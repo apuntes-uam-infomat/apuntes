@@ -1,0 +1,227 @@
+\documentclass{apuntes}
+\author{Guillermo Julián Moreno}
+\date{13/14 C1}
+\title{Estadística I}
+
+\begin{document}
+
+\pagestyle{plain}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Estadística descriptiva de datos univariantes}
+
+La estadística descriptiva es el conjunto de técnicas para resumir la información proporcionada por una gran masa de datos. El primer objetivo natural es resumir la información que proporcionan esos datos.
+
+\subsection{Estadísticos de tendencia central}
+ 
+\begin{defn}[Media]
+
+\[ \avg{x} = \frac{\sum_{i=1}^n x_i}{n} \]
+
+Es la medida de tendencia central más utilizada. Es bastante sensible a los valores atípicos (\textit{outliers}), observaciones anormalmente grandes que aparecen en el conjunto de datos por errores de transcripción o medición.
+
+\end{defn}
+
+\begin{defn}[Mediana]
+Es el valor que divide a los datos en dos mitades, de tal forma que la mitad son menores y la otra mitad mayores que la mediana. 
+
+La mediana se calcula de la siguiente forma: dado un conjunto de datos $\{x_1,\dotsc, x_n\}$, la mediana es $x_{\frac{n+1}{2}}$ si $n$ es impar y  el promedio entre $x_{\frac{n}{2}}$ y $x_{\frac{n}{2} + 1}$.
+\end{defn} 
+
+\subsection{Estadísticos de dispersión}
+
+\begin{defn}[Varianza]
+\[ \sigma^2 = \frac{1}{n} \sum_{i=1}n \left(x_i - \avg{x}\right)^2 = \frac{1}{n} \sum_{i=1}n x_i^2 - \avg{x}^2 \]
+\end{defn}
+
+\begin{defn}[Desviación típica]
+\[\sigma = \sqrt{\sigma^2} \]
+
+La desviación típica es la raíz de la varianza.
+\end{defn}
+
+\begin{defn}[Cuantil]
+Para $p\in (0, 1)$ se llama cuantil $p$ o $q_p$ al valor que deja el $100p \%$ de los datos a la izquierda.
+\end{defn}
+
+\begin{defn}[Cuartil]
+Los cuartiles son los tres datos que dejan a la izquierda el 25, 50 y 75 por ciento de los datos respectivamente. Es decir:
+
+\begin{itemize}
+\item $Q_1 = q_{0.25}$
+\item $Q_2 = q_{0.5}$. El cuartil dos es la mediana.
+\item $Q_3 = q_{0.75}$
+\end{itemize}
+\end{defn}
+
+Hay varios métodos para el cálculo de cuantiles. Para hacerlo a mano, podemos usar el siguiente método.
+
+Si el dato en la posición $p(n+1)$ no es un número entero, entones se interpola entre las observaciones ordenadas que están en la posición $\floor{p(n+1)}$ y $\floor{p(n+1)} + 1$ de la siguiente forma: sea $j$ la parte entera de $p(n+1)$ y $m$ la parte decimal. Entonces, \[ q_p = (1-m)x_j + m x_{j+1} \]
+
+
+\begin{defn}[Coeficiente\IS de asimetría]
+\index{Skewness}
+El tercer momento con respecto a la media se define como \[ \frac{1}{n}\sum_{i=1}^n\left(x_i-\avg{x}\right)^3 \] que, en su versión adimensional dividimos por $\sigma^3$.
+\end{defn}
+
+Al ser una función cúbica, los valores que se alejen mucho de la media tendrán un valor muy alto en valor absoluto (positivo o negativo según se aleje por la derecha o izquierda, respectivamente). Si la distribución de datos es muy asimétrica, los valores más altos no se cancelan con los valores altos del otro lado (porque no hay) y saldrá un valor más alejado de cero.\footnote{Está explicado como el p. culo, ya.}
+
+\subsection{Representación gráfica de datos}
+
+\begin{defn}[Box-plot]
+El diagrama de caja o \textit{box-plot}  (imagen \ref{imgCaja}) nos permite visualizar las medidas de dispersión respecto a la mediana. Hay que añadir una nueva medida, el \textbf{rango intercuartílico}\index{Rango!intercuartílico}, la diferencia entre el primer y el tercer cuartil: \[RI = Q_3 - Q_1 \]
+
+\easyimg{DiagramaCaja.png}{Diagrama de caja}{imgCaja}
+\end{defn}
+
+\begin{defn}[Histograma]
+El histograma se trata de una aproximación discreta a la función de densidad continua $f(t)$ de la variable que estamos midiendo. Es un diagrama de frecuencias que \textit{mantiene la forma} de esa función de densidad. 
+
+Definimos una serie, las marcas de intervalos $a^n_1, \dotsc, a^n_n$, donde $n$ es el número de intervalos y la longitud de cada intervalo  es $h_n = a^n_{j+1} - a^n_j$. Sea el conjunto $\{x_i\}_{i=0,\dotsc,m}$ los datos de nuestra muestra. Entonces, el estimador, la función $\hat{f}_n$, se define de la siguiente forma:
+
+\[ \hat{f}^n(t) = \frac{\card{i \tq x_i \in \left( a_j^n, a_{j+1}^n \right]}}{n h_n} = \frac{\sum_{i=1}^m \ind_{(a_j^n, a_{j+1}^n]} (x_i)}{n h_n} \]
+
+Recordemos que \[ \ind_A (n) = \begin{cases} 1 & n \in A \\ 0 & n \notin A\end{cases}\]
+
+A grandes rasgos, lo que hace en una función es definir un número de intervalos fijos de ancho $h_n$. Al evaluar $\hat{f}^n(t)$ buscamos en qué intervalo cae $t$ y contamos cuántas de nuestras mediciones caen también en ese intervalo.
+
+\easyimg{DensidadAHistograma.png}{El histograma es una aproximación de la función de densidad real en base a la muestra que hemos obtenido.}{lblDensidad}
+
+\end{defn}
+
+\subsubsection{Estimadores núcleo o kernel}
+
+\begin{defn}[Método de ventana móvil][Ventana móvil]
+El método de ventana móvil nos da una estimación de la función de densidad en un punto $t$ midiendo los $x_i$ que están en el intervalo de radio $h_n$ centrado en $t$. Matemáticamente:
+
+\[ \hat{f}_n(t) = \frac{1}{n2h_n}\sum_{i=1}^n \ind_{[t-h_n, t+h_n]}(x_i) = \frac{1}{n2h_n}\sum_{i=1}^n \ind_{[-1,1]}\left(\frac{t-x_i}{h_n}\right) \]
+\end{defn}
+
+Podemos reemplazar la función $\frac{1}{2}\ind_{[-1, 1]}$ por otra, llamada la función de densidad $K$, kernel o núcleo:
+
+\begin{defn}[Estimador núcleo]
+Dada una función de densidad $K$ simétrica, no necesariamente positiva, definimos el estimador kernel como:
+
+\[ \hat{f}_n(t) = \frac{1}{n}\sum_{i=1}^n K_h (t - x_i)  = \frac{1}{nh_n} \sum_{i=1}^n K\left(\frac{t-x_i}{h_n}\right) \]
+
+con $K_h(x) = \frac{1}{h}K(\frac{x}{h})$.
+\end{defn}
+
+La elección del núcleo $K$ no afecta especialmente a lo bien aproximada que esté la función de densidad. Sin embargo, sí que influye la selección de la ventana $h_n$ (figura \ref{lblSuavizado}), también llamada \textit{bandwith} en inglés.  Si escogemos una ventana muy pequeña, damos demasiado peso a los datos de nuestra muestra. Si elegimos una ventana muy grande, nuestra muestra pierde importancia y podemos perder información importante.
+
+La elección del $h_n$ más habitual es el que minimiza la distancia $L^2$ entre $\hat{f}$ y $f$, es decir, el parámetro que minimice $\displaystyle\int\left(\hat{f}_h-f\right)^2$. Sin embargo, hay un problema: no sabemos qué es $f$. Hay trucos que imagino que veremos más tarde.
+
+\easyimgw{Suavizado.png}{Los efectos que causa elegir una ventana más grande o más pequeña en el estimador}{lblSuavizado}{1}
+
+Las funciones kernel más usadas son la uniforme, $\frac{1}{2}\ind_{[-1, 1]}$, la gaussiana $\frac{1}{\sqrt{2 \pi}}e^{-\frac{t^2}{2}}$ y la de Epanechnikov, que matemáticamente es la que mejor aproxima $f$.
+
+El estimador kernel $\hat{f}_n(t)$ es la función de densidad de una medida de probabilidad que es la convolución \footnote{Ya aprenderemos en al algún momento de nuestra vida qué narices es una convolución} de dos medidas de probabilidad: una, $K_h(x)$ (el kernel reescalado) y otra que da probabilidad $\frac{1}{n}$ a cada punto de la muestra $\{x_i\}$ (distribución o medida empírica).
+
+\paragraph{Generación de datos del estimador kernel} Supongamos que $K$ es el núcelo gaussiano. Podemos generar datos artificiales de la densidad así:
+
+\[ x_i^0 = x_i^* + h_n Z_i,\; i=1,\dotsc, k \]
+
+donde $x_i^*$ es una observación elegida al azar entre los datos originales y $Z_i$ una observación aleatoria con probabilidad $N(0,1)$. Es decir, lo que hacemos es añadir un dato aleatorio de la muestra y sumamos una pequeña perturbación aleatoria.
+
+\section{Estadística descriptiva de datos bivariantes}
+
+En esta sección estudiaremos dos variables $(X, Y)$ para explorar la relación entre ambas y tratar de inferir si existe una relación funcional para predecir los valores de una variable en función de los de la otra.
+
+\subsection{Representación gráfica}
+
+\begin{defn}[Diagrama\IS de dispersión]
+El diagrama de dispersión representa cada variable en función de la otra para que podamos ver la posible relación entre ambas. Ver figura \ref{lblDispersion}.
+
+\easyimg{Dispersion.png}{Diagrama de dispersión}{lblDispersion}
+\end{defn} 
+
+\subsection{Regresión}
+
+\begin{defn}[Recta de regresión]
+
+La recta de regresión de $y$ sobre $x$ es la recta de forma $\hat{y} = \hat{a} + \hat{b}x$ que más se aproxima a los datos, minimizando los cuadrados de la distancia: \[ (\hat{a},\hat{b}) =\argmin_{a, b} \sum_{i=1}^n\left(y_i - a - bx_i)\right)^2 \]
+\end{defn}
+
+La recta de regresión se calcula obteniendo primero $\hat{b}$:
+
+\[ \hat{b} = \frac{\sigma_{x,y}}{\sigma^2_x} \]
+
+donde \[ \sigma_{x,y} = \frac{1}{n} \left( \sum_{i=1}^n x_i y_i\right)  - \avg{x}\avg{y} \] y después, sabiendo que la recta pasa por el punto $(\avg{x}, \avg{y})$, obtenemos $\hat{a}$ \[ \hat{a} = \avg{y} - \hat{b}\avg{x} \]
+
+El valor $b$ se denomina \textbf{coeficiente de regresión lineal}\index{Regresión lineal!coeficiente de} o parámetro de la regresión. Cada valor $e_i= y_i - \hat{y}_i$ se denomina \textbf{residuo}\index{Residuo}. Hay que notar que
+
+\begin{gather*}
+ \sum_{i=1}^n e_i = \sum_{i=1}^n \left(y_i - \hat{a} -\hat{b}x_i \right)= \sum_{i=1}^n\left( y_i - (\avg{y} - \hat{b}\avg{x}) - \hat{b}x_i \right) = \\
+ = \sum_{i=1}^n  \left(y_i - \hat{b}x_i\right) - n\avg{y}  + n\hat{b}\avg{x} = n\avg{y} - n \hat{b}\avg{x}- n\avg{y} + n\hat{b}\avg{x} = 0 \end{gather*}
+
+Esta ecuación ($\sum_{i=1}^n e_i = 0$) junto con \[ \sum_{i=1}^n x_i e_1 = 0 \] son las dos restricciones entre los residuos que nos dan la recta.
+
+\begin{defn}[Varianza\IS residual]
+La varianza residual $s_R^2$ o $\hat{\sigma}_e^2$ mide, aproximadamente el \textit{error cuadrático} cometido en la aproximación dada por la recta de regresión:
+
+\[ s_R^2 = \hat{\sigma}_e^2 = \frac{1}{n}\sum_{i=1}^n e_i^2 \]
+\end{defn}
+
+\begin{defn}[Coeficiente\IS de correlación lineal]
+\index{Coeficiente!de Pearson}
+El coeficiente de correlación lineal o coeficiente de Pearson
+
+\[ r = \frac{\hat{\sigma}_{x,y}}{\hat{\sigma}_x \hat{\sigma}_y} \] que cumple las siguientes condiciones:
+
+\begin{gather*}
+0 ≤ r^2 ≤ 1 \\
+\hat{\sigma}_e^2 = \hat{\sigma}_y^2(1-r^2) \\
+r = \hat{b}\frac{\hat{\sigma}_x}{\hat{\sigma}_y} 
+\end{gather*}
+
+nos indica el grado de ajuste lineal entre las dos variables. Un valor absoluto más cercano a 1 indica una correlación más fuerte. Un valor absoluto cercano a cero indica una correlación débil. El signo, positivo o negativo, indica si la correlación es creciente o decreciente.
+\end{defn}
+
+\appendix
+\section{Ejercicios}
+\subsection{Tema 1 - Estadística descriptiva}
+
+\begin{problem}[2] Demostrar que \[ \sum_{i=1}^n \left(x_i-\avg{x}\right)^2 = \min_{a\in \real} \sum_{i=1}^n(x_i-a)^2 \]
+
+\solution
+
+Definimos una función \[ g(a) = \sum_{i=1}^n(x_i-a)^2 \], buscamos su derivada \[ g'(a) = -2 \sum_{i=1}^n(x_i-a) \] e igualamos a cero:
+
+\begin{gather*}
+-2 \sum_{i=1}^n(x_i-a) = 0 \\
+\sum_{i=1}^n x_i - \sum_{i=1}^n a = 0 \\
+n \avg{x} = n a \\
+\avg{x} = a 
+\end{gather*}
+
+Esto quiere decir que la media muestral es el valor que minimiza la distancia con cada uno de los datos de la muestra.
+\end{problem}
+
+\begin{problem}[5]Determina si es verdadero o falso:
+
+\ppart Si añadimos 7 a todos los datos de un conjunto, el primer cuartil aumenta en 7 unidades y el rango intercuartílico no cambia.
+
+\ppart Si todos los datos de un conjunto se multiplican por -2, la desviación típica se dobla.
+\solution 
+
+\spart Añadir siete a todos los datos es una traslación, así que la distribución de los datos no cambia.
+
+\spart Teniendo en cuenta que si multiplicamos todos los datos del conjunto por $-2$ la media también se multiplica por $-2$, y sustituyendo en la fórmula de la varianza:
+
+\[ \sigma' = \sqrt{\frac{1}{n} \sum_{i=1}n (-2x_i)^2 - (-2\avg{x})^2} = \sqrt{\frac{1}{n} \sum_{i=1}4\left(n x_i^2 - \avg{x}^2\right)} = \sqrt{4\sigma^2} = 2\sigma \]
+
+Por lo tanto, la desviación típica sí se dobla.
+
+\spart Usando los cálculos del apartado anterior vemos que la varianza se multiplica por cuatro.
+
+\spart Efectivamente: cambiar el signo haría una reflexión de los datos sobre el eje Y y la asimetría estaría orientada hacia el lado contrario. 
+
+\end{problem}
+
+
+\newpage
+\printindex
+\end{document}
