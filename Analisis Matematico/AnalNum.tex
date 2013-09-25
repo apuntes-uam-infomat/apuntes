@@ -716,7 +716,7 @@ Con cuidado de $\displaystyle \deriv{G_i}{y_k}$ evaluado en $F(\ga)$ y $\deriv{F
  \[\appl{\sigma}{\real}{\real^N}\]
  Sea $g\equiv F\circ \sigma \equiv \text{ Comportamiento de F a lo largo de la curva } \sigma, \appl{g}{\real}{\real}$.
 
-$$g'(t_0) = DF(\sigma(t_0))D\sigma(t_0) = \underbrace{...}_{\text{Notación matricial}} = \underbrace{\pesc{\triangledown F(\sigma(t_0))}{\sigma'(t_0)}}_{\text{Notación vectorial}}$$
+$$g'(t_0) = DF(\sigma(t_0))D\sigma(t_0) = \underbrace{...}_{\text{Notación matricial}} = \underbrace{\pesc{\nabla F(\sigma(t_0))}{\sigma'(t_0)}}_{\text{Notación vectorial}}$$
 
  
  \item 
@@ -749,22 +749,30 @@ $$g'(t_0) = DF(\sigma(t_0))D\sigma(t_0) = \underbrace{...}_{\text{Notación matr
   Peeeeero...
   $$\appl{F}{\real^N}{\real^2}$$
   $$F(\gor{b})-F(\ga) = \begin{pmatrix}
-                         \pesc{\triangledown F_1(\gor{c_1}),{\gor{b}-\ga}}\\
-                         \pesc{\triangledown F_2(\gor{c_2}),\gor{b}-\ga}
+                         \pesc{\nabla F_1(\gor{c_1}),{\gor{b}-\ga}}\\
+                         \pesc{\nabla F_2(\gor{c_2}),\gor{b}-\ga}
                         \end{pmatrix}
 $$
   Tenemos 2 $c$ distintos, uno para cada $f$, por lo que este teorema pierde sentido.
   
   \item Versión para funciones matriciales:
   
-  $$\norm{F(\gor{b}-\ga)} \leq |||DF(\ga)|||\cdot\norm{\gor{b}-\ga}$$
+  \begin{theorem} [Extensión del valor medio]
+  Sea $f \in C^1$ en un abierto que contenga $[a,b]$.
+  $$\norm{F(\gor{b}-\ga)} \leq |||DF(\gor{c})|||\cdot\norm{\gor{b}-\ga}$$ 
+  
+  Siendo c un punto del segmento que une $\ga$ y $\gb$ en el que $|||DF(tb+(1-t)a)|||$ alcanza su máximo.
+   
+  \end{theorem}
+
+  
   
   \begin{proof}
    i) $$\appl{f}{\real}{\real}$$
    $$f(\gor{b}-f(\ga) = g(1)-g(0) = \int_0^1g'(s)ds \text{ con } g(t) = f(tb+(1-t)a)$$
    
    ii)  $$\appl{h}{\real^N}{\real}$$
-   $$h(\gor{b}-h(\ga) = g(1)-g(0) = \int_0^1g'(s)ds = \int_0^1 \pesc{\triangledown h(s\ga+(1-s)\gor{b}),(\gor{b}-\ga)}$$
+   $$h(\gor{b}-h(\ga) = g(1)-g(0) = \int_0^1g'(s)ds = \int_0^1 \pesc{\nabla h(s\ga+(1-s)\gor{b}),(\gor{b}-\ga)}$$
    $$g(t) = h(tb+(1-t)a)$$
    
    iii) $$\gor{G} = (G_1,...,G_M), G_i = \int_0^1H_i(t)dt$$
@@ -781,7 +789,7 @@ $$
    
    $\appl{F_i}{\real^N}{\real}$
    
-   $\underbrace{F_i(\gor{b})-F_i(\ga)}_{G_i} = \displaystyle\int_0^1 \underbrace{\pesc{\triangledown F_i (s\gor{b}+(1-s)\ga ),(\gor{b}-\ga)}}_{H_i(t)}dt$
+   $\underbrace{F_i(\gor{b})-F_i(\ga)}_{G_i} = \displaystyle\int_0^1 \underbrace{\pesc{\nabla F_i (s\gor{b}+(1-s)\ga ),(\gor{b}-\ga)}}_{H_i(t)}dt$
    
    Por el apartado iii tenemos que:
    
@@ -792,9 +800,9 @@ $$
                    H_M(t)
                   \end{pmatrix}
                 = \begin{pmatrix}
-                   \pesc{\triangledown F_1(tb+(1-t)a),b-a}\\
+                   \pesc{\nabla F_1(tb+(1-t)a),b-a}\\
                    \vdots\\
-                   \pesc{\triangledown F_M(tb+(1-t)a),b-a}
+                   \pesc{\nabla F_M(tb+(1-t)a),b-a}
                   \end{pmatrix}
 		= \left(DF(...)\right)\begin{pmatrix}
 		                        b_1-a_1\\
@@ -806,7 +814,14 @@ $$
 $$\norm{H(t)} = \norm{DF(...)(\gor{b}-\ga)} \leq \norm{DF}\cdot\norm{\gor{b}-\ga}$$
 
 
-$$\norm{F(\gor{b})-F(\ga)} \leq \displaystyle\int_0^1 \pesc{\triangledown F_i(tb+(1-t)a),b-a}dt$$
+$$\norm{F(\gor{b})-F(\ga)} \leq \displaystyle\int_0^1 \norm{\nabla DF_i(tb+(1-t)a),b-a}dt$$
+
+Aplicando: $A\gor{v} \leq |||A|||\cdot \norm{\gor{v}}$
+
+$$\norm{F(\gor{b})-F(\ga)} \leq \displaystyle\int_0^1 |||DF(*)|||\cdot\norm{\gb-\ga}dt$$
+$$= \norm{\gb - \ga} \displaystyle \int_0^1 |||DF(tb+(1-t)a)||| dt \leq |||DF(\gor{c})|||\cdot\norm{\gb-\ga}$$ 
+
+Siendo c un punto del segmento que une $\ga$ y $\gb$ en el que $|||DF(tb+(1-t)a)|||$ alcanza su máximo.
    
 Conclusión:
 
@@ -815,6 +830,83 @@ $$\norm{F(\gor{b})-F(\ga)} \leq \norm{DF}\cdot\norm{\gor{b}-\ga}$$
 
 \end{itemize}
 
+\paragraph{Aplicación:\\}
+
+$\appl{F}{\real^N}{\real^M}, F \in C^1$, definida en un conjunto abierto y conexo.
+
+$DF(\gx) \equiv 0, \forall \implies F \equiv $ cte.	
+
+\subsection{Derivada direccional: }
+
+$\appl{F}{\real^N}{\real^M}$ (escalar)
+
+$\ga \sim$ Recta que pasa por $\ga$ con dirección $\gor{v}$.
+
+$r(t) = \ga + t\gor{v}$. 
+
+\obs
+Como una recta tiene infinitos vectores directores (dependiendo de la longitud), siempre tomaremos vectores directores unitarios, con $\norm{\gor{v}} = 1$.
+
+
+Vamos a estudiar: $g(t) = F(\ga + t\gor{v}) = F \circ r (t)$.
+
+$t \sim 0 \dimplies \ga + t\gor{v} \sim \ga$
+\begin{defn} [Regla de la cadena]
+$$g'(0) = \displaystyle\lim_{h \rightarrow 0} \frac{g(h)-g(0)}{h} = \displaystyle\lim_{h \rightarrow 0} \frac{F(\ga+h\gor{v})-F(\ga)}{h} \equiv D_{\gor{v}}F(\ga)$$. 
+\end{defn}
+
+\obs
+La existencia de $D_{\gor{v}}F(\ga), \forall \gor{v}\in \real^N$ NO garantiza que $F$ sea derivable.
+
+
+Si sabemos que $F$ SÍ es diferenciable podemos usar la regla de la cadena obteniendo:
+
+$D_{\gor{v}}F(\ga) = g'(0) = D(F\circ r)(0) = ... = \pesc{\nabla F(\ga),\gor{v}}$
+
+
+\paragraph{Aplicación:} 
+\begin{itemize}
+ \item 
+ Dirección de máximo crecimiento:
+
+$D_{\gor{v}}F(\ga) = \pesc{\nabla F(\ga),\gor{v}}\leq \norm{\nabla F(\ga)}\cdot \underbrace{\norm{\gor{v}}}_{\equiv 1}$
+
+Conclusión:
+\begin{align*}
+D_{\gor{v}}F(\ga) &\leq \norm{\nabla F(\ga)}\\
+&\uparrow\\
+\text{El }= \text{se obtien}&\text{e cuando }\gor{v} = \displaystyle \frac{\nabla F(\ga)}{\norm{\nabla F(\ga)}}. 
+\end{align*}
+
+ 
+ \item
+ Vector perpendicular a los conjuntos de nivel
+ 
+ $\appl{F}{\real^N}{\real^M}$
+ 
+ $S = \{ \gx \in \real^N \tq F(\gx) = 0\}$ (Conjunto de nivel)
+ 
+ $\ga \in S$
+ 
+ Entonces: $\nabla F(\ga) \perp S$
+\end{itemize}
+
+\begin{theorem}[Derivadas parciales continuas implican función diferenciable]
+Si existen todas las derivadas parciales y son continuas $\implies F$ diferenciable en $\ga$.
+ 
+\end{theorem}
+
+Contraejemplo de la no reciprocidad: $f(x) = x^2 sin\left(\frac{1}{x}\right)$
+
+\begin{proof}
+ $\appl{F}{\real^2}{\real}$
+ 
+ $$¿\frac{\left|F(\ga+a,b+k) - F(a,b) - \deriv{F}{x}(a,b) h - \deriv{F}{y}(a,b)k\right|}{\norm{(h,k)}}\longrightarrow 0?$$
+ 
+ Sumamos y restamos al numerador $F(a,b+k)$
+ 
+ $$\frac{\left|\left(F(\ga+h,b+k) - F(a,b+k) - \deriv{F}{x}(a,b) h\right) + \left(F(\ga,b+k) - F(a,b)-\deriv{F}{y}(a,b)k\right)\right|}{\sqrt{h^2+k^2}}$$
+\end{proof}
 
 
 \newpage
