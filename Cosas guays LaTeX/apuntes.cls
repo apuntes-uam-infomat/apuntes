@@ -1,6 +1,8 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{apuntes}[2013/04/20 Note taking class]
 
+\RequirePackage{pdfpages}
+
 \LoadClass[titlepage]{custombase}
 
 % Cabecera super molona
@@ -11,6 +13,9 @@
 \rhead{\theauthor} 
 \cfoot{\thepage\ de \pageref{LastPage}}
 }
+
+\setlength{\parskip}{2mm}
+
 
 \newcommand{\placeholder}[1]{\begin{framed}\textit{\textbf{A rellenar:} #1}\end{framed}}
 
