@@ -89,7 +89,7 @@ Recordemos que \[ \ind_A (n) = \begin{cases} 1 & n \in A \\ 0 & n \notin A\end{c
 A grandes rasgos, lo que hace en una función es definir un número de intervalos fijos de ancho $h_n$. Al evaluar $\hat{f}^n(t)$ buscamos en qué intervalo cae $t$ y contamos cuántas de nuestras mediciones caen también en ese intervalo.
 
 \easyimg{DensidadAHistograma.png}{El histograma es una aproximación de la función de densidad real en base a la muestra que hemos obtenido.}{lblDensidad}
- 
+
 \end{defn}
 
 \subsubsection{Estimadores núcleo o kernel}
@@ -250,7 +250,7 @@ Al contrario no tiene por qué darse.
 \end{theorem}
 
 
-\begin{theorem}[Teorema\IS de Slutsky] Sean $\{X_n\}$, $\{Y_n$ sucesiones de variables aleatorias tales que $X_n\convdist X$, $Y_n\convprob c$ con $c\in\real$ constante. Entonces
+\begin{theorem}[Teorema\IS de Slutsky] Sean $\{X_n\}$, $\{Y_n\}$ sucesiones de variables aleatorias tales que $X_n\convdist X$, $Y_n\convprob c$ con $c\in\real$ constante. Entonces
 
 \begin{enumerate}
 \item $X_n + Y_n \convdist X + c$
@@ -266,7 +266,48 @@ Al contrario no tiene por qué darse.
 
 \begin{theorem}[Desigualdad\IS de Chebichev] En las mismas condiciones del teorema anterior, se cumple que  \[ \prob{\abs{X - \esp{X}} > \epsilon} ≤ \frac{V(X)}{\epsilon^2} \]
 \end{theorem}
+\subsection{Problema de inferencia}
+\subsubsection{Interpretación estadística de la ley de los grandes números}
 
+\begin{theorem}[Ley de los grandes números] Sea $\{x_k\}$ una sucesión de v.a.i.i.d con media finita $µ$. Se verifica entonces que 
+\label{thmGrandes}
+\[ \avg{X} = \frac{\sum_{i=1}^n x_i}{n} \convcs µ \]
+
+\end{theorem}
+
+\subsubsection{Función de distribución empírica}
+
+\begin{defn}[Función\IS de distribución empírica] La función de distribución empírica asociada a la muestra $\{x_n\}$ se define mediante
+
+\[ \prob{X ≤ t} =  \fd_n(t) = \frac{1}{n}\sum_{i=1}^n \ind_{(-\infty, t]} (x_i) \]
+
+Es decir, $\fd_n(t)$ es la proporción de puntos de la muestra que caen en el intervalo $(-\infty, t]$.
+\end{defn}
+
+Sin embargo, surge una duda: ¿converge la función de distribución empírica a la función de distribución original?
+
+Intuitivamente, podemos pensar que cuantos más puntos cojamos más se aproximará a la función de distribución original. De hecho, eso es lo que demuestra el siguiente teorema:
+
+\begin{theorem}[Teorema\IS de Glivenko-Cantelli] Sean $\{x_n\}$ v.a.i.i.d con función de distribución $F$. Se verifica que
+
+\[ \md{\fd_n - F}_\infty=\sup_{t\in\real} \abs{\fd_n(t) - F(t)} \convcs 0 \]
+
+donde $\md{\fd_n - F}_\infty$ es el \index{Estadístico! de Kolmogorov-Smirnov} \textbf{estadístico de Kolmogorov-Smirnov}.
+
+\end{theorem}
+
+\begin{proof}
+Empezamos demostrando la convergencia del supremo (¿?) \[ \fd_n(t) = \frac{1}{n}\sum_{i=1}^n \ind_{(-\infty, t]} (x_i) \]
+
+A cada uno de los términos de los términos de la suma $\ind_{(-\infty, t]}(x_i)$ los podemos llamar $y_i$. Estos valores son una muestra de la distribución \[ Y = \ind_{(-\infty, t]}(X) \]. Por lo tanto y por la LGN (\ref{thmGrandes}) \[ \fd_n(t) = \frac{1}{n}\sum_{i=1}^n Y_i = \avg{Y} \convcs \esp{Y} \]
+
+pero
+
+\[ \esp{Y} = \esp{\ind_{(-\infty, t]}(X)} = \prob{X\in (-\infty, ty]} = F(t) \]
+
+Ahora tenemos que demostrar que el límite por la izquierda converge. Es decir, hay que demostrar que \[ \fd_n(t^-) \convcs F(t^-) \]. Esa convergencia se da si y sólo si en un conjunto de probabilidad $1$ se tiene que $ \fd_n(t^-) \convs F(t^-) $. Según la definición de límite, esto se da si y sólo si \[ \forall \epsilon > 0\; \exists N \tq n ≥ N \implies \abs{\fd_n(t^-) - F(t^-) } < \epsilon \] 
+
+\end{proof}
 \appendix
 
 \section{Distribuciones notables}
