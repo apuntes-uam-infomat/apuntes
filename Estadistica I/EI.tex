@@ -297,18 +297,69 @@ donde $\md{\fd_n - F}_\infty$ es el \index{Estadístico! de Kolmogorov-Smirnov} 
 \end{theorem}
 
 \begin{proof}
-Empezamos demostrando la convergencia del supremo (¿?) \[ \fd_n(t) = \frac{1}{n}\sum_{i=1}^n \ind_{(-\infty, t]} (x_i) \]
+Empezamos demostrando la convergencia de los términos intermedios. Es decir, queremos demostrar que 
+
+\begin{equation}\label{eqConvCsGC}
+\fd_n(t) \convcs F(t)
+\end{equation} 
+
+Tenemos que \[ \fd_n(t) = \frac{1}{n}\sum_{i=1}^n \ind_{(-\infty, t]} (x_i) \]
 
 A cada uno de los términos de los términos de la suma $\ind_{(-\infty, t]}(x_i)$ los podemos llamar $y_i$. Estos valores son una muestra de la distribución \[ Y = \ind_{(-\infty, t]}(X) \]. Por lo tanto y por la LGN (\ref{thmGrandes}) \[ \fd_n(t) = \frac{1}{n}\sum_{i=1}^n Y_i = \avg{Y} \convcs \esp{Y} \]
 
 pero
 
-\[ \esp{Y} = \esp{\ind_{(-\infty, t]}(X)} = \prob{X\in (-\infty, ty]} = F(t) \]
+\[ \esp{Y} = \esp{\ind_{(-\infty, t]}(X)} = \prob{X\in (-\infty, t]} = F(t) \] por lo tanto hemos demostrado (\ref{eqConvCsGC}).
 
-Ahora tenemos que demostrar que el límite por la izquierda converge. Es decir, hay que demostrar que \[ \fd_n(t^-) \convcs F(t^-) \]. Esa convergencia se da si y sólo si en un conjunto de probabilidad $1$ se tiene que $ \fd_n(t^-) \convs F(t^-) $. Según la definición de límite, esto se da si y sólo si \[ \forall \epsilon > 0\; \exists N \tq n ≥ N \implies \abs{\fd_n(t^-) - F(t^-) } < \epsilon \] 
+Ahora tenemos que demostrar que el límite por la izquierda converge. Es decir, hay que demostrar que \begin{equation}
+ \fd_n(t^-) \convcs F(t^-)  \label{eqConvIzq}
+\end{equation}. Esa convergencia se da si y sólo si en un conjunto de probabilidad $1$ se tiene que $ \fd_n(t^-) \convs F(t^-) $. Según la definición de límite, esto se da si y sólo si \begin{equation}
+ \forall \epsilon > 0\; \exists N \tq n ≥ N \implies \abs{\fd_n(t^-) - F(t^-) } < \epsilon \label{eqLim1} \end{equation}
+
+Sabemos que 
+\begin{equation}
+	\exists\epsilon >0\tq \fd_n (t^-) = \fd_n (x)\; \forall x \in (t-\delta, t+\delta) \label{eqLim2}
+\end{equation}. Seguimos:
+
+\begin{equation}
+ F(t^-) = \lim_{x\to t^-} F(x) \dimplies \forall \epsilon > 0 \; \exists \delta > 0 \tq x \in (t - \delta, t) \implies \abs{F(x) - F(t^-)} < \frac{\epsilon}{2}\label{eqLim3} 
+\end{equation}
+
+Tomamos $x\in(t-\delta, t)$ con un delta que cumpla tanto la condición en (\ref{eqLim2}) como en (\ref{eqLim3}). Entonces
+
+\[ \abs{\fd_n(t^-) - F(t^-)} =  \abs{\fd_n(x) - F(x) + F(x) - F(t^-)} ≤ \underbrace{\abs{\fd_n(x) - F(x)}}_{(a)} + \underbrace{\abs{F(x) - F(t^-)}}_{(b)} \]
+
+Sabemos que $(a)$ es menor que $\frac{\epsilon}{2}$ por (\ref{eqLim1}) y que $(b)$ también es menor que $\frac{\epsilon}{2}$ por (\ref{eqLim3}), por lo tanto 
+
+\[ \abs{\fd_n(t^-) - F(t^-)}  < \epsilon \]
+
+Buscamos ahora una partición finita de $\real$ dada por $t_0 = -\infty ≤ t_1 ≤ \dotsb ≤ t_k = \infty$ tal que para todo $\epsilon > 0$ se cumpla que $\abs{F(t_i^-) - F(t_{i-1})} ≤ \epsilon$. Lo construimos de forma recursiva: dado $t_{i-1}$ tomamos
+
+\[ t_i =\sup_{z\in\real} \{ F(z) ≤ F(t_{i-1} + \epsilon \} \]
+
+El siguiente paso: para todo $t_{i-1} ≤ t ≤ t_i$ se tiene que 
+
+\[ \fd_n(t) - F(t) ≤ \fd_n(t_i^-) - F(t_i^-) + \epsilon \]
+
+Como $\fd_n$ es no decreciente (es una función de distribución), tenemos también que 
+
+\[ \fd_n(t) - F(t) ≥ \fd_n(t_{i-1}) - F(t_{i-1}) - \epsilon \]
+
+Con estas dos últimas ecuaciones, llegamos a que 
+
+\[ \sup_{t\in\real} \abs{\fd_n(t) - F(t)} ≤ \max\left\lbrace \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i) - F(t_i)},\; \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i^-) - F(t_i^n)} \right\rbrace + \epsilon \]
+
+Por (\ref{eqConvCsGC}), sabemos que $\abs{\fd_n(t_i) - F(t_i)} \convcs 0$, y por lo tanto \[ \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i) - F(t_i)} \convcs 0 \].
+
+De la misma forma, usando (\ref{eqConvIzq}) tenemos que \[ \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i^-) - F(t_i^n)} \convcs 0 \]. Por lo tanto, todo ese máximo enorme vale 0, de tal forma que 
+
+\[ \lim_{n\to\infty} \sup_{t\in\real} \abs{\fd_n(t) - F(t)}  =  \lim_{n\to\infty} \md{\fd_n - F}_\infty ≤ \epsilon \]
+
+para cualquier $\epsilon > 0$ arbitrario que cojamos. Es decir, que \[ \md{\fd_n - F}_\infty=\sup_{t\in\real} \abs{\fd_n(t) - F(t)} \convcs 0 \]
+
 \end{proof}
-\appendix
 
+\appendix
 \section{Distribuciones notables}
 \label{secDistr}
 \includepdf[pages={2-last}, nup=1x3]{Distribuciones.pdf}
