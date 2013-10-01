@@ -1,6 +1,9 @@
 \documentclass{apuntes}
 \newcommand{\acum}[1]{\#1 \subset(#1) }
 \usepackage{tikz}
+\newcommand{\invers}[1]{#1 ^ {-1}}
+\newcommand{\f}{\invers{f}}
+\newcommand{\F}{\invers{F}}
 \title{Análisis Matemático}
 \author{Víctor de Juan Sanz}
 \date{13/14 C1}
@@ -1116,22 +1119,25 @@ Con estos conocimientos son posibles de realizar todos los ejercicios de la hoja
 
 \section{Teoremas de la función implícita y la función inversa}
 
-En el mundo lineal tenemos:
+En el mundo lineal tenemos: 
 
-$\appl{F}{\real^N}{\real^N}$
-
+\begin{itemize} \item $\appl{F}{\real^N}{\real^N}$ y 
 $L(\gx) = A\gx,  A = $ matriz $NxN$
 
+<<<<<<< HEAD
 Si queremos resolver el sistema: $A\gx = \gy$. Este sistema tiene solución $\dimplies det(A) \neq 0$ (porque $\exists A^{-1}$).
 
+=======
+Si queremos resolver el sistema: $A\gx = \gy$ sabiendo que $A\gor{0} = \gor{0}$.\\ Este sistema tiene solución $\dimplies det(A) \neq 0$ (porque $\exists A^{-1}$).
+\item
+>>>>>>> f1b164664770801f421f4d1a4e4dec971b8c40e1
 $\appl{F}{\real^{N+M}}{\real^N}$
 
 $L(\gx) = A\gx, A = $ matriz $Nx(N+M)$
 
 Para resolver el sistema $A\gx = \gy$.  Se resolvía parametrizando $M$ variables.
 
-En el mundo NO lineal:
-
+\item En el mundo NO lineal:
 $\appl{F}{\real^N}{\real^N}$
 
 Suponemos que $\exists F(\ga) = F(\gor{b})$
@@ -1143,6 +1149,7 @@ F(x_1,\dotsc,x_N) = y_2\\
 F(x_1,\cdots,x_N) = y_N          
         \end{matrix}
 \right\} F(\gx)=\gy$
+\end{itemize}
 
 Vamos a intentar resolver este problema utilizando Taylor para aproximar al orden lineal, pero tenemos que pagar un precio: para que taylor funcione tenemos que trabajar cerca del punto. Esto significa que el resultado va a ser local.
 
@@ -1256,6 +1263,153 @@ $\left. \begin{matrix} y' = y\\
          y(0) = 1 \equiv y_0
         \end{matrix}\right\}$
 
+        
+\paragraph{Comentarios previos al teorema de la función inversa:}
+\begin{itemize}
+ \item Teorema de cálculo 1:
+
+$\appl{f}{\real}{\real}, f\in C^1 f'(a) \neq 0 \implies $ f es invertible en un entorno de $f(a)$. La inversa es diferencaible en ese entorno, y además $(f^{-1})'(f(a)) = \frac{1}{f'(a)}$
+
+Resultado local: $\left\{\begin{matrix} \exists f^{-1} \\ \text{es diferenciable} \\ \text{fórmula}\end{matrix}\right.$
+
+\item Dimensión N:
+
+$\appl{f}{\real^N}{\real^N}$ y supongamos que en algún abierto $\exists F^{-1}$ y $F,F^{-1} \in  C^1$.
+
+Entonces:
+
+$(F\circ \F)(y) = y \rightarrow DF(\F(y))D\F(y) = Id$
+
+$(\F\circ F)(y) = y \rightarrow D\F(F(y))DF(y) = Id$
+
+\end{itemize}
+
+Con $\appl{F}{\Omega\subset \real^N}{\real^N}$ queremos probar que existe $$\appl{G}{V}{U} \tlq \left\{\begin{matrix} G\circ F(\gx) = \gx, \forall\gx\in U \subset \Omega\\
+F\circ G(\gy) = \gy, \forall \gy \in V\\
+G \text{ diferenciable} \end{matrix}\right.$$
+
+\begin{theorem} [Teorema de la función inversa]
+Sea $\appl{F}{\Omega\subset\real^N}{\real^N} \text{ con } F\in C^1(\Omega)$.
+
+Supongamos $DF(\ga)$ invertible, $\ga \in \Omega$.
+
+Entonces existe un abierto $V \tlq F(\ga)\in V$, un abierto $U \tlq \ga \in U$ y una inversa local $\appl{G}{V}{U}$.\\
+Además, $G$ es diferenciable en $U$ y $DG(y) = \left[DF(\F(y))\right]^{-1}, \forall y \in U$.
+\end{theorem}
+
+\begin{proof}
+ \paragraph{1) Simplificar la notación:}
+ 
+ Queremos invertir $F(x) = y, \gor{y} \sim F(\ga), \gx \sim \gor{a}$.
+ 
+ Llamamos:
+ \begin{itemize}
+  \item $y = F(\ga) + \gor{z}; \gor{z} \sim \gor{0}$
+  \item $y = \ga + \gor{s}; \gor{s} \sim \gor{0}$
+ \end{itemize}
+ $F(\ga+\gor{s}) = F(\ga)+\gor{z}$.
+ 
+ Definimos: $\tilde{F}(\gor{s}) \equiv F(\ga + \gor{s}) - F(\ga) = \gor{z} \implies \tilde{F}(\gor{0}) = \gor{0}$
+ 
+ Esta es la traslación que hay que realizar para suponer que $F(\gor{0}) = \gor{0}$.
+ 
+ Tenemos: $detDF(\gor{0}) \neq 0$
+ 
+ Resolver para $F \dimplies $ Resolver para $CF(\gx) = \gor{y}$, donde C es una matriz invertible.
+ 
+ Tomamos $\tilde{F} = [DF(\gor{0})]^{-1}F$. ¿Qué hemos ganado?
+ 
+ $D\tilde{F}(\gor{0}) = Id$.
+ 
+ \paragraph{Paso 2: Formulación como punto fijo.}
+
+ Partimos de $F(\gor{0}=\gor{0} DF(\gor{0}) = Id$.
+ 
+ Definimos $f(\gx) = \gx - F(\gx)+\gy$
+ 
+ Resolver $F(\gx) = \gor{y} \equiv \text{ encontrar } f(\gx) = \gx$.
+ 
+ Objetivo: probar que $f$ es contractiva.
+ 
+ \paragraph{Paso 3: Estimaciones de f.\\}
+ 
+ $Df(\gx) = Id - DF(\gx) \rightarrow Df(\gor{0}) = Id - DF(0) = Id - Id = \text{ matriz nula}$.
+ 
+ \begin{itemize}
+  \item Estimación 1)
+  
+  Tenemos: $DF(\gor{0}) = Id \implies det(DF(\gor{0})) = 1$. 
+  
+  $$F\in C^1 \implies \exists \varepsilon_0 >0 \tlq \md{\gx} \leq \varepsilon_0 \implies  det(DF(\gor{0}))>0$$
+  Es decir, en un entorno del $\gor{0}$, el determinante sigue siendo positivo.
+  
+  \item Estimación 2)
+  
+  $F\in C^1 \implies f \in C^1, \appl{f}{\real^N}{\real^N}$
+  
+  $Df(\gor{0}) = \begin{pmatrix}
+                  Df_1(\gor{0}) \rightarrow\\
+                  \vdots\\
+                  Df_N(\gor{0}) \rightarrow
+                 \end{pmatrix}$. (Todas las filas son 0)
+                 
+ Por tanto $\md{Df_i(\gor{0})} = 0$.
+ 
+ Por continuidad $\exists \varepsilon_i > 0 \tlq \md{x} \leq \varepsilon_i, \implies \md{Df_i(\gx)} <\frac{1}{2N}$
+ 
+ Conclusión: Fijamos $\varepsilon = min \{\varepsilon_0,\varepsilon_1,\dotsc, \varepsilon_N\} ,i=0,\dotsc,N$.
+ 
+ Si $\md{x} \leq \varepsilon$ tenemos que: \begin{itemize}
+                                             \item $\det(DF(\gx))>0$
+                                             \item $\md{Df_i(\gx)}  = \md{\nabla f_i(\gx)} < \frac{1}{2N}, i=1,2,...,N$
+                                            \end{itemize}
+                                            
+ \obs $\varepsilon$ NO depende de $\gy$.
+
+ 
+ \end{itemize}
+  Conclusión: Tomaremos $\gx\in \gor{B_\varepsilon(\gor{0})}$ ($A\subset\real^N, \gor{A} = \text{ cierre de } A)$
+  
+  \paragraph{Paso 4: demostrar que f es contractiva }
+  
+  Primero hay que demostrar que lleva un cerrado en sí mismo, es decir $\appl{f}{ \gor{B_\varepsilon(\gor{0})}}{ \gor{B_\varepsilon(\gor{0})}}$.
+  
+  Teniendo $\md{x}\leq \varepsilon$ queremos probar $\md{f(\gx)}\leq \varepsilon$.
+  
+  $$\md{f(s)} = \md{f(s) - f(0) + f(0)} \leq \md{f(s)-f(0)} + \underbrace{\md{f(0)}}_{f(0) = \gor{0} + F(\gor{0}) + \gor{y} = y}$$
+  
+  $$\md{f(s)-f(0)}^2 = \sum_{i=1}^N (f_i(s)-f_i(0))^2 $$
+  
+  Aplicando el teorema del valor medio con un punto $0<\tilde{s}<s$:
+  
+  $$\sum \left(Df_i(\tilde{s})\cdot\gor{s}\right)^2 \text{(este cuadrado en los pauntes de elena no esta)} = $$
+  $$\sum_{i=1}^N(\pesc{\nabla f_i(\tilde{s}),\tilde{s}})^2 \leq \sum_{i=1}^N \md{\nabla f_i(\gor{s})}^2\md{\tilde{s}}^2 \leq N \cdot\frac{1}{4N^2} \md{\gor{s}}^2$$
+  
+  
+  $$\md{f(\gor{s}) - f(\gor{0})}^2 \leq \frac{N}{4N^2} \md{\gor{s}}^2$$
+  $$\implies \md{f(s)} \leq \frac{1}{2\sqrt{N}} \md{\gor{s}} + \md{\gy} \leq \frac{1}{2\sqrt{N}}\varepsilon + \md{\gy} \leq \frac{\varepsilon}{2} + \md{y} < \varepsilon \dimplies \md{y} < \frac{\varepsilon}{2}$$
+  Esta última acotación es por la que es un teorema local.
+  
+  \paragraph{Paso 5: f contractiva en $B_\varepsilon(\gor{0})$}
+  
+  $\gor{r},\gor{s} \in B_\varepsilon(\gor{0})$
+  
+  $$\md{f(\gor{r}) - f(\gor{s})} = \left(\sum \left( f_i(\gor{r}) - f_i(\gor{s})\right) ^2 \right)^{\frac{1}{2}}$$
+  Aplicando el teorema del valor medio
+  $$\left(\sum_{i=1}^N \pesc{Df_i(z_i), (\gor{r}-\gor{s})^2}\right)^{\frac{1}{2}}, z_i\in B_\varepsilon(0) $$
+  La misma cuenta de antes:
+  $$\md{f(\gor{r}) - f(\gor{s})} \leq \frac{1}{2\sqrt{N}}\md{\gor{r}-\gor{s}}$$
+  
+  Acabamos de encontrar el $\alpha$ que aparecía en la aplicación contractiva: $\alpha = \frac{1}{2\sqrt{N}}$. 
+  
+  Ahora ya podemos aplicar el teorema de la aplicación contractiva y ya tenemos el punto fijo.
+  
+  Aplicación contractiva $\implies$ punto fijo f $\implies$ Sol. $F(x) = y \rightarrow x = G(y)$, con lo que $\appl{G}{B_{\frac{\varepsilon}{2}}(0)}{\overline{{B_{\frac{\varepsilon}{2}}(0)}}}$.
+\end{proof}
+
+       
+        
+        
 \newpage
 \section{Ejercicios}
 \input{Practicas/practicas.tex}
