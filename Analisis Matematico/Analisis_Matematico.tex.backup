@@ -1036,7 +1036,7 @@ $\appl{F}{\real^N}{\real^N}$
 
 $L(\gx) = A\gx,  A = $ matriz $NxN$
 
-Si queremos resolver el sistema: $A\gx = \gy$. Este sistema tiene solución $\dimplies det(A) \neq 0$ (porque $\exists A^{-1}$).
+Si queremos resolver el sistema: $A\gx = \gy$ sabiendo que $A\gor{0} = \gor{0}$. Este sistema tiene solución $\dimplies det(A) \neq 0$ (porque $\exists A^{-1}$).
 
 $\appl{F}{\real^{N+M}}{\real^N}$
 
@@ -1048,7 +1048,7 @@ En el mundo NO lineal:
 
 $\appl{F}{\real^N}{\real^N}$
 
-Suponemos que $\exists F(\ga) = F(\gor{b})$
+Suponemos que $\exists F(\ga) = \gor{b}$ (sabemos la solución del sistema en al menos 1 punto $\ga$)
 
 $\left.\begin{matrix}
 F(x_1,\dotsc,x_N) = y_1\\
@@ -1061,7 +1061,7 @@ F(x_1,\cdots,x_N) = y_N
 Vamos a intentar resolver este problema utilizando Taylor para aproximar al orden lineal, pero tenemos que pagar un precio: para que taylor funcione tenemos que trabajar cerca del punto. Esto significa que el resultado va a ser local.
 
 
-\begin{theorem}[Teorema de la aplicación contractiva]
+\begin{theorem}[Teorema\IS de la aplicación contractiva]
 Sea $\appl{F}{\real^N}{\real^N}$ o\\
 Sea $\appl{F}{C}{C}, C\in \real^N$, cerrado, o\\
 Sea $\appl{F}{K}{K}, K\in \real^N$, compacto.
@@ -1082,64 +1082,74 @@ $$\implies \exists ! x_0 \in\left\{\begin{matrix}         \real^N\\
 \end{theorem}
 
 
-\begin{proof}
- Paso 1: Acotación
- $$
-  \md{F(\gx) - F(\ga)} \leq \alpha\md{\gx-\ga}$$
-  $$\md{F(\gx)} = \md{(F(\gx)-F(\ga)+F(\ga)} \leq \md{F(\gx)-F(\ga)} + \md{F(\ga)}\\
-  \leq \alpha \md{\gx-\ga} + \md{F(\ga)}$$
+\begin{proof} Primero llevamos los casos de $C$ y $\real^n$ a un conjunto compacto $K$. Partimos de 
+
+\begin{equation}
+\md{F(\gx) - F(\ga)} \leq \alpha\md{\gx-\ga} \label{eqAC_hip}
+\end{equation} 
+
+y veamos qué ocurre para un vector general $\gx$: \[ \md{F(\gx)} = \md{(F(\gx)-F(\ga)+F(\ga)} \leq \md{F(\gx)-F(\ga)} + \md{F(\ga)} \] 
+
+Aplicando (\ref{eqAC_hip}) tenemos que 
+\[\md{F(\gx)} ≤ \alpha \md{\gx-\ga} + \md{F(\ga)} \]
   
-  Tomamos $a=0$ (si  $0 \notin C $ solo haría falta una pequeña traslación), y supongamos \[\md{x} < R  \implies \md{F(\gx)} \leq \alpha R + \md{F(\gor{0})} < R\]
-  Es decir, F toma un compacto y lo lleva en sí mismo: $\appl{F}{B_R(0)}{B_R(0)}$
+  Si tomamos $\ga=0$ (en el caso  $0 \notin C $ solo haría falta una pequeña traslación), y suponemos $ \md{x} < R$\footnote*{Esto es razonable de suponer puesto que $x\in K$, compacto y por lo tanto accotado.}, tenemos entonces que \[ \md{F(\gx)} \leq \alpha R + \md{F(\gor{0})} < R\]
+  Es decir, $F$ toma un compacto y lo lleva en sí mismo: $\appl{F}{B_R(0)}{B_R(0)}$. Podemos seguir la demostración ahora suponiendo que estamos trabajando siempre sobre un compacto.
+  
+  El siguiente paso es llevar a cabo un \textbf{proceso iterativo}. Tenemos \[ \appl{F}{K}{K} \] con  $K\subset \real^N$ conjunto compacto. Definimos entonces la sucesión de $\{x_n\}_{n \in \nat} \subset K$, construido de forma iterativa con $x_n = F(x_{n-1})$. Vamos a demostrar que esa sucesión es de Cauchy, lo que implicaría que es convergente.
+  
+ Para ello, dado $\epsilon > 0$ hay que hallar $n_0$ tal que si $n,m>n_0$ entonces $\md{x_n-x_m}<\epsilon$. Pongamos, para facilitar la demostración, que $n>m$. 
  
- Paso 2: Proceso iterativo.
+ Entonces, sumamos y restamos a ese módulo cada uno de los $x_i$ entre $n$ y $m$: 
  
- Tenemos que $\appl{F}{K}{K}, K\in \real^N$, compacto.
+ \begin{equation}
+  \md{x_n - x_m} = \md{x_n \pm x_{n-1} \pm \dotsb \pm x_{m+1} - x_m} \leq \sum_{i=m}^n \md{x_i - x_{i-1}} \label{eqAC_sum}
+ \end{equation}
  
- $\{x_N\}_{n \in \mathbb{N}} \subset K, x_N = F(x_{n-1})$
- \begin{lemma}
-  $\{x_N\}_{n \in \mathbb{N}}$ es de Cauchy
- \end{lemma}
- 
- \begin{proof}
- Dado $\varepsilon > 0$ hay que hallar $n_0$ tal que si $n,m>n_0$ entonces $\md{x_n-x_m}<\varepsilon$
- 
- 
-  $$\md{x_n - x_m} = \md{x_n \pm x_{n-1} \pm \dots \pm x_{m+1} - x_m} \leq \sum_{i=n}^m \md{x_i - x_{i-1}} N>M!!!$$
- \begin{align*}
-  \md{x_n - x_{n-1}} &= \md{F(x_{n-1}) - F(x_{n-2})} \leq \alpha \md{x_{n-1} - x_{n-2}}\\
-    & = \alpha \md{F(x_{n-2}) - F(x_{n-3})} \leq \alpha ^2 \md{x_{n-2}-x_{n-3}}\\
-    & = \vdots\\
-    & \leq \alpha^{n-2} \md{x_2-x_1}
- \end{align*}
- 
- $$\md{x_n-x_m} \leq * \leq \underbrace{\{\alpha^{n-2} + \alpha^{n-3} + \dots + \alpha^{m-1}\}}_{\sum_{k=m-1}^{n-2} \alpha^k = \alpha^{m-1}\frac{1-\alpha^{n-m}}{1-\alpha} \leq \frac{\alpha^{m-1}}{1-\alpha} \md{x_2 - x_1} < \varepsilon \text{ tomando } n>m>n_0}$$
- 
- $$\left.\begin{matrix}
-x_n = F(x_{n-1})
- x_n \convs x_0
- x_{n-1} \convs x_0
- \text{ F continua}          
-         \end{matrix}
- \right\} \implies F(x_{n-1} \rightarrow F(x_0)$$
- 
- Unicidad del punto fijo:
+Operamos ahora con cada uno de esos sumandos. Por ejemplo, con $i = n$, vemos que 
 
- Supongamos $\left\{ \begin{matrix}
-                      a = F(a)\\
-                      b= F(b)
-                     \end{matrix}\right.$
- Demostración: $\md{a-b} = \md{F(a)-F(b)}\leq \alpha \md{a-b} < \md{a-b} \implies $ Contradicción!
+\begin{gather*}
+\md{x_n - x_{n-1}} = \md{F(x_{n-1}) - F(x_{n-2})} \leq \alpha \md{x_{n-1} - x_{n-2}} = \\
+= \alpha \md{F(x_{n-2}) - F(x_{n-3})} ≤ \alpha ^2 \md{x_{n-2}-x_{n-3}} 
+\end{gather*}
 
+Si seguimos operando, llegaremos a que $ \md{x_n - x_{n-1}} \leq \alpha^{n-2} \md{x_2-x_1}$. Generalizando, tenemos que
+
+\[ \md{x_i - x_{i-1}} ≤ \alpha^{i-2} \md{x_2-x_1} \]
+
+Aplicando esta fórmula en (\ref{eqAC_sum})
  
- \end{proof}
+\[ \md{x_n-x_m} \leq \left(\alpha^{n-2} + \alpha^{n-3} + \dots + \alpha^{m-1}\right) \md{x_2 - x_1}\]
+
+Esa suma de $\alpha$'s es la suma de una sucesión geométrica de razón $\alpha$. Por lo tanto, la podemos simplificar como \[\sum_{k=m-1}^{n-2} \alpha^k = \alpha^{m-1}\frac{1-\alpha^{n-m}}{1-\alpha} ≤ \frac{\alpha^{m-1}}{1-\alpha} \], y la ecuación nos queda de la forma \[ \frac{\alpha^{m-1}}{1-\alpha}  \md{x_2-x_1} \]. Dado que $\dfrac{\alpha^{m-1}}{1-\alpha}  \convs[][n_0] 0$, tendremos que tomando un $n_0$ suficientemente grande se cumple que 
+
+\[ \frac{\alpha^{m-1}}{1-\alpha}  \md{x_2-x_1} < \varepsilon \]
+
+para un $\epsilon$ arbitrariamente pequeño. Con esto \textbf{demostramos que la sucesión de $x_n$ es de Cauchy} y por lo tanto es convergente a un cierto límite $x_0$.
+
+Tal y como habíamos construido la sucesión, tenemos que 
+
+\begin{equation} \label{eqAC_suc}x_n= F(x_{n-1}) \end{equation}
+
+$x_n$ converge a $x_0$ cuando $n\to\infty$. De la misma forma, como $x_{n-1}$ también converge a $x_0$, está claro que $F(x_{n-1})$ convergerá a $F(x_0)$. Sustituyendo estos dos resultados en (\ref{eqAC_suc}), tenemos que 
+
+\[ x_0 = F(x_0) \]
+
+Hemos demostrado por lo tanto que el límite de esa sucesión que hemos construido \textbf{es un punto fijo} de la función. 
+
+Nos queda \textbf{demostrar ahora que ese punto es único}, y lo haremos por reducción al absurdo:
+
+ Supongamos que existen dos puntos fijos:
  
- 
+ \begin{gather*}
+ a = F(a)\\
+ b= F(b)
+\end{gather*}
+                     
+ Entonces tendríamos que \[ \md{a-b} = \md{F(a)-F(b)}\leq \alpha \md{a-b} \] pero como $\alpha$ es menor estricto que 1, entonces tendríamos que \[ \md{a-b} < \md{a-b} \], lo que es una contradicción.
 \end{proof}
 
-Ejemplo: (¿Cuando ha acabado la demostración??)
-
-E.D.O.
+El teorema de la aplicación contractiva nos sirve, por ejemplo, para comprobar si hay una solución de una ecuación diferencial ordinaria (EDO).
 
 $$\left.\begin{matrix}y'(x) = f(x,y(x))\\
         y(x_0) = y_0
@@ -1178,7 +1188,8 @@ Al tener definida una norma podemos definir convergencia y continuidad:
 
 
 
-
+\newpage
+\printindex
 
 
 \end{document}
