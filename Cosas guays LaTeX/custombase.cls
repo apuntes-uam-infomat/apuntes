@@ -13,7 +13,7 @@
 \RequirePackage{titling} % No tengo claro para qué es esto
 \RequirePackage{fancyhdr} % Cabeceras de página
 \RequirePackage{lastpage} % Módulo para añadir una referencia a la última página
-\RequirePackage[spanish]{babel} % Cadenas de LaTeX traducidas al español 
+\RequirePackage[spanish,es-noquoting]{babel} % Cadenas de LaTeX traducidas al español 
 \RequirePackage{amsthm} % Paquete de matemáticas
 \RequirePackage{framed} % Marcos 
 \RequirePackage{mdframed} % Más marcos
