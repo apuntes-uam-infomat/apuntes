@@ -34,7 +34,7 @@ La mediana se calcula de la siguiente forma: dado un conjunto de datos $\{x_1,\d
 \subsection{Estadísticos de dispersión}
 
 \begin{defn}[Varianza]
-\[ \sigma^2 = \frac{1}{n} \sum_{i=1}n \left(x_i - \avg{x}\right)^2 = \frac{1}{n} \sum_{i=1}n x_i^2 - \avg{x}^2 \]
+\[ \sigma^2 = \frac{1}{n} \sum_{i=1}^n \left(x_i - \avg{x}\right)^2 = \frac{1}{n} \sum_{i=1}^n x_i^2 - \avg{x}^2 \]
 \end{defn}
 
 \begin{defn}[Desviación típica]
@@ -59,7 +59,7 @@ Los cuartiles son los tres datos que dejan a la izquierda el 25, 50 y 75 por cie
 
 Hay varios métodos para el cálculo de cuantiles. Para hacerlo a mano, podemos usar el siguiente método.
 
-Si el dato en la posición $p(n+1)$ no es un número entero, entones se interpola entre las observaciones ordenadas que están en la posición $\floor{p(n+1)}$ y $\floor{p(n+1)} + 1$ de la siguiente forma: sea $j$ la parte entera de $p(n+1)$ y $m$ la parte decimal. Entonces, \[ q_p = (1-m)x_j + m x_{j+1} \]
+Si el dato en la posición $p(n+1)$ no es un número entero, entonces se interpola entre las observaciones ordenadas que están en la posición $\floor{p(n+1)}$ y $\floor{p(n+1)} + 1$ de la siguiente forma: sea $j$ la parte entera de $p(n+1)$ y $m$ la parte decimal. Entonces, \[ q_p = (1-m)x_j + m x_{j+1} \]
 
 
 \begin{defn}[Coeficiente\IS de asimetría]
@@ -235,7 +235,7 @@ Se dice que $X_n$ converge en probabilidad a $X$ si $\forall \epsilon > 0$ se ti
 Notación: \[ X_n \convprob X \]
 \end{defn}
 
-\begin{defn}[Convergencia casi segura] También denotada c.s o a.s en inglés, convergencia en casi todo punto (c.t.p) o convergencia con probabilidad 1. Se dice que $X_n$ converge a $X$ casi seguro si el conjunto de puntos que no son convergentes tiende a ser vacío. Es decir \[ \prob{X_n \convs X} = 1\]
+\begin{defn}[Convergencia\IS casi segura] También denotada c.s o a.s en inglés, convergencia en casi todo punto (c.t.p) o convergencia con probabilidad 1. Se dice que $X_n$ converge a $X$ casi seguro si el conjunto de puntos que no son convergentes tiende a ser vacío. Es decir \[ \prob{X_n \convs X} = 1\]
 
 Más estrictamente, la condición se expresa como \[\prob{\omega \in \Omega\tq X_n(\omega) \convs X(\omega)} = 1\]
 
@@ -289,7 +289,7 @@ Sin embargo, surge una duda: ¿converge la función de distribución empírica a
 Intuitivamente, podemos pensar que cuantos más puntos cojamos más se aproximará a la función de distribución original. De hecho, eso es lo que demuestra el siguiente teorema:
 
 \begin{theorem}[Teorema\IS de Glivenko-Cantelli] Sean $\{x_n\}$ v.a.i.i.d con función de distribución $F$. Se verifica que
-
+\label{thmGlivenko}
 \[ \md{\fd_n - F}_\infty=\sup_{t\in\real} \abs{\fd_n(t) - F(t)} \convcs 0 \]
 
 donde $\md{\fd_n - F}_\infty$ es el \index{Estadístico! de Kolmogorov-Smirnov} \textbf{estadístico de Kolmogorov-Smirnov}.
@@ -356,8 +356,113 @@ De la misma forma, usando (\ref{eqConvIzq}) tenemos que \[ \max_{i=1,\dotsc ,k} 
 \[ \lim_{n\to\infty} \sup_{t\in\real} \abs{\fd_n(t) - F(t)}  =  \lim_{n\to\infty} \md{\fd_n - F}_\infty ≤ \epsilon \]
 
 para cualquier $\epsilon > 0$ arbitrario que cojamos. Es decir, que \[ \md{\fd_n - F}_\infty=\sup_{t\in\real} \abs{\fd_n(t) - F(t)} \convcs 0 \]
-
 \end{proof}
+
+\subsection{Estadísticos}
+
+Cuando extraemos una muestra $\{x_n\}$ de $X$ se pueden calcular algunas \textit{medidas resumen}. Cualquiera de ellas se puede expresar matemáticamente como una función $T(x_1,\dotsc,x_n)$ de la muestra. 
+
+\begin{defn}[Estadístico]
+Sea $T(x_1,\dotsc,x_n)$ una función cuyo dominio incluye el espacio muestral del vector aleatorio $(X_1, \dotsc, X_n)$. Entonces la variable aleatoria $T$ se denomina \textbf{estadístico}. La única restricción es que un estadístico no puede ser función de un parámetro.
+\end{defn}
+
+Como la distribución de $T$ se calcula a partir de la distribución de las variables $X_i$ que constituyen la muestra, la denominaremos distribución de $T$ en el muestreo (\textit{sampling distribution).}
+
+\begin{defn}[Error\IS típico]\index{Error!estándar}
+El error estándar o error típico $\sigma$ de un estadístico $T$ es la desviación típica de su distribución en el muestreo. Como en ocasiones depende de alguna cantidad desconocida, también se denomina error típico a una estimación de ese valor.
+\end{defn}
+
+En ocasiones, se cumple que $\dfrac{T}{\sigma}$ sigue una distribución t de Student, lo que nos permitirá definir intervalos de confianza.
+
+\subsubsection{Media muestral y poblacional}
+
+\begin{defn}[Media\IS muestral] La media muestral \[ \avg{X} = \frac{\sum_{i=1}^n X_i}{n} \] se puede expresar de la siguiente forma
+
+\[ \avg{X} = \int_\real x\,d\fd_n(x) \]
+\end{defn}
+
+La definición es análoga con la de la media poblacional
+
+\[ µ = \int_\real x \,dF(x) \]
+
+Esto nos da una clave de la estadística: sustituir todo lo que desconozco de la población con su análogo muestral (en este caso, pasamos de la función de distribución teórica a la función de distribución empírica). Sólo quedaría ver si los estimadores que resultan son adecuados.
+
+La media muestral tiene otras relaciones muy importantes con $µ$:
+
+\begin{enumerate}
+\item $\avg{X}$ es \index{Estimador!insesgado}\index{Estimador!centrado} \textbf{estimador insesgado o centrado} de µ: $ \esp{\avg{X}} = µ$
+\item $\var{\avg{X}} = \dfrac{\sigma^2}{n}$. Como es inversamente proporcional, está claro que cuantos más datos haya mejor nos aproximaremos a lo que queremos estimar.
+\end{enumerate}
+
+\begin{theorem}[Teorema\IS central del límite] Suponemos que $\{X_n\}$ son v.a.i.i.d. con media $µ$ y desviación típica $\sigma$ finitas. Entonces
+\label{thmCentral}
+\[ \sqrt{n}\frac{\avg{X}-µ}{\sigma} \convdist N(0,1) \]
+
+Si denotamos la función de distribución de la normal como \[ \Phi(x) = \int_{-\infty}^x \frac{1}{\sqrt{2\pi}} e^{-\frac{t^2}{2}}\] entonces
+
+\[ \forall t\in\real\quad \prob{ \sqrt{n}\frac{\avg{X}-µ}{\sigma} ≤ t } \convs \Phi(t) \]
+
+Por tanto, para $n$ grande se tiene
+
+\[ \prob{\sqrt{n} \left(\avg{X} - µ\right) ≤ x} ≈ \Phi(\frac{x}{\sigma}) \]
+
+\textbf{aunque las $X_i$ no tengan distribución normal.}
+
+\end{theorem}
+
+\subsubsection{Varianza muestral y poblacional}
+
+Una medida importante de dispersión de una variable aleatoria es la varianza \begin{equation}
+ \mathbb{V}(X)=\sigma^2 = \int_\real(x-µ)^2 \,dF(x) \label{eqVarianza}
+\end{equation}
+
+\begin{defn}[Varianza\IS muestral]E análogo muestral de $\sigma^2$ es la \textbf{varianza muestral.}. Utilizando el criterio \textit{plugin} en (\ref{eqVarianza})
+
+\[\hat{\sigma}^2_n = \int_\real (x-\avg{X})^2\,d\fd_n(x) = \frac{1}{n}\sum_{i=1}^n(X_i - \avg{X})^2 \]
+\end{defn}
+
+\begin{theorem} La varianza muestral cumple lo siguiente
+
+\begin{gather*}
+\esp{\hat{\sigma}^2_n} = \frac{n-1}{n}\sigma^2\\
+\hat{\sigma}^2_n \convcs \sigma^2
+\end{gather*}
+\end{theorem}
+
+Por lo tanto, la varianza muestral es un estimador sesgado. No es un problema grande ya que cuando $n\to\infty$ acaba convergiendo a $\sigma^2$ y el sesgo 
+
+\[ \esp{\hat{\sigma}^2_n} - \sigma^2= \frac{n-1}{n}\sigma^2 - \sigma^2 = \frac{-1}{n}\sigma^2 \]
+
+también tiende a cero. Es decir, es \index{Asintóticamente!insesgado} \textbf{asintóticamente insesgado}.
+
+\begin{defn}[Cuasivarianza\IS muestral] En lugar de usar $\hat{\sigma}^2_n$ usamos la cuasivarianza muestral, definida como
+
+\[ S^2 = \frac{n}{n-1}\hat{\sigma}^2_n \] de tal forma que se tiene
+
+\begin{gather*}
+\esp{S^2} = \sigma^2 \\
+S^2 \convcs \sigma^2 
+\end{gather*}
+\end{defn}
+
+\subsubsection{Estadísticos de orden}
+
+\begin{defn}[Estadístico\IS de orden]Dada una muestra $\{X_n\}$, se denotan como \[ X_{(1)} ≤ \dotsb ≤ X_{(n)} \] las observaciones de la muestra ordenadas de menor a mayor, llamados \textbf{estadísticos de orden}. Cuando la distribución de las v.a. es continua, la probabilidad de coincidencia en valores es $0$ y con probabilidad $1$ se tiene que \[ X_{(1)} < \dotsb < X_{(n)} \]
+\end{defn}
+
+Los estadísticos de orden pueden utilizarse para definir la mediana o los cuartiles. Sin embargo, podemos usar la función cuantílica para definir mejor estos conceptos.
+
+\begin{defn}[Función\IS cuantílica] La función cuantílica en $p$ es el punto que deja una probabilidad $p$ a la izquierda, de tal forma que una proporción $p$ de los individuos de la población $X$ sería menor que el cuantil poblacional de orden $p$.
+
+La función cuantílica correspondiente a la función de distribución $F$ como la función 
+
+\begin{gather*}
+\appl{\inv{F}}{\real}{(0,1)} \\
+\inv{F}(p) = \inf \left\lbrace x \tq F(x) ≥ p \right\rbrace 
+\end{gather*}
+\end{defn}
+
+La función cuantílica nos permite obtener los \textbf{cuantiles poblacionales de orden $p$} \index{Cuantil!poblacional} al valor $\inv{F}(p)$. El análogo es el \textbf{cuantil muestral de orden $p$}, \index{Cuantil!muestral} se define a partir de la función de distribución empírica como $\inv{\fd_n}(p)$.
 
 \appendix
 \section{Distribuciones notables}

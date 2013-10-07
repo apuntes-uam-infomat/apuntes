@@ -36,3 +36,95 @@ Por lo tanto, la desviación típica sí se dobla.
 \spart Efectivamente: cambiar el signo haría una reflexión de los datos sobre el eje Y y la asimetría estaría orientada hacia el lado contrario. 
 
 \end{problem}
+
+\subsection{Tema 2 - Muestreo aleatorio}
+
+\begin{problem}[1] Se desea estimar el momento de orden 4, $\alpha_3 = \esp{X^3}$ en una v.a. $X$ con distirbución exponencial de parámetro 2, es decir, la función de distribución de $X$ es $F(t) = \prob{X ≤ t} = 1 - e^{-2t}$ para $t≥0$. Definir un estimador natural para $\alpha_3$ y calcular su error cuadrático medio.
+
+\solution
+
+Usando el criterio de \textit{plugin}, podríamos definir el estimador \[ \hat{\alpha}_3 = \int_\real x^3\,d\fd_n(x) \]. 
+
+Calculamos ahora el error cuadrático medio:
+
+\begin{gather*}
+ECM(\hat{\alpha}_3) = \esp{\hat{\alpha}_3 - \alpha_3}^2 = \esp{(\hat{\alpha}_3 - \esp{\hat{\alpha}_3} + \esp{\hat{\alpha}_3} - \alpha_3) ^2} = \\
+= \esp{(\hat{\alpha}_3 - \esp{\hat{\alpha_3}})^2 +  (\esp{\hat{\alpha_3}}- \alpha_3)^2 + 2(\hat{\alpha}_3 - \esp{\hat{\alpha_3}}) (\esp{\hat{\alpha_3}}- \alpha_3)} = \\
+= \underbrace{\esp{(\hat{\alpha_3} - \esp{\hat{\alpha_3}})^2}}_{(a)}+ \underbrace{\left(\esp{\hat{\alpha_3}} - \alpha_3\right)^2}_{(b)} + \underbrace{2 \cdot \esp{ (\esp{\hat{\alpha_3}}- \alpha_3)^2 + 2(\hat{\alpha}_3 - \esp{\hat{\alpha_3}})}}_{(c)} 
+\end{gather*}
+
+Aquí ya hay cosas raras. (c) es cero por alguna razón, luego hay que calcular la varianza y el sesgo.
+
+\[ \text{sesgo}(\hat{\alpha}_3) = \esp{\hat{\alpha}_3} - \alpha_3 = \alpha_3 - \alpha_3 = 0 \]
+
+\[ \var{\hat{\alpha}_3} = \dotsc \] 
+
+Queda para mañana. 
+
+\end{problem}
+
+\begin{problem}[2] Supongamos que la muestra tiene tamaño $n=50$ y que la distribución de las $X_i$ es una $N(4,1)$. 
+
+\ppart Obtener, utilizando la desigualdad de Chebichev, una cota superior para la probabilidad $\prob{\abs{\avg{X} - 4} > 0.3}$.
+\ppart Calcula exactamente $\prob{\abs{\avg{X} - 4} > 0.3}$ utilizando la distribución de $X_i$. 
+
+\solution
+\spart
+
+Como la media es cuatro, la desigualdad de Checbichev nos da una cota de 
+
+\[ \frac{\var{\avg{x}}}{0.3^2} = \frac{\var{X}}{n \cdot 0.3^2} \simeq 0.22 \]
+
+\spart
+
+Normalizamos
+
+\[ Z = \frac{\avg{X} - 4}{\frac{1}{\sqrt{50}}} ~ N(0,1) \]
+
+y calculamos.
+
+\[ \prob{\abs{\avg{X} - 4} > 0.3} = \prob{\abs{Z} > \frac{0.3}{\frac{1}{\sqrt{50}}}} = 2 \cdot \prob{Z > 2.12} = 0.038 \]
+
+\end{problem}
+
+\begin{problem}[4] Denotemos por 
+
+\[ C_n = \int_\real \left(\fd_n(t) - F(t)\right)^2 \, dF(t) \]
+
+la llamada discrepancia de Cramer-Von Mises entre $\fd_n$ y $F$. ¿Converge a cero casi seguro esta discrepancia?
+
+Calcular la distribución asintótica de la sucesión $D_n = \sqrt{n}\left(\fd_n(t) - F(t)\right)$ para un valor fijo $t\in\real$.
+
+\solution
+
+\[ C_n = \int_\real \left(\fd_n(t) - F(t)\right)^2 \, dF(t) = \int_\real \left(\fd_n(t) - F(t)\right)^2 f(t) \, dt \]
+
+Como por el teorema de Glivenko-Cantelli (\ref{thmGlivenko}) tenemos que 
+
+\[ \fd_n(t) - F(t) ≤ \sup_t \abs{\fd_n(t) - F(t)} = \md{\fd_n - F}_\infty \]
+
+entonces 
+
+\[ \int_\real \left(\fd_n(t) - F(t)\right)^2 f(t) \, dt ≤  \md{\fd_n - F}_\infty^2 \int_\real f(t) \,dt = \md{\fd_n - F}_\infty^2 \]
+
+Igualmente por Glivenko-Cantelli, 
+
+\[ \md{\fd_n - F}_\infty^2 \convcs 0  \qed \]
+
+\spart
+
+Para calcular la distirbución asintótica de \[ D_n = \sqrt{n}\left(\fd_n(t) - F(t)\right) \] usamos el Teorema Central del Límite (\ref{thmCentral}). Necesitamos algo que se asemeje a una media muestral, y de hecho
+
+\[ \fd_n(t) = \frac{1}{n} \sum_{i=1}^n \ind_{(-\infty, t]} (X_i) = \frac{1}{n} \sum_{i=1}^n Y_i = \avg{Y} \]
+
+Por otra parte, $Y = \ind_{(-\infty, t]}(X)$ y por lo tanto \[ \esp{Y} = \esp{\ind_{(-\infty, t]}(X)} = \prob{X ≤ t} = F(t) \]
+
+Ya podemos aplicar el TCL, pero nos falta saber cuál es la desviación típica de $Y$. Como es una distribución de Bernoulli 
+
+\[ \mathbb{V}(Y) = p(1-p) = F(t)(1-F(t)) \]
+
+y por lo tanto 
+
+\[ D_n \convdist N\left(0, \sqrt{F(t)(1-F(t))}\right) \]
+
+\end{problem}
