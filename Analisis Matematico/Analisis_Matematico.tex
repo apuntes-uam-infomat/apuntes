@@ -1,3 +1,4 @@
+
 \documentclass{apuntes}
 \newcommand{\acum}[1]{\#1 \subset(#1) }
 \usepackage{tikz}
@@ -664,10 +665,10 @@ Queremos buscar ahora cuánto vale la norma de una matriz cuando usamos la norma
  Sea A una matriz cualquiera, entonces $\trans{A}A$ es simétrica.
 \end{lemma}
 \begin{lemma}
- \[ \underbrace{\pesc{\gx,A\gy}}_{\text{Producto en } \real^n} = \underbrace{\pesc{A^T\gx,\gy}}_{\text{Producto en } \real^M} \]
+ \[ \underbrace{\pesc{\gx,A\gy}}_{\text{Producto en } \real^n} = \underbrace{\pesc{A^T \gx,\gy}}_{\text{Producto en } \real^M} \]
 \end{lemma}
 
-Tenemos $A^TA$ diagonalizable, de dimensión $N \times N$. Buscamos cuánto vale $\norm{A\gx}$ con  $\gx \in \real^N$. Empezamos desarrollando el vector en una base ortonormal de  $A^TA$: \[ \gx = \sum \alpha_i \gv_i \] y por lo tanto \[ ||\gx|| = \sum \alpha_i^2 \pesc{\gv_i,\gv_i}\].
+Tenemos $A^TA$ diagonalizable, de dimensión $N \times N$. Buscamos cuánto vale $\norm{A\gx}$ con  $\gx \in \real^N$. Empezamos desarrollando el vector en una base ortonormal de  $A^T A$: \[ \gx = \sum \alpha_i \gv_i \] y por lo tanto \[ ||\gx|| = \sum \alpha_i^2 \pesc{\gv_i,\gv_i}\].
  
  Desarrollamos el producto \[\trans{A}A\gx = \trans{A}A\left(\sum \alpha_i \gv_i\right) = \sum \left(\alpha_i\lambda_i\gor{v}_i\right) \] donde $\lambda_i$ son los autovalres de $\trans{A}A$. 
  
@@ -1568,7 +1569,18 @@ Definimos $H(x,y,z) = (x,y,F(x,y,z))$. Esta función aplana la superficie del co
 Pero esta función nos aplana la superficie del conjunto de nivel, pero lo que estamos buscando es desde un espacio bidimensional (conjunto de partida de $f$) llegar a la superficie de nivel, que es una superficie de $\real^3$, el espacio de partida de $F$. Entonces vamos a buscar $H^{-1}$.
 
 El problema de esta función es que $\appl{H}{\real^3}{\real^3}$, pero toda la información que necesitamos es la tercera componente de $H^{-1}$.
+\begin{theorem}[Teorema\IS de la función inversa] Existen abiertos $U, V$ con $(a,b,c) \in U$ y  $V\in (a,b,0)$; y una única inversa local 
 
+\[ \appl{\inv{H}}{V}{U} \]
+
+De tal forma que 
+
+\[ \inv{H}(u,v,w) = (x,y,z) \dimplies (u,v,w) = H(x,y,z) = (x,y,F(x,y,z)) \]
+
+Es decir \[ \inv{H} (u,v,w) = (u,v,g(u,v,w)) \]
+
+donde $g$ es la función única que depende de $(u,v,	w)$, y no es más que la tercera componente de la inversa que hemos construido.
+\end{theorem}
 
 \begin{proof}
  $$H\circ H^{-1} \equiv Id$$
@@ -1598,24 +1610,142 @@ $$Df = \begin{pmatrix}
        \end{pmatrix}
 $$
 
-$$det(DF) = 8^2 + 40y^2 \neq \text{ si } (x,y) \neq (0,0)$$
+$$det(DF) = 8x^2 + 40y^2 \neq \text{ si } (x,y) \neq (0,0)$$
 
 Cuando el determinante sea 0, significa que no puedo aplicar el teorema, por tanto, no sé si la función es invertible o no. Aplicamos los fundamentos. ¿Es inyectiva la función?
 
 No es inyectiva en ningún entorno del (0,0).
 
+\paragraph{Caso general}
+\begin{theorem}[Teorema de la función implícita]
+
+$n$ ecuaciones, $n+m$ incógnitas.
+
+$$\appl{F}{\Omega\subset\underbrace{\real^M}_{\text{x,y}} \times \underbrace{\real^N}_{\text{z}}}{\real^N}$$
+
+Notación:
+
+$F = (F_1,...,F_N)$
+
+Elementos de $\real^M\times\real^N \equiv (x_1,x_2,...,x_m,y_1,y_2,...,y_n) = (\gor{x},\gy)$.
+
+Supongamos $F\in C^1$. Sea $\ga \in \real^M, \gor{b} \in \real^N \tlq (\gor{a},\gor{b})\in \Omega , F(a,b)=0$
+
+Supongamos $D_yF(\ga,\gb)$ no singular, $det(D_yF)\neq 0$ siendo:
+$$D_yF = \begin{pmatrix}
+          \dpa{F_1}{y_1}&...&\dpa{F_n}{y_1}\\
+          \vdots&\ddots&\vdots\\
+          \dpa{F_n}{y_n}&\cdots&\dpa{F_n}{y_n}
+         \end{pmatrix}$$
+         
+\paragraph{Entonces:} Existen abiertos $\omega \subset \real^M, \Theta \in\real^n$, con $\ga \in \omega, \gb \in \Theta$ y una única función: $\appl{g}{\omega\subset\real^M}{\Theta \subset\real^N}, g\in C^1(\omega)$
+
+Tal que:
+\begin{itemize}
+ \item $g(\ga) = \gb$
+ \item $F(\gx,g(\gx)) = \gor{0}, \forall \gx \in \omega$
+ \item $\displaystyle Dg(\gx) = - \left[D_yF(\gx,g(\gx))\right]^{-1} \cdot D_xF(\gx,g(\gx))$
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+ 
+ Definimos: $H(\gx,\gy) = (\gx,F(\gx,\gy))$. Esta función $\appl{H}{\real^{m+n}}{\real^{n+m}}, H\in C^1$. Además $H(\ga,\gb) = (\ga,F(\ga,\gb)) = (\ga,\gor{0})$
+ 
+ $$DH_{(a,b)} = \left(
+                 %\underbrace{1&0&0&...&0}_{m}&\underbrace{0&...&0}_{n}\\
+                 %\underbrace{0&1&0&...&0}_{}&\underbrace{0&...&0}_{}\\
+                 \begin{array}{c|c}
+                 I_{m\times x} &  0_{m\times x}\\
+                 \hline
+                 D_x F_{n\times m} &  D_y F_{n\times n}
+                 \end{array}
+                 \right)
+$$
+
+$det(DH(\ga,\gb)) = det(D_y(\ga,\gb)) \neq 0$. Aplicando el teorema de la función inversa podemos invertir $H$ en un entorno de $H(\ga,\gb)$.Además, por el teorema también sabemos la unicidad y que $H \in C^1$.
+
+Problema: identificar $g$ dentro de $H^{-1}$.
+
+$$\underbrace{H(\gx,\gy)}_{\equiv (u,v)} = (\gx,F(\gx,gy))$$
+$$\implies H^{-1}(u,v) = (x,y) = (u,?)$$implícita
+Notación: $H^{-1}(u,v) = (u,\tilde{g}(u,v))$
+ 
+Estamos interesados en la restricción $H^{-1} (u,0) = (u,\tilde{g}(u,0))$. Podemos comprobar que $\tilde{g}(u)\in\real^N, u\in \real^m$.
+
+Tenemos
+\[H^{-1} (u,0) = (u,g(u)) \dimplies (u,0) = H(u,g(u)) = ( u,F(u,g(u)))\]
+
+
+Ya tenemos los 2 primeros apartados, vamos a por la fórmula:
+
+\[F(\gx,g(\gx)) = \gor{0}\]
+\[D_x[F(\gx,g(\gx))] = (\gor{0})\]
+\[D_x[F(\gx,g(\gx))] = \begin{pmatrix}
+                        \dpa{F_1(\gx,g(\gx))}{x_1}&\cdots&\dpa{F_1(\gx,g(\gx))}{x_n}\\
+                        \vdots&\ddots&\vdots\\
+                        \dpa{F_n(\gx,g(\gx))}{x_n}&\cdots &\dpa{F_n(\gx,g(\gx))}{x_n}
+                       \end{pmatrix}
+\]
+Donde: $$\dpa{F_1(\gx,g(\gx))}{x_1} = \dpa{F_1}{x_1} + \sum_{k=1}^{n} \dpa{F_1}{y_k}\cdot \dpa{y_k}{x_1} \sim (D_y F_1 \rightarrow) \cdot \begin{pmatrix}
+\dpa{g}{x_1}\\
+\vdots\\
+\dpa{g}{x_n}
+\end{pmatrix}
+$$
+
+Aplicando esto obtenemos:
+
+\[ D_x[F(\gx,g(\gx))] = (D_xF) + (D_yF)(Dg) = D_xF(D_x(\gx,g(\gx))) + D_yF(\gx,g(\gx))\cdot Dg(\gx)\]
+
+Despejando obtenemos la fórmula que nos decía el teorema.
+
+ 
+\end{proof}
+
+
+\paragraph{Ejemplo: Hoja 3, problema 16}
+
+$$z^3lg(xy) + 2x^2 + 2y^2 +z^2 + 8xz - z + 8 =0$$
+
+Demostrar que la ecuación anterior define DOS funciones $z = f_1(x,y), z = f_2(x,y)$ en un entorno de $(x,y)=(1,1)$.
+
+\paragraph{Solución: }
+
+Esto no contradice al teorema (que tiene unicidad) porque tenemos que anclar los puntos con los que vamos a trabajar en los que $F(x,y,z) = 0$. Asíque vamso a ver $F(1,1,z) = \underbrace{z^3lg(xy)}_{0} + 2 + 2 + z^2 + 8z -z +8 = 0 \implies z^2+7z+12 = 0 \implies $ 2 soluciones.
+
+Tenemos que ver qué pasa con $\displaystyle \dpa{F}{z}(1,1,z_i)$.
+
+\[\dpa{F}{z} = 3z^2lg(xy) + 2z -1\]
+\[\dpa{F}{z}(1,1,z_i) = 2z_i + 7 \neq 0\]
+
+Ahora estamos en condiciones de aplicar el teorema.
+
+También nos pide hallar el desarrollo de Taylor de orden 1 para $f_1$.
+
+\[f_1(x,y) = f_1(1,1) + \underbrace{\dpa{f_1}{x}(1,1)(x-1) + \dpa{f_1}{y}(1,1) (y-1)}_{\pesc{\nabla f_1(1,1),(x-1,y-1)}} + err\]
+¿Cómo calcular las derivadas? Recurrimos al teorema y sustituyendo $z=f_1(x,y)$
+\[(f_1(x,y))^3 lg(xy) + 2x^2 + 2y^2 + (f_1(x,y))^2 + 8x(f_1(x,y))-(f_1(x,y))+8 = 0\]
+Derivada con respecto a $x$:
+\[ 0 = (f_1(x,y))^2\dpa{f_1}{x}(x,y)\cdot lg(xy) + (f_1(x,y))^3 \frac{1}{x}+4x + 2(f_1(x,y))\dpa{f_1}{x}(x,y) + 8x\dpa{f_1}{x}(x,y) - \dpa{f_1}{x}(x,y)\]
+\[...\]
+Vamos a evaluar en $(1,1)$ lo que tenemos donde $f_1(x,y) = z_1$ y $f_2(x,y) = z_2$ y despejamos $\dpa{f_1}{x}$.
+
+
 \includepdf{Practicas/_PracticasAnalNum.pdf}
 \stepcounter{section}
-\newpage
-WTF DONDE VA¿¿¿¿¿¿
-\section{Convergencia y continuidad}
-Al tener definida una norma podemos definir convergencia y continuidad:
-\begin{itemize}
- \item\emph{Convergencia:} $\gor{x_n} \rightarrow \gx \longleftrightarrow \forall \varepsilon > 0 \exists n_0 tq n>n_0 \Rightarrow |||\gx-\gor{x_n}|||<\varepsilon$.
- \item\emph{Continuidad:} Sea $F: \mathbb{R}^N \rightarrow \mathbb{R}^M$ continua en $a$ $\dimplies \forall \varepsilon > 0 , \exists \delta > 0$ tal que $||\gx-\ga||_a < \delta \Rightarrow ||F(\gx)-F(\ga)||_b< \varepsilon$
-\end{itemize}
-\paragraph{Observación:} Es interensante ver que se puede hablar de continuidad tomando una norma en $\mathbb{R}^N$ y otra distinta en $\real^M$ sin por ello variar la definición de continuidad. Más adelante veremos que en $\real^N$ todas las normas son equivalentes y qué significa que las normas sean equivalentes. (Esto no sucederá en espacios de dimensión infinita)
-?????????????????
+
+% WTF DONDE VA¿¿¿¿¿¿
+% \section{Convergencia y continuidad}
+% Al tener definida una norma podemos definir convergencia y continuidad:
+% \begin{itemize}
+%  \item\emph{Convergencia:} $\gor{x_n} \rightarrow \gx \longleftrightarrow \forall \varepsilon > 0 \exists n_0 tq n>n_0 \Rightarrow |||\gx-\gor{x_n}|||<\varepsilon$.
+%  \item\emph{Continuidad:} Sea $F: \mathbb{R}^N \rightarrow \mathbb{R}^M$ continua en $a$ $\dimplies \forall \varepsilon > 0 , \exists \delta > 0$ tal que $||\gx-\ga||_a < \delta \Rightarrow ||F(\gx)-F(\ga)||_b< \varepsilon$
+% \end{itemize}
+% \paragraph{Observación:} Es interensante ver que se puede hablar de continuidad tomando una norma en $\mathbb{R}^N$ y otra distinta en $\real^M$ sin por ello variar la definición de continuidad. Más adelante veremos que en $\real^N$ todas las normas son equivalentes y qué significa que las normas sean equivalentes. (Esto no sucederá en espacios de dimensión infinita)
+% ?????????????????
+% 
+% 
 
 \begin{proof}
 Definimos $H(x,y,z) = (x,y,F(x,y,z))$, con $H\in C^1$, $H(a,b,c) = 0$. Entonces su matriz diferencial es
@@ -1628,19 +1758,6 @@ Definimos $H(x,y,z) = (x,y,F(x,y,z))$, con $H\in C^1$, $H(a,b,c) = 0$. Entonces 
 
 y por lo tanto \[ \det DH = \dpa{F}{z} ≠ 0 \]
 \end{proof}
-
-\begin{theorem}[Teorema\IS de la función inversa] Existen abiertos $U, V$ con $(a,b,c) \in U$ y  $V\in (a,b,0)$; y una única inversa local 
-
-\[ \appl{\inv{H}}{V}{U} \]
-
-De tal forma que 
-
-\[ \inv{H}(u,v,w) = (x,y,z) \dimplies (u,v,w) = H(x,y,z) = (x,y,F(x,y,z)) \]
-
-Es decir \[ \inv{H} (u,v,w) = (u,v,g(u,v,w)) \]
-
-donde $g$ es la función única que depende de $(u,v,	w)$, y no es más que la tercera componente de la inversa que hemos construido.
-\end{theorem}
 
 \newpage
 \printindex
