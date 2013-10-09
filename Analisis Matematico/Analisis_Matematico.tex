@@ -5,6 +5,7 @@
 \newcommand{\invers}[1]{#1 ^ {-1}}
 \newcommand{\f}{\invers{f}}
 \newcommand{\F}{\invers{F}}
+\newcommand{\Rnxm}{\real^M\times\real^N}
 \title{Análisis Matemático}
 \author{Víctor de Juan Sanz}
 \date{13/14 C1}
@@ -1822,7 +1823,86 @@ Entonces: $\exists$ un abierto $\omega$ con $(\ga,\gb) \in \omega$ y una funció
 
 \end{theorem}
 
-¿Aplicación de este teorema?
+9-oct
+
+\begin{proof}
+ Reordenamos las variables de manera que \[DF(\ga,\gb) = \begin{array}{c|c} A &B \end{array}\]
+ \[A \in M_{m\times m}, B = D_yF(\ga,\gb), \det B \neq 0\]
+ 
+ Definimos \[H(\gx,\gy) = (\gx,F(\gx,\gy))\]
+ Calculamos:
+ \[DH = \left(\begin{array}{c|c}
+         I & \\
+         \underbrace{D_xF}_{m\times n} & \underbrace{D_yF}_{n\times n}
+        \end{array}\right)\]
+        
+        
+  Estudiamos el determinante: $\det DH = \det D_yF \neq 0$ debido a la reordenación de las variables que hemos hecho al principio. Además, $F\in C^1 \implies H \in C^1$. Estamos en condiciones de aplicar el teorema de la función inversa. $\exists$ una inversa LOCAL $H^{-1}$
+
+  \[H(x,y) = (u,v) \dimplies (x,y) = H^{-1}(u,v) \equiv (\underbrace{G_1(u,v)}_{\real^M},\underbrace{G_2(u,v)}_{\real^N})\]
+  
+  \begin{gather*}
+H(H^{-1}(u,v)) = (u,v)\\
+H(G_1(u,v),G_2(u,v))\\
+= (G_1(u,v),F(G_1(u,v),G_2(u,v)))
+  \end{gather*}
+ Tomando $G(u,v) = (G_1(u,v),G_2(u,v))$ obtenemos que $F\circ G(u,v) = v$, para $(u,v)$ en un entorno del punto $(\ga,\gb)$
+ 
+\end{proof}
+
+\begin{theorem}[Teorema del Rango 2]
+ \[\appl{F}{\real^N}{\real^N\times\real^M}\]
+ \[F \in C^1, \ga \in \Omega\]
+ 
+ Rango de $DF(\ga) = n$ (máximo).
+ 
+ Entonces, $\exists \omega $ abierto en $\real^N\times\real^M$, con $F(\ga) \in \omega$.
+ 
+ Y una función $ G\in C^1(\omega), \appl{G}{\real^M\times\real^N}{\real^M\times\real^N}$
+ 
+  $G$ tiene inversa local diferenciable tal que $(G\circ F) (\underbrace{\gx}_{\real^N}) = (\underbrace{\gx}_{\real^N},\underbrace{\gor{0}}_{\real^M})$. 
+\end{theorem}
+
+\begin{proof}
+ \[DF(\ga) = \begin{pmatrix}
+              \dpa{F_1}{x_1} &\dots &\dpa{F_1}{x_n}\\
+              \vdots&\ddots&\vdots\\
+              \dpa{F_n+m}{x_1} &\dots & \dpa{F_n+m}{x_n}
+             \end{pmatrix}
+\]
+Reordemamos las $F_j$ de la siguiente manera:
+\[DF(\ga) = \overbrace{\left(\begin{array}{c}
+		  \det\neq 0\\
+		  \hline
+                  \text{Resto}
+                  \end{array}\right)}^{n \text{ columnas }}\begin{array}{c} \} \text{ n filas}\\ \} \text{ m filas}\end{array}\]
+
+Definimos: 
+\begin{align*}
+H: \real^N\times\real^M &\longrightarrow \real^N\times\real^M\\
+(\gx,\gy) &\longrightarrow \underbrace{F(\gx)}_{\real^N} + (\underbrace{\gor{0}}_{\real^N}, \underbrace{\gy}_{\real^M}) = (F(\gx),\gy)
+\end{align*}
+
+\[F(\gx) = H(\gx,\gy) = (F_1(\gx),F_2(\gx),...,F_n(\gx), F_{n+1}(\gx)+\gy_1,...,F_{n+m}(\gx)+\gy_m)\]
+\[DH = \left(\overbrace{D_xF}^{\text{ N columnas}} \; \begin{array}{|c}0  \\ \hline Id \end{array}  \right) \begin{array}{c} \}\text{ n filas} \\  \}\text{ m filas} \end{array} \implies \det DH \neq 0
+\]
+
+Estamos en condiciones de aplicar el teorema de la función inversa $ \implies \exists$ una inversa local $\invers{H}$ tal que
+\[\invers{H} \circ H(u,v) = (u,v), u\in \real^N,v\in\real^M\]
+En particular:
+\[\left. \begin{array}{c} \invers{H} \circ H (\gor{u},\gor{0}) = (\gor{u},\gor{0})\\
+H(\gor{u},\gor{0}) = (F(\gor{u}) + (\gor{0}, \gor{0})) \end{array} \right\} \implies \invers{H} \circ H(\gor{u}+(\gor{0},\gor{0})) = \invers{H}(F(\gor{u})) = (\gor{u},\gor{0})\]
+REVISAR: A partir del $\implies$ soy yo, no azorero.
+\end{proof}
+
+\begin{theorem}[Resultado general]
+\[\appl{F}{\real^N}{\real^K}, F\in C^1\]
+Con rango $DF = p < min{n,k}$
+
+Existe $\Gamma (u_1(\gx),...,u_n(\gx)) = (\underbrace{u_1,...,u_p,0,...,0}_{k})$, siendo $\Gamma = \Phi \circ F \circ \invers{\Phi}$.
+ 
+ Siendo $U$ un cambio de variable.
+\end{theorem}
 
 
 \includepdf{Practicas/_PracticasAnalNum.pdf}
@@ -1839,6 +1919,8 @@ Entonces: $\exists$ un abierto $\omega$ con $(\ga,\gb) \in \omega$ y una funció
 % ?????????????????
 % 
 % 
+
+Que es esto?
 
 \begin{proof}
 Definimos $H(x,y,z) = (x,y,F(x,y,z))$, con $H\in C^1$, $H(a,b,c) = 0$. Entonces su matriz diferencial es
