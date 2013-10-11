@@ -13,12 +13,13 @@
 \RequirePackage{titling} % No tengo claro para qué es esto
 \RequirePackage{fancyhdr} % Cabeceras de página
 \RequirePackage{lastpage} % Módulo para añadir una referencia a la última página
-\RequirePackage[spanish,es-noquoting]{babel} % Cadenas de LaTeX traducidas al español 
+\RequirePackage[spanish,es-noquoting,es-noshorthands]{babel} % Cadenas de LaTeX traducidas al español 
 \RequirePackage{amsthm} % Paquete de matemáticas
 \RequirePackage{framed} % Marcos 
 \RequirePackage{mdframed} % Más marcos
 \RequirePackage{exmath} % Nuestro querido paquete de utilidades
 \RequirePackage{hyperref} % Para que salgan enlaces en la tabla de contenidos y el glosario
+\RequirePackage{wrapfig}
 
 % Ajustes para los enlaces
 \hypersetup{

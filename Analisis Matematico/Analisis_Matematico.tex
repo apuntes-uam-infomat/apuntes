@@ -1,4 +1,3 @@
-
 \documentclass{apuntes}
 \newcommand{\acum}[1]{\#1 \subset(#1) }
 \usepackage{tikz}
@@ -67,7 +66,7 @@ a_N1 & \cdots& a_NN
 \cdot \begin{pmatrix} y_1\\
 																				\vdots\\ y_N \end{pmatrix}\]
 
-
+ 
 \begin{defn}[Norma\IS euclídea]
 \label{defnNorma}
 \[ \md{\gx} = \left(\pesc{\gx,\gx}\right)^{\frac{1}{2}} = \dotsb = \left(\sum_{i=1}^{N}x_i^2\right)^{\frac{1}{2}} \]
@@ -529,20 +528,43 @@ Es un conjunto conexo por abiertos porque no podemos separarlo en dos conjuntos 
 \end{remark}
 
 \subsection{Funciones continuas, abiertos y cerrados}
-Sea $F$ continua. Contrario a lo que podríamos intuir, 
+ 
+ Al tener definida una norma de vectores podemos definir convergencia y continuidad:
 
-1) A abierto $\nimplies F(A)$ abierto.
-2) B cerrado $\nimplies F(B)$ cerrado.
+\begin{defn}[Convergencia] Se dice que $\gx_n$ converge a $\gx$ (notación: $\gx_n \to \gx$) si
+
+\[  \forall \varepsilon > 0\; \exists n_0 \tq n > n_0 \implies \md{\gx-\gor{x}_n}<\varepsilon \]
+
+\end{defn}
+
+\begin{defn}[Función\IS continua] Sea $\appl{F}{\real^N}{\real^M}$. Se dice que $F$ es continua en $a$ si y sólo si 
+
+\[  \forall \varepsilon > 0 , \exists \delta > 0 \tq \md{\gx-\ga}_a < \delta \Rightarrow \md{F(\gx)-F(\ga)}_b< \varepsilon \]
+\label{dfnContinua}
+\end{defn}
+
+\begin{remark} Es interesante ver que se puede hablar de continuidad tomando una norma en $\mathbb{R}^N$ y otra distinta en $\real^M$ sin por ello variar la definición de continuidad, teniendo en cuenta que todas las normas son equivalentes. \end{remark}
+
+A partir de esta definición podemos estudiar qué hacen las funciones continuas con conjuntos abiertos y cerrados. Sea $F$ continua. Contrario a lo que podríamos intuir, 
+
+\begin{enumerate}
+\item A abierto no implica que  $F(A)$ sea abierto.
+\item B cerrado no implica que $F(B)$ sea cerrado.
+\end{enumerate}
+
+Empezamos definiendo en qué consiste una función inversa:
 
 \begin{defn}[Función\IS inversa] Dada \[\appl{F}{\real^N}{\real^N}\], definimos su inversa como
 \[ \inv{F}(A) = \left\{\gor{x}\in \real^N \tq F(\gor{x})\in A\right\} \]
 \end{defn}
 
+A partir de aquí podemos extraer dos conclusiones que sí nos ayudarán a discernir si un conjunto imagen es abierto y cerrado.
+
 \begin{theorem}[Función\IS inversa]\par\noindent\par
 \label{thmInversa}
 \begin{itemize}
-\item F continua $\y$ A abierto $\implies F^{-1} (A)$ abierto.
-\item F continua $\y$ B cerrado $\implies F^{-1} (A)$ cerrado.
+\item F continua y A abierto $\implies F^{-1} (A)$ abierto.
+\item F continua y B cerrado $\implies F^{-1} (A)$ cerrado.
 \end{itemize}
 \end{theorem}
 
@@ -557,23 +579,22 @@ que va de $\real^3$ a cierto conjunto $A = \{ a \in \real \tq a < 1 \}$. Podemos
 
 o, de otra forma, $M = \inv{F}(A)$. Según el teorema (\ref{thmInversa}), como $A$ es abierto entonces $M$ también es abierto.
 
-\begin{proof}
+\begin{proof} Demostramos las dos implicaciones que hemos enunciado.
+
 1) Dado un $\gor{x} \in F^{-1} (A)$ queremos hallar un $R>0$ tal que $B_R(\gor{x})\subset F^{-1} (A)$. Partimos de 
 \[\gor{x}\in F^{-1} (A) \dimplies F(\gor{x})\in A\]
 
 Como $F$ es continua, $\exists \varepsilon>0 \tq B_{\varepsilon}(F(\gor{x}))\subset A$. Esto es equivalente a decir que, para cualquier $\gz$
 \[ ||\gor{z}-F(\gor{x})|| < \varepsilon \implies \gor{z}\in A\]
 
-Por la definición de continuidad, dado un $\gor{s}\in B_R(\gor{x})$ 
+Por la definición de continuidad (\ref{dfnContinua}), dado un $\gor{s}\in B_R(\gor{x})$ 
 
 \[ \exists \delta > 0 \tq ||\gor{x}-\gor{s}||<\delta \implies ||F(\gor{x})-F(\gor{s})||< \varepsilon \]
 
+
 y por lo tanto $F(\gor{s}) \in A$ y $\gor{s} \in F^{-1} (A)$.
 Conclusión: Hemos encontrado un $\delta > 0$ tal que $s \in B_R(\gor{x}) \implies s \in F^{-1} (A)$.
-
-\textit{Pofale. Yo no lo pillo.}
 \end{proof}
-
 
 \subsection{Aplicaciones lineales}
 
@@ -595,29 +616,31 @@ a_{n1}	& \cdots & a_{nn}
 \end{pmatrix}\]
 
 \begin{theorem}
- L lineal $\implies$ L continua.
+Toda aplicación lineal $L$ es continua.
 \end{theorem}
-\begin{proof}
- $$L(\gor{x}) = \left(
- \begin{matrix}
-  A_1 & \rightarrow \\
-  \vdots & \vdots\\
-  A_n & \rightarrow
- \end{matrix}\right)$$
- 
- COMPLETAR
+\begin{proof} Partiendo de la definición de continuidad (\ref{dfnContinua}), $L$ es continua si y sólo si
 
+\[ \forall \ga, \gx \; \forall \epsilon > 0 \; \exists \delta > 0 \tq \md{\ga - \gx} < \delta \implies \md{L\ga - L\gx} < \epsilon \]
+
+Sabemos que $\md{A\gx} ≤ C\md{\gx}$ para alguna constante $C$. Podemos reescribir
+
+\[ \md{L\ga - L\gx} = \md{L(\ga-\gx)} ≤ C\md{\ga-\gx} \]
+
+Entonces, la igualdad se cumple si tomamos $\epsilon = C\delta$.
 \end{proof}
+
 \subsection{Norma de matrices}
-Consideramos una aplicación
+Consideramos una aplicación continua
 
 \begin{align*}
 \appl{F}{\real^N&}{\real} \\
 \gor{x} &\longrightarrow F(\gx) = \underbrace{||A\gx||}_{L(\gx)}
-\end{align*}F es continua.
+\end{align*}
 
 Sabemos que existe $C>0$ tal que $||A\gx|| \leq C||\gx||$, es decir,  $||A\gx||\leq C$ si $||\gx||=1$. Queremos saber cuál es la mejor constante que podemos encontrar, la que más se ajuste. Consideramos el conjunto $M$ de todos los vectores de la esfera unidad, es decir 
-$$M = \{||A\gx|| \tq ||\gx||=1\}\subset \real$$
+
+\[ M = \{||A\gx|| \tq ||\gx||=1\}\subset \real \]
+
 Entonces mejor constante $C$ es la cota superior mínima (supremo) que vamos a llamar $\alpha$. Al ser $F$ continua y $M$ compacto, sabemos que el supremo $\alpha \in M$.
 
 \begin{defn}[Norma\IS de una matriz]
@@ -636,8 +659,8 @@ Sabemos que existen dos vectores $\gx_A$ y $\gx_B$ que maximizan el resultado $\
 \[ \norm{A\gx_{A,B}} + \norm{B\gx_{A,B}} ≤ \norm{A\gx_A} + \norm{B\gx_B} = \norm{A} + \norm{B} \]
 
 \end{proof}
-%\begin{example}
-Calculamos la norma uno de 
+
+Basándonos en lo que hemos obtenido, calculamos la norma uno de 
 \[A = \begin{pmatrix}
       1&2\\-3&1\\2&0
      \end{pmatrix}\]  
@@ -649,7 +672,6 @@ Tenemos que maximizar, sabiendo que $|x|+|y| = 1$:
 Tomando $x_0 = 1$ y $y_0 = 0$ lo encontramos. Como $\gx$ está en la esfera unidad y es una cota, es el máximo y por lo tanto la norma que buscamos.
 
 Curiosamente, \textbf{coincide con la suma de los valores absolutos de las columnas} y escoger el más grande.
-%\end{example}
 
 Si tomamos la norma infinito de 
 \[A = \begin{pmatrix}
@@ -657,6 +679,8 @@ Si tomamos la norma infinito de
      \end{pmatrix}\]
 
 Tenemos que \textbf{coincide con el máximo de las posibles sumas de los valores absolutos de las filas}.
+
+
 
 Queremos buscar ahora cuánto vale la norma de una matriz cuando usamos la norma euclídea. Usaremos los dos lemas siguientes para apoyarnos.
 
@@ -669,7 +693,7 @@ Queremos buscar ahora cuánto vale la norma de una matriz cuando usamos la norma
 
 Tenemos $A^TA$ diagonalizable, de dimensión $N \times N$. Buscamos cuánto vale $\norm{A\gx}$ con  $\gx \in \real^N$. Empezamos desarrollando el vector en una base ortonormal de  $A^T A$: \[ \gx = \sum \alpha_i \gv_i \] y por lo tanto \[ ||\gx|| = \sum \alpha_i^2 \pesc{\gv_i,\gv_i}\].
  
- Desarrollamos el producto \[\trans{A}A\gx = \trans{A}A\left(\sum \alpha_i \gv_i\right) = \sum \left(\alpha_i\lambda_i\gor{v}_i\right) \] donde $\lambda_i$ son los autovalres de $\trans{A}A$. 
+ Desarrollamos el producto \[\trans{A}A\gx = \trans{A}A\left(\sum \alpha_i \gv_i\right) = \sum \left(\alpha_i\lambda_i\gor{v}_i\right) \] donde $\lambda_i$ son los autovalores de $\trans{A}A$. 
  
  Ahora queremos hallar el máximo de $||A\gx||$ cuando $||\gx|| = 1$:
  
@@ -726,8 +750,6 @@ Por lo tanto, el límite no existe a pesar de que existe cuando nos acercamos po
 \begin{theorem}
  $F$ es continua si y sólo si para cualquier abierto $A$, $F^{-1}(A)$ es abierto.
 \end{theorem}
-\obs
-Si $\appl{F}{\omega\subset\real^N}{\real^M} \dimplies$ para cualquier abierto $A, F^{-1}(A) = \omega \cup V$, con $V$ abierto.
 
 \begin{proof}
 De este teorema ya teníamos demostrada la implicación a la derecha (\ref{thmInversa}), así que sólo falta demostrar hacia la izquierda. Queremos probar que
@@ -747,66 +769,56 @@ Este teorema también se cumple para cerrados.
 \section{Diferenciación}
 
 \begin{defn}[Función\IS diferenciable]
- $F$ diferenciable en $\gor{a}$ si 
+ $F$ es diferenciable en $\gor{a}$ si existe una aplicación lineal $L$ tal que
  
- $$\exists \text{ aplicación lineal L} \tlq \frac{F(\gx)-F(\ga)-L(\gx-\ga)}{||\gx-\ga||} \underbrace{\rightarrow}_{\gx\rightarrow\ga} 0$$
-$$ = \lim_{\gor{h} \rightarrow \gor{0}} \frac{\md{F(\ga+\gor{h}) - F(\ga) - L\gor{h}}}{||\gor{h}||}$$
+\[ \frac{F(\gx)-F(\ga)-L(\gx-\ga)}{||\gx-\ga||} \convs[][\gx][\ga] 0 \]
 
+que se puede expresar como
+\[ \lim_{\gor{h} \rightarrow \gor{0}} \frac{\md{F(\ga+\gor{h}) - F(\ga) - L\gor{h}}}{||\gor{h}||} = 0 \]
 \end{defn}
 
+\begin{defn}[Diferencial]
+A esa matrix $L$ la vamos a llamar la diferencial de $F$ en $\ga$:
 
-\obs
-\begin{itemize}
-\item Si existe, $L$ es única.
-\end{itemize}
+\[ L\equiv DF(\ga) \]
+\end{defn}
 
-\begin{proof}
-Supongamos que existen $L_1,L_2$.
-\[0=\lim_{\gor{h} \rightarrow \gor{0}} \frac{F(\gor{a}+\gor{h}) - F(\ga)-L_1\gor{h}}{||\gor{h}||} = \lim_{\gor{h} \rightarrow \gor{0}} \frac{F(\gor{a}+\gor{h}) - F(\ga)-L_2\gor{h}}{||\gor{h}||}\].
-
-$$\text{ Sumando: } 0 = \lim_{\gor{h} \rightarrow \gor{0}} \frac{||F(\gor{a}+\gor{h}) - F(\ga)-L_1\gor{h}|| + ||F(\gor{a}+\gor{h}) - F(\ga) -L_2\gor{h}||}{||\gor{h}||}$$
-
-\obs $||A-B|| = ||A+(-B)|| \leq ||A||+||B||$
-
-$$\leq \lim_{\gor{h} \rightarrow \gor{0}} \frac{2\cdot\md{F(\ga + \gor{h}) - F(\ga)} + \md{L_1\gor{h}} + \md{L_2\gor{h}}}{\md{\gor{h}}}$$
-
-Completar la contradicción.
-\end{proof}
-
-\paragraph{Notación: (Diferencia de $F$ en $\ga$)}
-
-$$L\equiv DF(\ga)$$ 
-
-\paragraph{Proposición:}
+\begin{theorem} 
 $$F \text{ diferenciable en } \ga \implies F \text{ continua en } \ga$$
+\end{theorem}
+
 \begin{proof}
  $$\lim_{\gor{h} \rightarrow \gor{0}} \frac{\md{F(\ga+\gor{h}) - F(\ga) - L\gor{h}}}{\md{\gor{h}}} = 0$$
  Esta es la definición de diferenciable. Para que este límite sea 0, el numerador tiene que tender a 0, por lo que $F(\ga+\gor{h}) - F(\ga) \rightarrow 0$
 \end{proof}
 
-\obs
-$F$ diferenciable en $\ga$.
 
-$\appl{F}{\real^N}{\real^M}$
+\begin{theorem} 
+Si la diferencial existe, entonces es única.
+\end{theorem}
 
-Sabemos:
- $$0 = \lim_{\gor{h} \rightarrow \gor{0}} \frac{||F(\ga+\gor{h}) - F(\ga) - L\gor{h}}{||\gor{h}||} = 0 $$
- 
- En particular (tomando  h = $t \gor{e_1})$
+\begin{proof}  Vamos a demostrar que esa aplicación $L$ es única. Supongamos que existen $L_1,L_2$ que cumplen las condiciones.
+\[0=\lim_{\gor{h} \rightarrow \gor{0}} \frac{F(\gor{a}+\gor{h}) - F(\ga)-L_1\gor{h}}{||\gor{h}||} = \lim_{\gor{h} \rightarrow \gor{0}} \frac{F(\gor{a}+\gor{h}) - F(\ga)-L_2\gor{h}}{||\gor{h}||}\].
 
-$$ \lim_{\gor{t} \rightarrow \gor{0}}\frac{a}{b} = \lim_{\gor{t} \rightarrow \gor{0}}\norm{\underbrace{\frac{1}{t} F(\ga+t\gor{e_1})-F(\ga))-L\gor{e_1}}_{\gor{W}(t)\in\real^N}}$$
- Tomando la componente k-esima:
-\begin{gather*}
- 0 = \mylim{t}{0}{\frac{F_K(a+te_i)-F_k(a)}{t} - L_{ki}}\\
- L_{ki} = \mylim{t}{0} {\frac{F_k(a+te_i) - F_k(a)}{t}} = \deriv{ F_k}{x_i}(\ga)
-\end{gather*}
+Sumando:
+
+\[ 0 = \lim_{\gor{h} \rightarrow \gor{0}} \frac{||F(\gor{a}+\gor{h}) - F(\ga)-L_1\gor{h}|| + ||F(\gor{a}+\gor{h}) - F(\ga) -L_2\gor{h}||}{||\gor{h}||} \]
+
+Teniendo en cuenta que $||A-B|| = ||A+(-B)|| \leq ||A||+||B||$
+
+\[ 0 \leq \lim_{\gor{h} \rightarrow \gor{0}} \frac{2\cdot\md{F(\ga + \gor{h}) - F(\ga)} + \md{L_1\gor{h}} + \md{L_2\gor{h}}}{\md{\gor{h}}} \]
+
+\textit{Aquí falta completar.}
+\end{proof}
+
+
 
 \paragraph{Nomenclatura: }
 Aproximación lineal $\sim$ Diferencial.
 
 Matriz jacobiana $\sim$ Jacobiana.
 
-\begin{theorem}
+\begin{defn}[Matrix\IS diferencial]
  Matriz asociada a $DF(\ga) \equiv $ Matriz de las derivadas parciales de F.
  
  $$DF(\ga) \equiv \begin{pmatrix}
@@ -815,13 +827,13 @@ Matriz jacobiana $\sim$ Jacobiana.
                 \dpa{F_N}{x_1} & \cdot & \dpa{F_N}{x_N}
                 \end{pmatrix}
 $$
-\end{theorem}
+\end{defn}
 
 \begin{theorem}
- $F$ diferencialbe en $\ga \implies \exists \deriv{F_k}{x_i}(\ga), i=1,2,...,N \y k = 1,2,...,M$
+ $F$ diferenciable en $\ga \implies \exists \deriv{F_k}{x_i}(\ga), i=1,2,...,N \y k = 1,2,...,M$
 \end{theorem}
 
-El contraejemplo para demostrar $\Leftarrow$ es el mismo que en los límites a lo largo de rectas.
+El contraejemplo para demostrar la implicación a la izquierda es el mismo que en los límites a lo largo de rectas.
 
 $f(x,y) = \left\{ \begin{matrix}
 
@@ -830,21 +842,18 @@ $f(x,y) = \left\{ \begin{matrix}
            
           \end{matrix}\right.
 $
-\paragraph{Comentarios sobre notación: }
-\begin{itemize}
- \item $\appl{\delta}{\real}{\real^M}$. Utilizamos notación vectorial en vez de matricial (porque tendríamos una matriz columna).\\
- Ejemplo: la velocidad (en un instante de tiempo, un punto en el espacio).
- \item $\appl{F}{\real^N}{\real}$ (función escalar):
 
- COMPLETAR
- Se suele llamar vector gradiente.
- \item 
-\end{itemize}
+Según las aplicaciones que tengamos, la diferencial se suele llamar de una u otra forma. Con $\appl{\delta}{\real}{\real^M}$ utilizamos notación vectorial en vez de matricial porque tendríamos una matriz columna. Por ejemplo: la velocidad (en un instante de tiempo, un punto en el espacio).
 
-\subsection{Regla de la cadena: }
-\paragraph{Derivada de una composición:\\}
+\begin{defn}[Gradiente] Sea $\appl{F}{\real^N}{\real}$, entonces definimos el vector gradiente como 
 
-COMPLETAR DIBUJITO
+\[ \grad F(\gx) = DF(\gx) = \left(\dpa{F}{x_1}, \dpa{F}{x_2},\dotsc, \dpa{F}{x_n}\right) \]
+\end{defn}
+
+
+\subsection{Regla de la cadena}
+\index{Regla!de la cadena}
+Consideremos la composición de dos funciones de la siguiente forma:
 
 $\appl{F}{\real^N}{\real^M}$. 
 
@@ -854,18 +863,36 @@ $\appl{H=G\circ F}{\real^N}{\real^K}$.
 
 $ \gx \in \real^N, \gy \in \real^M$
 
-$F$ diferenciable en $\ga$, $G$ diferenciable en $F(\gor{a})$. Entonces $H=G\circ F$ es diferenciable en $\ga $.
+\begin{wrapfigure}{r}{0.3\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\draw[->] (-0.1,0.2) -- (-0.1,1.7);
+\draw[->] (0.3,1.9) -- (1.6,1.9);
+\draw[->] (0.3,0.2) -- (1.7,1.7);
+
+\node at (0,0) {$\real^N$};
+\node at (0,2) {$\real^M$};
+\node at (2,2) {$\real^K$};
+
+\node[left] at (-0.1,1) {$F$};
+\node[above] at (1,2) {$G$};
+\node[below right] at (1,1) {$H = G\circ F$};
+\end{tikzpicture}
+\end{center}
+\caption{Composición de funciones}
+\end{wrapfigure}
+
+Con $F$ diferenciable en $\ga$ y $G$ diferenciable en $F(\gor{a})$. Entonces $H=G\circ F$ es diferenciable en $\ga $.
 Además la expresión matricial es:
 
-$\underbrace{DH(\ga)}_{K\times N} = \underbrace{DG(F(\ga))}_{K\times M}\cdot \underbrace{DF(\ga)}_{M\times N}$
+\[ \underbrace{DH(\ga)}_{K\times N} = \underbrace{DG(F(\ga))}_{K\times M}\cdot \underbrace{DF(\ga)}_{M\times N} \]
  
-\obs
-\paragraph{Notación de Leibniz:}
+No hace falta calcular toda la matriz si sólo queremos un elemento. Para calcular 1 único elemento de la matriz diferencial (el de la fila $i$, columna $j$, usamos la siguiente fórmula
+\[ \dpa{H_i}{x_j}(\ga) = \sum_{k=1}^M \dpa{G_i}{y_k}\cdot\dpa{F_k}{x_j} \]
 
-Para calcular 1 único elemento de la matriz diferencial (el de la fila $i$, columna $j$):
+Siempre teniendo en cuenta que $\displaystyle\dpa{G_i}{y_k}$ está evaluado en $F(\ga)$ y $\displaystyle\dpa{F_k}{x_j}$ está evaluado en $\ga$.
 
-$$\deriv{H_i}{x_j}(\ga) = \displaystyle\sum_{k=1}^M \deriv{G_i}{y_k}\cdot\deriv{F_k}{x_j}$$
-Con cuidado de $\displaystyle \deriv{G_i}{y_k}$ evaluado en $\displaystyle F(\ga)$ y $\displaystyle\deriv{F_k}{x_j}$ evaluado en $\ga$.
+%% REV GUILLE.
 
 \paragraph{Aplicaciones y ejemplos:}
 \begin{itemize}
@@ -1907,13 +1934,7 @@ Existe $\Gamma (u_1(\gx),...,u_n(\gx)) = (\underbrace{u_1,...,u_p,0,...,0}_{k})$
 \stepcounter{section}
 
 % WTF DONDE VA¿¿¿¿¿¿
-% \section{Convergencia y continuidad}
-% Al tener definida una norma podemos definir convergencia y continuidad:
-% \begin{itemize}
-%  \item\emph{Convergencia:} $\gor{x_n} \rightarrow \gx \longleftrightarrow \forall \varepsilon > 0 \exists n_0 tq n>n_0 \Rightarrow |||\gx-\gor{x_n}|||<\varepsilon$.
-%  \item\emph{Continuidad:} Sea $F: \mathbb{R}^N \rightarrow \mathbb{R}^M$ continua en $a$ $\dimplies \forall \varepsilon > 0 , \exists \delta > 0$ tal que $||\gx-\ga||_a < \delta \Rightarrow ||F(\gx)-F(\ga)||_b< \varepsilon$
-% \end{itemize}
-% \paragraph{Observación:} Es interensante ver que se puede hablar de continuidad tomando una norma en $\mathbb{R}^N$ y otra distinta en $\real^M$ sin por ello variar la definición de continuidad. Más adelante veremos que en $\real^N$ todas las normas son equivalentes y qué significa que las normas sean equivalentes. (Esto no sucederá en espacios de dimensión infinita)
+
 % ?????????????????
 % 
 % 
