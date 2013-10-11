@@ -136,6 +136,15 @@ y por lo tanto
 \[ D_n \convdist N\left(0, \sqrt{F(t)(1-F(t))}\right) \]
 \end{problem}
 
+\begin{problem}[5] Sea $X$ una v.a. cuya función de densidad depende de un parámetro desconocido $\theta \in \real$, concretamente \[ f(x;\theta) = \frac{1}{\pi}\frac{1}{1+(x-\theta)^2} \] para $x\in \real$. Comprobar que $\theta$ coincide con la mediana y la moda de $X$ pero que la media $\esp{X}$ no está definida.
+
+Diseñoar un experimento de simulación en R, tomando algún valor concreto de $\theta$, orientado a comprobar cómo se comportan la mediana muestral y la media muestral como estimadores de $\theta$: mientras la mediana muestral se acerca al verdadero valor de $\theta$ al aumentar $N$, la media muestral oscila fuertemente y no se acerca a $\theta$ aunque se aumente el tamaño muestral $n$.
+
+\solution Viendo la función, vemos que es simétrica con respecto al eje $x= \theta$. Por lo tanto, el punto que deja a izquierda y derecha la misma probablidad, la mediana, es precisamente $\theta$. 
+
+De la misma forma, la moda es el valor máximo de la distribución, que se ve claramente que ocurre cuando $x=\theta$.
+\end{problem}
+
 \begin{problem}[7] Sea $X$ una v.a con distribución absolutamente continua. Sea $F$ la correspondiente función de distribución y $f = F'$ continua en todo punto la función de densidad. para $r\in \{1,\dotsc,n\}$, denotemos por $X_{(r)}$ el $r$-simo estadístico ordenado de una muestra de tamaño $n$ extraída de $X$. Calcular la función de distirbución y la de densidad de la v.a. $X_{(r)}$.
 
 \solution
@@ -151,7 +160,28 @@ que es la probabilidad que al menos $r$ elementos de la muestra sean menores o i
 = \sum_{j=r}^n \prob{B(n, F(x)) = j} = \sum_{j=r}^n \comb{n}{j}F(x)^j \left(1 - F(x)\right)^{n-j}
 \end{gather*}
 
+Ahora sólo falta calcular la densidad de $X_{(r)}$, y la obtenemos derivando
 
+\begin{gather*}
+ f_{X_{(r)}} (x) = \\
+ = \sum_{j=r}^n \left(\comb{n}{j}j(F(x)^{j-1}(1-F(x))^{n-j}f(x) - (F(x))^j(n-j)(1-F(x))^{n-j-1} f(x)\right) = \\
+ = \sum_{j=r}^n \comb{n}{j} j(F(x)^{j-1}(1-F(x))^{n-j}f(x)  - \sum_{j=r}^n (F(x))^j(n-j)(1-F(x))^{n-j-1} f(x) = \\
+ = \comb{n}{r} r(F(x))^{r-1} (1-F(x))^{n-1}f(x) + \sum_{j=r+1}^n \comb{n}{j}j(F(x))^{j-1} f(x) (1-F(x))^{n-j} \\
+ \quad \quad - \sum_{j=r}^n\comb{n}{j}(n-j)(F(x))^j (1-F(x))^{n-j-1}f(x) = \\
+ n\comb{n-1}{r-1}(F(x))^{r-1} (1-F(x))^{n-r} f(x)    +   \sum_{l=r}^{n-1}n\comb{n-1}{l}(F(x))^l (1-F(x))^{n-l-1} f(x) \\
+ \quad\quad -  \sum_{j=r}^{n-1}n\comb{n-1}{j}(F(x))^j (1-F(x))^{n-j-1} f(x)
+\end{gather*} 
 
+Los dos últimos términos se cancelan y nos queda que 
+
+\[ f_{X_{(r)}} (x) = n\comb{n-1}{r-1}(F(x))^{r-1} (1-F(x))^{n-r} f(x) \]
+
+Consideremos los dos casos particulares del mínimo y máximo de la muestra. Con el mínimo, $r=1$ y entonces
+
+\[ F_{X_{(1)}} (x)= \prob{X_{(1)} ≤ x} = \sum_{j=1}^n\comb{n}{j}(F(x))^j(1-F(x))^{n-j} = 1 - (1-F(x))^n \]
+
+En el caso del máximo:
+
+\[ F_{X_{(n)}} (x) = \prob{X_{(n)} ≤ x } = (F(x))^n \]
 
 \end{problem}
