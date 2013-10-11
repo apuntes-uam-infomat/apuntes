@@ -19,7 +19,7 @@
 \RequirePackage{mdframed} % Más marcos
 \RequirePackage{exmath} % Nuestro querido paquete de utilidades
 \RequirePackage{hyperref} % Para que salgan enlaces en la tabla de contenidos y el glosario
-\RequirePackage{wrapfig}
+\RequirePackage{wrapfig} 
 
 % Ajustes para los enlaces
 \hypersetup{
