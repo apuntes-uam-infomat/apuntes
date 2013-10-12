@@ -204,7 +204,7 @@ Nos fijamos en $\md{DF\left[\ga(1-t) + t\gb\right]}$. Al ser continua y estar de
 
 Este teorema nos sirve, por ejemplo, para ver que si tenemos $\appl{F}{\real^N}{\real^M}, F \in C^1$, definida en un conjunto abierto y conexo y  $DF(\gx) \equiv 0\; \forall\gx$, entonces $F$ es constante.
 
-\subsection{Derivada direccional: }
+\subsection{Derivada direccional}
 
 $\appl{F}{\real^N}{\real^M}$ (escalar)
 
@@ -292,7 +292,7 @@ Contraejemplo de la no reciprocidad: $f(x) = x^2 sin\left(\frac{1}{x}\right)$
 \end{proof}
 
 
-\subsection{Derivadas iteradas:}
+\subsection{Derivadas iteradas}
 
 \paragraph{Notación:}
 
@@ -306,45 +306,50 @@ $$\deriv{^2f}{x_i\partial x_j} = \deriv{^2 f}{x_j \partial x_i}$$
 \input{CALII/maximos_minimos_calculo2.tex}
 
 \subsection{Desarrollo de Taylor}
+\index{Polinomio!de Taylor}
+Tenemos una función $\appl{F}{\real^N}{\real}$, con $F\in C^k$ ($k$ veces derivable), y queremos el desarrollo de Taylor de $F$ alrededor de $\ga \in \real^N$.
 
-$\appl{F}{\real^N}{\real}. F\in C^k$\footnote{F es k veces derivable}. 
+En dimensión 1, el desarrollo era el que sigue
 
-Queremos desarrolar $F$ alrededor de $\ga \in \real^N$.
+\[ g(x) = g(0) + g'(0)x + \frac{g''(0)}{2!}x^2 + ... + \frac{g^{k)}(0)}{k!}x^k + \underbrace{\frac{g^{k+1)}(s)}{(k+1)!}x^{(k+1)}}_{\text{error}} \]
 
-Dimensión 1) $g(x) = g(0) + g'(0)x + \frac{g''(0)}{2!}x^2 + ... + \frac{g^{k)}(0)}{k!}x^k + \underbrace{error}_{\frac{g^{k+1)}(s)}{(k+1)!}x^{(k+1)}}$
+Tenemos que expandir este desarrollo a más dimensiones. Tomamos \[ g(t) \equiv F(t(\ga + \gor{h}) + (1-t)\ga) \] reduciendo así el cálculo a dimensión 1. Operamos ahora para calcular las derivadas:
 
-$F(\ga + \gor{h}) = F(\ga) + ...$
+\begin{gather*}
+g'(t) = \pesc{\nabla F(a+th),h} = \sum_{i=1}^N \deriv{F}{x_i}(a+th)\cdot h_i \\
+g''(t) = \sum_{i=1}^N\left(\sum_{j=1}^N \deriv{}{x_j}\deriv{F}{x_i}(\ga+\gor{h})\cdot{h_j}\right)h_i = \sum_{i,j = 1}^N \deriv{^2F}{x_i \partial x_j}(\ga+t\gor{h})h_ih_j \\
+\dotsb \\
+\frac{g^{s)} (0)}{s!} = \frac{1}{s!}\sum_{i_1,i_2,...,i_s=1}^N \frac{\partial^s F}{\partial x_{i_1},x_{i_2},...,x_{i_s}}
+\end{gather*}
 
-Más dimensiones) 
+De esta forma, el desarrollo de Taylor de orden $k$ de $F$ en $\ga$ en general es
 
-Tomamos $g(t) \equiv F(t(\ga + \gor{h}) + (1-t)\ga)$. Así hemos reducido el cálculo a dimensión 1.
+\begin{equation}
+T^k_F(x) = \sum_{\alpha = 0}^k 
+	\left( 
+		\frac{1}{\alpha !}
+		\sum_{v_1,\dotsc,v_\alpha = 0}^N 
+			(x_{v_1} - a_{v_1}) \dotsb (x_{v_\alpha} - a_{v_\alpha}) 
+			\frac{\partial^\alpha F}{\partial x_{v_1} \dotsb \partial x_{v_\alpha}} 
+			 (\ga)
+	\right) 
+\end{equation}
 
-%\begin{gather}
+Por ejemplo, el desarrollo de Taylor de una función $F(x,y)$ con $\ga = (a,b)$ queda lo siguiente (con $F_{xyz\dotsc} = \dfrac{\partial^nF}{\partial x \partial y \partial z \dotsb}$)
 
-$$g'(t) = \pesc{\nabla F(a+th),h} = \sum_{i=1}^N \deriv{F}{x_i}(a+th)\cdot h_i$$
-$$g'(0) = \pesc{\nabla F(\ga), \gor{h}}$$
-$$g''(t) = \sum_{i=1}^N\left(\sum_{j=1}^N \deriv{}{x_j}\deriv{F}{x_i}(\ga+\gor{h})\cdot{h_j}\right)h_i = \sum_{i,j = 1}^N \deriv{^2F}{x_i \partial x_j}(\ga+t\gor{h})h_ih_j $$
+\begin{align*}
+T^k_{F}(\gx) &= F(\ga) \\
+& +  (x - a) F_x(\ga) + (y - b) F_y(\ga)  \\
+& +\frac{1}{2!}\left[(x-a)^2F_{xx}(\ga) + 2(x-a)(y-b)F_{xy}(\ga) + (y-b)^2F_{yy}(\ga)\right] \\
+& +\frac{1}{3!}\left[(x-a)^3F_{xxx}(\ga) + 3(x-a)^2(y-b)F_{xxy}(\ga) + 3(x-a)(y-b)^2 F_{xyy} (\ga) + (y-b)^3F_{yyy} (\ga)\right] \\
+& +\dotsb
+\end{align*}
 
-Iterando:
+Existe una forma más compacta para el desarrollo de Taylor de orden dos usando el producto escalar, el vector gradiente y la matriz hessiana ($D^2F$) de derivadas segundas:
 
-$$\frac{g^{s)} (0)}{s!} = \frac{1}{s!}\sum_{i_1,i_2,...,i_s=1}^N \frac{\partial^s F}{\partial x_{i_1},x_{i_2},...,x_{i_s}}
-$$%\end{gather}
-                                                                                          
-El hesiano aparece en:
-$$g''(t) = \sum_{i=1}^N\left(\sum_{j=1}^N \deriv{}{x_j}\deriv{F}{x_i}(\ga+\gor{h})\cdot{h_j}\right)h_i = \sum_{i,j = 1}^N \deriv{^2F}{x_i \partial x_j}(\ga+t\gor{h})h_ih_j = ... =
-$$$$\frac{1}{2} (h_1,...,h_N) \cdot \left(D^2F(\ga)\right) \cdot \begin{pmatrix}
-h_1\\
-\vdots\\
-h_N                                                                                                                                                                                                                                       \end{pmatrix}
-$$
+\[ F(\gor{a}+\gor{h}) = F(\ga) + \pesc{\grad F(\ga),\gor{h}} + \frac{1}{2} \gor{h}^T D^2F(\ga)\gor{h} \]
 
-\paragraph{Desarollo de Taylor en general:}
-
-$$F(\gor{a}+\gor{h}) = F(\ga) + \pesc{\nabla F(\ga),\gor{h}} + \frac{1}{2} \gor{h}^T D^2F(\ga)\gor{h} + \frac{1}{3!}\sum_{i,j,k=1}^N \frac{\partial^3F}{\partial x_k,\partial x_j, \partial x_i} (\ga) h_kh_jh_i + $$
-
-\begin{theorem}
- $$\frac{|F(\ga+\gor{h} - P_{s,a}(\gor{h})|}{\norm{\gor{h}}^s} \rightarrow 0, \text{ Cuando } \gor{h} \rightarrow 0$$
- Además $P_{s,a}(\gor{h}$ es el único polinomio de orden S que hace que el límite sea 0).
+\begin{theorem}[Teorema\IS de Taylor]
+ $$\frac{|F(\ga)+\gor{h} - P_{s,a}(\gor{h})|}{\norm{\gor{h}}^s} \rightarrow 0, \text{ Cuando } \gor{h} \rightarrow 0$$
+ Además $P_{s,a}(\gor{h})$ es el único polinomio de orden S que hace que el límite sea 0.
 \end{theorem}
-
-Con estos conocimientos son posibles de realizar todos los ejercicios de la hoja de problemas 2
