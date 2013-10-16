@@ -261,7 +261,7 @@ Al contrario no tiene por qué darse.
 
 \subsubsection{Desigualdades básicas}
 
-\begin{theorem}[Desigualdad\IS de Markov] Sea $X$ v.a. Entonces, $\forall \epsilon > 0$, \[ \prob{\abs{X} > \epsilon} ≤ \frac{\esp{X}}{\epsilon} \]
+\begin{theorem}[Desigualdad\IS de Markov]\label{desMarkov} Sea $X$ v.a. Entonces, $\forall \epsilon > 0$, \[ \prob{\abs{X} > \epsilon} ≤ \frac{\esp{X}}{\epsilon} \]
 \end{theorem}
 
 \begin{theorem}[Desigualdad\IS de Chebichev] En las mismas condiciones del teorema anterior, se cumple que  \[ \prob{\abs{X - \esp{X}} > \epsilon} ≤ \frac{V(X)}{\epsilon^2} \]
@@ -493,6 +493,106 @@ Buscaremos varias propiedades interesantes de los estimadores:
 
 \index{Estimador!insesgado}
 \paragraph{Ausencia de sesgo} Se dice que un estimador $T_n$ es \textbf{insesgado} \index{Estimador!insesgado} si, siempre que $X_i \sim f(\cdot;\theta)$ se tiene que \[\esp{T_n} = \theta\; \forall \theta \in \Theta \]
+
+\paragraph{Consistencia}\index{Consistencia!en probabilidad} Se dice que $\{T_n\} = \{ T_n(X_1, \dotsc, X_n) \}$ es consistente en probabilidad si, siempre que $X_i \sim f(.;\theta)$ se tiene que $T_n \convprob \theta \; \forall \theta \in \Theta$.
+
+Si reemplazamos la consistencia en probabilidad por la convergencia casi segura, se obtiene la \textbf{consistencia fuerte} o casi segura. \index{Consistencia!casi segura}\index{Consistencia!fuerte}
+
+Para probar la consistencia fuerte, usaremos el siguiente teorema:
+
+\begin{theorem}[Teorema\IS de la aplicación continua] Sea $\appl{g}{\real}{\real}$ continua en todo punto de un conjunto $C$ tal que $\prob{X\in C} = 1$, entonces
+
+\begin{itemize}
+\item Si $X_n\convdist X$ entonces $g(X_n)\convdist  g(X)$.
+\item Si $X_n\convprob X$ entonces $g(X_n)\convprob g(X)$.
+\item Si $X_n\convcs X$ entonces $g(X_n)\convcs g(X)$.
+\end{itemize}
+
+\end{theorem}
+
+Otra forma de probarlo sería usar la desigualdad de Markov (\ref{desMarkov}). Buscamos probar que 
+
+\[ \prob{\abs{T_n - \theta} > \epsilon} \convs 0 \]
+
+entonces
+
+\[ \prob{\abs{T_n - \theta} > \epsilon}   = \prob{(T_n - \theta)^2 > \epsilon^2} \]
+
+que por Markov tenemos que
+
+\[ \prob{(T_n - \theta)^2 > \epsilon^2} ≤ \frac{\esp{T_n-\theta}^2}{\epsilon^2} \]
+
+y entonces sólo nos quedaría probar que $\esp{T_n-\theta}^2 \convs 0$.
+
+También podemos usar condiciones suficientes
+
+\begin{theorem}[Condición\IS de Borel-Cantelli] Si se cumple que 
+
+\[ \sum_{n=1}^\infty \prob{\abs{T_n-\theta} > \epsilon} < \infty\;\forall\epsilon > 0 \]
+
+entonces $T_n \convcs \theta$.
+\end{theorem}
+
+Con esta condición, bastaría ver que la probabilidad o la esperanza convergen y automáticamente se cumpliría la condición.
+
+\begin{example} Sean $\{X_n\}$ v.a.i.i.d con distribución uniforme en el intervalo $[0,\theta]$ con $\theta > 0$. Estudiar la consistencia de los siguientes estimadores de $\theta$
+
+\paragraph{a)}
+
+\[ T_n = 2\avg{X} \]
+
+Este estimador se basa en que $\esp{X} = \frac{\theta}{2}$. Esto se estima mediante la media muestral $\avg{X}$, y por lo tanto un estimador razonable sería duplicar esa media muestral: $T_n = 2 \avg{X}$.
+
+Como $T_n$ se expresa como una función continua de la media muestral, por la LFGN y el teorema de la aplicación continua 
+
+\[ T_n = g(\avg{X}) \convcs g(µ) = 2µ = 2\esp{X} = \theta \]
+
+y por lo tanto tiene consistencia fuerte.
+
+\paragraph{b)}
+
+\[ T_n=X_{(n)} = \max \{ X_1,\dotsc,X_n\} \]
+
+Aquí usaremos la segunda herramienta: estudiar la probabilidad que el estimador no se aleja del valor esperado en más de $\epsilon$:
+
+\[ \prob{\abs{T_n - \theta} > \epsilon} = \prob{\abs{X_{(n)} - \theta} > \epsilon} = \prob{\theta - X_{(n)} > \epsilon} = \prob{X_{(n)} < \theta - \epsilon} \]
+
+Si pedimos que el máximo sea mayor que $\theta - \epsilon$, es lo mismo que pedir que lo sean todas las observaciones:
+
+\[ \prob{X_{(n)} < \theta - \epsilon} = \prob{X_1 < \theta - \epsilon, \dotsc , X_n < \theta - \epsilon} \]
+
+Y con esto logramos quitarnos los estadísticos de orden, que nos causan problemas al tratar de seguir con la demostración. Como las variables de la muestra son independientes, podemos expresarlo todo como producto
+
+\[ \prod_{i=1}^n \prob{X_i < \theta - \epsilon} = \left(\frac{\theta - \epsilon}{\theta}\right)^n \]
+
+Esta probabilidad está contenida en el intervalo $(0, 1)$ y por lo tanto converge a cero cuando $n\to \infty$. Entonces, $T_n$ es un estimador de $\theta$ consistente en probabilidad.
+
+Para examinar si se cumple la condición de Borel-Cantelli, examinamos la serie 
+
+\[ \sum_{n=1}^\infty \prob{\abs{T_n - \theta} > \epsilon} = \sum_{n=1}^\infty \left(\frac{\theta - \epsilon}{\theta}\right)^n < \infty \]
+
+se cumple la condición y es un estimador consistente casi seguro.
+
+Si quisiésemos explorar cuál de los dos estimadores es mejor, usaríamos el error cuadrático medio.
+
+\end{example}
+
+\paragraph{Normalidad asintótica}\index{Asintóticamente!normal} Se dice que una sucesión de estimadores $\{T_n\}$ del parámetro $\theta$ es \textbf{asintóticamente normal} con tasa $\sqrt{n}$ si
+
+\[ \sqrt{n} (T_n - \theta) \convdist N(0,\sigma) \]
+
+¿Cómo se puede probar la normalidad asintótica? La herramienta se llama el \textbf{método delta} \index{Método!delta} y es consecuencia casi inmediata del teorema del valor medio y de las propiedades de la convergencia en distribución: intentaremos expresar el estimador que se propone como una función $C^1$ de la media muestral y aplicar entonces el Teorema Central del Límite (\ref{thmCentral}).
+
+Si llamamos $T_n = g(\avg{X})$ con $g\in C^1$ entonces podemos expresar, con un $µ^\ast$ entre $\avg{X}$ y $µ$
+
+\[ \sqrt{n} (g(\avg{X}) - g(µ)) \underset{TVM}{=} g'(µ^\ast) \sqrt{n}(\avg{X} -µ) \]
+
+Como $\avg{X}\convcs µ$ entonces $µ^\ast \convcs µ$ y por lo tanto y usando el Thm. de la aplicación continua (\ref{thmApContinua}) $g'(µ^\ast)\convcs g'(µ)$. Al final 
+
+\[ g'(µ^\ast) \sqrt{n}(\avg{X} -µ) \convdist N(\abs{g'(µ)}\sigma) \]
+
+En general, se habla de normalidad asintótica con tasa $a_n$ si se cumple que \[ a_n (T_n - \theta) \convdist N(0,\sigma) \], con $a_n$ sucesión creciente y mayor que cero.
+
 
 \appendix
 \section{Distribuciones notables}
