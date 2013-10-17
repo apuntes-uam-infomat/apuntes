@@ -194,14 +194,28 @@ En el caso del máximo:
 \begin{gather*}
 \esp{\hat{f}_n(t)} = \esp{\frac{1}{nh}\sum_{i=1}^n K \left(\frac{t-X_i}{h}\right)} = \\
 = \frac{1}{nh}\sum_{i=1}^n \esp{K\left(\frac{t-X_i}{h}\right)} = \frac{1}{h} \esp{K\left(\frac{t-X}{h}\right)} = \\
-= \frac{1}{h} \int_\real K \left(\frac{t-x}{h}\right) f(x) \,dx
+= \frac{1}{h} \int_\real K \left(\frac{t-x}{h}\right) f(x) \,dx = 
 \end{gather*}
 
-Haciendo un cambio de variable $x = t-hz$, $dx = -h\,dz$,
+Haciendo un cambio de variable $x = t-hz$, $dx = -h\,dz$, los límites se invierten,
 
-\[ \frac{1}{h} \int_\real K \left(\frac{t-x}{h}\right) f(x) \,d(x)  = \frac{-1}{h} \int_\real Kz f(t-hz) h \,dz  = -\int_\real Kz f(t-hz)\,dz \]
+\[ = \frac{1}{h} \int_{-\infty}^\infty K \left(\frac{t-x}{h}\right) f(x) \,d(x)  = \frac{-1}{h} \int_\infty^{-\infty} K(z) f(t-hz) h \,dz  = \int_{-\infty}^\infty Kz f(t-hz)\,dz \]
 
-Usando el desarrollo en serie de Taylor, la profesora se ha liado y yo desisto de copiar todo ese chorizo. 
+Ahora buscamos calcular el sesgo:
 
-Al final no se van las integrales en los que haya una potencia par de $z$. Habrá un montón de términos que se harán muy pequeños porque haremos que $h\to 0$ cuando $n\to\infty$ y por lo tanto el resto se hacen más pequeños y sólo queda el primer término que es $f(t)$.
+\[ \text{sesgo}\,(\hat{f}_n(t)) = \esp{\hat{f}_n(t)} - f(t) = \]
+
+Usando que $K$ es función de densidad y que $\int K = 1$, nos queda
+
+\begin{gather*}
+ = \int_{-\infty}^\infty K(z) f(t-hz)\,dz - \int_{-\infty}^\infty K(z) f(t)\, dz = \\
+ = \int_{-\infty}^\infty K(z) \left[f(t-hz)-f(t)\right]\,dz =\\
+ = hf'(t)\int_{-\infty}^\infty zK(z)\,dz + \frac{1}{2} h^2 f''(t) \int_{-\infty}^\infty z^2K(z)\,dz + \frac{1}{6}h^3 f'''(t) \int_{-\infty}^\infty z^3K(z)\,dz + \dotsb  
+\end{gather*}
+
+al hacer el desarrollo de Taylor. Como $K$ es una función simétrica, las integrales con índice impar (con $z=1, 3,\dotsc$) se anulan. Sin embargo, el segundo término no lo hace. Por lo tanto, el sesgo de un estimador kernel \textbf{no es nunca cero}. 
+
+El sesgo del estimador kernel depende de $h$ (el parámetro de suavizado o \textit{bandwith}) en potencias pares. Por eso, se toma de manera tal que $h\convs 0$ y entonces $\text{sesgo}\,\hat{f}_n(t) \convs 0$ pero manteniendo un equilibrio para que la varianza también sea pequeña y no tengamos picos en el histograma (ver sección \ref{secEst}).
+
+
 \end{problem}

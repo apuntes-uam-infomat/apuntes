@@ -93,7 +93,7 @@ A grandes rasgos, lo que hace en una función es definir un número de intervalo
 \end{defn}
 
 \subsubsection{Estimadores núcleo o kernel}
-
+\label{secEst}
 \begin{defn}[Método de ventana móvil][Ventana móvil]
 El método de ventana móvil nos da una estimación de la función de densidad en un punto $t$ midiendo los $x_i$ que están en el intervalo de radio $h_n$ centrado en $t$. Matemáticamente:
 
@@ -577,7 +577,7 @@ Si quisiésemos explorar cuál de los dos estimadores es mejor, usaríamos el er
 
 \end{example}
 
-\paragraph{Normalidad asintótica}\index{Asintóticamente!normal} Se dice que una sucesión de estimadores $\{T_n\}$ del parámetro $\theta$ es \textbf{asintóticamente normal} con tasa $\sqrt{n}$ si
+\paragraph{Normalidad asintótica}\index{Asintóticamente!normal}\index{Normalidad!asintótica} Se dice que una sucesión de estimadores $\{T_n\}$ del parámetro $\theta$ es \textbf{asintóticamente normal} con tasa $\sqrt{n}$ si
 
 \[ \sqrt{n} (T_n - \theta) \convdist N(0,\sigma) \]
 
@@ -593,6 +593,79 @@ Como $\avg{X}\convcs µ$ entonces $µ^\ast \convcs µ$ y por lo tanto y usando e
 
 En general, se habla de normalidad asintótica con tasa $a_n$ si se cumple que \[ a_n (T_n - \theta) \convdist N(0,\sigma) \], con $a_n$ sucesión creciente y mayor que cero.
 
+\subsection{Construcción de estimadoresa}
+
+En lo que sigue vamos a suponer que $\{X_n\}$ es una muestra formada por v.a.i.i.d. cuya distribución tiene una función de densidad o de masa $f(.;\theta_0)$ perteneciente a una familia de funciones $\{f(.;\theta) \tq \theta \in \Theta\}$. $\theta_0$ nos indica el valor real, y $\theta$ es un parámetro genérico.
+
+\subsubsection{Método de máxima verosimilitud}\index{Método!de máxima verosimilitud}
+
+Intuitivamente, lo que pensamos con este método es que la función de masa mide lo verosímil que es que salga un cierto parámetro. 
+
+\begin{defn}[Función\IS de verosimilitud] También llamada \textit{likelihood function}. Dada una muestra fija $\{x_n\}$, se define como
+
+\[ L_n(\theta;x_1,\dotsc,x_n) = L_n(\theta) = \prod_{i=1}^n f(x_i;\theta) \]
+\end{defn}
+
+\begin{defn}[Estimador\IS de máxima verosimilitud] También llamado EMV o MLE (\textit{maximo likelihood estimator}) es el argumento que maximiza la función de verosimilitud:
+
+\[ \hat{\theta}_n = \hat{\theta}_n(x,\dotsc,x_n) = \argmax_{\theta\in\Theta} L_n(\theta;x_1,\dotsc,x_n) \]
+
+cuando ese máximo está bien definido.
+\end{defn}
+
+Para evitar usar derivadas en un producto potencialmente muy largo, podemos maximizar el logaritmo de la verosimilitud, que es creciente y está bien definido porque la densidad es siempre mayor que cero, y los casos en los que sea cero no los estudiamos porque no ocurren (probabilidad 0).
+
+\paragraph{Cálculo efectivo del EMV}
+
+El valor del estimador se obtiene como solución de la \index{Ecuación!de verosimilitud} \textbf{ecuación de verosimilitud}.
+
+\[ \dpa{}{\theta}\log L_n = \dpa{}{\theta}\sum_{i=1}^n\log f(\theta;x_i) = 0 \]
+
+\paragraph{Ejemplos}
+
+\subparagraph{Distribución de Poisson de parámetro $\lambda$}. Suponemos que $X\sim \text{Poisson}\,(\lambda)$ con $\lambda > 0$, de tal forma que
+
+\[ \prob{X = x} = e ^{-\lambda}\frac{\lambda^x}{x!}; \; x\in \ent^+ \]
+
+Dada una muestra $\{x_n\}$ de $X$. Entonces
+
+\[ L_n(\lambda) = \prod_{i=1}^n f(x_i;\lambda) = \prod_{i=1}^n \prob{X=x} = \prod_{i=1}^n e ^{-\lambda}\frac{\lambda^x}{x!} = e^{-n\lambda}\frac{\lambda^{\sum_{i=1}^nx_1}}{x_1!\dotsb x_n!} \]
+
+Tomamos logaritmos:
+
+\[ \log  L_n(\lambda) = -n\lambda + \log\lambda \sum_{i=1}^n x_i- \log\left(x_1!\dotsb x_n!\right) \]
+
+y derivando
+
+\[ \dpa{}{\lambda}\log  L_n(\lambda)  = -n +\frac{1}{\lambda} \sum_{i=1}^n x_i \]
+
+de tal forma que nos queda \[ \hat{\lambda} = \frac{\sum_{i=1}^n x_i}{n} = \avg{x} \].
+
+En la imagen (\ref{imgPoisson}) vemos cómo las diferentes funciones se aproximan a $\lambda = 1$.
+
+\easyimg{VerosimilitudPoisson.png}{Diferentes funciones de verosimilitud para diferentes muestras de la distribución de Poisson}{imgPoisson}
+
+\subparagraph{Distribución normal de parámetros $µ,\sigma$} Tenemos \[f(x;µ,\sigma) = \frac{1}{\sqrt{2\pi}\sqrt{\sigma^2}}e^{\frac{-1}{2}\frac{(x-µ)^2}{\sigma^2}} \]
+
+La función de verosimilitud es
+
+\[ L_n = \prod_{i=1}^n f(x_i;µ,\sigma) = \frac{1}{(2\pi)^{n/2} (\sigma^2)^{n/2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^n(x_i-µ)^2} \]
+
+Tomamos logaritmos:
+
+\[ \log L_n = - \frac{n}{2}\log 2\pi - \frac{n}{2} \log \sigma^2 - \frac{1}{2\sigma^2} \sum_{i=1}^n(x_i-µ)^2 \]
+
+Derivamos con respecto de $µ$
+
+\[ \dpa{\log L_n}{µ} = - \frac{1}{\sigma^2} \sum_{i=1}^n(x_i-µ)(-1) = - \frac{1}{\sigma^2}\left( \sum_{i=1}^nx_i - nµ\right) \]
+
+de tal forma que $\hat{µ} = \avg{x}$.
+
+Hacemos lo mismo con $\sigma$
+
+\[ \dpa{\log L_n}{\sigma} = - \frac{n}{2}\frac{1}{\sigma^2} - \frac{1}{2}\sum_{i=1}^n(x_i-µ)^2 \frac{-1}{\sigma^4} = \frac{1}{2\sigma^2}\left(-n + \sum_{i=1}^n\left(x_i-µ\right)^2\frac{1}{\sigma^2}\right) = 0 \]
+
+y por lo tanto \[\hat{\sigma}^2 = \frac{1}{n}\sum_{i=1}^n(x_i-\avg{x})^2 = \sigma^2 \]
 
 \appendix
 \section{Distribuciones notables}
