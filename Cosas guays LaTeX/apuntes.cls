@@ -15,7 +15,7 @@
 }
 
 \setlength{\parskip}{2mm}
-
+\setlength{\headheight}{15pt}
 
 \newcommand{\placeholder}[1]{\begin{framed}\textit{\textbf{A rellenar:} #1}\end{framed}}
 
