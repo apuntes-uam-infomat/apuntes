@@ -14,5 +14,3 @@ mv Apuntes.pdf Estructuras.pdf
 cd "Estadistica I"
 pdflatex EI.tex
 cp EI.pdf ..
-dropbox_dir=$(dirname $(kpsewhich .Drop_Location))
-cp *.pdf dropbox_dir
