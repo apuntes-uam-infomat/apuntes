@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ "$#" -eq	"2" ]
+if [ "$1" == "vdj" ]
  then
 read -p "Compilar (y/n)?" yn
 case $yn in
