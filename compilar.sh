@@ -1,30 +1,29 @@
 #!/bin/bash
 read -p "Compilar (y/n)?" yn
 case $yn in
-	[Yy]* ) echo "Compilando"
+	[Yy]* ) echo "Compilando..."
+		echo "-----------------------------------------"
 		cd "Cosas guays LaTeX"
-		sudo ./install
+		sudo ./install > /dev/null
 		cd ..
 		cd "Analisis Matematico"
-		pdflatex Analisis_Matematico.tex
+		pdflatex Analisis_Matematico.tex > /dev/null
+		cp Analisis_Matematico.pdf ..
 		cd ..
 		cd "Estructuras Algebraicas"
-		pdflatex Apuntes.tex
+		pdflatex Apuntes.tex > /dev/null
 		cp Apuntes.pdf ..
 		cd ..
 		cd "Estadistica I"
-		pdflatex EI.tex;;
+		pdflatex EI.tex > /dev/null
+		cp EI.pdf ..
+		cd ..;;
 	[Nn]* ) echo "Ok";;
-        * ) echo "Please answer yes or no.";;
+        * ) echo "???";;
     esac
-echo "Subiendo pdfs a Dropbox (en el directorio de vdj)"
-cp "Analisis Matematico"/Analisis_Matematico.pdf .
-cp "Estadistica I"/EI.pdf .
-cp "Estructuras Algebraicas"/Apuntes.pdf .
+echo "-----------------------------------------"
 mv Apuntes.pdf Est_Alg.pdf
-echo "Introduce el path donde quiere copiar los archivos pdf: "
-read directorio
-find . -name *.pdf -print0 | xargs --null cp --target-directory=$directory
-#cp *.pdf ~/Compartido/Dropbox/Doble\ Grado\ UAM\ \(1\)/TERCEROGILIS/Primer\ Cuatrimestre/Apuntes\ Latex/
-#fi
-
+echo "Escribe el path donde quieres copiar los pdfs (a partir de home):"
+read directory
+cp *.pdf ~/$directory
+echo "Listo."
