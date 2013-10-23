@@ -24,7 +24,7 @@ cp "Estructuras Algebraicas"/Apuntes.pdf .
 mv Apuntes.pdf Est_Alg.pdf
 echo "Introduce el path donde quiere copiar los archivos pdf: "
 read directorio
-cp *.pdf ~/$directorio
+find . -name *.pdf -print0 | xargs --null cp --target-directory=$directory
 #cp *.pdf ~/Compartido/Dropbox/Doble\ Grado\ UAM\ \(1\)/TERCEROGILIS/Primer\ Cuatrimestre/Apuntes\ Latex/
 #fi
 
