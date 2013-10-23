@@ -713,7 +713,7 @@ que por la L.G.N. (\ref{thmGrandes}) converge a una función $\Psi(\theta)$ que 
 
 donde \[ \Psi(\theta) = \mathbb{E}_{\theta_0} \left[\log f(X;\theta)\right] = \int\log f(x;\theta) f(x;\theta_0) \, dx \]
 
-\begin{theorem} \label{thmMV} Sea $X\sim f(.;\theta_0)$. Supongamos que se satisfacen las siguientes condiciones:
+\begin{theorem}[Teorema MV1] \label{thmMV} Sea $X\sim f(.;\theta_0)$. Supongamos que se satisfacen las siguientes condiciones:
 
 \subparagraph{MV0) Parametrización adecuada} Las distribuciones son distintas si el parámetro $\theta$ es distinto.
 
@@ -767,6 +767,56 @@ Entonces, $\forall \epsilon > 0$
 Tomo $\displaystyle \epsilon = \frac{1}{2}\abs{\mathbb{E}_{\theta_0}\left(\log \frac{f(X;\theta)}{f(X;\theta_0)}\right)}$ y entonces 
 
 \[ \prob{\frac{1}{n}\sum_{i=1}^n\log\frac{f(X_i;\theta)}{f(X_i;\theta_0)}  <  \frac{1}{2}\abs{\mathbb{E}_{\theta_0}\left(\log \frac{f(X;\theta)}{f(X;\theta_0)}\right)} < 0 } \convs 1 \]
+\end{proof}
+
+\subsection{Consistencia del método de MV}
+
+\begin{theorem}[Teorema MV2] Supongamos que se cumplen las condiciones del teorema MV1 (\ref{thmMV}) y adicionalmente
+
+\subparagraph{MV3)} El espacio paremétrico $\Theta$ es un intervalo abierto no necesariamente finito y, para casi todo $x$, $f(x;\theta)$ es diferenciable respecto a $\theta$ con dereivada continua.
+
+Entonces, conprobabilidad tendiente a 1, la ecuación
+
+\begin{equation}
+ \dpa{}{\theta} \log L_n (\theta;X_1,\dotsc,X_n) = 0 \label{eqMV2}
+\end{equation}
+tiene una raíz $\hat\theta_n = \hat\theta_n(x_1,\dotsc,x_n)$ que \textbf{converge en probabilidad a $\theta_0$} (el verdadero valor del parámetro). Si además suponemos que la raíz es única, entonces $\hat\theta_n$ maximiza la verosimilitud $L_n$ y por lo tanto es el estimador de máxima verosimilitud.
+\end{theorem}
+
+\begin{proof}
+Sea $\epsilon > 0$. Entonces para casi todo\footnote{Casi todo: puntos con probabilidad no nula} $x$ en el intervalo $\Omega = (\theta_0 - \epsilon, \theta_0 + \epsilon)$ se tiene que $f(x;\theta)$ es diferenciable con derivada continua.
+
+\begin{center}
+\begin{tikzpicture}
+\draw (-4,0) -- (4,0);
+\node[fill=white, circle, draw, inner sep=2pt, label=below:$\theta_0 - \epsilon$] at (-2, 0) {};
+\node[fill=white, circle, draw, inner sep=2pt, label=below:$\theta_0$] at (0, 0) {};
+\node[fill=white, circle, draw, inner sep=2pt, label=below:$\theta_0 +\epsilon$] at (2, 0) {};
+
+\node[fill=black, circle, draw, inner sep=1pt, label=above left:$L_n(\theta_0 - \epsilon)$] (A) at (-2, 0.8) {};
+\node[fill=black, circle, draw, inner sep=1pt, label=above:$L_n(\theta_0)$] (B) at (0, 1.3) {};
+\node[fill=black, circle, draw, inner sep=1pt, label=above right:$L_n(\theta_0 +\epsilon)$] (C) at (2, 0.6) {};
+\end{tikzpicture}
+\end{center}
+
+Cogemos entonces un conjunto $S_n$ definido de la siguiente forma:
+
+\begin{align*}
+S_n = \{ (x_1,\dotsc,x_n) &\tq L_n(\theta_0;x_1, \dotsc,x_n) > L_n(\theta_0 - \epsilon; x_1, \dotsc, x_n) \\
+&\y  L_n(\theta_0;x_1, \dotsc,x_n) > L_n(\theta_0 + \epsilon; x_1, \dotsc, x_n) \} 
+\end{align*}
+
+Aplicando el teorema MV1 (\ref{thmMV}), tenemos que $\mathbb{P}_{\theta_0}(S_n) \convs 1$. 
+
+En algún punto del interior del intervalo $\Omega$ hay un máximo local. Como puede haber varios máximos locales, tomo $\hat\theta_n$ como el punto de máximo local más cercano a $\theta_0$. 
+
+Se cumple que cada uno de esos puntos de máximo satisfacen la ecuación de verosimilitud (\ref{eqMV2}). En consecuencia $\hat\theta_n$ satisface también esa misma ecuación. Por lo tanto
+
+\[ \prob{\abs{\hat\theta_n - \theta_0} < \epsilon} \convs 1 \dimplies \prob{\abs{\hat\theta_n - \theta_0} ≥ \epsilon} \convs 0 \]
+
+y entonces
+
+\[ \hat\theta_n \convprob \theta_0 \]
 \end{proof}
 
 
