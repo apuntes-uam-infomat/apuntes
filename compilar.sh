@@ -1,6 +1,4 @@
 #!/bin/bash
-if [ "$1" == "vdj" ]
- then
 read -p "Compilar (y/n)?" yn
 case $yn in
 	[Yy]* ) echo "Compilando"
@@ -25,8 +23,5 @@ cp "Estadistica I"/EI.pdf .
 cp "Estructuras Algebraicas"/Apuntes.pdf .
 mv Apuntes.pdf Est_Alg.pdf
 cp *.pdf ~/Compartido/Dropbox/Doble\ Grado\ UAM\ \(1\)/TERCEROGILIS/Primer\ Cuatrimestre/Apuntes\ Latex/
-else
-echo "Solo funciono en el ordenador de dejuan"
-echo "troool xD"
 fi
 
