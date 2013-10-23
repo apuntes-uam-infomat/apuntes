@@ -22,6 +22,9 @@ cp "Analisis Matematico"/Analisis_Matematico.pdf .
 cp "Estadistica I"/EI.pdf .
 cp "Estructuras Algebraicas"/Apuntes.pdf .
 mv Apuntes.pdf Est_Alg.pdf
-cp *.pdf ~/Compartido/Dropbox/Doble\ Grado\ UAM\ \(1\)/TERCEROGILIS/Primer\ Cuatrimestre/Apuntes\ Latex/
-fi
+echo "Introduce el path donde quiere copiar los archivos pdf: "
+read directorio
+cp *.pdf ~/$directorio
+#cp *.pdf ~/Compartido/Dropbox/Doble\ Grado\ UAM\ \(1\)/TERCEROGILIS/Primer\ Cuatrimestre/Apuntes\ Latex/
+#fi
 
