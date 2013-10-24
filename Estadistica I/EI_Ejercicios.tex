@@ -1,6 +1,10 @@
 \subsection{Tema 1 - Estadística descriptiva}
 
-\begin{problem}[2] Demostrar que \[ \sum_{i=1}^n \left(x_i-\avg{x}\right)^2 = \min_{a\in \real} \sum_{i=1}^n(x_i-a)^2 \]
+\begin{problem}[2] 
+
+Demostrar que 
+DESCOMENTAR UNA LINEA1
+%\[\sum_{i=1}^n \left(x_i-\avg{x}\right)^2 = \min_{a\in \real} \sum_{i=1}^n(x_i-a)^2 \]
 
 \solution
 
@@ -244,4 +248,101 @@ y derivando
 \[ \deriv{}{p} \log L(p) = \]
 
 y derivas tú lo que queda, majo.
+\end{problem}
+
+\begin{problem}[5]
+Distribución de Rayleigh, cuya función de densidad es:
+\[f(x;\theta) = \frac{x}{\theta^2} e^{\frac{-x^2}{2\theta^2}} \mathbb{I}_{[0,\infty)} (x), \theta > 0\]
+
+\begin{itemize}
+\item[a]Calcular el estimador de máxima verosimilitud (e.m.v.)
+\item[b]Calcular la consistencia.
+\item[c] ¿Es asintóticamente normal?
+\end{itemize}
+
+\solution
+
+\paragraph{a)}
+
+\[L_n(\theta;x_1,...,x_n) = \frac{x_1 \cdot ... \cdot x_n}{\theta^2} e^{\frac{-1}{2\theta^2} \sum_{i=1}^n x_i^2}\]
+\[log L_n(\theta) = \sum log x_i - 2nlog\theta -\frac{1}{2\theta^2}\sum x_i^2\]
+\[\dpa log L_n(\theta) = \frac{1}{\theta} \left(-2n+\frac{1}{\theta^2}\sum x_i^2\right) = 0\]
+\[\implies \hat{\theta}^2 = \frac{\sum x_i^2}{2n} \implies \hat{\theta} emv(\theta) = (\frac{\sum x_i^2}{2n}^2\]
+
+Estimador razonable porque $E(x^2) = V(x) + E(x) = 2\theta^2 \dimplies \theta^2 = \frac{1}{2} E(x^2)$
+
+\paragraph{b)}
+\textbf{Consistencia:} $\hat{\theta}^2 = \frac{1}{2} \gor{Y}, Y_i = X_i^2$
+
+Por la ley fuerte de los grandes números (\ref{LFGN}) sabemos que: $\gor{Y} \convs[cs] E_{\theta}(Y) = E_{\theta}(X^2) = 2\theta^2$
+
+Vamos a aplicar el teorema de Snouschky?.
+
+Sea $g(x) = \sqrt{\frac{1}{2}x}$ definida sobre $[0,\infty)$.
+
+Teorema de Snoopy $\implies g\left(\gor{Y}\right) = \sqrt{\frac{1}{2} \frac{\sum x_i^2}{n}} \convs[c.s.] g(E_{\theta}) = \sqrt{\frac{1}{2}\theta^2} = \theta \implies $ El e.m.v. de $\theta$, $\hat{\theta}$ es consistente c.s.
+
+
+\paragraph{c)}
+
+Queremos aplicar el método delta:
+
+\[\sqrt{n}(\hat{\theta} - \theta) = \sqrt{n}\left(g\left(\gor{Y}\right) - g\left(E(Y)\right)\right) \convs[d]N(0,\abs{g'(E(Y))}\sqrt{V(Y)}\]
+
+\[E_{\theta}(Y) = E_{\theta} (X^2) = 2\theta^2\]
+\[V_{\theta}(Y) = E(X^4) - E^2(X^2) = 8\theta^4-4\theta^4 = 4\theta^4\]
+
+Entonces tenemos que $g'(E(Y)) = \displaystyle \frac{1}{2\sqrt{2E(Y)}} = \frac{1}{4\theta}$.
+
+Con esta información completamos:  
+
+\[\sqrt{n}(\hat{\theta} - \theta) \convs[d] N\left(0,\sqrt{\frac{1}{2\theta}}\right)\]
+
+\end{problem}
+
+\begin{problem}[11]
+\footnote{Este ejercicio es del parcial del año pasado}
+
+
+\solution
+
+$X\leadsto Unif[0,\theta]$
+Con $f(x) = \displaystyle\left\{\begin{array}{cc}
+\frac{1}{\theta} & 0\leq x \leq \theta\\
+0 & x \notin [0,\theta]
+\end{array}$
+
+Vamos a calcular la función de distribución:
+
+\[F_{\theta} (x) = P_{\theta}\{X\leq x} = \int_{-infty}^x f_{\theta}(t)dt = \int_0^x \frac{1}{\theta} dt = \frac{x}{\theta} \ si 0\leq x \leq \theta\]
+
+\[F_{\theta} = \left\{\begin{array}{cc}
+\frac{x}{\theta} & 0\leq x \leq \theta\\
+0 & x \notin [0,\theta]
+\end{array}\]
+
+Nos piden dibujar las funciones... GUILLEEEE xD
+
+Vamos a calcular \[L_n(\theta;x_i) = \prod_{i=1}^n f_{\theta} (x_i) = \left\{\begin{array}{cc}
+\left(\frac{1}{\theta}\right)^n & \forall x_i \in [0,\theta]\\
+0 & \exists x_i\notin [0,\theta]
+\end{array}\]
+
+Calculamos la $logL_n$ que nos piden dibujarla:
+
+\[logL_n(\theta) = \left\{\begin{array}{cc}
+-nlog(\theta) & si \ max(\{x_i\})\leq \theta\\
+0 & si \ no
+\end{array}\]
+Dibujoo!
+
+\[\hat{\theta_n} = e.m.v.(\theta) = max\left(L_n(\theta)\right)\]
+
+También vale tomando el logaritmo:
+
+\[\hat{\theta}_n = e.m.v. (\theta) = arg\ mas logL_n(\theta) = max\{x_i\}\]
+porque $logLn(\theta) = \displaystyle\left\{\begin{array}{cc}
+-nlog(\theta) & max\{x_i\} \leq \theta\\
+-\infty & si \ no
+\end{array}\right.\]
 \end{problem}
