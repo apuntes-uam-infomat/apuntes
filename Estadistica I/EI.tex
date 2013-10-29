@@ -830,10 +830,141 @@ y entonces
 
 \subsection{Información de Fisher}
 
+Supongamos el conjunto de todos los estimadores de un parámetro $\theta$. Su error cuadrático medio es 
+
+\[ \ECM \hat\theta = \var{\hat\theta} + \sesgo^2 \hat\theta \]
+
+Si queremos buscar el \textit{mejor} estimador, buscamos los que minimicen el ECM. Por lo tanto, nos interesaremos en el subconjunto de estimadores insesgados ($\sesgo \hat\theta = 0$). Sin embargo, no tenemos una forma clara de distinguir cuál es mejor entre esos estimadores insesgados. En esta sección vamos a buscar una \textit{escala}, a la que llamaremos la \textbf{información de Fisher}, que nos dará una cota para la varianza de un estimador. 
+
+Suponemos que en la integral $\int f(x;\theta)\,dx$ se puede derivar dos veces bajo el signo integral (esto es, que $\int \frac{∂^2}{∂\theta^2} f(x;\theta)\,dx$ existe) y que además se puede permutar la integral y la derivada parcial (vemos condiciones suficientes en el apéndice \ref{secConds}, página \pageref{secConds}). Entonces
+
+\[ \int f(x;\theta)\, dx = 1 \implies \dpa{}{\theta} \int f(x;\theta)\,dx = 0 \]
+
+Por tanto
+
+\[ \int \dpa{}{\theta}(\log f(x;\theta) ) f(x;\theta) \, dx = \mathbb{E}_\theta\left(\dpa{}{\theta}\log f(X;\theta)\right) = 0 \]
+
+Si derivamos de nuevo en la integral
+
+\begin{gather*}
+\frac{∂^2}{∂\theta^2} \int f(x;\theta)\,dx = 0  = \int \frac{∂^2}{∂\theta^2} f(x;\theta)\,dx = \\
+=\int \frac{∂^2}{∂\theta^2} \log f(x;\theta) f(x;\theta)\,dx + \int\dpa{}{\theta} \log f(x;\theta) \cdot \dpa{}{\theta}f(x;\theta)\,dx = \wtf \\
+=\int \frac{∂^2}{∂\theta^2}\log f(x;\theta) f(x;\theta)\, dx + \int \left(\dpa{}{\theta}\log f(x;\theta)\right)^2 f(x;\theta)\,dx = \\
+= \mathbb{E}_\theta \left[\frac{∂^2}{∂\theta^2}\log f(X;\theta) \right] 
+	+ \mathbb{E}_\theta \left[ \left(\dpa{}{\theta} \log f(X;\theta)\right)^2\right] = 0
+\end{gather*}
+
+El segundo valor se llama información de Fisher:
+\begin{defn}[Información\IS de Fisher] Se denota por $I(\theta)$ la información de Fisher del parámetro $\theta$
+
+\[ I(\theta) =\left[\left(\dpa{}{\theta} \log f(X;\theta)\right)^2\right] \]
+
+Representa intuitivamente la \textit{cantidad de información} acerca del valor del parámetro $\theta$ contenida en una observación de $X$.
+\end{defn}
+
+¿En qué consiste esa cantidad de información? Tomemos, por ejemplo, una normal $N(0,\theta)$ con $\theta$ pequeña. Una observación $X$ que hagamos nos dará mucha información sobre el modelo, ya que todos los valores de la normal están muy agrupados, y por lo tanto $I(\theta)$ será grande. Si tomamos $\theta$ grande, una observación $X$ no nos dará mucha información sobre el modelo porque los valores están más dispersos, y por lo tanto tendremos un valor de $I(\theta)$ pequeño.
+
+La información de Fisher nos da una cota inferior para la varianza.
+
+\begin{theorem}[Cota\IS de Fréchet-Cramér-Rao] Dado $\hat\theta$ un estimador insesgado de $\theta$, entonces
+\label{thmCotaFCR}
+\[ \var{\hat\theta} ≥ \frac{1}{nI(\theta)} \]
+
+donde $\frac{1}{nI(\theta)}$ se llama la \textbf{cota de Fréchet-Cramér-Rao}.
+\end{theorem}
+
+\begin{proof} Tomamos la v.a. $Z$ como la derivada del logaritmo de la verosimilitud
+
+\[ Z = \dpa{}{\theta}\log L_n (X,\theta) = \sum_{i=1}^n \dpa{}{\theta} \log f(X_i;\theta) \]
+
+La desigualdad de Cauchy-Schwartz establece que \footnote{Por ejemplo, porque no tengo ni idea de dónde sale esto.}
+
+\[ \var[\theta]{T_n} ≥ \frac{\text{Cov}_\theta^2 (Z,T_n)}{\var[\theta]{Z}} \]
+
+Veremos que el numerador vale 1 si $T_n$ es un estimador insesgado, y que $\var[\theta]{Z} = n I(\theta)$.
+
+Primero observamos que
+
+\[ \esp[\theta]{Z} = \sum_{i=1}^n \esp{\frac{∂}{∂\theta} \log f(X_i;\theta)} = 0 \]
+
+Y la varianza
+
+\[ \var[\theta]{Z} = \sum_{i=1}^n \var[\theta]{\frac{∂}{∂\theta} \log f(X_i;\theta)} = \sum_{i=1}^n \esp{\left(\dpa{}{\theta} \log f(X;\theta)\right)^2}[\theta] = n I(\theta) \]
+
+La primera parte está demostrada.
+
+Ahora vemos que, si $\esp[\theta]{Z} = 0$, entonces
+
+\[ \text{Cov }(Z,T_n) = \esp[\theta]{ZT_n} - \underbrace{\esp[\theta]{Z}}_0 \esp[\theta]{T_n} = \esp[\theta]{ZT_n}  \]
+
+Como $Z$ y $T_n$ dependen de la muestra
+
+\[ \esp[\theta]{ZT_n} = \esp[\theta] {Z(X_1,\dotsc,X_n) \cdot T_n(X_1,\dotsc,X_n)}= \int_{\real^n} Z(x_1,\dotsc,x_n) \cdot T_n(x_1,\dotsc,x_n) \cdot f_\theta(x_1,\dotsc,x_n)\,d(x_1, \dotsc, x_n) \]
+
+Como las $X_1,\dotsc,X_n$ son independientes, 
+
+\[ f_\theta(x_1,\dotsc,x_n) = \prod_{i=1}^nf(x_i;\theta)\ \]
+
+y la integral nos queda entonces como una serie de integrales iteradas
+
+\[ \int_\real \dotsb \int_\real Z(x_1,\dotsc,x_n) \cdot T_n(x_1,\dotsc,x_n)  \prod_{i=1}^nf(x_i;\theta)\,dx_i \]
+
+Vemos cuánto vale $Z$:
+
+\[ Z = \dpa{}{\theta}\log f(x_i;\theta) = \sum_{i=1}^n \frac{\dpa{}{\theta}f(x_i;\theta)}{f(x_i;\theta)} \]
+
+Pero 
+
+\[ \sum_{i=1}^n \frac{\dpa{}{\theta}f(x_i;\theta)}{f(x_i;\theta)}  \prod_{i=1}^nf(x_i;\theta)\,dx_i  = \sum_{i=1}^n\left[ \dpa{}{\theta}f(x_i;\theta \cdot \prod_{\substack{j=1\\j\neq i}}^n f(x_j;\theta) \right] \]
+
+que por la regla de la cadena es igual a 
+
+\[ \dpa{}{\theta}\left[\prod_{i=1}^n f(x_i;\theta) \right] \]
+
+y entonces nos queda que
+
+\begin{gather*}
+ \text{Cov}\,(Z,T_n) = \esp[\theta]{ZT_n} = \int_\real \dotsc \int_\real T_n(x_1,\dotsc,x_n) \dpa{}{\theta} \prod_{i=1}^n f(x_i;\theta)\, dx_i = \\
+ = \dpa{}{\theta} \int_\real \dotsc \int_\real T_n(x_1,\dotsc,x_n) \prod_{i=1}^n f(x_i;\theta)\, dx_i =\\
+ = \dpa{}{\theta} \esp[\theta]{T_n} 
+ \end{gather*}
+
+Como $T_n$ es un estimador insesgado $\esp[\theta]{T_n}  = \theta$ y entonces $\text{Cov}\,(Z,T_n) = 1$. Por lo tanto, nos queda que 
+
+\[ \var{\hat\theta} ≥ \frac{1}{nI(\theta)} \]
+
+Además, si $T_n$ no fuese un estimador insesgado
+
+\[ \var{\hat\theta} ≥ \frac{\left(dpa{}{\theta} \esp[\theta]{T_n} \right)^2}{n I(\theta)} \]
+
+y por lo tanto
+
+\[ \text{ECM}(T_n) ≥ \frac{\left(\dpa{}{\theta} \esp[\theta]{T_n}\right)^2}{n I(\theta)} + \text{Sesgo }^2 (T_n) \]
+
+\end{proof}
+
+\begin{defn}[Estimador\IS eficiente] Se dice que un estimador es eficiente si su varianza es igual a la cota de Fréchet-Cramér-Rao (\ref{thmCotaFCR}), es decir
+\[ \var{\hat\theta} = \frac{1}{nI(\theta)} \]
+\end{defn}
+
+
 \appendix
 \section{Distribuciones notables}
 \label{secDistr}
 \includepdf[pages={2-last}, nup=1x3]{_Distribuciones.pdf}
+
+\section{Condiciones suficientes para permutar la derivada con la integral}
+\label{secConds}
+Sea una función $p(x,\theta)$ con $x\in \real$ y $\theta \in \mathbb{T}$ donde $\mathbb{T}$ es un intervalo abierto de los reales. Supongamos que
+\begin{enumerate}
+\item $p(x,\theta)$ es integrable con respecto a $x$ para cada $\theta$ (se cumple automáticamente si $p$ es función de densidad.
+\item Para casi todo punto\footnote{Para todo $x$ salvo los que tienen probabilidad 0} existe $\dfrac{∂}{∂\theta} p(x,\theta)\;\forall\theta$.
+\item Existe una función integrable $\appl{g}{\real}{\real}$ tal que \[ \abs{\dfrac{∂}{∂\theta} p(x,\theta)}≤g(x)\;\forall\theta \]
+\end{enumerate}
+
+Entonces para todo $\theta$
+
+\[ \dpa{}{\theta}\int_\real p(x,\theta)\,dx=\int_real \dpa{}{\theta} p(x,\theta)\,dx \]
 
 \section{Ejercicios}
 \input{EI_Ejercicios.tex}
