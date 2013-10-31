@@ -603,11 +603,9 @@ Como $\avg{X}\convcs µ$ entonces $µ^\ast \convcs µ$ y por lo tanto y usando e
 
 En general, se habla de normalidad asintótica con tasa $a_n$ si se cumple que \[ a_n (T_n - \theta) \convdist N(0,\sigma) \], con $a_n$ sucesión creciente y mayor que cero.
 
-\subsection{Construcción de estimadoresa}
+\subsection{Estimador de máxima verosimilitud (EMV)}
 
 En lo que sigue vamos a suponer que $\{X_n\}$ es una muestra formada por v.a.i.i.d. cuya distribución tiene una función de densidad o de masa $f(.;\theta_0)$ perteneciente a una familia de funciones $\{f(.;\theta) \tq \theta \in \Theta\}$. $\theta_0$ nos indica el valor real, y $\theta$ es un parámetro genérico.
-
-\subsubsection{Método de máxima verosimilitud}\index{Método!de máxima verosimilitud}
 
 Intuitivamente, lo que pensamos con este método es que la función de masa mide lo verosímil que es que salga un cierto parámetro. 
 
@@ -625,7 +623,7 @@ cuando ese máximo está bien definido.
 
 Para evitar usar derivadas en un producto potencialmente muy largo, podemos maximizar el logaritmo de la verosimilitud, que es creciente y está bien definido porque la densidad es siempre mayor que cero, y los casos en los que sea cero no los estudiamos porque no ocurren (probabilidad 0).
 
-\paragraph{Cálculo efectivo del EMV}
+\subsubsection{Cálculo efectivo}
 
 El valor del estimador se obtiene como solución de la \index{Ecuación!de verosimilitud} \textbf{ecuación de verosimilitud}.
 
@@ -709,7 +707,7 @@ De la segunda ecuación resulta prácticamente imposible despejar $k$. Sin embar
 
 Por ejemplo, tomamos $X\sim N(µ, \sigma)$. Ya habíamos calculado el e.m.v. de la varianza, que era la varianza muestral. ¿Cómo calcular entonces el e.m.v. de la desviación típica? Sabiendo que $\sigma = \sqrt{\sigma^2}$, tomamos $\tau(\theta) = \sqrt{\theta}$ que es una función biyectiva en $\real^+$ y por lo tanto podemos decir que $\text{emv}\,(\sigma) = \sqrt{\hat\sigma^2}$
 
-\subsection{Motivación del método de máxima verosimilitud}
+\subsubsection{Motivación del método}
 Estudiamos la siguiente función
 \[ \frac{1}{n}\log L_n(\theta) = \frac{1}{n} \log \left(\prod_{i=1}^nf(X_i,\theta)\right) = \frac{1}{n}\sum_{i=1}^n \log f(X_i;\theta) \]
 
@@ -775,9 +773,9 @@ Tomo $\displaystyle \epsilon = \frac{1}{2}\abs{\mathbb{E}_{\theta_0}\left(\log \
 \[ \prob{\frac{1}{n}\sum_{i=1}^n\log\frac{f(X_i;\theta)}{f(X_i;\theta_0)}  <  \frac{1}{2}\abs{\mathbb{E}_{\theta_0}\left(\log \frac{f(X;\theta)}{f(X;\theta_0)}\right)} < 0 } \convs 1 \]
 \end{proof}
 
-\subsection{Consistencia del método de MV}
+\subsubsection{Consistencia del método}
 
-\begin{theorem}[Teorema MV2] Supongamos que se cumplen las condiciones del teorema MV1 (\ref{thmMV}) y adicionalmente
+\begin{theorem}[Teorema MV2]\label{thmMV2} Supongamos que se cumplen las condiciones del teorema MV1 (\ref{thmMV}) y adicionalmente
 
 \subparagraph{MV3)} El espacio paremétrico $\Theta$ es un intervalo abierto no necesariamente finito y, para casi todo $x$, $f(x;\theta)$ es diferenciable respecto a $\theta$ con dereivada continua.
 
@@ -825,7 +823,7 @@ y entonces
 \[ \hat\theta_n \convprob \theta_0 \]
 \end{proof}
 
-\subsection{Información de Fisher}
+\subsubsection{Información de Fisher}
 
 Supongamos el conjunto de todos los estimadores de un parámetro $\theta$. Su error cuadrático medio es 
 
@@ -945,17 +943,20 @@ y por lo tanto
 \end{defn}
 
 
-\subsection{Eficiencia asintótica de los e.m.v}
-\begin{theorem}[Teorema 3 de algún tipo de cosa] Supongamos que se verifican las condiciones MV0 - MV3 (referencia a alguna parte de los apuntes y además)
+\subsubsection{Eficiencia asintótica}
+\begin{theorem}[Teorema\IS MV3] Supongamos que se verifican las condiciones MV0 - MV3 (ver teoremas \ref{thmMV}, \ref{thmMV2}) y además:
 
-DEJA DE CAMBIARME LA PUTA DIAPOSITIVA.
+\subparagraph{MV4)} La integral $\int f(x;\theta)\,dx$ se puede derivar dos veces bajo el signo integral.
+\subparagraph{MV5)} Para cada $x$ la densidad $f(x;\theta)$ es tres veces diferenciable con respecto a $\theta$, con la tercera derivada continua en $\theta$.
+\subparagraph{MV6)} La información de Fisher es estrictamente positiva y finita: $0 < I(\theta_0) < \infty$
+\subparagraph{MV7)} Para cada $\theta_0\in \Theta$ existen un número $c > 0$ y una función $M(x)$, que pueden depender de $\theta_0$, tales que \[ \esp[\theta_0]{M(X)} < \infty \] y \[ \abs{\frac{∂^3\log f}{∂\theta^3}(x;\theta)} ≤ M(x)\; \forall x;\;\forall\theta \in (\theta_0 - c,\theta_0 + c) \]
 \end{theorem}
 
 \begin{proof}
 
 \begin{gather}
  \tilde\Psi_n(\theta) = L_n  \\
- \tilde\Psi_n' = \dpa{\Psi_n(\theta)}{\theta} \\
+ \tilde\Psi_n' = \dpa{\Psi_n(\theta)}{\theta} \label{eqT3_2} \\
  f' = \dpa{f}{\theta}f
  \end{gather}
  
@@ -977,7 +978,7 @@ Vamos a demostrar que esto converge en tres pasos:
 \item Segunda parte denom. converge a 0 en prob.
 \end{itemize}
 
-Usando además el teorema de Slutsky \ref{thmSlutsky}, que nos dice que NO DICE NADA PORQUE LO HA BORRADO.
+Usando además el teorema de Slutsky (\ref{thmSlutsky}), que nos dice que NO DICE NADA PORQUE LO HA BORRADO.
 
 \paragraph{Parte 1: Numerador}
 
@@ -1049,6 +1050,62 @@ Este término converge a una constante por lo tanto, y entonces se cumple que
 
 \[\frac{1}{2n}\left(\hat\theta_n-\theta_0\right)\tilde\Psi_n'''(\theta_n^\ast) \convprob 0 \]
 \end{proof}
+
+
+\subsection{Método de los momentos}
+\index{Estimador!por el método de los momentos}
+Sea $X\sim f(x;\theta)$, donde $\theta = (\theta_1,\dotsc,\theta_p)$ es un parámetro p-dimensional, con $p≥1$. 
+
+Si los momentos $\alpha_k(\theta) = \esp[\theta_0]{X^k},\;k=1,\dotsc,p$ son funciones sencillas de los $\theta_i$, un procedimiento natural para obtener un estimador de $\theta$ es resolver en $\theta_1,\dotsc,\theta_p$ el sistema de ecuaciones
+
+\begin{gather*}
+m_1 = \alpha_1(\theta) \\
+\dotsb \\
+m_p = \alpha_p(\theta) 
+\end{gather*}
+
+donde cada $m_k$ es el momento muestral:
+
+\[ m_k = \frac{\sum_{i=1}^n X_i^k}{n} \]
+
+La idea es estimar el parámetro de tal forma que los momentos muestrales coincidan con los momentos poblacionales. Por la LGN, cuando $n\to\infty$ entonces $m_k \to \alpha_k(\theta_0)$. 
+
+El método de los momentos se utiliza poco ya que da peores estimadores que el EMV. Sin embargo, puede resultar muy útil en casos en los que el EMV se calcula difícilmente o directamente no se puede calcular. Ahí hay que usar métodos numéricos de aproximación, y usando el método de los momentos podemos encontrar una primera aproximación que mejore la convergencia de los algoritmos numéricos de búsqueda de raíces.
+
+\subsubsection{Ejemplos}
+
+Si se tiene el modelo \[f(x;\theta) = \frac{1+\theta x}{2}\ind_{[-1,1](x)}\,\theta\in[-1,1] \] no es sencillo calcular el EMV pero sí obtener el estimador por el método de los momentos:
+
+\[ \esp[\theta]{X} = \int_{-1}^1 x f(x;\theta)\,dx = \frac{\theta}{3} \]
+
+Por tanto, la solución de $\avg{X} = \esp[\theta]{X}$ es $\tilde\theta_n = 3\avg{X}$, cuya varianza es 
+
+\[ \var[\theta]{\tilde\theta_n} = \var[\theta]{3\avg{X}} = 9\frac{\sigma^2}{n} = \frac{3-\theta^2}{n} \]
+
+ya que \[ \sigma^2 = \var[\theta]{X}= \esp[\theta]{X^2} - \esp[\theta]{X}^2 = \frac{1}{3}-\frac{\theta^2}{9} \]. Este estimador es consistente ya que, por la LGN, $3\avg{X} \convs 3\esp[\theta]{X}$.
+
+Supongamos un ejemplo más complicado: $X\sim Beta(a,b)$.
+
+\[ f(x;a,b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^{a-1}(1-x)^{b-1} \ind_{[0,1]}(x) \]
+
+y
+
+\begin{align*}
+\esp[\theta]{X} &= \int_0^1\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^{a}(1-x)^{b-1}\,dx = \\
+&= \frac{\Gamma(a+b)}{\Gamma(a)}\frac{\Gamma(a+1)}{\Gamma(a+b+1)}\underbrace{\int_0^1\frac{\Gamma(a+b+1)}{\Gamma(a+1)\Gamma(b)} x^{a}(1-x)^{b-1}\,dx}_{=1 \text{ (f. densidad)}} = 
+\end{align*}
+
+Sabiendo que $\Gamma(p+1) = p\Gamma(p)$
+
+\[ \frac{\Gamma(a+b)}{\Gamma(a)}\frac{\Gamma(a+1)}{\Gamma(a+b+1)} = 
+	\frac{\Gamma(a+b)}{\Gamma(a)}\frac{a\Gamma(a)}{(a+b)\Gamma(a+b)} = \frac{a}{a+b} \]
+	
+y los estimadores quedan como
+	
+\begin{gather*}
+\hat{a} = \avg{X}\left(\frac{\avg{X}(1-\avg{X})}{s^2}-1\right) \\
+\hat{b} = (1-\avg{X})\left(\frac{\avg{X}(1-\avg{X})}{s^2}-1\right) 
+\end{gather*}
 
 
 \appendix
