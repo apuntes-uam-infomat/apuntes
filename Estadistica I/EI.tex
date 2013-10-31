@@ -1,7 +1,6 @@
 \documentclass{apuntes}
 
 \usepackage{tikz}
-
 \usetikzlibrary{calc, intersections}
 \author{Guillermo Julián Moreno}
 \date{13/14 C1}
@@ -257,7 +256,7 @@ Al contrario no tiene por qué darse.
 \end{theorem}
 
 
-\begin{theorem}[Teorema\IS de Slutsky] Sean $\{X_n\}$, $\{Y_n\}$ sucesiones de variables aleatorias tales que $X_n\convdist X$, $Y_n\convprob c$ con $c\in\real$ constante. Entonces
+\begin{theorem}[Teorema\IS de Slutsky]\label{thmSlutsky} Sean $\{X_n\}$, $\{Y_n\}$ sucesiones de variables aleatorias tales que $X_n\convdist X$, $Y_n\convprob c$ con $c\in\real$ constante. Entonces
 
 \begin{enumerate}
 \item $X_n + Y_n \convdist X + c$
@@ -922,7 +921,7 @@ que por la regla de la cadena es igual a
 y entonces nos queda que
 
 \begin{gather*}
- \text{Cov}\,(Z,T_n) = \esp[\theta]{ZT_n} = \int_\real \dotsc \int_\real T_n(x_1,\dotsc,x_n) \dpa{}{\theta} \prod_{i=1}^n f(x_i;\theta)\, dx_i = \\
+\cov (Z,T_n) = \esp[\theta]{ZT_n} = \int_\real \dotsc \int_\real T_n(x_1,\dotsc,x_n) \dpa{}{\theta} \prod_{i=1}^n f(x_i;\theta)\, dx_i = \\
  = \dpa{}{\theta} \int_\real \dotsc \int_\real T_n(x_1,\dotsc,x_n) \prod_{i=1}^n f(x_i;\theta)\, dx_i =\\
  = \dpa{}{\theta} \esp[\theta]{T_n} 
  \end{gather*}
@@ -944,6 +943,112 @@ y por lo tanto
 \begin{defn}[Estimador\IS eficiente] Se dice que un estimador es eficiente si su varianza es igual a la cota de Fréchet-Cramér-Rao (\ref{thmCotaFCR}), es decir
 \[ \var{\hat\theta} = \frac{1}{nI(\theta)} \]
 \end{defn}
+
+
+\subsection{Eficiencia asintótica de los e.m.v}
+\begin{theorem}[Teorema 3 de algún tipo de cosa] Supongamos que se verifican las condiciones MV0 - MV3 (referencia a alguna parte de los apuntes y además)
+
+DEJA DE CAMBIARME LA PUTA DIAPOSITIVA.
+\end{theorem}
+
+\begin{proof}
+
+\begin{gather}
+ \tilde\Psi_n(\theta) = L_n  \\
+ \tilde\Psi_n' = \dpa{\Psi_n(\theta)}{\theta} \\
+ f' = \dpa{f}{\theta}f
+ \end{gather}
+ 
+ donde la función \ref{eqT3_2} se llama el \textbf{score} (quizás).
+ 
+ Recordemos que $\hat\Psi_n(\theta)$ depende de la muestra. Para cada muestra fija se tiene
+ 
+ \[ \tilde\Psi_n(\hat\theta_n) = \hat\Psi_n'(\theta_0) + (\hat\theta_n-\theta_0)\Psi_n''(\theta_0) + \frac{\left(\hat\theta_n-\theta_0\right)^2}{2}\tilde\Psi_n'''(\theta_n^\ast) \]
+
+Para algún $\theta_n^\ast$ entre $\hat\theta_ n$ y $\theta_0$. Como el primer miembro es 0, resulta
+
+\[ \sqrt{n}\left(\hat\theta_n-\theta_0\right) = \frac{\frac{1}{\sqrt{n}}\tilde\Psi_n'(\theta)^2}{-\frac{1}{n}\Psi_n''(\theta_0) - \frac{1}{2n}\left(\hat\theta_n-\theta_0\right)\tilde\Psi_n'''(\theta_n^\ast)} \]
+
+Vamos a demostrar que esto converge en tres pasos:
+
+\begin{itemize}
+\item Numerador converge a $N(0,\sqrt{I(\theta_0)}$.
+\item Primera parte converge a $I(\theta_0)$.
+\item Segunda parte denom. converge a 0 en prob.
+\end{itemize}
+
+Usando además el teorema de Slutsky \ref{thmSlutsky}, que nos dice que NO DICE NADA PORQUE LO HA BORRADO.
+
+\paragraph{Parte 1: Numerador}
+
+\[ \frac{1}{\sqrt{n}}\tilde\Psi_n'(\theta_0) = \frac{\sqrt{n}}{n}\sum_{i=1}^n \left[\frac{f'(X_i;\theta_0)}{f(X_i;\theta_0)} - \esp[\theta_0]{\frac{f'(X_i;\theta_0)}{f(X_i;\theta_0)}}\right] \]
+
+Como $\esp[\theta_0]{\frac{f'(X_i;\theta_0)}{f(X_i;\theta_0)}} = 0$ (vete tú a saber por qué), la aplicación del TCL (\ref{thmCentral}) a las variables $Y_i = \frac{f'(X_i;\theta_0)}{f(X_i;\theta_0)}$ y la definición de $I(\theta_0)$ proporcionan directamente
+
+\[ \frac{1}{\sqrt{n}}\hat\Psi_n'(\theta_0) \convdist N(0,\sqrt{\var{Y}}) \]
+
+Calculamos ahora esa desviación típica:
+
+\begin{gather*}
+ \var[\theta]{Y} = \esp[\theta]{Y^2} - \esp[\theta]{Y}^2 = \esp[\theta]{Y^2} = \\
+ = \esp[\theta]{\left(\dpa{}{\theta}\log f(X;\theta)\right)^2} = I(\theta)
+\end{gather*}
+
+Y por lo tanto nos queda que 
+
+\[ \frac{1}{\sqrt{n}}\hat\Psi_n'(\theta_0) \convdist N\left(0,\sqrt{I(\theta_0)}\right) \]
+
+\paragraph{Parte 2: Denominador A}
+
+Operamos con
+
+\[ -\frac{1}{n}\Psi_n''(\theta_0) \]
+
+Si derivamos de nuevo $\tilde\Psi_n''$ con respecto a $\theta$ tenemos que 
+
+\[ \tilde\Psi_n''(\theta) = \sum_{i=1}^n \frac{f''(x_i;\theta)f(x_i;\theta) - \left(f'(x_i;\theta)\right)^2}{f^2(x_i;\theta)} \]
+
+Entonces $\frac{1}{n}\Psi_n''(\theta_0)$ es un promedio, y por la LGN (\ref{thmGrandes}) 
+
+\begin{align*}
+- \frac{1}{n}\Psi_n''(\theta_0) & \convprob - \esp[\theta_0]{\frac{f''(x_i;\theta)f(x_i;\theta) - \left(f'(x_i;\theta)\right)^2}{f^2(x_i;\theta)}} =\\ & =\underbrace{\esp[\theta_0]{\left(\frac{f'(X_i;\theta_0)}{f(X_i;\theta_0)}\right)^2}}_{I(\theta_0)}- \esp[\theta_0]{\frac{f''(X_i;\theta_0)}{f(X_i;\theta_0)}} 
+\end{align*}
+
+Operamos ahora con la segunda parte 
+
+\begin{gather*}
+\esp[\theta_0]{\frac{f''(X_i;\theta_0)}{f(X_i;\theta_0)}} = \int_\real \frac{f''(X_i;\theta_0)}{f(X_i;\theta_0)}f(X_i;\theta_0)\,dx = \\
+= \int_\real \left.\frac{∂^2}{∂\theta^2}f(x;\theta)\right|_{\theta=\theta_0}\,dx 
+\end{gather*}
+
+y como según el enunciado del teorema podemos permutar la derivada con la integral dos veces, tenemos que
+
+\[ \int_\real \left.\frac{∂^2}{∂\theta^2}f(x;\theta)\right|_{\theta=\theta_0}\,dx =  \left.\frac{∂^2}{∂\theta^2}\int_\real f(x;\theta)\,dx\right|_{\theta=\theta_0} = \left.\frac{∂^2}{∂\theta^2}0\right|_{\theta=\theta_0}  = 0 \]
+
+Por lo tanto
+
+\[ - \frac{1}{n}\Psi_n''(\theta_0) \convprob I(\theta_0) \]
+
+\paragraph{Paso 3: Algo}
+
+\[\frac{1}{2n}\left(\hat\theta_n-\theta_0\right)\tilde\Psi_n'''(\theta_n^\ast) \convprob 0 \]
+
+Por hipótesis del teorema, $\hat\theta_n$ se considera consistente y entonces \[ \left(\hat\theta_n-\theta_0\right) \convs 0 \]. Analizaremos ahora la segunda parte de esa ecuación, $\tilde\Psi_n'''(\theta_n^\ast)$, y demostraremos que tiende a una constante.
+
+\[ \tilde\Psi_n'''(\theta_n^\ast) = \frac{1}{n}\sum_{i=1}^n \frac{∂^3}{∂\theta^3}\log f(X_i;\theta) \]
+
+Como $\hat\theta_n$ es consistente, $\theta_n^\ast$, que es un punto intermedio entre $\hat\theta_n$ y $\theta_0$, también tiende a $\theta_0$ en probabilidad. Entonces podemos aplicar la hipótesis MV7 del teorema y acotar la derivada parcial:
+
+\[ \abs{\frac{∂^3}{∂\theta^3}\log f(X_i;\theta)} ≤ M(X_i) \]
+
+y por lo tanto podemos acotar en probabilidad
+
+\[ \abs{\tilde\Psi_n'''(\theta_n^\ast)} < \frac{1}{n}\sum_{i=1}^n M(X_i) \] 
+
+Este término converge a una constante por lo tanto, y entonces se cumple que 
+
+\[\frac{1}{2n}\left(\hat\theta_n-\theta_0\right)\tilde\Psi_n'''(\theta_n^\ast) \convprob 0 \]
+\end{proof}
 
 
 \appendix
