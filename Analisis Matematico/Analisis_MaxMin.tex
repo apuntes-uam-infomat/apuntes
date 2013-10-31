@@ -13,7 +13,7 @@ F(\gx) \geq F(\ga), \forall \gx \in u\cap M \end{matrix}\right.\]
 \end{defn}
 
 
-\begin{theorem}[Teorema\IS Multiplicadores de Lagrange]
+\begin{theorem}[Teorema\IS de los multiplicadores de Lagrange] \label{thmMultLagrange}
 $\appl{F}{\Omega\subset\rnk}{\real}, F\in C^1(\Omega)$.
 
 M, variedad n-dimensional en $\rnk$. $\ga\in M$ extremo local de $F$ condicionado a M.
@@ -120,7 +120,7 @@ y &= \pm 1\\
 
 Puntos críticos: $(0,1),(0,-1)$, con $F(0,\pm 1) = -1 \implies MIN$
 
-\subparagraph{Ejemplo 2)}
+\paragraph{Ejemplo 2)}
 
 Hallar los puntos críticos más cercanos al origen entre los contenidos en la curva
 \[\Gamma = \left\{ \begin{array}{cc} x^2+xy+y^2-z^2-1&=0\\x^2+y^2-1&=0\end{array}\right.\]
@@ -202,23 +202,104 @@ Echate las cuentas lector vago y llegarás a:
 \left(\frac{-1}{\sqrt{2}},\frac{-1}{\sqrt{2}},\frac{-1}{\sqrt{2}}\right)
 \right\}\] con $F(x,y,z) = \frac{3}{2}, \forall (x,y,z)\in P_2$
 
-Jodete guille
+\subsection{Clasificación de puntos críticos condicionados}
 
+Sea $M$ una subvariedad de manera que $M=\{G = \gor{0}\}$ definida por un sistema de $k$ ecuaciones $G=(G_1,\dotsc,G_k)$ con $\rango DG = k$. Sea $P\in M$ un punto crítico de una función $F$ restringida a $M$. El teorema de los multiplicadores de Lagrange (\ref{thmMultLagrange}) nos dice que 
 
-\tdplotsetmaincoords{70}{110}
-\begin{tikzpicture}[scale=3,tdplot_main_coords]
-    \def\x{.5}
-    \draw[thin] (0,0,0) -- ({1.2*\x},{sqrt(3)*1.2*\x},0) node[below] {$y=\sqrt{3}x$};
-    \filldraw[
-        draw=red,%
-        fill=red!20,%
-    ]          (0,0,0)
-            -- (\x,{sqrt(3)*\x},0)
-            -- (\x,{sqrt(3)*\x},1)
-            -- (0,0,1)
-            -- cycle;
-    \draw[thick,->] (-2,0,0) -- (2,0,0) node[anchor=north east]{$x$};
-    \draw[thick,->] (0,-1,0) -- (0,1,0) node[anchor=north west]{$y$};
-    \draw[thick,->] (0,0,-1) -- (0,0,1) node[anchor=south]{$z$};
-\end{tikzpicture}
+\[ \grad F(P) - \lambda_1 DG_1(P) - \dotsb -\lambda_kDG_k(P) = \gor{0} \]
+
+donde los $\lambda_j$ son los multiplicadores. Definimos una función auxiliar 
+
+\begin{equation} H(\gx) = F(\gx) - \lambda_1 G_1(\gx) - \dotsb - \lambda_k G_k(\gx)\label{eqClasAux} \end{equation}
+
+con dos propiedades interesantes:
+
+\begin{gather*}
+\gx\in M\implies H(\gx) = F(\gx) \\
+\grad H(P) = \gor{0} 
+\end{gather*}
+
+Para clasificar el punto crítico vamos a coger una curva dentro de la subvariedad y a componerla con $H$. Pasaremos a tener una función de una variable y ahí veremos en qué condiciones tenemos un máximo o un mínimo.
+
+Tomamos una curva $\alpha\in C^1$ tal que 
+\begin{gather*}
+\alpha(0) = P \\
+\alpha(t) \in M\; \forall t \\
+\alpha'(0) = \gv
+\end{gather*}
+
+Estudiamos $g(t) = H(\alpha(t)) = F(\alpha(t)$. Entonces
+
+\[ g'(t) = \pesc{\grad H(\alpha(t)),\alpha'(t)} \]
+
+y entonces \[ g'(0) =\pesc{\grad H(P),\gv} = 0\]
+
+Como $F$ tiene un punto crítico condicionado en $P$, entonces $g$ tiene un punto crítico en $t = 0$. Determinar el carácter del punto crítico condicionado es lo mismo que determinar el carácter del punto crítico en $g$. Por lo tanto, tenemos que explorar la segunda derivada $g''(0)$:
+
+\begin{gather*}
+g'(t) = \pesc{\grad H(\alpha(t)),\alpha'(t)}  = \sum_{i=1}^n\dpa{H}{x_i}(\alpha(t)) \cdot \alpha_i'(t) \\
+\frac{d^2g}{dt^2}(t) =  \sum_{i=1}^n\deriv{}{t} \left(\dpa{H}{x_i}(\alpha(t)) \cdot \alpha_i'(t)\right)
+\end{gather*}
+
+Calculamos esa segunda derivada dentro del sumatorio
+
+\[ \deriv{}{t} \left(\dpa{H}{x_i}(\alpha(t)) \cdot \alpha_i'(t)\right) = \underbrace{\dpa{H}{x_i}(\alpha(t))\alpha_i''(t)}_{=0\text{ si } t=0} + \alpha_i'(t) \left[ \sum_{j=1}^n\frac{∂^2H}{∂x_ix_j}(\alpha(t))\alpha_j'(t)\right] \]
+
+Conclusión:
+
+\[ \frac{d^2g}{dt^2}(t) = \sum_{i=1}^n\left[\dpa{H}{x_i}(\alpha(t))\alpha_i''(t) + \alpha_i'(t) \left(\sum_{j=1}^n\frac{∂^2H}{∂x_ix_j}(\alpha(t))\alpha_j'(t)\right)\right] \]
+
+Evaluando en $t=0$
+
+\begin{gather*}
+ \frac{d^2g}{dt^2}(0) = \sum_{i=1}^n\left[\underbrace{\dpa{H}{x_i}(P)}_{=0}\alpha_i''(0) + \left(\sum_{j=1}^n\frac{∂^2H}{∂x_ix_j}(P)v_iv_j\right)\right]  = \\
+ = \sum_{i=1}^n\sum_{j=1}^n\frac{∂^2H}{∂x_ix_j}(P)v_iv_j = \gv \cdot D^2H(P) \cdot \trans{\gv}
+ \end{gather*}
+ 
+ Si estuviésemos viendo la clasificación de un punto crítico en general, miraríamos si la matriz hessiana es definida positiva, negativa o qué. Sin embargo, aquí estamos viendo un punto crítico restringido. Los vectores $\gv$ están siempre en el plano tangente a la variedad, así que sólo tenemos que ver si la matriz es definida positiva/negativa para esos vectores. Por lo tanto, la clasificación queda como
+ 
+ \begin{theorem}[Clasificación\IS de puntos críticos restringidos] Dado un punto crítico restringido $P$ , su carácter depende del signo de $\gv \cdot D^2H(P) \cdot \trans{\gv}\; \forall\gv\in T_P M$ con la función $H$ definida en (\ref{eqClasAux}):
+ 
+ \begin{itemize}
+ \index{Máximo/mínimo!local (restringido)}
+ \item Signo mayor que cero: \textbf{mínimo local}
+ \item Signo menor que cero: \textbf{máximo local}
+ \end{itemize}
+ 
+\subsubsection{Ejemplos} Calculamos los puntos críticos de la función $F$ restringidos a la variedad $G = 0$, con
+
+\begin{gather*}
+F(x,y) = (x+1)^2+y^2 \\
+G(x,y) = y^2-x^3 = 0 
+\end{gather*}
+
+Con la restricción de $G$, tenemos que $x^3=y^2≥0$ y entonces $x≥0$. Entonces, esto significa que $F(x,y) ≥ 1$. Como $F(0,0)=1$, está claro que, sin operar, en $(0,0)$ hay un mínimo.
+
+\[
+\begin{matrix}
+\grad F= (2(x+1), 2y) \\
+\grad G = (-3x^2, 2y)
+\end{matrix}
+\left\lbrace
+\begin{matrix}
+2(x+1)=\lambda(-3x^2)\\
+2y=\lambda 2y\\
+y^2-x^3 = 0
+\end{matrix}
+\right.
+\]
+
+En la segunda ecuación, tenemos dos posibilidades para resolverlas:
+
+\paragraph{Caso 1: $y=0$}
+
+Tendríamos que \[\left.\begin{matrix}2(x+1)=-3\lambda x^2 \\ -x^3 = 0\end{matrix}\right\rbrace \], lo que es imposible.
+
+\paragraph{Caso 2: $\lambda = 1$}
+
+La ecuación queda como \[\left.\begin{matrix}2(x+1)=-3x^2 \\ y^2=x^3 \end{matrix}\right\rbrace \] pero  la ecuación $3x^2+2x+2=0$, imposible también.
+
+Esto no quiere decir que el teorema no funcione, sino que tenemos que tener cuidado con las hipótesis: $\grad G$ tiene rango 0 en $(0,0)$  y por lo tanto \textbf{no podemos aplicar el teorema}.
+ \end{theorem}
+ 
 
