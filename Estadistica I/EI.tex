@@ -1107,6 +1107,96 @@ y los estimadores quedan como
 \hat{b} = (1-\avg{X})\left(\frac{\avg{X}(1-\avg{X})}{s^2}-1\right) 
 \end{gather*}
 
+\subsection{Metodología bayesiana}
+\index{Distribución!a priori}
+
+En muchos casos se tiene cierta información a priori, antes de extraer la muestra, sobre la probabilidad de los diferentes valores del parámetro $\theta$. En estos casos se sabe, o se supone, que ciertos intervalos de valores de $\theta$ son \textit{más probables que otros} y se concreta esta información en una \textbf{distribución a priori sobre $\theta$} cuya función de densidad se denota $\pi(\theta)$.
+
+De manera formal, la estadística bayesiana considera que el parámetro es una variable aleatoria y que la información previa se puede expresar a través de la distribución a priori del parámetro.
+
+Entonces, si antes teníamos una v.a. $X\sim f(x;\theta)$, ahora lo que diremos es que $X$ sigue una distribución condicionada por un parámetro: $X\sim f(x|\theta)$.
+
+En este caso, la muestra $X_1,\dotsc,X_n$ contiene información de la muestra y también de nuestro parámetro. Es decir, que podemos considerar la función de distribución de la muestra como \[ \prod_{i=1}^n f(x_i|\theta) \]. Para juntar toda esta información usaremos el Teorema de Bayes:
+
+\begin{theorem}[Teorema\IS de Bayes] Sea $A_1,A_2,\dotsc$ una partición del espacio muestral y sea $B$ un suceso cualquiera. Entonces
+
+\[ \prob{A_i|B} = \frac{\prob{A_i\cap B}}{\prob{B}} = \frac{\prob{B|A_i}\cdot \prob{A_i}}{\sum_j \prob{B|A_j}\cdot \prob{A_j}} \]
+
+Esta formulación se refiere a sucesos probabilísticos. Podemos reformularla con la información a priori del parámetro:
+
+\begin{equation}
+\label{eqBayes}
+ \pi(\theta | x_1,\dotsc,x_n) = \frac{f(x_1,\dotsc,x_n|\theta)\pi(\theta)}{\displaystyle \int_\Theta f(x_1,\dotsc,x_n|\tau)\pi(\tau)\,d\tau} 
+ \end{equation}
+
+donde $\Theta$ es todo el espacio paramétrico. A $ \pi(\theta | x_1,\dotsc,x_n) $ se le denomina \textbf{distribución a posteriori}\index{Distribución!a posteriori}
+\end{theorem}
+
+Como $\pi$ es una función de distribución, tenemos que 
+
+\[ \int_\Theta \pi(\theta|x_1,\dotsc,x_n)\,d\theta = 1 \]
+
+para toda posible muestra $(x_1,\dotsc,x_n)$. Estudiaremos entonces la siguiente integral
+
+\[ \int_\Theta \frac{f(x_1,\dotsc,x_n|\theta)\pi(\theta)}{\displaystyle \int_\Theta f(x_1,\dotsc,x_n|\tau)\pi(\tau)\,d\tau} \]
+
+En esta, integral, el término \[ \int_\Theta f(x_1,\dotsc,x_n|\tau)\pi(\tau)\,d\tau \] es constante. Por lo tanto, lo que nos interesará será el numerador, la integral \[ \int_Theta f(x_1,\dotsc,x_n|\theta)\pi(\theta)\,d\theta \] que nos dará la información que necesitamos.
+
+\begin{defn}[Estimador\IS Bayes] Se define, para cada muestra dada $(x_1,\dotsc,x_n)$ como la esperanza de la distribución a posteriori:
+
+\[ T_n(x_1,\dotsc,x_n) = \int_\Theta \theta\pi(\theta|x_1,\dotsc,x_n)\,d\theta \]
+\end{defn}
+
+
+\subsubsection{Ejemplos}
+
+La estadística bayesiana se suele usar para estimar los votantes de un partido político. Por ejemplo, sea $\theta$ la proporción de votantes de un partido $P$, y sea $X$ la v.a. Bernoulli que toma valor 1 cuando un votante elige $P$ y 0 en otro caso. Es decir
+
+\[ \begin{cases}
+f(x|\theta) = \theta &\text{si } x=1 \\
+f(x|\theta) = 1 - \theta &\text{si } x=0 \\
+\end{cases} \]
+
+Entonces tenemos que \[ f(x_1,\dotsc,x_n|\theta) = \prod_{i=1}^n f(x_i|\theta) = \theta^{\sum_{i=1}^n x_i} (1-\theta)^{n -\sum_{i=1}^n x_i} \]
+
+SUponemos que la distribución a priori es una Beta(4,10):
+
+\[ \pi(\theta) = \frac{\Gamma(14)}{\Gamma(4)\Gamma(10)}\theta^3(1-\theta)^9\ind_{[0,1]}(\theta) \]
+
+Así pues, aplicando la fórmula de Bayes (\ref{eqBayes}) nos queda una cosa rara y que
+
+\[  \pi(\theta | x_1,\dotsc,x_n)  \sim Beta(4 + \sum x_i, 10 + n - \sum x_i) \]
+
+El estimador Bayes es, por lo tanto
+
+\[ T_n = \frac{4 + \sum x_i}{14 + n} = \underbrace{\frac{n}{4 + 10 + n}\avg{x}}_{(A)} + \underbrace{\frac{4+10}{4+10+n}\frac{4}{4+10}}_{(B)} \]
+
+Es decir, pondera las dos información que teníamos: la media de la distribución a priori $(B)$ y la media muestral $(A)$. Si nos fijamos en la expresión, si tenemos un tamaño muestral muy grande ($n\to\infty$) damos mucho más peso a la información de la muestra que a la distribución a priori. Sin embargo, si tenemos menos muestras nuestra distribución a priori influirá más en el resultado.
+
+Con los datos $\sum x_i = 125$ y $n = 1000$, el estimador Bayes toma valor $0.127$, mientras que el e.m.v. valdría $0.125$. Es decir, nuestro estimador bayesiano pondera la información que teníamos previamente y considera que en nuestra distribución a priori era más probable valores más altos.
+
+Curiosamente, en (\ref{eqE1}) hemos pasado de una distribución a priori a una distribución a posteriori fácilmente identificable con una distribución Beta. Esto tiene que ver con el concepto de familias conjugadas.
+
+\subsubsection{Familias conjugadas}
+
+\begin{defn}[Familias\IS conjugadas] Sea $\mathcal{F}$ una familia de distribuciones paramétricas $f(\cdot | \theta),\;\theta\in\Theta$; y sea $\Pi$ una familia de distribuciones a priori $\pi(\theta)$ sobre el parámetro $\theta$. 
+
+Diremos que $\Pi$ es la familia de dsitribuciones a priori conjugada de $\mathcal{F}$ si la distribución a posteriori $ \pi(\theta | x_1,\dotsc,x_n) $ también pertence a $\Pi$ para toda muestra $ ( x_1,\dotsc,x_n) $ y para toda a priori de $\Pi$.
+\end{defn}
+
+Tenemos varias familias conjugadas identificadas:
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|c}
+$\mathcal{F}$ & $\Pi$ \\
+\hline 
+Binomial & Beta \\ 
+\hline 
+Normal & Normal \\ 
+\end{tabular} 
+\caption{Familias conjugadas}
+\end{table}
+
 
 \appendix
 \section{Distribuciones notables}
