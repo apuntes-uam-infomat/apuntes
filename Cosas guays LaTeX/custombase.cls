@@ -8,7 +8,6 @@
 \LoadClass[12pt,a4paper]{article}
 
 \RequirePackage[left=3cm,right=2cm,top=3cm,bottom=2cm]{geometry} % Márgenes
-\RequirePackage[utf8x]{inputenc} % Para poder meter caracteres guays como ≤≥
 \RequirePackage{imakeidx} % Creación de índices
 \RequirePackage{titling} % No tengo claro para qué es esto
 \RequirePackage{fancyhdr} % Cabeceras de página
@@ -20,6 +19,7 @@
 \RequirePackage{exmath} % Nuestro querido paquete de utilidades
 \RequirePackage{hyperref} % Para que salgan enlaces en la tabla de contenidos y el glosario
 \RequirePackage{wrapfig} 
+\RequirePackage{MathUnicode}
 
 % Ajustes para los enlaces
 \hypersetup{
@@ -32,6 +32,5 @@
 }
 
 % Para cambiar la fuente por defecto.
-\usepackage[T1]{fontenc}
 \renewcommand*\familydefault{\sfdefault}
 
