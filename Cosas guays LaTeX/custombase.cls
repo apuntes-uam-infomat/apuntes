@@ -2,7 +2,7 @@
 \ProvidesClass{custombase}[2013/04/20 Base class]
 
 
-\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
 \ProcessOptions\relax
 
 \LoadClass[12pt,a4paper]{article}
