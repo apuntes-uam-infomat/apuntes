@@ -27,7 +27,8 @@
 \RequirePackage{listings} % Para poner código.
 
 % Números en las subsecciones
-\def\thesubsubsection{\thesubsection .\arabic{subsubsection}}
+\setcounter{secnumdepth}{3}
+\def\thechapter{\Roman{chapter}}
 
 % Ajustes para los enlaces
 \hypersetup{

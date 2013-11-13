@@ -37,6 +37,7 @@
 \gb#m
 \gv#m
 \gu#m
+\gw#m
 \qeq#m
 \r{arg0}#m
 \comb{arg0}{arg1}#m
