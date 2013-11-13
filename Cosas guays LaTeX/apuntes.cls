@@ -4,6 +4,9 @@
 \RequirePackage{pdfpages}
 
 \LoadClass[titlepage]{custombase}
+\DeclareOption{nochap}{\def\thesection{\arabic{section}}}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
+\ProcessOptions\relax
 
 % Cabecera super molona
 \fancyhf{}
