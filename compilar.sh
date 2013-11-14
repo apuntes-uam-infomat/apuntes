@@ -27,3 +27,4 @@ echo "Escribe el path donde quieres copiar los pdfs (a partir de home):"
 read directory
 cp *.pdf ~/$directory
 echo "Listo."
+
