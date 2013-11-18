@@ -7,12 +7,12 @@ case $yn in
 		sudo ./install > /dev/null
 		cd ..
 		cd "Analisis Matematico"
-		pdflatex Analisis_Matematico.tex > /dev/null
+		pdflatex tex/Analisis_Matematico.tex > /dev/null
 		cp Analisis_Matematico.pdf ..
 		cd ..
 		cd "Estructuras Algebraicas"
-		pdflatex Apuntes.tex > /dev/null
-		cp Apuntes.pdf ..
+		pdflatex Estructuras.tex > /dev/null
+		cp Estructuras.pdf ..
 		cd ..
 		cd "Estadistica I"
 		pdflatex EI.tex > /dev/null
@@ -22,9 +22,14 @@ case $yn in
         * ) echo "???";;
     esac
 echo "-----------------------------------------"
-mv Apuntes.pdf Est_Alg.pdf
-echo "Escribe el path donde quieres copiar los pdfs (a partir de home):"
-read directory
-cp *.pdf ~/$directory
+if [ $USER=vicdejuan ]
+then
+	echo "Eres dejuan y me se tu directorio"
+	cp *.pdf /home/vicdejuan/Compartido/Dropbox/Doble\ Grado\ UAM\ \(1\)/TERCEROGILIS/Primer\ Cuatrimestre/Apuntes\ Latex/
+else
+	echo "Escribe el path donde quieres copiar los pdfs (a partir de home):"
+	read directory
+	cp *.pdf ~/$directory/
+fi
 echo "Listo."
 
