@@ -4,7 +4,8 @@
 \RequirePackage{pdfpages}
 
 \LoadClass[titlepage]{custombase}
-\DeclareOption{nochap}{\def\thesection{\arabic{section}}}
+\DeclareOption{nochap}{\def\thesection{\arabic{section}}
+\numberwithin{equation}{subsection}}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
 \ProcessOptions\relax
 
@@ -12,8 +13,8 @@
 \fancyhf{}
 \PrerenderUnicode{ÁáÉéÍíÓóÚúÑñ} % Para que salgan las tildes y demás mierdas en el título.
 \fancypagestyle{plain}{%
-\lhead{\itshape \thetitle\, -\, \thedate\, -\, UAM} 
-\rhead{\theauthor} 
+\lhead{\small \itshape \thetitle\, -\, \thedate\, -\, UAM} 
+\rhead{\small \theauthor} 
 \cfoot{\thepage\ de \pageref{LastPage}}
 }
 

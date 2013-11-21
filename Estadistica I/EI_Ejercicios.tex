@@ -711,3 +711,122 @@ Esta es nuestra cantidad pivotal, que depende de la muestra (por el $\hat{\theta
 El despejar se deja como ejercicio para el lector.
 
 \end{problem}
+
+\begin{problem}[6]
+Sea $\sample$ una muestra de una v.a. uniforme en el interalo $[0,θ]$ con $0 < θ < 1$. Obtener una cantidad pivotal para $θ$ a partir del emv. Usando esta cantidad pivotal construye un intervalo de confianza para $θ$ de nivel prefijado $1-α$.
+
+\solution
+
+El e.m.v es \[ \emv (θ) = \hat{θ} = \max X_i \] La cantidad pivotal para $θ = Q(θ; \sample)$
+
+\[ F_{X_{(n)}} (x) = \prob{\hat{θ}_n ≤ x} = \prob{X_{(n)} ≤ x} = \prod_{i=1}^{n} \prob{X_i ≤ x} = \begin{cases}
+0& x<0 \\
+\left( \frac{x}{θ} \right)^n & 0≤x≤θ \\
+1 & x > 1
+\end{cases}\]
+
+Tomo $Q(θ; \sample ) = \dfrac{X_{(n)}}{θ} = \dfrac{\hat{\theta}}{n}$, que es válido como cantidad pivotal porque \[ \prob{Q≤x} = \prob{\frac{X_{(n)}}{θ} ≤ x} = \begin{cases}
+0 & x<0 \\
+x^n & 0≤x≤θ \\
+1 & x > 1
+\end{cases} \]
+
+Tenemos que elegir dos valores $q_1, q_2$ de tal forma que 
+
+\[ 1- α = \prob{q_1(α) ≤ Q(θ;\sample) ≤ q_2(α)} \]
+
+¿Cómo elegirlos? Queremos buscar que la longitud del intervalo de confianza $IC_{1-α}(θ) = \left(\dfrac{\hat{θ}_n}{q_2},\dfrac{\hat{θ}_n}{q_1}\right)$ sea mínima. Calculamos esa longitud:
+
+\[ \text{len IC} = \hat{θ}_n\left(\frac{1}{q_1}-\frac{1}{q_2}\right)=\hat{θ}_n \left(\frac{q_2-q_1}{q_1q_2}\right) \]
+
+Es decir, tenemos que buscar que $q_1-q_2$ sea más pequeño y además tienen que ser lo mayores posible. Por lo tanto, la elección óptima es 
+
+\[ q_2 = 1,\;q_1=α^{1/n} \]
+
+\end{problem}
+
+\begin{problem}[7] Construye tres intervalos de confianza asintóticos diferentes para el parámetro $λ$ de una distribución de Poisson usando los tres métodos siguientes:
+
+\ppart Utiliza el comportamiento asintótico de la media muestral, estima de forma consistente la varianza y aplica el teorema de Slutsky.
+
+\ppart Igual que el anterior, pero sin estimar la varianza
+
+\ppart Aplicando el método delta para \textit{estabilizar la varianza}, es decir, buscando una función $g$ tal que $\sqrt{n}(g(\avg{X}) - g(λ))\convdist N(0,1)$.
+
+\solution
+
+\spart El TCL (\ref{thmCentral}) nos dice que
+
+\[ \sqrt{n}\frac{\avg{X} - λ}{\sqrt{λ}} \convdist N(0,1) \]
+
+Entonces tenemos que 
+\begin{equation}
+ 1-α = \prob{-z_{α/2}≤\sqrt{n}\frac{\avg{X} - λ}{\sqrt{λ}} ≤ z_{α/2}} \label{eqEj7}
+ \end{equation}
+
+Sustituyo $λ$ en el denominador por una estimación consistente $\hat{λ}\convs[P, c.s]λ$:
+
+\[ \sqrt{n}\frac{\avg{X} - λ}{\sqrt{\hat{λ}}} \convdist N(0,1) \]
+
+Como sabemos que $λ=\esp{X}$, tomamos la media muestral como el estimador: $\hat{λ} = \avg{X}$. La convergencia nos queda entonces como
+
+
+\[ \sqrt{n}\frac{\avg{X} - λ}{\sqrt{\avg{X}}} \convdist N(0,1) \]
+
+y por lo tanto tomamos $ \sqrt{n}\dfrac{\avg{X} - λ}{\sqrt{\avg{X}}}$ como nuestra cantidad pivotal. Despejamos ahora en (\ref{eqEj7}):
+
+\[ \prob{\avg{X} - z_{α/2} \sqrt{\frac{\avg{X}}{n}} 
+	≤ λ
+	≤ \avg{X} + z_{α/2} \sqrt{\frac{\avg{X}}{n}}}
+	\]
+	
+\spart Partimos de nuevo de (\ref{eqEj7}), pero no tenemos que estimar $λ$. Esta ecuación es equivalente a 
+
+\[ \prob{n\frac{(\avg{X}-λ)^2}{λ} ≤ z_{α/2}^2} \]
+
+De ahí sólo tenemos que despejar $λ$ para hallar nuestro intervalo de confianza.
+
+\spart Tenemos que buscar que se satisfaga la ecuación \[ \sqrt{n}(g(\avg{X}) - g(λ))\convdist N(0,1) \]
+
+Sin embargo, el método delta (\ref{defMetDelta}) nos dice algo distinto:
+
+\[ \sqrt{n}(g(\avg{X}) - g(λ))\convdist N(0,\abs{g'(μ)}\sqrt{\var{X}}) \]
+
+Entonces tenemos que 
+
+\[ \abs{g'(λ)}\sqrt{λ} = 1 \implies g'(λ) = \frac{1}{\sqrt{λ}} \]
+
+e integrando vemos que $g(λ) = 2\sqrt{λ} $.
+\end{problem}
+
+\begin{problem}[8]
+\ppart Se desea evaluar aproximadamente, por el \textit{método de Montecarlo}, la integral 
+
+\[ p = \int_0^1f(x)\,dx \] 
+
+de una función continua $\appl{f}{[0,1]}{[0,1]}$. Para ello se generan 500 observaciones independientes $(X_i,Y_i)$ con $i=1,\dotsc,500$ con distribución uniforme en el cuadrado $[0,1]×[0,1]$ y se estima $p$ mediante
+
+\[ \hat{p} = \sum_{i=1}^{500} \frac{Z_i}{500} \]
+
+donde la v.a. $Z_i$ vale 1 si $Y_i≤f(X_i)$ y $0$ en caso contrario. ¿Qué distribución tienen las $Z_i$? Suponiendo que, en una muestra concreta hemos obtenido $\sum_{i=1}^{500} z_i = 255$, obtener un intervalo de confianza de nivel $0.99$ para la correspondiente estimación de $p$.
+
+\solution
+
+\spart La v.a. sigue una distribución de Bernoulli, de tal forma que
+
+\begin{equation} \prob{Z=1}=\prob{Y ≤ f(X)} \label{eqEj8} \end{equation}
+
+La distribución de densidad de la v.a. $(X_i, Y_i)$ es 
+
+\[ f(x,y) = \begin{cases}
+1 & (x,y) ∈ [0,1]×[0,1] \\
+0 & \text{en otro caso}
+\end{cases} \]
+
+Aplicando esto en $(\ref{eqEj8})$
+
+\[ \prob{Z=1} = \prob{(X,Y) ∈ \{(x,y)\tq y ≤ f(x) \}} = \int_0^1\int_0^{f(x)} \,dy\,dx = \int_0^1f(x)\,dy = p \]
+
+y llegamos a la forma de estimar la integral que queríamos. 
+
+\end{problem}

@@ -70,6 +70,7 @@
 \sesgo#m
 \ECM#m
 \cov#m
+\emv#m
 \nat#m
 \ent#m
 \rac#m
