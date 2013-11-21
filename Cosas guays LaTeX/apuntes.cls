@@ -4,7 +4,8 @@
 \RequirePackage{pdfpages}
 
 \LoadClass[titlepage]{custombase}
-\DeclareOption{nochap}{\def\thesection{\arabic{section}}}
+\DeclareOption{nochap}{\def\thesection{\arabic{section}}
+\numberwithin{equation}{subsection}}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
 \ProcessOptions\relax
 
