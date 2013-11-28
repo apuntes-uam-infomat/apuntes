@@ -334,17 +334,407 @@ La prueba es: no la pienso copiar ni de coña.
 
 
 \subsubsection{Pull-back}
-Entramos en como transformar k-formas de $\real^N$ a $\real^M$. Partimos de la base de que existe una transformación $T$ que va de $\real^N \to \real^M$ y buscamos una $T^{\ast} \tlq \real^M\to\real^N$.
+Entramos en como transformar k-formas de $\real^N$ a $\real^M$. Partimos de la base de que existe una transformación $T$ que va de $\real^N \to \real^M$, tal que $T(s)=x$ y buscamos una $T^{\ast} \tlq \real^M\to\real^N$.
 
 En caso de 0-formas, el \emph{pull-back} es lo mismo que la composición.
 
 Supongamos que tenemos una $\omega$ k-forma en $\real^N$.
 Para construir $T^{\ast}$:
 
-tenemos $\gor{s} \in \real^N, \gw_1,\gw_2,..,\gw_k$ vectores en $\real^N$.
+tenemos $\gor{s} \in \real^N, \gv_1,\gv_2,..,\gv_k$ vectores en $\real^N$.
 
 Queremos definir $T^{\ast}\omega$ en términos de $T$ y $\omega$.
 
 \[
-(T^{\ast}\omega)(\gor{s}) [\underbrace{\gw_1}_{\in\real^N},...,\gw_k] = \omega(T(s)) [DT(s)\gw_j]
+(T^{\ast}\omega)(\underbrace{\gor{s}}_{\in\real^N}) [\underbrace{\gv_1}_{\in\real^N},...,\gv_k] = \omega(\underbrace{T(s)}_{\in\real^M}) [\underbrace{DT(s)\gv_j}_{\in\real^M}]
 \]
+
+\obs
+
+
+\[\omega(T(s)) [DT(s)\gv]\equiv \sum f_i(T(s))dx_i[DT(s)\gv]\]
+
+\[DT(s) = \begin{pmatrix}
+\dpa{T_1}{s_1}(s) & ... & \dpa{T_1}{s_N}\\
+\vdots & \ddots & \vdots \\
+\dpa{T_M}{s_1} & \dots & \dpa{T_M}{s_N}
+\end{pmatrix} \cdot \begin{pmatrix}
+v_1\\
+\downarrow\\
+v_N
+\end{pmatrix}\]
+
+¿Que significa $dx_i[DT(s)\gv]$? Vamos a ver que pasa con el producto de una de las filas de la matriz.
+
+\[dx_i[DT(s)\gv] = \dpa{T_i}{s_1}v_1 + ... + \dpa{T_i}{s_N}v_n\]
+Podemos darnos cuenta de que $v_1 = ds_1[\gv]$. Con esto tenemos:
+\[\underbrace{\left(\dpa{T_i}{s_1}ds_1 + ... + \dpa{T_i}{s_N}ds_N \right)}_{dT_i}[\gv]\]
+
+
+\paragraph{Ejemplos}
+
+\subparagraph{Ej 1)} Sea  $f(x)dx_i$ una 1-forma de la que queremos calcular el \emph{pull-back}
+
+\[T^{\ast}(fdx_i)(s)[v] = f(T(s)) dx_1[DT(s)\gv]\]
+Supongamos $f\equiv 1$
+\[T^{\ast}(fdx_i)(s)[v] = dx_1[DT(s)\gv] = dT_i[\gv]\]
+\textbf{Conclusión: } $T^{\ast}dx_i = dT_i$.
+
+\subparagraph{Ej 2)} Sea $\omega = \sum_i f_i dx_i$ una 1-forma de la que queremos calcular el \emph{pull-back}
+
+\[ 
+ (T^{\ast} \omega )(s)[\gv]= \sum_i f_i(T(s))dx_i [DT(s)\gv] = \sum_if_i(T(s)) dT_i[\gv] = T^{\ast} (\sum_i f_idx_i) = \sum_i f_i \circ T dT_i
+\]
+
+\textbf{Conclusión: } $T^{\ast} (\sum_i f_idx_i) = \sum_i f_i \circ T dT_i$
+
+\subparagraph{Ej 3)} ¿Cómo se comporta con el producto exterior? Vamos a trabajar con $f\equiv 1$.
+
+\[
+T^{\ast}(dx_i\y dx_j) [\gu,\gv] = dx_i\y dx_j \left[DT(s)[\gu], DT(s)[\gv]\right] =\]\[ \left|\begin{matrix}
+dx_i[DT(s)\gu] & dx_j[DT(s)\gu] \\
+dx_i[DT(s)\gv] & dx_j[DT(s)\gv] 
+\end{matrix}\right| = \left| \begin{matrix}
+dT_i[\gu] & dT_j[\gu]\\
+dT_i[\gv] & dT_j[\gv]
+\end{matrix}\right| = (1) = dT_i \y dT_j [\gu,\gv]
+\]
+(1) = Por las propiedades del producto exterior de 1-formas.
+
+\textbf{Conclusión: } $T^{\ast} (dx_i \y dx_j) = dT_i \y dT_j$.
+
+\subparagraph{Ej 4)} ¿Qué pasa cuando tenemos el producto de 2-formas generadas?
+
+\[\omega = \sum f_idx_i\,;\,\beta=\sum g_jdx_j\]
+Vamos con el $\y$.
+
+\begin{gather*}
+T^{\ast} (\omega \y \beta) (s) [\gu,\gv] = \sum_{i,j} f_i(T(s))g_j(T(s)) \underbrace{dx_i\y dx_j [DT(s)\gu, DT(s),\gv]}_{\text{Calculado justo arriba}}\\
+= \sum_{i,j} (f_i\circ T) ... \\
+= \left(\sum (f_i\circ T)dT_i\right)\y\left(\sum(g_j \circ T) dT_j\right) = T^{\ast}\omega \y T^{\ast}\beta
+\end{gather*}
+
+\textbf{Conclusión: } $T^{\ast}(\omega \y \beta) = T^{\ast}\omega \y T^{\ast}\beta$. 
+
+Esto es válido para multindices $I$, es decir, para $\omega$ k-forma y $\beta$ s-forma.
+
+
+\paragraph{Pull-back y diferencial exterior}
+una vez visto cómo se comporta el \emph{pull-back} respecto del producto exterior vamos a ver como se comporta con respecto de la diferencial exterior.
+
+\begin{gather*}
+d(T^{\ast} \omega) = d\left(\sum_i f_i(T(s)) dx_i [DT(s)\gv]\right) = d\left(\sum (f_i \circ T)(s) dT_i[\gv]\right)\\
+= \sum_i d(f_i\circ T)\y dT_i
+\end{gather*}
+\text{Vamos a ver que significa:  $d(f_i\circ T)$}
+
+\begin{gather*}
+d(f_i\circ T) =  \sum_k \dpa{f_i\circ T}{s_k} ds_k \\
+\dpa{f_i\circ T}{s_k} = \sum_j \dpa{f_i}{x_j}(T(s))\cdot \dpa{x_j}{s_k}; \text{Donde }x_j = T_j(s)\\
+\text{Juntando todo tenemos: }
+\sum_{i,j,k} \dpa{f_i}{x_j}(t(s)) \dpa{T_j(s)}{s_k} ds_k \y dT_i = \sum_{i,j} \dpa{f_i}{s_j}(T(s)) dT_j\y dT_i = T^{\ast}(d(\sum f_i dx_i))
+ \end{gather*}
+ 
+ \textbf{Conclusión: } $d(T^{\ast}\omega) = T^{\ast}(d\omega)$
+ 
+ 
+ \paragraph{Ejemplo concreto} ¡¡Por fin!! El cambio a coordenadas polares.
+ 
+ $(\rho,\theta)$.
+ 
+ 
+ \[T(\rho,\theta) =\left( T_1(\rho,\theta),T_2(\rho,\theta)\right) = (\rho cos\theta,\rho sen\theta)\]
+ 
+ Vamos a calcular los pull-backs:
+ 
+ \[T^{\ast}(dx) = ...\]
+ 
+ \[T^{\ast} (dy) = dT_2 = d(\rho sen\theta) = \dpa{\rho sen\theta}{\rho} d\rho + \dpa{\rho sen\theta}{\theta}d\theta =sen\theta d\rho + \rho cos\theta d\theta\]
+ 
+ \[T^{\ast}(dx\y dy) = ... = \rho d\rho \y d\theta\]
+Completar.
+
+\textbf{Interpretación:}
+
+No sé dónde va esto.
+
+Sea $ω$ una k-forma, donde \[ ω = \sum_I f_i \, dx_I \] donde $I$ son k-multiíndices. Entonces el pullback de $ω$ es 
+
+\[ T^\ast ω = \sum_I f_i\circ T \, dT_I \]
+
+Supongamos ahora que quiero calcular la diferencial exterior:
+
+\begin{equation} d(T^\ast ω) = \sum_I d(\underbrace{
+	(f_i\circ T)}_{\text{0-forma}}
+	\underbrace{\,dT_I}_{\text{k-forma}})\label{eqSuputamadre} 
+	\end{equation}
+
+Si nos acordamos de la fórmula de Lebiniz \wtf tenemos que
+
+\begin{gather*} 
+d(fω) = df\y ω + fdω \\
+d(ω\y β) = dω \y β + (-1)^kω\y dβ
+\end{gather*}
+
+Usamos la primera fórmula en \ref{eqSuputamadre}
+
+\[  d(T^\ast ω) = \sum_I d(f_i\circ T) \y dT_i + d(f_I\circ T)\underbrace{d(d(T_i))}_{=0} = \sum_{I,K}\dpa{}{s_k} (f_I\circ T) ds_k\y dT_I \]
+
+Usando la regla de la cadena en la derivada parcial
+
+\[ \dpa{}{s_k} (f_I\circ T) = \sum_j\dpa{f}{x_j}\circ T \dpa{T_j}{s_k} \]
+
+Poniendo de nuevo todo junto
+
+\[ d(T^\ast ω) = \sum_{I, K, j} \dpa{f}{x_j}\circ T \dpa{T_j}{s_k} ds_k\y dT_I = \]
+
+Sacando factor común
+
+\[ = \sum_{I, j} \dpa{f}{x_j}\circ T\underbrace{\sum_K \dpa{T_j}{s_k} ds_k}_{dT_j}\y dT_I = \sum_{I,j} \dpa{f_i}{x_j}\circ T dT_j\y dT_I = T^\ast \left(\sum_{I,j} \dpa{f_i}{x_j}dx_j\y d_{x_I} \right) \]
+
+Vemos que lo de dentro es lo mismo que $dω$ y por lo tanto
+
+\[ d(T^\ast ω) T^\ast(dω)\]
+
+Y hay una última propiedad (esto lo ordenas tú) que dice
+
+\[ (T\circ S)^\ast ω = S^\ast(T^\ast ω) \]
+
+\paragraph{Propiedades fundamentales de la operación}
+
+\begin{enumerate}
+\item $T^\ast f = f\circ T$, siendo $f$ una 0-forma.
+\item $T^\ast(dω) = d(T^\ast ω)$. En particular $T^\ast (dx_I) = dT_I$.
+\item $T^\ast(ω\y β)=(T^\ast ω) \y (T^\ast β)$.
+\item $T^\ast(fω) = (f\circ T)(T^\ast ω) = (T^\ast f)(T^\ast ω)$
+\item $T^\ast(ω+β)=T^\ast+T^\ast β$.
+\end{enumerate}
+
+\begin{example}
+
+Tenemos una aplicación $φ(s,t) = (φ_1(s,t), φ_2(s,t))$. Calculamos su pullback y entonces
+
+\[ φ^\ast(dx) = dφ_1 = \dpa{φ_1}{s}ds + \dpa{φ_1}{t}dt \]
+
+y de la misma forma
+\[ φ^\ast(dyx) = dφ_2 = \dpa{φ_2}{s}ds + \dpa{φ_2}{t}dt \]
+
+\begin{gather*}
+ φ^\ast(dx\y dy) = dφ_1\y dφ_2 =\left( \dpa{φ_1}{s}ds + \dpa{φ_1}{t}dt \right) \y\left( \dpa{φ_2}{s}ds + \dpa{φ_2}{t}dt \right) = \\
+ 0 + \dpa{φ_1}{s}\dpa{φ_2}{t}ds\y dt + \dpa{φ_1}{t}\dpa{φ_2}{s} dt\y ds + 0
+ \end{gather*}
+ 
+ Los diferenciales están cambiados de orden así que seguimos pagando con un cambio de signo:
+ 
+ \[ \left(\dpa{φ_1}{s}\dpa{φ_2}{t} - \dpa{φ_1}{t}\dpa{φ_2}{s}\right)ds\y dt= \left|\begin{matrix}
+ \dpa{φ_1}{s} & \dpa{φ_1}{t} \\
+ \dpa{φ_2}{s} & \dpa{φ_2}{t} 
+ \end{matrix}\right| =  \det \left(\dpa{φ}{s,t}\right) ds\y dt \]
+ \end{example}
+ 
+ \begin{example}
+ Tenemos $β$, la 2-dorma asociada a un campo $\vf=(F_1, F_2, F_3)$:
+ 
+ \[ β = F_1dy\y dz + F_2dz\y dx + F_3 dx\y dy \]
+ 
+ Queremos calcular su pullback mediante una aplicación $\appl{Φ}{ℝ^2}{ℝ^3}$. Entonces
+ 
+ \[ Φ^\ast β = g(s,t) ds\y dt \]
+ 
+ ¿Quién es $g$? Calculamos el pullback:
+ 
+ \[ φ^\ast β = F_1\circ Φ\, dΦ_2\y dΦ_3 + F_2\circ Φ\, dΦ_3 \y dΦ-2 + F_3\circ Φ\, dΦ_1\y dΦ_2 \]
+ 
+ Calculamos los distintos diferenciales, que no pienso copiarlos porque no los ha puesto él en la pizarra, y los pinchamos en el morcillo ese. Y operamos. Y yo no voy a operar. Al final sale todo y queda lo siguiente
+ 
+ \[ =\pesc{\vf\circ Φ, \left(\dpa{Φ_1}{s}, \dpa{Φ_2}{s}, \dpa{Φ_3}{s}\right) × \left(\dpa{Φ_1}{t}, \dpa{Φ_2}{t}, \dpa{Φ_3}{t}\right)} ds\y dt \]
+ 
+ Sin embargo, el producto vectorial de esos dos vectores parece el producto vectorial de $T_s×T_x$, el factor que teníamos que poner para integrar un campo en una superficie. {\Huge SORPRESA}.
+ \end{example}
+ 
+ \begin{example}
+ 
+ Tenemos una 1-forma asociada a $\vf$:
+ 
+ 
+ 
+ \[ ω = \sum_i F_i\,dx_i \]
+ 
+ y una aplicación (curva) $\appl{σ}{ℝ}{ℝ^n}$. Entonces $σ^\ast ω$ es de la forma $g(t)\,dt$. 
+ 
+ Entonces
+ 
+ \begin{gather*} (σ^\ast ω)(t)[λ] = \sum_i F_i(σ(t)) dx_i[Dσ(t)λ] = \sum_i F_i(σ(t)) dx_i[σ_1'(t)λ, \dotsc, σ_N'(t)λ = \\
+ = \sum_i F_i(σ(t)) σ_i'(t) dt[λ] = \\
+ = \pesc{\vf \circ σ, σ'} dt [λ]
+ \end{gather*}
+ 
+ Que, oh, sorpresa de nuevo, es lo que aparece cuando integrábamos un campo sobre una curva. 
+ \end{example}
+ 
+ Al final, querremos integrar k-formas en $ℝ^N$ sobre variedades de dimensión $k$. 
+ 
+ \subsection{Integración de formas diferenciales}
+
+Vamos a partir de Ω abierto de $\real^N$. 
+
+Sea $\omega$ n-forma definida en un entorno de Ω, es decir $\omega = f(\gx) \underbrace{\df{x_1,...,x_n}}_{\text{Elemento de volumen}}$
+
+\begin{defn}[Integración\IS n-forma en $\real^N$.]
+\[
+\int_Ω\omega = \inf f(\gx) dx_1...dx_N
+\]
+\end{defn}
+
+\obs Supongamos que tenemos una $\appl{\Phi}{\real^K}{\real^N}$, tal que $\Phi(\gor{s}) = \gx$.
+
+Para que lo de la derecha sea una variedad tenemos que $\Phi$ tiene que ser regular, homeomorfismo y rango máximo.
+
+Supongamos $\omega \in \real^N$, con $\omega$ una x-forma.
+
+¿Qué pasaría si queremos integrar $T^{\ast}\omega$?
+
+Si queremos integrar $\pb{\omega}$ en $\real^k, \omega$ tiene que ser una k-forma para poder aplicar la definición.
+
+
+\begin{example}
+Variedad 1-dimensional.
+
+$\appl{\sigma}{\real}{\real^3}$
+
+Sea $\omega = f_1(x,y,z)dx + f_2(x,y,z)dy + f_3(x,y,z)dz$
+
+Tenemos que $\sigma^{\ast}\omega = \pesc{\overrightarrow{F}\circ \sigma,\sigma'}dt$
+
+La integral quedaría:
+
+\[\int_{\sigma(I)} = \int_I  \pesc{\overrightarrow{F}\circ \sigma,\sigma'}dt 
+\]
+
+Integrar 1-forma sobre la variedad 1-dimensional es integrar el trabajo del campo $\overrightarrow{F}$ a lo largo de $\sigma(I)$.
+\end{example}
+
+\begin{example}
+Una variedad de dimensión 2 en $\real^3$.
+
+$\appl{\Phi}{\real^2}{\real^3}$, con $\Phi(s,t) =  (x,y,z)$.
+
+$\beta$ 2-forma. 
+\[\beta = G_1(x,y,z) \df{y,z} + G_2(x,y,z) \df{z,x} + G_3(x,y,z) \df{x,y}\]
+
+El pullback (calculado anteriormente es)
+
+\[\Phi^{\ast}\beta = \pesc{\overrightarrow{G}\circ\Phi,\Phi_s\x\Phi_t}\df{s,t}\]
+
+\[\int_{\Phi(D)}ß = \int \int_D \pesc{\overrightarrow{G}\circ\Phi,\Phi_s\x\Phi_t}dsdt\]
+
+La integral sería:
+
+
+Es decir, integrar una 2-forma sobre $\Phi(D)$ es integrar el \textbf{flujo} del campo $\overrightarrow{G}$ a través de $\Phi(D)$
+\end{example}
+
+\paragraph{Caso general}
+
+Sea $M$ una variedad de dimensión k en $\real^N$.
+
+Supongamos que $(D,\Phi)$ una carta local, es decir:
+$\appl{\Phi}{D\subset\real^K}{\real^N}, \Phi(D)\subset M; \Phi$ parametrización. ($\Phi(\gor{t}) = \gx$)
+
+Sea \[\omega = \sum_I f_Idx_I; \, \, \, I=\{i_1,i_2,...,i_k\}\]
+
+Por definición:
+
+\[
+\int_{\Phi(d) \omega} = \int_D \Phi^{\ast}\omega
+\]
+
+El pull-back nos va a dar una k-forma definida en $\real^k$.
+
+\[
+\Phi^{\ast}\omega =g(\gor{t})\df{t_1,t_2,...,t_k}
+\]
+
+Aplicando esto:
+\[
+\int_{\Phi(d) \omega} = \int_D g(\gor{t})\df{t_1,t_2,...,t_k}
+\]
+
+Vamos a identificar la función $g$ remangándonos y haciendo cuentas:
+
+\[
+\Phi^{\ast} \omega = \sum_I f_I\circ\Phi d\Phi_I = 
+\]
+
+Vamos a fijarnos en 
+$d\Phi_I = \df{\Phi_{i_1},...,\Phi_{i_k}}$, que va a actuar sobre k-vectores, es decir:
+
+\[
+d\Phi_I[\gv_1,...,\gv_k] = \df{\Phi_{i_1},...,\Phi_{i_k}} [\gv_1,...,\gv_k] = \det \begin{pmatrix}
+d\Phi_{i_1}[\gv_1] &\cdots& d\Phi_{i_1}[\gv_k] \\
+\vdots & \ddots & \vdots\\
+d\Phi_{i_k}[\gv_1] & \cdots & d\Phi_{i_k}[\gv_k] \\
+\end{pmatrix}
+\]
+
+Vamos a desarrollar 1 de los elementos de la matriz (escribiendo $\gw$ para generalizar a cualquiera de los vectores sobre los que actúa):
+\[
+d\Phi_{i_1}[\gw] = \sum_{j=1}^k \left(\dpa{\Phi_{i_1}}{t_j} dt_j\right)[\gw] = \sum_{j=1}^k \dpa{\Phi_{i_1}}{t_j}w_j = \pesc{\grad \Phi_{i_1},\gw}
+\]
+
+Aplicando esto:
+
+\[d\Phi_I[\gv_1,...,\gv_k] =  \det \begin{pmatrix}
+\pesc{\grad \Phi_{i_1},\gv_1} &\cdots&  \pesc{\grad \Phi_{i_1},\gv_k}\\
+\vdots & \ddots & \vdots\\
+\pesc{\grad \Phi_{i_k},\gv_1} & \cdots & \pesc{\grad \Phi_{i_k},\gv_k} \\
+\end{pmatrix} = \det \left(\begin{pmatrix}
+\grad \Phi_{i_1} \rightarrow \\
+...\\
+\grad \Phi_{i_k} \rightarrow 
+\end{pmatrix}
+\begin{pmatrix}
+\gv_1 & ... & \gv_k\\
+\downarrow & ... & \downarrow
+\end{pmatrix}\right) =\]
+\[ \det\begin{pmatrix}
+\grad \Phi_{i_1} \longrightarrow \\
+...\\
+\grad \Phi_{i_k} \longrightarrow 
+\end{pmatrix} \cdot \det 
+\begin{pmatrix}
+\gv_1 & ... & \gv_k\\
+\downarrow & ... & \downarrow
+\end{pmatrix} = (1) =
+\det\begin{pmatrix}
+\grad \Phi_{i_1} \longrightarrow \\
+...\\
+\grad \Phi_{i_k} \longrightarrow 
+\end{pmatrix} \df{t_1,t_2,...,t_k}[\gv_1,\gv_2,...,\gv_k]
+\]
+
+(1): Aplicando que $dt_1(\gv)$ es la primera coordenada del vector $\gv$. Un paso intermedio es \[\det \begin{pmatrix}
+dt_1(\gv_1) & ... & dt_1(\gv_k)\\
+\vdots & \ddots & \vdots\\
+dt_k(\gv_1) & ... & dt_k(\gv_k)
+\end{pmatrix}\]
+
+\textbf{Conclusión:}
+\[
+\Phi^{\ast} \omega = \sum_I f_I\circ\Phi d\Phi_I =
+\overbrace{\sum_I f_i\circ\Phi 
+\det\begin{pmatrix}
+\grad \Phi_{i_1} \longrightarrow \\
+...\\
+\grad \Phi_{i_k} \longrightarrow 
+\end{pmatrix}}^{\text{Esta es la g que buscamos}} \df{t_1,...,t_k}
+\]
+
+Aplicando a una integral:
+
+\[\int_{\Phi(D)} \omega = \int_D \sum_I f_i\circ\Phi 
+\det\begin{pmatrix}
+\grad \Phi_{i_1} \longrightarrow \\
+...\\
+\grad \Phi_{i_k} \longrightarrow 
+\end{pmatrix}dt_1dt_2...dt_k\]
