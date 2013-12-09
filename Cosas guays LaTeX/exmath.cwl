@@ -27,6 +27,8 @@
 \normp{arg0}{arg1}#m
 \liminft{arg0}#m
 \mylim{arg0}{arg1}{arg2}#m
+\df{arg0}{arg1}#m
+\do{arg0}#m
 \app#m
 \obs#m
 \gx#m
@@ -38,6 +40,7 @@
 \gv#m
 \gu#m
 \gw#m
+\pb{arg0}#m
 \qeq#m
 \r{arg0}#m
 \comb{arg0}{arg1}#m
