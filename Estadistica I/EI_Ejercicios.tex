@@ -865,3 +865,64 @@ $s^2$ por lo tanto no es eficiente $\left( \text{porque la Cota de FCR es: } \di
 
 
 \end{problem}
+
+\section{Tema 5 - Contraste de hipótesis}
+
+\begin{problem}[1] En octubre de 2007 el periódico \textit{The New York Times} realizó un muestreo en 20 restaurantes y tiendas de Nueva York con objeto de analizar la variable $X$, que representa el contenido en ppm de metilmercurio en el sushi de atún que se pone a la venta. La media y la cuasi-desviación típica muestrales obtenidas con estas 20 observaciones de $X$ fueron $\avg{x} = 0.794,\, s=0.2953$. Supongamos que $X$ tiene distribución aproximadamente normal.
+
+\ppart ¿Proporcionan estos datos suficiente evidencia estadística a nivel $0.05$ a favor de la hipótesis de que la concentración media de metilmercurio en las raciones de sushi de atún en la población considerada es superior a 0.6 ppm? El p-valor, ¿es menor o mayor que 0.01?
+
+\ppart Obtener, a partir de estos datos, un intervalo de confianza de nivel 0.95 para la concentración media de metilmercurio $μ$ en toda la población. Calcular el mínimo tamaño muestral mínimo que habría que utilizar para, con una probabilidad de 0.95, estimar la concentración media de metilmercurio con un error máximo de 0.06 ppm.
+
+\solution
+
+\spart Empezamos definiendo la hipótesis nula, que será que $μ≤0.6$ ya que queremos una evidencia muy fuerte para rechazar que la concentración suba del nivel mínimo.
+
+La región de rechazo en este caso es 
+
+\[ R = \{ T > t_{19;α} \}\]
+
+donde \[ T = \frac{\avg{x} - 0.6}{0.2953/\sqrt{20}} = 2.938 \]
+
+Por otra parte, $t_{19;α} = 1.729$. Se cumple la condición de la región de rechazo, por lo tanto rechazamos $H_0$. El p-valor del contraste tendrá que ser menor entonces que $0.05$.
+
+Para saber si el p-valor es menor que $0.01$ calculamos $t_{19;0.01}=2.53$. Como sigue siendo menor que $T$, seguimos rechazando $H_0$ y por lo tanto el p-valor del contraste será menor que $0.01$.
+
+Si quisiésemos obtener el p-valor concreto del contraste, buscaríamos el valor de $α$ tal que $ t_{19;α} = 2.938$. En R, obtendríamos este valor con la orden
+
+\begin{verbatim}
+> pt(2.938, 19, lower.tail=FALSE)
+[1] 0.004221168
+\end{verbatim}
+
+El p-valor es por lo tanto $0.004$. Esto quiere decir que la probabilidad de obtener la muestra que hemos conseguido suponiendo que $H_0$ es cierta (esto es, suponiendo que la media de ppm de metilmercurio en el atún es menor que $0.6$) es extremadamente baja, y o bien hemos obtenido una muestra muy, muy extraña o $H_0$ es falsa. Por lo tanto, lo razonable sería rechazar la hipótesis nula y decir que, de media, la concentración de metilmercurio media es mayor que $0.6$.
+
+\spart El intervalo de confianza sería 
+
+\[ IC_{0.95} (μ) = \left(\avg{x}\pm t_{n-1;\frac{α}{2}}\frac{s}{\sqrt{n}} \right) = (0.656, 0.932) \]
+
+Como además $0.6\notin IC_{0.95}(μ)$, rechazaríamos $H_0:\,μ=0.06$ a nivel $α=0.05$.
+
+Para hallar el tamñao muestral mínimo buscamos que 
+
+\[ IC_{0.95}(μ) = (\avg{x} \pm 0.06)\]
+
+Despejando, tenemos que resolver
+
+\[ t_{n-1;0.025}\frac{s}{\sqrt{n}} < 0.06\]
+
+Como no conocemos $s$, lo sustituimos por una aproximación, la cuasivarianza muestral de los 20 restaurantes que teníamos al principio. Además, intuimos que $n$ va a ser grande y por lo tanto $t$ se aproximaría a una distribución normal $Z = N(0,1)$, y por lo tanto
+
+\[ t_{n-1;0.025} ≈ z_{0.025} = 1.96 \]
+
+y entonces $n > 93$.
+\end{problem}
+
+\begin{problem}[8] \ppart Supongamos que en una determinada población de referencia, formada por adultos sanos, el nivel en sangre de la enzima hepática GGT (gamma-glutamil-transpeptidasa) sigue aproximadamente una distribución normal con media polacional $42 IU/L$ y desviación típica poblacional 13. Calcular aproximadamente el porcentaje de personas en la población que tienen un nivel de GGT superior a 80.
+\ppart Supongamos ahora que se selecciona una muestra de 61 personas en otra población formada por bebedores habituales no diagnosticados de alcoholismo y se obtiene una media muestra de 58 IU/L con una desviación típica de 21. ¿Hay suficiente evidencia estadística, al nivel 0.05, para afirmar que la concentración media de GGT en la población de bebedores es mayor que 42?
+
+\solution
+
+Sí.
+
+\end{problem}

@@ -7,6 +7,7 @@
 \author{Guillermo Julián Moreno}
 \date{13/14 C1}
 
+\renewcommand*{\arraystretch}{1.5}
 
 \title{Estad\'{i}stica I}
 
@@ -1212,7 +1213,7 @@ Normal & Normal \\
 \end{table}
 
 \section{Estimación por intervalos de confianza}
-
+\label{secConfianza}
 Al igual que en el tema anterior, vamos a obtener información sobre un parámetro desconocido $θ∈Θ$ a partir de una meustra $X_1,…,X_n$. Habíamos logrado una estimación puntual, pero, ¿por qué va a ser válido sólo ese valor? ¿Podría ser válido un valor cercano al estimador?
 
 Este tema responde a esa pregunta: ofrece un intervalo que típicamente contiene a un estimador puntual, de posibles valores para un parámetro. Veremos cómo construir ese intervalo y la información que ofrecen.
@@ -1358,19 +1359,99 @@ La teoría de Neyman-Pearson trata de responder a este problema con los dos sigu
 \item Se busca una región de rechazo $R$ tal que \[ \max_{θ∈Θ_0} \prob[θ]{R} ≤ α \]
 \end{itemize}
 
+Tal y como hemos definido $α$, se puede considerar que el nivel de significación nos indica la probabilidad de cometer un error de tipo I, es decir, de rechazar $H_0$ cuando es cierta. Por lo tanto, cuanto menor es el nivel de significación más \textit{seguros} estamos de que no estamos rechazando $H_0$ por error.
+
 \paragraph{Minimizar la probabilidad de error de tipo II}
 
 Se intenta buscar una región de rechazo $R$ que maximice la función de potencia cuando $θ∈Θ_1$.
 
 Aquí podemos ver por qué las dos hipótesis no son simétricas. Los tests de hipótesis están diseñados para controlar la probabilidad máxima de rechazar $H_0$ cuando es cierta. En consecuencia, suelen ser conservadores con la hipótesis nula: hace falta mucha evidencia muestral para rechazar $H_0$. Observemos que es posible que, con los mismos datos, $H_0$ se rechace para un nivel de significación $α=0.05$ y se acepte para $α=0.01$. 
 
+Además de la asimetría, tenemos que pensar que al aceptar $H_0$ no significa que la hayamos demostrado, sino simplemente que no se ha encontrado suficiente evidencia empírica a nivel prefijado $α$ en contra de $H_0$. \textbf{No es una demostración matemática}.
+
 \section{Problema de una muestra}
 
 En una primera aproximación, los problemas de contraste de hipótesis  pueden clasificarse en problemas de una muestra o de dos, según haya sólo una población de interés o queramos comparar dos poblaciones y dispongamos de una muestra de cada una de ellas. Presentaremos las ideas básicas en el caso de los problemas de una muestra pero pueden extenderse de modo análogo a los de dos muestras. 
 
-Hubo partido de baloncesto y falta completar.
+\paragraph{Dualidad con los intervalos de confianza}
 
-%Clase del jueves que copió dejuan y no guille
+En algunos casos de hipótesis nula simple, aparece una dualidad entre el contraste de hipótesis y los intervalos de confianza (\ref{secConfianza}). Si tenemos $H_0:\; μ=μ_0$, entonces aceptar $H_0$ significa que $μ ∈ IC_{1-α}(θ)$, es decir, que está en el intervalo de confianza. La región de rechazo sería entonces
+
+\[ R=\{ (\sample[x])\tq θ(\sample[x]) \notin IC_{1-α}(θ) \} \]
+
+\begin{defn}[p-valor del contraste] Se define el p-valor del contraste como el ínfimo de los niveles de significación $α$ para los que rechazo $H_0$.
+
+De esta forma, si $α$ es menor que el p-valor, aceptaremos $H_0$ y si es mayor, la rechazaremos.
+\end{defn}
+
+¿Qué información nos va a dar el p-valor? Supongamos que tenemos, por ejemplo, un p-valor pequeño ($<0.01$). Con este valor rechazaríamos la hipótesis nula para los valores más habituales de niveles de significación ($0.01, 0.05, 0.1$). Por lo tanto, en este caso lo razonable sería rechazar $H_0$.
+
+Por otra parte, supongamos que tenemos un p-valor grande ($>0.1$). En este caso, aceptaríamos la hipótesis nula para los valores más habituales de $α$, y entonces lo más razonable sería aceptar $H_0$.
+
+De forma general, el p-valor de contraste nos dice la probabilidad de observar la muestra que hemos obtenido suponiendo que $H_0$ es cierta. Si es muy bajo, nos indicará que es muy poco probable que la muestra obtenida haya salido así por pura casualidad.
+
+\subsection{Regiones de rechazo para contrastes habituales} 
+\subsubsection{Contraste de la media de una distribución}
+
+En todo caso se rechaza $H_0$ cuando $(\sample) ∈ R$. Para hallar las regiones de rechazo buscaremos los \textbf{estadísticos de contraste}\index{Estadístico!de contraste}, medidas de lo razonable que es la hipótesis nula y que depende de la muestra obtenida. Cuando la hipótesis nula sea cierta, el estadístico del contraste estará en zonas de alta probabilidad.
+
+\paragraph{Distribución normal con varianza conocida}
+
+Primero construiremos el estadístico del contraste $Z$, que depende de la media muestral obtenida.
+
+\[ Z = \frac{\avg{X}-μ_0}{σ/\sqrt{n}} \]
+
+Si $H_0:\;μ=μ_0$ es cierta entonces $Z\sim N(0,1)$. Entonces las regiones de rechazo son 
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{|c|c|}
+\hline  $H_0$ & $R$  \\ 
+\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{Z} ≥ z_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq Z ≥ z_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq Z ≤ z_{\frac{α}{2}}\}$ \\ 
+\hline 
+\end{tabular}
+\caption{Regiones de rechazo para una normal $N(μ,σ)$.} 
+\end{table}
+
+\paragraph{Distribución normal con varianza desconocida} 
+
+Sea $\sample$ una muestra aleatoria de $X\sim N(μ,σ)$ con $σ$ desconocido. Entonces el estadístico del contraste sigue una distribución $T$ de Student de $n-1$ grados de libertad:
+
+\[ T=\frac{\avg{X} - μ_0}{s/\sqrt{n}} \]
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{|c|c|}
+\hline  $H_0$ & $R$  \\ 
+\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{T} ≥ t_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq T ≥ t_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq T ≤ t_{\frac{α}{2}}\}$ \\ 
+\hline 
+\end{tabular} 
+\caption{Regiones de rechazo para una normal $N(μ,σ)$ con $σ$ desconocida.}
+\end{table}
+
+\paragraph{Tests de nivel aproximado $α$ (muestras grandes) para la media de cualquier distribución}
+
+ Sea $\sample$ una muestra aleatoria de $X$ con $\esp{X} = μ < ∞$. Entonces el estadístico del contraste es 
+ 
+ \[ Z= \frac{\avg{X}-μ_0}{S/\sqrt{n}}\stackrel{TCL}{\sim} N(0,1) \]
+ 
+ si $H_0:\, μ=μ_0$ es cierta. Por lo tanto, nos quedamos con las siguientes regiones:
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{|c|c|}
+\hline  $H_0$ & $R$  \\ 
+\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{Z} ≥ z_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq Z ≥ z_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq Z ≤ z_{\frac{α}{2}}\}$ \\ 
+\hline 
+\end{tabular} 
+\caption{Regiones de rechazo para la media de cualquier distribución}
+\end{table}
 
 \section{Contrastes para dos muestras}
 
@@ -1446,6 +1527,8 @@ Y ahora expresamos nuestra hipótesis en función de $D$, de la que sabemos que 
 \end{itemize}
 \end{example}
 En el apéndice encontramos un ejercicio realizado en $\mathcal{R}$
+
+
 
 \appendix
 \chapter{Anexos}
