@@ -23,7 +23,6 @@
 \rnk#m
 \rk#m
 \ncl{arg0}#m
-\norm{arg0}#m
 \normp{arg0}{arg1}#m
 \liminft{arg0}#m
 \mylim{arg0}{arg1}{arg2}#m

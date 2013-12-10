@@ -1093,9 +1093,9 @@ Vamos con $\displaystyle\int_{\partial M} x \,dy$
 Para calcular esta integral (que es calcular el flujo) aplicamos la fórmula de siempre.
 
 Para ello necesitamos parametrizar 
-\[
+\begin{equation}\label{eqEjStokes}
 \Phi(x,y) = (x,y,\sqrt{1-x^2+y^2}), (x,y)\in D = \{x^2+y^2\leq y\} 
-\]
+\end{equation}
 
 Calculamos $T_x\x T_y =\displaystyle \left(\frac{x}{\sqrt{\cdot}},\frac{x}{\sqrt{\cdot}},1\right)$
 
@@ -1103,4 +1103,141 @@ Calculamos $T_x\x T_y =\displaystyle \left(\frac{x}{\sqrt{\cdot}},\frac{x}{\sqrt
 \int \int_M (0,0,1) dS = - \int \int_D \pesc{(0,0,1),(\ast,\ast,1)} \,dx\,dy = -\text{ Area } (D) = -\pi\frac{1}{4}
 \]
 
+\[ \int_{∂M^+}y\df{z} = \int_{∂M^+}(0,0,y)\df{σ} \stackrel{Stokes}{=} \int\int_{M^+} \rot (0,0,y)\df{S} \]
+
+En \ref{eqEjStokes} teníamos la parametrización, así que la aplicamos. Teniendo en cuenta la orientación, tenemos que cambiar el signo y nos queda 
+
+\[ 
+- \iint_D \pesc{(1,0,0),\left(\frac{x}{\sqrt{\ast}}, \frac{y}{\sqrt{\ast}}, 1}\right) \df{x}\df{y} 
+= -\iint_D\frac{x}{\sqrt{1-x^2-y^2}} \d{x,y} 
+\]
+
+Viendo que estamos integrando una función impar en una región simétrica, la integral vale 0.
+
+Pasamos ahora a calcular la integral de $z$. TEnemos lo mismo
+
+\[ \int_{∂M^+}z\df{x} = \int_{∂M^+}(z,0,0)\df{σ} \stackrel{Stokes}{=} \iint_{M^+} \rot (z,0,0)\df{S} = \iint_{M^+}(0,1,0)\d{S}= - \iint_D \pesc{(0,1,0),\left(\frac{x}{\sqrt{\ast}}, \frac{y}{\sqrt{\ast}}, 1}\right) \df{x}\df{y} 
+= -\iint_D\frac{y}{\sqrt{1-x^2-y^2}} \dif x \dif y  \]
+
+Vemos que esta integral es muy complicada y nos va a ganar, así que pasamos a tratar de integrar como una curva. Deberemos parametrizar la curva, encontrar la orientación correcta y aplicar la fórmula.
+
+Empezamos con la parametrización:
+
+\[ ∂M = \left\{ \begin{matrix}
+x^2+y^2+z^2 = 1 \implies y + z^2 = 1 \implies z = \sqrt{1-y} \\
+x^2 + y^2 = y \implies x = \pm \sqrt{y-y^2}
+\end{matrix}\right. \]
+
+Por lo tanto, podemos parametrizar en dos trozos
+
+\begin{align*}
+Γ_1\equiv &(\sqrt{y-y^2}, y, \sqrt{1-y};\quad&y∈[0,1] \\
+Γ_2\equiv &(-\sqrt{y-y^2}, y, \sqrt{1-y};\quad&y∈[0,1] \\
+\end{align*}
+
+\todo[inline]{Dibujito de orientaciones}
+
+Tal y como vemos en la figura, la orientación es negativa en $Γ_1$ y positiva en $Γ_2$. Entonces
+
+\[ \int_{∂M^+}(z,0,0)\df{σ} = \int_{Γ_1^+}(z,0,0)\dif{σ_1} +  \int_{Γ_2^+}(z,0,0)\dif{σ_2} \]
+
+Operando con la primera integral:
+
+\[  \int_{Γ_1^+}(z,0,0)\dif{σ_1} = - \int_0^1\pesc{(\sqrt{1-y},0,0),\left(\frac{1-2y}{2\sqrt{y-y^2}},\ast,\ast\right)}\dif y = 
+-\int_0^1\frac{1-2y}{2\sqrt{y}}\dif y = \]
+
+Separamos en dos sumandos
+
+\[ = \int_0^1\sqrt{y}\d y - \int_0^1 \frac{1}{2\sqrt y}\dif y = \dotsb \]
+
+Podríamos tomar otra parametrización alternativa usando coordenadas esféricas. La esfera queda determinada por la parametrización
+
+\[ \left\{\begin{matrix}
+x = \cos θ \sin φ \\
+y = \sin θ \sin φ \\ 
+z = \cos φ
+\end{matrix}\right. \]
+
+Añadiendo la restricción de $x^2+y^2=y$, nos queda que $\sin φ = \sin θ$. Entonces podemos seguir parametrizando 
+
+\[\left. \begin{matrix}
+x = \cos θ \sin θ \\
+y = \sin^2 θ \\
+ z = \sqrt{1-\sin^2 θ} = \abs{\cos θ}
+\end{matrix} \right\} θ∈[0,π]
+\]
+
+y tenemos que
+
+\[ σ_1(θ) = (\cos θ \sin θ, \sin^2 θ, \cos θ) \]
+
+Por otra parte, si pusiésemos los límites de integración en la región D
+
+
 \end{example}
+
+\subsection{Campos conservativos}
+
+\todo[inline]{Revisar la sección/numeración de este capítulo}
+
+\begin{defn}[Campo\IS conservativo] Consideramos $\vf$, un campo en $ℝ^N$. Se dice que $\vf$ es conservativo si y sólo si $∃\appl{V}{ℝ^N}{ℝ}$ tal que $F=\grad V$, donde $V$ es el \textbf{potencial}\index{Potencial} del campo $\vf$.
+\end{defn}
+
+\begin{theorem} Sea $\vf$ un campo $C^1$ en $ℝ^3$. Entonces $\vf $ es conservativo si y sólo si $\rot \vf = \vec{0}$.
+\end{theorem}
+
+\begin{proof}
+\paragraph{Implicación a la derecha} Como $F=\grad V$, y $F∈C^1$, entonces $V∈C^2$. Calculamos ahora el rotacional:
+
+\[ \rot\vf = \left|\begin{matrix}
+\vec{i} & \vec{j} & \vec{k} \\
+\pd{}{x} & \pd{}{y} & \pd{}{z} \\
+F_1 & F_2 & F_3
+\end{matrix}\right| = \left(\dpa{F_3}{y}-\dpa{F_2}{z}, \dpa{F_1}{z}-\dpa{F_3}{x}, \dpa{F_2}{x}-\dpa{F_1}{y} \right) \]
+
+Sustituyendo con $F=\grad V$ veríamos que sale todo cero.
+
+\paragraph{Implicación hacia la izquierda}
+
+Supongamos $Γ$ una curva cerrada, que sea la frontera de una superficie $M$. Entonces
+
+\[ \int_{M^+}\vf  \stackrel{Stokes}{=} \iint_M\rot \vf\dif S = 0 \]
+
+Es decir, que la integral de $F$ sobre cualquier curva cerrada va a dar 0. Buscamos ahora un $V$ tal que $\grad V = \vf$.
+
+Supongamos un punto cualquiera $(x,y,z)$: A ese punto podemos llegar a través de varias rectas paralelas a los ejes. Con esas rectas podríamos construir un camino, y entonces tendríamos que 
+
+\todo[inline]{Poner dibujito aquí}
+
+\[ \int_{Γ_1}\vf = \int_{Γ_2} \vf = \int_{Γ_3}\vf \]
+
+ya que cogiendo dos pares $Γ_i$ y cambiando la orientación de uno de ellos construimos una curva cerrada.
+
+Parametrizamos $Γ_1$:
+
+\[ Γ_1 \equiv \{ (t,0,0)\,t∈[0,x]\} 
+	\cup \{ (x,s,0)\,s∈[0,y]\}
+	\cup \{ (x,y,r)\,r∈[0,z]\} \]
+	
+Entonces
+
+\begin{align*}
+\int_{Γ_1}\vf&= \int_0^x\pesc{(F_1(t,0,0),F_2(t,0,0), F_3(t,0,0),(1,0,0)}\dif t \\
+&+\int_0^y\pesc{(F_1(x,s,0),F_2(x,s,0), F_3(x,s,0),(0,1,0)}\dif s \\
+&+\int_0^x\pesc{(F_1(x,y,r),F_2(x,y,r), F_3(x,y,r),(1,0,0)}\dif r \\
+&=\int_0^x F_1(t,0,0)\dif t + \int_0^y F_2(x,s,0)\dif s+ \int_0^z F_3(x,y,r)\dif r 
+\end{align*}
+
+De la misma forma, tendríamos
+
+\begin{gather*}
+\int_{Γ_2}\vf = \int_0^y F_2(0,t,0)\dif t + \int_0^z F_3(0,y,s)\dif s+ \int_0^x F_1(x,y,r)\dif r \\ 
+\int_{Γ_3}\vf = \int_0^x F_1(t,0,0)\dif t + \int_0^z F_3(x,0,s)\dif s+ \int_0^y F_1(x,r,z)\dif r \\
+\end{gather*}
+
+Las tres integrales son iguales, así que podemos derivar con respecto de la que nos venga mejor para construir la función $V$, que es la que buscábamos.
+
+\end{proof}
+
+
+
