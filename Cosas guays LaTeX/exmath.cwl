@@ -1,3 +1,4 @@
+\mop{arg0}#m
 \dimplies#m
 \implies#m
 \nimplies#m
