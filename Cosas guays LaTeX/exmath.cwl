@@ -85,6 +85,7 @@
 \vx#m
 \vy#m
 \vf#m
+\vg#m
 \va#m
 \vu#m
 \vn#m
