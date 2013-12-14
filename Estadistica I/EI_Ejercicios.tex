@@ -865,3 +865,285 @@ $s^2$ por lo tanto no es eficiente $\left( \text{porque la Cota de FCR es: } \di
 
 
 \end{problem}
+
+\section{Tema 5 - Contraste de hipótesis}
+\subsection{Hoja 5A}
+
+\begin{problem}[1] En octubre de 2007 el periódico \textit{The New York Times} realizó un muestreo en 20 restaurantes y tiendas de Nueva York con objeto de analizar la variable $X$, que representa el contenido en ppm de metilmercurio en el sushi de atún que se pone a la venta. La media y la cuasi-desviación típica muestrales obtenidas con estas 20 observaciones de $X$ fueron $\avg{x} = 0.794,\, s=0.2953$. Supongamos que $X$ tiene distribución aproximadamente normal.
+
+\ppart ¿Proporcionan estos datos suficiente evidencia estadística a nivel $0.05$ a favor de la hipótesis de que la concentración media de metilmercurio en las raciones de sushi de atún en la población considerada es superior a 0.6 ppm? El p-valor, ¿es menor o mayor que 0.01?
+
+\ppart Obtener, a partir de estos datos, un intervalo de confianza de nivel 0.95 para la concentración media de metilmercurio $μ$ en toda la población. Calcular el mínimo tamaño muestral mínimo que habría que utilizar para, con una probabilidad de 0.95, estimar la concentración media de metilmercurio con un error máximo de 0.06 ppm.
+
+\solution
+
+\spart Empezamos definiendo la hipótesis nula, que será que $μ≤0.6$ ya que queremos una evidencia muy fuerte para rechazar que la concentración suba del nivel mínimo.
+
+La región de rechazo en este caso es 
+
+\[ R = \{ T > t_{19;α} \}\]
+
+donde \[ T = \frac{\avg{x} - 0.6}{0.2953/\sqrt{20}} = 2.938 \]
+
+Por otra parte, $t_{19;α} = 1.729$. Se cumple la condición de la región de rechazo, por lo tanto rechazamos $H_0$. El p-valor del contraste tendrá que ser menor entonces que $0.05$.
+
+Para saber si el p-valor es menor que $0.01$ calculamos $t_{19;0.01}=2.53$. Como sigue siendo menor que $T$, seguimos rechazando $H_0$ y por lo tanto el p-valor del contraste será menor que $0.01$.
+
+Si quisiésemos obtener el p-valor concreto del contraste, buscaríamos el valor de $α$ tal que $ t_{19;α} = 2.938$. En R, obtendríamos este valor con la orden
+
+\begin{verbatim}
+> pt(2.938, 19, lower.tail=FALSE)
+[1] 0.004221168
+\end{verbatim}
+
+El p-valor es por lo tanto $0.004$. Esto quiere decir que la probabilidad de obtener la muestra que hemos conseguido suponiendo que $H_0$ es cierta (esto es, suponiendo que la media de ppm de metilmercurio en el atún es menor que $0.6$) es extremadamente baja, y o bien hemos obtenido una muestra muy, muy extraña o $H_0$ es falsa. Por lo tanto, lo razonable sería rechazar la hipótesis nula y decir que, de media, la concentración de metilmercurio media es mayor que $0.6$.
+
+\spart El intervalo de confianza sería 
+
+\[ IC_{0.95} (μ) = \left(\avg{x}\pm t_{n-1;\frac{α}{2}}\frac{s}{\sqrt{n}} \right) = (0.656, 0.932) \]
+
+Como además $0.6\notin IC_{0.95}(μ)$, rechazaríamos $H_0:\,μ=0.06$ a nivel $α=0.05$.
+
+Para hallar el tamñao muestral mínimo buscamos que 
+
+\[ IC_{0.95}(μ) = (\avg{x} \pm 0.06)\]
+
+Despejando, tenemos que resolver
+
+\[ t_{n-1;0.025}\frac{s}{\sqrt{n}} < 0.06\]
+
+Como no conocemos $s$, lo sustituimos por una aproximación, la cuasivarianza muestral de los 20 restaurantes que teníamos al principio. Además, intuimos que $n$ va a ser grande y por lo tanto $t$ se aproximaría a una distribución normal $Z = N(0,1)$, y por lo tanto
+
+\[ t_{n-1;0.025} ≈ z_{0.025} = 1.96 \]
+
+y entonces $n > 93$.
+\end{problem}
+
+\begin{problem}[8] 
+
+\ppart Supongamos que en una determinada población de referencia, formada por adultos sanos, el nivel en sangre de la enzima hepática GGT (gamma-glutamil-transpeptidasa) sigue aproximadamente una distribución normal con media polacional $42 IU/L$ y desviación típica poblacional 13. Calcular aproximadamente el porcentaje de personas en la población que tienen un nivel de GGT superior a 80.
+
+\ppart Supongamos ahora que se selecciona una muestra de 61 personas en otra población formada por bebedores habituales no diagnosticados de alcoholismo y se obtiene una media muestra de 58 IU/L con una desviación típica de 21. ¿Hay suficiente evidencia estadística, al nivel 0.05, para afirmar que la concentración media de GGT en la población de bebedores es mayor que 42?
+
+\solution
+
+Sí.
+
+\end{problem}
+
+\begin{problem}[4] Los niveles en sangre de una hormona denominada FSH están asociados con la fertilidad femenina. Las mujeres que tienen un nivel de FSH "alto" (superior a 10 IU/L) tienen en general más dificultad para concebir que aquellas que tienen niveles bajos de FSH. En un estudio realizado recientemente, se analizó la posible relación entre el grupo sanguíneo y la fertilidad. Para ello se midieron los niveles de FSH en una muestra de 254 mujeres en edad fértil con grupo sanguíneo "O" y resultó que 43 de ellas tenían niveles altos de FSH y, por tanto, podrían tener dificultades para concebir. En otra muestra, independiente de la anterior, de 309 mujeres cuyo grupo sanguíneo no es O, resultó que 27 tenían niveles altos de FSH. 
+
+\ppart ¿Proporcionan estos datos suficiente evidencia estadística, al nivel 0.05, a favor de la hipótesis de que las mujeres con grupo sanguíneo 0 tienen más dificultades para concebir que las que tienen otro grupo sanguíneo?
+
+\ppart Calcular el tamaño muestral necesario para, con probabilidad 0.95, estimar en la población de mujeres del grupo 0 el porcentaje de las que tienen un nivel alto de FSH, con un error máximo de 2 puntos.
+
+\solution
+
+Consideramos la v.a. $X$ que vale $1$ si una mujer del grupo 0 tiene nivel alto de FSH y 0 si no, y que sigue una distribución de Bernoulli con probabilidad $p_1$. Análogamente, definimos la v.a. $Y$ que vale $1$ si una mujer del grupo no 0 tiene nivel alto de FSH y 0 si no, y que sigue una distribución de Bernoulli con probabilidad $p_2$.
+
+Tenemos que 
+
+\begin{gather*}
+\sum_{i=1}^{254} x_i = 43 \\
+\sum_{i=1}^{309} y_i = 27 
+\end{gather*}
+
+\spart Primero tenemos que definir la hipótesis nula:
+
+\[ H_0:\: p_1≤p_2 \]
+
+es decir, que las mujeres con grupo 0 no tienen más dificultad para concebir. Tomamos esto como la hipótesis nula porque es la que aceptamos por defecto, y queremos una evidencia muy fuerte para poder decir que es falsa.
+
+Para construir la región de rechazo, usamos la región del formulario para comparación de proporciones. Usando el TCL, tenemos que si $p_1=p_2=p$ entonces tanto $\avg{X}$ como $\avg{Y}$ van a seguir una distribución normal con $n_i = n_1$ o $n_2$ según sea $X$ ó $Y$
+
+\[ N\left(p, \sqrt{\frac{p(1-p)}{n_i}}\right) \]
+
+y por lo tanto el estadístico del contraste es
+
+\[ Z = \frac{\avg{X} - \avg{Y}}{\sqrt{\avg{p}(1-\avg{p})\left(\frac{1}{n_1}+\frac{1}{n_2}\right)}} \]
+
+siendo $\avg{p}$ un estimador puntual de $p$, y que se calcula como 
+
+\[ \avg{p} = \frac{\sum x_i + \sum y_i}{n_1 + n_2} = \frac{n_1\avg{x} + n_2\avg{y}}{n_1 + n_2} \]
+
+La región de rechazo es
+
+\[ R = \left\{ \avg{x} - \avg{y} > z_{0.05}\sqrt{\avg{p}(1-\avg{p})\left(\frac{1}{n_1}+\frac{1}{n_2}\right)} \right\} \equiv \{ 0.0819 > 0.0460 \} \]
+
+y por lo tanto rechazamos la hipótesis nula al nivel $α=0.05$.
+
+Calculamos ahora el p-valor para tener más datos sobre la hipótesis:
+
+\[ \text{p-valor}\, = \prob{N(0,1) > z} = \dotsb \]
+
+\spart Necesitamos un intervalo de confianza
+
+\[ IC_{0.95}(p_1) = \left(\avg{x} \pm z_0.025\sqrt{\frac{\avg{x}(1-\avg{x}}{n_1}}\right) \]
+
+donde $z_0.025\sqrt{\frac{\avg{x}(1-\avg{x}}{n_1}}$ es el error cometido al estimar $p_1$ con el IC, y que tiene que ser menor que $0.02$. Como no tenemos el valor de $\avg{x}$, lo sustituimos por el valor de la media muestral obtenido en la anterior medición, de tal forma que tenemos que $n_1≥1351$ para obtener la confianza requerida. 
+
+Si quisiésemos ser más conservadores, sustiuiríamos $\avg{x}$ por el valor máximo que podemos obtener, aunque en este caso saldría un tamaño muestral mucho más grande.
+
+\end{problem}
+
+\begin{problem}[5] El gasto telefónico medio bimensual en una muestra de 10 usuarios elegidos al azar en una ciudad ha resultado ser 90 euros y la cuasidesviación típica 11 euros. En otra ciudad se ha tomado, de modo independiente, otra muestra de 12 usuarios y los valores obtenidos para la media y la cuasidesviación típica muestrales han sido, respectivamente, 80 y 10.
+
+\ppart ¿Proporcionan estos datos suficiente evidencia estadística, al nivel 0.05, a favor de la hipótesis  de que el gasto medio en la primera ciudad es más alto que el gasto medio en la segunda? Suponer que las varianzas de las variables que indican los gastos telefónicos en ambas ciudades son iguales. Indicar claramente las restantes suposiciones necesarias para garantizar la validez del procedimiento empleado.
+
+\ppart El p-valor ¿es mayor o menor que 0.01? Razonar la respuesta.
+
+\solution
+
+\spart Definimos las dos variables aleatorias que tenemos: $X$ es el gasto medio bimensual en la primera ciudad, y $Y$ el gasto en la segunda. Tomamos las esperanzas y varianzas:
+
+\begin{gather*}
+\esp{X} = μ_1,\;\var{X} = σ_1^2 \\
+\esp{Y} = μ_2,\;\var{Y} = σ_2^2 
+\end{gather*}
+
+ Definimos la hipótesis nula: $H_0:\, μ_1≤μ_2$, es decir, que el gasto medio en la primera ciudad no es mayor que en la segunda.
+ 
+ Tenemos que suponer que $X$ e $Y$ son normales para poder definir bien el estadístico del contraste. Si usásemos cualquier otra distribución el estadístico del contraste toma una distribución mucho más complicada que no podríamos determinar correctamente. También suponemos que son independientes.                       
+
+La región de rechazo es 
+
+\[ R = \left\{ \avg{x} - \avg{y} > t_{n_1+n_2-2, α} s_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}\right\} \] 
+
+Calculando, tenmos que 
+
+\begin{gather*}
+\avg{x}-\avg{y} = 10\\
+s_p^2 = 109.45 \\
+R= \{10 > 7.73 \}
+\end{gather*}
+
+y por lo tanto rechazamos la hipótesis nula.
+
+\spart Calculamos la región de rechazo para $α=0.01$:
+
+\[ R= \{10 > 11.32 \} \]
+
+y por lo tanto para nivel $0.01$ no hay evidencia para rechazar $H_0$. Entonces, el p-valor es mayor que $0.01$.
+
+\end{problem}
+
+\begin{problem}[6]
+Se realiza un experimento para comparar los incrementos en los niveles plasmáticos de insulina producidos por la ingesta de carne y de pescado. PAra ello se midieron los incrementos (medido esn picomoles por litro) producidos en la concentración de insulina en la sangre de 6 voluntarios, 90 minutos después de comer un bistec de 250 gramos. Dos días más tarde se realizó de nuevo el experimento con las mismas 6 personas, después de consumir un filete de pescado. En la tabla se observan los resultados:
+
+\begin{tabular} {|l|c|c|c|c|c|c|}
+\hline
+Persona & 1 & 2 & 3 & 4 & 5 & 6\\
+\hline
+Resultados con la carne: & 109& 106 & 111& 105 & 110 & 108\\
+\hline
+Resultados con el pescado: & 100& 95& 105& 106& 80& 88\\
+\hline
+\end{tabular}
+
+\ppart Proporcionan estos datos suficiente estadística a nivel significación 0.05 para afirmar que el incremento medio...?
+\solution
+
+\spart 
+
+\paragraph{1)} Definir las variables:
+\begin{itemize}
+\item $X$ nivel de insulina en 1 voluntario tras la ingesta de carne. Llamamos a $\esp{X} = \mu_1$
+\item $Y$ nivel de insulina en \textbf{el mismo} voluntario tras la ingesta de carne. $\esp{Y} = \mu_2$
+\end{itemize}
+
+Tenemos que las variables no son independientes (porque son muestras tomadas de los mismo voluntarios). A este tipo de datos le llamamos datos emparejados \index{Datos \IS emparejados}
+
+\paragraph{2) Definir las hipótesis}
+\begin{itemize}
+\item $H_0: \mu_1 \leq \mu_2$
+\item $H_1 : \mu_1>\mu_2$
+\end{itemize}
+
+\paragraph{3)} Como tenemos datos emparejados, podemos trabajar más facilmente con la diferencia, es decir, definimos $D=X-Y$ y definimos el contraste (siendo $\esp{D}=\mu$)
+\begin{itemize}
+\item $\Huge_0 : \mu \leq 0$
+\item $H_1: \mu >0$
+\end{itemize}
+
+Que es un contraste equivalente.
+
+Además tenemos que $D \sim N(\mu,\sigma)$ 
+
+Suponer que la diferencia es una normal es el procedimiento estándar para datos emparejados. (nos la jugamos, es una hipótesis del problema, que puede ser más o menos razonable. En este caso, lo único que de momento sabemos hacer es suponer que es normal (si no fuera normal, tendríamos que aplciar el TCL (para lo que necesitamos n grande) y con este tamaño muestral (6) no podríamos aplicarlo)
+
+Mirando en la tabla de regiones de rechazo tenemos:
+\[R = \left\{\gor{d}> t_{n-1;\alpha} \frac{s_d}{\sqrt{n}}\right\}\]
+Donde $\displaystyle \frac{\gor{d}}{s_d/\sqrt{n}}$ es el estadístico del contraste, que sigue una $t_{n-1}$.
+
+De los datos extraemos $\gor{d} = 12.5;s_d=10.97$.
+
+Para $\alpha = 0.05$ calculamos el cualtil correspondiente de la $t$ de Student. Para $\alpha = 0.05$ es 9.02.
+
+De aquí deducimos que sí hay evidencia para rechazar la hipótesis nula (porque  $\displaystyle \frac{\gor{d}}{s_d/\sqrt{n}} > 9.02$).
+
+\spart Tomando $\alpha = 0.01$ no se cumple la condición de rechazo, no pudiendo negar entonces la hipótesis nula.
+
+\spart Es el típico ejercicio mecánico de extraer el tamaño muestral.
+\end{problem}
+
+\subsection{Hoja 5B}
+
+\begin{problem}[1] Tenemos una $X \sim \mop{exp}(\theta)$. Queremos contrastar para $\alpha = 0.01$ las dos siguientes hipótesis: $H_0: \theta = 5$ frente a $H_1: \theta = \theta_1$, siendo $\theta_1 > 5$ un valor prefijado.
+
+\ppart Obtener la región crítica del test UMP.
+
+\ppart Calcular la probabilidad de error de tipo II en este test.
+
+\ppart Supongamos que para una determinada muestra, se obtiene $\sum_{i=1}^5 x_i= 5$. ¿Qué decisión habría que adoptar si se utiliza el test construido en a)?
+\solution
+
+\spart Ejemplo típico de aplicar el lema de Pearson. Primero comprobamos la propiedad de CVM:
+
+\[\frac{f_n(\sample[x];θ_1)}{f_n(\sample[x];5)} = \left(\frac{θ_1}{5}\right)^n e^{-(θ_1-5)\sum x_i} \]
+
+Efectivamente, la función es monótona.
+
+La región de rechazo del test UMP es, por el lema de Neyman-Pearson (\ref{thmNeymanPearson}), la siguiente:
+
+\[ R^{\ast} = \left\{ \left(\frac{\theta_1}{5}\right)^n e^{(-\theta_1-5)\sum x_i > k_α}\right\}
+	 = \left\{\sum x_i < c_{\alpha}\right\} \]
+	 
+¿Cómo construimos $c_{\alpha}$? Tiene que cumplir $\prob[\theta=5]{\sum x_i < c_{\alpha}} = \alpha$
+
+Como $X$ es una exponencial, tenemos que 
+
+\[ \sum X_i \sim γ(θ;n) \]
+
+y entonces
+
+\[ \prob[θ=5]{R}= \prob{γ(5;n) < c_α} \]
+
+De esta forma, $c_α$ es el cuantil $α$ de la distribución Gamma $γ(5;n)$:
+
+\[ c_α = q_{5,n}(α) \]
+
+\spart Calculamos el error de tipo dos, la probabilidad de aceptar la hipótesis nula cuando es falsa:
+
+\[ \prob[θ_1]{R^c}=1-\prob[θ_1]{R} = 1- \prob[θ_1]{\sum X_1 < q_{5,n}(0,01)} = 1 - \prob{γ(θ_1;n)<q_{5,n}(0,01)} \]
+
+Usando las propiedades de la distribución gamma, tenemos que
+
+\[ γ(θ_1;n) = γ\left(\frac{θ_1}{5}5;n\right) = \frac{5}{θ_1}γ(5;n) \]
+
+y entonces
+
+\[ \prob[θ_1]{R^c} = 1 - \prob{γ(5;n) < \frac{θ_1}{5}q_{5,n}(0,01)}
+ 	= \prob{γ(5;n)≥ \frac{θ_1}{5}q_{5,n} (0,01)} \] 
+ 	
+Este valor tiende a 0 cuando $θ_1\to∞$.
+
+\spart Nuestra muestra nos da una estimación puntual de $\avg{x} = 1$. Bajo la hipótesis nula, la media de la población nos debería de dar $\frac{1}{5}$. Bajo la hipótesis alternativa, la media debería ser estrictamente menor que $\frac{1}{5}$.
+
+Entonces, hay más evidencia a favor de la hipótesis nula así que esperaríamos aceptarla. Comprobémoslo ahora calculando la región de rechazo.
+
+Tenemos que calcular el cuantil de la distribución Gamma:
+
+\[ q_{5,5}(0.01) = 0.2558 \]
+
+No se satisface la condición de la región de rechazo y por lo tanto no hay evidencia para rechazar la hipótesis nula, tal y como habíamos intuido.
+\end{problem}

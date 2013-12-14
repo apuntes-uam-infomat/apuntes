@@ -7,6 +7,7 @@
 \author{Guillermo Julián Moreno}
 \date{13/14 C1}
 
+\renewcommand*{\arraystretch}{1.5}
 
 \title{Estad\'{i}stica I}
 
@@ -1191,7 +1192,7 @@ Curiosamente, en (\ref{eqE1}) hemos pasado de una distribución a priori a una d
 
 \subsubsection{Familias conjugadas}
 
-\begin{defn}[Familias\IS conjugadas] Sea $\mathcal{F}$ una familia de distribuciones paramétricas $f(\cdot | \theta),\;\theta\in\Theta$; y sea $\Pi$ una familia de distribuciones a priori $\pi(\theta)$ sobre el parámetro $\theta$. 
+\begin{defn}[Familia\IS conjugada] Sea $\mathcal{F}$ una familia de distribuciones paramétricas $f(\cdot | \theta),\;\theta\in\Theta$; y sea $\Pi$ una familia de distribuciones a priori $\pi(\theta)$ sobre el parámetro $\theta$. 
 
 Diremos que $\Pi$ es la familia de dsitribuciones a priori conjugada de $\mathcal{F}$ si la distribución a posteriori $ \pi(\theta | x_1,\dotsc,x_n) $ también pertence a $\Pi$ para toda muestra $ ( x_1,\dotsc,x_n) $ y para toda a priori de $\Pi$.
 \end{defn}
@@ -1212,7 +1213,7 @@ Normal & Normal \\
 \end{table}
 
 \section{Estimación por intervalos de confianza}
-
+\label{secConfianza}
 Al igual que en el tema anterior, vamos a obtener información sobre un parámetro desconocido $θ∈Θ$ a partir de una meustra $X_1,…,X_n$. Habíamos logrado una estimación puntual, pero, ¿por qué va a ser válido sólo ese valor? ¿Podría ser válido un valor cercano al estimador?
 
 Este tema responde a esa pregunta: ofrece un intervalo que típicamente contiene a un estimador puntual, de posibles valores para un parámetro. Veremos cómo construir ese intervalo y la información que ofrecen.
@@ -1338,11 +1339,12 @@ Para medir la probabilidad de cometer uno de esos fallos definimos la función d
 θ&\longmapsto β_n(θ) = \prob[θ]	{(\sample) ∈ R}
 \end{align*}
 
-y nos da la probabilidad de rechazar la hipótesis $Θ_0$.
+y nos da la probabilidad de rechazar la hipótesis $Θ_0$.\label{defFuncPotencia}
 \end{defn}
 
-\subsection{Teoría de Neyman-Pearson}
 
+\subsection{Teoría de Neyman-Pearson}
+\label{secNeymanPearson}
 Nos gustaría que $β_n(Θ_0) = 0$ y que $β_n(Θ_1) =1$, pero normalmente no pasará esto, sino que $β_n$ será una función continua y suave del parámetro. 
 
 La teoría de Neyman-Pearson trata de responder a este problema con los dos siguientes pasos:
@@ -1358,19 +1360,99 @@ La teoría de Neyman-Pearson trata de responder a este problema con los dos sigu
 \item Se busca una región de rechazo $R$ tal que \[ \max_{θ∈Θ_0} \prob[θ]{R} ≤ α \]
 \end{itemize}
 
+Tal y como hemos definido $α$, se puede considerar que el nivel de significación nos indica la probabilidad de cometer un error de tipo I, es decir, de rechazar $H_0$ cuando es cierta. Por lo tanto, cuanto menor es el nivel de significación más \textit{seguros} estamos de que no estamos rechazando $H_0$ por error.
+
 \paragraph{Minimizar la probabilidad de error de tipo II}
 
 Se intenta buscar una región de rechazo $R$ que maximice la función de potencia cuando $θ∈Θ_1$.
 
 Aquí podemos ver por qué las dos hipótesis no son simétricas. Los tests de hipótesis están diseñados para controlar la probabilidad máxima de rechazar $H_0$ cuando es cierta. En consecuencia, suelen ser conservadores con la hipótesis nula: hace falta mucha evidencia muestral para rechazar $H_0$. Observemos que es posible que, con los mismos datos, $H_0$ se rechace para un nivel de significación $α=0.05$ y se acepte para $α=0.01$. 
 
+Además de la asimetría, tenemos que pensar que al aceptar $H_0$ no significa que la hayamos demostrado, sino simplemente que no se ha encontrado suficiente evidencia empírica a nivel prefijado $α$ en contra de $H_0$. \textbf{No es una demostración matemática}.
+
 \section{Problema de una muestra}
 
 En una primera aproximación, los problemas de contraste de hipótesis  pueden clasificarse en problemas de una muestra o de dos, según haya sólo una población de interés o queramos comparar dos poblaciones y dispongamos de una muestra de cada una de ellas. Presentaremos las ideas básicas en el caso de los problemas de una muestra pero pueden extenderse de modo análogo a los de dos muestras. 
 
-Hubo partido de baloncesto y falta completar.
+\paragraph{Dualidad con los intervalos de confianza}
 
-%Clase del jueves que copió dejuan y no guille
+En algunos casos de hipótesis nula simple, aparece una dualidad entre el contraste de hipótesis y los intervalos de confianza (\ref{secConfianza}). Si tenemos $H_0:\; μ=μ_0$, entonces aceptar $H_0$ significa que $μ ∈ IC_{1-α}(θ)$, es decir, que está en el intervalo de confianza. La región de rechazo sería entonces
+
+\[ R=\{ (\sample[x])\tq θ(\sample[x]) \notin IC_{1-α}(θ) \} \]
+
+\begin{defn}[p-valor del contraste] Se define el p-valor del contraste como el ínfimo de los niveles de significación $α$ para los que rechazo $H_0$.
+
+De esta forma, si $α$ es menor que el p-valor, aceptaremos $H_0$ y si es mayor, la rechazaremos.
+\end{defn}
+
+¿Qué información nos va a dar el p-valor? Supongamos que tenemos, por ejemplo, un p-valor pequeño ($<0.01$). Con este valor rechazaríamos la hipótesis nula para los valores más habituales de niveles de significación ($0.01, 0.05, 0.1$). Por lo tanto, en este caso lo razonable sería rechazar $H_0$.
+
+Por otra parte, supongamos que tenemos un p-valor grande ($>0.1$). En este caso, aceptaríamos la hipótesis nula para los valores más habituales de $α$, y entonces lo más razonable sería aceptar $H_0$.
+
+De forma general, el p-valor de contraste nos dice la probabilidad de observar la muestra que hemos obtenido suponiendo que $H_0$ es cierta. Si es muy bajo, nos indicará que es muy poco probable que la muestra obtenida haya salido así por pura casualidad.
+
+\subsection{Regiones de rechazo para contrastes habituales} 
+\subsubsection{Contraste de la media de una distribución}
+
+En todo caso se rechaza $H_0$ cuando $(\sample) ∈ R$. Para hallar las regiones de rechazo buscaremos los \textbf{estadísticos de contraste}\index{Estadístico!de contraste}, medidas de lo razonable que es la hipótesis nula y que depende de la muestra obtenida. Cuando la hipótesis nula sea cierta, el estadístico del contraste estará en zonas de alta probabilidad.
+
+\paragraph{Distribución normal con varianza conocida}
+
+Primero construiremos el estadístico del contraste $Z$, que depende de la media muestral obtenida.
+
+\[ Z = \frac{\avg{X}-μ_0}{σ/\sqrt{n}} \]
+
+Si $H_0:\;μ=μ_0$ es cierta entonces $Z\sim N(0,1)$. Entonces las regiones de rechazo son 
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{|c|c|}
+\hline  $H_0$ & $R$  \\ 
+\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{Z} ≥ z_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq Z ≥ z_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq Z ≤ z_{\frac{α}{2}}\}$ \\ 
+\hline 
+\end{tabular}
+\caption{Regiones de rechazo para una normal $N(μ,σ)$.} 
+\end{table}
+
+\paragraph{Distribución normal con varianza desconocida} 
+
+Sea $\sample$ una muestra aleatoria de $X\sim N(μ,σ)$ con $σ$ desconocido. Entonces el estadístico del contraste sigue una distribución $T$ de Student de $n-1$ grados de libertad:
+
+\[ T=\frac{\avg{X} - μ_0}{s/\sqrt{n}} \]
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{|c|c|}
+\hline  $H_0$ & $R$  \\ 
+\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{T} ≥ t_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq T ≥ t_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq T ≤ t_{\frac{α}{2}}\}$ \\ 
+\hline 
+\end{tabular} 
+\caption{Regiones de rechazo para una normal $N(μ,σ)$ con $σ$ desconocida.}
+\end{table}
+
+\paragraph{Tests de nivel aproximado $α$ (muestras grandes) para la media de cualquier distribución}
+
+ Sea $\sample$ una muestra aleatoria de $X$ con $\esp{X} = μ < ∞$. Entonces el estadístico del contraste es 
+ 
+ \[ Z= \frac{\avg{X}-μ_0}{S/\sqrt{n}}\stackrel{TCL}{\sim} N(0,1) \]
+ 
+ si $H_0:\, μ=μ_0$ es cierta. Por lo tanto, nos quedamos con las siguientes regiones:
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{|c|c|}
+\hline  $H_0$ & $R$  \\ 
+\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{Z} ≥ z_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq Z ≥ z_{\frac{α}{2}}\}$ \\ 
+\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq Z ≤ z_{\frac{α}{2}}\}$ \\ 
+\hline 
+\end{tabular} 
+\caption{Regiones de rechazo para la media de cualquier distribución}
+\end{table}
 
 \section{Contrastes para dos muestras}
 
@@ -1385,7 +1467,7 @@ Podemos plantear hipótesis del tipo
 Este útlimo caso (si las varianzas son iguales) suele ser un requisito previo antes de plantearte contrastes como el segundo ejemplo.
 
 
-Uno de los test más usuales es el de igualdad de medias para dos poblaciones \textbf{homocedásticas} \index{Muestras! homocedásticas}, es decir, con $\sigma_1=\sigma_2$.
+Uno de los test más usuales es el de igualdad de medias para dos poblaciones \textbf{homocedásticas} \index{Muestra!homocedástica}, es decir, con $\sigma_1=\sigma_2$.
 
 Si \[\left.\begin{array}{cc}
 X\sim N(\mu_1,\sigma)\\
@@ -1411,7 +1493,7 @@ X_1,...,X_{n_1}\to \frac{(n_1-1)S_1^2}{\sigma_1^2} \sim \chi^2_{(n_1-1)}\\
 Y_1,...,Y_{n_1}\to \frac{(n_1-1)S_2^2}{\sigma_2^2} \sim \chi^2_{(n_2-1)}\\
 \end{array}\]
 
-Para seguir con el contraste de igualdad de medias necesitamos definir la distribución \textbf{Fisher-Snedecor} con $n_1\,y\,n_2$ grados de libertad. \index{Distribuci\'on F de Fisher}. La distribución se parece mucho a la $\chi^2$, y su función de distribución se obtiene así:
+Para seguir con el contraste de igualdad de medias necesitamos definir la distribución \textbf{Fisher-Snedecor} con $n_1\,y\,n_2$ grados de libertad. \index{Distribuci\'on! $F$ de Fisher}. La distribución se parece mucho a la $\chi^2$, y su función de distribución se obtiene así:
 
 \[Q_1 \sim \chi_{n_1}^2 \,;\, Q_2 \sim \chi_{n_2}^2\]
 \[F \sim\displaystyle \frac{\displaystyle Q_1/n_1}{\displaystyle Q_2/n_2}\]
@@ -1445,8 +1527,120 @@ Y ahora expresamos nuestra hipótesis en función de $D$, de la que sabemos que 
 \item Si $H_0: \mu_1\geq\mu_2 \dimplies H_0: \mu_d\geq0 $
 \end{itemize}
 \end{example}
-En el apéndice encontramos un ejercicio realizado en $\mathcal{R}$
+En el apéndice encontramos un ejercicio realizado en $\mathcal{R}$ ¿¿¿¿?????
 
+\section{Consistencia de tests. Tests insesgados y UMP}
+
+\begin{defn}[Sucesión\IS consistente] Se dice que una sucesión de tests con un nivel prefijado $α$ es consistente cuando
+
+\[ \lim_{n\to ∞} β_n(θ) = 1\,∀θ∈Θ_1= Θ\setminus Θ_0 \]
+
+Es decir, que la probabilidad de rechazar la hipótesis nula cuando es falsa, dada por la función de potencia (\ref{defFuncPotencia}), tienda a uno con muestras suficientemente grandes.
+\end{defn}
+
+
+\begin{defn}[Test\IS insesgado] Se dice que un test es insesgado cuando
+
+\[ β_n(θ)≤α\;∀θ∈Θ_0 \]
+
+, es decir, cuando cumple la teoría de Neyman-Pearson (ver sección \ref{secNeymanPearson}); y además \[ β_n(θ)≥α \;∀θ∈Θ_1 \]
+
+\end{defn}
+
+\begin{defn}[Test\IS UMP] Se dice que un test es uniformemente más potente (UMP) dentro de una clase $\mathcal{B}_{n,α}$ de tests de nivel $α$ basados en muestras de tamaño $n$ cuando
+
+\[ β_n(θ) ≥ \tilde{β}_n(θ),\;∀θ∈Θ_1 \]
+
+siendo $\tilde{β}_n$ la función de potencia de cualquier otro test de la clase  $\mathcal{B}_{n,α}$.
+\end{defn}
+
+\subsection{Lema de Neyman-Pearson}
+
+Recordemos la función de verosimilitud, que medía lo verosímil que es el valor del parámetro $θ$ a la vista de la muestra. Para comparar dos hipótesis simples $H_i:\,θ=θ_i$, calcularíamos la función de verosimilitud para esos dos valores y veríamos cuál es más probable. Extendiendo esta idea llegamos al lema de Neyman-Pearson
+
+\begin{theorem}[Lema\IS de Neyman-Pearson]\label{thmNeymanPearson}
+Se considera el problema de hipótesis simple y alternativa simple, es decir, que $H_0:\,θ=θ_0$ frente a $H_1:\,θ=θ_1$. Denotemos \[ f_n(\sample[x];θ) = \prod_{i=1}^n f(x_i;θ= \]
+
+Dado $α∈(0,1)$, supongamos que la región de rechazo
+
+\[ R^\ast = \left\{ (\sample[x]\tq \frac{f_n(\sample[x];θ_1)}{f_n(\sample[x];θ_0} > k \right\} \]
+
+verifica $P_{\theta_0}(R^{\ast}) = \alpha$
+Completar esto.
+
+\end{theorem}
+
+\begin{proof} Denotamos $\vx = (\sample[x])$ para cortar.
+
+Tenemos que probar que $\prob[\theta_1]{R^\ast} - \prob[θ_1]{R}$ es mayor o igual que cero.
+
+\[ \prob[θ_1](R^\ast) - \prob[θ_1]{R} = \int_{R^\ast\cap R^c} f_n(\vx;θ_1)d\vx - \int_{R^{\ast c}\cap R} f_n(\vx;θ_1)d\vx \]
+
+Por definición de $R^\ast$
+
+\[ \int_{R^\ast\cap R^c} f_n(\vx;θ_1)d\vx ≥ k \int_{R^\ast\cap R^c} f_n(\vx;θ_0)d\vx \]
+
+y también 
+
+\[ \int_{R^{\ast c}\cap R} f_n(\vx;θ_1)d\vx ≥ k \int_{R^{\ast c}\cap R} f_n(\vx;θ_0)d\vx \]
+
+Por lo tanto, 
+
+\[ \prob[θ_1](R^\ast) - \prob[θ_1]{R} ≥ k\left[\int_{R^\ast\cap R^c} f_n(\vx;θ_0)d\vx - \int_{R^{\ast c}\cap R} f_n(\vx;θ_0)d\vx \right] \]
+
+Y aquí es donde me he perdido.
+
+\end{proof}
+
+\subsection{Familias paramétricas con cociente de verosimilitudes monótono y tests óptimos}
+
+En la subsección anterior hemos construido tests óptimos en problemas de hipótesis simple y alternativa simple. Pasaremos ahora a definirlos en modelos nilaasjdajfklsaghdkfas
+
+
+\begin{defn}[Familia\IS paramétrica CVM] Se dice que $f(\cdot|θ)$ es una familia paramétrica con cociente de verosimilitudes monótono (CVM) si existe un estadístico $T_n(\sample[x])$ tal que, para todo $θ_1,θ_2$ con $θ_1<θ_2$ la razón de verosimilitudes 
+
+\[ \frac{f_n(\sample[x];θ_2)}{f_n(\sample[x];θ_1} \]
+
+es una función monótona no decreciente de $T_n(\sample[x])$.
+\end{defn}
+
+Podemos ver algunos ejemplos de este tipo de familias.
+
+\paragraph{Distribución exponencial}
+
+Tomemos $X\sim \text{exp}(θ)$ con $θ>0$ y $f(x;θ) = θe^{-θx}$ para $x>0$. El cociente de las dos funciones es
+
+\[ \frac{θ_2^ne^{-θ_2\sum x_i}}{θ_1^ne^{-θ_1\sum x_i}} = \left(\frac{θ_2}{θ_1}\right)^ne^{(θ_1-θ_2)\sum x_i } \]
+
+con $θ_1-θ_2 < 0$. Entonces, si consideramos
+
+\[ T_n(\sample[x]) = -\sum x_i \] 
+
+pasa algo con nuestras vidas y la estadística en general que no he llegado a copiar.
+
+\begin{theorem}
+Supongamos que $F(\cdot;\theta)$ cumpla la propiedad CVM (cociente de verosimilitudes monótono) y que $k_{\alpha}$ es tal que:
+\[P_{\theta_0} \{t_n > k_{\alpha} = \alpha\}\]
+Además suponemos que $P_{\theta_0} \{T_n = c\} = 0, \forall \theta,c$. 
+
+\textbf{Entonces:} $R=\{(x,q,...,x_n): T_n(x_1,...,x_n) > k_{\alpha}\}$ es la región crítica de un test óptimo (uniformemente más potente) de nivel $\alpha$ para contrastar $H_0: \theta \leq \theta_0\,;\, H_1: \theta > \theta_0$.
+\end{theorem}
+
+Vamos a ver otro ejemplo:
+
+\begin{example}
+Ya hemos visto que la exponencial tiene CVM (cociente verosimilitudes monótono).
+
+Por el teorema tenemos que el \textbf{test óptimo} de nivel $\alpha$ para $H_0: \theta \leq \theta_0\,;\, H_1: \theta > \theta_0$.
+
+Podemos construir la región de rechazo 
+\[R = \{(x_1,...,x_n): \frac{1}{\sum_{i=1}^n x_i} > k_{\alpha}\}\] donde \[P_{\theta_0} \left\{\sum_{i=1}^n X_i < \frac{1}{k_{\alpha}}\right\} = \alpha\]
+\end{example}
+
+\begin{example}
+Sea $f(\cdot;\theta)$ una uniforme en $(0,\theta)$.
+Se deja como ejercicio para el lector la comprobación de que la propiedad de CVM y la obtención del estadístico (que es el máximo de la muestra)
+\end{example}
 \appendix
 \chapter{Anexos}
 \section{Condiciones suficientes para permutar la derivada con la integral}

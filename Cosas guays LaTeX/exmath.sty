@@ -15,9 +15,14 @@
 \RequirePackage{bbm}
 \RequirePackage[shadow]{todonotes} % Marcas To Do (a hacer)
 \RequirePackage{etoolbox} % Comandos guays.
+\RequirePackage{commath}
+
+\let\mder\md
 
 \setlength{\marginparwidth}{2.6cm}
 \reversemarginpar
+
+\newcommand{\mop}[1]{\mathrm{#1}\,}
 
 % Comandos de lógica
 \newcommand{\dimplies}{\Leftrightarrow}
@@ -28,6 +33,7 @@
 \newcommand{\tq}{\;\diagup\;}
 \newcommand{\tlq}{\text{ tal que }}
 \newcommand{\wtf}{(?)}
+
 % Cálculo
 \newcommand{\deriv}[2]{\frac{d\, #1}{d\, #2}}
 \newcommand{\dpa}[2]{\frac{\partial\,#1}{\partial\, #2}}
@@ -49,18 +55,17 @@
 \newcommand{\ncl}[1]{N\left(#1 \right)}
 
 %Análisis matemático
-\newcommand{\norm}[1]{||#1||}
 \newcommand{\normp}[2]{\norm{\gor{#1}}_{#2}}
 \newcommand{\liminft}[1]{\lim_{{#1}\rightarrow \infty}}
 \newcommand{\mylim}[3]{\lim_{\gor{#1} \rightarrow \gor{#2}} F({#3})}
 \newcommand{\df}[2][\wedge\,]{%
   \,
   \def\nextitem{\def\nextitem{#1}}% Separator
-  \renewcommand*{\do}[1]{\nextitem d##1}% How to process each item
+  \renewcommand*{\do}[1]{\nextitem \dif ##1}% How to process each item
   \docsvlist{#2}% Process list
 } % Diferenciales
+\newcommand{\id}[1]{\df[]{#1}}
 
-%No se donde meter
 %Para mejorar después
 \newcommand{\app}{\paragraph{Aplicaci\'{o}n:}}
 \newcommand{\obs}{\paragraph{Obsevaci\' {o}n:}}
@@ -85,7 +90,7 @@
 
 % Operadores
 \newcommand{\comb}[2]{\left( \begin{matrix} #1 \\ #2 \end{matrix} \right)} % Número combinatorio
-\newcommand{\abs}[1]{\left\vert #1 \right\vert} % Valor aboluto
+\renewcommand{\abs}[1]{\left\vert #1 \right\vert} % Valor aboluto
 \newcommand{\inv}[1]{{#1}^{-1}} % Inversa
 \newcommand{\conj}[1]{\overline{#1}} % Conjugado
 \newcommand{\avg}[1]{\overline{#1}}
@@ -143,12 +148,13 @@
 
 % Vectores
 \newcommand{\pesc}[1]{\langle #1 \rangle} % Producto escalar
-\newcommand{\md}[1]{\left|\left| #1 \right|\right|} % Módulo
+\renewcommand{\md}[1]{\| #1 \|} % Módulo
 
 % Vectores usuales, para no tener que andar escribiendo
 \newcommand{\vx}{\vec{x}}
 \newcommand{\vy}{\vec{y}}
 \newcommand{\vf}{\vec{F}}
+\newcommand{\vg}{\vec{G}}
 \newcommand{\va}{\vec{a}}
 \newcommand{\vu}{\vec{u}}
 \newcommand{\vn}{\vec{n}}
@@ -199,7 +205,9 @@
 	\textbf{Ejercicio \ifthenelse{\equal{#1}{}}{\theejr}{#1}}:
 }{\end{rightbar}\vspace{10 pt}}
 
-\newenvironment{example}{\begin{rightbar} \itshape \paragraph{Ejemplo:}}{\end{rightbar}}
+\newenvironmentx{example}[1][1=]
+{\paragraph{Ejemplo: #1} \itshape}
+{}
 
 
 \newcommand{\listtheoremname}{Teoremas}
@@ -217,7 +225,7 @@
 		{\index{#2}}
 
 	\renewcommand{\IS}{ }
-	\noindent \stepcounter{thm} \textit{Definici\'{o}n \thethm}
+	\noindent \refstepcounter{thm} \textit{Definici\'{o}n \thethm}
 	\textbf{#1}.\itshape}
 	{\vspace{2 pt}}
 
