@@ -66,7 +66,7 @@
 \parts{arg0}#m
 \ind#m
 \gen{arg0}#m
-\ord{arg0}#m
+\ord#m
 \esp{arg0}{arg1}#m
 \prob{arg0}{arg1}#m
 \var{arg0}{arg1}#m
