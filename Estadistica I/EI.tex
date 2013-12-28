@@ -1149,7 +1149,15 @@ para toda posible muestra $(x_1,\dotsc,x_n)$. Estudiaremos entonces la siguiente
 
 \[ \int_\Theta \frac{f(x_1,\dotsc,x_n|\theta)\pi(\theta)}{\displaystyle \int_\Theta f(x_1,\dotsc,x_n|\tau)\pi(\tau)\,d\tau} \]
 
-En esta, integral, el término \[ \int_\Theta f(x_1,\dotsc,x_n|\tau)\pi(\tau)\,d\tau \] es constante. Por lo tanto, lo que nos interesará será el numerador, la integral \[ \int_Theta f(x_1,\dotsc,x_n|\theta)\pi(\theta)\,d\theta \] que nos dará la información que necesitamos.
+En esta, integral, el término 
+
+\[ \int_\Theta f(x_1,\dotsc,x_n|\tau)\pi(\tau)\,d\tau \] 
+
+es constante. Por lo tanto, lo que nos interesará será el numerador, la integral 
+
+\[ \int_\Theta f(x_1,\dotsc,x_n|\theta)\pi(\theta)\,d\theta \] 
+
+que nos dará la información que necesitamos.
 
 \begin{defn}[Estimador\IS Bayes] Se define, para cada muestra dada $(x_1,\dotsc,x_n)$ como la esperanza de la distribución a posteriori:
 
@@ -1602,6 +1610,7 @@ En la subsección anterior hemos construido tests óptimos en problemas de hipó
 \[ \frac{f_n(\sample[x];θ_2)}{f_n(\sample[x];θ_1} \]
 
 es una función monótona no decreciente de $T_n(\sample[x])$.
+\label{defFamCVM}
 \end{defn}
 
 Podemos ver algunos ejemplos de este tipo de familias.
@@ -1618,7 +1627,7 @@ con $θ_1-θ_2 < 0$. Entonces, si consideramos
 
 pasa algo con nuestras vidas y la estadística en general que no he llegado a copiar.
 
-\begin{theorem}
+\begin{theorem}\label{thmNeymanPearson2}
 Supongamos que $F(\cdot;\theta)$ cumpla la propiedad CVM (cociente de verosimilitudes monótono) y que $k_{\alpha}$ es tal que:
 \[P_{\theta_0} \{t_n > k_{\alpha} = \alpha\}\]
 Además suponemos que $P_{\theta_0} \{T_n = c\} = 0, \forall \theta,c$. 
@@ -1641,6 +1650,88 @@ Podemos construir la región de rechazo
 Sea $f(\cdot;\theta)$ una uniforme en $(0,\theta)$.
 Se deja como ejercicio para el lector la comprobación de que la propiedad de CVM y la obtención del estadístico (que es el máximo de la muestra)
 \end{example}
+
+\subsection{Construcción de tests. Test de cociente de verosimilitudes}
+
+\begin{defn}[Estadístico\IS del contraste de razón de verosimilitudes]
+
+Sea $f(\ast;θ)$ donde $θ =(\sample[θ])∈Θ⊆ℝ^k$, siendo $Θ$ un \textit{intervalo} $ℝ^k$. Dada una muestra $x=(\sample[x])$, sea \[ f_n(x;θ) =\prod_{i=1}^{n} f(x_1;θ) \]
+
+Consideremos el problema de contrastar $H_0: \,θ_i=c_i$ para $i=1,\dotsc, r ≤ k$ y $H_1:\, θ_1≠c_i$ para algún $i=1,\dotsc, r$. 
+
+El estadístico del contraste de razón de verosimilitudes es
+
+\[ Λ_n = \frac{\sup_{θ∈Θ_0}f_n(x;θ)}{\sup_{θ∈Θ}f_n(x;θ)} = \frac{\sup_{θ∈Θ_0}f_n(x;θ)}{f_n(x;\hat{θ}} \]
+
+donde $\hat{θ}$ es el e.m.v (\ref{defEMV}) de $θ$, y 
+\end{defn}
+
+Si $H_0$ es cierta y el verdadero valor de $θ$ están en $Θ_0$ entonces $A_n\eqsim1$, porque $\hat{θ}_n$ tiende al verdadero valor del parámetro. Si $H_0$ es falsa, el e.m.v. de $θ$ tiende a un valor fuera de $Θ_0$. Entonces $Λ_n$ tomará un valor significativamente menor que 1.
+
+De esta forma, podemos construir una región de rechazo
+
+\[ R = \{(\sample[x]\tq Λ_n(\sample[x]) < k_α \} \]
+
+Hallar $k_α$ según la probabilidad de error que queramos es algo complejo. Por eso nos apoyamos en el siguiente teorema:
+
+\begin{theorem}
+Supongamos que 
+\begin{enumerate}
+\item El e.m.v. $\hat{θ}_n$ es estimador consistente en probabilidad del parámetro $θ$.
+\item Para todo $x$, la función $\log f(x;θ)$ tiene derivadas parciales terceras respecto a los componentes de $θ$ continueas.
+\item En las integrales que involucran a la función $f(x;θ)$ se pueden permutar las derivadas con el signo integral.
+\item La matriz de información de Fisher \[ \mathcal{I}(θ) = \left(\frac{∂^2}{∂θ_i∂θ_j} \log f(X;θ)\right)_{1≤i,j≤k} \] es invertible para cada $θ$.
+\end{enumerate}
+
+Entonces, bajo $H_0$, 
+
+\[ -2\log Λ_n\convdist χ^2 \]
+\end{theorem}
+
+\subsubsection{Aplicación a tests de bondad de ajuste} Sea $X$ una v.a. discreta que toma los valores $a_1,\dotsc a_k$. Denotemos $p_i = \prob{X=a_i}$. Supongamos que se desea contrastar
+
+\[ H_0:\, p_i=p_{i0}\; i=1,\dots,k \]
+
+basado en una muestra $\sample[x]$. Obsérvese que, en este caso, con la notación del teorema, $r=k-1$ porque cuando se fijan $k-1$ probabilidades $p_i$ queda fijada la probabilidad restante. Por tanto, se rechaza al nivel $α$ cuando
+
+\[ - 2 \log Λ_n > χ_{k-1;α}^2 \]
+
+Consideramos $f(\sample[x];\sample[p][k])$ como la probabilidad de haber observado la muestra $\sample[x]$ con los valores de los parámetros $\sample[p][k]$. Entonces el numerador de $Λ_n$ es 
+
+\[ \frac{n!}{O_1!\dotsb O_k!}p_{10}^{O_1}\dotsb p_{k0}^{O_k} \]
+
+siendo $ O_j=\card{i\tq x_i = a_j}$ las \textit{frecuencias observadas} de los distintos valores de la variable. Nótese que, bajo $H_0$, $(\sample[O][k])$ tiene distribución multinomial $\mathcal{M}(n:p_{10},\dotsc , p_{k0})$. 
+
+En el denominador tenemos que poner los e.m.v. de cada $p$, de la siguiente forma
+
+\[ \hat{p}_k = \frac{o_k}{n} \]
+
+y por lo tanto el denominador queda
+
+\[ \frac{n!}{O_1!\dotsb O_k!} \left(\frac{O_1}{n}\right)^{O_1} \dotsb \left(\frac{O_k}{n}\right)^{O_k} \]
+
+Sustituyendo en $Λ_n$ es inmediato ver que que el estadístico de contraste se puede expresar en la forma 
+
+\[ - 2 \log Λ_n \]
+
+
+\begin{example}[Experimento de Mendel] Un ejemplo clásico de este tipo de ajuste se puede ver en el experimento de Mendel, en el que se cruzaron plantas de guisantes con fenotipo rugoso-amarillo con otras de fenotipo liso-verde. En la segunda generación se podían observar cuatro fenotipos cuyas respectivas probabilidades, según la teoría de la herencia mendeliana, debían ser 
+
+\[ p_{10} = \frac{9}{16},\,p_{20}=\frac{3}{16},\,p_{30}=\frac{3}{16},\,p_{40}=\frac{1}{16} \]
+
+Observados $n=556$ guisantes en la segunda generación del experimento se obtuvieron los siguientes números con los fenotipos.
+
+
+\[ 0_1=315,\,O_2=101,\,O_3= \]
+
+¿Proporcionan estos resultados alguna evidencia en contra de la teoría mendeliana?
+
+Aplicamos el test para contrastar $H_0$ tomada como los valores esperados. 
+
+Copia página 40 diapositivas y artículo original de Fisher de la página.
+
+\end{example}
+
 \appendix
 \chapter{Anexos}
 \section{Condiciones suficientes para permutar la derivada con la integral}
@@ -1669,6 +1760,16 @@ Entonces para todo $θ$
 \newpage
 \includepdf[pages={1-3}]{_T5DatosMercurio.pdf}
 \newpage
+
+\chapter{Exámenes}
+\section{Enero 2013}
+\includepdf[pages=-]{_ExamenEnero.pdf}
+\includepdf[pages=-]{_ExamenEnero_Sol.pdf}
+
+\section{Junio 2013}
+
+\includepdf[pages=-]{_ExamenJunio.pdf}
+\includepdf[pages=-]{_ExamenJunio_Sol.pdf}
 \printindex
 \end{document}
 
