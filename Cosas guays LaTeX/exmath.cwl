@@ -29,6 +29,7 @@
 \mylim{arg0}{arg1}{arg2}#m
 \df{arg0}{arg1}#m
 \do{arg0}#m
+\dfl{arg0}{arg1}#m
 \id{arg0}#m
 \app#m
 \obs#m
