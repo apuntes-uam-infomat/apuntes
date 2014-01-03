@@ -42,7 +42,6 @@
 \gv#m
 \gu#m
 \gw#m
-\pb{arg0}#m
 \qeq#m
 \r{arg0}#m
 \comb{arg0}{arg1}#m
