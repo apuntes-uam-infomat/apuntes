@@ -1,4 +1,5 @@
 \mop{arg0}#m
+\pbreak#m
 \dimplies#m
 \implies#m
 \nimplies#m
