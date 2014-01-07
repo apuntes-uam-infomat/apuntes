@@ -1,23 +1,42 @@
 #!/bin/bash
-read -p "Compilar (y/n)?" yn
-case $yn in
-	[Yy]* ) echo "Compilando..."
+
+install=false
+
+makelatex() {
+	includes="../Cosas guays LaTeX"
+
+	echo "Compilando $1"
+	cd "$1"
+	if $install ; then
+		cp "$includes/*.sty" ./
+		cp "$includes/*.cls" ./
+	fi
+	latexmk -pdf -silent -c && cp *.pdf ..
+	if $install ; then
+		rm *.sty
+		rm *.cls
+	fi
+	cd ..
+}
+
+read -p "Instalar paquetes (opcional)? (y/n) " iyn
+case $iyn in 
+	[Yy]* ) echo "Instalando paquetes.."
 		echo "-----------------------------------------"
 		cd "Cosas guays LaTeX"
 		sudo ./install > /dev/null
 		cd ..
-		cd "Analisis Matematico"
-		pdflatex tex/Analisis_Matematico.tex > /dev/null
-		cp Analisis_Matematico.pdf ..
-		cd ..
-		cd "Estructuras Algebraicas"
-		pdflatex Estructuras.tex > /dev/null
-		cp Estructuras.pdf ..
-		cd ..
-		cd "Estadistica I"
-		pdflatex EI.tex > /dev/null
-		cp EI.pdf ..
-		cd ..;;
+		install=true;;
+	esac
+
+
+read -p "Compilar (y/n)? " yn
+case $yn in
+	[Yy]* ) echo "Compilando..."
+		echo "-----------------------------------------"
+		makelatex "Analisis Matematico"
+		makelatex "Estructuras Algebraicas"
+		makelatex "Estadistica I";;
 	[Nn]* ) echo "Ok";;
         * ) echo "???";;
     esac
