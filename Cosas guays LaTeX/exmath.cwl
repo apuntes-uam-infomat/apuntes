@@ -96,8 +96,6 @@
 \IS#m
 \theapr#m
 \iPartSpaceSkip#m
-\ppart#m
-\spart#m
 \iPartSpaceSkip#m
 \solution#m
 \iPartSpaceSkip#m
