@@ -47,20 +47,32 @@ packagefile = open(sys.argv[1], "r")
 contents = packagefile.read()
 cwlfile = open(sys.argv[2], "w")
 
-#\\(newcommand|renewcommand|newcommandx|DeclareMathOperator)*?{(?<name>.*?)}(\[(?<nargs>\d*)])?(\[(?<optargspec>.*]))?[^%\n]*%?(?<arginfo>[^\|\n]*)
-matches = re.finditer("\\\\(?P<cmd_type>newcommand|renewcommand|newcommandx|DeclareMathOperator)*?{(?P<name>.*?)}(\\[(?P<nargs>\\d*)])?(\\[(?P<optargspec>.*]))?[^%\\n]*%?(?P<arginfo>[^\\|\\n]*)", contents)
+#\\(?<cmd_type>newcommand|newcommandx|renewcommand|newenvironment|newenvironmentx|renewenvironment|DeclareMathOperator)*?{(?<name>.*?)}(\[(?<nargs>\d*)])?(\[(?<optargspec>.*]))?[^%\n]*%?(?<arginfo>[^\|\n]*)
+matches = re.finditer("\\\\(?P<cmd_type>newcommand|newcommandx|renewcommand|newenvironment|newenvironmentx|renewenvironment|DeclareMathOperator)\\*?{(?P<name>.*?)}(\\[(?P<nargs>\\d*)])?(\\[(?P<optargspec>.*]))?[^%\\n]*%?(?P<arginfo>[^\\|\\n]*)", contents)
+
+processed = []
 
 for match in matches:
-	lines = []
-	cmd = match.group('name')
 	arginfo = []
-
+	cmd = match.group('name')
+	cmd_type = match.group('cmd_type')
 	arginfo_str = match.group('arginfo')
 	optargspec_str = match.group('optargspec')
+	modifiers = "m"
+
+	if "environment" in cmd_type:
+		cmd = "\\begin{%s}" % cmd
+		modifiers = "" 
+
+	if cmd in processed:
+		continue
+
+	processed.append(cmd)
+
 	if arginfo_str is not None and (not arginfo_str.isspace() and len(arginfo_str) > 0):
 		parse_arginfo(arginfo, match.group('arginfo'))
 	elif optargspec_str is not None:
-		parse_argspec(arginfo, match.group('optargspec'), match.group('cmd_type'))
+		parse_argspec(arginfo, match.group('optargspec'), cmd_type)
 
 	optional_args = [arg for arg in arginfo if arg['optional']]
 	mandatory_args = [arg for arg in arginfo if not arg['optional']]
@@ -82,7 +94,7 @@ for match in matches:
 
 	arg_combinations = [arg + mandatory_args_str for arg in optional_args_str]
 
-	lines = [ cmd + argstr + "#m\n" for argstr in arg_combinations]
+	lines = [ cmd + argstr + "#" + modifiers + "\n" for argstr in arg_combinations]
 
 	for line in lines:
 		cwlfile.write(line)
