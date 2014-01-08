@@ -1,6 +1,13 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{exmath}[2013/04/21 Extended math commands]
 
+% ----------------------------------------------------------
+% Formato para generación del archivo de autocompletado (.cwl) para TexStudio
+% 	Después de la declaración del comando, ponemos un comentario con la siguiente sintaxis
+%	\newcommand... % 1: descripción argumento 1; 2O: descripción argumento 2; ... | Comentarios adicionales (no se incluyen)
+%	La "O" (una "o", no un 0) después del número de argumento indica que es opcional.
+% ----------------------------------------------------------a
+
 % Paquetes requeridos
 \RequirePackage{amsmath} % Matemáticas
 \RequirePackage{amsfonts} % Más matemáticas
@@ -22,8 +29,8 @@
 \setlength{\marginparwidth}{2.6cm}
 \reversemarginpar
 
-\newcommand{\mop}[1]{\mathrm{#1}\,}
-\newcommand{\pbreak}{\mbox{} \\}
+\newcommand{\mop}[1]{\mathrm{#1}\,} % 1: operacion
+\newcommand{\pbreak}{\mbox{} \\} % Salto de párrafo forzado.
 
 % Comandos de lógica
 \newcommand{\dimplies}{\Leftrightarrow}
@@ -36,7 +43,7 @@
 \newcommand{\wtf}{(?)}
 
 % Cálculo
-\newcommand{\deriv}[2]{\frac{d\, #1}{d\, #2}}
+\newcommand{\deriv}[2]{\frac{d\, #1}{d\, #2}} % 1: f; 2: var
 \newcommand{\dpa}[2]{\frac{\partial\,#1}{\partial\, #2}}
 \DeclareMathOperator{\rot}{rot} % Rotacional
 \DeclareMathOperator{\dv}{div}  % Divergencia
@@ -53,20 +60,20 @@
 \newcommand{\acum}[1]{\#1 \subset(#1) }
 \newcommand{\rnk}{\real^{N+K}}
 \newcommand{\rk}{\real^{N+K}}
-\newcommand{\ncl}[1]{N\left(#1 \right)}
+\newcommand{\ncl}[1]{N\left(#1 \right)} % 1: appl;
 
 %Análisis matemático
-\newcommand{\normp}[2]{\norm{\gor{#1}}_{#2}}
-\newcommand{\liminft}[1]{\lim_{{#1}\rightarrow \infty}}
-\newcommand{\mylim}[3]{\lim_{\gor{#1} \rightarrow \gor{#2}} F({#3})}
-\newcommand{\df}[2][\wedge\,]{%
+\newcommand{\normp}[2]{\norm{\gor{#1}}_{#2}} % 1: vector; 2: norma-n; | Normas-p
+\newcommand{\liminft}[1]{\lim_{{#1}\rightarrow \infty}} % 1: variable;
+\newcommand{\mylim}[3]{\lim_{\gor{#1} \rightarrow \gor{#2}} F({#3})} % 1: vector; 2: tiende-a; 3: variable;
+\newcommand{\df}[2][\wedge\,]{% 1: variables; 2O: separador; | Lista de variables para formas diferenciales
   \,
   \def\nextitem{\def\nextitem{#1}}% Separator
   \renewcommand*{\do}[1]{\nextitem \dif ##1}% How to process each item
   \docsvlist{#2}% Process list
-} % Diferenciales
-\newcommand{\dfl}[2]{\dif #1 \wedge \dotsc \wedge \dif #2}
-\newcommand{\id}[1]{\df[]{#1}}
+} 
+\newcommand{\dfl}[2]{\dif #1 \wedge \dotsc \wedge \dif #2} % 1: comienzo; 2: fin; | Lista de la forma dv1 Λ ... Λ dvn
+\newcommand{\id}[1]{\df[]{#1}} % 1: variables; | Lista de variables para integrales
 
 %Para mejorar después
 \newcommand{\app}{\paragraph{Aplicaci\'{o}n:}}
@@ -85,7 +92,7 @@
 \newcommand{\gu}{\overline{u}}
 \newcommand{\gw}{\overline{w}}
 %pullback
-\newcommandx{\pb}[1][1=T]{{#1}^{\ast}}
+\newcommandx{\pb}[1][1=T]{{#1}^{\ast}} 
 % Caracteres 
 \newcommand{\qeq}{\overset{?}{=}} % Un igual con una interrogación encima.
 \renewcommand{\r}[1]{\overset{\circ}{#1}} % Un circulito encima de una letra-
@@ -107,7 +114,7 @@
 
 % Comandos para conjuntos y relaciones
 \newcommand{\x}{\times} % una x superguay.
-\newcommand{\appl}[3]{#1 : #2\longmapsto #3} % Aplicación
+\newcommand{\appl}[3]{#1 : #2\longmapsto #3} % 1: f; 2: dominio; 3: imagen; | Aplicación
 \newcommand{\uexists}{\exists\, !\;} % Existe y es único
 \newcommand{\sint}{\int_b^a\;}
 \newcommand{\stdf}{$\appl{f}{X}{Y}$} % Típica función f:X -> Y
@@ -118,24 +125,24 @@
 \DeclareMathOperator{\ord}{ord}
 
 % Estadística
-\newcommand{\esp}[2][]{
+\newcommand{\esp}[2][]{ % 1: parametro; 2: variable
 \ifthenelse{\equal{#1}{}}
 		{\mathbb{E}}
 		{\mathbb{E}_{#1}}\left(#2\right)}
-\newcommand{\prob}[2][]{
+\newcommand{\prob}[2][]{  % 1: parametro; 2: variable
 \ifthenelse{\equal{#1}{}}
 		{\mathbb{P}}
 		{\mathbb{P}_{#1}}\left\lbrace #2 \right\rbrace}
-\newcommand{\var}[2][]{
+\newcommand{\var}[2][]{  % 1: parametro; 2: variable
 \ifthenelse{\equal{#1}{}}
 		{\mathbb{V}}
 		{\mathbb{V}_{#1}}\left(#2\right)}
 \newcommand{\fd}{\mathbb{F}}
-\newcommandx{\convs}[3][1=,2=n,3=\infty]{\xrightarrow[#2\to #3]{#1}}
-\newcommandx{\convdist}[1][1=n]{\convs[d][#1]}
-\newcommandx{\convprob}[1][1=n]{\convs[P][#1]}
-\newcommandx{\convcs}[1][1=n]{\convs[c.s][#1]}
-\newcommandx{\sample}[2][1=X,2=n]{{#1}_1,\dotsc , {#1}_#2}
+\newcommandx{\convs}[3][1=,2=n,3=\infty]{\xrightarrow[#2\to #3]{#1}} % 1O: texto superior; 2O: variable; 3O: converge a;
+\newcommandx{\convdist}[1][1=n]{\convs[d][#1]} % 1O: variable;
+\newcommandx{\convprob}[1][1=n]{\convs[P][#1]} % 1O: variable;
+\newcommandx{\convcs}[1][1=n]{\convs[c.s][#1]} % 1O: variable;
+\newcommandx{\sample}[2][1=X,2=n]{{#1}_1,\dotsc , {#1}_#2} % 1O: variable; 2O: indice;
 \DeclareMathOperator{\sesgo}{sesgo}
 \DeclareMathOperator{\ECM}{ECM}
 \DeclareMathOperator{\cov}{cov}
@@ -191,8 +198,8 @@
   innerrightmargin=10pt, skipabove=0pt, skipbelow=0pt]}{\end{mdframed}}
 
 \newcommand{\iPartSpaceSkip}{}
-\newcommandx{\ppart}[1][1=\theapr]{\indent \stepcounter{apr}\textbf{#1)} }
-\newcommandx{\spart}[1][1=\theapr]{
+\newcommandx{\ppart}[1][1=\theapr]{\indent \stepcounter{apr}\textbf{#1)} } % 1O: apartado;
+\newcommandx{\spart}[1][1=\theapr]{ % 1O: apartado;
 	\iPartSpaceSkip 
 	\renewcommand{\iPartSpaceSkip}{\vspace{10pt}}
 	\indent \stepcounter{apr}\textsc{Apartado #1)} 
@@ -262,5 +269,5 @@
 \DeclareMathOperator{\geom}{Geom}
 
 % Imágenes
-\newcommand{\easyimgw}[4]{\begin{figure}[htbp]\begin{centering}\includegraphics[width=#4\textwidth]{#1}\caption{#2}\label{#3}\end{centering}\end{figure}}
-\newcommand{\easyimg}[3]{\easyimgw{#1}{#2}{#3}{0.8}}
+\newcommand{\easyimgw}[4]{\begin{figure}[htbp]\begin{centering}\includegraphics[width=#4\textwidth]{#1}\caption{#2}\label{#3}\end{centering}\end{figure}} % 1: ruta; 2: caption; 3: label; 4: width;
+\newcommand{\easyimg}[3]{\easyimgw{#1}{#2}{#3}{0.8}} % 1: ruta; 2: caption; 3: label;
