@@ -12,3 +12,5 @@
 \prob[arg0]{arg1}#m
 \var[arg0]{arg1}#m
 \sample[X]#
+\easyimgw{imgPath}{caption}{key}{width}#r
+\easyimg{imgPath}{caption}{key}#r
