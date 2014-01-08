@@ -4,7 +4,7 @@
 
 Los apuntes necesitan los archivos en la carpeta `Cosas Guays LaTeX` para compilar (hay clases de documentos y algunos paquetes). Se pueden o bien instalar directamente en el sistem usando el script `install` del directorio o bien copiarlos al directorio del archivo `.tex` para que el compilador los reconozca.
 
-Además, hay un script en la raíz `compilar.sh` que recorreo todos los directorios compilando los PDFs, con capacidad de exportarlos a otras carpetas.
+Además, hay un script en la raíz `compilar.sh` que recorre todos los directorios compilando los PDFs, con capacidad de exportarlos a otras carpetas.
 
 ### Sugerencias de comandos (TeXstudio)
 
@@ -12,11 +12,11 @@ Para facilitar las cosas, hay un script `cwlmaker.py` que genera un archivo `.cw
 
 ### Inclusión de PDFs
 
-Para que git meta en el control de código archivos PDF, renombradlos con una barra baja al principio, para denotar que son archivos auxiliares y no generados por LaTeX.
+Para que git meta en el control de código archivos PDF, hay que renombrarlos con una barra baja al principio, para denotar que son archivos auxiliares y no generados por LaTeX.
 
 ## Descarga
 
-Puedes descargar los apuntes en PDF, actualizados diariamiente. [aquí](https://db.tt/fX1jP4wp).
+Puedes descargar los apuntes en PDF, actualizados diariamiente, [aquí](https://db.tt/fX1jP4wp).
 
 ## Autores
 
