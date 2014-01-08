@@ -1,4 +1,4 @@
-\mop{arg0}#m
+\mop{operacion}#m
 \pbreak#m
 \dimplies#m
 \implies#m
