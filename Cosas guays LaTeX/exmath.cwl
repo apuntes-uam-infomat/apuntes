@@ -69,8 +69,6 @@
 \rel#m
 \parts{arg0}#m
 \ind#m
-\gen{arg0}#m
-\ord#m
 \esp{parametro}{arg1}#m
 \prob{parametro}{arg1}#m
 \var{parametro}{arg1}#m
@@ -141,3 +139,7 @@
 \geom#m
 \easyimgw{ruta}{caption}{label}{width}#m
 \easyimg{ruta}{caption}{label}#m
+\gen{arg0}#m
+\ord#m
+\gr#m
+\kbb#m
