@@ -35,7 +35,7 @@ Es la medida de tendencia central más utilizada. Es bastante sensible a los val
 \begin{defn}[Mediana]
 Es el valor que divide a los datos en dos mitades, de tal forma que la mitad son menores y la otra mitad mayores que la mediana. 
 
-La mediana se calcula de la siguiente forma: dado un conjunto de datos $\{x_1,\dotsc, x_n\}$, la mediana es $x_{\frac{n+1}{2}}$ si $n$ es impar y  el promedio entre $x_{\frac{n}{2}}$ y $x_{\frac{n}{2} + 1}$.
+La mediana se calcula de la siguiente forma: dado un conjunto de datos $\{x_1,\dotsc, x_n\}$, la mediana es $x_{\frac{n+1}{2}}$ si $n$ es impar y el promedio entre $x_{\frac{n}{2}}$ y $x_{\frac{n}{2} + 1}$ si $n$ es par.
 \end{defn} 
 
 \subsection{Estadísticos de dispersión}
@@ -89,7 +89,7 @@ El histograma se trata de una aproximación discreta a la función de densidad c
 
 Definimos una serie, las marcas de intervalos $a^n_1, \dotsc, a^n_n$, donde $n$ es el número de intervalos y la longitud de cada intervalo  es $h_n = a^n_{j+1} - a^n_j$. Sea el conjunto $\{x_i\}_{i=0,\dotsc,m}$ los datos de nuestra muestra. Entonces, el estimador, la función $\hat{f}_n$, se define de la siguiente forma:
 
-\[ \hat{f}^n(t) = \frac{\card{i \tq x_i \in \left( a_j^n, a_{j+1}^n \right]}}{n h_n} = \frac{\sum_{i=1}^m \ind_{(a_j^n, a_{j+1}^n]} (x_i)}{n h_n} \]
+\[ \hat{f}^n(t) = \frac{\card{\left\{i \tq x_i \in \left( a_j^n, a_{j+1}^n \right]\right\}}}{n h_n} = \frac{\displaystyle\sum_{i=1}^m \ind_{(a_j^n, a_{j+1}^n]} (x_i)}{n h_n} \]
 
 Recordemos que \[ \ind_A (n) = \begin{cases} 1 & n \in A \\ 0 & n \notin A\end{cases}\]
 
@@ -127,7 +127,7 @@ Las funciones kernel más usadas son la uniforme, $\frac{1}{2}\ind_{[-1, 1]}$, l
 
 El estimador kernel $\hat{f}_n(t)$ es la función de densidad de una medida de probabilidad que es la convolución \footnote{Ya aprenderemos en al algún momento de nuestra vida qué narices es una convolución} de dos medidas de probabilidad: una, $K_h(x)$ (el kernel reescalado) y otra que da probabilidad $\frac{1}{n}$ a cada punto de la muestra $\{x_i\}$ (distribución o medida empírica).
 
-\paragraph{Generación de datos del estimador kernel} Supongamos que $K$ es el núcelo gaussiano. Podemos generar datos artificiales de la densidad así:
+\paragraph{Generación de datos del estimador kernel} Supongamos que $K$ es el núcleo gaussiano. Podemos generar datos artificiales de la densidad así:
 
 \[ x_i^0 = x_i^* + h_n Z_i,\; i=1,\dotsc, k \]
 
@@ -210,9 +210,9 @@ Durante este tema, usaremos conceptos de Probabilidad, que repasaré aquí breve
 
 \begin{theorem}[Teorema\IS de cambio de espacio de integración] Sea $g$ una función real medible tal que $\esp{g(X)}$ es finita, entonces 
 
-\[ \esp{g(X))} = \int_\real g(x) \, dF(x) = \int_\real g(x)\, dP(x) \]. 
+\[ \esp{g(X))} = \int_\real g(x) \dif F(x) = \int_\real g(x) \dif P(x) \]. 
 
-En particular \[ µ =\int_\real x\, dF(x)  \] y \[ \sigma^2 = \int_\real \left(x - µ\right)^2 \, dF(x) \]
+En particular \[ µ =\int_\real x \dif F(x)  \] y \[ \sigma^2 = \int_\real \left(x - µ\right)^2 \dif F(x) \]
 \end{theorem}
 
 \begin{defn}[Momento] El momento $µ_k$ es la esperanza de X elevado a una potencia de orden $k$. Es el valor esperado de la distancia de orden $k$ con respecto a la media
@@ -286,7 +286,7 @@ Al contrario no tiene por qué darse.
 
 \begin{theorem}[Ley\IS de los grandes números] Sea $\{x_k\}$ una sucesión de v.a.i.i.d con media finita $µ$. Se verifica entonces que 
 \label{thmGrandes}
-\[ \avg{X} = \frac{\sum_{i=1}^n x_i}{n} \convcs µ \]
+\[ \avg{X} = \frac{\displaystyle\sum_{i=1}^n x_i}{n} \convcs µ \]
 
 \end{theorem}
 
@@ -1311,7 +1311,10 @@ Sea $Z\sim N(0,1)$ y $W\sim χ_k^2$. Supongamos que $Z$ y $W$ son independientes
 
 se denomina distribución $t$ de Student con $k$ grados de libertad. Su forma se aproxima a una normal $N(0,1)$.
 
-\todo{Lema de Fisher-Cochran}
+\begin{theorem}[Lema\IS de Fischer-Cochran] Si \sample son v.a.i.i.d con distribución $N(μ,σ)$ entonces $\avg{X}$ y $S^2$ (desviación) son estadísticos independientes.
+\end{theorem}
+
+Este teorema tiene una consecuencia importante, y es que podemos obtener un intervalo de confianza exacto para $μ$ en $N(μ,σ)$ aún cuando σ es desconocida.
 
 \subsection{Intervalos de confianza bayesianos}
 
@@ -1573,8 +1576,11 @@ Dado $α∈(0,1)$, supongamos que la región de rechazo
 
 \[ R^\ast = \left\{ (\sample[x]\tq \frac{f_n(\sample[x];θ_1)}{f_n(\sample[x];θ_0} > k \right\} \]
 
-verifica $P_{\theta_0}(R^{\ast}) = \alpha$
-Completar esto.
+verifica $P_{\theta_0}(R^{\ast}) = \alpha$. Entonces
+
+\[ \prob[θ_1](R^\ast) ≥ \prob[θ_1]{R} \]
+
+siendo $R$ la región crítica de cualquier otro test tal que $\prob[θ_0]{R} ≤ α$. En otras palabras, $R^\ast$ es el \textbf{test óptimo de nivel α} para el problema considerado.
 
 \end{theorem}
 
@@ -1582,21 +1588,23 @@ Completar esto.
 
 Tenemos que probar que $\prob[\theta_1]{R^\ast} - \prob[θ_1]{R}$ es mayor o igual que cero.
 
-\[ \prob[θ_1](R^\ast) - \prob[θ_1]{R} = \int_{R^\ast\cap R^c} f_n(\vx;θ_1)d\vx - \int_{R^{\ast c}\cap R} f_n(\vx;θ_1)d\vx \]
+\[ \prob[θ_1](R^\ast) - \prob[θ_1]{R} = \int_{R^\ast\cap R^c} f_n(\vx;θ_1)\dif\vx - \int_{R^{\ast c}\cap R} f_n(\vx;θ_1)\dif\vx \]
 
 Por definición de $R^\ast$
 
-\[ \int_{R^\ast\cap R^c} f_n(\vx;θ_1)d\vx ≥ k \int_{R^\ast\cap R^c} f_n(\vx;θ_0)d\vx \]
+\[ \int_{R^\ast\cap R^c} f_n(\vx;θ_1)\dif\vx ≥ k \int_{R^\ast\cap R^c} f_n(\vx;θ_0)\dif\vx \]
 
 y también 
 
-\[ \int_{R^{\ast c}\cap R} f_n(\vx;θ_1)d\vx ≥ k \int_{R^{\ast c}\cap R} f_n(\vx;θ_0)d\vx \]
+\[ \int_{R^{\ast c}\cap R} f_n(\vx;θ_1)\dif\vx ≥ k \int_{R^{\ast c}\cap R} f_n(\vx;θ_0)\dif\vx \]
 
 Por lo tanto, 
 
-\[ \prob[θ_1](R^\ast) - \prob[θ_1]{R} ≥ k\left[\int_{R^\ast\cap R^c} f_n(\vx;θ_0)d\vx - \int_{R^{\ast c}\cap R} f_n(\vx;θ_0)d\vx \right] \]
-
-Y aquí es donde me he perdido.
+\begin{align*}
+\prob[θ_1]{R^\ast} - \prob[θ_1]{R} &≥ k\left[\int_{R^\ast\cap R^c} f_n(\vx;θ_0)\dif\vx - \int_{R^{\ast c}\cap R} f_n(\vx;θ_0)\dif\vx \right] = \\
+&= k\left[\int_{R^\ast}f_n(\vx;θ_0)\dif \vx - \int_R f_n(\vx;θ_0)\dif x\right] = \\
+&= k\left[\prob[θ_0]{R^\ast} - \prob[θ_0]{R}\right] ≥ 0
+\end{align*}
 
 \end{proof}
 
@@ -1607,7 +1615,7 @@ En la subsección anterior hemos construido tests óptimos en problemas de hipó
 
 \begin{defn}[Familia\IS paramétrica CVM] Se dice que $f(\cdot|θ)$ es una familia paramétrica con cociente de verosimilitudes monótono (CVM) si existe un estadístico $T_n(\sample[x])$ tal que, para todo $θ_1,θ_2$ con $θ_1<θ_2$ la razón de verosimilitudes 
 
-\[ \frac{f_n(\sample[x];θ_2)}{f_n(\sample[x];θ_1} \]
+\[ \frac{f_n(\sample[x];θ_2)}{f_n(\sample[x];θ_1)} \]
 
 es una función monótona no decreciente de $T_n(\sample[x])$.
 \label{defFamCVM}
