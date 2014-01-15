@@ -130,13 +130,14 @@ Calculamos ahora el error cuadrático medio:
 
 \begin{gather*}
 ECM(\hat{\alpha}_3) = \esp{\hat{\alpha}_3 - \alpha_3}^2 = \esp{(\hat{\alpha}_3 - \esp{\hat{\alpha}_3} + \esp{\hat{\alpha}_3} - \alpha_3) ^2} = \\
-= \esp{(\hat{\alpha}_3 - \esp{\hat{\alpha_3}})^2 +  (\esp{\hat{\alpha_3}}- \alpha_3)^2 + 2(\hat{\alpha}_3 - \esp{\hat{\alpha_3}}) (\esp{\hat{\alpha_3}}- \alpha_3)} = \\
-= \underbrace{\esp{(\hat{\alpha_3} - \esp{\hat{\alpha_3}})^2}}_{(a)}+ \underbrace{\left(\esp{\hat{\alpha_3}} - \alpha_3\right)^2}_{(b)} + \underbrace{2 \cdot \esp{ (\esp{\hat{\alpha_3}}- \alpha_3)^2 + 2(\hat{\alpha}_3 - \esp{\hat{\alpha_3}})}}_{(c)} 
+ \underbrace{\esp{(\hat{\alpha_3} - \esp{\hat{\alpha_3}})^2}}_{(a)}+ \underbrace{\left(\esp{\hat{\alpha_3}} - \alpha_3\right)^2}_{(b)} + \underbrace{2 \cdot \esp{ (\esp{\hat{\alpha_3}}- \alpha_3)\cdot(\hat{\alpha}_3 - \esp{\hat{\alpha_3}})}}_{(c)} 
 \end{gather*}
 
-Aquí ya hay cosas raras. (c) es cero por alguna razón, luego hay que calcular la varianza y el sesgo.
+Calculamos b) que es el sesgo:
 
 \[ \text{sesgo}(\hat{\alpha}_3) = \esp{\hat{\alpha}_3} - \alpha_3 = \alpha_3 - \alpha_3 = 0 \]
+
+Como el sesgo$=0$, tenemos que c es también 0. Solo nos queda calcular a, que es la varianza:
 
 \[ \var{\hat{\alpha}_3} = \var{\frac{1}{n}\sum X_i^3 } = \frac{1}{n^2}\var{\sum X_i^3} = \frac{1}{n^2}\sum \var{X_i^3} = \frac{\var{X^3}}{n} \]
 
@@ -146,7 +147,7 @@ y, teniendo en cuenta el enunciado,
 
 y por lo tanto
 
-\[ \text{ECM}(\hat{\alpha}_3) = \frac{171}{16n} = O(\frac{1}{n)} \convs 0 \]
+\[ \text{ECM}(\hat{\alpha}_3) = \frac{171}{16n} = O\left(\frac{1}{n}\right) \convs 0 \]
 
 donde lo que más nos importa es la convergencia a cero, que indica que cuanto más muestras tenemos mejor será el estimador.
 
@@ -165,6 +166,7 @@ Como la media es cuatro, la desigualdad de Checbichev nos da una cota de
 
 \[ \frac{\var{\avg{x}}}{0.3^2} = \frac{\var{X}}{n \cdot 0.3^2} \simeq 0.22 \]
 
+
 \spart
 
 Normalizamos
@@ -181,12 +183,12 @@ y calculamos.
 
 \[ C_n = \int_\real \left(\fd_n(t) - F(t)\right)^2 \, dF(t) \]
 
-la llamada discrepancia de Cramer-Von Mises entre $\fd_n$ y $F$. ¿Converge a cero casi seguro esta discrepancia?
+la llamada discrepancia de Cramer-Von Mises entre $\fd_n$ y $F$. \ppart ¿Converge a cero casi seguro esta discrepancia?
 
-Calcular la distribución asintótica de la sucesión $D_n = \sqrt{n}\left(\fd_n(t) - F(t)\right)$ para un valor fijo $t\in\real$.
+\ppart Calcular la distribución asintótica de la sucesión $D_n = \sqrt{n}\left(\fd_n(t) - F(t)\right)$ para un valor fijo $t\in\real$.
 
 \solution
-
+\spart 
 \[ C_n = \int_\real \left(\fd_n(t) - F(t)\right)^2 \, dF(t) = \int_\real \left(\fd_n(t) - F(t)\right)^2 f(t) \, dt \]
 
 Como por el teorema de Glivenko-Cantelli (\ref{thmGlivenko}) tenemos que 
@@ -225,6 +227,24 @@ Diseñar un experimento de simulación en R, tomando algún valor concreto de $\
 \solution Viendo la función, vemos que es simétrica con respecto al eje $x= \theta$. Por lo tanto, el punto que deja a izquierda y derecha la misma probablidad, la mediana, es precisamente $\theta$. 
 
 De la misma forma, la moda es el valor máximo de la distribución, que se ve claramente que ocurre cuando $x=\theta$.
+\end{problem}
+
+\begin{problem}[6]
+Se extrae una muestra aleatoria de tama~no n = 600 de una v.a. cuya desviación típica es $\sigma = 3$.
+Calcular aproximadamente la probabilidad \[\prob{\abs{\gor{X} - \mu} < 0.1}\]
+\solution
+Tenemos 2 posibilidades: Tipificar o con Chebichev.
+
+Con Chebichev me da negativo... 
+
+Tipificando: \[Z = \frac{\gor{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \sim N(0,1)\]
+
+Entonces:
+
+\[\prob{\abs{\gor{X} - \mu} < 0.1} = 1- \prob{\abs{\gor{X} - \mu} > 0.1} = 1 - \prob{\abs{Z} > \frac{0.1\sqrt{n}}{\sigma}} = 0.59\] 
+
+(Recordamos que $\var{\gor{X}} = \frac{\var{X}}{\sqrt{n}}$ y que $\esp{\gor{X}} = \mu = \esp{X}$)
+
 \end{problem}
 
 \begin{problem}[7] Sea $X$ una v.a con distribución absolutamente continua. Sea $F$ la correspondiente función de distribución y $f = F'$ continua en todo punto la función de densidad. para $r\in \{1,\dotsc,n\}$, denotemos por $X_{(r)}$ el $r$-simo estadístico ordenado de una muestra de tamaño $n$ extraída de $X$. Calcular la función de distirbución y la de densidad de la v.a. $X_{(r)}$.

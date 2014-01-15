@@ -26,7 +26,7 @@
 \acum{arg0}#m
 \rnk#m
 \rk#m
-\ncl{appl}#m
+\ncl{f}#m
 \normp{vector}{norma-n}#m
 \liminft{variable}#m
 \mylim{vector}{tiende-a}{variable}#m
@@ -47,7 +47,7 @@
 \gu#m
 \gw#m
 \qeq#m
-\r{arg0}#m
+\r{A}#m
 \comb{arg0}{arg1}#m
 \abs{arg0}#m
 \inv{arg0}#m
