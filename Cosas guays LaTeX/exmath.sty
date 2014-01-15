@@ -29,8 +29,17 @@
 \setlength{\marginparwidth}{2.6cm}
 \reversemarginpar
 
-\newcommand{\mop}[1]{\mathrm{#1}\,} % 1: operacion;
+\newcommand{\elst}[3]{ \, % IGN
+  \def\nextitem{\def\nextitem{#1}}% Separator
+  \renewcommand*{\do}[1]{\nextitem #2 ##1}% How to process each item. IGN
+  \docsvlist{#3}% Process list
+}
+
 \newcommand{\pbreak}{\mbox{} \\} % Salto de párrafo forzado.
+
+% BEGIN CMDDEF
+
+\newcommand{\mop}[1]{\mathrm{#1}\,} % 1: operacion;
 
 % Comandos de lógica
 \newcommand{\dimplies}{\Leftrightarrow}
@@ -53,35 +62,32 @@
 \newcommand{\bigzero}{\text{\Large 0}}
 \newcommand{\tlps}{\tilde{\Psi}}
 
-\newcommand{\invers}[1]{#1 ^ {-1}}
+\newcommand{\invers}[1]{#1 ^ {-1}} % 1: f
 \newcommand{\f}{\invers{f}}
 \newcommand{\F}{\invers{F}}
 \newcommand{\Rnxm}{\real^M\times\real^N}
 \newcommand{\acum}[1]{\#1 \subset(#1) }
 \newcommand{\rnk}{\real^{N+K}}
 \newcommand{\rk}{\real^{N+K}}
-\newcommand{\ncl}[1]{N\left(#1 \right)} % 1: appl;
+\newcommand{\ncl}[1]{\ker #1} % 1: f; | Sólo por no romper EA.
 
 %Análisis matemático
+
+
 \newcommand{\normp}[2]{\norm{\gor{#1}}_{#2}} % 1: vector; 2: norma-n; | Normas-p
 \newcommand{\liminft}[1]{\lim_{{#1}\rightarrow \infty}} % 1: variable;
 \newcommand{\mylim}[3]{\lim_{\gor{#1} \rightarrow \gor{#2}} F({#3})} % 1: vector; 2: tiende-a; 3: variable;
-\newcommand{\df}[2][\wedge\,]{% 1: variables; 2O: separador; | Lista de variables para formas diferenciales
-  \,
-  \def\nextitem{\def\nextitem{#1}}% Separator
-  \renewcommand*{\do}[1]{\nextitem \dif ##1}% How to process each item
-  \docsvlist{#2}% Process list
-} 
+\newcommand{\df}[1]{\elst{\wedge\,}{\dif}{#1}} % 1: x,y,z; | Lista de variables para formas diferenciales
 \newcommand{\dfl}[2]{\dif #1 \wedge \dotsc \wedge \dif #2} % 1: comienzo; 2: fin; | Lista de la forma dv1 Λ ... Λ dvn
-\newcommand{\id}[1]{\df[]{#1}} % 1: variables; | Lista de variables para integrales
+\newcommand{\id}[1]{\elst{}{\dif}{#1}} % 1: x,y,z; | Lista de variables para integrales
+\newcommandx{\pb}[1][1=T]{{#1}^{\ast}} 
 
-%Para mejorar después
-\newcommand{\app}{\paragraph{Aplicaci\'{o}n:}}
-\newcommand{\obs}{\vspace{10pt}\par \noindent \textbf{Observaci\'{o}n}: }
+% Para mejorar después. IGN
+\newcommand{\app}{\paragraph{Aplicaci\'{o}n:}} %IGN
+\newcommand{\obs}{\vspace{10pt}\par \noindent \textbf{Observaci\'{o}n}: } %IGN
 
 
-%Usuales para la notación de puntos de R^N
-
+% Notación de puntos de $R^N$
 \newcommand{\gx}{\overline{x}}
 \newcommand{\gs}{\overline{s}}
 \newcommand{\gy}{\overline{y}}
@@ -91,11 +97,10 @@
 \newcommand{\gv}{\overline{v}}
 \newcommand{\gu}{\overline{u}}
 \newcommand{\gw}{\overline{w}}
-%pullback
-\newcommandx{\pb}[1][1=T]{{#1}^{\ast}} 
+
 % Caracteres 
 \newcommand{\qeq}{\overset{?}{=}} % Un igual con una interrogación encima.
-\renewcommand{\r}[1]{\overset{\circ}{#1}} % Un circulito encima de una letra-
+\renewcommand{\r}[1]{\overset{\circ}{#1}} % 1: A; |Un circulito encima de una letra-
 
 % Operadores
 \newcommand{\comb}[2]{\left( \begin{matrix} #1 \\ #2 \end{matrix} \right)} % Número combinatorio
@@ -117,21 +122,21 @@
 \newcommand{\appl}[3]{#1 : #2\longmapsto #3} % 1: f; 2: dominio; 3: imagen; | Aplicación
 \newcommand{\uexists}{\exists\, !\;} % Existe y es único
 \newcommand{\sint}{\int_b^a\;}
-\newcommand{\stdf}{$\appl{f}{X}{Y}$} % Típica función f:X -> Y
+\newcommand{\stdf}{\ensuremath{\appl{f}{X}{Y}}} % Típica función f:X -> Y
 \newcommand{\rel}{\mathcal{R}} % Símbolo de relación
 \newcommand{\parts}[1]{\mathcal{P}\left(#1\right)} % Partes de un conjunto
 \newcommand{\ind}{\mathbbm{1}}
 
 % Estadística
-\newcommand{\esp}[2][]{ % 1: parametro; 2: variable
+\newcommand{\esp}[2][]{ % 1O: parametro; 2: variable
 \ifthenelse{\equal{#1}{}}
 		{\mathbb{E}}
 		{\mathbb{E}_{#1}}\left(#2\right)}
-\newcommand{\prob}[2][]{  % 1: parametro; 2: variable
+\newcommand{\prob}[2][]{  % 1O: parametro; 2: variable
 \ifthenelse{\equal{#1}{}}
 		{\mathbb{P}}
 		{\mathbb{P}_{#1}}\left\lbrace #2 \right\rbrace}
-\newcommand{\var}[2][]{  % 1: parametro; 2: variable
+\newcommand{\var}[2][]{  % 1O: parametro; 2: variable
 \ifthenelse{\equal{#1}{}}
 		{\mathbb{V}}
 		{\mathbb{V}_{#1}}\left(#2\right)}
@@ -171,8 +176,8 @@
 \newcounter{thm}[section]
 \newcounter{ejr}[subsection]
 %\numberwithin{equation}{section}
-\renewcommand{\thethm}{\thesection.\arabic{thm}}
-\renewcommand{\theejr}{\arabic{ejr}}
+\renewcommand{\thethm}{\thesection.\arabic{thm}} % IGN
+\renewcommand{\theejr}{\arabic{ejr}} % IGN
 
 \newtheorem{lemma}[thm]{Lema}
 \newtheorem{itheorem}[thm]{Teorema}
@@ -183,26 +188,26 @@
 \newenvironment{remark}{\vspace{10pt}\par \noindent \textbf{Observaci\'{o}n}: }{}
 \newtheorem*{props}{Propiedades}
 
-\newcommand{\IS}{}
+\newcommand{\IS}{} % IGN
 
 \newenvironment{op}[1]{\indent \\ \noindent\textsc{#1}\\\[}{\]}
 
 \newcounter{apr}[ejr]
-\renewcommand{\theapr}{\alph{apr}}
+\renewcommand{\theapr}{\alph{apr}} % IGN
 
 
 \newenvironment{rightbar}{\begin{mdframed}[topline=false, leftline=false, bottomline=false,%
   linewidth=2pt, innerleftmargin=0pt, rightmargin=0pt,%
   innerrightmargin=10pt, skipabove=0pt, skipbelow=0pt]}{\end{mdframed}}
 
-\newcommand{\iPartSpaceSkip}{}
-\newcommandx{\ppart}[1][1=\theapr]{\par \indent \stepcounter{apr}\textbf{#1)} } % 1O: apartado;
-\newcommandx{\spart}[1][1=\theapr]{ % 1O: apartado;
+\newcommand{\iPartSpaceSkip}{} %IGN
+\newcommandx{\ppart}[1][1=\theapr]{\par \indent \stepcounter{apr}\textbf{#1)} } % 1O: apartado; | IGN
+\newcommandx{\spart}[1][1=\theapr]{ % 1O: apartado; | IGN
 	\iPartSpaceSkip 
 	\renewcommand{\iPartSpaceSkip}{\vspace{10pt}}
 	\indent \stepcounter{apr}\textsc{Apartado #1)} \par 
 	}
-\newcommand{\solution}{\end{framed}\setcounter{apr}{0} \begin{rightbar} \itshape }
+\newcommand{\solution}{\end{framed}\setcounter{apr}{0} \begin{rightbar} \itshape } %IGN
 \newenvironmentx{problem}[1][1=] % 1O: N. ejercicio;
 {
 	\vspace{1 pt}
@@ -217,41 +222,41 @@
 {}
 
 
-\newcommand{\listtheoremname}{Teoremas}
+\newcommand{\listtheoremname}{Teoremas} %IGN
 \newlistof[section]{ithm}{ithmc}{\listtheoremname}
 
-\newcommand{\ithm}[1]{%
+\newcommand{\ithm}[1]{%IGN
 \refstepcounter{ithm}
 \addcontentsline{ithmc}{ithm}{\protect\numberline{\theithm}#1}\par}
 
 \newenvironmentx{defn}[2][1=, 2=None]{  % 1O: titulo; 2O: indice;
 	\vspace{15 pt}
-	\renewcommand{\IS}{!}
+	\renewcommand{\IS}{!} %IGN
 	\ifthenelse{\equal{#2}{None}}
 		{\index{#1}}
 		{\index{#2}}
 
-	\renewcommand{\IS}{ }
+	\renewcommand{\IS}{ } %IGN
 	\noindent \refstepcounter{thm} \textit{Definici\'{o}n \thethm}
 	\textbf{#1}.\itshape}
 	{\vspace{2 pt}}
 
 \newenvironmentx{theorem}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
 	\vspace{2pt}
-	\renewcommand{\IS}{!}
+	\renewcommand{\IS}{!} %IGN
 	\ifthenelse{\equal{#2}{None}}
 		{\index{#1}}
 		{\index{#2}}
 	\ifthenelse{\equal{#1}{}}
 		{}
 		{\ithm{#1}}
-	\renewcommand{\IS}{ }
+	\renewcommand{\IS}{ } %IGN
 	\begin{framed}
 
 	\begin{itheorem}[#1]}
 	{\end{itheorem}\end{framed}}
 
-\newcommand{\printtheorems}{\listofithm}
+\newcommand{\printtheorems}{\listofithm} %IGN
 
 \renewenvironment{proof}{\begin{leftbar}\noindent \textit{Demostraci\'{o}n.} }{\qed\end{leftbar}}
 
@@ -262,13 +267,13 @@
 % Matrices
 \newcommand{\trans}[1]{{#1}^{T}}
 
-% Estadística y probabilidad
+% Probabilidad
 \DeclareMathOperator{\bin}{Bin}
 \DeclareMathOperator{\geom}{Geom}
 
-% Imágenes
-\newcommand{\easyimgw}[4]{\begin{figure}[htbp]\begin{centering}\includegraphics[width=#4\textwidth]{#1}\caption{#2}\label{#3}\end{centering}\end{figure}} % 1: ruta; 2: caption; 3: label; 4: width;
-\newcommand{\easyimg}[3]{\easyimgw{#1}{#2}{#3}{0.8}} % 1: ruta; 2: caption; 3: label;
+% Imágenes IGN
+\newcommand{\easyimgw}[4]{\begin{figure}[htbp]\begin{centering}\includegraphics[width=#4\textwidth]{#1}\caption{#2}\label{#3}\end{centering}\end{figure}} % 1: ruta; 2: caption; 3: label; 4: width; | IGN
+\newcommand{\easyimg}[3]{\easyimgw{#1}{#2}{#3}{0.8}} % 1: ruta; 2: caption; 3: label; | IGN
 
 % Estructuras algebraicas
 \newcommand{\gen}[1]{\mathopen{<} #1 \mathclose{>}}

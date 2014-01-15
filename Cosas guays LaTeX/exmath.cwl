@@ -1,5 +1,7 @@
-\mop{operacion}#m
+\elst{arg0}{arg1}{arg2}#m
+\do{arg0}#m
 \pbreak#m
+\mop{operacion}#m
 \dimplies#m
 \implies#m
 \nimplies#m
@@ -28,11 +30,11 @@
 \normp{vector}{norma-n}#m
 \liminft{variable}#m
 \mylim{vector}{tiende-a}{variable}#m
-\df{variables}#m
-\df[separador]{variables}#m
-\do{arg0}#m
+\df{x,y,z}#m
 \dfl{comienzo}{fin}#m
-\id{variables}#m
+\id{x,y,z}#m
+\pb#m
+\pb[T]#m
 \app#m
 \obs#m
 \gx#m
@@ -44,8 +46,6 @@
 \gv#m
 \gu#m
 \gw#m
-\pb#m
-\pb[T]#m
 \qeq#m
 \r{arg0}#m
 \comb{arg0}{arg1}#m
@@ -69,9 +69,12 @@
 \rel#m
 \parts{arg0}#m
 \ind#m
-\esp{parametro}{arg1}#m
-\prob{parametro}{arg1}#m
-\var{parametro}{arg1}#m
+\esp{arg1}#m
+\esp[parametro]{arg1}#m
+\prob{arg1}#m
+\prob[parametro]{arg1}#m
+\var{arg1}#m
+\var[parametro]{arg1}#m
 \fd#m
 \convs#m
 \convs[texto superior]#m

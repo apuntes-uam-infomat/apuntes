@@ -1,71 +1,60 @@
-\documentclass{apuntes}
+\documentclass[nochap]{apuntes}
+
+\usepackage{longtable}
+
 \author{Guillermo Julián Moreno}
-\date{Septiembre 2013}
+\date{\today}
 \title{Manual paquete extendido \LaTeX}
+
 
 \begin{document}
 
 \pagestyle{plain}
 \maketitle
 
-\section{Comandos}
+\section{Formato y maquetación}
 
-Comandos definidos en el paquete que sirven tanto para ir más rápido como para luego modificarlos sin tener que cambiar el código en los documentos por cada ocurrencia.
+LaTeX se encarga automáticamente de la maquetación del texto, así que por eso no hay que preocuparse. Sólo hay que acostumbrarse a dejar una línea en blanco entre párrafos para que LaTeX los reconozca como tales. Por ejemplo, si ponemos
 
-\subsection{Lógica}
-Todos los comandos funcionan en modo matemático únicamente.
-\begin{itemize}
-\item \verb|\dimplies| $\dimplies$
-\item \verb|\implies| $\implies$
-\item \verb|\Or| $\Or$
-\item \verb|\y| $\y$
-\item \verb|\tq| $\tq$ (tal que)
-\end{itemize}
+\begin{verbatim}
+Un párrafo.
+Otro párrafo.
+\end{verbatim}
 
-\subsection{Cálculo}
+acabarían los dos párrafos en el mismo. Tenemos que separarlos así:
 
-\begin{itemize}
-\item \verb|\deriv{f}{x}| $\deriv{f}{x}$
-\item \verb|\dpa{f}{x}| $\dpa{f}{x}$
-\item \verb|\rot| $\rot$ (rotacional)
-\item \verb|\dv| $\dv$ (divergencia)
-\item \verb|\img| $\img$ (imagen)
-\end{itemize}
 
-\subsection{Operaciones}
-\begin{itemize}
-\item \verb|\qeq| $\qeq$
-\item \verb|\r{A}| $\r{A}$ Un circulito encima de la letra. A saber para qué sirve.
-\item \verb|\comb{1}{2}| $\comb{1}{2}$ Números combinatorios.
-\item \verb|\abs{-2}| $\abs{-2}$
-\item \verb|\inv{f}| $\inv{f}$
-\item \verb|\conj{x}|, \verb|\avg{x}|, \verb|\no{x}| $\avg{x}$ Barrita encima.
-\item \verb|\card{A}| $\card{A}$ Cardinal.
-\item \verb|\floor{x}| $\floor{x}$ Parte entera.
-\item \verb|\pesc{x, y}| $\pesc{x, y}$ Producto escalar.
-\item \verb|\md{x}| $\md{x}$ módulo.
-\item \verb|\argmin_a| $\argmin_a$
-\item \verb|\argmax_a| $\argmax_a$
-\end{itemize}
+\begin{verbatim}
+Un párrafo.
 
-\subsection{Conjuntos y relaciones}
-\begin{itemize}
-\item \verb|\x| $\x$  Producto cartesiano.
-\item \verb|\appl{f}{X}{Y}| $\appl{f}{X}{Y}$ Aplicación
-\item \verb|\uexists| $\uexists$ Existe y es único.
-\item \verb|\sint| $\sint$ Integral típica.
-\item \verb|\stdf| \stdf Aplicación típica (no hay que meterla en modo matemático)
-\item \verb|\rel| $\rel$ Operador de relación.
-\item \verb|\parts{A}| $\parts{A}$ Partes del conjunto.
-\end{itemize}
+Otro párrafo.
+\end{verbatim}
 
-El paquete también incluye abreviaciones para conjuntos usuales: $\nat, \ent, \rac, \real, \cplex$ con los comandos \verb|\nat|, \verb|\ent|, \verb|\rac|, \verb|\real|, \verb|\cplex| respectivamente.
+Si queremos forzar un salto de línea, podemos usar \verb|\\|, \verb|\newline| o \verb|\pbreak|.
 
-\subsection{Vectores}
+\subsection{Modo matemático}
 
-Hay varios vectores definidos para no tener que andar escribiendo. Los comandos son simplemente \verb|\vK|, donde K es la letra del vector. Por ejemplo, \verb|\vx| o \verb|va|.
+En modo matemático hay que tener cuidado porque el formato es distinto. Por ejemplo, tenemos que tener cuidado si queremos poner texto y no sólo símbolos, ya sea para explicaciones u operaciones. Veamos que
 
-Vectores definidos: $\vx, \vy, \vf, \va, \vu, \vn, \vv$.
+\begin{center}\verb|$arctg y \cdot f sin x = 1 \implies f es inyectiva$| \end{center}
+
+nos deja algo como esto: \[ arctg y \cdot f  sin x = 1 \implies f es inyectiva \] 
+
+Si queremos que todo salga bien, primero tenemos que usar los operadores en las funciones. Por ejemplo, \verb|\sin| en lugar de \texttt{sin} a secas, para que la separación esté bien (si no existe el comando que sea, se puede usar \verb|\mop{cmd}| para que salga bien). Y si queremos poner texto, lo ponemos con \verb|\text{}|. Siguiendo con el ejemplo, tendríamos
+
+\begin{center}
+\verb|$\mop{arctg} y \cdot f \sin x = 1 \implies \text{f es inyectiva}$|
+\end{center}
+
+\[ \mop{arctg} y \cdot f \sin x = 1 \implies \text{f es inyectiva} \]
+
+Si además queremos modificar el espaciado, podemos usar alguno de los comandos de espaciado (\verb|\ \, \; \quad \qquad|).
+
+Además, hay diferencias entre usar el modo \textit{inline} y las ecuaciones en su párrafo (ya sea con \verb|\[ \]| o con otros entornos matemáticos). Por ejemplo, un sumatorio entre dólares sale así: $\sum_{i=1}^{k}$. En su propio entorno, sale así:
+
+\[ \sum_{i=1}^{k} \]
+
+La solución en estos casos es usar \verb|\displaystyle|. Por ejemplo, \verb|$\displaystyle\sum_{i=1}^{k}$| saca $\displaystyle\sum_{i=1}^{k}$. 
 
 \section{Entornos}
 \subsection{Teorema y definición}
@@ -177,6 +166,77 @@ x = 3 + \deriv{f}{x}
 \end{op}
 
 El entorno \texttt{op} incluye el modo matemático directamente, y el nombre de operación es obligatorio.
+
+\subsection{Ejercicios}
+
+Hay dos entornos para incluir ejercicios o ejemplos en los archivos. El primero es \texttt{example}, que acepta un argumento opcional como nombre del ejemplo.
+
+\begin{verbatim}
+\begin{example}[Titulo]
+Un ejemplo sobre cosas matemáticas.
+
+\[ 3 = 3 \]
+
+Fin del ejemplo.
+\end{example}
+\end{verbatim}
+
+
+\begin{example}[Titulo]
+Un ejemplo sobre cosas matemáticas.
+
+\[ 3 = 3 \]
+
+Fin del ejemplo.
+\end{example}
+
+El otro sería \texttt{problem}, que viene con bastantes cosillas. Acepta un argumento opcional, que es el número de ejercicio. Si no se pasa este argumento, la numeración es automática. El comando \verb|\solution| separa enunciado y solución, y los comandos \verb|\ppart| y \verb|spart| sirven para separar los diferentes apartados (la numeración es automática). Ejemplo:
+
+\begin{verbatim}
+\begin{problem}[3]
+Sea $x$ una cosa, entonces calcula:
+
+\ppart Calcula la divergencia de $x$.
+\ppart Calcula 3.
+\ppart Supongamos que $x$ es otra cosa distinta. Entonces dime qué te parece
+
+\[ x^2 + 1 \]
+
+\solution
+
+\spart La divergencia es 0.
+
+\spart
+
+\[ 3 = \int_0^1 δ(x^2) \]
+
+\spart  Muy bien.
+
+\end{problem}
+\end{verbatim}
+ 
+Y el resultado es 
+
+\begin{problem}[3]
+Sea $x$ una cosa, entonces calcula:
+
+\ppart Calcula la divergencia de $x$.
+\ppart Calcula 3.
+\ppart Supongamos que $x$ es otra cosa distinta. Entonces dime qué te parece
+
+\[ x^2 + 1 \]
+
+\solution
+
+\spart La divergencia es 0.
+
+\spart
+
+\[ 3 = \int_0^1 δ(x^2) \]
+
+\spart  Muy bien.
+
+\end{problem}
  
 \section{Imágenes}
 
@@ -219,7 +279,45 @@ También está el comando \verb|\easyimg|, el uso es el mismo salvo que sólo ne
 
 \subsection{Entornos matemáticos}
 
-El paquete \texttt{amsmath} viene con un buen número de entornos matemáticos para organizar ecuaciones. Lo escribiría aquí, pero son muchos así que te vas a la documentación de \texttt{amsmath}\footnote{\url{ftp://ftp.ams.org/pub/tex/doc/amsmath/amsldoc.pdf}}, sección 3, y ahí lo explica todo muy bien. Los más interesantes: \texttt{align} y \texttt{gather}. Las versiones con asterisco (\texttt{align*}, \texttt{gather*}) no te ponen los números en las ecuaciones.
+El paquete \texttt{amsmath} viene con un buen número de entornos matemáticos para organizar ecuaciones. Lo escribiría aquí, pero son muchos así que te vas a la documentación de \texttt{amsmath}\footnote{\url{ftp://ftp.ams.org/pub/tex/doc/amsmath/amsldoc.pdf}}, sección 3, y ahí lo explica todo muy bien. Los más interesantes: \texttt{align} y \texttt{gather}. Las versiones con asterisco (\texttt{align*}, \texttt{gather*}) no te ponen los números en las ecuaciones. 
+
+La mayor diferencia entre ambos entornos es que \texttt{align} te permite alinear las ecuaciones como en las tablas. Dos ejemplos:
+
+\begin{verbatim}
+\begin{align*}
+f(x) + λ &= g(x) + α \\
+f'(x) &= g'(x) + \dpa{α}{x} = \\
+&= 4g'(x)^2
+\end{align*}
+\end{verbatim}
+
+Resultado:
+
+\begin{align*}
+f(x) + λ &= g(x) + α \\
+f'(x) &= g'(x) + \dpa{α}{x} = \\
+&= 4g'(x)^2
+\end{align*}
+
+\begin{verbatim}
+\begin{gather*}
+f(x) = g(x) + α \\
+k(x) = g'(x) + \dpa{α}{x} \\
+\end{gather*}
+\end{verbatim}
+
+Resultado:
+
+\begin{gather*}
+f(x) = g(x) + α \\
+k(x) = g'(x) + \dpa{α}{x} \\
+\end{gather*}
+
+\section{Comandos}
+
+ \setcounter{LTchunksize}{10}
+\renewcommand{\arraystretch}{1.5}% Spread rows out...
+\input{cmds.tex}
 
 \newpage
 \printindex
