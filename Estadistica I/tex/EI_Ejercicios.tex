@@ -333,10 +333,8 @@ Se desea estimar $\theta$ a partir de una muestra.
 \ppart Probar que $T_n$ es insesgado y eficiente.
 
 \ppart Estudiar la distribución asintótica de $T_n$.
-
 \solution
-\spart
-Buscamos el máximo de la función de verosimilitud
+\spart Buscamos el máximo de la función de verosimilitud
 \[L_n(\theta;X_1,...,X_n) = \prod_{i=1}^n f(x_i;\theta) = \frac{1}{\sqrt{2\pi}^{\frac{n}{2}}\theta^{\frac{n}{2}}} e ^ {-\frac{1}{2\theta} \sum x_i^2}\]
 
 El máximo de la función de verosimilitud será también el máximo de la logverosimilitud
@@ -353,7 +351,6 @@ Para ello derivamos e igualamos a 0.
 \spart $\esp[\theta]{T_n} = \esp[\theta]{\frac{1}{n}\sum x_i^2} = \esp[\theta]{X^2} = \theta$
 
 Nos tenemos que dar cuenta de que $\var{X} = \esp{X^2} - \esp{X}^2$. En este caso $\esp{X} = \mu = 0$ por lo que $\esp{X^2} = \theta$ por hipótesis.
-
 Vamos a calcular la información de fisher para comprobar si el estimador es eficiente o no.
 
 \[ log f(x;\theta) = \frac{-1}{2}log(2\pi)-\frac{1}{2}log(\theta) - \frac{1}{2\theta}X^2\]
@@ -389,14 +386,14 @@ Los siguientes pasos para comprobar lo bueno que es el estimador son: \begin{ite
 
 Llamando $Y_i = X_i^2 \implies \esp[\theta]{Y} = \esp[\theta]{X^2} = \theta$
 
-Entonces: $\displaystyle \sqrt{n}(\hat{Y} - \esp[\theta]{Y}) \convs[TCL \ d] N(0,\sqrt{\var{Y}})$
+Entonces por el TCL (Teorema Central del Límite): \[\displaystyle \sqrt{n}(\hat{Y} - \esp[\theta]{Y}) \convs[d] N(0,\sqrt{\var{Y}})\]
 
-Donde $\var{Y} = \var[\theta]{X^2} = 2\theta^2$
+Donde $\var{Y} = \var[\theta]{X^2} = \esp{(X^2)^2} - \esp{X^2}^2 = 3\theta^2 - \theta^2 = 2\theta^2$
 \end{problem}
 
 
 
-\begin{problem}[3] Se disponeb de un gran lote de piezas producidas en una cadena de montaje. Denotemos por $p$ la proporción de piezas defectuosas en ese lote. Supongamos que se seleccionan al azar sucesivamente (con reemplazamiento) piezas del lote hasta que se encuentra una defectuosa. Sea $X$ la variable aleatoria que indica el número de la extracción en la que aparece la primera pieza defectuosa.
+\begin{problem}[3] Se dispone de un gran lote de piezas producidas en una cadena de montaje. Denotemos por $p$ la proporción de piezas defectuosas en ese lote. Supongamos que se seleccionan al azar sucesivamente (con reemplazamiento) piezas del lote hasta que se encuentra una defectuosa. Sea $X$ la variable aleatoria que indica el número de la extracción en la que aparece la primera pieza defectuosa.
 
 \ppart Calcular $\prob{X=k}$ para $k=1,2,\dotsc$ Obtener el estimador de $p$ por el método de los momentos, a partir de una muestra $X_1,\dotsc , X_n$.
 
@@ -409,17 +406,32 @@ La probabilidad sigue una distribución geométrica de parámetro $p$:
 
 \spart Calculamos la función de verosimilitud:
 
-\[ L(p;x_1,\dotsc,x_n) = \prod_{i=1}^n f(x_i;p) = \prod_{i=1}^n (1-p)^{x_i -1}p = (1-p)^{\sum_{i=1}^n x_i -n} p^n \]
+\[ L(p;x_1,\dotsc,x_n) = \prod_{i=1}^n f(x_i;p) = \prod_{i=1}^n (1-p)^{x_i - 1}p = (1-p)^{\sum_{i=1}^n x_i - 1} p^n \]
 
 Tomamos logaritmos
 
-\[ \log L(p) = \log(1-p) \left(\sum_{i=1}^n x_i -n\right) + n\log p \]
+\[ \log L(p) = \log(1-p) \left(\sum_{i=1}^n x_i - 1\right) + n\log p \]
 
 y derivando
 
-\[ \deriv{}{p} \log L(p) = \frac{-1}{1-p} \left(\sum_{i=1}^n x_i -n\right)  + \frac{n}{p} \] 
+\[ \deriv{}{p} \log L(p) = \frac{-1}{1-p} \left(\sum_{i=1}^n x_i - 1\right)  + \frac{n}{p} \] 
 
-y derivas tú lo que queda, majo.
+\[n(1-p) = p \sum_{i=1}^n x_i - 1 \dimplies p = \frac{n}{n + \displaystyle \sum_{i=1}^n (x_i-1)} = T_n\]
+
+El $emv(p) = \displaystyle\frac{1}{1 + \gx}$.
+
+Vamos a calcular su distribución asintótica. Para ello llamamos $Y = \displaystyle \frac{1}{1+x}$.
+
+Calculamos $\gor{Y} = \displaystyle\frac{1}{1+\gx}$ (esto está medio inventado).
+
+Suponiendo que ese resultado es correcto, por el TCL tenemos:
+
+\[\sqrt{n} \left(T_n - \frac{1}{1+\gx}\right) \convs[d] N\left(0,\sqrt{\var{X}}\right)\]
+
+Entiendo que esto no termina de contestar a la distribución asintótica del estimador, con lo que "despejando" $T_n$ obtenemos:
+
+\[T_n \convs[d] N\left(\frac{1}{1+\gx} , \sqrt{n}\sqrt{ \var{X}}\right)\]
+
 \end{problem}
 
 \begin{problem}[5]
