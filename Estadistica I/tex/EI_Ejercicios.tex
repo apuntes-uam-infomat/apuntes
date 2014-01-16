@@ -321,6 +321,69 @@ El sesgo del estimador kernel depende de $h$ (el parámetro de suavizado o \text
 \end{problem}
 \section{Tema 3 - Estimación puntual paramétrica}
 
+
+\begin{problem}[2]
+Supongamos que $X$ mide el error cometido en la medici'on de una magnitud. $X$ es una v.a. normal de media 0 y varianza $\theta$. 	
+\[X\leadsto N(0,\sqrt{\theta}), \theta>0, \Theta = (0,\infty)\]
+
+Se desea estimar $\theta$ a partir de una muestra.
+
+\ppart Calcular el estimador de máxima verosimilitud $T_n$.
+
+\ppart Probar que $T_n$ es insesgado y eficiente.
+
+\ppart Estudiar la distribución asintótica de $T_n$.
+
+\solution
+\spart
+\[L_n(\theta;X_1,...,X_n) = \prod_{i=1}^n f(x_i;\theta) = \frac{1}{\sqrt{2\pi}^{\frac{n}{2}}\theta^{\frac{n}{2}}} e ^ {-\frac{1}{2\theta} \sum x_i^2}\]
+
+\[logL_n(\theta) = \frac{n}{2}\cdot log(2\pi) - \frac{n}{2}log(\theta) - \frac{1}{2\theta} \sum x_i^2\]
+
+\[\dpa{}{\theta} logL_n(\theta) = ... \implies T_n = e.m.v.(\theta) = \frac{1}{n}\sum x_i^2\]
+
+
+\spart $\esp[\theta]{T_n} = \esp[\theta]{\frac{1}{n}\sum x_i^2} = \esp[\theta]{X^2} = \theta$
+
+Vamos a calcular la información de fisher para comprobar si el estimador es eficiente o no.
+
+\[ log f(x;\theta) = \frac{-1}{2}log(2\pi)-\frac{1}{2}log(\theta) - \frac{1}{2\theta}X^2\]
+Derivamos:
+\[\dpa{}{\theta} log f(x;\theta) = -\frac{1}{2\theta} + \frac{1}{2\theta^2}X^2\]
+Elegimos derivar otra vez o elevar al cuadrado (2 alternativas para calcularlo).
+
+En este caso vamos a elevar al cuadrado:
+
+\[\dpa{}{\theta}logf(X;\theta) = \frac{1}{4\theta} \left( 1+\frac{X^4}{\theta} - 2\frac{X^2}{\theta}\right)\]
+
+Entonces la información de fisher será:
+
+\[I(\theta) = \esp[\theta]{\frac{1}{4\theta} \left( 1+\frac{X^4}{\theta} - 2\frac{X^2}{\theta}\right)} = \frac{1}{4\theta} \left( 1+\frac{\esp[\theta]{X^4}}{\theta} - 2\frac{\esp[\theta]{X^2}}{\theta}\right)\]
+
+Aplicamos por hipótesis: $\esp[\theta]{X^4} = 3\theta^2$
+
+\[I(\theta) = \frac{1}{4\theta^4} \left(1+\frac{3\theta^3}{\theta^2} - 2 \frac{\theta}{\theta}\right) = \frac{1}{2\theta}\]
+
+Vamos a calcular \[\var[\theta]{T_n} = \var[\theta]{\frac{1}{n}\sum x_i^2} = \frac{1}{n^2}\sum \var[\theta]{x_i^2} = \frac{n}{n^2} \var[\theta]{X^2} = \frac{1}{n}\left(\esp[\theta]{X^4} - \esp[\theta]{X^2}\right) = \frac{1}{n}(3\theta^2-\theta^2) = \frac{2\theta^2}{n} = \frac{1}{nI(\theta)} \implies EFICIENTEEE!\]
+
+Los siguientes pasos para comprobar lo bueno que es el estimador son: \begin{itemize}
+\item $T_n$ asintóticamente normal.
+\item $T_n$ es consistente casi seguro.
+\end{itemize}
+
+\spart Vamos a estudiar la distribución asintótica:
+
+\[\sqrt{n}(T_n-\theta) \convs[d] N(0,\sigma(\theta))\]
+
+Llamando $Y_i = X_i^2 \implies \esp[\theta]{Y} = \esp[\theta]{X^2} = \theta$
+
+Entonces: $\displaystyle \sqrt{n}(\hat{Y} - \esp[\theta]{Y}) \convs[TCL \ d] N(0,\sqrt{\var{Y}})$
+
+Donde $\var{Y} = \var[\theta]{X^2} = 2\theta^2$
+\end{problem}
+
+
+
 \begin{problem}[3] Se disponeb de un gran lote de piezas producidas en una cadena de montaje. Denotemos por $p$ la proporción de piezas defectuosas en ese lote. Supongamos que se seleccionan al azar sucesivamente (con reemplazamiento) piezas del lote hasta que se encuentra una defectuosa. Sea $X$ la variable aleatoria que indica el número de la extracción en la que aparece la primera pieza defectuosa.
 
 \ppart Calcular $\prob{X=k}$ para $k=1,2,\dotsc$ Obtener el estimador de $p$ por el método de los momentos, a partir de una muestra $X_1,\dotsc , X_n$.
@@ -345,103 +408,6 @@ y derivando
 \[ \deriv{}{p} \log L(p) = \frac{-1}{1-p} \left(\sum_{i=1}^n x_i -n\right)  + \frac{n}{p} \] 
 
 y derivas tú lo que queda, majo.
-\end{problem}
-
-\begin{problem}[5]
-Distribución de Rayleigh, cuya función de densidad es:
-\[f(x;\theta) = \frac{x}{\theta^2} e^{\frac{-x^2}{2\theta^2}} \mathbb{I}_{[0,\infty)} (x), \theta > 0\]
-
-\begin{itemize}
-\item[a]Calcular el estimador de máxima verosimilitud (e.m.v.)
-\item[b]Calcular la consistencia.
-\item[c] ¿Es asintóticamente normal?
-\end{itemize}
-
-\solution
-
-\paragraph{a)}
-
-\[L_n(\theta;x_1,...,x_n) = \frac{x_1 \cdot ... \cdot x_n}{\theta^2} e^{\frac{-1}{2\theta^2} \sum_{i=1}^n x_i^2}\]
-\[log L_n(\theta) = \sum log x_i - 2nlog\theta -\frac{1}{2\theta^2}\sum x_i^2\]
-\[\dpa log L_n(\theta) = \frac{1}{\theta} \left(-2n+\frac{1}{\theta^2}\sum x_i^2\right) = 0\]
-\[\implies \hat{\theta}^2 = \frac{\sum x_i^2}{2n} \implies \hat{\theta} emv(\theta) = (\frac{\sum x_i^2}{2n}^2\]
-
-Estimador razonable porque $E(x^2) = V(x) + E(x) = 2\theta^2 \dimplies \theta^2 = \frac{1}{2} E(x^2)$
-
-\paragraph{b)}
-\textbf{Consistencia:} $\hat{\theta}^2 = \frac{1}{2} \gor{Y}, Y_i = X_i^2$
-
-Por la ley fuerte de los grandes números (\ref{thmGrandes}) sabemos que: $\gor{Y} \convs[cs] E_{\theta}(Y) = E_{\theta}(X^2) = 2\theta^2$
-
-Vamos a aplicar el teorema de Snouschky?.
-
-Sea $g(x) = \sqrt{\frac{1}{2}x}$ definida sobre $[0,\infty)$.
-
-Teorema de Snoopy $\implies g\left(\gor{Y}\right) = \sqrt{\frac{1}{2} \frac{\sum x_i^2}{n}} \convs[c.s.] g(E_{\theta}) = \sqrt{\frac{1}{2}\theta^2} = \theta \implies $ El e.m.v. de $\theta$, $\hat{\theta}$ es consistente c.s.
-
-
-\paragraph{c)}
-
-Queremos aplicar el método delta:
-
-\[\sqrt{n}(\hat{\theta} - \theta) = \sqrt{n}\left(g\left(\gor{Y}\right) - g\left(E(Y)\right)\right) \convs[d]N(0,\abs{g'(E(Y))}\sqrt{V(Y)}\]
-
-\[E_{\theta}(Y) = E_{\theta} (X^2) = 2\theta^2\]
-\[V_{\theta}(Y) = E(X^4) - E^2(X^2) = 8\theta^4-4\theta^4 = 4\theta^4\]
-
-Entonces tenemos que $g'(E(Y)) = \displaystyle \frac{1}{2\sqrt{2E(Y)}} = \frac{1}{4\theta}$.
-
-Con esta información completamos:  
-
-\[\sqrt{n}(\hat{\theta} - \theta) \convs[d] N\left(0,\sqrt{\frac{1}{2\theta}}\right)\]
-
-\end{problem}
-
-\begin{problem}[11]
-\footnote{Este ejercicio es del parcial del año pasado}
-
-ashkjdf
-\solution
-
-$X\leadsto Unif[0,\theta]$
-Con \[ f(x) = \displaystyle\left\{\begin{array}{cc}
-\frac{1}{\theta} & 0\leq x \leq \theta\\
-0 & x \notin [0,\theta]
-\end{array}\right.\]
-
-Vamos a calcular la función de distribución:
-
-\[F_{\theta} (x) = \mathbb{P}_{\theta}\{X\leq x\} = \int_{-infty}^x f_{\theta}(t)dt = \int_0^x \frac{1}{\theta} dt = \frac{x}{\theta} \ si 0\leq x \leq \theta\]
-
-\[F_{\theta} = \left\{\begin{array}{cc}
-\frac{x}{\theta} & 0\leq x \leq \theta\\
-0 & x \notin [0,\theta]
-\end{array}\right.\]
-
-Nos piden dibujar las funciones... GUILLEEEE xD
-
-Vamos a calcular \[L_n(\theta;x_i) = \prod_{i=1}^n f_{\theta} (x_i) = \left\{\begin{array}{cc}
-\left(\frac{1}{\theta}\right)^n & \forall x_i \in [0,\theta]\\
-0 & \exists x_i\notin [0,\theta]
-\end{array}\right.\]
-
-Calculamos la $logL_n$ que nos piden dibujarla:
-
-\[logL_n(\theta) = \left\{\begin{array}{cc}
--nlog(\theta) & si \ max(\{x_i\})\leq \theta\\
-0 & si \ no
-\end{array}\right.\]
-Dibujoo!
-
-\[\hat{\theta_n} = e.m.v.(\theta) = max\left(L_n(\theta)\right)\]
-
-También vale tomando el logaritmo:
-
-\[\hat{\theta}_n = e.m.v. (\theta) = arg\ mas logL_n(\theta) = max\{x_i\}\]
-porque \[ logLn(\theta) = \displaystyle\left\{\begin{array}{cc}
--nlog(\theta) & max\{x_i\} \leq \theta\\
--\infty & si \ no
-\end{array}\right.\]
 \end{problem}
 
 \begin{problem}[5]
@@ -511,102 +477,6 @@ y por lo tanto es efectivamente asintóticamente normal.
 
 \end{problem}
 
-\begin{problem}[11]
-\footnote{Este ejercicio es del parcial del año pasado}
-
-asdasdf
-\solution
-
-$X\leadsto Unif[0,\theta]$
-Con $f(x) = \displaystyle\left\{\begin{array}{cc}
-\frac{1}{\theta} & 0\leq x \leq \theta\\
-0 & x \notin [0,\theta]
-\end{array}\right.$
-
-Vamos a calcular la función de distribución:
-
-\[F_{\theta} (x) = P_{\theta}\{X\leq x\} = \int_{-infty}^x f_{\theta}(t)dt = \int_0^x \frac{1}{\theta} dt = \frac{x}{\theta} \ si 0\leq x \leq \theta\]
-
-\[F_{\theta} = \left\{\begin{array}{cc}
-\frac{x}{\theta} & 0\leq x \leq \theta\\
-0 & x \notin [0,\theta]
-\end{array}\right.\]
-
-Nos piden dibujar las funciones... GUILLEEEE xD
-
-Vamos a calcular \[L_n(\theta;x_i) = \prod_{i=1}^n f_{\theta} (x_i) = \left\{\begin{array}{cc}
-\left(\frac{1}{\theta}\right)^n & \forall x_i \in [0,\theta]\\
-0 & \exists x_i\notin [0,\theta]
-\end{array}\right.\]
-
-Calculamos la $logL_n$ que nos piden dibujarla:
-
-\[logL_n(\theta) = \left\{\begin{array}{cc}
--nlog(\theta) & si \ max(\{x_i\})\leq \theta\\
-0 & si \ no
-\end{array}\right.\]
-Dibujoo!
-
-\[\hat{\theta_n} = e.m.v.(\theta) = max\left(L_n(\theta)\right)\]
-
-También vale tomando el logaritmo:
-
-\[\hat{\theta}_n = e.m.v. (\theta) = arg\ mas logL_n(\theta) = max\{x_i\}\]
-porque \[ logLn(\theta) = \displaystyle\left\{\begin{array}{cc}
--nlog(\theta) & max\{x_i\} \leq \theta\\
--\infty & si \ no
-\end{array}\right.\]
-\end{problem}
-
-\begin{problem}[2]
-\[X\leadsto N(0,\sqrt{\theta}), \theta>0, Espacioparametrico = (0,\infty)\]
-\solution
-\paragraph{a)}
-\[L_n(\theta;X_1,...,X_n) = \prod_{i=1}^n f(x_i;\theta) = \frac{1}{\sqrt{2\pi}^{\frac{n}{2}}\theta^{\frac{n}{2}}} e ^ {-\frac{1}{2\theta} \sum x_i^2}\]
-
-\[logL_n(\theta) = \frac{n}{2}\cdot log(2\pi) - \frac{n}{2}log(\theta) - \frac{1}{2\theta} \sum x_i^2\]
-
-\[\dpa{}{\theta} logL_n(\theta) = ... \implies T_n = e.m.v.(\theta) = \frac{1}{n}\sum x_i^2\]
-
-
-b) $\esp[\theta]{T_n} = \esp[\theta]{\frac{1}{n}\sum x_i^2} = \esp[\theta]{X^2} = \theta$
-
-Vamos a calcular la información de fisher para comprobar si el estimador es eficiente o no.
-
-\[ log f(x;\theta) = \frac{-1}{2}log(2\pi)-\frac{1}{2}log(\theta) - \frac{1}{2\theta}X^2\]
-Derivamos:
-\[\dpa{}{\theta} log f(x;\theta) = -\frac{1}{2\theta} + \frac{1}{2\theta^2}X^2\]
-Elegimos derivar otra vez o elevar al cuadrado (2 alternativas para calcularlo).
-
-En este caso vamos a elevar al cuadrado:
-
-\[\dpa{}{\theta}logf(X;\theta) = \frac{1}{4\theta} \left( 1+\frac{X^4}{\theta} - 2\frac{X^2}{\theta}\right)\]
-
-Entonces la información de fisher será:
-
-\[I(\theta) = \esp[\theta]{\frac{1}{4\theta} \left( 1+\frac{X^4}{\theta} - 2\frac{X^2}{\theta}\right)} = \frac{1}{4\theta} \left( 1+\frac{\esp[\theta]{X^4}}{\theta} - 2\frac{\esp[\theta]{X^2}}{\theta}\right)\]
-
-Aplicamos por hipótesis: $\esp[\theta]{X^4} = 3\theta^2$
-
-\[I(\theta) = \frac{1}{4\theta^4} \left(1+\frac{3\theta^3}{\theta^2} - 2 \frac{\theta}{\theta}\right) = \frac{1}{2\theta}\]
-
-Vamos a calcular \[\var[\theta]{T_n} = \var[\theta]{\frac{1}{n}\sum x_i^2} = \frac{1}{n^2}\sum \var[\theta]{x_i^2} = \frac{n}{n^2} \var[\theta]{X^2} = \frac{1}{n}\left(\esp[\theta]{X^4} - \esp[\theta]{X^2}\right) = \frac{1}{n}(3\theta^2-\theta^2) = \frac{2\theta^2}{n} = \frac{1}{nI(\theta)} \implies EFICIENTEEE!\]
-
-Los siguientes pasos para comprobar lo bueno que es el estimador son: \begin{itemize}
-\item $T_n$ asintóticamente normal.
-\item $T_n$ es consistente casi seguro.
-\end{itemize}
-
-\paragraph{c)} Vamos a estudiar la distribución asintótica:
-
-\[\sqrt{n}(T_n-\theta) \convs[d] N(0,\sigma(\theta))\]
-
-Llamando $Y_i = X_i^2 \implies \esp[\theta]{Y} = \esp[\theta]{X^2} = \theta$
-
-Entonces: $\displaystyle \sqrt{n}(\hat{Y} - \esp[\theta]{Y}) \convs[TCL \ d] N(0,\sqrt{\var{Y}})$
-
-Donde $\var{Y} = \var[\theta]{X^2} = 2\theta^2$
-\end{problem}
 
 \begin{problem}[8] Sea $X \sim N(µ,\sqrt{\theta})$. Estamos interesados en la estimación de $\theta$ basados en muestras $X_1,\dotsc,X_n$ de tamaño $n$. Calcular la cota de Fréchet-Cramer-Rao (\ref{thmCotaFCR}) para estimadores insesgados.
 
@@ -659,6 +529,56 @@ Calculamos ahora la varianza:
 = \esp[\theta]{\log^2 X} - \esp[\theta]{\log X}^2 = \frac{1}{\theta^2}
 \end{gather*}
 
+\end{problem}
+
+
+\begin{problem}[11]
+\footnote{Este ejercicio es del parcial del año pasado}
+
+ashkjdf
+\solution
+
+$X\leadsto Unif[0,\theta]$
+Con \[ f(x) = \displaystyle\left\{\begin{array}{cc}
+\frac{1}{\theta} & 0\leq x \leq \theta\\
+0 & x \notin [0,\theta]
+\end{array}\right.\]
+
+Vamos a calcular la función de distribución:
+
+\[F_{\theta} (x) = \mathbb{P}_{\theta}\{X\leq x\} = \int_{-infty}^x f_{\theta}(t)dt = \int_0^x \frac{1}{\theta} dt = \frac{x}{\theta} \ si 0\leq x \leq \theta\]
+
+\[F_{\theta} = \left\{\begin{array}{cc}
+\frac{x}{\theta} & 0\leq x \leq \theta\\
+0 & x \notin [0,\theta]
+\end{array}\right.\]
+
+Nos piden dibujar las funciones. 
+
+
+
+Vamos a calcular \[L_n(\theta;x_i) = \prod_{i=1}^n f_{\theta} (x_i) = \left\{\begin{array}{cc}
+\left(\frac{1}{\theta}\right)^n & \forall x_i \in [0,\theta]\\
+0 & \exists x_i\notin [0,\theta]
+\end{array}\right.\]
+
+Calculamos la $logL_n$ que nos piden dibujarla:
+
+\[logL_n(\theta) = \left\{\begin{array}{cc}
+-nlog(\theta) & si \ max(\{x_i\})\leq \theta\\
+0 & si \ no
+\end{array}\right.\]
+Dibujoo!
+
+\[\hat{\theta_n} = e.m.v.(\theta) = max\left(L_n(\theta)\right)\]
+
+También vale tomando el logaritmo:
+
+\[\hat{\theta}_n = e.m.v. (\theta) = arg\ mas logL_n(\theta) = max\{x_i\}\]
+porque \[ logLn(\theta) = \displaystyle\left\{\begin{array}{cc}
+-nlog(\theta) & max\{x_i\} \leq \theta\\
+-\infty & si \ no
+\end{array}\right.\]
 \end{problem}
 
 \section{Tema 4 - Intervalos de confianza}
