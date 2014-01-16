@@ -84,6 +84,18 @@ El diagrama de caja o \textit{box-plot}  (imagen \ref{imgCaja}) nos permite visu
 \easyimg{DiagramaCaja.png}{Diagrama de caja}{imgCaja}
 \end{defn}
 
+A partir del rango intercuartílico obtenemos los límites inferior y superior de la representación:
+
+\begin{defn}[Límite inferior/superior][Límite!inferior]\index{Límite!superior} Se define el límite superior (LS) y el inferior (LI) de la siguiente forma:
+
+\begin{gather*}
+LS = Q_3 + 1.5 RI \\
+LI = Q_1 - 1.5 RI 
+\end{gather*}
+
+Cualquier dato fuera del intervalo $[LI, LS]$ se considera un atípico.
+\end{defn}
+
 \begin{defn}[Histograma]
 El histograma se trata de una aproximación discreta a la función de densidad continua $f(t)$ de la variable que estamos midiendo. Es un diagrama de frecuencias que \textit{mantiene la forma} de esa función de densidad. 
 
@@ -260,7 +272,7 @@ Notación \[ X_n\convcs X \]
 \begin{theorem}Se puede probar que si $\{X_n\}$ es una sucesión de variables aleatorias y $X$ es variable aleatoria, 
 
 \[ X_n\convcs X \implies X_n \convprob X \implies X_n \convdist X \]
-Al contrario no tiene por qué darse.
+La recíproca no tiene por qué darse.
 \end{theorem}
 
 
@@ -576,7 +588,7 @@ Aquí usaremos la segunda herramienta: estudiar la probabilidad que el estimador
 
 \[ \prob{\abs{T_n - \theta} > \epsilon} = \prob{\abs{X_{(n)} - \theta} > \epsilon} = \prob{\theta - X_{(n)} > \epsilon} = \prob{X_{(n)} < \theta - \epsilon} \]
 
-Si pedimos que el máximo sea mayor que $\theta - \epsilon$, es lo mismo que pedir que lo sean todas las observaciones:
+Si pedimos que el máximo sea menor que $\theta - \epsilon$, es lo mismo que pedir que lo sean todas las observaciones:
 
 \[ \prob{X_{(n)} < \theta - \epsilon} = \prob{X_1 < \theta - \epsilon, \dotsc , X_n < \theta - \epsilon} \]
 
@@ -747,7 +759,7 @@ En el teorema se habla del soporte, definámoslo formalmente:
 
 Para la demostración, primero veremos la siguiente desigualdad:
 
-\begin{theorem}[Desigualdad\IS de Jensen] Supongamos que $X$ es una v.a. tal que $\esp{X}< \infty$ (su esperanza existe y es finita) y que $\varphi$ es una función convexa (como una parábola, más o menos) tal que $\esp{\varphi(X)} < \infty$.
+\begin{theorem}[Desigualdad\IS de Jensen] Supongamos que $X$ es una v.a. tal que $\esp{X}< \infty$ (su esperanza existe y es finita) y que $\varphi$ es una función convexa (como una parábola $y=x^2$, más o menos) tal que $\esp{\varphi(X)} < \infty$.
 
 Entonces \[ \esp{\varphi(X)} ≥ \varphi(\esp{X}) \] \label{desJensen}
 \end{theorem}
@@ -959,6 +971,11 @@ y por lo tanto
 \subparagraph{MV5)} Para cada $x$ la densidad $f(x;\theta)$ es tres veces diferenciable con respecto a $\theta$, con la tercera derivada continua en $\theta$.
 \subparagraph{MV6)} La información de Fisher es estrictamente positiva y finita: $0 < I(\theta_0) < \infty$
 \subparagraph{MV7)} Para cada $\theta_0\in \Theta$ existen un número $c > 0$ y una función $M(x)$, que pueden depender de $\theta_0$, tales que \[ \esp[\theta_0]{M(X)} < \infty \] y \[ \abs{\frac{∂^3\log f}{∂\theta^3}(x;\theta)} ≤ M(x)\; \forall x;\;\forall\theta \in (\theta_0 - c,\theta_0 + c) \]
+
+Entonces, si $\hat{θ}_n(\sample)$ es cualquier sucesión consistente de soluciones de las ecuaciones de verosimilitud, se verifica
+
+\[ \sqrt{n}\left(\hat{θ}_n-θ_0\right) \convdist N\left(0,\frac{1}{\sqrt{I(θ_0)}}\right) \]
+
 \end{theorem}
 
 \begin{proof}
@@ -982,12 +999,18 @@ Para algún $\theta_n^\ast$ entre $\hat\theta_ n$ y $\theta_0$. Como el primer m
 Vamos a demostrar que esto converge en tres pasos:
 
 \begin{itemize}
-\item Numerador converge a $N(0,\sqrt{I(\theta_0)}$.
+\item Numerador converge a $N(0,\sqrt{I(\theta_0)})$.
 \item Primera parte converge a $I(\theta_0)$.
 \item Segunda parte denom. converge a 0 en prob.
 \end{itemize}
 
-Usando además el teorema de Slutsky (\ref{thmSlutsky}), que nos dice que NO DICE NADA PORQUE LO HA BORRADO.
+Tendremos por lo tanto que 
+
+\[ \sqrt{n}\left(\hat\theta_n-\theta_0\right) \convdist \frac{N(0, \sqrt{I(θ_0)}}{I(θ_0)+0} \]
+
+Y usando la tercera condición del teorema de Slutsky (\ref{thmSlutsky}), tendremos que  
+
+\[  \frac{N(0, \sqrt{I(θ_0)}}{I(θ_0)+0}  \convdist N\left(0,\frac{1}{\sqrt{I(θ_0)}}\right) \] 
 
 \paragraph{Parte 1: Numerador}
 
@@ -1039,7 +1062,7 @@ Por lo tanto
 
 \[ - \frac{1}{n}\Psi_n''(\theta_0) \convprob I(\theta_0) \]
 
-\paragraph{Paso 3: Algo}
+\paragraph{Paso 3: Segunda parte del denominador}
 
 \[\frac{1}{2n}\left(\hat\theta_n-\theta_0\right)\tilde\Psi_n'''(\theta_n^\ast) \convprob 0 \]
 
