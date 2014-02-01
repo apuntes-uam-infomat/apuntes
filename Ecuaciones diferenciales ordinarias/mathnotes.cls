@@ -8,6 +8,7 @@
 \RequirePackage{etoolbox}
 \RequirePackage{makeidx}
 \RequirePackage{fancyhdr}
+\RequirePackage{chngcntr}
 
 \AfterEndPreamble{
 	\maketitle
@@ -23,7 +24,11 @@
 \setlength{\headheight}{16pt}
 \patchcmd{\headrule}{\hrule}{\color{DarkBlue}\hrule}{}{}
 
-\vfuzz=2pt
+\vfuzz=6pt
+\hfuzz=6pt
+
+\counterwithin{figure}{section}
+\counterwithin{equation}{section}
 
 \makeindex
 
