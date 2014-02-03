@@ -48,6 +48,7 @@
 \gw#m
 \qeq#m
 \r{A}#m
+\gradc#m
 \comb{arg0}{arg1}#m
 \abs{arg0}#m
 \inv{arg0}#m
@@ -135,6 +136,7 @@
 \begin{theorem}[titulo][indice]#
 \printtheorems#m
 \begin{proof}#
+\begin{expla}#
 \ctrig{angulo}#m
 \ceul{modulo}{angulo}#m
 \trans{arg0}#m
