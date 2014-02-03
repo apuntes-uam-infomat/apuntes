@@ -148,3 +148,4 @@
 \ord#m
 \gr#m
 \kbb#m
+\mv{vector}#m
