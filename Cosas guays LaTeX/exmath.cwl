@@ -149,3 +149,9 @@
 \gr#m
 \kbb#m
 \mv{vector}#m
+\cv#m
+\cv[\alpha]#m
+\cn#m
+\cn[\alpha]#m
+\ct#m
+\ct[\alpha]#m
