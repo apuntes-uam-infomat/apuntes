@@ -151,7 +151,13 @@
 \mv{vector}#m
 \cv#m
 \cv[\alpha]#m
+\cvv#m
+\cvv[\alpha]#m
 \cn#m
 \cn[\alpha]#m
 \ct#m
 \ct[\alpha]#m
+\cb#m
+\cb[\alpha]#m
+\ctr#m
+\ctr[\alpha]#m
