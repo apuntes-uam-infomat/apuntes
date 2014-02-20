@@ -3,7 +3,6 @@
 \pbreak#m
 \mop{operacion}#m
 \dimplies#m
-\implies#m
 \nimplies#m
 \Or#m
 \y#m
