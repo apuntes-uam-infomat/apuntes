@@ -5,7 +5,7 @@
 \usetikzlibrary{decorations.pathmorphing,patterns}
 \begin{document}
 
-\paragraph{Ecuaciones lineales con coeficientes constantes}
+\subsection{Problemas lineales con coeficientes constantes}
 
 En el caso homogéneo, en el que tenemos una EDO
 
@@ -147,9 +147,9 @@ Replanteemos el problema anterior con rozamiento.
 
 La ecuación cambia al añadir el rozamiento:
 
-\begin{gather*} mx'' = -kx - εx' \\
+\begin{gather} mx'' = -kx - εx' \nonumber \\
 x'' + \frac{ε}{m}x' + \frac{k}{m}x = 0
-\end{gather*}
+\end{gather}
 
 Resolvemos el polinomio característico \[ λ^2 + \frac{ε}{m}λ + \frac{k}{m} = 0 \] y nos queda
 
@@ -168,7 +168,7 @@ Tenemos
 
 De sus expresiones vemos que tanto $λ_+$ como $λ_-$ son negativos. La solución general del problema es 
 
-\[ x(t) = Ae^{λ_+t} + Be^{λ_-t} \]
+\( x(t) = Ae^{λ_+t} + Be^{λ_-t} \)
 
 Despejando de los valores iniciales $x(0) = x_0$, $x'(0) = v_0$ y haciendo cuentas,
 
@@ -186,13 +186,34 @@ que no tiene solución. Por lo tanto, el objeto no llega nunca a la posición de
 
 En este caso, tenemos $λ=\frac{-ε}{2m}$ que es una raíz doble. Por el método de variación de las constantes, nuestras dos soluciones son
 
-\[ x_1(t) = e^{\frac{-ε}{2m}t};\quad te^{\frac{-ε}{2m}t} \]
+\[ x_1(t) = e^{\frac{-ε}{2m}t};\quad x_2(t) = te^{\frac{-ε}{2m}t} \]
 
 y la solución general se expresa como 
 
-\[ x(t) = A e^{\frac{-ε}{2m}t} + B t e^{\frac{-ε}{2m}t} = e^{\frac{-ε}{2m}t} \left(A + Bt\right) \]
+\( x(t) = A e^{\frac{-ε}{2m}t} + B t e^{\frac{-ε}{2m}t} = e^{\frac{-ε}{2m}t} \left(A + Bt\right) \)
 
 Al igual que en el anterior caso, $x(t) \convs[][t][∞] 0$, pero aquí $x(t) = 0$ sí que podemos tener soluciones.
+
+\subparagraph{Tercer caso: $Δ < 0$ (sin rozamiento)}
+
+Aquí tendremos raíces complejas, es decir:
+
+\[ λ_+ = \frac{-ε}{2m} + \i \sqrt{\frac{k}{m} - \left(\frac{ε}{2m}\right)^2} \]
+
+y su conjugada. De esta forma, las dos soluciones reales serán
+
+\begin{gather*}
+x_1(t) = e^{\frac{-ε}{2m}t} \cos t\sqrt{\frac{k}{m} - \left(\frac{ε}{2m}\right)^2} \\
+x_1(t) = e^{\frac{-ε}{2m}t} \sin t\sqrt{\frac{k}{m} - \left(\frac{ε}{2m}\right)^2} \\
+\end{gather*}
+
+Podemos extraer la solución general y hacer el cambio del anterior apartado, pasando a polares $(A,B) \sim (R\cos φ, R\sin φ)$s, de tal forma que nos queda la solución general
+
+\( x(t) = R e^{-\frac{ε}{2m}t} \cos \left(t\sqrt{\frac{k}{m} - \left(\frac{ε}{2m}\right)^2} - Φ\right) \)
+
+Es decir, hay un decaimiento exponencial de la amplitud. La gráfica de la función sería la de la figura \ref{imgMasaResorteSeno}
+
+\easyimg{img/MasaResorteSeno.png}{$x(t)$ para un sistema masa-resorte}{imgMasaResorteSeno}
 
 \paragraph{Péndulo simple}
 
@@ -242,5 +263,169 @@ y por lo tanto nos quedan las dos ecuaciones
  \[ θ'' + \frac{g}{L} \sin θ = 0 \]
 
 Por Taylor, podemos aproximar $\sin θ \sim θ$ cuando θ es pequeña, de tal forma que nos reducimos al caso de un sistema masa-resorte.
+
+\subsection{Problemas lineales no homogéneos con coeficientes constantes}
+
+¿Qué ocurre cuando consideramos sistemas con fuerzas externas? Un ejemplo sería la siguiente ecuación en orden dos:
+
+\(\label{eqEcOrden2} x'' + ax' + bx = f(t) \)
+
+donde $f(t)$ representa esa fuerza externa. Tal y como habíamos visto en anteriores secciones, la solución general $X_G$ se escribía como una solución particular $X_P$ más todas las asociadas al homogéneo $X_H$. En esta situación, el problema es encontrar la solución particular, para lo cual teníamos varios métodos.
+
+\subsubsection{Método de variación de constantes}
+\index{Variación!de constantes} 
+
+Siguiendo con el ejemplo en orden 2, tenemos 
+
+\[ x_H (t) = c_1x_1(t) + c_2x_2(t) \]
+
+y buscamos \[ x_p(t) = c_1(t)x_1(t) + c_2(t) + x_2(t) \]. Para ello derivamos:
+
+\begin{align*}
+x_p'&= c_1'x_1 + c_1x_1' + c_2'x_2 + c_2x_2' = \\
+	&= c_1'x_1 + c_1 \\
+x_p'' 	&= c_1''x_1+c_1'x_1' + c_2''x_2+c_2'x_2' + \\ 
+		&\quad+ c_1'x_1'+c_1x_1'' + c_2'x_2' + c_2x_2'' = \\
+		&= x_1''x_1 + c_2''x_2+2c_1'x_1'+2c_2'x_2' + c_1x_1'' +c_2x_2'' 
+\end{align*}
+
+Sustituyendo en \eqref{eqEcOrden2}:
+
+\begin{align*}
+f(t) &= x_p'' + ax_p' + bx_p = &  \\
+	&= c_1''x_1 + c_2''x_2 + 2c_1'x_1' + 2c_2'x_2'  + c_1x_1''  + c_2x_2'' \\
+	& + ac_1' x_1 + ac_2'x_2  + ac_1x_1'  + ac_2x_2' \\
+	&  + bc_1x_1  + bc_2x_2 
+\end{align*}
+
+Hemos acabado con un enorme caos de variables y cosas. Sin embargo, recordamos que no buscamos todos las soluciones, sino que sólo nos basta con una. Planteamos 
+
+\[ c_1'x_1 + c_2'x_2 = 0 \] y \[ c_1'x_1' + c_2'x_2' = f \]
+ 
+Que nos lleva a un sistema
+
+\[ \underbrace{\begin{pmatrix}
+x_1 & x_2 \\
+x_1' & x_2' 
+\end{pmatrix}}_A\begin{pmatrix}
+c_1' \\ c_2'
+\end{pmatrix} = \begin{pmatrix}
+0 \\ f(t)
+\end{pmatrix} \] 
+
+que tiene solución, ya que al ser $x_1,x_2$ soluciones independientes, el wronskiano (igual al determinante de $A$ es distinto de $0$).
+
+En un caso general de orden $n$, el sistema a plantear será
+
+\[ \begin{pmatrix}
+x_1 & \cdots & x_n \\
+x_1' & \cdots & x_n \\
+\vdots & \ddots & \vdots \\
+x_1^{n)} & \cdots & x_n^{n)}
+\end{pmatrix} \begin{pmatrix} c_1' \\ c_2' \\ \vdots \\ c_n' \end{pmatrix} 
+= 
+\begin{pmatrix}
+0 \\ \vdots \\ 0 \\ f(t)
+\end{pmatrix} \]
+
+Apliquemos ahora este desarrollo a algún ejemplo.
+
+\paragraph{Ejemplo} $x'' + x = e^t$
+
+Buscamos $x_p(t) = c_1(t) x_1 + c_2(t) x_2$, donde
+
+\[ \underbrace{\begin{pmatrix}
+x_1 & x_2 \\
+x_1' & x_2' 
+\end{pmatrix}}_A\begin{pmatrix}
+c_1' \\ c_2'
+\end{pmatrix} = \begin{pmatrix}
+0 \\ e^t
+\end{pmatrix} \] 
+
+Podemos elegir $x_1$ y $x_2$ como seno y coseno:
+
+\[ \underbrace{\begin{pmatrix}
+\cos t & \sin t \\
+- \sin t & \cos t 
+\end{pmatrix}}_A\begin{pmatrix}
+c_1' \\ c_2'
+\end{pmatrix} = \begin{pmatrix}
+0 \\ e^t
+\end{pmatrix} \] 
+
+y resolvemos el sistema. Nos queda que 
+
+\[ c_2' = e^t \cos t \]
+
+y haciendo cuentas desagradables sale. Sin embargo, a ojo vemos que una solución particular es
+
+\[ x_p(t) = \frac{e^t}{2} \]
+
+¿Qué tiene de especial este problema? Esa exponencial en $f(t)$. Esto nos lleva a otro método, el de coeficientes indeterminados.
+
+\subsubsection{Método de coeficientes indeterminados}
+
+Podremos aplicar este método cuando $f(t)$ sea un polinomio, una exponencial, senos y cosenos y combinaciones lineales de todos los anteriores. En todos estos casos las derivadas nos llevan a funciones de la misma clase, y podremos aplicar este método que nos lleva a cuentas más sencillas.
+
+En este método, suponemos que la solución particular es una función de la misma familia de $f(t)$ multiplicada por una constante, así que planteamos el problema y resolvemos el sistema. Estudiémoslo desde un ejemplo:
+
+\paragraph{1)} \[ x'' - x = e^{2t} \]
+
+Tenemos que 
+\begin{gather*}
+x_p(t) = Ce^{2t} \\
+x_p' = 2Ce^{2t} \\
+x_p'' = 4Ce^{2t} \\
+e^2t = 4Ce^{2t} - Ce^{2t} = 3Ce^{2t} 
+\end{gather*}
+
+$C$ ha de ser $\frac{1}{3}$ y por lo tanto nuestra solución general del sistema será
+
+\[ x_G = c_1e^t + c_2e^{-t} + \frac{1}{3}e^{2t} \]
+
+\paragraph{2)} Otro ejemplo:
+
+\[ x''-x= e^t \]
+
+Aquí habría que calcular $x_p = ce^t$. Sin embargo, nos quedaría $x_p'' - x_p = 0 ∀c$. Cuando $f(t)$ es una de las soluciones de la ecuación homogénea asociada, tenemos que añadir algo más. Buscamos soluciones de la forma $cte^t$
+
+\begin{gather*}
+x_p  = cte^t \\
+x_p' = cte^t + ce^t \\
+x_p'' = cte^t + 2ce^t \\
+\end{gather*}
+
+Resolviendo:
+
+\begin{align*}
+x_p'' - c_p &= 2ce^t \\
+e^t &= 2ce^t \\
+C &= \frac{1}{2} 
+\end{align*}
+
+\paragraph{3)} Probamos ahora con senos y cosenos.
+
+\[ x'' + x= \cos 2t\]
+
+En este caso, la solución debe tener una combinación lineal de senos y cosenos. Por lo tanto
+
+\[ x_p = A\cos 2t + B\sin 2t \]
+
+y resolviendo
+
+\[ \cos 2t = x_p'' + x_p = -3A\cos 2t - 3B\sin 2t \]
+
+de tal forma que $A=\frac{-1}{3}$ y $B=0$.
+
+\paragraph{4)} Consideramos $x''+x = \cos t$. 
+
+En este caso, $f(t) = \cos t$ es una solución de la parte homogénea, así que la solución será de la forma
+
+\[ x_p(t) = At\cos t + Bt\sin t \]
+
+Supongamos que esto modela una situación real, como por ejemplo empujando un columpio. ¿Cómo interpretamos esto? 
+
+A ciertas frecuencias, la ecuación es creciente, la amplitud aumenta con el tiempo. Es un fenómeno de \textbf{resonancia}.
 
 \end{document}
