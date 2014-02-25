@@ -114,6 +114,9 @@
 \IS#m
 \begin{op}{arg0}#
 \theapr#m
+\(#m
+\([etiqueta]#m
+\)#m
 \begin{rightbar}#
 \iPartSpaceSkip#m
 \ppart#m
