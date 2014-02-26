@@ -426,6 +426,123 @@ En este caso, $f(t) = \cos t$ es una solución de la parte homogénea, así que 
 
 Supongamos que esto modela una situación real, como por ejemplo empujando un columpio. ¿Cómo interpretamos esto? 
 
-A ciertas frecuencias, la ecuación es creciente, la amplitud aumenta con el tiempo. Es un fenómeno de \textbf{resonancia}.
+A ciertas frecuencias, la ecuación es creciente, la amplitud aumenta con el tiempo. Es un fenómeno de \textbf{resonancia}. Veamos cómo modelizar este caso.
+
+\paragraph{Ejemplo: Sistema masa-resorte con fuerza externa}
+
+La ecuación en este caso es
+
+\(\label{eqMRF1} x'' + \underbrace{\frac{k}{m}}_{=ω^2}x = \underbrace{f(t)}_{F\cos αt} \)
+
+Hemos cambiado algunas constantes para adaptarlo a nuestro caso. Hay varias opciones a partir de aquí relacionadas con las constantes ω y α:
+
+\subparagraph{Caso 1: $ω≠α$}
+
+Resolvemos la ecuación homogénea $x''+ω^2 x = 0$ con el polinomio característico:
+
+\[ λ^2+ω^2  = 0 \implies λ = \pm ω\i \]
+
+y por lo tanto
+
+\( x_H(t) = c_1 \cos ωt + c_2 \sin ωt \)
+
+Necesitamos ahora una solución particular $x_P = A\cos αt + B\sin αt$. Derivamos dos veces:
+
+\begin{gather*}
+x_P(t) = A\cos αt + B\sin αt \\
+x_P'(t) = -Aα\sin αt + Bα\cos αt \\
+x_P''(t) = -Aα^2\cos αt - Bα^2\sin αt 
+\end{gather*}
+
+Sustituyendo en \eqref{eqMRF1}
+
+\begin{gather*}
+ F\cos αt = x_P'' + ω^2x_P = \dotsb = (ω^2-α^2)\left(A\cos αt + B\sin αt\right) \\
+ B = 0;\quad A= \frac{F}{ω^2-α^2} \\
+ x_P(t) = \frac{F}{ω^2-α^2}\cos αt
+\end{gather*}
+
+De esta forma, la ecuación general nos queda
+
+\( x_G(t) = \frac{F}{ω^2-α^2}\cos αt + c_1 \cos ωt + c_2 \sin ωt \)
+
+Para los datos iniciales $x(0) = x'(0) = 0$, despejamos y tenemos la solución al problema
+
+\(\label{eqMRF2-Sol} x(t) = \frac{F}{ω^2-α^2}\left(\cos αt - \cos ωt\right) \)
+
+Volviendo de nuevo al sistema que tratamos, ω y α representan dos frecuencias. α es la externa y ω es la natural. Podemos reescribir la ecuación \eqref{eqMRF2-Sol} usando identidades trigonométricas. Sabemos que
+
+\[ \cos (A-B) - \cos(A+B) = 2\sin A \sin B \]
+
+Resolvemos:
+
+\[ \left.\begin{matrix}A - B = αt \\ A + B = ωt \end{matrix}\right\}
+\left.\begin{matrix}A = \frac{ω+α}{2}t \\ B = \frac{ω-α}{2}t\end{matrix}\right\} \]
+
+Sustituyendo en \eqref{eqMRF2-Sol}:
+
+\( x(t) = \frac{2F}{ω^2-α^2} ·\sin \frac{ω-α}{2}t · \sin \frac{ω+α}{2}t  \)
+
+Luego lo que tenemos es una oscilación rápida (Δ) con una amplitud contenida dentro de otra con oscilación más lenta (Γ).
+
+\easyimg{img/MasaResorteF.png}{Gráfico de una oscilación rápida (Δ, azul) con una amplitud contenida dentro de otra con oscilación más lenta (Γ, verde)}{imgMasaResorteF}
+
+\subparagraph{Caso 2: $ω=α$}
+
+En este caso, la ecuación diferencial es 
+
+\[ x'' + ω^2 x = F\cos ωt \]
+
+La solución de la homogénea es $x_H = c_1 \cos ωt + c_2 \sin ωt$. Tenemos un problema: $F\cos ωt$ es solución de la homogénea. Para encontrar una solución particular multiplicamos entonces por $t$:
+
+\begin{gather*}
+x_P = t\left(A\cos ωt + B\sin ωt\right) \\
+x_P' =t\left(-Aω\sin ωt + Bω\cos ωt\right) + \left(A\cos ωt + B\sin ωt\right) \\
+x_P'' = t\left(-Aω^2 \cos ωt - Bω^2 \sin ωt\right) + 2\left(-Aω\sin ωt + Bω\cos ωt \right)
+\end{gather*}
+
+Igualando, 
+
+\[ F\cos ωt \qeq x_p'' + ω^2x_p = 2\left(-Aω\sin ωt + Bω\cos ωt \right) \]
+
+de donde sacamos que $A=0$ y $B=\frac{F}{2ω}$. Una solución particular es entonces
+
+\[ x_P(t) = \frac{F}{2ω}t \sin ωt \]
+
+que es además la solución que cumple $x_P(0) = x_P'(0) = 0$. La gráfica de esta ecuación será
+
+\easyimg{img/MasaResorteF-Resonancia.png}{Gráfica de un sistema masa-resorte en resonancia}{imgMasaResorteFR}
+
+Estamos ante un fenómeno de resonancia. La amplitud tiene a infinito siempre, por muy pequeña que sea la fuerza.
+
+Que, por cierto, Azorero nos ha engañado en una cosa: la expresión de la fuerza es un coseno en lugar de una función genérica $F(t)$. En realidad esto se debe al desarrollo en serie de Fourier, que dice que cualquier función se puede expresar como 
+
+\[ F(t) = \sum_{j=0}^∞ F_j \cos \frac{jπ}{T}t \]
+
+\paragraph{Modelo con rozamiento}
+
+Añadiendo el rozamiento al modelo anterior, tenemos
+
+\[ x''+2εx'+ω^2x = \cos αt \]
+
+Haciendo cuentas y suponiendo $ε^2-ω^2<0$. Nos queda una solución para la homogénea
+
+\[ x_H = e^{-εt}\left(c_1 \cos \sqrt{ω^2-ε^2}t + c_2 \sin \sqrt{ω^2-ε^2}t\right) \]
+
+Buscamos la solución particular
+
+\[ x_P (t) = A\cos αt + B\sin αt \]
+
+y llegamos a 
+
+\[ x_P(t) = \frac{1}{(ω^2-α^2)^2 + 4α^2ε^2}\left((ω^2-α^2)\cos αt + 2αε \sin αt \right) \].
+
+La solución general es entonces
+
+\[ x_G(t) = x_P(t) + x_H(t) \]
+
+Dado que en $x_H$ está todo multiplicado por una exponencial negativa, tiende a cero cuando $t\to ∞$, por lo que la llamamos la parte \textbf{transitoria}. El primer sumando, $x_P$, permanece y se le llama la parte \textbf{estacionaria}.
+
+En este caso, cuando $α=ω$ (estamos en la frecuencia de resonancia), es el que más aporta a la ecuación. Sin embargo, en ningún caso la amplitud se va a infinito. El rozamiento impide que la amplitud se dispare.
 
 \end{document}
