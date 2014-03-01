@@ -141,6 +141,7 @@
 \begin{expla}#
 \ctrig{angulo}#m
 \ceul{modulo}{angulo}#m
+\i#m
 \trans{arg0}#m
 \bin#m
 \geom#m
