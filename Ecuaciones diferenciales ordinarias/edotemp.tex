@@ -3,6 +3,10 @@
 \usepackage{tikz}
 \tikzset{>=latex}
 \usetikzlibrary{decorations.pathmorphing,patterns}
+
+\tikzstyle{vnlin}=[rectangle, inner sep=0pt, minimum height=6pt, minimum width=0pt, draw, fill=black]
+\tikzstyle{hnlin}=[rectangle, inner sep=0pt, minimum height=0pt, minimum width=6pt, draw, fill=black]
+
 \begin{document}
 
 \subsection{Problemas lineales con coeficientes constantes}
@@ -821,14 +825,19 @@ O, en términos de ε y δ, que para $x∈(a,b)$
 Ahora bien, hay que leer con cuidado. En esta definición, tenemos que $n_0 = n_0(ε,x)$ depende de dos parámetros. Esta definición es por lo tanto muy débil como para usarla en los métodos de resolución anteriores.
 
 \begin{figure}[hbtp]
+
 \centering
-\begin{tikzpicture}[x=300pt, y=20pt]
-\draw[->] (-0.1, 0) -- (1.3,0);
+\begin{tikzpicture}[x=150pt, y=30pt]
+\draw[->] (-0.1, 0) -- (1.4,0);
 \draw[->] (0,-0.1) -- (0,5);
 
-\draw[-,green, thick] (0,0) -- (0.5,1) -- node[above right] {$y_1$} (1,0) -- (1.3,0);
+\draw[-,blue, thick] (0,0) -- (0.0625,4) -- node[above right] {$y_n$}  (0.125,0) -- (1.3,0);
 \draw[-,red, thick] (0,0) -- (0.25,2) -- node[above right] {$y_2$} (0.5,0) -- (1.3,0);
-\draw[-,blue, thick] (0,0) --node[above left] {$y_n$} (0.0625,4) --  (0.125,0) -- (1.3,0);
+\draw[-,green, thick] (0,0) -- (0.5,1) -- node[above right] {$y_1$} (1,0) -- (1.3,0);
+
+\node[vnlin, label=below:{$\dfrac{1}{n}$}] at (0.125,0) {};
+\node[vnlin, label=below:{$\dfrac{1}{2}$}] at (0.5,0) {};
+\node[vnlin, label=below:{$1$}] at (1,0) {};
 \end{tikzpicture}
 \caption{Sucesión de funciones $y_n$}
 \label{imgAF_Yn}
@@ -865,21 +874,45 @@ o, dicho de otra forma
 
 La convergencia uniforme tiene una interpretación geométrica que podemos ver en la figura \ref{imgConvUnif}.
 
-\todo{Completar el gráfico de las bandas. La banda es de anchura epsilon, está coloreada.}
-
 \begin{figure}[hbtp]
 \centering
-\begin{tikzpicture}[scale=1.4]
+\begin{tikzpicture}[scale=1.5,declare function={
+	wav_sl(\x,\ofst) = 0.3 * \x + 1 + \ofst + 0.2 * sin(3 * \x r);
+	wav_pert(\x,\a,\b) = \a * cos(7* \x r) + \b * sin(\x r) * cos(\x * 5 r);
+}]
 \draw[->] (-0.1,0) -- (5,0);
 \draw[->] (0,-0.1) -- (0,3);
 
-\draw[very thick,domain=0.8:4.2,smooth,variable=\x,green] plot ({\x}, {0.3*\x + 1 + 0.2*sin(3*\x r)});
+\fill[draw=none,domain=0.8:4.2,smooth,variable=\x,green!50!white, fill=green!10] 
+	(0.8, {wav_sl(0.8,-0.5)}) -- plot ({\x}, {wav_sl(\x,0.5)}) -- (4.2, {wav_sl(4.2,-0.5)})
+	plot ({5 - \x}, {wav_sl(5 - \x,-0.5)});
 
-\draw[very thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {0.3*\x + 1.5 + 0.2*sin(3*\x r)});
 
-\draw[very thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {0.3*\x + 0.5 + 0.2*sin(3*\x r)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!10] plot ({\x}, {wav_sl(\x,-0.2) + wav_pert(\x,0.15,0.1)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!20] plot ({\x}, {wav_sl(\x,0.2) + wav_pert(\x,0.132,-0.07)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!40] plot ({\x}, {wav_sl(\x,0.07) + wav_pert(\x,0.05,-0.01)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!80] plot ({\x}, {wav_sl(\x,0) + wav_pert(\x,0.01,0.04)});
+
+\draw[very thick,domain=0.8:4.2,smooth,variable=\x,black] plot ({\x}, {wav_sl(\x,0)});
+\draw[thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {wav_sl(\x,0.5)});
+\draw[thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {wav_sl(\x,-0.5)});
+
+
+\node[draw, circle, fill=white, inner sep=1.5pt] (M) at (2, {wav_sl(2,0)}) {};
+\node[draw, circle, fill=white, inner sep=1.5pt] (U) at (2, {wav_sl(2,0.5)}) {};
+\node[draw, circle, fill=white, inner sep=1.5pt] (L) at (2, {wav_sl(2,-0.5)}) {};
+
+\node[hnlin, label=left:{$y(x)$}] (MO) at (0, {wav_sl(2,0)}) {};
+\node[hnlin, label=left:{$y(x) + ε$}] (UO) at (0, {wav_sl(2,0.5)}) {};
+\node[hnlin, label=left:{$y(x) - ε$}] (LO) at (0, {wav_sl(2,-0.5)}) {};
+
+\draw[-] (U) -- (M) -- (L);
+
+\draw[dashed,gray] (UO) -- (U);
+\draw[dashed,gray] (MO) -- (M);
+\draw[dashed,gray] (LO) -- (L);
 \end{tikzpicture}
-\caption{Interpretación geométrica de la convergencia continua. Todas las $y_n$ estarán en la banda coloreada.}
+\caption{Interpretación geométrica de la convergencia uniforme a $y(x)$ (negro). Todas las $y_n$ (en azul, más oscuro indica $n$ mayor) estarán en la banda coloreada.}
 \label{imgConvUnif}
 \end{figure}
 
