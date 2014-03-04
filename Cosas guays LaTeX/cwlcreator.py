@@ -48,7 +48,7 @@ contents = packagefile.read()
 cwlfile = open(sys.argv[2], "w")
 
 #\\(?<cmd_type>newcommand|newcommandx|renewcommand|newenvironment|newenvironmentx|renewenvironment|DeclareMathOperator)*?{(?<name>.*?)}(\[(?<nargs>\d*)])?(\[(?<optargspec>.*]))?[^%\n]*%?(?<arginfo>[^\|\n]*)
-matches = re.finditer("\\\\(?P<cmd_type>newcommand|newcommandx|renewcommand|newenvironment|newenvironmentx|renewenvironment|DeclareMathOperator)\\*?{(?P<name>.*?)}(\\[(?P<nargs>\\d*)])?(\\[(?P<optargspec>.*]))?[^%\\n]*%?(?P<arginfo>[^\\|\\n]*)", contents)
+matches = re.finditer("\\\\(?P<cmd_type>providecommand|newcommand|newcommandx|renewcommand|newenvironment|newenvironmentx|renewenvironment|DeclareMathOperator)\\*?{(?P<name>.*?)}(\\[(?P<nargs>\\d*)])?(\\[(?P<optargspec>.*]))?[^%\\n]*%?(?P<arginfo>[^\\|\\n]*)", contents)
 
 processed = []
 

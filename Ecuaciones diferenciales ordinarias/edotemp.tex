@@ -705,8 +705,118 @@ y sustituimos
 
 y además tiene que ser
 
-\[ (Φ'(t))^2 = \frac{Q(t)}{B} \]6
+\[ (Φ'(t))^2 = \frac{Q(t)}{B} \]
 
 \end{example}
 
+\section{Teoremas de existencia y unicidad}
+
+Partiendo del problema
+
+\[ \begin{cases}
+y' = f(x,y(x)) \\
+y(x_0) = y_0
+\end{cases} \]
+
+podemos hacer una \textbf{formulación integral equivalente} de la forma
+
+\[ y(x) = y_0 + \int_{x_0}^x f(s,y(s))\dif s \].
+
+Hay dos posibles aproximaciones para resolver este problema.
+
+\paragraph{Iteradas de Picard}\index{Iteradas!de Picard} Veamos este método con un ejemplo. Partimos de 
+
+\[ \begin{cases}
+y' = y \\
+y(x_0) = 1
+\end{cases} \].
+
+La primera aproximación será
+
+\[ y_1(x) = 1 + \int_0^x y_0 \dif x = 1+ \int_0^x 1\dif s = 1 + x \]. Hacemos una segunda aproximación:
+
+\[ y_2(x) = 1 + \int_0^x y_1 \dif x = 1 + \int_0^x 1+s \dif s  = 1 + x +\frac{x^2}{2} \]
+
+Podríamos seguir haciendo iteradas basándonos en la misma fórmula
+
+\(\label{eqIteradasPicard} y_n(x) = 1 + \int_0^x y_{n-1}(s) \dif s \)
+
+y veríamos que lo que sale es el polinomio de Taylor de la exponencial. Planteamos entonces un algoritmo iterativo siguiendo la ecuación \eqref{eqIteradasPicard}. Si consiguiésemos demostrar que
+
+\begin{itemize}
+\item $y_n(x) \convs[][n] y(x)$.
+\item $\displaystyle\lim_{n\to\infty} \int_{x_0}^x f(s,y_{n-1}(s))\dif s = \int_{x_0}^x \lim_{n\to ∞} f(s,y_{n-1}(s)) \dif s$.
+\item $\displaystyle\lim_{n\to ∞} f(s, y_{n-1}(s)) = f(s,y(s))$.
+\end{itemize}
+
+tendríamos siempre una solución al problema. Sin embargo, no es trivial definir qué es un límite de funciones, entrando dentro del análisis funcional. Además, deberíamos ver hasta qué $x$ podríamos usar la solución. 
+
+Buscamos por lo tanto otro método para resolver el problema.
+
+\paragraph{Método de las poligonales de Euler}\index{Poligonales!de Euler} Supongamos que la solución exacta del problema es $y(x)$. Entonces, para un $x_1=x_0 + h$, podemos decir que
+
+\[ y(x_1) = y(x_0 + h) \stackrel{\text{Taylor}}{=} y(x_0) + y'(x_0)\cdot h + \mop{error}(h) \]
+
+Ahora bien, sabemos que $y(x_0) = y_0$ y que $y'(x_0) =f(x_0, y_0)$. Entonces
+
+\[ y(x_1) ≈ y_0 + f(x_0, y_0)·h \equiv y_1 \]
+
+es un valor aproximado de la solución en $x_1$. Repetimos el proceso. Tomamos $x_2 = x_1 + h$, y 
+
+\[ y(x_2) ≈ y_1 + f(x_1,x_1)· h \equiv y_2 \]
+
+Rehaciendo el proceso, llegamos a una poligonal $P_n$ (poligonal de Euler) que aproximará la curva:
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[x=50pt,y=20pt]
+	\draw[->] (-0.5,0) -- (5,0) node[right] {$x$};
+	\draw[->] (0,-0.5) -- (0,3) node[above] {$y$};
+	
+	\draw[very thick,domain=0.8:4.2,smooth,variable=\x,green] plot ({\x},{2.19805 - 1.84594*\x + 0.64716*\x*\x + 0.150811*\x*\x*\x - 0.0500811*\x*\x*\x*\x});
+	
+	\node[draw,label=above:{$y_0$},circle, fill=white, inner sep=2pt] (A) at (1,1.1) {};
+	\node[draw,label=above:{$y_1$},circle, fill=white, inner sep=2pt] (B) at (2,1.5) {};
+	\node[draw,label=above:{$y_2$},circle, fill=white,inner sep=2pt] (C) at (3,2.5) {};
+	\node[draw,label=above:{$y_3$},circle, fill=white, inner sep=2pt] (D) at (4,2) {};
+	
+	\node[label=below:{$x_0$}] at (1,0) {};
+	\node[label=below:{$x_1$}] at (2,0) {};
+	\node[label=below:{$x_2$}] at (3,0) {};
+	\node[label=below:{$x_3$}] at (4,0) {};
+	
+	\draw[-, dashed] (1,-0.1) -- (A);	
+	\draw[-, dashed] (2,-0.1) -- (B);
+	\draw[-, dashed] (3,-0.1) -- (C);
+	\draw[-, dashed] (4,-0.1) -- (D);
+	
+	\draw[-,thick,red] (A) -- (B) -- (C) -- (D) node[right] {$P_n$};
+	
+\end{tikzpicture}
+\end{figure}
+
+
+Entonces, deberíamos tener que
+
+\[ y(x) \equiv \lim_{h\to 0} P_n(x) \]
+
+Es también una solución razonable, pero llegamos a la misma dificultad que antes: no sabemos en qué consiste el límite de una sucesión de funciones.
+
+\subsection{Análisis funcional y sucesiones de funciones}
+
+De cualquiera de las formas tenemos que entrar en análisis funcional, así que tratemos de dar sentido a ese concepto de sucesiones de funciones. Partimos de un conjunto de funciones $\{f_n(x)\}_{n∈ℕ}$ definidas para $x∈(a,b)$. ¿Qué significa entonces el límite $\displaystyle\lim_{n\to ∞} f_n(x) = f(x)$?
+
+Hay varias definiciones para ese límite. La primera es la convergencia puntual:
+
+\subsubsection{Convergencia puntual}
+
+La convergencia puntual consiste en la convergencia de cada uno de los puntos del intervalo. Es decir
+
+\[ f_n\to f \iff \lim_{n\to ∞} f_n(x) = f(x) ∀x ∈ (a,b) \]
+
+O, en términos de ε y δ, que para $x∈(a,b)$
+
+\[ ∀ε>0\, ∃n_0 \tq n> n_0 \implies \abs{f_n(x) - f(x)} < ε \]
+
+Ahora bien, hay que leer con cuidado. En esta definición, tenemos que $n_0 = n_0(ε,x)$ depende de dos parámetros. Esta definición es por lo tanto muy débil como para usarla en los métodos de resolución anteriores.
 \end{document}
