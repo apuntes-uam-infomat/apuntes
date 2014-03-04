@@ -741,7 +741,7 @@ Podríamos seguir haciendo iteradas basándonos en la misma fórmula
 
 \(\label{eqIteradasPicard} y_n(x) = 1 + \int_0^x y_{n-1}(s) \dif s \)
 
-y veríamos que lo que sale es el polinomio de Taylor de la exponencial. Planteamos entonces un algoritmo iterativo siguiendo la ecuación \eqref{eqIteradasPicard}. Si consiguiésemos demostrar que
+y veríamos que lo que sale es el polinomio de Taylor de la exponencial\footnote{No es cierto que el método de Picard dé siempre el desarrollo de Taylor. Es una casualidad de este ejemplo.}. Planteamos entonces un algoritmo iterativo siguiendo la ecuación \eqref{eqIteradasPicard}. Si consiguiésemos demostrar que
 
 \begin{itemize}
 \item $y_n(x) \convs[][n] y(x)$.
@@ -819,4 +819,135 @@ O, en términos de ε y δ, que para $x∈(a,b)$
 \[ ∀ε>0\, ∃n_0 \tq n> n_0 \implies \abs{f_n(x) - f(x)} < ε \]
 
 Ahora bien, hay que leer con cuidado. En esta definición, tenemos que $n_0 = n_0(ε,x)$ depende de dos parámetros. Esta definición es por lo tanto muy débil como para usarla en los métodos de resolución anteriores.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[x=300pt, y=20pt]
+\draw[->] (-0.1, 0) -- (1.3,0);
+\draw[->] (0,-0.1) -- (0,5);
+
+\draw[-,green, thick] (0,0) -- (0.5,1) -- node[above right] {$y_1$} (1,0) -- (1.3,0);
+\draw[-,red, thick] (0,0) -- (0.25,2) -- node[above right] {$y_2$} (0.5,0) -- (1.3,0);
+\draw[-,blue, thick] (0,0) --node[above left] {$y_n$} (0.0625,4) --  (0.125,0) -- (1.3,0);
+\end{tikzpicture}
+\caption{Sucesión de funciones $y_n$}
+\label{imgAF_Yn}
+\end{figure}
+
+Consideremos la familia de funciones $y_n$ definidas como en la figura \ref{imgAF_Yn}. Por ejemplo, $\lim_{n\to ∞} y_n(0) = 0$. En $x=\frac{1}{2}$, tenemos 
+
+\[ \{y_n(1/2) \}_{n∈ℕ} = \{ 1,0,0,\dotsc \} \]
+
+y por lo tanto $\lim_{n\to ∞} y_n(1/2) = 0$. En general, para cualquier $x>0$, tendríamos que existe un $n_0$ tal que si $\frac{1}{n_0} < x$ entonces $y_m(x) = 0$ para todo $m≥n_0$. Es decir, que tendríamos una convergencia puntual:
+
+\[ \lim_{n\to ∞} y_n(x) = 0 \; ∀x∈[0,1] \]
+
+Ahora bien, ¿qué ocurre con la integral? Sería igual al área, y entonces
+
+\[ \lim_{n\to ∞} \int_0^1 y_n(x) \dif x = \frac{1}{n} · n ·\frac{1}{2} =\frac{1}{2} \]
+
+pero sin embargo
+
+\[ \int_0^1 \lim_{n\to ∞}y_n(x) \dif x = \int_0^1 0\dif x = 0 \]
+
+Las integrales difieren, no podemos \textit{intercambiar} el límite con la integral y por lo tanto esta definición es muy débil para lo que buscamos. Tenemos que buscar una noción alternativa.
+
+\subsubsection{Convergencia uniforme}
+
+\begin{defn}[Convergencia\IS uniforme] Diremos que una sucesión de funciones $y_n$ converge uniformemente a $y$ en el intervalo $(a,b)$ si y sólo si $∀ ε > 0 ∃n_0 = n_0(ε)$ tal que si $n>n_0$ entonces
+
+\[ \abs{y_n(x) - y(x)} < ε ∀x∈(a,b) \]
+
+o, dicho de otra forma
+
+\[ \sup_{x∈[a,b]} \abs{y_n(x) - y(x)} < ε \]
+\end{defn}
+
+La convergencia uniforme tiene una interpretación geométrica que podemos ver en la figura \ref{imgConvUnif}.
+
+\todo{Completar el gráfico de las bandas. La banda es de anchura epsilon, está coloreada.}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[scale=1.4]
+\draw[->] (-0.1,0) -- (5,0);
+\draw[->] (0,-0.1) -- (0,3);
+
+\draw[very thick,domain=0.8:4.2,smooth,variable=\x,green] plot ({\x}, {0.3*\x + 1 + 0.2*sin(3*\x r)});
+
+\draw[very thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {0.3*\x + 1.5 + 0.2*sin(3*\x r)});
+
+\draw[very thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {0.3*\x + 0.5 + 0.2*sin(3*\x r)});
+\end{tikzpicture}
+\caption{Interpretación geométrica de la convergencia continua. Todas las $y_n$ estarán en la banda coloreada.}
+\label{imgConvUnif}
+\end{figure}
+
+Si volvemos al ejemplo de los triángulos, vemos que siempre tenemos una punta que se sale fuera de la banda $(-ε, ε)$ para cualquier ε que escojamos.
+
+\paragraph{Propiedades de la convergencia uniforme} Dadas $f_n\to f,\; g_n\to g$
+
+\begin{itemize}
+\item $f_n+g_n \to f + g$
+\item $f_ng_n \to fg$
+\item $\frac{f_n}{g_n} \to \frac{f}{g}$ si $g≠0$.
+\end{itemize}
+
+Además de las propiedades algebraicas, tenemos varios teoremas.
+
+\begin{theorem} Sea $\{f_n\}_{n∈ℕ}$ una sucesión de funciones continuas en $(a,b)$. Si $f_n$ converge uniformemente a $f$ en $(a,b)$, entonces $f$ es continua en $(a,b)$.
+\end{theorem}
+
+\begin{proof} Queremos probar que dado $x_0∈(a,b)$, $∀ε>0\, ∃δ>0 \tq \abs{x-x_0} < δ \implies \abs{f(x) - f(x_0)} < ε$. Conocemos la convergencia uniforme en $(a,b)$.
+
+Sumamos y restamos $f_n(x)$ y $f_n(x_0)$. Entonces
+
+\[ \abs{f(x) - f(x_0)} = \abs{f(x) \pm f_n(x) \pm f_n(x_0) - f(x_0)} ≤ \abs{f(x) - f_n(x)} + \abs{f_n(x) - f_n(x_0)} + \abs{f_n(x_0) - f(x_0)} \]
+
+Podemos elegir $n > n_0$ tal que tanto $\abs{f(x) - f_n(x)}$ como $\abs{f_n(x_0) - f(x_0)}$ sean menor que $\frac{ε}{3}$, por la convergencia uniforme. Sólo falta hacer pequeño el sumando central, y eso lo hacemos usando la continuidad de las $f_n$.
+\end{proof}
+
+\begin{theorem} Supongamos que $f_n\to f$ uniformemente en $(a,b)$, con $(a,b)$ intervalo \textbf{acotado}. Entonces
+
+\[ \lim_{n\to ∞} \int_a^b f_n(x) \dif x = \int_a^b \lim_{n\to ∞} f_n(x) \dif x = \int_a^b f(x) \dif x \]
+\end{theorem}
+
+\begin{proof} Usamos el teorema del sandwich y acotamos la diferencia de integrales.
+
+\[ 0 ≤ \abs{ \int_a^b f_n(x) \dif x - \int_a^b f(x) \dif x } ≤ \int_a^b \underbrace{\abs{f_n(x) - f(x)}}_A \dif x \]
+
+donde $A$ es menor que $ε$ para todo $x$ si $n>n_0$. Por lo tanto, 
+
+\[ \int_a^b \abs{f_n(x) - f(x)} \dif x < ε(b-a) \]
+
+que se hace tan pequeño como queramos.
+\end{proof}
+
+\begin{defn}[Sucesión\IS de Cauchy uniforme] Se dice que $\{ f_n \}$ es de Cauchy uniforme en $(a,b)$ si y sólo si $∀ε>0$ $∃n_0=n_0(ε)$ tal que si $n,m>n_0$ entonces 
+
+\[ \abs{f_n(x) - f_m(x)} < ε\; ∀x∈(a,b) \]
+\end{defn}
+
+\subsubsection{El espacio de las funciones continuas}
+
+Denotamos al espacio $\mathcal{C}([a,b])$ como el conjunto de las funciones continuas en el intervalo $[a,b]$.
+
+\begin{defn}[Norma\IS de funciones] Definimos
+
+\[ \norm{f}_{∞} = \sup_{x∈[a,b]} \abs{f(x)} \]
+\end{defn}
+
+A partir de la norma definimos la distancia 
+
+\[ d_∞(f,g) = \norm{f-g}_{∞} \]
+
+y por lo tanto tenemos una definición de convergencia de funciones:
+
+\[ f_n \convs[\norm{\cdot}_{∞}] f \dimplies d_∞(f_n,f) \convs[][n] 0 \]
+
+que es equivalente a la convergencia uniforme.
+
+Uniendo todos estos conceptos, tendríamos que $\mathcal{C}\left([a,b];\norm{\cdot}_{∞}\right)$ es el espacio de las funciones continuas con la topología de la convergencia uniforme.
+
 \end{document}
+
