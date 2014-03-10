@@ -965,7 +965,7 @@ que se hace tan pequeño como queramos.
 
 Denotamos al espacio $\mathcal{C}([a,b])$ como el conjunto de las funciones continuas en el intervalo $[a,b]$.
 
-\begin{defn}[Norma\IS de funciones] Definimos
+\begin{defn}[Norma\IS de funciones]\label{defNormaFun} Definimos
 
 \[ \norm{f}_{∞} = \sup_{x∈[a,b]} \abs{f(x)} \]
 \end{defn}
@@ -981,6 +981,127 @@ y por lo tanto tenemos una definición de convergencia de funciones:
 que es equivalente a la convergencia uniforme.
 
 Uniendo todos estos conceptos, tendríamos que $\mathcal{C}\left([a,b];\norm{\cdot}_{∞}\right)$ es el espacio de las funciones continuas con la topología de la convergencia uniforme.
+
+\todo[inline]{Aquí faltan las clases de dos días. Un teorema de existencia y unicidad global para sistemas lineales con coef. continuos y otro también global para EDO con 2º término globalmente Lipschitz.}
+
+Veíamos ejemplos en los que pedir una función globalmente Lipschitz era pedir demasiado. Por ejemplo, $f(y)=y^2$ no es globalmente Lipschitz. Por lo tanto, buscaremos algo más débil que nos dé teoremas de existencia y unicidad más generales.
+
+\begin{defn}[Condición\IS de Lipschitz local]  Se dice que $f(x,y)$ es localmente Lipschitz respecto de $y$ en una región $A$ si y sólo si $∀(x_0,y_0)∈A$ existe un rectángulo $R$
+
+\[ R_{(x_0, y_0)} = [x_0-ε,x_0+ε] × [y_0-d, y_0+δ] \]
+
+tal que $R_{(x_0, y_0)}⊆ A$, y una constante $L_R$ tal que 
+
+\[ \abs{f(x,y) - f(x,z)} < L_R\abs{y-z}\quad ∀(x,y),(x,z)∈R_{(x_0, y_0)} \].
+\end{defn}
+
+A partir de esta definición podemos llegar a otro nuevo teorema de existencia y unicidad
+
+\begin{theorem}[Teorema\IS de existencia y unicidad local] Sea $f(x,y)$ una función continua localmente Lipschitz con respecto a la segunda variable ($y$) en una región $A⊆ℝ^2$ abierta.
+
+Entonces, dado el problema 
+
+\[ \begin{cases}
+y'(x) &= f(x,y(x)) \\
+y(x_0) &= y_0
+\end{cases} \]
+
+con $(x_0, y_0)∈A$, entonces existe una \textbf{única solución local}. Es decir:
+
+\begin{itemize}
+\item Existe una constante $α>0$ y una función $y(x)$ que es solución en $[x_0-α, x_0+α]$.
+\item Dadas soluciones $y_1$ definida en $[x_0-α_1, x_0+α_1]$, $y_2$ definida en $[x_0-α_2, x_0+α_2]$, ambas son iguales en el intervalo común $[x_0-α_1, x_0+α_1] \cap [x_0-α_2, x_0+α_2]$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+Hay dos formas de llevar a cabo la demostración: o por el teorema de la aplicación contractiva o por el método de iteradas de Picard. Hagamos los dos.
+
+\paragraph{1) T. Aplicación Contractiva} Buscamos demostrar que \[ y(x) = y_0 + \int_{x_0}^x f(s,y(s)) \dif s \] para $x∈[x_0, x_0+h]$.
+
+Trabajaremos en el espacio $X$, el conjunto de funciones $y(x)$ continuas en el intervalo  $[x_0, x_0+h]$ tales que $(x,y(x))∈R_{(x_0, y_0)}\; ∀x∈[x_0, x_0+h]$. 
+
+Definimos la transformación de funciones \[ Ty = y_0 + \int_{x_0}^{x} f(s,y(s)) \dif s \] y buscamos un punto fijo de $T$. Entonces
+
+\[ \abs{Ty(x) - Tz(x)} ≤ \int_{x_0}^{x} \abs{f(s,y(s)) - f(s,z(s))} \dif s \stackrel{\text{Lipschitz}}{≤} \int_{x_0}^x L_R \abs{y(s)-z(s)}\dif s \]
+
+Sabiendo que $\abs{y(s)-z(s)}$ será menor siempre que la norma entre esas dos funciones (ver \ref{defNormaFun}), sustituimos y 
+
+\[ \norm{Ty(x) - Tz(x)}_\infty ≤ L_Rh\norm{y-z}_\infty \]
+
+y por lo tanto será contractivo si $h<\frac{1}{L_R}$.
+
+Sin embargo, el teorema de la aplicación contractiva sólo vale para funciones de un espacio en sí mismo. En este caso, no es seguro que $Ty∈X$. Para poder aplicar el teorema, hay que demostrar que $T$ es una aplicación $\appl{T}{X}{X}$. Vamos a ello.
+
+Tenemos que demostrar que si $(x,y(x)) ∈R\; ∀x∈[x_0, x_0+h]$, entonces $(x, Ty(x))∈R\; ∀x∈[x_0, x_0+h]$, o, dicho de otra forma, que $\abs{Ty(x) - y_0}<δ$.  En este caso, vemos que
+
+\[ \abs{Ty(x) - y_0} ≤ \int_{x_0}^x \abs{f(s,y(s))}\dif s \]
+
+Necesitamos que aparezca $y_0$ por alguna razón, así que sumamos y restamos y nos queda 
+
+\[ \abs{Ty(x) - y_0} ≤ \int_{x_0}^x \underbrace{\abs{f(s,y(s))}}_{A} + \underbrace{\abs{f(s,y(s) - f(s,y_0)}}_{B} \dif s \]
+
+Tenemos que $A<C_0$ por ser $f$ continua. Por otro lado, $B<L_R\abs{y-y_0}$ por la condición de Lipschitz, y al estar $y$ en el rectángulo $R$ entonces $B<L_Rδ$. Nos queda entonces 
+
+\[ \abs{Ty(x) - y_0} ≤(C_0 + L_R δ)h \]
+y nos bastará tomar $h$ suficientemente pequeño para que se cumpla que $ \abs{Ty(x) - y_0} < δ$, es decir,
+
+\[ h < \frac{δ}{C_0 + L_Rδ} \]
+
+Para finalizar la prueba, nos quedamos con el $h$ mínimo entre este y el que hace que sea contractiva:
+
+\[ h < \min \left\{ \frac{δ}{C_0 + L_Rδ}, \frac{1}{L_R} \right\} \]
+
+\paragraph{2) Iteradas de Picard} Sudo. De hecho
+
+\begin{verbatim}
+sudo rual completa esto
+\end{verbatim}
+\end{proof}
+
+Lo bueno del método de iteradas de Picard es que nos permitirá demostrar un lema adicional de continuidad con respecto a los datos.
+
+\begin{lemma}[Lema\IS de Gronwall] Dada una función 
+
+\[ w(x)≤C+ \int_{x_0}^x k(s)w(s)\dif s \]
+
+entonces 
+
+\[ w(x) ≤ C\exp{\int_{x_0}^xk(s)\dif s} \]
+
+\end{lemma}
+
+Aplicamos a nuestro querido lema:
+
+\begin{proof}
+
+Dados dos problemas
+
+\[ \begin{cases}
+y'(x) &= f(x,y(x)) \\
+y(x_0) &= y_0
+\end{cases}, \begin{cases}
+z'(x) &= f(x,z(x)) \\
+z(x_0) &= z_0
+\end{cases} \]
+
+tenemos que
+
+\begin{gather*}
+y(x) = y_0 + \int_{x_0}^{x} f(s,y(s)) \dif s \\
+z(x) = z_0 + \int_{x_0}^{x} f(s,z(s)) \dif s 
+\end{gather*}
+\todo[inline]{Completar. Completar mucho}
+Después de un chorrón de cuentas enorme llegamos a la expresión
+
+\[ \underbrace{\abs{y(x) - z(x)}}_{w(x)} ≤ \underbrace{\abs{y_0-z_0}}_{C} + \int_{x_0}^{x} \underbrace{L_R}_{k(s)} \underbrace{\abs{y(s)-z(s)}}_{w(x)} \dif s \]
+
+y aplicando el lema de Gronwall tenemos que
+
+\[ \abs{y(x)-z(x)} ≤ \abs{y_0-z_0}\exp \int_{x_0}^{x}L_R\dif S = \abs{y_0-z_0} M \]
+
+y tenemos la continuidad.
+\end{proof}
 
 \end{document}
 
