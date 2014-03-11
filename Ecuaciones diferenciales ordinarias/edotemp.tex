@@ -995,6 +995,44 @@ tal que $R_{(x_0, y_0)}⊆ A$, y una constante $L_R$ tal que
 \[ \abs{f(x,y) - f(x,z)} < L_R\abs{y-z}\quad ∀(x,y),(x,z)∈R_{(x_0, y_0)} \].
 \end{defn}
 
+\paragraph{Interpretación geométrica de la condición de Lipschitz local} Consideremos una función de Lipschitz $f$ \[\abs{f(x,y) - f(x,z)} < L\abs{y-z} \] y nos fijamos sólo en la $y$ y en la $z$. Mantenemos $z$ fijo con valor 1 (por ejemplo). Esto entonces acota nuestra función
+
+\begin{gather*}
+-L\abs{y-1} ≤ f(y) - f(z) ≤ L\abs{y-1}
+\underbrace{f(1) - L \abs{y-1}}_{G(y)} ≤ f(y) ≤ \underbrace{f(1) + L\abs{y-1}}_{H(y)}
+\end{gather*}
+
+entre dos funciones $G(y)$ y $H(y)$. Es decir.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[y=40,x=100, declare function={
+	wav_sl(\x,\a,\b) = 0.3 * (\x - \a) + \b - 0.1 + 0.1 * cos(20 * pow((\x - \a),2) r) + 0.15 * sin(10 * pow((\x - \a),2) r);
+}]
+\draw[->] (-0.2, 0) -- (3,0);
+\draw[->] (0,-0.2) -- (0,3);
+
+\fill[red!5!green!5] (0.5,2.5) -- (1.5, 1.5) -- (2.5,2.5) -- (2.5,0.5) -- (1.5, 1.5) --  (0.5,0.5);
+\draw[thick,-, red] (0.5,2.5) -- (1.5, 1.5) -- (2.5,2.5) node[right] {$H(y)$};
+\draw[thick,-, green] (0.5,0.5) -- (1.5, 1.5) -- (2.5,0.5) node[right] {$G(y)$};
+\draw[domain=0.3:2.7,smooth,variable=\x,black] plot ({\x},{wav_sl(\x,1.5,1.5)}) node[right] {$f(y)$};
+\end{tikzpicture}
+\end{figure}
+
+En el caso de la raíz cuadrada, vemos que en el 0 vamos a tener una tangente vertical y por lo tanto no vamos a encontrar nunca la constante $L$, ya que tiende a infinito en el cero. Es decir, podemos extraer varias observaciones:
+
+\begin{itemize}
+\item Lipschitz implica continua.
+\item Lipschitz \textbf{no implica} derivable (p.ej., $\abs{y}$).
+\item Derivable \textbf{no implica} Lipschitz global.
+\end{itemize}
+
+Parece que podemos encontrar alguna conexión entre Lipschitz y la derivada. Consideramos una $f$ derivable. Entonces 
+
+\[ f(y_1) - f(y_2) = f'(z) (y_1 - y_2) \]
+
+por el teorema del valor medio. Entonces, ese $f'(z)$ sería nuestra constante de Lipschitz $L$. Es decir, la condición de Lipschitz implica acotación de la derivada, que esa $L$ no se va a infinito.
+
 A partir de esta definición podemos llegar a otro nuevo teorema de existencia y unicidad
 
 \begin{theorem}[Teorema\IS de existencia y unicidad local] Sea $f(x,y)$ una función continua localmente Lipschitz con respecto a la segunda variable ($y$) en una región $A⊆ℝ^2$ abierta.
@@ -1061,17 +1099,73 @@ sudo rual completa esto
 
 Lo bueno del método de iteradas de Picard es que nos permitirá demostrar un lema adicional de continuidad con respecto a los datos.
 
-\begin{lemma}[Lema\IS de Gronwall] Dada una función 
+\begin{lemma}[Lema de Gronwall] Dada una función 
 
-\[ w(x)≤C+ \int_{x_0}^x k(s)w(s)\dif s \]
+\[ w(x)≤ h + \int_{x_0}^x k(s)w(s)\dif s \]
 
-entonces 
+con $k$ continua y mayor o igual que cero, entonces 
 
-\[ w(x) ≤ C\exp{\int_{x_0}^xk(s)\dif s} \]
+\[ w(x) ≤ h \exp{\int_{x_0}^xk(s)\dif s} \]
 
 \end{lemma}
 
-Aplicamos a nuestro querido lema:
+\begin{proof}
+
+Sea $v(x) = \int_{x_0}^x k(s)w(s)\dif s$. Entonces $v(x_0) = 0$, y  \[ v'(x) = k(x)w(x) \] por el Teorema Fundamental del Cálculo. Sustituyendo de nuevo
+
+\[ v'(x) ≤ k(x) (h + v(x)) = hk(x) + k(x) v(x) \]
+
+Nos queda un sistema
+
+\[ \begin{cases}
+v'(x) - k(x)v(x) ≤ hk(x) \\
+v(x_0) 
+\end{cases} \]
+
+Resolvemos aplicando un factor integrante $μ(x) ≥ 0$. Entonces
+
+\[ μ(x)v'(x) - k(x)μ(x)v(x) ≤ hk(x)μ(x) \] es la ecuación a plantear y nos queda
+
+\begin{gather*}
+μ' = -kμ \implies μ(x) = \exp -\int_{x_0}^x k(s) \dif s \\
+(μ(x)v(x))' ≤ h k(x) μ(x) \\
+(μ(x)v(x))' ≤ -hμ'(x) \\
+\int_{x_0}^x (μ(x)v(x))' ≤-h \int_{x_0}^x μ'(s) \dif s 
+μ(x)v(x) - \underbrace{μ(x_0) v(x_0)}_0 ≤ -h (μ(x) - \underbrace{μ(x_0)}_1)
+\end{gather*}
+
+En total, nos queda
+
+\begin{gather*}
+\exp\left(-\int_{x_0}^x k(s)\dif s\right) v(x) ≤ -h \left(\exp\left(-\int_{x_0}^x k(s)\dif s\right) - 1\right) \\
+w(x) - h ≤ v(x) ≤ h \left(\exp\left(-\int_{x_0}^x k(s)\dif s\right) - 1\right) \\
+w(x) ≤ h \exp\left(-\int_{x_0}^x k(s)\dif s\right) 
+\end{gather*}
+
+En un caso más general, si tengo que \[ w(x) ≤ h(x) + \int_{x_0}^x k(s)w(s)\dif s \] con $k$ continua y mayor o igual que cero, llegaríamos a la conclusión haciendo cuentas análogas de que
+
+\[ w(x) ≤ h(x) + \int_{x_0}^x h(s) k(s) e^{\int_{x_0}^xk(t)\dif t} \dif s \]
+
+\end{proof}
+
+Con este lema, podemos construir otro de continuidad respecto de los datos.
+
+\begin{lemma}[Continuidad respecto de los datos]
+
+Dados dos problemas
+
+\[ \begin{cases}
+y'(x) &= f(x,y(x)) \\
+y(x_0) &= y_0
+\end{cases}, \begin{cases}
+z'(x) &= f(x,z(x)) \\
+z(x_0) &= z_0
+\end{cases} \] con $f$ función Lipschitz, entonces 
+
+\[ \abs{y(x)-z(x)} ≤ \abs{y_0-z_0} M \] con $M∈ℝ$.
+
+Dicho de otra forma, datos próximos nos dan soluciones próximas.
+\end{lemma}
 
 \begin{proof}
 
@@ -1091,17 +1185,24 @@ tenemos que
 y(x) = y_0 + \int_{x_0}^{x} f(s,y(s)) \dif s \\
 z(x) = z_0 + \int_{x_0}^{x} f(s,z(s)) \dif s 
 \end{gather*}
-\todo[inline]{Completar. Completar mucho}
-Después de un chorrón de cuentas enorme llegamos a la expresión
+
+Entonces, si restamos y tomamos valores absolutos,
+
+\begin{multline*}
+ \abs{y(x) - z(x)} ≤ \abs{y_0-z_0} + \int_{x_0}^x \abs{f(s,y(s)) - f(s,z(s))} \dif s \\ \stackrel{\text{Lipschitz}}{≤}  \abs{y_0-z_0} + \int_{x_0}^x L_R\abs{y(s)-z(s)} \dif s \end{multline*}
+
+Podemos aplicar el Lema de Gronwall a esta ecuación:
 
 \[ \underbrace{\abs{y(x) - z(x)}}_{w(x)} ≤ \underbrace{\abs{y_0-z_0}}_{C} + \int_{x_0}^{x} \underbrace{L_R}_{k(s)} \underbrace{\abs{y(s)-z(s)}}_{w(x)} \dif s \]
 
-y aplicando el lema de Gronwall tenemos que
+y entonces tenemos que 
 
-\[ \abs{y(x)-z(x)} ≤ \abs{y_0-z_0}\exp \int_{x_0}^{x}L_R\dif S = \abs{y_0-z_0} M \]
+\[ \abs{y(x)-z(x)} ≤ \abs{y_0-z_0}e^{\int_{x_0}^{x}L_R\dif S} = \abs{y_0-z_0} M \]
 
-y tenemos la continuidad.
+donde $M$ es una constante, así que tenemos la continuidad.
 \end{proof}
+
+
 
 \end{document}
 
