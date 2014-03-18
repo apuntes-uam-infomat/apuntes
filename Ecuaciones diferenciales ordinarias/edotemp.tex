@@ -1152,7 +1152,7 @@ En un caso más general, si tengo que \[ w(x) ≤ h(x) + \int_{x_0}^x k(s)w(s)\
 
 Con este lema, podemos construir otro de continuidad respecto de los datos.
 
-\begin{lemma}[Continuidad respecto de los datos]
+\begin{theorem}[Continuidad\IS respecto de los datos]\label{thmContDatos}
 
 Dados dos problemas
 
@@ -1167,7 +1167,7 @@ z(x_0) &= z_0
 \[ \abs{y(x)-z(x)} ≤ \abs{y_0-z_0} M \] con $M∈ℝ$.
 
 Dicho de otra forma, datos próximos nos dan soluciones próximas.
-\end{lemma}
+\end{theorem}
 
 \begin{proof}
 
@@ -1204,9 +1204,165 @@ y entonces tenemos que
 donde $M$ es una constante, así que tenemos la continuidad.
 \end{proof}
 
+\subsection{Ejercicios}
+
+\begin{problem}[] Analiza la convergencia puntual y uniforme de las siguientes sucesiones de funciones.
+
+\ppart $f_n(x) = x^n -x^{n+1}$ en $[0,1]$.
+\ppart $f_n(x) = \frac{e^x}{x^n}$ en $(1,∞)$.
+\ppart $f_n(x) = x^n - x^{2n}$ en $[0,1]$.
+\ppart $f_n(x) = n \left(\sqrt{x + \frac{1}{n}} - \sqrt{x}\right)$ en $x > 0$.
+\ppart $f_n(x) = \sin\left(\frac{x}{n}\right)$ con $x∈ℝ$.
+\solution
+
+\spart Buscamos primero la convergencia puntual, y tenemos que 
+
+\[ \lim_{n\to ∞} x^n-x^{n+1} = 0 \] por lo que converge puntualmente.
+
+Estudiamos ahora la convergencia uniforme con el límite
+
+\[ \lim_{n\to ∞} \max_{x∈[0,1]} \abs{f_n(x) - 0} = \lim_{n\to ∞} \max_{x∈[0,1]} x^n - x^{n+1} \]
+
+Para hallar el máximo, derivamos e igualamos a cero:
+
+\[ nx^{n-1} - (n+1){x^(n-1)} = x^{n-1}(n-(n+1)x) = 0 \] y nos queda 
+
+\[ \lim_{n\to ∞} \max_{x∈[0,1]} f_n(x) = f_n\left(\frac{n}{n+1}\right) = \underbrace{\frac{1}{\left(1+\frac{1}{n}\right)^n}}_{\convs\frac{1}{e}} \cdot \underbrace{\frac{1}{n+1}}_{\convs 0} = 0 \] y por lo tanto hay convergencia uniforme.
+
+\spart Puntualmente y con $x>1$
+
+\[ \lim_{n\to ∞} x^{-n} e^x = 0 \]
+
+Estudiamos la convergencia uniforme
+
+\[ \lim_{n\to ∞} \sup_{x>1} \abs{f_n(x)} = \lim_{n\to ∞} \sup_{x>1} x^{-n} e^x \]
+
+Derivamos e igualamos a cero
+
+\[ e^xx^{-n-1}(x-n) = 0 \iff x=n \]
+
+y evaluando
+
+\[ \lim_{n\to ∞} \eval{f_n(x)}_{x=n} = \lim_{n\to ∞} \left(\frac{e}{n}\right)^n = 0 \]
+
+Ojo, porque en este caso no tenemos convergencia uniforme. No hemos demostrado que en $x=n$ haya un máximo: de hecho, es un mínimo. También tendríamos que tener cuidado con el supremo y no el máximo, ya que estamos en un conjunto no acotado.
+
+\spart Convergencia puntual. Cero. Uniforme: otra vez lo del límite, puede poner máximo.\footnote{Esta mierda de ejercicio que estoy copiando está patrocinado por la falta de sueño por culpa de redes.} Deriva. Saca algo. Es un máximo. Evalúa, distinto de cero, no hay convergencia uniforme.
+
+\spart Hay que hacer el conjugado... se va a algún sitio y $\frac{1}{2\sqrt{x}} = f(x)$ es el límite puntual. Vamos a la uniforme y miramos si converge al límite puntual
+
+\[ \lim_{n\to ∞} \sup_{x∈(0,∞)} \abs{f_n(x) - f(x)} \]
+
+pero ese uno entre dos raíz de equis se va a menos infinito, y como tenemos hun balor havzolutoh me ahorro las dos caras de cuentas de derivadas de Azorero. Pero dice que no, que comprobemos en $(1/2, + ∞)$.
+
+\spart Parece que sí hay convergencia puntual. No hay uniforme en todo $ℝ$ ya que habrá algún valor en el que el seno valga uno. Sin embargo, en un intervalo acotado sí habrá convergencia uniforme.
+\end{problem}
 
 
-CLASE DEL LUNES. No se si ya está copiado..
+\begin{problem} Determinar para qué valores de $α≥0$ se satisface una condición de Lipschitz con respecto de $y$ siendo 
+
+\[ f(x) = \abs{y}^α \]
+
+\solution 
+
+Es trivial ver que para $α=0,1$, se cumple. Para valores mayores que 1, la derivada estará acotada si estudiamos la condición en intervalos acotados. Si $α<1$, tendremos problemas en el 0.
+
+La filosofía es que raíces malas en el 0, potencias malas en el infinito.
+
+Supongamos $y>0$, entonces $f'(y) = α y^{α-1}$. Para $α>1$, 
+
+\[ \abs{f(y_1)-f(y_2)} \stackrel{TVM}{=} \abs{f'(z)} \abs{y_1-y_2} = αz^{α-1} \abs{y_1-y_2} \stackrel{?}{<} L \abs{y_1-y_2} \]
+
+y entonces debe ser $αz^{α-1}<L$, es decir, tenemos que tener una cuota superior para $y_2$.
+\end{problem}
+
+
+\subsection{Diferenciabilidad con respecto a los datos}
+
+Hasta ahora hemos estado viendo problemas de la forma
+
+\[ \begin{cases}
+y' = f(x,y) \\
+y(x_0) = t
+\end{cases} \]. 
+
+En realidad, al resolver, obtenemos funciones $y(x,t)$, una familia de soluciones que dependen del valor inicial de $t$. 
+
+Sabemos que si $f(x,y)$ es continua y localmente Lipschitz en un abierto $A⊆ℝ^2$ con $(x_0,t)∈A$, entonces tenemos existencia y unicidad local.
+
+Por otro lado, también demostramos un resultado de continuidad con respecto a los datos. Es decir, $y(x,t)$ es continua con respecto a $t$ (ver lema \ref{thmContDatos}). 
+
+El paso siguiente es ver qué ocurre cuando $f$ es algo \textit{mejor} que Lipschitz: $y(x,t)$ será también \textit{mejor}. Veamos el teorema:
+
+\begin{theorem}[Diferenciabilidad\IS respecto a los datos] Si $f$ es una función continua en $x$ y además $C^1$ con respecto a la segunda variable, entonces la solución $y(x,t)$ es derivable respecto de $t$.
+\end{theorem}
+
+\begin{proof} Fijamos $t$, y estudiamos el límite que representa la derivada
+
+\[ \lim_{h\to 0} \frac{y(x,t+h) - y(x,t)}{h} = \lim_{h\to 0} P_h(x) \]
+
+Dicho de otra forma,
+
+\[ P_h(x) = \frac{1}{h}\left((t+h) + \int_{x_0}^x f(s, y(s, t+h)\dif s - t - \int_{x_0}^x f(s, y(s, t)\dif s\right) \] 
+que no es más que la reformulación usando la forma integral de $y$. Si seguimos operando
+
+\[ P_h(x) = 1 + \int_{x_0}^x\frac{1}{h}\left(f(s, y(s,t+h)) - f(s,y(s,t+h))\right)\dif s \]
+
+Si aplicamos el teorema del valor medio
+
+\[ P_h(x) = 1 + \int_{x_0^x} \underbrace{\pd{f}{y}(s,z(s,h))}_{F}\underbrace{\frac{1}{h} (y(s,t+h) - y(s,t))}_{P_h(x)} \dif s \]
+
+con $z(s,h)$ un valor intermedio entre $y(s,t)$ e $y(s,t+h)$, que tiende a $y(s,t)$ cuando $h\to 0$. Llamamos $F$ a la derivada parcial para simplificar, y además vemos que nos vuelve a salir $P_h$. Reescribimos
+
+\[ P = 1 + \int_{x_0}^{x} FP \dif s \]
+y vemos que estamos antes la formulación integral del siguiente problema
+
+\[ \begin{cases}
+P' = FP \\
+P(x_0) = 1
+\end{cases} \implies P = e^{\int_{x_0}^x F\dif s} \]
+
+Calculamos ahora el límite de $P_h$ cuando $h\to 0$. El punto delicado es cómo pasar el límite de fuera de la integral a dentro. Asumiendo que se puede hacer sin problemas, quedaría
+
+\[ \lim_{h\to 0} P_h(x) = \exp{\int_{x_0}^x \pd{f}{y}(s,y(s,t)) \dif s} = \pd{y}{t} \]
+
+Para poder pasar el límite, tenemos que tener convergencia uniforme. Como estamos trabajando en un conjunto compacto con una función continua, la función es uniformemente continua , tendremos esa convergencia y podremos pasar el límite dentro.
+
+\end{proof}
+
+\subsection{Resultados de prolongabilidad}
+
+Queremos explorar hasta dónde llegan las soluciones que obtenemos y el tipo de desastres que podemos encontrar. Tenemos el problema de siempre,
+
+\[ \begin{cases}
+y' = f(x,y) \\
+y(x_0) = t
+\end{cases} \], con $f(x,y)$ es continua y localmente Lipschitz en un abierto $A⊆ℝ^2$ con $(x_0,t)∈A$, entonces tenemos existencia y unicidad local.
+
+Sabemos varias cosas:
+
+\begin{itemize}
+\item \textbf{Existencia local} $∃α>0, y(x)$ solución definida en $[x_0,x_0 + α]$.
+\item \textbf{Unicidad} Si tenemos dos soluciones $y_1,y_2$ definidas en los intervalos $[x_0, x_0 + α_{1/2}]$ respectivamente, entonces ambas son iguales en el intervalo $[x_0, x_0 + \min \{α_1,α_2\}]$.
+\end{itemize}
+
+La pregunta es, ¿hay una solución maximal, que no se pueda extender más? Consideremos el conjunto
+
+\[ S= \{ α∈ℝ \tq ∃ y(x) \text{ solución en } [x_0,x_0+α] \} \]
+
+Buscamos $α_{max} = \sup S$, que nos dará el intervalo maximal $[x_0, x_0 + α_{max})$. Es importante tener en cuenta que el intervalo está abierto por la derecha. 
+
+Lo primero que tenemos que considerar es que en el intervalo maximal no puede haber dos soluciones distintas que arranquen del mismo punto. 
+
+Si nos salimos fuera del conjunto $A$ en el que la función es Lipschitz, podemos tener un desastre. ¿Qué puede ocurrir dentro?
+
+Podemos tener una solución que \textit{se pare antes}, que oscile infinitamente, que llegue al borde o que explote.\todo{Dibujitos}
+
+El teorema nos dice que las primeras dos cosas no pueden ocurrir, y que las dos segundas sí. Esta cosa tan vaga la formalizamos viendo que toda solución se escapa de cualquier conjunto compacto estrictamente contenido en $A$ y que contenga al dato inicial. 
+
+\begin{theorem}
+Para todo compacto $K\subset A$ tal que $(x_0,y_0)∈K$ podemos encontrar $x^\ast ∈[x_0,x_0 + α_{max}]$ tal que $(x^\ast, y(x^\ast)) ∉ K$.
+\end{theorem}
 
 \begin{theorem}
 \[\left\{\begin{array}{cc}
@@ -1333,80 +1489,6 @@ El dibujo de los triángulos te lo dejo a ti Rual xD
 Haciendo el apaño de los triángulos llegamos a un intervalo $\left[0,\frac{1}{2}\right]$
 
 Vamos a ver un ejemplo más sencillo por el que tendríamos que haber empezado (tal vez) q estoy muy cansado como para copiar........
-
-
-\subsection{Ejercicios}
-
-\begin{problem}[] Analiza la convergencia puntual y uniforme de las siguientes sucesiones de funciones.
-
-\ppart $f_n(x) = x^n -x^{n+1}$ en $[0,1]$.
-\ppart $f_n(x) = \frac{e^x}{x^n}$ en $(1,∞)$.
-\ppart $f_n(x) = x^n - x^{2n}$ en $[0,1]$.
-\ppart $f_n(x) = n \left(\sqrt{x + \frac{1}{n}} - \sqrt{x}\right)$ en $x > 0$.
-\ppart $f_n(x) = \sin\left(\frac{x}{n}\right)$ con $x∈ℝ$.
-\solution
-
-\spart Buscamos primero la convergencia puntual, y tenemos que 
-
-\[ \lim_{n\to ∞} x^n-x^{n+1} = 0 \] por lo que converge puntualmente.
-
-Estudiamos ahora la convergencia uniforme con el límite
-
-\[ \lim_{n\to ∞} \max_{x∈[0,1]} \abs{f_n(x) - 0} = \lim_{n\to ∞} \max_{x∈[0,1]} x^n - x^{n+1} \]
-
-Para hallar el máximo, derivamos e igualamos a cero:
-
-\[ nx^{n-1} - (n+1){x^(n-1)} = x^{n-1}(n-(n+1)x) = 0 \] y nos queda 
-
-\[ \lim_{n\to ∞} \max_{x∈[0,1]} f_n(x) = f_n\left(\frac{n}{n+1}\right) = \underbrace{\frac{1}{\left(1+\frac{1}{n}\right)^n}}_{\convs\frac{1}{e}} \cdot \underbrace{\frac{1}{n+1}}_{\convs 0} = 0 \] y por lo tanto hay convergencia uniforme.
-
-\spart Puntualmente y con $x>1$
-
-\[ \lim_{n\to ∞} x^{-n} e^x = 0 \]
-
-Estudiamos la convergencia uniforme
-
-\[ \lim_{n\to ∞} \sup_{x>1} \abs{f_n(x)} = \lim_{n\to ∞} \sup_{x>1} x^{-n} e^x \]
-
-Derivamos e igualamos a cero
-
-\[ e^xx^{-n-1}(x-n) = 0 \iff x=n \]
-
-y evaluando
-
-\[ \lim_{n\to ∞} \eval{f_n(x)}_{x=n} = \lim_{n\to ∞} \left(\frac{e}{n}\right)^n = 0 \]
-
-Ojo, porque en este caso no tenemos convergencia uniforme. No hemos demostrado que en $x=n$ haya un máximo: de hecho, es un mínimo. También tendríamos que tener cuidado con el supremo y no el máximo, ya que estamos en un conjunto no acotado.
-
-\spart Convergencia puntual. Cero. Uniforme: otra vez lo del límite, puede poner máximo.\footnote{Esta mierda de ejercicio que estoy copiando está patrocinado por la falta de sueño por culpa de redes.} Deriva. Saca algo. Es un máximo. Evalúa, distinto de cero, no hay convergencia uniforme.
-
-\spart Hay que hacer el conjugado... se va a algún sitio y $\frac{1}{2\sqrt{x}} = f(x)$ es el límite puntual. Vamos a la uniforme y miramos si converge al límite puntual
-
-\[ \lim_{n\to ∞} \sup_{x∈(0,∞)} \abs{f_n(x) - f(x)} \]
-
-pero ese uno entre dos raíz de equis se va a menos infinito, y como tenemos hun balor havzolutoh me ahorro las dos caras de cuentas de derivadas de Azorero. Pero dice que no, que comprobemos en $(1/2, + ∞)$.
-
-\spart Parece que sí hay convergencia puntual. No hay uniforme en todo $ℝ$ ya que habrá algún valor en el que el seno valga uno. Sin embargo, en un intervalo acotado sí habrá convergencia uniforme.
-\end{problem}
-
-
-\begin{problem} Determinar para qué valores de $α≥0$ se satisface una condición de Lipschitz con respecto de $y$ siendo 
-
-\[ f(x) = \abs{y}^α \]
-
-\solution 
-
-Es trivial ver que para $α=0,1$, se cumple. Para valores mayores que 1, la derivada estará acotada si estudiamos la condición en intervalos acotados. Si $α<1$, tendremos problemas en el 0.
-
-La filosofía es que raíces malas en el 0, potencias malas en el infinito.
-
-Supongamos $y>0$, entonces $f'(y) = α y^{α-1}$. Para $α>1$, 
-
-\[ \abs{f(y_1)-f(y_2)} \stackrel{TVM}{=} \abs{f'(z)} \abs{y_1-y_2} = αz^{α-1} \abs{y_1-y_2} \stackrel{?}{<} L \abs{y_1-y_2} \]
-
-y entonces debe ser $αz^{α-1}<L$, es decir, tenemos que tener una cuota superior para $y_2$.
-\end{problem}
-
 
 \end{document}
 
