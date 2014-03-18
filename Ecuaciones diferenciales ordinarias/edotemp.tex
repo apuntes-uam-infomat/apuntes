@@ -1361,17 +1361,14 @@ Podemos tener una solución que \textit{se pare antes}, que oscile infinitamente
 El teorema nos dice que las primeras dos cosas no pueden ocurrir, y que las dos segundas sí. Esta cosa tan vaga la formalizamos viendo que toda solución se escapa de cualquier conjunto compacto estrictamente contenido en $A$ y que contenga al dato inicial. 
 
 \begin{theorem}
-Para todo compacto $K\subset A$ tal que $(x_0,y_0)∈K$ podemos encontrar $x^\ast ∈[x_0,x_0 + α_{max}]$ tal que $(x^\ast, y(x^\ast)) ∉ K$.
-\end{theorem}
+Consideramos el problema el problema
+\[ \begin{cases}
+y' &=f(x,y) \\ 
+y(x_0)&=y_0
+\end{cases} \]
+con $f$ es continua y localmente Lipschitz respecto de $y$ en un abierto $A\subset \real^2$ con $(x_0,y_0)\in A$. 
 
-\begin{theorem}
-\[\left\{\begin{array}{cc}
-y' &=f(x,y)\\ y(x_0)&=y_0\end{array}
-\right.\]
-
-f es continua y localmente Lipschitz respecto y en un abierto $A\subset \real^2$ con $(x_0,y_0)\in A$. 
-
-\textbf{Entonces} para cualquier compacto K con $(x_0,y_0)\in K\subset A$, podemos encontrar $x^{\ast}\in[x_0,x_0+\alpha_{max})$ tal que $(x^{\ast},y(x^{\ast}))\in A-K$.
+Entonces para cualquier compacto K con $(x_0,y_0)\in K\subset A$, podemos encontrar $x^{\ast}\in[x_0,x_0+\alpha_{max})$ tal que $(x^{\ast},y(x^{\ast}))\in A-K$.
 
 
 \end{theorem}
@@ -1490,5 +1487,150 @@ Haciendo el apaño de los triángulos llegamos a un intervalo $\left[0,\frac{1}{
 
 Vamos a ver un ejemplo más sencillo por el que tendríamos que haber empezado (tal vez) q estoy muy cansado como para copiar........
 
+\todo[inline]{Quince primeros minutos de clase faltan aquí}
+
+\begin{example}
+Veamos el problema \[ \begin{cases} y' &= y^{2/3} \\ y(0) &= 0 \end{cases} \]
+
+No podemos aplicar directamente el teorema de existencia y unicidad: la derivada no está acotada alrededor de 0 y por lo tanto no es localmente Lipschitz en ese punto. Si nos dijeran que $y(0) = ε ≠ 0$ sí sería localmente Lipschitz en un entorno pequeño del punto.
+
+Como no podemos aplicar el teorema, tenemos que estudiar el caso más detenidamente. En primer lugar, vemos que $y\equiv 0$ es solución. También podemos resolver como una ecuación de variables separadas:
+
+\[ \int_0^x \frac{y(s)}{y^{2/3}(s)} \dif s = \int_0^x \dif s = x \] sobre la que podemos hacer un cambio de variables $y(s) = t$, $y'(s) \dif s = \dif t$ y entonces
+
+\[ \int_{y(0)}^{y(x)} \frac{\dif t}{t^{2/3}} = \eval{t^{1/3}{\frac{1}{3}}}_{t=y(0)=0}^{y(x)} = 3y^{1/3}(x) 
+\] 
+y por lo tanto \[ y(x) = \left(\frac{x}{3}\right)^3 \] es otra solución.
+
+¿Hay alguna más? Efectivamente, de hecho podemos combinar las dos:
+
+\[ y(x) = \begin{cases}
+0 & x ≤ 0 \\
+\left(\frac{x}{3}\right)^3 & x > 0
+\end{cases}\quad \text{\'o} \quad y(x) = \begin{cases}
+\left(\frac{x}{3}\right)^3 & x ≤ 0 \\
+0 & x ≤ 0\end{cases} \]
+
+E incluso podemos conseguir infinitas soluciones combinando "desplazamientos", como por ejemplo el de la figura \ref{imgInfSoluciones}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-3,0) -- (3,0);
+\draw[->] (0,-3) -- (0,3);
+
+\draw[thick,domain=-2.8:1,smooth,variable=\x,blue!80] plot ({\x}, {0});
+\draw[thick,domain=1:2.8,smooth,variable=\x,blue!80] plot ({\x}, {(\x-1)*(\x-1)*(\x-1)/3});
+\end{tikzpicture}
+\label{imgInfSoluciones}
+\caption{Una solución posible trasladando otra con dato inicial $y(1) = 0$}
+\end{figure}
+\end{example}
+
+Sin embargo, no tiene por qué ocurrir siempre que se nos descuadre todo al no poder aplicar la condición de Lipschitz. Veamos otro ejemplo
+
+\begin{example}
+ \[ \begin{cases} y' &= (y-x)^{2/3} \\ y(x_0) &= y_0 \end{cases} \]
+ 
+ En este caso los problemas aparecen cuando $y=x$. Es decir, que podemos aplicar el teorema de existencia y unicidad local cuando $y_0 ≠ x_0$. 
+ 
+ Supongamos, por poner las cosas interesantes, que $y(1) = 1$. Hay que estudiar este caso directamente.
+ 
+ Podemos resolverlo a través del teorema de la función implícita. Sea $w(x) = y - x$. Haciendo las sustituciones
+ 
+ \begin{gather*}
+ y(x) = w(x) + x \\
+ y' = w' + 1
+ \end{gather*} 
+ 
+ convertimos el problema en 
+ 
+ \[ \begin{cases}
+ w'+1 = w^{2/3} \\
+ w(1)  = 0
+ \end{cases} \]
+ 
+ Resolviendo como ecuación de variables separadas de la misma forma que en el anterior ejemplo, llegamos a la integral
+ 
+ \[ \int_{0}^{w(x)}  \frac{\dif t}{t^{2/3} - 1} \]
+ 
+ Y ahí está la solución, si pudiésemos resolver explícitamente la integral y despejar $w$. Pero podemos usar el teorema de la función implícita. Tenemos una función $F$ definida como
+ 
+ \[ F(x,w) = (x-1) - \int_{0}^{w(x)}  \frac{\dif t}{t^{2/3} - 1} 
+ \] 
+ con $F(1,0) = 0$. ¿Podemos despejar $w(x)$? Para saberlo necesitamos comprobar que la derivada es distinta de cero:
+ 
+ \[ \pd{F}{w} = - \eval{\frac{1}{w^{2/3} - 1}}_{(x,w) = (1,0)} = 1 ≠ 0 \] y por lo tanto el TFI nos dice que existe $w(x)$ despejable a partir de $F$ y que además es única.
+\end{example}
+
+En resumidas cuentas, cuando no se cumplen las hipótesis del teorema puede pasar cualquier cosa. Veamos otro ejemplo bastante artificial pero interesante.
+
+\begin{example}
+\[ \begin{cases}
+y' &= \frac{\sqrt{1-y^2}}{1+x^2} \\
+y(0) = \frac{1}{2}
+\end{cases} \]
+
+La ecuación nos restringe $y$ al intervalo $[-1,1]$ para que la raíz cuadrada esté definida. Y de hecho, en esos dos extremos del intervalo la derivada será cero así que tendremos un problema. Por otra parte, $y\equiv \pm 1$ son soluciones de la ecuación (no del problema entero).
+
+La solución es
+
+\[ y(x) = \sin \left(\frac{1}{1-x} - 1 + \frac{π}{4}\right) 
+\]
+que no es más que una traslación de la función $\sin\frac{1}{1-x}$, cuya gráfica se ve en la figura \ref{imgSenoOsc}. En $1$ tenemos un montón de oscilaciones, por lo tanto el intervalo maximal de la solución será $[0, 1)$.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/SenoOscilaciones.png}
+\caption{$y(x) = \sin\frac{1}{1-x}$}
+\label{imgSenoOsc}
+\end{figure}
+
+\end{example}
+
+\begin{example} 
+
+\[ \begin{cases}
+y' = \dfrac{x^2 + 4y^2 + xy}{1 + x^2 + y^2} \\
+y(x_0) = y_0
+\end{cases} \]
+
+Se verifica condición de Lipschitz local y por lo tanto tenemos existencia y unicidad local para cualquier punto $(x_0,y_0)$. ¿Hasta dónde llega la solución?
+
+Podemos aplicar uno de los tres casos que hemos visto. Los dos polinomios son del mismo orden, por lo tanto el lado derecho estará acotado y tendremos el primer caso, de tal forma que tenemos existencia global.
+
+Vamos a demostrar mejor la existencia de esa cota.
+
+\begin{multline*}
+ \dfrac{x^2 + 4y^2 + xy}{1 + x^2 + y^2} ≤ \dfrac{x^2 + y^2 + 3y^2 + \abs{xy}}{1 + x^2 + y^2} ≤ \dfrac{1 + x^2 + y^2 + 3 y^2 + xy}{1 + x^2 + y^2} =\\ =
+  1 + \frac{3y^2 + \abs{xy}}{1+x^2+y^2} ≤ 1 + \frac{3(1+x^2+y^2) + \abs{xy}}{1+x^2+y^2} = 4 + \frac{\abs{xy}}{1+x^2+y^2} \end{multline*}
+
+Por último, viendo que $0≤(x-y)^2 = y^2+x^2 - 2xy \implies \dfrac{x^2+y^2}{2} ≥ xy$ nos queda que 
+
+\[ 
+	4 + \frac{\abs{xy}}{1+x^2+y^2} ≤ 4 + \frac{x^2+y^2}{2(1+x^2+y^2)} ≤ 4 + \frac{1 x^2+y^2}{2(1+x^2+y^2)} = 4 + \frac{1}{2} 
+\]
+y, efectivamente, nos queda una cota.
+
+
+\end{example}
+
+En muchos casos nos encontraremos cálculos complicados, y en estos casos podemos usar argumentos de comparación con problemas más simples. Veamos cómo hacerlo.
+
+\begin{example}
+\[ \begin{cases} 
+y' = y^2 +x^2 \\
+y(0) = 1
+\end{cases} \]
+
+A pesar de la sencillez de la ecuación, resolverla será difícil. Podemos explorar ecuaciones similares. Por ejemplo, viendo que el dato inicial nos lo dan en $x=0$, podemos pensar que la ecuación deberá parecerse mucho a 
+
+\[ \begin{cases} 
+z' = z^2 \\ 
+z(0) = 1
+\end{cases} \].
+
+Vemos que la gráfica de $z$ se mantendrá por debajo todo el tiempo, ya que $z' < y'$ en todo caso. Como la solución del segundo problema es $z(t) = \dfrac{1}{1-t}$, $y$ también tendrá una asíntota vertical en $t=1$ o incluso antes. Por lo tanto, el intervalo maximal a la derecha para $y(t)$ está contenido en $(0,1)$.
+\end{example}
 \end{document}
 
