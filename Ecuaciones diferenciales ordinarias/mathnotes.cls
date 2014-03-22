@@ -4,11 +4,12 @@
 \LoadClass[a4paper, 12pt]{article}
 
 \RequirePackage[spanish]{babel}
-\RequirePackage[utf8]{inputenc}
 \RequirePackage{etoolbox}
 \RequirePackage{makeidx}
 \RequirePackage{fancyhdr}
 \RequirePackage{chngcntr}
+\RequirePackage{hyperref}
+\RequirePackage{MathUnicode}
 
 \AfterEndPreamble{
 	\maketitle
