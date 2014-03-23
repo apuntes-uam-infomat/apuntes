@@ -3,7 +3,7 @@
 
 \LoadClass[a4paper, 12pt]{article}
 
-\RequirePackage[spanish]{babel}
+\RequirePackage[spanish,es-noquoting,es-noshorthands]{babel}
 \RequirePackage{etoolbox}
 \RequirePackage{makeidx}
 \RequirePackage{fancyhdr}
