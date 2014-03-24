@@ -11,6 +11,12 @@
 \RequirePackage{hyperref}
 \RequirePackage{MathUnicode}
 
+\hypersetup{
+  colorlinks,
+  citecolor=black,
+  linkcolor=DarkBlue,
+  urlcolor=DarkBlue}
+
 \AfterEndPreamble{
 	\maketitle
 	\newpage
@@ -19,8 +25,8 @@
 }
 
 \pagestyle{fancy}
-\lhead{\color{DarkBlue}{\thetitle}}
-\rhead{\color{DarkBlue}{\theauthor}}
+\lhead{\color{DarkBlue}{\rightheader}}
+\rhead{\color{DarkBlue}{\leftheader}}
 \cfoot{\thepage}
 \setlength{\headheight}{16pt}
 \patchcmd{\headrule}{\hrule}{\color{DarkBlue}\hrule}{}{}
