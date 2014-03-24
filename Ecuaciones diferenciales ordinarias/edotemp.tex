@@ -741,15 +741,15 @@ sudo rual completa esto
 
 Lo bueno del método de iteradas de Picard es que nos permitirá demostrar un lema adicional de continuidad con respecto a los datos.
 
-\begin{lemma}[Lema de Gronwall] Dada una función 
+\begin{theorem}[Lema\IS de Gronwall] Dada una función 
 
 \[ w(x)≤ h + \int_{x_0}^x k(s)w(s)\dif s \]
 
 con $k$ continua y mayor o igual que cero, entonces 
 
 \[ w(x) ≤ h \exp{\int_{x_0}^xk(s)\dif s} \]
-
-\end{lemma}
+\label{thmGronwall}
+\end{theorem}
 
 \begin{proof}
 
@@ -1391,6 +1391,120 @@ Queremos hallar el $R(h)$ óptimo, así que derivando y operando obtenemos que
 Tomemos ahora la indicación del problema. Suponemos que $b>r^{-3/4}$. ¿Qué estimación podemos obtener a partir de esto? 
 
 \end{example}
+
+\begin{example}[Problema 16]
+Tenemos 
+
+\[ \begin{cases}
+y' = \frac{y}{1+x^2} + e^{-y^2} \\
+y(0) = 10
+\end{cases},\quad 
+\begin{cases}
+z' = \frac{z}{1+x^2} \\
+z(0) = 10
+\end{cases} \]
+
+Queremos demostrar que $0< y(x) - z(x) ≤ e^{-100} (e^x-1)$.
+
+En el caso de la primera ecuación, vemos que $y'≥0$, así que $y(x) ≥ 10\,∀x ≥ 0$. Además, $f(x,y)$ es continua en $ℝ^2$. Para comprobar la condición de Lipschitz, acotamos
+
+\[ \abs{\pd{f}{y}} = \abs{\frac{1}{1+x^2}+e^{y^2}(-2y)} ≤ \frac{1}{1+x^2} + 2\abs{y} e^{-y^2} ≤ 1+2\abs{y} 
+\] 
+y tenemos condición de Lipschitz local, por lo que tenemos existencia y unicidad local. Además, también podemos acotar el lado derecho de la ecuación por un término lineal:
+
+\[ \abs{f(x,y)} ≤ \abs{\frac{y}{1+x^2} + e^{-y^2}} ≤ \frac{\abs{y}}{1+x^2} + e^{-y^2} ≤ \abs{y} + 1 
+\]
+lo que, junto con el segundo teorema de prolongabilidad, tenemos existencia en $[a,b]$  $∀a,b$.
+
+Pero además, podríamos haber logrado una cota mejor para $2\abs{y} e^{-y^2}$. Sabiendo que es una función continua y que tiende a 0 cuando $y\to \infty$, podemos decir que existe un máximo $C$. Acotando esa parte por una constante tendríamos Lipschitz global y existencia en todo $ℝ$ de la solución.
+
+Pasamos ahora al segundo problema. Es una ecuación de variables separadas, así que integramos (podemos pasar la $z$ dividiendo ya que es siempre positiva):
+
+\begin{align*}
+\frac{z'}{z} &= \frac{1}{1+x^2} \\
+\eval{\log z(s)}_{s=0}^x &= \eval{\arctan s}_{s=0}^x \\
+\log z(x) - \log 10 &= \arctan x \\
+z(x) &= 10 e^{\arctan x}
+\end{align*}
+
+De hecho, si aplicamos esto al primer problema, podemos decir que
+
+\begin{align*}
+y' &>  \frac{y}{1+x^2} \\
+\frac{y'}{y} &> \frac{1}{1+x^2} \\
+y(x) &> 10 e^{\arctan x} = z(x)
+\end{align*}
+
+Tenemos ya la primera parte de la desigualdad, $y(x) - z(x) > 0$. Pasamos a demostrar la segunda parte. Sabemos que
+\begin{gather*}
+y(x) = 10 + \int_0^x \frac{y(s)}{1+s^2} + e^{-y^2(s)} \dif s \\
+z(x) = 10 + \int_0^x \frac{z(s)}{1+s^2} \dif s \\
+y(x) - z(x) = \int_0^x \frac{y(s)-z(s)}{1+s^2} + e^{-y^2(s)} \dif s
+\end{gather*}.
+
+Transformamos la ecuación para aplicar el lema de Gronwall (\ref{thmGronwall}):
+
+\( \label{eqProb16}
+y(x) - z(x) = \int_0^x e^{-y^2(s)} \dif s + \int_0^x \frac{y(s)-z(s)}{1+s^2}\dif s ≤ e^{-100} + \int_0^x \frac{y(s)-z(s)}{1+s^2}\dif
+\)
+Tomando $k(s) = \frac{1}{1+s^2}$, nos quedaría que 
+\[ 
+y(x) - z(x) ≤ e^{-100}e^{\int_0^x\frac{1}{1+s^2}\dif s} = e^{-100} e^{\arctan x} 
+\].
+
+Comparamos con lo que nos pedían: hemos llegado a algo parecido pero no a lo mismo. De hecho, cuando $x\to 0$ la exponencial es mejor en la desigualdad que nos daban, y es que el Lema de Gronwall nos va a dar siempre el mismo resultado: cuando $x\to 0$, la integral se va a cero y por lo tanto la cota se quedaría en $e^{-100}$.
+
+Lo que haremos será parar antes de la primera estimación, en \eqref{eqProb16}, y ver qué cuentas hacíamos en la demostración del lema de Gronwall para no perder precisión. Llamamos $w=y-z$, y 
+
+\[ \int_0^x\frac{w(s)}{1+s^2}\dif s \equiv Φ(x) 
+\]. 
+
+Operando:
+
+\begin{gather*}
+Φ'(x) = \frac{w(x)}{1+x^2} ≤ \frac{1}{1+x^2}\left(e^{-100} x + Φ(x)\right) \\
+Φ'(x) - \frac{1}{1+x^2}Φ(x) ≤ e^{-100}\frac{x}{1+x^2} 
+\end{gather*}
+
+Tratamos de resolver esa ecuación diferencial usando un factor integrante $μ≥0$:
+
+\begin{align*}
+ μΦ' - \frac{μ}{1+x^2}Φ &≤ e^{-100}μ\frac{x}{1+x^2} \\
+ μΦ' + μ'Φ &= μΦ' - \frac{μ}{1+x^2}Φ \\
+ μ' &= \frac{-μ}{1+x^2} \\
+ \cdots & \cdots \\
+ μ(x) &= e^{-\arctan x} \\
+\left(e^{-\arctan x}Φ\right)' & ≤ e^{-100} \frac{e^{-\arctan x}x}{1+x^2} \\
+\int_0^x \left(e^{-\arctan s}Φ(s)\right)'\dif s &≤ e^{-100}\int_0^x \frac{e^{-\arctan s}s}{1+s^2} \dif s \\
+e^{-\arctan x} Φ(x) - 0 &≤ e^{-100} \left( \eval{se^{-\arctan s}}_{s=0}^x + \int_0^x e^{-\arctan s} \dif s \right) \\
+Φ(x) &≤ e^{-100}\left(-x+e^{\arctan x}\int_0^2 e^{-\arctan s}\dif s\right)
+\end{align*}
+
+Metiendo ahí la estimación de $w≤e^{-100}x + Φ(x)$ (que no sé de dónde puñetas ha salido) tenemos que
+
+\[ w(x) ≤ e^{-100} \left(e^{\arctan x} \int_0^x e^{-\arctan s} \dif s\right) \]
+
+¿Cómo llegamos a que  $e^{\arctan x} \int_0^x e^{-\arctan s} \dif s < e^x -1$? Vemos que para $x∈[0,1]$, $e^{\arctan x} < e^x$ y que como $e^{-\arctan s} < 1$, entonces $\int_0^x e^{-\arctan s} < x$. Sin embargo, esta estimación no es válida. Vamos por otra parte.
+
+Consideramos la función \[ u(x) = e^{\arctan x} \int_{0}^{x}e^{-\arctan s}\dif \]. Si derivamos, 
+
+\begin{gather*}
+ u' = \frac{e^{\arctan x}}{1+x^2}\int_0^x e^{-\arctan s}\dif s + e^{\arctan x}e^{-\arctan x} \\
+ u' = \frac{u}{1+x^2} + 1 ≤ u+1
+ \end{gather*}
+ 
+Resolvemos esta ecuación diferencial con el valor inicial $u(0) = 0$ y nos queda que $u(x) ≤ e^x-1$, y tendríamos resuelto el problema. Pero hemos llegado a prácticamente la misma ecuación que antes, quitándonos el $e^{-y^2}$. Y es que efectivamente, si restamos
+
+\[ (y-z)' = \frac{y-z}{1+x^2} + e^{-y^2} \stackrel{y ≥ 10}{≤} \frac{y-z}{1+x^2} + e^{-100}  ≤ (y-z) + e^{-100} 
+\]
+y ahora resolviendo \[ \begin{cases} w' ≤ w + e^{-100} \\ w(0) = 0 \end{cases} \implies w(x) ≤ e^{-100}\left(e^x - 1\right) \].
+\end{example}
+
+\section{Sistemas autónomos. Plano de fases}
+
+Ya hemos pasado por un tema de sistemas lineales donde aprendimos a resolver cosas de la forma \[ \begin{cases}x'= a_11x + a_12y \\ y'=a_21x + a_22y \end{cases} \]. 
+
+A partir de aquí teníamos un camino para resolver el problema: coeficientes variables. Otra opción es algo que acaba de explicar y no me he enterado.
 
 \end{document}
 
