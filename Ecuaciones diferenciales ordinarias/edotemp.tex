@@ -1528,14 +1528,14 @@ El segundo problema a estudiar sería el comprobar si hay \textbf{trayectorias c
 Volviendo al problema del sistema masa-resorte: si sabemos que buscamos una curva parametrizada, ¿podemos escribirlo como conjunto de nivel? No siempre es posible pero a veces funciona. En el caso de que efectivamente podamos eescribir la solución como conjunto de nivel $E(x,y) = C$, tendríamos que
 
 \begin{gather*}
-\pd{E}{x}  x' + \pd{E}{y}y' = 0 \\
-\pd{E}{x} y + \pd{E}{y} (-kx) = 0
+\dpa{E}{x}  x' + \dpa{E}{y}y' = 0 \\
+\dpa{E}{x} y + \dpa{E}{y} (-kx) = 0
 \end{gather*}
 o, dicho de otra forma, buscamos que $\grad E \perp (y,-kx)$. En este caso, $\grad E$ sería paralelo a $(kx,y)$ y obtendríamos las trayectorias dadas por la ecuación
 
 \[ \frac{kx^2}{2} + \frac{y^2}{2} = C 
 \]
-lo que, en el plano de fases nos daría algo como la imagen \ref{imgFasesMasaRecorte}. Ahora bien, ese dibujo no estaría completo: nos faltaría determinar el sentido en el que recorremos las curvas, que lo obtendríamos viendo la derivada.
+lo que, en el plano de fases nos daría algo como la imagen \ref{imgFasesMasaResorte}. Ahora bien, ese dibujo no estaría completo: nos faltaría determinar el sentido en el que recorremos las curvas, que lo obtendríamos viendo la derivada.
 
 \easyimg{img/PlanoFasesMasaResorte.png}{Plano de fases para el sistema masa-resorte}{imgFasesMasaResorte}
 
@@ -1553,7 +1553,82 @@ En el caso general, si tenemos una integral primera $E(x,y) = C$, entonces
 
 \[ 0 = \pd{E}{x}x' + \pd{E}{y} y' = \pd{E}{x}F + \pd{E}{y} G 
 \] 
-lo que nos dice que buscamos $\grad E \perp (F,G)$ o, lo que es lo mismo, $\grad E \parallel (-G,F)$. Esto nos llevaría a que si \[ \pd{-G}{y} = \pd{F}{x}\] entonces tenemos que $(-G,F) = \grad V$ para un potencial $V$, y entonces podremos tomar $E\equiv V$. Si no encuentras esto, podemos buscar un factor integrante\footnote{Y lloras. Mucho.}.
+lo que nos dice que buscamos $\grad E \perp (F,G)$ o, lo que es lo mismo, $\grad E \parallel (-G,F)$. Esto nos llevaría a que si \[ -\pd{G}{y} = \pd{F}{x}\] entonces tenemos que $(-G,F) = \grad V$ para un potencial $V$, y entonces podremos tomar $E\equiv V$. Si no encuentras esto, podemos buscar un factor integrante\footnote{Y lloras. Mucho.}.
+
+\begin{example}
+\[\begin{cases}x' = y \\ y' = 1+x^2 \end{cases} \]
+
+Buscamos una solución de la forma $E(x(t), y(t)) = C$ que cumple 
+
+\[ \grad E \perp (y, 1+x^2) \implies \grad E (1+x^2,-y) \]
+
+Necesitamos entonces poder escribir $(1+x^2,-y)$ como $\grad V$, el gradiente de un potencial. Para ello, tendría que cumplirse que 
+
+\[ \dpa{}{y}(1+x^2) = \dpa{}{x}(-y) \]
+
+Efectivamente, en este caso se cumple y existe $V$. Integrando:
+
+\begin{gather*}
+\dpa{V}{x} = 1+x^2 \implies V = x + \frac{x^3}{3} + C(y) \\
+-y \qeq \dpa{V}{y} = C'(y) \implies C(y) = \frac{-y^2}{2}
+V(x,y) = x + \frac{x^3}{3} -\frac{y^2}{2}
+\end{gather*}
+
+\easyimgw{img/Grano.png}{Conjuntos de nivel de la función $x + \frac{x^3}{3} -\frac{y^2}{2}$.}{imgGranos}{0.5}
+
+Por lo tanto, las soluciones serán las dadas por las curvas $V(x(t), y(t)) = C$, dibujadas en la figura \ref{imgGranos}. Sólo faltaría el sentido en el que se recorren las curvas. Viendo las derivadas, vemos que $y'>0$ y que por lo tanto se recorren hacia arriba siempre, hacia la derecha cuando $y$ es positivo y hacia la izquierda en otro caso.
+
+\end{example}
+
+\begin{example}
+\[ \begin{cases} x' = x(1+y) \\ y'=-y(1+x) \end{cases} \]
+
+Buscamos de nuevo una posible función potencial. Hacemos las derivadas cruzadas:
+
+\begin{gather*}
+\dpa{}{y} (y(1+x)) = 1+x \\
+\dpa{}{x} (x(1+y)) = 1+y
+\end{gather*}
+
+No existe un potencial que resuelva esta ecuación. Ahora bien, podemos buscar una función μ tal que $(μ(-G),μF)  = \grad V$. Derivamos de nuevo
+
+\begin{align*}
+\dpa{}{y} (μy(1+x)) &\qeq \dpa{}{x} (μx(1+y)) \\
+(1+x)\left(\dpa{μ}{y} y + μ\right) &= (1+y)\left(\dpa{μ}{x}  + μ\right)
+\end{align*}
+
+y si miramos, podremos encontrar un factor integrante.
+\end{example}
+
+\begin{example}[Tiburones en el océano]
+Suponiendo que no hubiese predadores, el número de presas $x$ variaría linealmente con la tasa de supervivencia $a$, que depende de la diferencia entre mortalidad y natalidad. Es decir, \[ x' = ax \]. 
+
+Con predadores, la ecuación se transformaría en \[ x' = a(y) x \], con $a$ dependiendo del número de predadores $y$. Si consideramos que $a(y)$ es una recta, por simplificar el modelo, la ecuación sería \[ x' = ax - bxy \].
+
+Por otra parte, podemos considerar que la población de predadores crece con \[ y' = -cy + dxy \].
+
+Transformando un poco las ecuaciones, llegamos al problema \[ \begin{cases} x' = x(a-by) \\ y' = y(-c+dx) \end{cases} \], que son las llamadas \textbf{ecuaciones de Volterra}. 
+
+Este problema tiene puntos críticos $F=G=0$. Si $F=0$, podemos tener $x=0$, el caso obvio de que no hay ni presas ni predadores. El otro es que $y=\frac{a}{b}$, que nos da que para que $G=0$ debe de ser $x=\frac{c}{d}$, lo que nos daría un punto de equilibrio.
+
+Si añadimos al sistema a los pescadores, con influencia ε ($a\to a + ε$, $c\to c+ ε$), el punto de equilibrio pasa a ser $\displaystyle \left(\frac{a-ε}{b}, \frac{c+ε}{d}\right)$, un punto más abajo y a la derecha. Es decir, se favorece la aparición de presas y la disminución de la proporción de predadores. En la segunda guerra mundial, al bajar la pesca el movimiento se invirtió y aumentó el porcentaje de tiburones.
+
+Ahora bien, la naturaleza no siempre se mantiene en el punto de equilibrio, sino que hay oscilaciones. Veámoslo resolviendo el sistema. Buscamos una función $E(x,y) = C$. Las derivadas cruzadas no son iguales, por lo que hay que buscar un factor integrante $μ(x,y)$ tal que 
+
+\[ \dpa{}{y}(μ(x,y)(cy -dxy)) = \dpa{}{x} (μ(x,y) (ax-bxy)) \]
+
+Haciendo la cuenta, sale $μ(x,y) = \frac{1}{xy}$. La solución es entonces
+
+\[ \grad V = \left(\frac{1}{xy}(xy-dxy),\frac{1}{xy}(ax-bxy)\right)= \left(\frac{c}{x}-d,\frac{a}{y}-b\right) 
+\]
+de donde podemos sacar \[ V(x,y) = a \log y - b y + c \log x - d x \]. 
+
+\easyimgw{img/Poblaciones.png}{Evolución de presas y depredadores.}{imgPoblaciones}{0.5}
+
+Sólo nos interesa lo que pasa en el primer cuadrante (posiciones negativas no nos gustan). Lo que obtenemos son trayectorias cerradas alrededor de un punto de equilibrio (figura \ref{imgPoblaciones})
+\end{example}
+
+
 
 \end{document}
 
