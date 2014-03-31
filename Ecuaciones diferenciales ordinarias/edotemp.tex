@@ -2,11 +2,14 @@
 
 \usepackage{tikz}
 \tikzset{>=latex}
-\usetikzlibrary{decorations.pathmorphing,patterns,intersections,positioning}
+\usetikzlibrary{decorations.pathmorphing,decorations.markings,patterns,intersections,positioning,spy}
 
 \tikzstyle{vnlin}=[rectangle, inner sep=0pt, minimum height=6pt, minimum width=0pt, draw, fill=black]
 \tikzstyle{hnlin}=[rectangle, inner sep=0pt, minimum height=0pt, minimum width=6pt, draw, fill=black]
-
+\tikzstyle{dense directed}=[postaction={decorate,decoration={markings,
+    mark=between positions 0.2 and 0.8 step 1cm with {\arrow{stealth};}}}]
+\tikzstyle{directed}=[postaction={decorate,decoration={markings,
+        mark=at position 0.5 with {\arrow[scale=1.3]{stealth};}}}]
 \renewcommand{\i}{\imath}
 
 \begin{document}
@@ -1630,7 +1633,168 @@ de donde podemos sacar \[ V(x,y) = a \log y - b y + c \log x - d x \].
 Sólo nos interesa lo que pasa en el primer cuadrante (posiciones negativas no nos gustan). Lo que obtenemos son trayectorias cerradas alrededor de un punto de equilibrio (figura \ref{imgPoblaciones})
 \end{example}
 
+\begin{theorem}
+Sea $(x_1(t), y_1(t))$ una solución tal que $(x_1(t),y_1(t)) ∈ γ\; ∀t$ donde γ es una curva en el plano de fases.
+
+Sea $(x_2(t), y_2(t))$ otra solución y supongamos que existen $t_1, t_2 ∈ ℝ$ tales que  $(x_1(t_1), y_1(t_1)) = (x_2(t_2),x_2(t_2))$. Entonces $(x_2(t), y_2(t)) ⊆ γ$.
+
+Dicho de otra forma, si dos curvas solución se cortan entonces son la misma.
+\end{theorem}
+
+\begin{proof}
+Sean $(x_h(t),y_h(t)) = (x_1(t+h), y_1(t+h))$. Sabemos que si $(x_1,y_1)$ es solución y estamos en un sistema autónomo, entonces $(x_h, y_h)$ también es solución. En particular, para $h=t_1 - t_2$ tenemos que \[ (x_{t_2 - t_1}(t),y_{t_2 - t_1}(t)) = (x_1(t+t_1-t_2),y_1(t+t_1-t_2)) \].
+
+En el punto $t=t_2$, nos queda \[ (x_{t_2 - t_1}(t_2),y_{t_2 - t_1}(t_2)) = (x_1(t_1),y_1(t_1)) \].
+
+Tenemos dos soluciones del sistema que en el instante inicial pasan por el mismo punto. Aplicando el teorema de existencia y unicidad, tenemos que $(x_{t_2 - t_1},y_{t_2 - t_1})\equiv (x_2,y_2)$, que no es más que una traslación de la solución original $(x_1,y_1)$.
+\end{proof}
+
+\subsection{Clasificación de puntos críticos}
+
+Partimos del sistema \[ \begin{cases} x' = ax + by \\ y' = cx + dy \end{cases} \] con $a,b,c,d∈ℝ$, que viene de una \textit{linealización} por Taylor de cualquier sistema.
+
+¿Cuántos puntos críticos tenemos? Sabemos que siempre tenemos al menos el $(0,0)$ como punto crítico. Si además la matriz $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ tiene determinante cero, tendremos una recta de puntos críticos.
+
+Para el análisis, empezaremos suponiendo que $(0,0)$ es un punto crítico aislado, es decir, con \[ \det \begin{pmatrix} a & b \\ c & d \end{pmatrix} ≠ 0 \]. 
+
+Vamos a ir paso a paso distinguiendo los distintos casos que nos podemos encontrar al resolver este sistema.
+
+\subsubsection{Sistemas con autovalores reales}
+
+\paragraph{Caso 1.1: $0< λ_1 < λ_2$}. Con esta información, la solución general es 
+
+\[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = A e^{λ_1t}\begin{pmatrix} u_1 \\ u_2\end{pmatrix} + B e^{λ_2t} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} \].
+
+En esta ecuación está toda la información que tenemos que tener sobre el plano de fases. Tenemos varias opciones. 
+
+Si $A = 0$, la solución es \[ B e^{λ_2t} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} \]. Es decir, que si $B>0$ tendremos una semirrecta en la dirección de $\vv$, y si es negativo una semirrecta en la dirección contraria. La solución sería análoga para $B=0$. Podemos ver en la figura \ref{imgABUnoCero} el esquema de las soluciones.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+\draw[very thick, red!40!white] (0,0) -- node[midway,sloped] {$>$} (2,4) node[right] {$A=0; B>0$};
+\draw[very thick, red!80!black] (0,0) -- node[midway,sloped] {$<$} (-2,-4) node[left] {$A=0; B<0$};
+
+\draw[very thick, orange!40!white] (0,0) -- node[midway,sloped] {$>$} (4,2) node[above] {$A>0; B=0$};
+\draw[very thick, orange!80!black] (0,0) -- node[midway,sloped] {$<$} (-4,-2) node[below] {$A<0; B=0$};
 
 
+\draw[->,thick,red] (0,0) -- (0.7,1.4) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+
+
+\end{tikzpicture}
+\caption{Posibles soluciones para $A=0$ ó $B=0$.}
+\label{imgABUnoCero}
+\end{figure}
+
+¿Qué ocurre cuando ni $A$ ni $B$ son cero? La solución general es \[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = A e^{λ_1t}\vu + B e^{λ_2t} \vv \]. Podemos sacar factor común $e^{λ_1t}$ para tener
+
+\[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = e^{λ_1t} \left(A\vu + Be^{(λ_2-λ_1)t} \vv\right) \].
+
+Es decir, que cuando $t\to -∞$, $Be^{(λ_2-λ_1)t} \to 0$ y por lo tanto la trayectoria será tangente al vector $\vu$. Si lo que hacemos es sacar factor común $e^{λ_2}$, tenemos 
+
+\[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = e^{λ_2t} \left( Ae^{(λ_1-λ_2)t}\vu + B \vv\right) \].
+
+Así, cualquier trayectoria en este caso acabará siendo paralela al vector $\vv$. Las trayectorias salen del origen tangentes a $\vu$ y cuando $t$ crece tienden a ser paralelas a $\vv$. Este último vector es la dirección principal, ya que atrae a todas las trayectorias salvo a la recta $\vu$ (cuando $A=0$).
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+
+\foreach \x in {0.5,1,1.5,2,2.5} 
+	\draw[very thin, blue,dense directed] (0,0) to [looseness=\x,out=30, in=60] ({2*\x - 2},-4);
+
+\foreach \x in {0.25,0.5,0.75} 
+	\draw[very thin, blue,dense directed] (0,0) to [looseness=\x,out=210, in=60] ({-2 - 4*\x},-4);
+
+\foreach \x in {0.25,0.5,0.75} 
+	\draw[very thin, blue,dense directed] (0,0) to [looseness=\x,out=30, in=240] ({4*\x + 2},4);
+	
+\foreach \x in {0.5,1,1.5,2,2.5} 
+	\draw[very thin, blue,dense directed] (0,0) to [looseness=\x,out=210, in=240] ({2 -2*\x},4);
+	
+
+\draw[very thick, red!40!white, directed] (0,0) -- (2,4);
+\draw[very thick, red!80!black, directed] (0,0) -- (-2,-4);
+\draw[very thick, orange!40!white, directed] (0,0) -- (4,2);
+\draw[very thick, orange!80!black, directed] (0,0) -- (-4,-2);
+
+\draw[->,thick,red] (0,0) -- (0.7,1.4) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+
+
+\end{tikzpicture}
+\caption{Posibles soluciones (en azul) para $A=0$ ó $B=0$ con ambos autovalores positivos.}
+\label{imgABNoCero}
+\end{figure}
+
+\paragraph{Caso 1.2: $λ_1 < 0 < λ_2$}. La solución es la misma que antes, \[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = A e^{λ_1t}\vu + B e^{λ_2t} \vv \].
+
+Cuando $A=0$, tenemos el mismo caso de antes. Ahora bien, cuando $B=0$, al ser el autovalor negativo las soluciones \textit{vienen} de infinito. Es decir, tenemos el caso de la figura \ref{imgAB_AVN_UnoCero}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+\draw[very thick, red!40!white, directed] (0,0) -- (2,4) node[right] {$A=0; B>0$};
+\draw[very thick, red!80!black, directed] (0,0) -- (-2,-4) node[left] {$A=0; B<0$};
+
+\draw[very thick, orange!40!white, directed] (4,2) node[above] {$A>0; B=0$} -- (0,0);
+\draw[very thick, orange!80!black, directed] (-4,-2) node[below] {$A<0; B=0$} -- (0,0);
+
+
+\draw[->,thick,red] (0,0) -- (0.7,1.4) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+
+
+\end{tikzpicture}
+\caption{Las dos posibles rectas solución para un sistema autónomo con un autovalor negativo y otro positivo, con $A=0$ ó $B=0$.}
+\label{imgAB_AVN_UnoCero}
+\end{figure}
+
+Cuando $A,B≠0$, siguiendo el mismo procedimiento de factores comunes de antes, tenemos que tanto en $+∞$ como en $-∞$ explotan. Cuando $t\to -∞$, estamos \textit{lejos} y paralelos a $\vu$. Cuando $t\to + ∞$, la trayectoria también se irá lejos en la dirección de $\vv$, tal y como refleja la figura \ref{imgAB_AVN_NoCero}.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[spy using outlines={circle, magnification=4, size=2cm, connect spies}]
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+\foreach \x in {1,2,3} 
+	\draw[very thin, blue,dense directed] (4,{2.5 - 0.1*\x }) to [looseness=\x,out=210, in=240] ({2.5 - 0.1*\x},4);
+
+\foreach \x in {0.5,1,1.5,2} 
+	\draw[very thin, blue,dense directed] (4,{1.7 + 0.1*\x }) to [looseness=\x,out=210, in=60] ({-1.5 - 0.2*\x},-4);
+
+\foreach \x in {1,2,3,4} 
+	\draw[very thin, blue,dense directed] (-4,{-2.5 + 0.1*\x }) to [looseness=\x,out=30, in=60] ({-2.5 + 0.1*\x},-4);
+
+\foreach \x in {0.5,1,1.5,2} 
+	\draw[very thin, blue,dense directed] (-4,{-1.7 - 0.1*\x }) to [looseness=\x,out=30, in=240] ({1.5 + 0.2*\x},4);
+
+
+\draw[very thick, red!40!white, directed] (0,0) -- (2,4);
+\draw[very thick, red!80!black, directed] (0,0) -- (-2,-4);
+
+\draw[very thick, orange!40!white, directed] (4,2) -- (0,0);
+\draw[very thick, orange!80!black, directed] (-4,-2) -- (0,0);
+
+\draw[->,thick,red] (0,0) -- (0.7,1.4) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+
+
+\end{tikzpicture}
+\caption{En azul, posibles soluciones de un sistema autónomo con un autovalor negativo y otro positivo, con $A≠0,B≠0$.}
+\label{imgAB_AVN_NoCero}
+\end{figure}
 \end{document}
 
