@@ -1,6 +1,6 @@
 \documentclass{mathnotes}
 \usepackage{mathnotes}
-
+\usepackage{commath}
 \newcommand{\theauthor}{Guillermo Ruiz Álvarez\\Guillermo Julián Moreno\\Víctor de Juan Sanz}
 \newcommand{\thetitle}{Ecuaciones Diferenciales Ordinarias\\Notas no exentas de errores}
 \newcommand{\rightheader}{Ecuaciones diferenciales ordinarias}
@@ -2287,13 +2287,13 @@ El polinomio característico es
 
 cuyas raíces son 
 
-\[ λ=\pm \i\sqrt{\frac{k}{m}} \]
+\[ λ=\pm \imath \sqrt{\frac{k}{m}} \]
 
 Las soluciones complejas son, por lo tanto,
 
 \begin{gather*}
-z_1 = e^{\i t\sqrt{\frac{k}{m}}} = \cos \sqrt{\frac{k}{m}} t + \i \sin \sqrt{\frac{k}{m}} t \\
-z_1 = e^{-\i t\sqrt{\frac{k}{m}}} = \cos \sqrt{\frac{k}{m}} t - \i \sin \sqrt{\frac{k}{m}} t 
+z_1 = e^{\imath t\sqrt{\frac{k}{m}}} = \cos \sqrt{\frac{k}{m}} t + \imath\sin \sqrt{\frac{k}{m}} t \\
+z_1 = e^{-\imath t\sqrt{\frac{k}{m}}} = \cos \sqrt{\frac{k}{m}} t - \imath\sin \sqrt{\frac{k}{m}} t 
 \end{gather*}
 
 Combinándolas de forma lineal, obtenemos dos soluciones reales:
@@ -2410,7 +2410,7 @@ Al igual que en el anterior caso, $x(t) \convs[][t][∞] 0$, pero aquí sí que 
 
 Aquí tendremos raíces complejas, es decir:
 
-\[ λ_+ = \frac{-ε}{2m} + \i \sqrt{\frac{k}{m} - \left(\frac{ε}{2m}\right)^2} \]
+\[ λ_+ = \frac{-ε}{2m} + \imath\sqrt{\frac{k}{m} - \left(\frac{ε}{2m}\right)^2} \]
 
 y su conjugada. De esta forma, las dos soluciones reales serán
 
@@ -2589,7 +2589,1815 @@ Realizando bastantes operacioens podemos obtener una solución particular, sin e
 \end{example}
 
 
+\subsubsection{Método de coeficientes indeterminados}
 
+Podremos aplicar este método cuando $f(t)$ sea un polinomio, una exponencial, senos y cosenos y combinaciones lineales de todos los anteriores. En todos estos casos las derivadas nos llevan a funciones de la misma clase, y podremos aplicar este método que nos lleva a cuentas más sencillas.
+
+En este método, suponemos que la solución particular es una función de la misma familia de $f(t)$ multiplicada por una constante, así que planteamos el problema y resolvemos el sistema. Estudiémoslo desde un ejemplo:
+
+\paragraph{1) Exponenciales} \[ x'' - x = e^{2t} \]
+
+Tenemos que 
+\begin{gather*}
+x_p(t) = Ce^{2t} \\
+x_p' = 2Ce^{2t} \\
+x_p'' = 4Ce^{2t} \\
+e^2t = 4Ce^{2t} - Ce^{2t} = 3Ce^{2t} 
+\end{gather*}
+
+$C$ ha de ser $\frac{1}{3}$ y por lo tanto nuestra solución general del sistema será
+
+\[ x_G = c_1e^t + c_2e^{-t} + \frac{1}{3}e^{2t} \]
+
+\paragraph{2) Exponenciales con $f(t)$ solución de la homogénea} Otro ejemplo:
+
+\[ x''-x= e^t \]
+
+Aquí habría que calcular $x_p = ce^t$. Sin embargo, tomando esa solución nos quedaría $x_p'' - x_p = 0\; ∀c$, por lo que no nos vale. Cuando $f(t)$ es una de las soluciones de la ecuación homogénea asociada, tenemos que añadir algo más. Buscamos soluciones de la forma $cte^t$
+
+\begin{gather*}
+x_p  = cte^t \\
+x_p' = cte^t + ce^t \\
+x_p'' = cte^t + 2ce^t \\
+\end{gather*}
+
+Resolviendo:
+
+\begin{align*}
+x_p'' - c_p &= 2ce^t \\
+e^t &= 2ce^t \\
+C &= \frac{1}{2} 
+\end{align*}
+
+\paragraph{3) Senos y cosenos} Probamos ahora con senos y cosenos.
+
+\[ x'' + x= \cos 2t\]
+
+En este caso, la solución debe tener una combinación lineal de senos y cosenos. Por lo tanto
+
+\[ x_p = A\cos 2t + B\sin 2t \]
+
+y resolviendo
+
+\[ \cos 2t = x_p'' + x_p = -3A\cos 2t - 3B\sin 2t \]
+
+de tal forma que $A=\frac{-1}{3}$ y $B=0$.
+
+\paragraph{4) Senos y cosenos con $f(t)$ sol. de la homogénea} Consideramos $x''+x = \cos t$. 
+
+En este caso, $f(t) = \cos t$ es una solución de la parte homogénea, así que la solución será de la forma
+
+\[ x_p(t) = At\cos t + Bt\sin t \]
+
+Supongamos que esto modela una situación real, como por ejemplo empujando un columpio. ¿Cómo interpretamos esto? 
+
+A ciertas frecuencias, la ecuación es creciente, la amplitud aumenta con el tiempo. Es un fenómeno de \textbf{resonancia}. Veamos cómo modelizar este caso.
+
+\paragraph{Ejemplo: Sistema masa-resorte con fuerza externa}
+
+La ecuación en este caso es
+
+\(\label{eqMRF1} x'' + \underbrace{\frac{k}{m}}_{=ω^2}x = \underbrace{f(t)}_{F\cos αt} \)
+
+Hemos cambiado algunas constantes para adaptarlo a nuestro caso. Hay varias opciones a partir de aquí relacionadas con las constantes ω y α:
+
+\subparagraph{Caso 1: $ω≠α$}
+
+Resolvemos la ecuación homogénea $x''+ω^2 x = 0$ con el polinomio característico:
+
+\[ λ^2+ω^2  = 0 \implies λ = \pm ω\i \]
+
+y por lo tanto
+
+\( x_H(t) = c_1 \cos ωt + c_2 \sin ωt \)
+
+Necesitamos ahora una solución particular $x_P = A\cos αt + B\sin αt$. Derivamos dos veces:
+
+\begin{align*}
+x_P(t) &= A\cos αt + B\sin αt \\
+x_P'(t) &= -Aα\sin αt + Bα\cos αt \\
+x_P''(t) &= -Aα^2\cos αt - Bα^2\sin αt 
+\end{align*}
+
+Sustituyendo en \eqref{eqMRF1}
+
+\begin{gather*}
+ F\cos αt = x_P'' + ω^2x_P = \dotsb = (ω^2-α^2)\left(A\cos αt + B\sin αt\right) \\
+ B = 0;\quad A= \frac{F}{ω^2-α^2} \\
+ x_P(t) = \frac{F}{ω^2-α^2}\cos αt
+\end{gather*}
+
+De esta forma, la ecuación general nos queda
+
+\( x_G(t) = \frac{F}{ω^2-α^2}\cos αt + c_1 \cos ωt + c_2 \sin ωt \)
+
+Para los datos iniciales $x(0) = x'(0) = 0$, despejamos y tenemos la solución al problema
+
+\(\label{eqMRF2-Sol} x(t) = \frac{F}{ω^2-α^2}\left(\cos αt - \cos ωt\right) \)
+
+Volviendo de nuevo al sistema que tratamos, ω y α representan dos frecuencias. α es la externa y ω es la natural. Podemos reescribir la ecuación \eqref{eqMRF2-Sol} usando identidades trigonométricas. Sabemos que
+
+\[ \cos (A-B) - \cos(A+B) = 2\sin A \sin B \]
+
+Resolvemos:
+
+\[ \left.\begin{matrix}A - B = αt \\ A + B = ωt \end{matrix}\right\}
+\left.\begin{matrix}A = \frac{ω+α}{2}t \\ B = \frac{ω-α}{2}t\end{matrix}\right\} \]
+
+Sustituyendo en \eqref{eqMRF2-Sol}:
+
+\( x(t) = \frac{2F}{ω^2-α^2} ·\sin \frac{ω-α}{2}t · \sin \frac{ω+α}{2}t  \)
+
+Luego lo que tenemos es una oscilación rápida (Δ) con una amplitud contenida dentro de otra con oscilación más lenta (Γ).
+
+\begin{figure}
+\centering
+\includegraphics{img/MasaResorteF.png}
+\caption{Gráfico de una oscilación rápida (Δ, azul) con una amplitud contenida dentro de otra con oscilación más lenta (Γ, verde)}
+\label{imgMasaResorteF}
+\end{figure}
+
+\subparagraph{Caso 2: $ω=α$}
+
+En este caso, la ecuación diferencial es 
+
+\[ x'' + ω^2 x = F\cos ωt \]
+
+La solución de la homogénea es $x_H = c_1 \cos ωt + c_2 \sin ωt$. Tenemos un problema: $F\cos ωt$ es solución de la homogénea. Para encontrar una solución particular multiplicamos entonces por $t$:
+
+\begin{gather*}
+x_P = t\left(A\cos ωt + B\sin ωt\right) \\
+x_P' =t\left(-Aω\sin ωt + Bω\cos ωt\right) + \left(A\cos ωt + B\sin ωt\right) \\
+x_P'' = t\left(-Aω^2 \cos ωt - Bω^2 \sin ωt\right) + 2\left(-Aω\sin ωt + Bω\cos ωt \right)
+\end{gather*}
+
+Igualando, 
+
+\[ F\cos ωt \stackrel{?}{=} x_p'' + ω^2x_p = 2\left(-Aω\sin ωt + Bω\cos ωt \right) \]
+
+de donde sacamos que $A=0$ y $B=\frac{F}{2ω}$. Una solución particular es entonces
+
+\[ x_P(t) = \frac{F}{2ω}t \sin ωt \]
+
+que es además la solución que cumple $x_P(0) = x_P'(0) = 0$. La gráfica de esta ecuación será
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics{img/MasaResorteF-Resonancia.png}
+\caption{Gráfica de un sistema masa-resorte en resonancia}
+\label{imgMasaResorteFR}
+\end{figure}
+
+Estamos ante un fenómeno de resonancia. La amplitud tiene a infinito siempre, por muy pequeña que sea la fuerza.
+
+Que, por cierto, Azorero nos ha engañado en una cosa: la expresión de la fuerza es un coseno en lugar de una función genérica $F(t)$. En realidad esto se debe al desarrollo en serie de Fourier, que dice que cualquier función se puede expresar como 
+
+\[ F(t) = \sum_{j=0}^∞ F_j \cos \frac{jπ}{T}t \]
+
+\paragraph{Modelo con rozamiento}
+
+Añadiendo el rozamiento al modelo anterior, tenemos
+
+\[ x''+2εx'+ω^2x = \cos αt \]
+
+Haciendo cuentas y suponiendo $ε^2-ω^2<0$. Nos queda una solución para la homogénea
+
+\[ x_H = e^{-εt}\left(c_1 \cos \sqrt{ω^2-ε^2}t + c_2 \sin \sqrt{ω^2-ε^2}t\right) \]
+
+Buscamos la solución particular
+
+\[ x_P (t) = A\cos αt + B\sin αt \]
+
+y llegamos a 
+
+\[ x_P(t) = \frac{1}{(ω^2-α^2)^2 + 4α^2ε^2}\left((ω^2-α^2)\cos αt + 2αε \sin αt \right) \].
+
+La solución general es entonces
+
+\[ x_G(t) = x_P(t) + x_H(t) \]
+
+Dado que en $x_H$ está todo multiplicado por una exponencial negativa, tiende a cero cuando $t\to ∞$, por lo que la llamamos la parte \textbf{transitoria}. El primer sumando, $x_P$, permanece y se le llama la parte \textbf{estacionaria}.
+
+En este caso, cuando $α=ω$ (estamos en la frecuencia de resonancia), es el que más aporta a la ecuación. Sin embargo, en ningún caso la amplitud se va a infinito. El rozamiento impide que la amplitud se dispare.
+
+\subsubsection{Resumen de métodos para ec. lineales no homogéneas}
+
+Hagamos un resumen de los métodos que hemos visto. Las soluciones de una ecuación no homogénea de la forma
+
+\[ y^{n)} + a_{n-1}y^{n-1)} + \dotsb + a_1y'+a_0y = f(t) \]
+
+se expresan en función de una solución particular $y_p$ y el conjunto de las soluciones para la ecuación homogénea asociada $y_H$:
+
+\[ y_G = y_p + y_H \]
+
+Podemos obtener fácilmente las soluciones a la homogénea usando la técnica vista en la sección anterior \eqref{secEcHomoLinealConstante}. Para obtener la solución particular tenemos que usar el método de variación de constantes (\ref{secMetodoVarConst}). Sin embargo, ese método nos lleva a muchas más cuentas de las necesarias. Podemos simplificar las cosas cuando $f(t)$ pertenece a una familia de curvas "cerrada" por la derivada. Veamos esos casos.
+
+\paragraph{Polinomio}
+
+\[ f(t) = A_0 + A_1t + \dotsb + A_Nt^N \]
+
+Si $0$ no es raíz, buscamos \[y_p(t) = a_0 + a_1t + \dotsb + a_Nt^N\]. Si $0$ es raíz con multiplicidad $k$, entonces la solución particular que buscamos será de la forma
+
+\[ y_p(t) =( a_0 + a_1t + \dotsb + a_Nt^N)t^k \]
+
+\paragraph{Trigonométrico} 
+
+\[ f(t) = \cos αt \]
+
+o análogamente para senos. Tenemos dos posibilidades. Si $α\i$ no es raíz del p. característico, la solución particular es de la forma
+
+\[ y_p(t) = a\cos αt + b\sin αt \]
+
+En el caso de que $α\imath$ sea raíz con multiplicidad $k$, entonces
+
+\[ y_p(t) = (a\cos αt + b\sin αt)t^k \]
+
+\paragraph{Polinomio y exponencial}
+
+\[ f(t) = e^{αt}(A_0 + A_1t + \dotsb + A_Nt^N) \]
+
+Si $α$ no es raíz del p. característico,
+
+\[ y_p(t) = e^{αt}(a_0 + a_1t + \dotsb + a_Nt^N) \]. si α sí es raíz con multiplicidad $k$,
+
+\[ y_p(t) = t^ke^{αt}(a_0 + a_1t + \dotsb + a_Nt^N) \]
+
+\subsection{Ejemplos}
+
+\begin{example} Consideramos la ecuación
+
+\[ y'' + a' + by = 0 \]
+
+Demuestra que 
+
+\[ y_H(t) \convs[][t][∞] 0 \iff a>0, b>0 \]
+
+Empezamos por la implicación a la izquierda. El polinomio característico es
+
+\[ λ^2+aλ+b \implies λ_{\pm} = \pm \frac{a\pm \sqrt{a^2-4b}}{2} \]
+
+Tenemos tres casos:
+
+\begin{itemize}
+\item $a^2-4b > 0$. En este caso, $λ_-,λ_+ ∈ℝ$, $λ_-<λ_+<0$ y por lo tanto $e^{λ_+t}$ y $e^{λ_-t}$ tienden a cero cuando $t\to ∞$.
+
+\item $a^2=4b$. Aquí tenemos que $λ=\frac{-a}{2}$, raíz doble. Las soluciones son $e^{\frac{-a}{2}t}$ y $te^{\frac{-a}{2}t}$, ambas tienden a cero.
+
+\item $a^2-4b > 0$. Las raíces son imaginarias y te sale igual porque lo ha borrado.
+
+\end{itemize}
+
+Para demostrar la implicación a la derecha, tenemos que si $y_H(t)\convs[][t][∞]0$, entonces los autovalores del p.c. son o bien
+
+\[ y_\pm = α\pm + \iβ \]
+
+con $α<0$ o bien reales con $λ_-≤λ_+<0$. En ambos casos tenemos que $a>0, b>0$ tal y como hemos visto al demostrar la otra implicación.
+
+\end{example}
+
+\begin{example}[Ejercicio 7]
+
+Tenemos la siguiente ecuación:
+
+\[ y^{iv)} + 4y''' + 8y'' + 8y' +4y = 0\]
+
+y nos dicen que $\imath- 1$ es raíz del p.c.
+
+\[ P(λ) = λ^4 + 4λ^3 + 8λ^2 + 8λ + 4 = 0 \]
+
+Sabiendo que $\i-1$ es raíz y que su conjugado $-\imath- 1$ también, podemos hacer las cuentas y
+
+\begin{gather*}
+ P(λ) = (λ-(-1+\i)) · (λ-(-1-\i)) · P_2(λ) \\
+ ((λ+1)^2 + 1) P_2(λ)
+ \end{gather*}
+
+donde 
+
+\[ P_2(λ) = \frac{λ^4+ 4λ^3 + 8λ^2 + 8λ + 4 }{λ^2+2λ + 2} = \dotsb = λ^2 + 2λ + 2 \].
+
+Por lo tanto las dos raíces son dobles.
+\end{example}
+
+\begin{example}[Ejercicio 8] Tenemos la ecuación
+
+\[ y^{n)} + a_{n-1}y^{n-1)} + \dotsb + a_1y' + a_0y = x^k \]
+
+con $a_0≠0$. Demostrar que en el caso $n=4,k=3$, existe un único polinomio que sea solución del problema, que además tiene grado 3.
+
+Hay que demostrar dos cosas: que existe y que es único. Empezamos demostando la unicidad suponiendo que existen $P,Q$ polinomios de grado tres solución.
+
+En este caso tendríamos que $P-Q$ es solución de la homogénea. Y ha dicho algo y no lo he podido copiar.
+
+Demostramos ahora la existencia. Buscamos una solución polinómica $y(x) = c_0+c_1x + c_2x^2 + c_3x^3$. Si calculamos
+
+\[ a_0y(x) + a_1y'(x) + a_2y''(x) + a_3y'''(x) = x^3 = \underbrace{\{c_j,a_j\}}_{=0} + \underbrace{\{c_j,a_j\}x}_{=0} + \underbrace{\{c_j,a_j\}x^2}_{=0} + \underbrace{\{c_j,a_j\}}_{=1}x^3 \]
+
+donde $\{c_j,a_j\}$ son combinaciones lineales de cada una de las $a_j$ y $c_j$. Tendremos entonces un sistema con coeficientes $a_j$ e incógnitas $c_j$ de la forma
+
+\[ A \begin{pmatrix}
+c_0 \\ c_1 \\ c_2 \\ c_3
+\end{pmatrix} = \begin{pmatrix}
+0 \\ 0 \\ 0 \\ 1
+\end{pmatrix} \]
+\end{example}
+
+\begin{example}[Ejercicio 11]
+
+Tenemos la ecuación
+
+\[ y'' + P(t) y' + Q(t) y = 0 \]
+
+Decir sobre qué condiciones de $P,Q$ el cambio de variables $s=Φ(t), z(s) = y(t)$ convierte la ecuación en una coeficientes constantes. 
+
+Calculamos las derivadas:
+
+\begin{gather*}
+ \od{y}{t} = \od{y}{t} \od{s}{t} = \od{z}{s} \od{Φ}{t} \\
+ \od[2]{y}{t} = \od[2]{z}{s} \left(\od{Φ}{t}\right)^2 + \od{z}{s}\od[2]{Φ}{t}
+\end{gather*}
+
+y sustituyendo
+
+\[ 0 = \od[2]{z}{s} + \underbrace{\left(\frac{\od[2]{Φ}{t} + P\od{Φ}{t}}{\left(\od{Φ}{t}\right)^2}\right)}_{A} \od{z}{s} + \underbrace{\frac{Q}{\left(\od{Φ}{t}\right)^2}}_{B}z \]
+
+tenemos que buscar las condiciones sobre $P$ y $Q$ y la expresión de $Φ(t)$ para que ahí haya constantes multiplicando a $\od{z}{s}$ y a $z$. Entonces
+
+\[ \frac{Q}{\left(\od{Φ}{t}\right)^2} = B \implies \left(\od{Φ}{t}\right)^2 = \frac{Q}{B} \implies \od{Φ}{t} = \sqrt{\frac{Q}{B}} \]
+
+Sustituyendo:
+
+\[ A = \frac{\od[2]{Φ}{t} + P\sqrt{\frac{Q}{B}}}{\left(\od{Φ}{t}\right)^2} \]
+
+Casi tenemos la relación, pero tenemos que deshacernos de esa segunda derivada. Así que derivamos:
+
+\[ \od[2]{Φ}{t} = \frac{-A}{2\sqrt{B}\sqrt{Q}}Q' \]
+
+y sustituimos 
+
+\[ A = \frac{\frac{-A}{2\sqrt{B}\sqrt{Q}}Q' + P\sqrt{\frac{Q}{B}}}{\left(\od{Φ}{t}\right)^2} = \dotsb = \frac{Q'+2PQ}{Q\sqrt{Q}} = \text{cte.} \]
+
+y además tiene que ser
+
+\[ (Φ'(t))^2 = \frac{Q(t)}{B} \]
+
+\end{example}
+
+\section{Teoremas de existencia y unicidad}
+
+Partiendo del problema
+
+\[ \begin{cases}
+y' = f(x,y(x)) \\
+y(x_0) = y_0
+\end{cases} \]
+
+podemos hacer una \textbf{formulación integral equivalente} de la forma
+
+\[ y(x) = y_0 + \int_{x_0}^x f(s,y(s))\dif s \].
+
+Hay dos posibles aproximaciones para resolver este problema.
+
+\paragraph{Iteradas de Picard}\index{Iteradas!de Picard} Veamos este método con un ejemplo. Partimos de 
+
+\[ \begin{cases}
+y' = y \\
+y(x_0) = 1
+\end{cases} \].
+
+La primera aproximación será
+
+\[ y_1(x) = 1 + \int_0^x y_0 \dif x = 1+ \int_0^x 1\dif s = 1 + x \]. Hacemos una segunda aproximación:
+
+\[ y_2(x) = 1 + \int_0^x y_1 \dif x = 1 + \int_0^x 1+s \dif s  = 1 + x +\frac{x^2}{2} \]
+
+Podríamos seguir haciendo iteradas basándonos en la misma fórmula
+
+\(\label{eqIteradasPicard} y_n(x) = 1 + \int_0^x y_{n-1}(s) \dif s \)
+
+y veríamos que lo que sale es el polinomio de Taylor de la exponencial\footnote{No es cierto que el método de Picard dé siempre el desarrollo de Taylor. Es una casualidad de este ejemplo.}. Planteamos entonces un algoritmo iterativo siguiendo la ecuación \eqref{eqIteradasPicard}. Si consiguiésemos demostrar que
+
+\begin{itemize}
+\item $y_n(x) \convs[][n] y(x)$.
+\item $\displaystyle\lim_{n\to\infty} \int_{x_0}^x f(s,y_{n-1}(s))\dif s = \int_{x_0}^x \lim_{n\to ∞} f(s,y_{n-1}(s)) \dif s$.
+\item $\displaystyle\lim_{n\to ∞} f(s, y_{n-1}(s)) = f(s,y(s))$.
+\end{itemize}
+
+tendríamos siempre una solución al problema. Sin embargo, no es trivial definir qué es un límite de funciones, entrando dentro del análisis funcional. Además, deberíamos ver hasta qué $x$ podríamos usar la solución. 
+
+Buscamos por lo tanto otro método para resolver el problema.
+
+\paragraph{Método de las poligonales de Euler}\index{Poligonales!de Euler} Supongamos que la solución exacta del problema es $y(x)$. Entonces, para un $x_1=x_0 + h$, podemos decir que
+
+\[ y(x_1) = y(x_0 + h) \stackrel{\text{Taylor}}{=} y(x_0) + y'(x_0)\cdot h + \mop{error}(h) \]
+
+Ahora bien, sabemos que $y(x_0) = y_0$ y que $y'(x_0) =f(x_0, y_0)$. Entonces
+
+\[ y(x_1) ≈ y_0 + f(x_0, y_0)·h \equiv y_1 \]
+
+es un valor aproximado de la solución en $x_1$. Repetimos el proceso. Tomamos $x_2 = x_1 + h$, y 
+
+\[ y(x_2) ≈ y_1 + f(x_1,x_1)· h \equiv y_2 \]
+
+Rehaciendo el proceso, llegamos a una poligonal $P_n$ (poligonal de Euler) que aproximará la curva:
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[x=50pt,y=20pt]
+	\draw[->] (-0.5,0) -- (5,0) node[right] {$x$};
+	\draw[->] (0,-0.5) -- (0,3) node[above] {$y$};
+	
+	\draw[very thick,domain=0.8:4.2,smooth,variable=\x,green] plot ({\x},{2.19805 - 1.84594*\x + 0.64716*\x*\x + 0.150811*\x*\x*\x - 0.0500811*\x*\x*\x*\x});
+	
+	\node[draw,label=above:{$y_0$},circle, fill=white, inner sep=2pt] (A) at (1,1.1) {};
+	\node[draw,label=above:{$y_1$},circle, fill=white, inner sep=2pt] (B) at (2,1.5) {};
+	\node[draw,label=above:{$y_2$},circle, fill=white,inner sep=2pt] (C) at (3,2.5) {};
+	\node[draw,label=above:{$y_3$},circle, fill=white, inner sep=2pt] (D) at (4,2) {};
+	
+	\node[label=below:{$x_0$}] at (1,0) {};
+	\node[label=below:{$x_1$}] at (2,0) {};
+	\node[label=below:{$x_2$}] at (3,0) {};
+	\node[label=below:{$x_3$}] at (4,0) {};
+	
+	\draw[-, dashed] (1,-0.1) -- (A);	
+	\draw[-, dashed] (2,-0.1) -- (B);
+	\draw[-, dashed] (3,-0.1) -- (C);
+	\draw[-, dashed] (4,-0.1) -- (D);
+	
+	\draw[-,thick,red] (A) -- (B) -- (C) -- (D) node[right] {$P_n$};
+	
+\end{tikzpicture}
+\end{figure}
+
+
+Entonces, deberíamos tener que
+
+\[ y(x) \equiv \lim_{h\to 0} P_n(x) \]
+
+Es también una solución razonable, pero llegamos a la misma dificultad que antes: no sabemos en qué consiste el límite de una sucesión de funciones.
+
+\subsection{Análisis funcional y sucesiones de funciones}
+
+De cualquiera de las formas tenemos que entrar en análisis funcional, así que tratemos de dar sentido a ese concepto de sucesiones de funciones. Partimos de un conjunto de funciones $\{f_n(x)\}_{n∈ℕ}$ definidas para $x∈(a,b)$. ¿Qué significa entonces el límite $\displaystyle\lim_{n\to ∞} f_n(x) = f(x)$?
+
+Hay varias definiciones para ese límite. La primera es la convergencia puntual:
+
+\subsubsection{Convergencia puntual}
+
+La convergencia puntual consiste en la convergencia de cada uno de los puntos del intervalo. Es decir
+
+\[ f_n\to f \iff \lim_{n\to ∞} f_n(x) = f(x) ∀x ∈ (a,b) \]
+
+O, en términos de ε y δ, que para $x∈(a,b)$
+
+\[ ∀ε>0\, ∃n_0 \st n> n_0 \implies \abs{f_n(x) - f(x)} < ε \]
+
+Ahora bien, hay que leer con cuidado. En esta definición, tenemos que $n_0 = n_0(ε,x)$ depende de dos parámetros. Esta definición es por lo tanto muy débil como para usarla en los métodos de resolución anteriores.
+
+\begin{figure}[hbtp]
+
+\centering
+\begin{tikzpicture}[x=150pt, y=30pt]
+\draw[->] (-0.1, 0) -- (1.4,0);
+\draw[->] (0,-0.1) -- (0,5);
+
+\draw[-,blue, thick] (0,0) -- (0.0625,4) -- node[above right] {$y_n$}  (0.125,0) -- (1.3,0);
+\draw[-,red, thick] (0,0) -- (0.25,2) -- node[above right] {$y_2$} (0.5,0) -- (1.3,0);
+\draw[-,green, thick] (0,0) -- (0.5,1) -- node[above right] {$y_1$} (1,0) -- (1.3,0);
+
+\node[vnlin, label=below:{$\dfrac{1}{n}$}] at (0.125,0) {};
+\node[vnlin, label=below:{$\dfrac{1}{2}$}] at (0.5,0) {};
+\node[vnlin, label=below:{$1$}] at (1,0) {};
+\end{tikzpicture}
+\caption{Sucesión de funciones $y_n$}
+\label{imgAF_Yn}
+\end{figure}
+
+Consideremos la familia de funciones $y_n$ definidas como en la figura \ref{imgAF_Yn}. Por ejemplo, $\lim_{n\to ∞} y_n(0) = 0$. En $x=\frac{1}{2}$, tenemos 
+
+\[ \{y_n(1/2) \}_{n∈ℕ} = \{ 1,0,0,\dotsc \} \]
+
+y por lo tanto $\lim_{n\to ∞} y_n(1/2) = 0$. En general, para cualquier $x>0$, tendríamos que existe un $n_0$ tal que si $\frac{1}{n_0} < x$ entonces $y_m(x) = 0$ para todo $m≥n_0$. Es decir, que tendríamos una convergencia puntual:
+
+\[ \lim_{n\to ∞} y_n(x) = 0 \; ∀x∈[0,1] \]
+
+Ahora bien, ¿qué ocurre con la integral? Sería igual al área, y entonces
+
+\[ \lim_{n\to ∞} \int_0^1 y_n(x) \dif x = \frac{1}{n} · n ·\frac{1}{2} =\frac{1}{2} \]
+
+pero sin embargo
+
+\[ \int_0^1 \lim_{n\to ∞}y_n(x) \dif x = \int_0^1 0\dif x = 0 \]
+
+Las integrales difieren, no podemos \textit{intercambiar} el límite con la integral y por lo tanto esta definición es muy débil para lo que buscamos. Tenemos que buscar una noción alternativa.
+
+\subsubsection{Convergencia uniforme}
+
+\begin{definition}\name{Convergencia}[uniforme] Diremos que una sucesión de funciones $y_n$ converge uniformemente a $y$ en el intervalo $(a,b)$ si y sólo si $∀ ε > 0 ∃n_0 = n_0(ε)$ tal que si $n>n_0$ entonces
+
+\[ \abs{y_n(x) - y(x)} < ε ∀x∈(a,b) \]
+
+o, dicho de otra forma
+
+\[ \sup_{x∈[a,b]} \abs{y_n(x) - y(x)} < ε \]
+\end{definition}
+
+La convergencia uniforme tiene una interpretación geométrica que podemos ver en la figura \ref{imgConvUnif}.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[scale=1.5,declare function={
+	wav_sl(\x,\ofst) = 0.3 * \x + 1 + \ofst + 0.2 * sin(3 * \x r);
+	wav_pert(\x,\a,\b) = \a * cos(7* \x r) + \b * sin(\x r) * cos(\x * 5 r);
+}]
+\draw[->] (-0.1,0) -- (5,0);
+\draw[->] (0,-0.1) -- (0,3);
+
+\fill[draw=none,domain=0.8:4.2,smooth,variable=\x,green!50!white, fill=green!10] 
+	(0.8, {wav_sl(0.8,-0.5)}) -- plot ({\x}, {wav_sl(\x,0.5)}) -- (4.2, {wav_sl(4.2,-0.5)})
+	plot ({5 - \x}, {wav_sl(5 - \x,-0.5)});
+
+
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!10] plot ({\x}, {wav_sl(\x,-0.2) + wav_pert(\x,0.15,0.1)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!20] plot ({\x}, {wav_sl(\x,0.2) + wav_pert(\x,0.132,-0.07)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!40] plot ({\x}, {wav_sl(\x,0.07) + wav_pert(\x,0.05,-0.01)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!80] plot ({\x}, {wav_sl(\x,0) + wav_pert(\x,0.01,0.04)});
+
+\draw[very thick,domain=0.8:4.2,smooth,variable=\x,black] plot ({\x}, {wav_sl(\x,0)});
+\draw[thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {wav_sl(\x,0.5)});
+\draw[thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {wav_sl(\x,-0.5)});
+
+
+\node[draw, circle, fill=white, inner sep=1.5pt] (M) at (2, {wav_sl(2,0)}) {};
+\node[draw, circle, fill=white, inner sep=1.5pt] (U) at (2, {wav_sl(2,0.5)}) {};
+\node[draw, circle, fill=white, inner sep=1.5pt] (L) at (2, {wav_sl(2,-0.5)}) {};
+
+\node[hnlin, label=left:{$y(x)$}] (MO) at (0, {wav_sl(2,0)}) {};
+\node[hnlin, label=left:{$y(x) + ε$}] (UO) at (0, {wav_sl(2,0.5)}) {};
+\node[hnlin, label=left:{$y(x) - ε$}] (LO) at (0, {wav_sl(2,-0.5)}) {};
+
+\draw[-] (U) -- (M) -- (L);
+
+\draw[dashed,gray] (UO) -- (U);
+\draw[dashed,gray] (MO) -- (M);
+\draw[dashed,gray] (LO) -- (L);
+\end{tikzpicture}
+\caption{Interpretación geométrica de la convergencia uniforme a $y(x)$ (negro). Todas las $y_n$ (en azul, más oscuro indica $n$ mayor) estarán en la banda coloreada.}
+\label{imgConvUnif}
+\end{figure}
+
+Si volvemos al ejemplo de los triángulos, vemos que siempre tenemos una punta que se sale fuera de la banda $(-ε, ε)$ para cualquier ε que escojamos.
+
+\paragraph{Propiedades de la convergencia uniforme} Dadas $f_n\to f,\; g_n\to g$
+
+\begin{itemize}
+\item $f_n+g_n \to f + g$
+\item $f_ng_n \to fg$
+\item $\frac{f_n}{g_n} \to \frac{f}{g}$ si $g≠0$.
+\end{itemize}
+
+Además de las propiedades algebraicas, tenemos varios teoremas.
+
+\begin{theorem} Sea $\{f_n\}_{n∈ℕ}$ una sucesión de funciones continuas en $(a,b)$. Si $f_n$ converge uniformemente a $f$ en $(a,b)$, entonces $f$ es continua en $(a,b)$.
+\end{theorem}
+
+\begin{proof} Queremos probar que dado $x_0∈(a,b)$, $∀ε>0\, ∃δ>0 \st \abs{x-x_0} < δ \implies \abs{f(x) - f(x_0)} < ε$. Conocemos la convergencia uniforme en $(a,b)$.
+
+Sumamos y restamos $f_n(x)$ y $f_n(x_0)$. Entonces
+
+\[ \abs{f(x) - f(x_0)} = \abs{f(x) \pm f_n(x) \pm f_n(x_0) - f(x_0)} ≤ \abs{f(x) - f_n(x)} + \abs{f_n(x) - f_n(x_0)} + \abs{f_n(x_0) - f(x_0)} \]
+
+Podemos elegir $n > n_0$ tal que tanto $\abs{f(x) - f_n(x)}$ como $\abs{f_n(x_0) - f(x_0)}$ sean menor que $\frac{ε}{3}$, por la convergencia uniforme. Sólo falta hacer pequeño el sumando central, y eso lo hacemos usando la continuidad de las $f_n$.
+\end{proof}
+
+\begin{theorem} Supongamos que $f_n\to f$ uniformemente en $(a,b)$, con $(a,b)$ intervalo \textbf{acotado}. Entonces
+
+\[ \lim_{n\to ∞} \int_a^b f_n(x) \dif x = \int_a^b \lim_{n\to ∞} f_n(x) \dif x = \int_a^b f(x) \dif x \]
+\end{theorem}
+
+\begin{proof} Usamos el teorema del sandwich y acotamos la diferencia de integrales.
+
+\[ 0 ≤ \abs{ \int_a^b f_n(x) \dif x - \int_a^b f(x) \dif x } ≤ \int_a^b \underbrace{\abs{f_n(x) - f(x)}}_A \dif x \]
+
+donde $A$ es menor que $ε$ para todo $x$ si $n>n_0$. Por lo tanto, 
+
+\[ \int_a^b \abs{f_n(x) - f(x)} \dif x < ε(b-a) \]
+
+que se hace tan pequeño como queramos.
+\end{proof}
+
+\begin{definition}\name{Sucesión}[de Cauchy uniforme] Se dice que $\{ f_n \}$ es de Cauchy uniforme en $(a,b)$ si y sólo si $∀ε>0$ $∃n_0=n_0(ε)$ tal que si $n,m>n_0$ entonces 
+
+\[ \abs{f_n(x) - f_m(x)} < ε\; ∀x∈(a,b) \]
+\end{definition}
+
+\subsubsection{El espacio de las funciones continuas}
+
+Denotamos al espacio $\mathcal{C}([a,b])$ como el conjunto de las funciones continuas en el intervalo $[a,b]$.
+
+\begin{definition}\name{Norma}[de funciones]\label{defNormaFun} Definimos
+
+\[ \norm{f}_{∞} = \sup_{x∈[a,b]} \abs{f(x)} \]
+\end{definition}
+
+A partir de la norma definimos la distancia 
+
+\[ d_∞(f,g) = \norm{f-g}_{∞} \]
+
+y por lo tanto tenemos una definición de convergencia de funciones:
+
+\[ f_n \convs[\norm{\cdot}_{∞}] f \iff d_∞(f_n,f) \convs[][n] 0 \]
+
+que es equivalente a la convergencia uniforme.
+
+Uniendo todos estos conceptos, tendríamos que $\mathcal{C}\left([a,b];\norm{\cdot}_{∞}\right)$ es el espacio de las funciones continuas con la topología de la convergencia uniforme.
+
+\todo[inline]{Aquí faltan las clases de dos días. Un teorema de existencia y unicidad global para sistemas lineales con coef. continuos y otro también global para EDO con 2º término globalmente Lipschitz.}
+
+Veíamos ejemplos en los que pedir una función globalmente Lipschitz era pedir demasiado. Por ejemplo, $f(y)=y^2$ no es globalmente Lipschitz. Por lo tanto, buscaremos algo más débil que nos dé teoremas de existencia y unicidad más generales.
+
+\begin{definition}\name{Condición}[de Lipschitz local]  Se dice que $f(x,y)$ es localmente Lipschitz respecto de $y$ en una región $A$ si y sólo si $∀(x_0,y_0)∈A$ existe un rectángulo $R$
+
+\[ R_{(x_0, y_0)} = [x_0-ε,x_0+ε] × [y_0-d, y_0+δ] \]
+
+tal que $R_{(x_0, y_0)}⊆ A$, y una constante $L_R$ tal que 
+
+\[ \abs{f(x,y) - f(x,z)} < L_R\abs{y-z}\quad ∀(x,y),(x,z)∈R_{(x_0, y_0)} \].
+\end{definition}
+
+\paragraph{Interpretación geométrica de la condición de Lipschitz local} Consideremos una función de Lipschitz $f$ \[\abs{f(x,y) - f(x,z)} < L\abs{y-z} \] y nos fijamos sólo en la $y$ y en la $z$. Mantenemos $z$ fijo con valor 1 (por ejemplo). Esto entonces acota nuestra función
+
+\begin{gather*}
+-L\abs{y-1} ≤ f(y) - f(z) ≤ L\abs{y-1}
+\underbrace{f(1) - L \abs{y-1}}_{G(y)} ≤ f(y) ≤ \underbrace{f(1) + L\abs{y-1}}_{H(y)}
+\end{gather*}
+
+entre dos funciones $G(y)$ y $H(y)$. Es decir.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[y=40,x=100, declare function={
+	wav_sl(\x,\a,\b) = 0.3 * (\x - \a) + \b - 0.1 + 0.1 * cos(20 * pow((\x - \a),2) r) + 0.15 * sin(10 * pow((\x - \a),2) r);
+}]
+\draw[->] (-0.2, 0) -- (3,0);
+\draw[->] (0,-0.2) -- (0,3);
+
+\fill[red!5!green!5] (0.5,2.5) -- (1.5, 1.5) -- (2.5,2.5) -- (2.5,0.5) -- (1.5, 1.5) --  (0.5,0.5);
+\draw[thick,-, red] (0.5,2.5) -- (1.5, 1.5) -- (2.5,2.5) node[right] {$H(y)$};
+\draw[thick,-, green] (0.5,0.5) -- (1.5, 1.5) -- (2.5,0.5) node[right] {$G(y)$};
+\draw[domain=0.3:2.7,smooth,variable=\x,black] plot ({\x},{wav_sl(\x,1.5,1.5)}) node[right] {$f(y)$};
+\end{tikzpicture}
+\end{figure}
+
+Y lo importante es que lo hace \textbf{en todo el intervalo} que estemos considerando. El mismo cono podemos trasladarlo por la función en todo el intervalo y siempre acotará la función.
+
+En el caso de la raíz cuadrada, vemos que en el 0 vamos a tener una tangente vertical y por lo tanto no vamos a encontrar nunca la constante $L$, ya que tiende a infinito en el cero. Es decir, podemos extraer varias observaciones:
+
+\begin{itemize}
+\item Lipschitz implica continua.
+\item Lipschitz \textbf{no implica} derivable (p.ej., $\abs{y}$).
+\item Derivable \textbf{no implica} Lipschitz global.
+\end{itemize}
+
+Parece que podemos encontrar alguna conexión entre Lipschitz y la derivada. Consideramos una $f$ derivable. Entonces 
+
+\[ f(y_1) - f(y_2) = f'(z) (y_1 - y_2) \]
+
+por el teorema del valor medio. Entonces, ese $f'(z)$ sería nuestra constante de Lipschitz $L$. Es decir, la condición de Lipschitz implica acotación de la derivada, que esa $L$ no se va a infinito.
+
+A partir de esta definición podemos llegar a otro nuevo teorema de existencia y unicidad
+
+\begin{theorem}[de existencia y unicidad local] Sea $f(x,y)$ una función continua localmente Lipschitz con respecto a la segunda variable ($y$) en una región $A⊆ℝ^2$ abierta.
+
+Entonces, dado el problema 
+
+\[ \begin{cases}
+y'(x) &= f(x,y(x)) \\
+y(x_0) &= y_0
+\end{cases} \]
+
+con $(x_0, y_0)∈A$, entonces existe una \textbf{única solución local}. Es decir:
+
+\begin{itemize}
+\item Existe una constante $α>0$ y una función $y(x)$ que es solución en $[x_0-α, x_0+α]$.
+\item Dadas soluciones $y_1$ definida en $[x_0-α_1, x_0+α_1]$, $y_2$ definida en $[x_0-α_2, x_0+α_2]$, ambas son iguales en el intervalo común $[x_0-α_1, x_0+α_1] \cap [x_0-α_2, x_0+α_2]$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+Hay dos formas de llevar a cabo la demostración: o por el teorema de la aplicación contractiva o por el método de iteradas de Picard. Hagamos los dos.
+
+\paragraph{1) T. Aplicación Contractiva} Buscamos demostrar que \[ y(x) = y_0 + \int_{x_0}^x f(s,y(s)) \dif s \] para $x∈[x_0, x_0+h]$.
+
+Trabajaremos en el espacio $X$, el conjunto de funciones $y(x)$ continuas en el intervalo  $[x_0, x_0+h]$ tales que $(x,y(x))∈R_{(x_0, y_0)}\; ∀x∈[x_0, x_0+h]$. 
+
+Definimos la transformación de funciones \[ Ty = y_0 + \int_{x_0}^{x} f(s,y(s)) \dif s \] y buscamos un punto fijo de $T$. Entonces
+
+\[ \abs{Ty(x) - Tz(x)} ≤ \int_{x_0}^{x} \abs{f(s,y(s)) - f(s,z(s))} \dif s \stackrel{\text{Lipschitz}}{≤} \int_{x_0}^x L_R \abs{y(s)-z(s)}\dif s \]
+
+Sabiendo que $\abs{y(s)-z(s)}$ será menor siempre que la norma entre esas dos funciones (ver \ref{defNormaFun}), sustituimos y 
+
+\[ \norm{Ty(x) - Tz(x)}_\infty ≤ L_Rh\norm{y-z}_\infty \]
+
+y por lo tanto será contractivo si $h<\frac{1}{L_R}$.
+
+Sin embargo, el teorema de la aplicación contractiva sólo vale para funciones de un espacio en sí mismo. En este caso, no es seguro que $Ty∈X$. Para poder aplicar el teorema, hay que demostrar que $T$ es una aplicación $\app{T}{X}{X}$. Vamos a ello.
+
+Tenemos que demostrar que si $(x,y(x)) ∈R\; ∀x∈[x_0, x_0+h]$, entonces $(x, Ty(x))∈R\; ∀x∈[x_0, x_0+h]$, o, dicho de otra forma, que $\abs{Ty(x) - y_0}<δ$.  En este caso, vemos que
+
+\[ \abs{Ty(x) - y_0} ≤ \int_{x_0}^x \abs{f(s,y(s))}\dif s \]
+
+Necesitamos que aparezca $y_0$ por alguna razón, así que sumamos y restamos y nos queda 
+
+\[ \abs{Ty(x) - y_0} ≤ \int_{x_0}^x \underbrace{\abs{f(s,y(s))}}_{A} + \underbrace{\abs{f(s,y(s) - f(s,y_0)}}_{B} \dif s \]
+
+Tenemos que $A<C_0$ por ser $f$ continua. Por otro lado, $B<L_R\abs{y-y_0}$ por la condición de Lipschitz, y al estar $y$ en el rectángulo $R$ entonces $B<L_Rδ$. Nos queda entonces 
+
+\[ \abs{Ty(x) - y_0} ≤(C_0 + L_R δ)h \]
+y nos bastará tomar $h$ suficientemente pequeño para que se cumpla que $ \abs{Ty(x) - y_0} < δ$, es decir,
+
+\[ h < \frac{δ}{C_0 + L_Rδ} \]
+
+Para finalizar la prueba, nos quedamos con el $h$ mínimo entre este y el que hace que sea contractiva:
+
+\[ h < \min \left\{ \frac{δ}{C_0 + L_Rδ}, \frac{1}{L_R} \right\} \]
+
+\paragraph{2) Iteradas de Picard} Sudo. De hecho
+
+\begin{verbatim}
+sudo rual completa esto
+\end{verbatim}
+\end{proof}
+
+Lo bueno del método de iteradas de Picard es que nos permitirá demostrar un lema adicional de continuidad con respecto a los datos.
+
+\begin{theorem}[de Gronwall] Dada una función 
+
+\[ w(x)≤ h + \int_{x_0}^x k(s)w(s)\dif s \]
+
+con $k$ continua y mayor o igual que cero, entonces 
+
+\[ w(x) ≤ h \exp{\int_{x_0}^xk(s)\dif s} \]
+\label{thmGronwall}
+\end{theorem}
+
+\begin{proof}
+
+Sea $v(x) = \int_{x_0}^x k(s)w(s)\dif s$. Entonces $v(x_0) = 0$, y  \[ v'(x) = k(x)w(x) \] por el Teorema Fundamental del Cálculo. Sustituyendo de nuevo
+
+\[ v'(x) ≤ k(x) (h + v(x)) = hk(x) + k(x) v(x) \]
+
+Nos queda un sistema
+
+\[ \begin{cases}
+v'(x) - k(x)v(x) ≤ hk(x) \\
+v(x_0) 
+\end{cases} \]
+
+Resolvemos aplicando un factor integrante $μ(x) ≥ 0$. Entonces
+
+\[ μ(x)v'(x) - k(x)μ(x)v(x) ≤ hk(x)μ(x) \] es la ecuación a plantear y nos queda
+
+\begin{gather*}
+μ' = -kμ \implies μ(x) = \exp -\int_{x_0}^x k(s) \dif s \\
+(μ(x)v(x))' ≤ h k(x) μ(x) \\
+(μ(x)v(x))' ≤ -hμ'(x) \\
+\int_{x_0}^x (μ(x)v(x))' ≤-h \int_{x_0}^x μ'(s) \dif s 
+μ(x)v(x) - \underbrace{μ(x_0) v(x_0)}_0 ≤ -h (μ(x) - \underbrace{μ(x_0)}_1)
+\end{gather*}
+
+En total, nos queda
+
+\begin{gather*}
+\exp\left(-\int_{x_0}^x k(s)\dif s\right) v(x) ≤ -h \left(\exp\left(-\int_{x_0}^x k(s)\dif s\right) - 1\right) \\
+w(x) - h ≤ v(x) ≤ h \left(\exp\left(-\int_{x_0}^x k(s)\dif s\right) - 1\right) \\
+w(x) ≤ h \exp\left(-\int_{x_0}^x k(s)\dif s\right) 
+\end{gather*}
+
+En un caso más general, si tengo que \[ w(x) ≤ h(x) + \int_{x_0}^x k(s)w(s)\dif s \] con $k$ continua y mayor o igual que cero, llegaríamos a la conclusión haciendo cuentas análogas de que
+
+\[ w(x) ≤ h(x) + \int_{x_0}^x h(s) k(s) e^{\int_{x_0}^xk(t)\dif t} \dif s \]
+
+\end{proof}
+
+Con este lema, podemos construir otro de continuidad respecto de los datos.
+
+\begin{theorem}[Continuidad respecto de los datos]\label{thmContDatos}
+
+Dados dos problemas
+
+\[ \begin{cases}
+y'(x) &= f(x,y(x)) \\
+y(x_0) &= y_0
+\end{cases}, \begin{cases}
+z'(x) &= f(x,z(x)) \\
+z(x_0) &= z_0
+\end{cases} \] con $f$ función Lipschitz, entonces 
+
+\[ \abs{y(x)-z(x)} ≤ \abs{y_0-z_0} M \] con $M∈ℝ$.
+
+Dicho de otra forma, datos próximos nos dan soluciones próximas.
+\end{theorem}
+
+\begin{proof}
+
+Dados dos problemas
+
+\[ \begin{cases}
+y'(x) &= f(x,y(x)) \\
+y(x_0) &= y_0
+\end{cases}, \begin{cases}
+z'(x) &= f(x,z(x)) \\
+z(x_0) &= z_0
+\end{cases} \]
+
+tenemos que
+
+\begin{gather*}
+y(x) = y_0 + \int_{x_0}^{x} f(s,y(s)) \dif s \\
+z(x) = z_0 + \int_{x_0}^{x} f(s,z(s)) \dif s 
+\end{gather*}
+
+Entonces, si restamos y tomamos valores absolutos,
+
+\begin{multline*}
+ \abs{y(x) - z(x)} ≤ \abs{y_0-z_0} + \int_{x_0}^x \abs{f(s,y(s)) - f(s,z(s))} \dif s \\ \stackrel{\text{Lipschitz}}{≤}  \abs{y_0-z_0} + \int_{x_0}^x L_R\abs{y(s)-z(s)} \dif s \end{multline*}
+
+Podemos aplicar el Lema de Gronwall a esta ecuación:
+
+\[ \underbrace{\abs{y(x) - z(x)}}_{w(x)} ≤ \underbrace{\abs{y_0-z_0}}_{C} + \int_{x_0}^{x} \underbrace{L_R}_{k(s)} \underbrace{\abs{y(s)-z(s)}}_{w(x)} \dif s \]
+
+y entonces tenemos que 
+
+\[ \abs{y(x)-z(x)} ≤ \abs{y_0-z_0}e^{\int_{x_0}^{x}L_R\dif S} = \abs{y_0-z_0} M \]
+
+donde $M$ es una constante, así que tenemos la continuidad.
+\end{proof}
+
+\subsection{Ejercicios}
+
+\begin{example} Analiza la convergencia puntual y uniforme de las siguientes sucesiones de funciones.
+
+\begin{enumerate}
+\item $f_n(x) = x^n -x^{n+1}$ en $[0,1]$.
+\item $f_n(x) = \frac{e^x}{x^n}$ en $(1,∞)$.
+\item $f_n(x) = x^n - x^{2n}$ en $[0,1]$.
+\item $f_n(x) = n \left(\sqrt{x + \frac{1}{n}} - \sqrt{x}\right)$ en $x > 0$.
+\item $f_n(x) = \sin\left(\frac{x}{n}\right)$ con $x∈ℝ$.
+\end{enumerate}
+
+\paragraph{$f_n(x) = x^n -x^{n+1}$} Buscamos primero la convergencia puntual, y tenemos que 
+
+\[ \lim_{n\to ∞} x^n-x^{n+1} = 0 \] por lo que converge puntualmente.
+
+Estudiamos ahora la convergencia uniforme con el límite
+
+\[ \lim_{n\to ∞} \max_{x∈[0,1]} \abs{f_n(x) - 0} = \lim_{n\to ∞} \max_{x∈[0,1]} x^n - x^{n+1} \]
+
+Para hallar el máximo, derivamos e igualamos a cero:
+
+\[ nx^{n-1} - (n+1){x^{n-1}} = x^{n-1}(n-(n+1)x) = 0 \] y nos queda 
+
+\[ \lim_{n\to ∞} \max_{x∈[0,1]} f_n(x) = f_n\left(\frac{n}{n+1}\right) = \underbrace{\frac{1}{\left(1+\frac{1}{n}\right)^n}}_{\convs \frac{1}{e}} \cdot \underbrace{\frac{1}{n+1}}_{\convs 0} = 0 \] y por lo tanto hay convergencia uniforme.
+
+\paragraph{$f_n(x) = \frac{e^x}{x^n}$} Puntualmente y con $x>1$
+
+\[ \lim_{n\to ∞} x^{-n} e^x = 0 \]
+
+Estudiamos la convergencia uniforme
+
+\[ \lim_{n\to ∞} \sup_{x>1} \abs{f_n(x)} = \lim_{n\to ∞} \sup_{x>1} x^{-n} e^x \]
+
+Derivamos e igualamos a cero
+
+\[ e^xx^{-n-1}(x-n) = 0 \iff x=n \]
+
+y evaluando
+
+\[ \lim_{n\to ∞} \eval{f_n(x)}_{x=n} = \lim_{n\to ∞} \left(\frac{e}{n}\right)^n = 0 \]
+
+Ojo, porque en este caso no tenemos convergencia uniforme. No hemos demostrado que en $x=n$ haya un máximo: de hecho, es un mínimo. También tendríamos que tener cuidado con el supremo y no el máximo, ya que estamos en un conjunto no acotado.
+
+\paragraph{$f_n(x) = x^n - x^{2n}$} Convergencia puntual. Cero. Uniforme: otra vez lo del límite, puede poner máximo.\footnote{Esta mierda de ejercicio que estoy copiando está patrocinado por la falta de sueño por culpa de redes.} Deriva. Saca algo. Es un máximo. Evalúa, distinto de cero, no hay convergencia uniforme.
+
+\paragraph{$f_n(x) = n \left(\sqrt{x + \frac{1}{n}} - \sqrt{x}\right)$} Hay que hacer el conjugado... se va a algún sitio y $\frac{1}{2\sqrt{x}} = f(x)$ es el límite puntual. Vamos a la uniforme y miramos si converge al límite puntual
+
+\[ \lim_{n\to ∞} \sup_{x∈(0,∞)} \abs{f_n(x) - f(x)} \]
+
+pero ese uno entre dos raíz de equis se va a menos infinito, y como tenemos hun balor havzolutoh me ahorro las dos caras de cuentas de derivadas de Azorero. Pero dice que no, que comprobemos en $(1/2, + ∞)$.
+
+\paragraph{ $f_n(x) = \sin\left(\frac{x}{n}\right)$} Parece que sí hay convergencia puntual. No hay uniforme en todo $ℝ$ ya que habrá algún valor en el que el seno valga uno. Sin embargo, en un intervalo acotado sí habrá convergencia uniforme.
+\end{example}
+
+
+\begin{example} Determinar para qué valores de $α≥0$ se satisface una condición de Lipschitz con respecto de $y$ siendo 
+
+\[ f(x) = \abs{y}^α \].
+
+Es trivial ver que para $α=0,1$, se cumple. Para valores mayores que 1, la derivada estará acotada si estudiamos la condición en intervalos acotados. Si $α<1$, tendremos problemas en el 0.
+
+La filosofía es que raíces malas en el 0, potencias malas en el infinito.
+
+Supongamos $y>0$, entonces $f'(y) = α y^{α-1}$. Para $α>1$, 
+
+\[ \abs{f(y_1)-f(y_2)} \stackrel{TVM}{=} \abs{f'(z)} \abs{y_1-y_2} = αz^{α-1} \abs{y_1-y_2} \stackrel{?}{<} L \abs{y_1-y_2} \]
+
+y entonces debe ser $αz^{α-1}<L$, es decir, tenemos que tener una cuota superior para $y_2$.
+\end{example}
+
+
+\subsection{Diferenciabilidad con respecto a los datos}
+
+Hasta ahora hemos estado viendo problemas de la forma
+
+\[ \begin{cases}
+y' = f(x,y) \\
+y(x_0) = t
+\end{cases} \]. 
+
+En realidad, al resolver, obtenemos funciones $y(x,t)$, una familia de soluciones que dependen del valor inicial de $t$. 
+
+Sabemos que si $f(x,y)$ es continua y localmente Lipschitz en un abierto $A⊆ℝ^2$ con $(x_0,t)∈A$, entonces tenemos existencia y unicidad local.
+
+Por otro lado, también demostramos un resultado de continuidad con respecto a los datos. Es decir, $y(x,t)$ es continua con respecto a $t$ (ver lema \ref{thmContDatos}). 
+
+El paso siguiente es ver qué ocurre cuando $f$ es algo \textit{mejor} que Lipschitz: $y(x,t)$ será también \textit{mejor}. Veamos el teorema:
+
+\begin{theorem}[Diferenciabilidad respecto a los datos] Si $f$ es una función continua en $x$ y además $C^1$ con respecto a la segunda variable, entonces la solución $y(x,t)$ es derivable respecto de $t$.
+\end{theorem}
+
+\begin{proof} Fijamos $t$, y estudiamos el límite que representa la derivada
+
+\[ \lim_{h\to 0} \frac{y(x,t+h) - y(x,t)}{h} = \lim_{h\to 0} P_h(x) \]
+
+Dicho de otra forma,
+
+\[ P_h(x) = \frac{1}{h}\left((t+h) + \int_{x_0}^x f(s, y(s, t+h)\dif s - t - \int_{x_0}^x f(s, y(s, t)\dif s\right) \] 
+que no es más que la reformulación usando la forma integral de $y$. Si seguimos operando
+
+\[ P_h(x) = 1 + \int_{x_0}^x\frac{1}{h}\left(f(s, y(s,t+h)) - f(s,y(s,t+h))\right)\dif s \]
+
+Si aplicamos el teorema del valor medio
+
+\[ P_h(x) = 1 + \int_{x_0^x} \underbrace{\pd{f}{y}(s,z(s,h))}_{F}\underbrace{\frac{1}{h} (y(s,t+h) - y(s,t))}_{P_h(x)} \dif s \]
+
+con $z(s,h)$ un valor intermedio entre $y(s,t)$ e $y(s,t+h)$, que tiende a $y(s,t)$ cuando $h\to 0$. Llamamos $F$ a la derivada parcial para simplificar, y además vemos que nos vuelve a salir $P_h$. Reescribimos
+
+\[ P = 1 + \int_{x_0}^{x} FP \dif s \]
+y vemos que estamos antes la formulación integral del siguiente problema
+
+\[ \begin{cases}
+P' = FP \\
+P(x_0) = 1
+\end{cases} \implies P = e^{\int_{x_0}^x F\dif s} \]
+
+Calculamos ahora el límite de $P_h$ cuando $h\to 0$. El punto delicado es cómo pasar el límite de fuera de la integral a dentro. Asumiendo que se puede hacer sin problemas, quedaría
+
+\[ \lim_{h\to 0} P_h(x) = \exp{\int_{x_0}^x \pd{f}{y}(s,y(s,t)) \dif s} = \pd{y}{t} \]
+
+Para poder pasar el límite, tenemos que tener convergencia uniforme. Como estamos trabajando en un conjunto compacto con una función continua, la función es uniformemente continua , tendremos esa convergencia y podremos pasar el límite dentro.
+
+\end{proof}
+
+\subsection{Resultados de prolongabilidad}
+
+Queremos explorar hasta dónde llegan las soluciones que obtenemos y el tipo de desastres que podemos encontrar. Tenemos el problema de siempre,
+
+\[ \begin{cases}
+y' = f(x,y) \\
+y(x_0) = t
+\end{cases} \], con $f(x,y)$ es continua y localmente Lipschitz en un abierto $A⊆ℝ^2$ con $(x_0,t)∈A$, entonces tenemos existencia y unicidad local.
+
+Sabemos varias cosas:
+
+\begin{itemize}
+\item \textbf{Existencia local} $∃α>0, y(x)$ solución definida en $[x_0,x_0 + α]$.
+\item \textbf{Unicidad} Si tenemos dos soluciones $y_1,y_2$ definidas en los intervalos $[x_0, x_0 + α_{1/2}]$ respectivamente, entonces ambas son iguales en el intervalo $[x_0, x_0 + \min \{α_1,α_2\}]$.
+\end{itemize}
+
+La pregunta es, ¿hay una solución maximal, que no se pueda extender más? Consideremos el conjunto
+
+\[ S= \{ α∈ℝ \st ∃ y(x) \text{ solución en } [x_0,x_0+α] \} \]
+
+Buscamos $α_{max} = \sup S$, que nos dará el intervalo maximal $[x_0, x_0 + α_{max})$. Es importante tener en cuenta que el intervalo está abierto por la derecha. 
+
+Lo primero que tenemos que considerar es que en el intervalo maximal no puede haber dos soluciones distintas que arranquen del mismo punto. 
+
+Si nos salimos fuera del conjunto $A$ en el que la función es Lipschitz, podemos tener un desastre. ¿Qué puede ocurrir dentro?
+
+Podemos tener una solución que \textit{se pare antes}, que oscile infinitamente, que llegue al borde o que explote.\todo{Dibujitos}
+
+El teorema nos dice que las primeras dos cosas no pueden ocurrir, y que las dos segundas sí. Esta cosa tan vaga la formalizamos viendo que toda solución se escapa de cualquier conjunto compacto estrictamente contenido en $A$ y que contenga al dato inicial. 
+
+\begin{theorem}
+Consideramos el problema
+\[ \begin{cases}
+y' &=f(x,y) \\ 
+y(x_0)&=y_0
+\end{cases} \]
+con $f$ continua y localmente Lipschitz respecto de $y$ en un abierto $A\subset \real^2$ con $(x_0,y_0)\in A$. 
+
+Entonces para cualquier compacto K con $(x_0,y_0)\in K\subset A$, podemos encontrar $x^{\ast}\in[x_0,x_0+\alpha_{max})$ tal que $(x^{\ast},y(x^{\ast}))\in A-K$.
+
+
+\end{theorem}
+
+\begin{proof}
+Llamamos $S\equiv \{\alpha\in\real \st \text{ la solución y(x) está definida en } [x_0,x_0+\alpha] \}$ y $\alpha_{max} = sup(s)$.
+
+$\forall n>0$ podemos encontrar $x_n \in \left(x_0 + \alpha_{max} - \frac{1}{n},x_0+\alpha_{max}\right)$ tal que $s_n\in S$, donde 
+
+Entonces podremos construir una sucesión $x_n$ creciente de Cauchy cuyo límite es $x_0+\alpha_{max}$ en $x_0 + \alpha_{max}$ tal que y esté definida en todos los $x_n$.
+
+Vamos a demostrarlo por \textbf{reducción al absurdo:}
+
+Supongamos $(x,y(x))\subset K, \forall x\in[x_0,x_0+\alpha_{max}]$.
+
+En particular $\{(x_n,y(x_n))\}\subset K$,
+
+
+Entonces queremos ver que $| y(x_n) - y(x_m)|$ para comprobar si es convergente y si tiene límite utilizando el criterio de Cauchy.
+
+Poniendolo en notación integral:
+
+\[| y(x_n) - y(x_m)| \underset{m>n}{=} y_0 + \int_{x_n}^{x_m} f(s,y(s))ds \leq M |x_m-x_n| \]
+
+\paragraph{Conclusión:}
+Por ser $\{X_n\}$ convergente, entonces $\{y(x_n)\}$ es de Cauchy y por tanto tiene límite, que vamos a llamar $y^{\ast}$ .
+
+Como K es compacto, entonces $y^{\ast}\in K$. (por ser límite de la sucesión).
+
+¿Podemos definir $y(x_0+\alpha_{max} = y^{\ast})$? 
+\textbf{Respuesta:} Todavía no. Si tuvieramos una solución que oscile al acercarse a la frontera, el límite dependería de la sucesión que eligiéramos. Necesitamos demostrar que $y^{\ast}$ no depende de la sucesión $\{x_n\}$ de puntos de la curva que hayamos elegido.
+
+Para ello: sea $\{z_n\}$ ptra sucesión con $z_n$ que se aproxima a $x_0+\alpha_{max}$. ¿Qué pasa con $|y(x_n) - y(z_n)| \to 0$? 
+
+
+\[|y(x_n) - y(z_n)| = \int_{x_n}^{z_n} f(s,y(s))ds \underset{\begin{array}{c}(x,y(x))\in K \subset A\\\text{ f continua }\end{array}}{\leq}M |z_n - x_n| \to 0 \implies (*) \]
+\[(*) \implies \exists!y^{\ast} \st y^{\ast} = \lim_{x\to (x_0+\alpha_{max})^{-}} y(x) \text{ para cualquier sucesión con límite } x_0+\alpha_{max}\]
+
+
+Estudiamos este problema:
+\[\begin{array}{cc}
+y' &= f(x,y)\\
+y(x_0+\alpha_{max} &= y^{\ast})
+\end{array}\]
+Por ser Lipschitz tenemos el teorema de existencia y unicidad local (refrencia) entonces tendríamos una solución que sobrepase el punto $x_0+\alpha_{max}$ contradiciendo la hipótesis.
+
+\end{proof}
+
+Algunas estimaciones del intervalo maximal. 
+
+Vamos a considerar $A \equiv (x,b)×ℝ$, es decir, una banda vertical en $\real^2$.
+
+\paragraph{Caso 1}
+Supongamos que la $f(x,y)\leq C,\forall (x,y)\in A$ (está acotada). Además suponemos (como siempre) que $f$ es continua y localmente Lipschitz.
+
+Tenemos un $(x_0,y_0)$ y queremos comprobar si la solución llega al extremo (o por el contrario tiene una asíntota).
+
+Sea la solución: $\displaystyle y(x) = y_0 + \int_{x_0}^{x} f(s,y(s))ds\, x\int [x_0,x_0+\alpha_{max})\subset [x_0,b)$.
+
+\[y(x) - y_0| \leq \int_{x_0}^x |f(s,y(s))|ds \leq C |x-x_0|\]
+
+\[y(x) - y_0|\leq C |x-x_0| \implies y_0 - C(x-x_0) \leq y(x) \leq y_0 + C(x - x_0)\] es decir, está controlada por las rectas $y_0 \pm C(x-x_0)$ evitando así cualquier asíntota vertical. Además, el teorema anterior nos dice que la solución se sale del conjunto compacto, con lo que el intervalo maximal llega hasta b.
+
+\textbf{Lado derecho acotado implica solución global en (a,b)}
+
+\paragraph{Caso 2} Supongamos $|f(x,y)|\leq A(x)|y| + B(x);\, A,B\ge 0$ continuas en (a,b)
+
+Trabajando con notación integral:
+\[|y(x)| \leq  |y_0| + \int_{x_0}^x | A(s)|y(s)| + B(s)|ds = \underbrace{|y_0| + \int_{x_0}^x B(s)ds}_{C} + \int_{x_0}^x A(s)|y(s)|ds \]
+Esta es una desigualdad que nos permite aplicar el lema de Gronwall.
+
+Entonces $|y(x)| \leq C \exp{\int_{x_0}^{b^{\ast}} A(s)ds }$.
+
+Donde $b^{\ast}$ es un punto arbitrario para acotar la solución con un valor que no dependa de $x$.
+
+\textbf{El intervalo maximal $\equiv (a,b)$}
+
+
+\paragraph{Ejemplo:} 
+\[\begin{array}{cc}
+y'&=y^2\\
+y(0)&=1
+\end{array}\]
+
+\[\frac{y'}{y^2} = 1 ; \int_0^x \frac{y'/s(ds)}{(y(s))^2} = \int_0^x 1ds = x \implies ... \implies y(x) = \frac{1}{1-x}\]
+Aquí el intervalo maximal hacia la derecha es $[0,1)$.
+
+Sin embargo, el lado derecho ($y^2$) es localmente Lipschizt en todo $\real^2$.
+
+Vamos a demostrarlo para recordar: Siendo una función derivable, aplicamos que si la derivada está acotada, entonces la primitiva el Lipstchizt. 
+
+Como $2y$ es localmente acotada, entonces $y^2$ es localmente Lipschitz.
+
+Vamos a definir un compacto $K = [0,R]×[1,1+h]$ y por el teorema anterior sabemos que la solución se escapa del compacto. Ahora vamos a ver si por arriba o por la derecha (para ver hasta donde llega el intervalo maximal).
+
+\[0\leq y' \leq (1+h)^2\]
+Integrando, (con alguna cuenta intermedia) obtenemos:
+\[1\leq y (x) = 1 + (1+h)^2 x\]
+
+Es decir, la solución está acotada por 2 rectras, $y=1$ por abajo y $1 + (1+h)^2 x$ por arriba (hasta el corte con el borde superior del compacto, que llamamos $R(h)$).
+
+Lo único que podemos decir es que la solución no ha \textit{explotado} antes de $R(h)$.
+
+Vamos a calcular (creo que por diversión) cuánto vale $R(h)$.
+\[(1+h) = (1+h)^2x+1\]
+\[R(h) = \frac{h}{(1+h)^2}\]
+
+
+No era por diversión. Si tenemos $h\to \infty$ ó $h=0 \implies R(h) \to 0$. Esto nos da un máximo: $h=1; R(1)=\frac{1}{4}$.
+
+\textbf{Conclusión} el intervalo de existencia contiene a $\left[0,\frac{1}{4}\right]$.
+
+El dibujo de los triángulos te lo dejo a ti Rual xD
+
+Haciendo el apaño de los triángulos llegamos a un intervalo $\left[0,\frac{1}{2}\right]$
+
+Vamos a ver un ejemplo más sencillo por el que tendríamos que haber empezado (tal vez) q estoy muy cansado como para copiar........
+
+\todo[inline]{Quince primeros minutos de clase faltan aquí}
+
+\begin{example}
+Veamos el problema \[ \begin{cases} y' &= y^{2/3} \\ y(0) &= 0 \end{cases} \]
+
+No podemos aplicar directamente el teorema de existencia y unicidad: la derivada no está acotada alrededor de 0 y por lo tanto no es localmente Lipschitz en ese punto. Si nos dijeran que $y(0) = ε ≠ 0$ sí sería localmente Lipschitz en un entorno pequeño del punto.
+
+Como no podemos aplicar el teorema, tenemos que estudiar el caso más detenidamente. En primer lugar, vemos que $y\equiv 0$ es solución. También podemos resolver como una ecuación de variables separadas:
+
+\[ \int_0^x \frac{y(s)}{y^{2/3}(s)} \dif s = \int_0^x \dif s = x \] sobre la que podemos hacer un cambio de variables $y(s) = t$, $y'(s) \dif s = \dif t$ y entonces
+
+\[ \int_{y(0)}^{y(x)} \frac{\dif t}{t^{2/3}} = \eval{t^{1/3}{\frac{1}{3}}}_{t=y(0)=0}^{y(x)} = 3y^{1/3}(x) 
+\] 
+y por lo tanto \[ y(x) = \left(\frac{x}{3}\right)^3 \] es otra solución.
+
+¿Hay alguna más? Efectivamente, de hecho podemos combinar las dos:
+
+\[ y(x) = \begin{cases}
+0 & x ≤ 0 \\
+\left(\frac{x}{3}\right)^3 & x > 0
+\end{cases}\quad \text{\'o} \quad y(x) = \begin{cases}
+\left(\frac{x}{3}\right)^3 & x ≤ 0 \\
+0 & x ≤ 0\end{cases} \]
+
+E incluso podemos conseguir infinitas soluciones combinando "desplazamientos", como por ejemplo el de la figura \ref{imgInfSoluciones}.
+\end{example}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-3,0) -- (3,0);
+\draw[->] (0,-3) -- (0,3);
+
+\draw[thick,domain=-2.8:1,smooth,variable=\x,blue!80] plot ({\x}, {0});
+\draw[thick,domain=1:2.8,smooth,variable=\x,blue!80] plot ({\x}, {(\x-1)*(\x-1)*(\x-1)/3});
+\end{tikzpicture}
+\label{imgInfSoluciones}
+\caption{Una solución posible trasladando otra con dato inicial $y(1) = 0$}
+\end{figure}
+
+
+Sin embargo, no tiene por qué ocurrir siempre que se nos descuadre todo al no poder aplicar la condición de Lipschitz. Veamos otro ejemplo
+
+\begin{example}
+ \[ \begin{cases} y' &= (y-x)^{2/3} \\ y(x_0) &= y_0 \end{cases} \]
+ 
+ En este caso los problemas aparecen cuando $y=x$. Es decir, que podemos aplicar el teorema de existencia y unicidad local cuando $y_0 ≠ x_0$. 
+ 
+ Supongamos, por poner las cosas interesantes, que $y(1) = 1$. Hay que estudiar este caso directamente.
+ 
+ Podemos resolverlo a través del teorema de la función implícita. Sea $w(x) = y - x$. Haciendo las sustituciones
+ 
+ \begin{gather*}
+ y(x) = w(x) + x \\
+ y' = w' + 1
+ \end{gather*} 
+ 
+ convertimos el problema en 
+ 
+ \[ \begin{cases}
+ w'+1 = w^{2/3} \\
+ w(1)  = 0
+ \end{cases} \]
+ 
+ Resolviendo como ecuación de variables separadas de la misma forma que en el anterior ejemplo, llegamos a la integral
+ 
+ \[ \int_{0}^{w(x)}  \frac{\dif t}{t^{2/3} - 1} \]
+ 
+ Y ahí está la solución, si pudiésemos resolver explícitamente la integral y despejar $w$. Pero podemos usar el teorema de la función implícita. Tenemos una función $F$ definida como
+ 
+ \[ F(x,w) = (x-1) - \int_{0}^{w(x)}  \frac{\dif t}{t^{2/3} - 1} 
+ \] 
+ con $F(1,0) = 0$. ¿Podemos despejar $w(x)$? Para saberlo necesitamos comprobar que la derivada es distinta de cero:
+ 
+ \[ \pd{F}{w} = - \eval{\frac{1}{w^{2/3} - 1}}_{(x,w) = (1,0)} = 1 ≠ 0 \] y por lo tanto el TFI nos dice que existe $w(x)$ despejable a partir de $F$ y que además es única.
+\end{example}
+
+En resumidas cuentas, cuando no se cumplen las hipótesis del teorema puede pasar cualquier cosa. Veamos otro ejemplo bastante artificial pero interesante.
+
+\begin{example}
+\[ \begin{cases}
+y' &= \frac{\sqrt{1-y^2}}{1+x^2} \\
+y(0) = \frac{1}{2}
+\end{cases} \]
+
+La ecuación nos restringe $y$ al intervalo $[-1,1]$ para que la raíz cuadrada esté definida. Y de hecho, en esos dos extremos del intervalo la derivada será cero así que tendremos un problema. Por otra parte, $y\equiv \pm 1$ son soluciones de la ecuación (no del problema entero).
+
+La solución es
+
+\[ y(x) = \sin \left(\frac{1}{1-x} - 1 + \frac{π}{4}\right) 
+\]
+que no es más que una traslación de la función $\sin\frac{1}{1-x}$, cuya gráfica se ve en la figura \ref{imgSenoOsc}. En $1$ tenemos un montón de oscilaciones, por lo tanto el intervalo maximal de la solución será $[0, 1)$.
+\end{example}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/SenoOscilaciones.png}
+\caption{$y(x) = \sin\frac{1}{1-x}$}
+\label{imgSenoOsc}
+\end{figure}
+
+\begin{example} 
+
+\[ \begin{cases}
+y' = \dfrac{x^2 + 4y^2 + xy}{1 + x^2 + y^2} \\
+y(x_0) = y_0
+\end{cases} \]
+
+Se verifica condición de Lipschitz local y por lo tanto tenemos existencia y unicidad local para cualquier punto $(x_0,y_0)$. ¿Hasta dónde llega la solución?
+
+Podemos aplicar uno de los tres casos que hemos visto. Los dos polinomios son del mismo orden, por lo tanto el lado derecho estará acotado y tendremos el primer caso, de tal forma que tenemos existencia global.
+
+Vamos a demostrar mejor la existencia de esa cota.
+
+\begin{multline*}
+ \dfrac{x^2 + 4y^2 + xy}{1 + x^2 + y^2} ≤ \dfrac{x^2 + y^2 + 3y^2 + \abs{xy}}{1 + x^2 + y^2} ≤ \dfrac{1 + x^2 + y^2 + 3 y^2 + xy}{1 + x^2 + y^2} =\\ =
+  1 + \frac{3y^2 + \abs{xy}}{1+x^2+y^2} ≤ 1 + \frac{3(1+x^2+y^2) + \abs{xy}}{1+x^2+y^2} = 4 + \frac{\abs{xy}}{1+x^2+y^2} \end{multline*}
+
+Por último, viendo que $0≤(x-y)^2 = y^2+x^2 - 2xy \implies \dfrac{x^2+y^2}{2} ≥ xy$ nos queda que 
+
+\[ 
+	4 + \frac{\abs{xy}}{1+x^2+y^2} ≤ 4 + \frac{x^2+y^2}{2(1+x^2+y^2)} ≤ 4 + \frac{1 x^2+y^2}{2(1+x^2+y^2)} = 4 + \frac{1}{2} 
+\]
+y, efectivamente, nos queda una cota.
+
+
+\end{example}
+
+En muchos casos nos encontraremos cálculos complicados, y en estos casos podemos usar argumentos de comparación con problemas más simples. Veamos cómo hacerlo.
+
+\begin{example}
+\[ \begin{cases} 
+y' = y^2 +x^2 \\
+y(0) = 1
+\end{cases} \]
+
+A pesar de la sencillez de la ecuación, resolverla será difícil. Podemos explorar ecuaciones similares. Por ejemplo, viendo que el dato inicial nos lo dan en $x=0$, podemos pensar que la ecuación deberá parecerse mucho a 
+
+\[ \begin{cases} 
+z' = z^2 \\ 
+z(0) = 1
+\end{cases} \].
+
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+\begin{tikzpicture}[xscale=1.2]
+\draw[->] (-0.8,0) -- (3.4,0);
+\draw[->] (0,-0.8) -- (0,3);
+
+\draw[thick,domain=-0.3:2.5,smooth,variable=\x,green!80] plot ({\x}, {1/(3-\x) + 0.3*\x})  node[right,xshift=5pt] {$y(x)$};
+\draw[thick,domain=-0.3:2.5,smooth,variable=\x,blue!80] plot ({\x}, {1/(3-\x)}) node[right,xshift=5pt] {$z(x)$};
+\draw[dashed, gray] (2.6,-0.2) -- (2.6, 3);
+\end{tikzpicture}
+\caption{Gráfica de $y(x)$ y $z(x)$.}
+\label{imgGraficaAprox}
+\end{wrapfigure}
+
+Vemos que la gráfica de $z$ se mantendrá por debajo todo el tiempo, ya que $z' < y'$ en todo caso (ver figura \ref{imgGraficaAprox}). Como la solución del segundo problema es $z(t) = \dfrac{1}{1-t}$, $y$ también tendrá una asíntota vertical en $t=1$ o incluso antes. Por lo tanto, el intervalo maximal a la derecha para $y(t)$ está contenido en $(0,1)$.
+
+También podemos llegar al mismo resultado de otra forma, trabajando con desigualdades. Sabiendo que $y$ es siempre mayor que cero, podemos decir
+
+\[ y'= y^2+x^2 ≥ y^2 \implies \frac{y'}{y^2} ≥ 1 \]
+
+Integrando
+\[
+ \int_0^x \frac{y'(s)}{y^2(s)}\dif s ≥ \int_0^x \dif s = x
+\] 
+y haciendo cambio de variable $y(s) = t$, $y'(s)\dif s = \dif t$
+\[ 
+\int_1^{y(x)}\frac{\dif t}{t^2} = \eval{\frac{-1}{t}}_{t=1}^{y(x)} = 1 - \frac{1}{y(x)}
+\].
+
+Con esto nos quedaría la siguiente desigualdad.
+
+\[ y(x) ≥ \frac{1}{1-x} \].
+
+También podemos hacer una segunda estimación. Aplicando que el intervalo maximal de nuestra solución es como  mucho $(0,1)$, vemos que
+\[ 
+y' = y^2 + x^2 ≤ y^2 + 1
+\]
+lo que nos daría una nueva estimación
+
+\[ y(x) ≤ \tan\left(x + \frac{π}{4}\right) \].
+
+Juntando todos los resultados, tendríamos una estimación como la de la figura \ref{imgEstRegion}.
+
+\end{example}
+
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[xscale=1.5, yscale=1.2]
+\draw[->] (-0.8,0) -- (3.4,0);
+\draw[->] (0,-0.8) -- (0,3);
+
+\draw[thick,domain=-0.3:0.6,smooth,variable=\x,green!80] plot ({\x}, {tan((\x + pi/4) r) / 2}) node[right,xshift=5pt] {$\tan\left(x + \dfrac{π}{4}\right)$};
+\draw[thick,domain=-0.3:2.5,smooth,variable=\x,blue!80] plot ({\x}, {1/(3-\x)}) node[right,xshift=5pt] {$\dfrac{1}{1-x}$};
+\draw[dashed, gray] (2.6,-0.1) -- (2.6, 3);
+\draw[dashed, gray] (0.65,-0.1) -- (0.65, 3);
+\node[label=below:{$\dfrac{π}{4}$}] at (0.65,0) {};
+\node[label=below:{$1$}] at (2.6,0) {};
+
+\end{tikzpicture}
+\caption{La función real $y(x)$ estará entre las dos funciones que hemos estimado..}
+\label{imgEstRegion}
+\end{figure}
+
+\paragraph{Método de las poligonales de Euler y funciones no-Lipschitz} Consideremos el ejemplo anterior de $y'=y^{2/3}$. Si aplicamos el método de las poligonales de Euler, no encontraríamos ninguna otra solución que no fuese la constante $y\equiv 0$. Sin embargo, si tomamos un punto inicial $y(0) = ε$ la solución sí crecerá. Por lo tanto, si no tenemos un teorema que nos garantice unicidad tendremos que estudiar qué ocurre alrededor de ese punto para comprobar que no nos dejamos ecuaciones.
+
+Sigamos con más ejemplos.
+
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[xscale=2,yscale=1.4]
+
+\draw[->] (-0.8,0) -- (3,0);
+\draw[->] (0,-0.8) -- (0,2);
+
+\draw[gray,-,fill=orange!10] (0,0) rectangle (2,1);
+\draw[pattern=horizontal lines, pattern color=red!70!orange] (0,0) -- (0.86,1) -- (2,1) -- (2,0) -- (0,0);
+\path[name path=hl] (0,1) -- (2,1);
+\draw[name path=fn, very thick,-] (-0.5,-0.6) -- (1.5,1.8) node[right] {$(h^4+r)x$};
+
+\path [name intersections={of=hl and fn,by=E}];
+\node (I) [above=0.5 of E] {};
+\node (IO) [below=1 of E] {};
+\draw[dashed] (I) -- (IO);
+\node[vnlin,label=below:{$R(h)$},anchor=north] at (IO) {};
+
+\node[anchor=north west,orange!80!black] at (0,1) {$K$};
+\node[hnlin,gray,label=left:{$h$}] at (0,1) {};
+\node[vnlin,gray,label=below:{$R$}] at (2,0) {};
+\end{tikzpicture}
+\caption{Representación del conjunto $K$, donde la zona rayada es donde encontraremos la solución.}
+\label{figConjuntoK}
+\end{figure}
+
+\begin{example}
+\[ \begin{cases}
+y' = y^4 + r \\
+y(0) = 0
+\end{cases}
+\] 
+con $r>0$. La ecuación verifica una condición de Lipschitz local. A primera vista vemos que $y'>0$ y por lo tanto $y≥0$.
+
+Consideramos el conjunto $K$, un rectángulo de altura $h$ y anchura $R$ (figura \ref{figConjuntoK}). Podemos hacer una estimación y operar
+
+\begin{gather*}
+0 ≤ y^4 + r ≤ h^4 + r \\
+0 ≤ y' ≤ h^4 + r \\
+0 ≤ y(x) ≤ (h^4+r)x \quad ∀(x,y) ∈ K
+\end{gather*}
+
+Por lo tanto, la solución tendrá un intervalo maximal a la derecha $[0,b)$, donde $b$ será mayor o igual a $R(h)$, que es la intersección de la recta $(h^4+r)x$ con $y=h$, es decir
+
+\[ R(h) = \frac{h}{h^4+r} \]
+
+Queremos hallar el $R(h)$ óptimo, así que derivando y operando obtenemos que
+
+\[ b ≥ R(h_{max}) = \left(\frac{r}{3}\right)^{-3/4} \frac{1}{4} \]
+
+Tomemos ahora la indicación del problema. Suponemos que $b>r^{-3/4}$. ¿Qué estimación podemos obtener a partir de esto? 
+\end{example}
+
+
+
+\begin{example}[Problema 16]
+Tenemos 
+
+\[ \begin{cases}
+y' = \frac{y}{1+x^2} + e^{-y^2} \\
+y(0) = 10
+\end{cases},\quad 
+\begin{cases}
+z' = \frac{z}{1+x^2} \\
+z(0) = 10
+\end{cases} \]
+
+Queremos demostrar que $0< y(x) - z(x) ≤ e^{-100} (e^x-1)$.
+
+En el caso de la primera ecuación, vemos que $y'≥0$, así que $y(x) ≥ 10\,∀x ≥ 0$. Además, $f(x,y)$ es continua en $ℝ^2$. Para comprobar la condición de Lipschitz, acotamos
+
+\[ \abs{\pd{f}{y}} = \abs{\frac{1}{1+x^2}+e^{y^2}(-2y)} ≤ \frac{1}{1+x^2} + 2\abs{y} e^{-y^2} ≤ 1+2\abs{y} 
+\] 
+y tenemos condición de Lipschitz local, por lo que tenemos existencia y unicidad local. Además, también podemos acotar el lado derecho de la ecuación por un término lineal:
+
+\[ \abs{f(x,y)} ≤ \abs{\frac{y}{1+x^2} + e^{-y^2}} ≤ \frac{\abs{y}}{1+x^2} + e^{-y^2} ≤ \abs{y} + 1 
+\]
+lo que, junto con el segundo teorema de prolongabilidad, tenemos existencia en $[a,b]$  $∀a,b$.
+
+Pero además, podríamos haber logrado una cota mejor para $2\abs{y} e^{-y^2}$. Sabiendo que es una función continua y que tiende a 0 cuando $y\to \infty$, podemos decir que existe un máximo $C$. Acotando esa parte por una constante tendríamos Lipschitz global y existencia en todo $ℝ$ de la solución.
+
+Pasamos ahora al segundo problema. Es una ecuación de variables separadas, así que integramos (podemos pasar la $z$ dividiendo ya que es siempre positiva):
+
+\begin{align*}
+\frac{z'}{z} &= \frac{1}{1+x^2} \\
+\eval{\log z(s)}_{s=0}^x &= \eval{\arctan s}_{s=0}^x \\
+\log z(x) - \log 10 &= \arctan x \\
+z(x) &= 10 e^{\arctan x}
+\end{align*}
+
+De hecho, si aplicamos esto al primer problema, podemos decir que
+
+\begin{align*}
+y' &>  \frac{y}{1+x^2} \\
+\frac{y'}{y} &> \frac{1}{1+x^2} \\
+y(x) &> 10 e^{\arctan x} = z(x)
+\end{align*}
+
+Tenemos ya la primera parte de la desigualdad, $y(x) - z(x) > 0$. Pasamos a demostrar la segunda parte. Sabemos que
+\begin{gather*}
+y(x) = 10 + \int_0^x \frac{y(s)}{1+s^2} + e^{-y^2(s)} \dif s \\
+z(x) = 10 + \int_0^x \frac{z(s)}{1+s^2} \dif s \\
+y(x) - z(x) = \int_0^x \frac{y(s)-z(s)}{1+s^2} + e^{-y^2(s)} \dif s
+\end{gather*}.
+
+Transformamos la ecuación para aplicar el lema de Gronwall (\ref{thmGronwall}):
+
+\( \label{eqProb16}
+y(x) - z(x) = \int_0^x e^{-y^2(s)} \dif s + \int_0^x \frac{y(s)-z(s)}{1+s^2}\dif s ≤ e^{-100} + \int_0^x \frac{y(s)-z(s)}{1+s^2}\dif
+\)
+Tomando $k(s) = \frac{1}{1+s^2}$, nos quedaría que 
+\[ 
+y(x) - z(x) ≤ e^{-100}e^{\int_0^x\frac{1}{1+s^2}\dif s} = e^{-100} e^{\arctan x} 
+\].
+
+Comparamos con lo que nos pedían: hemos llegado a algo parecido pero no a lo mismo. De hecho, cuando $x\to 0$ la exponencial es mejor en la desigualdad que nos daban, y es que el Lema de Gronwall nos va a dar siempre el mismo resultado: cuando $x\to 0$, la integral se va a cero y por lo tanto la cota se quedaría en $e^{-100}$.
+
+Lo que haremos será parar antes de la primera estimación, en \eqref{eqProb16}, y ver qué cuentas hacíamos en la demostración del lema de Gronwall para no perder precisión. Llamamos $w=y-z$, y 
+
+\[ \int_0^x\frac{w(s)}{1+s^2}\dif s \equiv Φ(x) 
+\]. 
+
+Operando:
+
+\begin{gather*}
+Φ'(x) = \frac{w(x)}{1+x^2} ≤ \frac{1}{1+x^2}\left(e^{-100} x + Φ(x)\right) \\
+Φ'(x) - \frac{1}{1+x^2}Φ(x) ≤ e^{-100}\frac{x}{1+x^2} 
+\end{gather*}
+
+Tratamos de resolver esa ecuación diferencial usando un factor integrante $μ≥0$:
+
+\begin{align*}
+ μΦ' - \frac{μ}{1+x^2}Φ &≤ e^{-100}μ\frac{x}{1+x^2} \\
+ μΦ' + μ'Φ &= μΦ' - \frac{μ}{1+x^2}Φ \\
+ μ' &= \frac{-μ}{1+x^2} \\
+ \cdots & \cdots \\
+ μ(x) &= e^{-\arctan x} \\
+\left(e^{-\arctan x}Φ\right)' & ≤ e^{-100} \frac{e^{-\arctan x}x}{1+x^2} \\
+\int_0^x \left(e^{-\arctan s}Φ(s)\right)'\dif s &≤ e^{-100}\int_0^x \frac{e^{-\arctan s}s}{1+s^2} \dif s \\
+e^{-\arctan x} Φ(x) - 0 &≤ e^{-100} \left( \eval{se^{-\arctan s}}_{s=0}^x + \int_0^x e^{-\arctan s} \dif s \right) \\
+Φ(x) &≤ e^{-100}\left(-x+e^{\arctan x}\int_0^2 e^{-\arctan s}\dif s\right)
+\end{align*}
+
+Metiendo ahí la estimación de $w≤e^{-100}x + Φ(x)$ (que no sé de dónde puñetas ha salido) tenemos que
+
+\[ w(x) ≤ e^{-100} \left(e^{\arctan x} \int_0^x e^{-\arctan s} \dif s\right) \]
+
+¿Cómo llegamos a que  $e^{\arctan x} \int_0^x e^{-\arctan s} \dif s < e^x -1$? Vemos que para $x∈[0,1]$, $e^{\arctan x} < e^x$ y que como $e^{-\arctan s} < 1$, entonces $\int_0^x e^{-\arctan s} < x$. Sin embargo, esta estimación no es válida. Vamos por otra parte.
+
+Consideramos la función \[ u(x) = e^{\arctan x} \int_{0}^{x}e^{-\arctan s}\dif \]. Si derivamos, 
+
+\begin{gather*}
+ u' = \frac{e^{\arctan x}}{1+x^2}\int_0^x e^{-\arctan s}\dif s + e^{\arctan x}e^{-\arctan x} \\
+ u' = \frac{u}{1+x^2} + 1 ≤ u+1
+ \end{gather*}
+ 
+Resolvemos esta ecuación diferencial con el valor inicial $u(0) = 0$ y nos queda que $u(x) ≤ e^x-1$, y tendríamos resuelto el problema. Pero hemos llegado a prácticamente la misma ecuación que antes, quitándonos el $e^{-y^2}$. Y es que efectivamente, si restamos
+
+\[ (y-z)' = \frac{y-z}{1+x^2} + e^{-y^2} \stackrel{y ≥ 10}{≤} \frac{y-z}{1+x^2} + e^{-100}  ≤ (y-z) + e^{-100} 
+\]
+y ahora resolviendo \[ \begin{cases} w' ≤ w + e^{-100} \\ w(0) = 0 \end{cases} \implies w(x) ≤ e^{-100}\left(e^x - 1\right) \].
+\end{example}
+
+\section{Sistemas autónomos. Plano de fases}
+
+Ya hemos pasado por un tema de sistemas lineales donde aprendimos a resolver cosas de la forma \[ \begin{cases}x'= a_{11}x + a_{12}y \\ y'=a_{21}x + a_{22}y \end{cases} \]. Ahora veremos sistemas de la forma \[ \begin{cases} x'(t) = F(x,y) \\ y'(t) = G(x,y) \end{cases} \]. Trabajaremos en dimensión dos para dibujar de forma mucho más precisa los sistemas, pero la teoría será genérica.
+
+El detalle importante de estos sistemas es que en la parte derecha no aparece la variable $t$, lo que nos da un resultado básico: si $X(t) = (x(t), y(t))$ es solución, entonces también lo es $X_h(t) = (x(t+h), y(t+h))\; ∀h∈ℝ$. Es decir, las soluciones serán \textbf{invariantes por traslación}. Obtendremos la solución concreta al fijar el dato inicial.
+
+En vista de este resultado, normalmente interpretaremos las soluciones $(x(t), y(t)) = σ(t)$, una curva parametrizada que dibujaremos en el plano.
+
+Consideremos de nuevo el sistema masa resorte, con la ecuación $x'' +kx = 0$. Si lo escribimos como sistema, tenemos \[ \begin{cases} x' = y \\ x' = -kx \end{cases} \], que nos daba una solución explícita 
+
+\begin{align*}
+x(t) = A\cos \sqrt{k}t + B \sin \sqrt{k} t \\
+y(t) = B\sqrt{k}\cos \sqrt{k} t - A \sqrt{k}\sin \sqrt{k} t
+\end{align*}
+
+Supongamos que no hemos sabido resolver el sistema y no hemos encontrado la solución. Simplemente mirando el sistema deberíamos apreciar un punto importante: $x(t) = 0,\;y(t) = 0$ es una solución. Si lo pintamos en el plano de fases, la trayectoria sería un único punto en el origen. Se trata de una solución estacionaria o punto de equilibrio.
+
+\begin{definition}\name{Punto}[de equilibrio]
+En general, diremos que $(a,b)$ es un punto de equilibrio si y sólo si $F(a,b) = G(a,b) = 0$.
+\end{definition}
+
+Esto nos da un primer camino a estudiar: la \textbf{estabilidad}. 
+
+El segundo problema a estudiar sería el comprobar si hay \textbf{trayectorias cerradas}. Es decir, queremos encontrar soluciones periódicas. Encontraremos un problema similar al de la estabilidad: ¿qué pasa cuando cogemos una solución que pasa por un punto cercano a una trayectoria cerrada? ¿Sigue estando cerrada o se abre? 
+
+Volviendo al problema del sistema masa-resorte: si sabemos que buscamos una curva parametrizada, ¿podemos escribirlo como conjunto de nivel? No siempre es posible pero a veces funciona. En el caso de que efectivamente podamos eescribir la solución como conjunto de nivel $E(x,y) = C$, tendríamos que
+
+\begin{gather*}
+\pd{E}{x}  x' + \pd{E}{y}y' = 0 \\
+\pd{E}{x} y + \pd{E}{y} (-kx) = 0
+\end{gather*}
+o, dicho de otra forma, buscamos que $\grad E \perp (y,-kx)$. En este caso, $\grad E$ sería paralelo a $(kx,y)$ y obtendríamos las trayectorias dadas por la ecuación
+
+\[ \frac{kx^2}{2} + \frac{y^2}{2} = C 
+\]
+lo que, en el plano de fases nos daría algo como la imagen \ref{img:FasesMasaResorte}. Ahora bien, ese dibujo no estaría completo: nos faltaría determinar el sentido en el que recorremos las curvas, que lo obtendríamos viendo la derivada.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/PlanoFasesMasaResorte.png}
+\caption{Plano de fases para el sistema masa-resorte}
+\label{img:FasesMasaResorte}
+\end{figure}
+
+Si fuésemos físicos, veríamos que la $x$ sería la posición y $y$ la velocidad, representando en un diagrama ambas variables. Pero como no lo somos, nos la repantinfla bastante.
+
+
+Si aplicamos esta misma idea a sistemas generales del estilo, \[ \begin{cases} x' = F(x,y) \\ y' = G(x,y) \end{cases} \], llegamos a la siguiente definición:
+
+\begin{definition}\name{Integral}[ primera] Decimos que $E(x,y) ∈ C^1$ es una \textbf{integral primera} del sistema si y sólo si dado $(x(t),y(t))$ solución, entonces $E(x(t),y(t)) = C\;∀t$.
+\end{definition} 
+
+Esta integral primera no siempre existe. Pero, si por ejemplo tenemos un sistema \[ \begin{cases} x' = \pd{H}{y}(x,y) \\ y' = -\pd{H}{x}(x,y) \end{cases} \] la integral primera es inmediata: $H(x,y) = C$. Los sistemas con este tipo de estructura se llaman \textbf{sistemas hamiltonianos}\index{Sistema!hamiltoniano}.
+
+En el caso general, si tenemos una integral primera $E(x,y) = C$, entonces
+
+\[ 0 = \pd{E}{x}x' + \pd{E}{y} y' = \pd{E}{x}F + \pd{E}{y} G 
+\] 
+lo que nos dice que buscamos $\grad E \perp (F,G)$ o, lo que es lo mismo, $\grad E \parallel (-G,F)$. Esto nos llevaría a que si \[ -\pd{G}{y} = \pd{F}{x}\] entonces tenemos que $(-G,F) = \grad V$ para un potencial $V$, y entonces podremos tomar $E\equiv V$. Si no encuentras esto, podemos buscar un factor integrante\footnote{Y lloras. Mucho.}.
+
+\begin{example}
+\[\begin{cases}x' = y \\ y' = 1+x^2 \end{cases} \]
+
+Buscamos una solución de la forma $E(x(t), y(t)) = C$ que cumple 
+
+\[ \grad E \perp (y, 1+x^2) \implies \grad E (1+x^2,-y) \]
+
+Necesitamos entonces poder escribir $(1+x^2,-y)$ como $\grad V$, el gradiente de un potencial. Para ello, tendría que cumplirse que 
+
+\[ \pd{}{y}(1+x^2) = \pd{}{x}(-y) \]
+
+Efectivamente, en este caso se cumple y existe $V$. Integrando:
+
+\begin{gather*}
+\pd{V}{x} = 1+x^2 \implies V = x + \frac{x^3}{3} + C(y) \\
+-y \stackrel{?}{=} \pd{V}{y} = C'(y) \implies C(y) = \frac{-y^2}{2}
+V(x,y) = x + \frac{x^3}{3} -\frac{y^2}{2}
+\end{gather*}
+
+Por lo tanto, las soluciones serán las dadas por las curvas $V(x(t), y(t)) = C$, dibujadas en la figura \ref{imgGranos}. Sólo faltaría el sentido en el que se recorren las curvas. Viendo las derivadas, vemos que $y'>0$ y que por lo tanto se recorren hacia arriba siempre, hacia la derecha cuando $y$ es positivo y hacia la izquierda en otro caso.
+
+\end{example}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{img/Grano.png}
+\caption{Conjuntos de nivel de la función $x + \frac{x^3}{3} -\frac{y^2}{2}$.}
+\label{imgGranos}
+\end{figure}
+
+\begin{example}
+\[ \begin{cases} x' = x(1+y) \\ y'=-y(1+x) \end{cases} \]
+
+Buscamos de nuevo una posible función potencial. Hacemos las derivadas cruzadas:
+
+\begin{gather*}
+\pd{}{y} (y(1+x)) = 1+x \\
+\pd{}{x} (x(1+y)) = 1+y
+\end{gather*}
+
+No existe un potencial que resuelva esta ecuación. Ahora bien, podemos buscar una función μ tal que $(μ(-G),μF)  = \grad V$. Derivamos de nuevo
+
+\begin{align*}
+\pd{}{y} (μy(1+x)) &\stackrel{?}{=} \pd{}{x} (μx(1+y)) \\
+(1+x)\left(\pd{μ}{y} y + μ\right) &= (1+y)\left(\pd{μ}{x}  + μ\right)
+\end{align*}
+
+y si miramos, podremos encontrar un factor integrante.
+\end{example}
+
+\begin{example}[Tiburones en el océano]
+Suponiendo que no hubiese predadores, el número de presas $x$ variaría linealmente con la tasa de supervivencia $a$, que depende de la diferencia entre mortalidad y natalidad. Es decir, \[ x' = ax \]. 
+
+Con predadores, la ecuación se transformaría en \[ x' = a(y) x \], con $a$ dependiendo del número de predadores $y$. Si consideramos que $a(y)$ es una recta, por simplificar el modelo, la ecuación sería \[ x' = ax - bxy \].
+
+Por otra parte, podemos considerar que la población de predadores crece con \[ y' = -cy + dxy \].
+
+Transformando un poco las ecuaciones, llegamos al problema \[ \begin{cases} x' = x(a-by) \\ y' = y(-c+dx) \end{cases} \], que son las llamadas \textbf{ecuaciones de Volterra}. 
+
+Este problema tiene puntos críticos $F=G=0$. Si $F=0$, podemos tener $x=0$, el caso obvio de que no hay ni presas ni predadores. El otro es que $y=\frac{a}{b}$, que nos da que para que $G=0$ debe de ser $x=\frac{c}{d}$, lo que nos daría un punto de equilibrio.
+
+Si añadimos al sistema a los pescadores, con influencia ε ($a\to a + ε$, $c\to c+ ε$), el punto de equilibrio pasa a ser $\displaystyle \left(\frac{a-ε}{b}, \frac{c+ε}{d}\right)$, un punto más abajo y a la derecha. Es decir, se favorece la aparición de presas y la disminución de la proporción de predadores. En la segunda guerra mundial, al bajar la pesca el movimiento se invirtió y aumentó el porcentaje de tiburones.
+
+Ahora bien, la naturaleza no siempre se mantiene en el punto de equilibrio, sino que hay oscilaciones. Veámoslo resolviendo el sistema. Buscamos una función $E(x,y) = C$. Las derivadas cruzadas no son iguales, por lo que hay que buscar un factor integrante $μ(x,y)$ tal que 
+
+\[ \pd{}{y}(μ(x,y)(cy -dxy)) = \pd{}{x} (μ(x,y) (ax-bxy)) \]
+
+Haciendo la cuenta, sale $μ(x,y) = \frac{1}{xy}$. La solución es entonces
+
+\[ \grad V = \left(\frac{1}{xy}(xy-dxy),\frac{1}{xy}(ax-bxy)\right)= \left(\frac{c}{x}-d,\frac{a}{y}-b\right) 
+\]
+de donde podemos sacar \[ V(x,y) = a \log y - b y + c \log x - d x \]. 
+
+Sólo nos interesa lo que pasa en el primer cuadrante (posiciones negativas no nos gustan). Lo que obtenemos son trayectorias cerradas alrededor de un punto de equilibrio (figura \ref{imgPoblaciones})
+\end{example}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.5\textwidth]{img/Poblaciones.png}
+\caption{Evolución de presas y depredadores.}
+\label{imgPoblaciones}
+\end{figure}
+
+\begin{theorem}
+Sea $(x_1(t), y_1(t))$ una solución tal que $(x_1(t),y_1(t)) ∈ γ\; ∀t$ donde γ es una curva en el plano de fases.
+
+Sea $(x_2(t), y_2(t))$ otra solución y supongamos que existen $t_1, t_2 ∈ ℝ$ tales que  $(x_1(t_1), y_1(t_1)) = (x_2(t_2),x_2(t_2))$. Entonces $(x_2(t), y_2(t)) ⊆ γ$.
+
+Dicho de otra forma, si dos curvas solución se cortan entonces son la misma.
+\end{theorem}
+
+\begin{proof}
+Sean $(x_h(t),y_h(t)) = (x_1(t+h), y_1(t+h))$. Sabemos que si $(x_1,y_1)$ es solución y estamos en un sistema autónomo, entonces $(x_h, y_h)$ también es solución. En particular, para $h=t_1 - t_2$ tenemos que \[ (x_{t_2 - t_1}(t),y_{t_2 - t_1}(t)) = (x_1(t+t_1-t_2),y_1(t+t_1-t_2)) \].
+
+En el punto $t=t_2$, nos queda \[ (x_{t_2 - t_1}(t_2),y_{t_2 - t_1}(t_2)) = (x_1(t_1),y_1(t_1)) \].
+
+Tenemos dos soluciones del sistema que en el instante inicial pasan por el mismo punto. Aplicando el teorema de existencia y unicidad, tenemos que $(x_{t_2 - t_1},y_{t_2 - t_1})\equiv (x_2,y_2)$, que no es más que una traslación de la solución original $(x_1,y_1)$.
+\end{proof}
+
+\subsection{Clasificación de puntos críticos}
+
+Partimos del sistema \[ \begin{cases} x' = ax + by \\ y' = cx + dy \end{cases} \] con $a,b,c,d∈ℝ$, que viene de una \textit{linealización} por Taylor de cualquier sistema.
+
+¿Cuántos puntos críticos tenemos? Sabemos que siempre tenemos al menos el $(0,0)$ como punto crítico. Si además la matriz $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ tiene determinante cero, tendremos una recta de puntos críticos.
+
+Para el análisis, empezaremos suponiendo que $(0,0)$ es un punto crítico aislado, es decir, con \[ \det \begin{pmatrix} a & b \\ c & d \end{pmatrix} ≠ 0 \]. 
+
+Vamos a ir paso a paso distinguiendo los distintos casos que nos podemos encontrar al resolver este sistema.
+
+\subsubsection{Sistemas con autovalores reales}
+
+\paragraph{Caso 1.1: $0< λ_1 < λ_2$}. Con esta información, la solución general es 
+
+\[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = A e^{λ_1t}\begin{pmatrix} u_1 \\ u_2\end{pmatrix} + B e^{λ_2t} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} \].
+
+En esta ecuación está toda la información que tenemos que tener sobre el plano de fases. Tenemos varias opciones. 
+
+Si $A = 0$, la solución es \[ B e^{λ_2t} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} \]. Es decir, que si $B>0$ tendremos una semirrecta en la dirección de $\vv$, y si es negativo una semirrecta en la dirección contraria. La solución sería análoga para $B=0$. Podemos ver en la figura \ref{imgABUnoCero} el esquema de las soluciones.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+\draw[very thick, red!40!white, directed] (0,0) -- (2,4) node[right] {$A=0; B>0$};
+\draw[very thick, red!80!black, directed] (0,0) -- (-2,-4) node[left] {$A=0; B<0$};
+
+\draw[very thick, orange!40!white, directed] (0,0) -- (4,2) node[above] {$A>0; B=0$};
+\draw[very thick, orange!80!black, directed] (0,0) -- (-4,-2) node[below] {$A<0; B=0$};
+
+
+\draw[->,thick,red] (0,0) -- (0.7,1.4) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+
+
+\end{tikzpicture}
+\caption{Posibles soluciones para $A=0$ ó $B=0$.}
+\label{imgABUnoCero}
+\end{figure}
+
+¿Qué ocurre cuando ni $A$ ni $B$ son cero? La solución general es \[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = A e^{λ_1t}\vu + B e^{λ_2t} \vv \]. Podemos sacar factor común $e^{λ_1t}$ para tener
+
+\[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = e^{λ_1t} \left(A\vu + Be^{(λ_2-λ_1)t} \vv\right) \].
+
+Es decir, que cuando $t\to -∞$, $Be^{(λ_2-λ_1)t} \to 0$ y por lo tanto la trayectoria será tangente al vector $\vu$. Si lo que hacemos es sacar factor común $e^{λ_2}$, tenemos 
+
+\[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = e^{λ_2t} \left( Ae^{(λ_1-λ_2)t}\vu + B \vv\right) \].
+
+Así, cualquier trayectoria en este caso acabará siendo paralela al vector $\vv$. Las trayectorias salen del origen tangentes a $\vu$ y cuando $t$ crece tienden a ser paralelas a $\vv$. Este último vector es la dirección principal, ya que atrae a todas las trayectorias salvo a la recta $\vu$ (cuando $A=0$).
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+
+\foreach \x in {0.5,1,1.5,2,2.5} 
+	\draw[very thin, blue,dense directed] (0,0) to [looseness=\x,out=30, in=60] ({2*\x - 2},-4);
+
+\foreach \x in {0.25,0.5,0.75} 
+	\draw[very thin, blue,dense directed] (0,0) to [looseness=\x,out=210, in=60] ({-2 - 4*\x},-4);
+
+\foreach \x in {0.25,0.5,0.75} 
+	\draw[very thin, blue,dense directed] (0,0) to [looseness=\x,out=30, in=240] ({4*\x + 2},4);
+	
+\foreach \x in {0.5,1,1.5,2,2.5} 
+	\draw[very thin, blue,dense directed] (0,0) to [looseness=\x,out=210, in=240] ({2 -2*\x},4);
+	
+
+\draw[very thick, red!40!white, directed] (0,0) -- (2,4);
+\draw[very thick, red!80!black, directed] (0,0) -- (-2,-4);
+\draw[very thick, orange!40!white, directed] (0,0) -- (4,2);
+\draw[very thick, orange!80!black, directed] (0,0) -- (-4,-2);
+
+\draw[->,thick,red] (0,0) -- (0.7,1.4) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+
+
+\end{tikzpicture}
+\caption{Posibles soluciones (en azul) para $A=0$ ó $B=0$ con ambos autovalores positivos.}
+\label{imgABNoCero}
+\end{figure}
+
+\paragraph{Caso 1.2: $λ_1 < 0 < λ_2$}. La solución es la misma que antes, \[ \begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = A e^{λ_1t}\vu + B e^{λ_2t} \vv \].
+
+Cuando $A=0$, tenemos el mismo caso de antes. Ahora bien, cuando $B=0$, al ser el autovalor negativo las soluciones \textit{vienen} de infinito. Es decir, tenemos el caso de la figura \ref{imgAB_AVN_UnoCero}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+\draw[very thick, red!40!white, directed] (0,0) -- (2,4) node[right] {$A=0; B>0$};
+\draw[very thick, red!80!black, directed] (0,0) -- (-2,-4) node[left] {$A=0; B<0$};
+
+\draw[very thick, orange!40!white, directed] (4,2) node[above] {$A>0; B=0$} -- (0,0);
+\draw[very thick, orange!80!black, directed] (-4,-2) node[below] {$A<0; B=0$} -- (0,0);
+
+
+\draw[->,thick,red] (0,0) -- (0.7,1.4) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+
+
+\end{tikzpicture}
+\caption{Las dos posibles rectas solución para un sistema autónomo con un autovalor negativo y otro positivo, con $A=0$ ó $B=0$.}
+\label{imgAB_AVN_UnoCero}
+\end{figure}
+
+Cuando $A,B≠0$, siguiendo el mismo procedimiento de factores comunes de antes, tenemos que tanto en $+∞$ como en $-∞$ explotan. Cuando $t\to -∞$, estamos \textit{lejos} y paralelos a $\vu$. Cuando $t\to + ∞$, la trayectoria también se irá lejos en la dirección de $\vv$, tal y como refleja la figura \ref{imgAB_AVN_NoCero}.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[spy using outlines={circle, magnification=4, size=2cm, connect spies}]
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+\foreach \x in {1,2,3} 
+	\draw[very thin, blue,dense directed] (4,{2.5 - 0.1*\x }) to [looseness=\x,out=210, in=240] ({2.5 - 0.1*\x},4);
+
+\foreach \x in {0.5,1,1.5,2} 
+	\draw[very thin, blue,dense directed] (4,{1.7 + 0.1*\x }) to [looseness=\x,out=210, in=60] ({-1.5 - 0.2*\x},-4);
+
+\foreach \x in {1,2,3,4} 
+	\draw[very thin, blue,dense directed] (-4,{-2.5 + 0.1*\x }) to [looseness=\x,out=30, in=60] ({-2.5 + 0.1*\x},-4);
+
+\foreach \x in {0.5,1,1.5,2} 
+	\draw[very thin, blue,dense directed] (-4,{-1.7 - 0.1*\x }) to [looseness=\x,out=30, in=240] ({1.5 + 0.2*\x},4);
+
+
+\draw[very thick, red!40!white, directed] (0,0) -- (2,4);
+\draw[very thick, red!80!black, directed] (0,0) -- (-2,-4);
+
+\draw[very thick, orange!40!white, directed] (4,2) -- (0,0);
+\draw[very thick, orange!80!black, directed] (-4,-2) -- (0,0);
+
+\draw[->,thick,red] (0,0) -- (0.7,1.4) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+
+
+\end{tikzpicture}
+\caption{En azul, posibles soluciones de un sistema autónomo con un autovalor negativo y otro positivo, con $A≠0,B≠0$.}
+\label{imgAB_AVN_NoCero}
+\end{figure}
 
 
 \newpage
@@ -2597,6 +4405,8 @@ Realizando bastantes operacioens podemos obtener una solución particular, sin e
 \thispagestyle{empty}
 \newpage
 \appendix
+
+
 \section{Algunos problemas clásicos}
 A continuación vamos a abordar un el problema de la catenaria y lo solucionaremos aplicando alguna de las técnicas de integración estudiadas.
 
@@ -2785,6 +4595,8 @@ $$\frac{sin(\alpha)}{\sqrt{-2gy}}=C$$
 
 Sabiendo que $tan(\alpha+\frac{\pi}{2}) = y^\prime$, con la ecuación anterior obtenemos una EDO que satisface la curva.
 \end{example}
+
+
 
 \printindex
 \end{document}

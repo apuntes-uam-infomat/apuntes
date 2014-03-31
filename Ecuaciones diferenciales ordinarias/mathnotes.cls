@@ -10,6 +10,7 @@
 \RequirePackage{chngcntr}
 \RequirePackage{hyperref}
 \RequirePackage{MathUnicode}
+\RequirePackage{wrapfig}
 
 \hypersetup{
   colorlinks,
