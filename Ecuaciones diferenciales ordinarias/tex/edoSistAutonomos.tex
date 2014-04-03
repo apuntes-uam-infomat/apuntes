@@ -668,7 +668,7 @@ Tenemos entonces que
 $$\lambda = \frac{T\pm\sqrt{T^2-4D}}{2}$$
 El hecho de que los valores de $\lambda$ sean complejos o no depende del radicando anterior.
 
-(\textbf{Dibujito de una parabola $D=\frac{T^2}{2}$ donde los ejes son y=D, x=T})
+(\textbf{Dibujito de una parábola $D=\frac{T^2}{2}$ donde los ejes son y=D, x=T})
 
 Según las relaciones que haya entre el determinante de la matriz y su traza tenemos casos distintos:
 \begin{itemize}
@@ -681,4 +681,165 @@ Según las relaciones que haya entre el determinante de la matriz y su traza ten
 
 La zona de estabilidad es justamente el segundo cuadrante.
 
+\begin{definition}\name{Punto}[Crítico estable]
 
+Dado un sistema \[ \begin{cases} x' = F(x,y) \\ y'= G(x,y) \end{cases} \] con $(x_0, y_0)$ punto crítico. Se dice que $(x_0, y_0)$ es un punto crítico estable si y sólo si $∀R>0 \, ∃r > 0$ tal que si $\norm{(x(t_0),y(t_0)) - (x_0,y_0)} < R$ entonces $\norm{(x(t), y(t)) -(x_0, y_0)} < r \; ∀t > t_0$.
+
+\end{definition}
+
+\begin{definition}\name{Punto}[asintóticamente estable]
+
+En las mismas hipótesis de la definición anterior, decimos que $(x_0,y_0)$ es asintóticamente estable si y sólo es estable y $∃R>0$ tal que si $\norm{x(t_0), y(t_0)) - (x_0,y_0)} < R$ entonces $\lim_{t\to ∞} (x(t), y(t)) = (x_0, y_0)$.
+\end{definition}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\begin{scope}
+\draw[->] (-3,0) -- (3,0);
+\draw[->] (0,-3) -- (0,3);
+
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+\draw[->,thick,red] (0,0) -- (-0.7,1.4) node[above] {$\vv$};
+
+\draw [domain=0:30,variable=\t,samples=300, blue, rotate=30, full directed]
+        plot ({0.1 * \t * cos(\t r)}, {0.04 * \t * sin(\t r)});
+\end{scope}
+
+\begin{scope}[xshift=7cm]
+\draw[->] (-3,0) -- (3,0);
+\draw[->] (0,-3) -- (0,3);
+
+\draw[blue, rotate=30] (0,0) ellipse (2 and 1);
+\draw[thick,red,->, rotate=30] (0,0) -- node[midway, above] {$R$} (-2,0);
+\draw[thick,orange,->, rotate=30, dense directed] (0,0) -- node[midway,above right] {$r$} (0,1);
+\end{scope}
+\end{tikzpicture}
+\end{figure}
+
+Notamos que un punto estable no tiene por qué ser asintóticamente estable. Por ejemplo, el centro de una elipse es un punto estable pero no asintóticamente estable, ya que las trayectorias no tienden al origen.
+
+Estas dos definiciones tienen como objetivo el \textbf{método de linealización}. Tenemos $F,G∈C^1$ con $F(x_0,y_0) = G(x_0, y_0) = 0$. Si hacemos el desarrollo de Taylor, tenemos que 
+
+\begin{gather*}
+F(x,y) = F(x_0, y_0) + \cdots \\
+\cdots
+\end{gather*}
+
+Por lo tanto, cerca de $(x_0, y_0)$ tenemos 
+
+\begin{equation} \label{eqML_TaylorNoErr}
+\begin{matrix}
+x' &\simeq&  a(x-x_0) + b(y-y_0) \\
+y' &\simeq& c(x-x_0) + d(y-y_0) 
+\end{matrix}
+\end{equation}
+
+Haciendo un cambio de variable para quitarnos la traslación, llegamos a 
+
+\begin{equation} \label{eqML_Trasl}
+\begin{matrix}
+\tilde{x}' &=& a\tilde{x} + b \tilde{y} \\
+\tilde{y}' &=& c\tilde{x} + d \tilde{y} 
+\end{matrix}
+\end{equation}
+
+
+El comportamiento cerca del punto crítico $(x_0, y_0)$ para el sistema \eqref{eqML_TaylorNoErr} es el mismo que el de \eqref{eqML_Trasl}. Estudiaremos el segundo ya que es tipo de sistema que ya habíamos visto.
+
+Supongamos que tenemos un sistema con puntos críticos $(0,0)$ y $(1,1)$. Hacemos la linealización en $(0,0)$, de tal forma que tendríamos la matriz del sistema linealizado en $(0,0)$:
+
+\begin{equation} \label{eqML_MatSistLin} \begin{pmatrix}
+\pd{F}{x}(0,0) & \pd{F}{y}(0,0) \\
+\pd{G}{x}(0,0) & \pd{G}{y}(0,0)
+\end{pmatrix} \end{equation}
+
+Supongamos que esta matriz nos da autovalores $1$ y $-1$ con autovectores $(1,1)$ y $(1,-1)$. Automáticamente vemos que es un punto de silla y que las soluciones alrededor de ese punto tendran la forma de la figura \ref{imgML_Silla}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\begin{scope}
+\draw[->] (-3,0) -- (3,0);
+\draw[->] (0,-3) -- (0,3);
+
+\draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
+\draw[->,thick,red] (0,0) -- (-0.7,1.4) node[above] {$\vv$};
+
+\draw [domain=0:30,variable=\t,samples=300, blue, rotate=30, full directed]
+        plot ({0.1 * \t * cos(\t r)}, {0.04 * \t * sin(\t r)});
+\end{scope}
+
+\begin{scope}[xshift=7cm]
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+\foreach \x in {1,2,3} 
+	\draw[very thin, blue,dense directed] (4,{2.5 - 0.1*\x }) to [looseness=\x,out=210, in=240] ({2.5 - 0.1*\x},2);
+
+\foreach \x in {0.5,1,1.5,2} 
+	\draw[very thin, blue,dense directed] (4,{1.7 + 0.1*\x }) to [looseness=\x,out=210, in=60] ({-1.5 - 0.2*\x},-2);
+
+\foreach \x in {1,2,3,4} 
+	\draw[very thin, blue,dense directed] (-4,{-2.5 + 0.1*\x }) to [looseness=\x,out=30, in=60] ({-2.5 + 0.1*\x},-2);
+
+\foreach \x in {0.5,1,1.5,2} 
+	\draw[very thin, blue,dense directed] (-4,{-1.7 - 0.1*\x }) to [looseness=\x,out=30, in=240] ({1.5 + 0.2*\x},2);
+
+
+\draw[very thick, red!40!white, directed] (0,0) -- (2,2);
+\draw[very thick, red!80!black, directed] (0,0) -- (-2,2);
+
+\draw[very thick, orange!40!white, directed] (2,2) -- (0,0);
+\draw[very thick, orange!80!black, directed] (-2,-2) -- (0,0);
+
+\draw[->,thick,red] (0,0) -- (0.7,0.7) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (0.7,0.7) node[above] {$\vu$};
+\end{scope}
+\end{tikzpicture}
+\caption{Distribución de las soluciones alrededor del punto crítico $(0,0)$.}
+\label{imgML_Silla}
+\end{figure}
+
+Si linealizamos en $(1,1)$, nos saldría una matriz similar a \eqref{eqML_MatSistLin}, pero con las derivadas evaluadas en $(1,1)$. Si suponemos que tenemos autovalores $-1+\imath$ y $-1+\imath$, lo que nos daría espirales asintóticamente estables. ¿Cómo juntamos estas dos cosas? 
+
+\begin{figure}[hbtp]
+\begin{tikzpicture}
+\draw[->] (-4,0) -- (4,0);
+\draw[->] (0,-4) -- (0,4);
+
+\draw[red!60!white, thick, directed] (-4,-4) -- (4,4);
+\draw[orange!60!white, thick, directed] (-4,4) -- (4,-4);
+
+\foreach \x in {1,2,3} 
+	\draw[blue, very thin, dense directed] ({-3.4 - 0.1 * \x}, 3) to[looseness=\x, out=315, in=225] ({3 - 0.1 * \x}, 3);
+\end{tikzpicture}
+\end{figure}
+
+Si quisiésemos analizar este punto crítico, nos interesaría la recta separatriz (en naranja en la figura \ref{imgmierdas}), que divide el plano en dos regiones, una en la que las soluciones se van a una espiral y otra en la que las soluciones se van a infinito. 
+
+\begin{theorem} Supongamos $(x_0, y_0)$ punto crítico, $F, G∈C^1$, con los coeficientes de Taylor de antes, y con \[ \det \begin{pmatrix}
+a & b \\ c & d
+\end{pmatrix} ≠ 0 \]. Trasladamos el sistema linealizado a $(0,0)$ mediante el cambio de variable $\tilde{x} = x - x_0$, $\tilde{y}= y-y_0$. 
+
+Entonces, si el punto crítico $(0,0)$ en el sistema linealizado pertenece a alguno de los casos principales (nodos propios, sillas o focos; ver imagen \ref{imgCosasRarasRualFoto}) entonces sigue siendo del mismo tipo en cuanto a forma y estabilidad en el sistema completo.
+
+Si en el sistema linealizado tenemos un nodo impropio inestable, entonces en el sistema completo tendremos un nodo o una espiral, inestables en ambos casos.
+
+Si tenemos un nodo impropio asintóticamente estable, en el sistema completo tendremos un nodo o espiral asintóticamente estable.
+
+El caso peor es  si tenemos un centro estable, ya que puede ocurrir cualquier cosa.
+\end{theorem}
+
+En relación con las integrales primeras, vemos que sólo podremos expresar las soluciones como conjuntos de nivel si los puntos críticos son nodos o centros.
+
+\begin{example}
+\[\begin{cases}
+x' &= x(60-3x-4y) \\
+y' &= y(42-2x-3y)
+\end{cases} \]
+
+Si viésemos esto en el contexto de estudio de poblaciones, veríamos que son dos especies compitiendo por un mismo recurso limitado. Los puntos críticos son $(0,0)$, $\left(0, 14\right)$, $(20, 0)$ y $(12, 6)$. Tendremos cuatro sistemas linealizados distintos, donde tendremos que calcular autovalores y autovectores. Habrá que dibujar puntos críticos separados, discernir si estamos en los casos principales y juntarlo.
+
+En este sistema habría que preguntar qué especie extingue a la otra. El lunes volveremos con ello.
+\end{example}
