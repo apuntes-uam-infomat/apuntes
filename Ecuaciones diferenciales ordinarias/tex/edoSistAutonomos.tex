@@ -9,8 +9,8 @@ En vista de este resultado, normalmente interpretaremos las soluciones $(x(t), y
 Consideremos de nuevo el sistema masa resorte, con la ecuación $x'' +kx = 0$. Si lo escribimos como sistema, tenemos \[ \begin{cases} x' = y \\ x' = -kx \end{cases} \], que nos daba una solución explícita 
 
 \begin{align*}
-x(t) = A\cos \sqrt{k}t + B \sin \sqrt{k} t \\
-y(t) = B\sqrt{k}\cos \sqrt{k} t - A \sqrt{k}\sin \sqrt{k} t
+x(t) &= A\cos \sqrt{k}t + B \sin \sqrt{k} t \\
+y(t) &= B\sqrt{k}\cos \sqrt{k} t - A \sqrt{k}\sin \sqrt{k} t
 \end{align*}
 
 Supongamos que no hemos sabido resolver el sistema y no hemos encontrado la solución. Simplemente mirando el sistema deberíamos apreciar un punto importante: $x(t) = 0,\;y(t) = 0$ es una solución. Si lo pintamos en el plano de fases, la trayectoria sería un único punto en el origen. Se trata de una solución estacionaria o punto de equilibrio.
@@ -754,14 +754,14 @@ Supongamos que tenemos un sistema con puntos críticos $(0,0)$ y $(1,1)$. Hacemo
 \pd{G}{x}(0,0) & \pd{G}{y}(0,0)
 \end{pmatrix} \end{equation}
 
-Supongamos que esta matriz nos da autovalores $1$ y $-1$ con autovectores $(1,1)$ y $(1,-1)$. Automáticamente vemos que es un punto de silla y que las soluciones alrededor de ese punto tendran la forma de la figura \ref{imgML_Silla}
+Supongamos que esta matriz nos da autovalores $1$ y $-1$ con autovectores $(1,1)$ y $(1,-1)$. Automáticamente vemos que es un punto de silla y que las soluciones alrededor de ese punto tendrán la forma de la figura \ref{imgML_Silla}
 
 \begin{figure}[hbtp]
 \centering
 \begin{tikzpicture}
-\begin{scope}
-\draw[->] (-3,0) -- (3,0);
-\draw[->] (0,-3) -- (0,3);
+\begin{scope}[xshift=7cm]
+\draw[->] (-2.7,0) -- (2.7,0);
+\draw[->] (0,-2.7) -- (0,2.7);
 
 \draw[->,thick,orange] (0,0) -- (1.4,0.7) node[above] {$\vu$};
 \draw[->,thick,red] (0,0) -- (-0.7,1.4) node[above] {$\vv$};
@@ -770,53 +770,81 @@ Supongamos que esta matriz nos da autovalores $1$ y $-1$ con autovectores $(1,1)
         plot ({0.1 * \t * cos(\t r)}, {0.04 * \t * sin(\t r)});
 \end{scope}
 
-\begin{scope}[xshift=7cm]
+\begin{scope}
+
 \draw[->] (-4,0) -- (4,0);
 \draw[->] (0,-4) -- (0,4);
 
-\foreach \x in {1,2,3} 
-	\draw[very thin, blue,dense directed] (4,{2.5 - 0.1*\x }) to [looseness=\x,out=210, in=240] ({2.5 - 0.1*\x},2);
+\foreach \a in {0,90}
+{
+	\begin{scope}[rotate=\a]
+		\foreach \x in {0.5,1,1.5,2} 
+			\draw[very thin, blue,dense directed] (3,{-2.4 - 0.2*\x}) to [looseness=\x,in=225, out=135] (3,{2.4 + 0.2*\x });
+	\end{scope}
+}
 
-\foreach \x in {0.5,1,1.5,2} 
-	\draw[very thin, blue,dense directed] (4,{1.7 + 0.1*\x }) to [looseness=\x,out=210, in=60] ({-1.5 - 0.2*\x},-2);
+\foreach \a in {180,270}
+{
+	\begin{scope}[rotate=\a]
+		\foreach \x in {0.5,1,1.5,2} 
+			\draw[very thin, blue,dense directed] (3,{2.4 + 0.2*\x }) to [looseness=\x,out=225, in=135] (3,{-2.4 - 0.2*\x});
+	\end{scope}
+}
 
-\foreach \x in {1,2,3,4} 
-	\draw[very thin, blue,dense directed] (-4,{-2.5 + 0.1*\x }) to [looseness=\x,out=30, in=60] ({-2.5 + 0.1*\x},-2);
+\draw[very thick, red!40!white, sparse directed] (-3,-3) -- (3,3);
+\draw[very thick, orange!40!white, sparse directed] (-3,3) -- (3,-3);
 
-\foreach \x in {0.5,1,1.5,2} 
-	\draw[very thin, blue,dense directed] (-4,{-1.7 - 0.1*\x }) to [looseness=\x,out=30, in=240] ({1.5 + 0.2*\x},2);
-
-
-\draw[very thick, red!40!white, directed] (0,0) -- (2,2);
-\draw[very thick, red!80!black, directed] (0,0) -- (-2,2);
-
-\draw[very thick, orange!40!white, directed] (2,2) -- (0,0);
-\draw[very thick, orange!80!black, directed] (-2,-2) -- (0,0);
-
-\draw[->,thick,red] (0,0) -- (0.7,0.7) node[left] {$\vv$};
-\draw[->,thick,orange] (0,0) -- (0.7,0.7) node[above] {$\vu$};
+\draw[->,thick,red] (0,0) -- (1,-1) node[left] {$\vv$};
+\draw[->,thick,orange] (0,0) -- (1,1) node[above] {$\vu$};
 \end{scope}
 \end{tikzpicture}
-\caption{Distribución de las soluciones alrededor del punto crítico $(0,0)$.}
+\caption{Distribución de las soluciones alrededor de los puntos críticos $(0,0)$ (izquierda) y $(1,1)$ (derecha).}
 \label{imgML_Silla}
 \end{figure}
 
-Si linealizamos en $(1,1)$, nos saldría una matriz similar a \eqref{eqML_MatSistLin}, pero con las derivadas evaluadas en $(1,1)$. Si suponemos que tenemos autovalores $-1+\imath$ y $-1+\imath$, lo que nos daría espirales asintóticamente estables. ¿Cómo juntamos estas dos cosas? 
+\todo{Revisar orientación de las soluciones en \ref{imgML_Silla}.}
+
+Si linealizamos en $(1,1)$, nos saldría una matriz similar a \eqref{eqML_MatSistLin}, pero con las derivadas evaluadas en $(1,1)$. Si suponemos que tenemos autovalores $-1+\imath$ y $-1+\imath$, lo que nos daría espirales asintóticamente estables.
+
+Tenemos las dos soluciones de la figura \ref{imgML_Silla}. ¿Cómo juntamos estas dos cosas? 
 
 \begin{figure}[hbtp]
+\centering
 \begin{tikzpicture}
+\draw [very thin, green!60!black, domain=0:8.5*pi/2,variable=\t,samples=300, rotate=45, invert full directed]
+        plot ({4.087 + 0.14 * \t * cos(2 * \t r)}, {-1.075 + 0.07 * \t * sin(2 * \t r)});
+
+\begin{scope}
+
 \draw[->] (-4,0) -- (4,0);
 \draw[->] (0,-4) -- (0,4);
 
-\draw[red!60!white, thick, directed] (-4,-4) -- (4,4);
-\draw[orange!60!white, thick, directed] (-4,4) -- (4,-4);
+\foreach \a in {0,90}
+{
+	\begin{scope}[rotate=\a]
+		\foreach \x in {1,1.5,2} 
+			\draw[very thin, blue,dense directed] (3,{-2.4 - 0.2*\x}) to [looseness=\x,in=225, out=135] (3,{2.4 + 0.2*\x });
+	\end{scope}
+}
 
-\foreach \x in {1,2,3} 
-	\draw[blue, very thin, dense directed] ({-3.4 - 0.1 * \x}, 3) to[looseness=\x, out=315, in=225] ({3 - 0.1 * \x}, 3);
+\foreach \a in {180,270}
+{
+	\begin{scope}[rotate=\a]
+		\foreach \x in {1,1.5,2} 
+			\draw[very thin, blue,dense directed] (3,{2.4 + 0.2*\x }) to [looseness=\x,out=225, in=135] (3,{-2.4 - 0.2*\x});
+	\end{scope}
+}
+
+\draw[very thick, red!40!white, sparse directed] (-3,-3) -- (3,3);
+\draw[very thick, orange!40!white, sparse directed] (-3,3) -- (3,-3);
+
+\end{scope}
 \end{tikzpicture}
+\caption{Más o menos ésta será la forma del sistema completo. Todas las soluciones a la derecha de la recta naranja caerán en las espirales que tienen como foco el $(1,1)$.}
+\label{imgMLSoluciones}
 \end{figure}
 
-Si quisiésemos analizar este punto crítico, nos interesaría la recta separatriz (en naranja en la figura \ref{imgmierdas}), que divide el plano en dos regiones, una en la que las soluciones se van a una espiral y otra en la que las soluciones se van a infinito. 
+Si quisiésemos analizar este punto crítico, nos interesaría la recta separatriz (en naranja en la figura \ref{imgMLSoluciones}), que divide el plano en dos regiones, una en la que las soluciones se van a una espiral y otra en la que las soluciones se van a infinito. 
 
 \begin{theorem} Supongamos $(x_0, y_0)$ punto crítico, $F, G∈C^1$, con los coeficientes de Taylor de antes, y con \[ \det \begin{pmatrix}
 a & b \\ c & d
