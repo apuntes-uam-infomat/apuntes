@@ -1,0 +1,190 @@
+
+
+\section{Algunos problemas clásicos}
+A continuación vamos a abordar un el problema de la catenaria y lo solucionaremos aplicando alguna de las técnicas de integración estudiadas.
+
+\img{img/catenaria.png}{Curva catenaria}{catenaria}{0.8}
+\begin{example}[(Problema de la catenaria)]
+El problema de la catenaria trata de encontrar una expresión para la curva que describe una cadena que cuelga de dos puntos (ver \textbf{Figura \ref{fig:catenaria}}).
+Para encontrar esta expresión, vamos a estudiar sólo un trozo de la cadena, que en la figura se muestra de color negro oscuro.
+
+Para que la sección de cadena esté en equilibrio, tiene que haber dos fuerzas que la sujeten por los puntos $A$ y $B$. 
+
+\begin{itemize}
+\item En el punto $A$ tenemos el vector $T$, que tiene que tener la dirección de la tangente a la curva. Denotaremos como $T_x$ a la componente horizontal y como $T_y$ a la componente vertical.
+
+La componente $T_y$ tiene que contrarrestar al peso del segmento de cadena, que viene dado por el producto entre su densidad y su longitud. La densidad la denotaremos por $\rho$ y la longitud es $\int_0^x \norm{\sigma^\prime(s)}ds$, donde $x$ es la primera coordenada de $A$ y $\sigma$ es la parametrización de la curva $\sigma = (x, y(x))$. Por tanto el peso será $\int_0^x \sqrt{1+(y^\prime(ds))^2}ds$.
+
+\item En el punto $B$ el segmento ha de ser sujetado por una fuerza que contrarreste a $T_x$.
+\end{itemize}
+
+Tenemos entonces los siguientes datos:
+\begin{equation*}
+  \left\lbrace
+  \begin{array}{l}
+     T_x = Tcos(\alpha)=T_0 \text{(Tensión)} \\
+     T_y = Tsin(\alpha) = \rho\int_0^x \sqrt{1+(y^\prime(ds))^2}ds \\
+     tan(\alpha) = y^\prime(x)\\
+  \end{array}
+  \right.
+\end{equation*}
+Dividiendo la segunda expresión por la primera: 
+$$\frac{sin(\alpha)}{cos(\alpha)} = \frac{\rho}{T_0}\int_0^x \sqrt{1+(y^\prime(ds))^2}ds$$
+Utilizando la tercera:
+$$y^\prime(x) = \frac{\rho}{T_0}\int_0^x \sqrt{1+(y^\prime(ds))^2}ds$$
+Derivando para que desaparezca la integral:
+$$y^{\prime\prime}(x) = \frac{\rho}{T_0}\sqrt{1+(y^\prime(x))^2}$$
+Tenemos una ecuación de segundo orden, que sabemos convertir en un sistema de dos ecuaciones de primer orden:
+\begin{equation*}
+  \left\lbrace
+  \begin{array}{l}
+     y^\prime = p \\
+     p^\prime(x) = \frac{\rho}{T_0}\sqrt{1+p^2(x)} \\
+  \end{array}
+  \right.
+\end{equation*}
+con los datos $p(0) = 0$ y $y(L) = H$ donde $A = (L,H)$.
+Notamos ahora que estamos ante una EDO separable:
+$$\frac{p^\prime(x)}{\sqrt{1+p^2(x)}} = \frac{\rho}{T_0}$$
+Integrando ambos términos:
+$$\int_0^x \frac{p^\prime(s)}{\sqrt{1+p^2(s)}}ds = \frac{\rho}{T_0}\int_0^x ds = \frac{\rho}{T_0}x$$
+Realizando el cambio de variables $
+  \left\lbrace
+  \begin{array}{l}
+     p(s) = u \\
+     p^\prime(s)ds = du \\
+  \end{array}
+  \right.
+$
+
+obtenemos $$\int_0^{p(x)} \frac{du}{\sqrt{1+u^2}} = \frac{\rho}{T_0} x $$
+Para resolver esta integral se puede usar que $cosh^2(z) = 1+ sinh^2(z)$ y realizar un cambio de variables. Tenemos entonces que $$ln(\sqrt{1+p(x)} + p(x)) = \frac{\rho}{T_0} x $$
+Tomando exponenciales y despejando $p$ llegamos a que
+$$y^\prime = p = \frac{e^{\frac{\rho}{T_0} x }-e^{\frac{-\rho}{T_0} x }}{2} = sinh(\frac{\rho}{T_0} x )$$
+Integrando de nuevo llegamos a la solución:
+$$y = \frac{T_0}{\rho}cosh(\frac{\rho}{T_0} x ) + C$$
+donde podemos obtener la constante utilizando los datos ya proporcionados.
+\end{example}
+
+\img{img/puente.png}{Puente Colgante}{puente}{0.8}
+
+\begin{example}
+En el ejemplo anterior, hemos visto el problema de la caternaria. Cambiemos algunas hipótesis iniciales:
+\begin{itemize}
+\item Supongamos que ahora tenemos un puente colgante y queremos averiguar una expresión para la curva que describe la cadena que sujeta la calzada.
+\item La calzada se sujeta con cuerdas cuyo peso es despreciable.
+\end{itemize}
+Para la resolución de este problema, el método a seguir es el mismo que en el ejemplo anterior. Sin embargo, ahora la componente $T_y$ no tiene que sujetar el peso de la cuerda, sino el peso del puente, que es en este caso el producto de su densidad $C$ y su longitud $x$. (Ver \textbf{Figura \ref{fig:puente}}).
+
+Tenemos entonces
+\begin{equation*}
+  \left\lbrace
+  \begin{array}{l}
+     T_x = Tcos(\alpha)=T_0 \text{(Tensión)} \\
+     T_y = Tsin(\alpha) = Cx \\
+     tan(\alpha) = y^\prime(x)\\
+  \end{array}
+  \right.
+\end{equation*}
+
+De donde obtenemos que $y^\prime = \frac{C}{T_0}x$
+Por lo que la solución es $$y = \frac{C}{2T_0}x^2 + D$$
+\end{example}
+
+\begin{example}
+Supongamos que se tiene una cortina colgada de dos extremos. En este caso, al contrario que en el ejemplo anterior, el peso se distribuye por todo el área encerrada bajo la curva de la cortina. Por tanto, la ecuación diferencial obtenida será $$y^\prime = \frac{c}{T_0}\int_0^x y(s)ds$$ de donde obtenemos $$y^{\prime\prime} = \frac{c}{T_0}y$$
+
+Basta con tomar $y^\prime = p$ y $y^{\prime\prime} = p\partialder{y}{p}$
+
+Obtenemos entonces que $$p\partialder{y}{p} = \frac{c}{T_0}y$$ 
+Integrando ambos términos tenemos $$\frac{1}{2}p^2(y) = \frac{c}{2T_0}y^2+D$$
+$$y^\prime = p = \sqrt{\frac{c}{T_0}y^2+D}$$
+obteniendo así una EDO de primer orden.
+\end{example}
+
+\img{img/brac.png}{Curva braquistocrona}{brac}{0.7}
+
+\begin{example}[(Braquistocrona I)]
+El objetivo de este problema es encontrar la expresión de la curva en la que el tiempo de descenso es mínimo al soltar un cuerpo que se deslice por ella (Ver \textbf{Figura \ref{fig:brac}}).
+
+Vamos a parametrizar la curva en función del tiempo, de modo que obtenemos
+$$\sigma(t) = (x(t),y(x(t)))$$
+$$\sigma^\prime(t) = (x^\prime(t), \partialder{x}{y}(x(t))x^\prime(t))$$
+$$\norm{\sigma^\prime(t)} = \abs{x^\prime(t)}\sqrt{1+(\partialder{x}{y}(x(t)))^2}$$
+
+
+Aplicando unos pocos conocimientos físicos notamos que la energía cinética ha de ser igual a la potencial, pues despreciamos el rozamiento. Tenemos entonces
+$$\frac{1}{2}mv^2 = mg(-y) \implies v = \sqrt{-2gy}$$
+
+Igualando estas dos expresiones para la velocidad llegamos a la expresión
+$$\sqrt{\frac{1+(\partialder{x}{y}x(t))^2}{-2gy(x(t))}}x^\prime(t) = 1$$
+
+Ahora integramos ambos términos entre $0$ y $T$, siendo $T$ el tiempo de llegada
+$$\int_0^{T}\sqrt{\frac{1+(\partialder{x(t)}{y}x(t))^2}{-2gy(x)}}x^\prime(t) = T$$
+y realizamos el cambio de variable $x(t) = x$. Tenemos entonces que los límites de integración son ahora $0$ y $x_B$.
+$$\int_0^{x_B}\sqrt{\frac{1+(\partialder{x}{y}x)^2}{-2gy(x)}}dx = T$$
+
+Como resultado de lo anterior, tenemos una función que indica el tiempo de llegada al punto de destino.
+Como hemos dicho al inicio, el objetivo es minimizar ese tiempo. Por tanto, buscamos el mínimo de la función
+$$T(y) = \int_0^{x_B}\sqrt{\frac{1+(\partialder{x}{y}x)^2}{-2gy(x)}}dx$$
+$$T(y) = \int_0^{x_B} F(y, \partialder{x}{y})dx$$
+$$T(y) = \int_0^{x_B} F(y, p)dx$$
+
+Esta función toma una función y devuelve un número, por lo que es dificil de manejar. Si definimos
+$$T(y+\delta\Phi) = g(\delta)$$
+siendo $y$ la solución del problema y $\Phi$ una función que pertenezca al conjunto 
+$$A = \set{f:[0,x_B] \to \R \st f\in C^1, f(0) = 0, f(x_B) = 0}$$
+tenemos que $g(0)$ es un mínimo de $T(y)$.
+
+Tenemos entonces $$g(\delta) = \int_0^{x_B} F(y+\delta\Phi, \derivative{x}(y+\delta\Phi)dx$$
+$$g(\delta) = \int_0^{x_B} F(y+\delta\Phi, \partialder{x}{y} + \delta\partialder{x}{\Phi})dx$$
+
+Como $0$ es un punto crítico de $g$, tenemos que $g^\prime(0) = 0$
+$$g^\prime(0) = \derivative{\delta}(0) = \int_0^{x_B} F(y+\delta\Phi, \partialder{x}{y} + \delta\partialder{x}{\Phi})dx = 0$$
+
+$$g^\prime(0) = \int_0^{x_B} \partialder{y}{F}\Phi + \partialder{p}{F}\partialder{x}{\Phi}dx = 0$$
+
+Integrando el segundo término de la integral por partes, llegamos a que
+
+$$g^\prime(0) = \int_0^{x_B} (\partialder{y}{F}-\derivative{x}\partialder{p}{F})\Phi dx = 0 \forall \Phi\in A$$
+
+Tenemos entonces la EDO
+$$\partialder{y}{F}-\derivative{x}\partialder{p}{F} = 0$$
+
+Multiplicando a ambos lados por $\partialder{x}{y}$
+$$\derivative{x}(F-\partialder{x}{y}\partialder{p}{F} = 0$$
+$$F-\partialder{x}{y}\partialder{p}{F} = cte$$
+
+Retomando la función $F$ definida anteriormente tenemos y realizando los calculos necesarios para sustituir en la EDO tenemos
+$$\frac{\sqrt{1+(y^\prime)^2}}{\sqrt{2y}\sqrt{-y}}-y^\prime\frac{1}{\sqrt{2y}}\frac{1}{\sqrt{-y}}\frac{y^\prime}{\sqrt{1+(y^\prime)^2}}=C$$
+
+Tras varias operaciones de simplificación obtenemos
+\begin{equation*}
+  \left\lbrace
+  \begin{array}{l}
+     y^\prime=-\sqrt{\frac{-1}{2gc^2y}-1}\\
+	 y(x_B)=y_B\\
+  \end{array}
+  \right.
+\end{equation*}
+
+Tras resolver este problema, que se deja como ejercicio para el lector, se obtiene una curva cicloide.
+\vspace{5mm}
+\textit{Indicación: Denotar} $$k = \frac{1}{-2gc^2}$$ \textit{y realizar, a la hora de integrar, el cambio de variables} $$1+tan^2(x(=\frac{1}{cos^2(x)}$$
+\end{example}
+
+\img{img/brac2.png}{}{brac2}{0.7}
+
+\begin{example}[(Braquistocrona II)]
+Otra forma de resolver el problema de la braquistocrona es aplicando resultados fisicos de la óptica.
+Según la ley de Snell, cuando la luz pasa de un medio a otro, se cumple que
+$$\frac{sin(\alpha_1)}{v_1} = \frac{sin(\alpha_2)}{v_2}$$
+
+Si dividimos el espacio en bandas horizontales de longitud $h$ en las que en cada banda está la tangente a la curva (Ver \textbf{Figura \ref{fig:brac2}}), tenemos la relación
+$$\frac{sin(\alpha_1)}{v_1} = \frac{sin(\alpha_2)}{v_2} = \hdots$$
+
+Cuando $h\to 0$ tenemos que $\frac{sin(\alpha)}{v} = cte$ por lo que obtenemos
+$$\frac{sin(\alpha)}{\sqrt{-2gy}}=C$$
+
+Sabiendo que $tan(\alpha+\frac{\pi}{2}) = y^\prime$, con la ecuación anterior obtenemos una EDO que satisface la curva.
+\end{example}

@@ -1,0 +1,379 @@
+\section{Algunos métodos de integración}
+A continuación veremos cómo resolver algunos casos particulares de EDO:
+
+\subsection{EDO de variables separadas}
+Como ya hemos visto, las EDO de variables separadas\index{Ecuación diferencial ordinaria!de variables separadas} son de la forma $F(y)y^\prime = G(x)$ con un dato $y(x_0) = y_0$.
+Para resolverlas basta con integrar ambos términos:
+$$\int_{x_0}^x F(y(s))y^\prime(s)ds = \int_{x_0}^x G(s)ds$$
+Realizando el cambio 
+$\left\lbrace
+  \begin{array}{l}
+     y(s) = u \\
+     y^\prime(s)ds = du  \\
+  \end{array}
+  \right.
+$ vemos que basta con aplicar el siguiente método:
+
+\begin{method}[para resolver una EDO de variables separadas]
+Dada una EDO de la forma $F(y)y^\prime = G(x)$ y un dato $y(x_0) = y_0$ basta con resolver $$\int_{y_0}^{y(x)} F(u)du = \int_{x_0}^x G(s)ds$$
+\end{method} 
+
+\subsection{Ecuaciones homogéneas}
+El primer paso antes de definir una ecuación homogénea y dar un método para su resolución es definir el concepto de función homogénea.:
+
+\begin{definition}\name{Función homogénea}
+Se dice que $F(x,y)$ es una función homogénea de \textbf{grado m} si y solo si
+$$F(\lambda x, \lambda y) = \lambda^m F(x,y)$$
+\end{definition}
+
+A partir de aquí, proporcionaremos la definición de ecuación homogénea de dos formas equivalentes:
+\begin{definition}\name[Ecuación diferencial ordinaria]{homogénea}
+\begin{itemize}
+\item $y^\prime = F(x,y)$ es una ecuación homogénea $\iff F$ es homogénea de grado $0$.
+\item $M(x,y)+N(x,y)y^\prime = 0$ es una ecuación homogénea $\iff M,N$ son homogéneas del \textbf{mismo} grado.
+
+De este modo tenemos que $N\neq 0 \implies y^\prime = \frac{-M(\lambda x,\lambda y)}{N(\lambda x,\lambda y)} = \frac{-\lambda^mM(x,y)}{\lambda^mN(x,y)} = \frac{-M(x,y)}{N(x,y)}$
+
+Obteniendo finalmente que $y^\prime = \frac{-M(x,y)}{N(x,y)}$ es de grado $0$.
+\end{itemize}
+\end{definition}
+
+Se puede observar que si $F$ es de grado $0$, entonces
+$$F(x,y) = F(x\cdot 1, x\cdot \frac{y}{x}) = x^0 F(1,\frac{y}{x}) = F(1, \frac{y}{x})$$
+reduciéndose el problema a una función de una sóla variable $z(x)=\frac{y(x)}{x}$.
+
+Realizando unas pocas cuentas seremos capaces de llegar a una expresión más sencilla para la EDO.
+Tenemos pues:
+$$z(x) = \frac{y(x)}{x}$$
+$$y(x) = xz(x)$$
+Derivando implícitamente:
+$$y^\prime(x) = z(x) + xz^\prime(x)$$
+Como sabemos que $$y^\prime(x) = F(x,y) = F(1, \frac{y}{x}) = F(1, z) = \tilde{F}(z)$$
+igualando tenemos que $$\tilde{F}(z) = z + xz^\prime$$
+Con todo esto hemos obtenido a partir de la EDO homogénea una EDO de variables separadas:
+$$\frac{z^\prime}{\tilde{F}(z)-z} = \frac{1}{x}$$
+
+\begin{example}
+Sea la EDO $$\underbrace{x^2+y^2}_\text{grado 2} + \underbrace{xy}_\text{grado 2}y^\prime = 0$$ tenemos que $$y^\prime = -\frac{x^2+y^2}{xy}$$ es de grado $0$.
+
+Podemos reducir facilemente el problema a una sola variable viendo que 
+$$y^\prime = -\frac{x^2+y^2}{xy} = \frac{-x^2(1+(\frac{y}{x})^2)}{xy} = \frac{-1+(\frac{y}{x})^2}{\frac{y}{x}} = \frac{-1+z^2}{z}$$
+o directamente comprobando que $y^\prime = -\frac{x^2+y^2}{xy}$ es homogénea de grado 0.
+
+A partir de aquí construimos la EDO de variables separadas. Tenemos que $$\tilde{F}(z) = -\frac{x^2+y^2}{xy}$$ por lo que la ecuación que hay que resolver es:
+$$\frac{z^\prime}{\tilde{F}(z)-z} = \frac{z^\prime}{-\frac{1+z^2}{z}-z} = \frac{1}{x}$$
+$$z^\prime x = -\frac{1+z^2}{z}-z = \frac{-1-2z^2}{z}$$
+$$\frac{zz^\prime}{1+2z^2} = \frac{-1}{x}$$
+Integrando ambos términos tenemos que:
+$$\int \frac{z(s)z^\prime(s)}{1+2z^2(s)}ds = \int\frac{-1}{s}ds$$
+Obteniendo así:
+$$\frac{1}{4}ln(2z^2(x)+1) = ln(x) + C$$
+A partir de aquí sólo es necesario simplificar la expresión y despejar $y(x)$, recordando que $z(x) = \frac{y(x)}{x}$.
+\end{example}
+
+Con este ejemplo hemos visto un método para resolver ecuaciones homogéneas:
+\begin{method}[para resolver una EDO homogénea]
+Este método es válido para resolver una EDO de la forma $y^\prime(x) = F(x,y)$ con $F$ homogénea de grado 0.
+\begin{itemize}
+\item En caso de tener una EDO de la forma $M(x,y) + N(x,y)y^\prime = 0$ con $M,N$ del \textbf{mismo} grado, basta con construir una EDO como la anterior de la forma $y^\prime = \frac{-M(x,y)}{N(x,y)} = F(x,y)$ donde $F(x,y) = \frac{-M(x,y)}{N(x,y)}$ es de grado 0.
+
+\item Tomar $z(x) = \frac{y(x)}{x}$ y $\tilde{F}(z(x)) = F(1,z(x))$
+\item Construir la EDO $\frac{z^\prime}{\tilde{F}(z) - z} = \frac{1}{x}$
+\item Tenemos entonces una EDO de variables separadas, que ya sabemos resolver. Una vez resuelta sustituir $z(x)$ por $\frac{y(x)}{x}$ y despejar $y(x)$.
+\end{itemize}
+\end{method}
+
+\subsection{Ecuaciones exactas}
+Dado un conjunto de nivel de una función $V$: $$V(x,y) = C$$
+queremos hallar la EDO asociada. Derivando implícitamente tenemos que dicha EDO es: 
+$$\derivative{x}V(x,y) + \derivative{y}V(x,y)y^\prime = 0$$
+Vemos entonces que si tenemos una EDO como la anterior, sus soluciones son de la forma $V$: $$V(x,y) = C$$.
+Es lo que denominamos ecuación exacta.
+
+\begin{definition}
+Una EDO de la forma $M(x,y) + N(x,y)y^\prime = 0$ es exacta $\iff \exists V \st \nabla V = (M,N)$
+\end{definition}
+
+\begin{theorem}
+Una EDO de la forma $M(x,y) + N(x,y)y^\prime = 0$ con $M,N \in C^2$ es exacta $\iff \derivative{y}{M} = \derivative{x}N$
+\end{theorem}
+\begin{proof}
+Queremos probar que dada la EDO $M(x,y) + N(x,y)y^\prime = 0$ con $M,N \in C^2$:
+$$\derivative{y}M = \derivative{x}N \iff \exists V \st \nabla V = (M,N)$$
+\begin{itemize}
+\item $\impliedby$)
+
+Dada una función $V$ de forma que $\nabla V = (\derivative{x}V, \derivative{y}V) = (M, N)$ tenemos que 
+\begin{equation*}
+  \left\lbrace
+  \begin{array}{l}
+     \derivative{y}M = \dderivative{x}{y}V \\
+     \derivative{x}N = \dderivative{y}{x}V  \\
+  \end{array}
+  \right.
+\end{equation*}
+
+Por el Teorema de Schwarz, al ser $M,N\in C^2$, tenemos que las derivadas parciales cruzadas son iguales, por tanto $$\derivative{y}M = \derivative{x}N$$
+
+\item $\implies$)
+Sea $F$ el campo vectorial $F = (M(x,y),N(x,y),0)$, cuyo rotacional es 
+
+$(-\derivative{z}F_y+\derivative{y}F_z)\vec{i} + (\derivative{z}F_x-\derivative{x}F_z)\vec{j}+(-\derivative{y}F_x+\derivative{x}F_y)\vec{k} = (0,0, -\derivative{y}F_x+\derivative{x}F_y)$
+
+Tenemos que si $$\derivative{y}M = \derivative{x}N$$ entonces $$rot(F) = (0,0,0)$$ lo que implica que $F$ es un campo conservativo. Por tanto $\exists \tilde{V}$ tal que $\tilde{V}$ es el potencial del campo $F$. De esta forma tenemos que $\exists \tilde{V} \st \nabla \tilde{V} = (M(x,y),N(x,y),0)$. Tomando $V = (\tilde{V}_1, \tilde{V}_2)$ concluimos que $\derivative{y}M = \derivative{x}N \implies \exists V \st \nabla V = (M,N)$.
+\end{itemize}
+\end{proof}
+
+Tenemos entonces, el siguiente método para resolver las ecuaciones exactas:
+\begin{method}[para resolver ecuaciones exactas]
+Dada una EDO exacta de la forma $M(x,y) + N(x,y)y^\prime = 0$
+\begin{itemize}
+\item Calcular la función $V(x,y)$ que cumple que $\nabla V(x,y) = (M,N)$
+\item Las soluciones de la EDO son los conjuntos de nivel de $V(x,y)$
+\end{itemize}
+\end{method}
+
+Veamos un ejemplo:
+
+\begin{example}
+Se pide resolver la EDO $$\underbrace{\frac{-1}{y}}_M+\underbrace{\frac{x}{y^2}}_Ny^\prime = 0$$ que es separable y homogénea.
+Veamos si es exacta: $$\derivative{y}M = \frac{1}{y^2} = \derivative{x}N$$
+Tenemos entonces que 
+\begin{itemize}
+\item $M = \frac{-1}{y} = \derivative{x}V \implies V(x,y) = \int \frac{-1}{y}dx$
+
+de donde obtenemos que $V(x,y) = \frac{-x}{y} + C(y)$
+
+\item $N = \frac{x}{y^2} = \derivative{y}V \implies V(x,y) = \int \frac{x}{y^2}dy$
+
+de donde obtenemos que $V(x,y) = \frac{-x}{y} + C^\prime(y)$. Así que $C^\prime(y) = 0$, por lo que $C(y) = K$.
+
+Por tanto las soluciones de la EDO son los conjuntos de nivel de $V$: $$\frac{-x}{y} = K$$
+\end{itemize}
+
+Se puede observar que si hubiesemos simplificado al EDO multiplicando por $y$ habriamos obtenido $$-1+\frac{x}{y}y^\prime = 0$$ que deja de ser exacta. El paso contrario, que es el de convertir una EDO no exacta en una exacta multiplicando por un factor es lo que se conoce como \textbf{Factor integrante}\index{Factor integrante}.
+\end{example}
+
+Veamos otro ejemplo de resolución de una EDO exacta.
+
+\begin{example}
+Sea
+$$\underbrace{xy^2+nx^2y}_M+\underbrace{x^3+x^2y}_Ny^\prime = 0$$
+se quiere averiguar que valor ha de tener $n$ para que la ecuación sea exacta.
+
+$$
+  \left\lbrace
+  \begin{array}{l}
+     \derivative{y}M = 2xy+nx^2 \\
+     \derivative{x}N = 2xy+3x^2 \\
+  \end{array}
+  \right.
+$$
+Tenemos entonces que si $n=3$ entonces la EDO es exacta. Para resolverla, basta con buscar el potencial $V$ del cual $(M,N)$ es el vector gradiente, y las soluciones serán los conjuntos de nivel de $v$.
+\begin{itemize}
+\item $M = \derivative{x}V = xy^2+3x^2y$, integrando tenemos $V(x,y) = \frac{x^2y^2}{2}+x^3y+C(y)$
+\item $N = \derivative{y}V = x^3+x^2y$. Derivando la expresión que ya tenemos para $V$ con respecto a $y$, obtenemos $x^3+x^2y+C^\prime(y)$, por lo que $C^\prime(y) = 0$ y $C=K$.
+\item Tenemos que las soluciones son los conjuntos de nivel de la función $$V(x,y) = \frac{x^2y^2}{2}+x^3y$$
+\end{itemize}
+\end{example}
+
+\subsection{Factor integrante}
+En un ejemplo anterior hemos visto una técnica que hace que una EDO no exacta se transforme en una que sí lo es multiplicando toda la ecuación por un factor, denominado factor integrante.
+
+\begin{definition}\name{Factor integrante}
+Dada una EDO de la forma $$G(x,y)+H(x,y)y^\prime = 0$$ decimos que $\mu$ es un \textbf{factor integrante} si y sólo si $$\underbrace{\mu G}_{M}+\underbrace{\mu H}_{N}y^\prime = 0$$ es exacta.
+\end{definition}
+
+Para que la EDO sea exacta, ya sabemos que se tiene que cumplir que $$\derivative{y}M = \derivative{x}N$$ lo que implica que 
+\begin{equation}
+\partialder{y}{\mu}G+\mu\partialder{y}{G} = \partialder{x}{\mu}H+\mu\partialder{x}{H}
+\label{eq:factor_integrante}
+\end{equation}
+
+A partir de este resultado, podemos enunciar dos teoremas de partida y un método para conseguir los mismos resultados que proporcionan los teoremas utilizando funciones distintas.
+
+\begin{theorem}
+Si la fracción $$\frac{\partialder{y}{G}(x,y)-\partialder{x}{H}(x,y)}{H(x,y)}$$ es función \textbf{sólo} de $x$, entonces el factor integrante $\mu$ es función \textbf{sólo} de $x$ y se tiene $$\frac{\mu^\prime(x)}{\mu(x)} = \frac{\partialder{y}{G}(x,y)-\partialder{x}{H}(x,y)}{H(x,y)}$$
+\end{theorem}
+\begin{proof}
+Basta con notar que $\partialder{y}{\mu} = 0$ y por tanto $\partialder{x}{\mu} = \mu^\prime$.
+Sustituyendo en \ref{eq:factor_integrante} obtenemos $$\mu(x)\partialder{y}{G}(x,y) = \mu^\prime H(x,y)+\mu(x) \partialder{x}{H}(x,y)$$
+
+Agrupando terminos tenemos que 
+$$\frac{\mu^\prime(x)}{\mu(x)} = \frac{\partialder{y}{G}(x,y)-\partialder{x}{H}(x,y)}{H(x,y)}$$
+por lo que si el término de la derecha depende sólo de $x$, tenemos que $\mu$ también es función sólo de $x$.
+\end{proof}
+
+\newpage
+\begin{theorem}
+Si la fracción $$\frac{\partialder{x}{H}(x,y)-\partialder{y}{G}(x,y)}{G(x,y)}$$ es función \textbf{sólo} de $y$, entonces el factor integrante $\mu$ es función \textbf{sólo} de $y$, y se tiene
+$$\frac{\mu^\prime(y)}{\mu(y)} = \frac{\partialder{x}{H}(x,y)-\partialder{y}{G}(x,y)}{G(x,y)}$$
+\end{theorem}
+
+\begin{proof}
+Basta con notar que $\partialder{x}{\mu} = 0$ y por tanto $\partialder{y}{\mu} = \mu^\prime$.
+Sustituyendo en \ref{eq:factor_integrante} obtenemos $$\mu(y)\partialder{x}{H}(x,y) = \mu^\prime G(x,y)+\mu(y) \partialder{y}{G}(x,y)$$
+
+Agrupando terminos tenemos que 
+$$\frac{\mu^\prime(y)}{\mu(y)} = \frac{\partialder{x}{H}(x,y)-\partialder{y}{G}(x,y)}{G(x,y)}$$
+por lo que si el término de la derecha depende sólo de $y$, tenemos que $\mu$ también es función sólo de $y$.
+\end{proof}
+
+De esta forma, dado una variable $\xi$ que sea función de $x$ e $y$, tenemos un método para obtener la expresión del factor integrante $\mu$ en caso de que sepamos que es función de $\mu = \mu(\xi)$.
+
+\begin{method}[para obtener el factor integrante]
+Si nos es proporcionado el dato de que $\mu = \mu(\xi(x,y))$, para averiguar el factor integrante:
+\begin{itemize}
+\item Calcular $\partialder{x}{\mu}$, que será función de $x,y,\xi$.
+\item Calcular $\partialder{y}{\mu}$, que será función de $x,y,\xi$.
+\item Sustituir $\partialder{x}{\mu}$ y $\partialder{y}{\mu}$ en \ref{eq:factor_integrante}.
+\item Despejar de la ecuación $\frac{\mu^\prime(\xi)}{\mu(\xi)}$
+\item Integrar ambos términos y operar para obtener la expresión para $\mu$.
+\end{itemize}
+\end{method}
+
+\begin{example}
+Veamos qué debe ocurrir para que $\mu = \mu(\xi)$ con $\xi = xy$.
+\begin{itemize}
+\item $\partialder{x}{\mu} = \mu^\prime(\xi)\partialder{x}{\xi} = \mu^\prime(\xi)y$
+\item $\partialder{y}{\mu} = \mu^\prime(\xi)\partialder{y}{\xi} = \mu^\prime(\xi)x$
+\item Sustituyendo en \ref{eq:factor_integrante} obtenemos $$\mu^\prime(\xi)xG(x,y)+\mu(\xi)\partialder{y}{G}(x,y) = \mu^\prime(\xi)yH(x,y)+\mu(\xi)\partialder{x}{H}(x,y)$$
+\item Despejando obtenemos $$\frac{\mu^\prime(\xi)}{\mu(\xi)} = \frac{\partialder{x}{H}(x,y)-\partialder{y}{G}(x,y)}{xG(x,y)-yH(x,y)}$$ por lo que el término de la derecha ha de ser función sólo de $\xi=xy$.
+\end{itemize}
+\end{example}
+
+\begin{example}
+Se quiere resolver la EDO $y+(x^2y-x)y^\prime = 0$ sabiendo que $\mu = \mu(x)$. Con esto tenemos que $\mu y +\mu(x^2y-x)y^\prime = 0$ es exacta, por lo que $$\derivative{y}(\mu y) = \derivative{x} (\mu(yx^2-x))$$
+Obtenemos $$0 = \mu^\prime(x)(x^2y-x)+\mu(2xy-2)$$
+Despejando $$\frac{\mu^\prime(x)}{\mu(x)} = \frac{-2xy+2}{x^2y-x} = \frac{-2(xy-1)}{x(xy-1)} = \frac{-2}{x}$$
+Integrando podemos obtener la solución para $mu$. Una vez hecho esto podemos convertir la EDO en exacta y resolverla con el método explicado.
+\end{example}
+
+\begin{example}
+Se quiere resolver la EDO $(3y^2-x)+2y(y^2-3x)y^\prime = 0$ sabiendo que $\mu = \mu(\xi)$ con $\xi = x+y^2$. Con esto tenemos que $$\underbrace{\mu(\xi)(3y^2-x)}_M+\underbrace{\mu(\xi)2y(y^2-3x)}_Ny^\prime = 0$$ es exacta, por lo que $\partialder{y}{M} = \partialder{x}{N}$. 
+Obtenemos $$\mu^\prime(\xi)2y(3y^2-x)+\mu(x+y^2)6y = \mu(\xi)2y(y^2-3x)+\mu(\xi)(6-y)$$
+Despejando $$\frac{\mu^\prime(\xi)}{\mu(\xi)} = \frac{-3}{\xi}$$
+Integrando y tomando exponenciales llegamos a la solución para $mu$ $$\mu = e^C\frac{1}{\xi^3}$$
+Como los factores integrantes son invariantes por constantes, elegimos $C=0$ $$\mu = \frac{1}{(x+y^2)^3}$$
+\end{example}
+
+\subsection{Ecuaciones lineales de primer orden}
+Las ecuaciones lineales de primer orden son aquellas que tienen la forma $$y^\prime +P(x)y=Q(x)$$ donde $P,Q$ son funciones de $x$.
+
+Para resolverlas basta con buscar un factor integrante $\mu$ que las convierta en ecuaciones exactas.
+Para que 
+$$\underbrace{\mu(P(x)y-Q(x))}_M+\underbrace{\mu}_N y^\prime = 0$$
+sea exacta se tiene que cumplir que $$\partialder{y}{M} = \partialder{x}{N}$$
+$$\partialder{y}{\mu}(P(x)y-Q(x)) + \mu P(x) = \partialder{x}{\mu}$$
+Como se tiene que $\mu = \mu(x) \implies \partialder{y}{\mu} = 0$ por tanto tenemos que $$\mu P(x) = \mu^\prime(x)$$ de donde obtenemos que $$\frac{\mu^\prime}{\mu} = P(x)$$ que es una EDO de variables separadas cuya solución es $\mu = e^{\int P(x)dx}$
+
+\begin{method}[para resolver ecuaciones lineales de primer orden]
+Dada una EDO de la forma $y^\prime +P(x)y = Q(x)$
+\begin{itemize}
+\item Hallar $\mu = e^{\int P(x)dx}$
+\item Resolver $$\underbrace{\mu(P(x)y-Q(x))}_M+\underbrace{\mu}_N y^\prime = 0$$ que es una EDO exacta
+\end{itemize}
+\end{method}
+
+\begin{example}
+Se quiere resolver la EDO lineal de primer orden 
+$$y^\prime + y = \frac{1}{1+e^{2x}}$$
+
+donde 
+$
+  \left\lbrace
+  \begin{array}{l}
+     P(x) = 1 \\
+     Q(x) = \frac{1}{1+e^{2x}} \\
+  \end{array}
+  \right.
+$
+
+\begin{itemize}
+\item Se halla el factor integrante $\mu = e^{\int P(x)dx} = e^x$
+\item Se resuelve la EDO que queda al multiplicar la original por $\mu$ que es
+$$(e^xy)^\prime = \frac{e^x}{1+e^{2x}}$$
+\item En este caso, es más simple resolver la EDO itengrando ambos términos que hallando el potencial
+$$e^xy=\int \frac{e^x}{1+e^{2x}}$$
+\item Tenemos como resultado
+$$y(x) = e^{-x}(arctan (e^x) + C)$$
+\end{itemize}
+\end{example}
+
+\subsection{Ecuaciones de segundo orden reducibles}
+\subsubsection{}
+Para resolver las ecuaciones de segundo orden que tienen la forma $$F(x, y^\prime, y^{\prime\prime}) = 0$$ basta con hacer el cambio de variables $y^\prime = p$ obteniendo así una EDO de a forma $$F(x, p, p^\prime) = 0$$
+
+\subsubsection{}
+Para resolver las ecuaciones de segundo orden que tienen la forma $$F(y,y^\prime, y^{\prime\prime}) = 0$$ basta con interpretar $p$ como función de $y$, es decir, tenemos $p = p(y)$.
+
+Usemos la notación de Leibniz para ver de que forma queda la EDO:
+
+$$y^\prime(x) = \partialder{x}{y} = p \implies y^{\prime\prime}(x) = \derivative{x}p$$
+Usando ahora la regla de la cadena tenemos que 
+$$y^{\prime\prime}(x) = \derivative{x}p = \partialder{y}{p}\partialder{x}{y} = p\partialder{y}{p}$$
+Tenemos entonces una EDO de la forma $$F(y, p(y), p(y)\partialder{y}{p}) = 0$$
+
+\subsection{Algunas ecuaciones clásicas}
+\subsubsection{Ecuaciones de Bernouilli}
+Las ecuaciones de Bernouilli son de la forma $$y^\prime + P(x)y=Q(x)y^n$$ donde $P,Q$ son funciones de $x$.
+
+\begin{method}[para resolver una EDO de Bernouilli]
+Para resolver una EDO de Bernouilli basta hacer el cambio de variable $z=y^{1-n}$ obteniendo así que $y=z^{\frac{1}{1-n}}$ y que $y^\prime = \frac{1}{1-n}z^{\frac{n}{1-n}}z^\prime$
+
+Sustituyendo en la ecuación de Bernouilli y simplificando obtenemos
+$$z^\prime+(1-n)P(x)z=(1-n)Q$$ que es una ecuación lineal.
+\end{method}
+
+\subsubsection{Ecuaciones de Ricatti}
+Las ecuaciones de Ricatti tienen la forma $$y^\prime +P(x)y=Q(x) + R(x)y^2$$
+Si tenemos que $y_1(x)$ es una solución, haciendo el cambio de variables $z=y-y_1$ tenemos que $y=z+y_1$ y que $y^\prime=z^\prime+y_1^\prime$
+
+Sustituyendo en la ecuación de Ricatti obtenemos
+$$(z^\prime+y_1^\prime)+P(z+y1) = Q + R(z+y_1)^2$$
+Reordenando términos en el lado izquierdo y operando el cuadrado en el lado derecho
+$$(z^\prime+Pz)+\underbrace{(y_1^\prime+Py_1)}_{Q+Ry_1^2} = Q+Rz^2+Ry_1^2+2Rzy_1$$
+La expresión encerrada en una llave es justamente la parte izquierda de la ecuación de Ricatti, como $y_1$ es solución, lo podemos sustituir por la parte derecha de la ecuación de Ricatti. Nos queda
+$$z^\prime+(P-2Ry_1)z=Rz^2$$
+que es una ecuación de Bernouilli.
+
+\subsubsection{Ecuaciones de Euler-Cauchy de orden n}
+Las ecuaciones de Euler-Cauchy son de la forma 
+$$a_nx^ny^{n)}+a_{n-1}x^{n-1}y^{n-1)}+\hdots+a_1xy^\prime+a_0y=0$$
+Las soluciones son de la forma $y=x^\alpha$
+Tenemos entonces 
+\begin{equation*}
+  \left\lbrace
+  \begin{array}{l}
+     y^\prime = \alpha x^{\alpha-1}\\
+     y^{\prime\prime} = \alpha(\alpha-1)x^{\alpha-2}\\
+     \vdots\\
+     y^{j)}=\alpha(\alpha-1)\hdots(\alpha-j+1)x^{\alpha-j}\\
+  \end{array}
+  \right.
+\end{equation*}
+
+Si sustituimos en la ecuación anterior, tenemos como factor común $x^\alpha$ y nos queda un polinomio de grado $n$ donde $\alpha$ son sus raíces.
+
+\begin{example}
+Se quieren encontrar soluciones de la EDO $$x^2y^{\prime\prime}+5xy^\prime+6y=0$$
+Tenemos
+\begin{equation*}
+  \left\lbrace
+  \begin{array}{l}
+  	 y=x^\alpha
+     y^\prime = \alpha x^{\alpha-1}\\
+     y^{\prime\prime} = \alpha(\alpha-1)x^{\alpha-2}\\
+  \end{array}
+  \right.
+\end{equation*}
+
+Sustituyendo obtenemos
+$$x^2(\alpha(\alpha-1)x^{\alpha-2})+5x(\alpha x^{\alpha-1})+6(x^\alpha) = 0$$
+$$x^\alpha(\alpha(\alpha-1))+5\alpha x^\alpha+6x^\alpha = 0$$
+$$x^\alpha(\alpha(\alpha-1)+5\alpha+6) = 0$$
+Nos queda el polinomio
+$$\alpha^2+4\alpha+6 = 0$$ que no tiene raíces reales.
+\end{example}
+
+
