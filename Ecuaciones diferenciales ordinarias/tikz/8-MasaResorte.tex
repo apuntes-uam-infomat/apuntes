@@ -1,0 +1,28 @@
+\begin{tikzpicture}[font=\small]
+
+\pgfmathsetmacro{\vdiff}{-4}
+
+\draw[->] (-3,0) -- (3,0);
+\draw[->] (0,-1) -- (0,3);
+
+\draw[blue, domain=-2:2, variable=\x] plot ({\x}, {\x*\x}) node[right] {$F(x) = Ax^2$};
+
+\draw[->] (-3,\vdiff) -- (3,\vdiff);
+\draw[->] (0,\vdiff - 2) -- (0,\vdiff + 2);
+
+\foreach \x/\c [count=\i] in {1.5/orange,1/red}
+{
+	 \node[\c, draw, fill, circle, inner sep=1pt] at ({\x}, {\x*\x}) {};
+	 \node[\c, draw, fill, circle, inner sep=1pt] at ({-\x}, {\x*\x}) {};
+	 \draw[\c, thin] (-2.2, {\x * \x}) -- (2.2, {\x*\x}) node[right] {$C_\i$};
+	 \draw[\c, dashed] ({\x}, {\x*\x}) --  ({\x}, {\vdiff});
+	 \draw[\c, dashed] ({-\x}, {\x*\x}) --  ({-\x}, {\vdiff});
+	 \draw[\c, invert full directed] (0,\vdiff) ellipse ({\x} and {\x * 0.5});
+	 \node[\c, anchor=west] (U) at ({\x + 1}, {\vdiff + 0.5*\x*\x}) {$y(x) = \sqrt{2}\sqrt{C_\i - F(x)}$};
+ 	 \node[\c, anchor=west] (L) at ({\x + 1}, {\vdiff - 0.5*\x*\x}) {$y(x) = - \sqrt{2}\sqrt{C_\i - F(x)}$};
+ 	 \draw[\c, thick, ->] ({1-0.2*\x*\x},{\vdiff + 0.35*\x*\x}) to[bend left] (U.west);
+ 	 \draw[\c, thick, ->] ({1-0.2*\x*\x},{\vdiff - 0.35*\x*\x}) to[bend right] (L.west);
+}
+
+
+\end{tikzpicture}

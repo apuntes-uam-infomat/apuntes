@@ -17,7 +17,10 @@
         mark=at position 0.5 with {\arrow[scale=1.3]{stealth};}}}]
 \tikzstyle{sparse directed}=[postaction={decorate,decoration={markings,
         mark=between positions 0.25 and 0.75 step 0.25 with {\arrow[scale=1.3]{stealth};}}}]
-        
+
+\tikzstyle{plot directed}=[postaction={decorate,decoration={markings,
+    mark=between positions 0.05 and 0.95 step 0.7cm with {\arrow{stealth};}}}]
+   
 \tikzstyle{invert dense directed}=[postaction={decorate,decoration={markings,
     mark=between positions 0.2 and 0.8 step 1cm with {\arrowreversed{stealth};}}}]
 
@@ -30,6 +33,8 @@
 \tikzstyle{invert sparse directed}=[postaction={decorate,decoration={markings,
         mark=between positions 0.25 and 0.75 step 0.25 with {\arrowreversed[scale=1.3]{stealth};}}}]
 
+\tikzstyle{invert plot directed}=[postaction={decorate,decoration={markings,
+    mark=between positions 0.05 and 0.95 step 0.7cm with {\arrowreversed{stealth};}}}]
 
 \pgfkeys{
 	/cfam/.is family,
@@ -40,10 +45,17 @@
 	end/.value required,
 	step/.estore in = \crvfstep,
 	step/.value required,
-	offset/.estore in = \crvfofst,
-	offset/.value required,
+	boffset/.estore in = \crvfbofst,
+	boffset/.value required,
+	eoffset/.estore in = \crvfeofst,
+	eoffset/.value required,
+	etarget/.estore in = \crvfeofstnode,
+	etarget/.value required,
+	btarget/.estore in = \crvfbofstnode,
+	btarget/.value required,
 	default/.style = 
-	  {start = 0, end = 1, step = 0.1, offset = 0},
+	  {start = 0, end = 1, step = 0.1, boffset = 0, eoffset = 0, 
+	  etarget=CFA,btarget=CFB},
 	.unknown/.code={%
 		\let\currname\pgfkeyscurrentname%
 		\let\currval\pgfkeyscurrentvalue%
@@ -71,11 +83,12 @@
 		
 	\foreach \x [count=\i] in {\crvfend,\crvfnext,...,\crvfstart}
 	{
-		\pgfmathsetmacro{\crvfof}{\i * \crvfofst}
+		\pgfmathsetmacro{\crvfaof}{\i * \crvfbofst}
+		\pgfmathsetmacro{\crvfbof}{\i * \crvfeofst}
 		\draw[/cfam/remainingkeys] 
-			($(CFA) + \crvfof*(CFB) - \crvfof*(CFA)$) 
+			($(CFA) + \crvfaof*(\crvfbofstnode) - \crvfaof*(CFA)$) 
 			..controls ( $(CFA)!.5!(CFB)!\x!(CFTR)$ ) 
-			.. ($(CFB) + \crvfof*(CFA) - \crvfof*(CFB)$);	
+			.. ($(CFB) + \crvfbof*(\crvfeofstnode) - \crvfbof*(CFB)$);	
 	}
 }        
 

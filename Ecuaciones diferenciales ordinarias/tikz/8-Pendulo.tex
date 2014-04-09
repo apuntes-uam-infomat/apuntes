@@ -1,0 +1,46 @@
+
+
+\begin{tikzpicture}[scale=1.5]
+\draw[->] (-1.5,0) -- (5.5,0);
+\draw[->] (0,-1.5) -- (0,1.5);
+
+
+\node[fill=black, draw, circle, inner sep=1pt] at (-1,0) {};
+
+\foreach \x in {1,3,5}
+{
+	\node[fill=black, draw, circle, inner sep=1pt] at ({\x},0) {};
+	\curvefam[red, very thin, dense directed, start=0.6, end=1.2, step=0.2]{({\x-2},0)}{({\x},0)}{({\x - 1},1)}	
+	
+	\curvefam[red, very thin, dense directed, start=0.6, end=1.2, step=0.2]{({\x-2},0)}{({\x},0)}{({\x - 1},-1)}	
+	
+	\foreach \z in {1,...,3}
+	{
+		\pgfmathsetmacro{\xrad}{\z * 0.2}
+		\draw[orange, very thin, invert plot directed] ({\x - 1}, 0) ellipse ({\xrad}  and 0.1*\z);
+	}
+}
+
+\draw[blue, domain=-1.3:5.3, plot directed, thin, variable=\x, smooth] plot ({\x}, {0.5*sin((pi*\x + pi/2) r) + 0.8});
+
+\draw[blue, domain=-1.3:5.3, plot directed, thin, variable=\x, smooth] plot ({\x}, {-0.5*sin((pi*\x + pi/2) r) - 0.8});
+
+\begin{scope}[yshift=-4cm, xshift=2cm]
+\draw[->] (-3,0) -- (3,0) node[right] {$t$};
+\draw[->] (0,-1.5) -- (0,1.5) node[above] {$x$};
+
+\draw[red, domain=-2.7:2.7, thin, variable=\x, smooth] plot ({\x}, {rad(atan(4*\x))});
+\draw[orange, domain=-2.7:2.7, thin, variable=\x, smooth, samples=200] plot ({\x}, {0.3*sin(4*\x r)});
+\draw[blue, domain=-2.7:2.7, thin, variable=\x, smooth, samples=200] plot ({\x}, {0.5*\x + 0.3*sin(7*\x r)});
+\end{scope}
+
+\begin{scope}[yshift=-1cm, xshift=7.5cm]
+\draw[very thick] (0,0) -- (0,-2);
+\node[black, fill=white, draw,circle,inner sep=4pt] at (0,-2) {};
+
+\draw[|->, red] (0,0.5) arc (90:-270:0.5);
+\draw[<->, orange] ({-1.75*sin(20)},{-1.75*cos(20)}) arc(250:290:1.75);
+\draw[<-|, blue, domain=0:4*pi, variable=\x, smooth, samples=250] plot ({(0.03*\x + 0.6) *sin(-\x r)}, {(0.03*\x + 0.6)  * cos(-\x r)});
+\end{scope}
+
+\end{tikzpicture}
