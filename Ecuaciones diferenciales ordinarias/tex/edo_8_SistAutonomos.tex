@@ -523,7 +523,7 @@ La zona de estabilidad es justamente el segundo cuadrante.
 
 \subsection{Método de linealización}
 
-\begin{definition}\name[Punto]{crítico estable}
+\begin{definition}\name[Punto]{crítico estable}\label{defPuntoEstable}
 
 Dado un sistema \[ \begin{cases} x' = F(x,y) \\ y'= G(x,y) \end{cases} \] con $(x_0, y_0)$ punto crítico. Se dice que $(x_0, y_0)$ es un punto crítico estable si y sólo si $∀R>0 \, ∃r > 0$ tal que si $\norm{(x(t_0),y(t_0)) - (x_0,y_0)} < R$ entonces $\norm{(x(t), y(t)) -(x_0, y_0)} < r \; ∀t > t_0$.
 
@@ -757,5 +757,91 @@ Supongamos una trayectoria $(x(t), y(t))$ y medimos el cuadrado de su distancia 
 Como siempre es negativo, tenemos un punto crítico estable. Liapounov dio un paso más: ¿qué valor tiene el hecho de que hayamos elegido la distancia? Nos vale con tener una función con que en el origen valga 0 y que vaya creciendo según me aleje. La idea de Liapounov es encontrar una \textit{distancia} de tal forma que su derivada sea siempre negativa o positiva.
 
 
+\begin{definition}\name[Función]{de Liapounov} Supongamos que tenemos un sistema \begin{equation} \begin{cases} x' = F(x,y) \\ y' = G(x,y) \end{cases} \label{eqSisLiap} \end{equation} con $(0,0)$ punto crítico aislado, y trayectorias $(x(t), y(t))$. 
 
+Una función $E(x, y)$ es una función de Liapounov para ese sistema si y sólo si 
 
+\begin{itemize}
+\item $E$ es $C^1$ en algún abierto alrededor de $(0,0)$.
+\item $E(x,y) > 0$ si $(x,y) ≠ 0$ y $E(0,0) = 0$.
+\item $\pd{E}{x} F + \pd{E}{y} G ≤ 0 $.
+\end{itemize}
+\end{definition}
+
+\begin{theorem} Si existe alguna función de Liapounov para el sistema \ref{eqSisLiap}, entonces el punto crítico $(0,0)$ es \textbf{estable}.
+
+Si además se tiene \[ \pd{E}{x} F + \pd{E}{y} G < 0 \quad ∀(x,y) ≠ (0,0) \], además $(0,0)$ es \textbf{asintóticamente estable}. En este caso, diremos que tenemos una \textbf{función de Liapounov estricta}.
+\end{theorem}
+
+Si dibujamos la gráfica de la función de Liapounov $z=E(x,y)$, veríamos que cuando $z'(t) > 0$ la función crece por la superficie, y si es menor que cero se acercaría al origen. Nos interesa ver por lo tanto la trayectoria $(x(t), y(t))$ en la superficie dada por esa función. 
+
+Una vez que tenemos una idea del problema, vamos a demostrarlo
+
+\begin{proof} Empezamos viendo que \[ z'(t) = \pd{E}{x}x' + \pd{E}{y}y' = \pd{E}{x} F + \pd{F}{y} \]
+
+\paragraph{Proposición 1: Estabilidad} Queremos demostrar que $∀ R > 0,\, ∃r>0$ tal que si $\norm{(x(t_0), y(t_0))} < r$, entonces $\norm{(x(t), y(t))} < R ∀ t > t_0$ (ver la definición de punto estable en \ref{defPuntoEstable}).
+
+Dado $R$ consideramos el conjunto ξ y su mínimo: \[ ξ = \{ E(x,y) \st \norm{(x,y)} = R\};\; m = \min ξ \]
+
+Si $E(x(t), y(t)) < m \, ∀t$, entonces la trayectoria no corta la circunferencia.
+
+Sabemos que $E(0,0) = 0$ y que $E$ es continua. Por lo tanto podemos tomar un $r >0$ tal que $E(x,y) < \frac{m}{2}$ si $\norm{(x,y) ≤ r}$ por continuidad.
+
+Supongamos que en un instante $t_0$ tenemos $\norm{(x(t_0), y(t_0))} < r$. Si además sabemos que $z'(t) ≤ 0$ por ser condición de Liapounov y tenemos que $z(t_0) < \frac{m}{2}$ por el apartado anterior, tenemos que $z(t) < \frac{m}{2}\, ∀t>t_0$.
+
+\paragraph{Proposición 2: Estabilidad asintótica} Vamos a ver cómo la condición de Liapounov estricta nos da estabilidad asintótica. Supongamos \[ \pd{E}{x}F + \pd{E}{y}G < 0 \]
+
+Si esto es así, entonces $z'(t) < 0$. Sabemos además que $z(t) ≥ 0$. Si tenemos una función decreciente y acotada inferiormente, entonces \[ ∃\lim_{t\to∞} z(t) = L ≥ 0 \]
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\inputtikz{8-DemLiapounov}
+\label{img8-DemLiapounov}
+\caption{La trayectoria está confinada en la zona verde}
+\end{wrapfigure}
+
+Si $L=0$, hemos terminado. ¿Qué pasa si $L>0$, es decir, que las trayectorias se parasen antes del origen? Demostremos que esto no puede ocurrir.
+
+Supongamos $L>0$. Nuevamente por continuidad, puedo encontrar $δ>0$ tal que $E(x,y) > \frac{L}{2}$ si $\norm{(x,y)} < δ$. En la figura \ref{img8-DemLiapounov} las trayectorias se encontrarían sólo en la zona verde. Es decir, $(x(t),y(t)) ⊆ B_R - B_δ$.
+
+Consideramos $z'(t)$ en el compacto $B_R - B_δ$ y $-k = \max z'(t)$ en ese conjunto. Aquí tenemos que
+
+\[ z(t) = z(t_0) + \int_{t_0}^t z'(s)\dif s ≤ z(t_0) + \int_{t_0}^t (-k)\dif s = z(t_0) - k(t-t_0) \convs[][t] - ∞ \], una contradicción dado que decíamos que $z≥0$. Por lo tanto, no puede darse el caso de que el límite sea $L>0$.
+\end{proof}
+
+Por lo tanto, con encontrar la función de Liapounov demostraríamos la estabilidad. No tenemos garantizado el encontrar esta función siempre. En sistemas físicos podemos usar la energía del sistema. También tenemos otro tipo de estrategias que veremos en varios ejemplos.
+
+\begin{example} \[ \begin{cases} x' &= y-3x^3 \\ y' &= -x - 7y^3 \end{cases} \]
+
+El punto crítico es $(0,0)$, y el método de linealización nos lleva a un centro. Nos deja colgados, así que buscamos una función de Liapounov $E(x,y)$ que tenga un mínimo en $(0,0)$. Una buena idea es buscar un polinomio en potencias pares de $x$ e $y$:
+
+\[ E(x,y) = Ax^{2n} + y^{2m} \] 
+
+Ajustaremos los tres parámetros $A>0$, $n$, $m$ tales que \[ \pd{E}{x} F + \pd{E}{y} ≤ 0 \]. No tenemos garantía de encontrarla y esto no funciona siempre, pero vamos a intentarlo. Operamos
+
+\begin{align*}
+\pd{E}{x} &= 2nAx^{2n-1} \\
+\pd{E}{y} &= 2my^{2m-1} \\
+\pd{E}{x} F + \pd{E}{y} G &= 2nAx^{2n-1}(y-3x^3) + 2my^{2m-1}(x+7y^3) = \\
+ & =2nAx^{2n-1} y - 6nAx^{2n+2} - 2my^{2m-1} x - 14my^{2m+2}
+\end{align*}
+
+En esos cuatro sumandos de ahí, hay algunos que son bien y otros que son caca. El primero y el tercero son caca porque a veces son positivos y a veces negativos. Los otros dos sí los tenemos perfectamente controlados.
+
+En este caso, lo que haremos será cancelarlos, lo que nos da el sistema \[ \begin{cases} 2nA &= 2m \\ 2n -1 &= 1 \\  2m - 1 &= 1\end{cases} \implies n = m = A = 1 \]
+
+La función de Liapounov sería la distancia habitual al cuadrado $E(x,y) = x^2 + y^2$ y $\pd{E}{x} G + \pd{E}{y} G = -6x^4 - 14y^4 < 0$, es decir, un punto asintóticamente estable.
+\end{example}
+
+\begin{example} \[\begin{cases} x' = -xy^4 \\ y'=yx^4 \end{cases} \]
+
+En este caso el método de linealización no nos da puntos críticos aislados (la matriz es nula) así que vamos a Liapounov.
+
+\begin{align*}
+E(x,y) &= Ax^{2n} + y^{2m} \\
+\pd{E}{x} &= 2n Ax^{2n-1} \\
+\pd{E}{y} &= 2my^{2m-1} \\
+\pd{E}{x}F + \pd{E}{y}G &= -2nAx^{2n}y^4 + 2my^{2m}x^4
+\end{align*}
+
+Con $2n=2m=4$ y $A>1$ tendríamos una función de Liapounov estricta.
+\end{example}
