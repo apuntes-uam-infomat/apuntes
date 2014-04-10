@@ -26,6 +26,7 @@
 \RequirePackage{MathUnicode} % Paquete para poder poner caracteres griegos y demás cosas raras.
 \RequirePackage{listings} % Para poner código.
 
+
 % Números en las subsecciones
 \setcounter{secnumdepth}{3}
 \def\thechapter{\Roman{chapter}}
@@ -34,11 +35,9 @@
 \hypersetup{
 	hyperindex,
     colorlinks,
-    citecolor=black,
-    filecolor=black,
-    linkcolor=black,
-    urlcolor=black
+    allcolors=blue!60!black
 }
+
 
 %%%%% Listings UTF8 %%%%%
 \lstset{literate=%
