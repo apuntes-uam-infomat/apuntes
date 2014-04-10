@@ -1240,6 +1240,109 @@ La otra ecuación a resolver es el engendro ese de ahí \footnote{Matadme ya.} 
 
 \subsection{Hoja 7}
 
+\begin{problem}
+
+Sea $\appl{L}{ℝ^2×ℝ^2}{ℝ}$.
+
+\[ L = ((x_1, x_2), (y_1, y_2)) = \frac{1}{2}\left(y_1^2 + e^{x_1}y_2^2\right) \]
+
+\solution
+
+Calculamos el \textbf{funcional integral asociado a $L$}:
+
+\[ L(α) = \int_a^b L(α,α')\dif t \] donde \[ \appl{α}{[a,b]}{ℝ^2};\quad α(t) = (x(t), y(t)) \]. Entonces
+
+\[ F(α) = \int_a^b \frac{1}{2}\left(x'^2 +e^x y'^2\right) \dif t \]
+
+Hallamos ahora la \textbf{primera variación del funcional}. Lo que hacemos es coger varias curvas próximas a α que dependen de un parámetro λ, por ejemplo. La primera variación del funcional nos dirá cómo varía la curva en función de ese segundo parámetro. 
+
+Definimos $α(t, λ)$ como la variación de la curva α y
+
+\[ \tilde{F}(λ) = F(α(t,λ)) = \int_{a}^{b} \frac{1}{2}\left(x'(t,λ)^2 + e^{x(t,λ)} y'(t,λ)^2\right) \dif t \].
+
+La primera variación no será más que $\tilde{F}'(0)$. Derivamos la integral con respecto a λ:
+
+\[ \tilde{F}(λ) = \int_a^b \frac{1}{2}\left(2x'(t,λ) \pd{x'}{λ} (t,λ)  +e^{x(t, λ)} \pd{x}{λ}y'^2 + e^{x(t,λ)} 2y'\pd{y'}{λ}\right) \dif t \]
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+
+\begin{tikzpicture}[font=\small]
+\foreach \l/\pos in {-1/below,0/above,1/above}
+{
+	\draw[green!80!blue, domain=-pi-0.5:pi+0.5, variable=\x, smooth, samples=200] plot ({\x}, {-0.02*\x*\x + \l * (0.2*sin(4*\x r) + 0.1*(\x-pi)*(\x+pi))});
+	\node[\pos] at (-1, {\l * 1.1}) {$α(t, \l)$};
+}
+
+\draw[blue,domain=-1.2:1.2, variable=\x, smooth] plot ({0.4 + 0.2*\x*\x}, {\x}) node[above] {$α(1, λ)$};
+
+\node[draw, circle, fill, black, inner sep=1pt, label=above:{$V(a) = 0$}] at (-pi, -0.02*pi*pi) {};
+\node[draw, circle, fill, black, inner sep=1pt, label=above:{$V(b) = 0$}] at (pi, -0.02*pi*pi) {};
+\end{tikzpicture} 
+\caption{Variación de las curvas y puntos de inicio y final}
+\end{wrapfigure}
+
+Hasta aquí es sólo cálculo de primero. Llamamos ahora $V(t,λ) = \pd{α}{λ}(t,λ)$ al vector que indica hacia dónde varían las curvas. Dicho de otra forma, \[ V(t) = (V_1(t), V_2(t)) = \left(\pd{x}{λ}(t,0), \pd{y}{λ}(t,0)\right) \] y ahora sustituimos:
+
+\[ \tilde{F}'(0) = \int_a^b \frac{1}{2}\left(2x'(t) V_1'(t) + e^{x(t)}V_1 y'^2 + e^x 2y'V_2' \right) \] usando el hecho de que todo sea $C^\infty$ y podamos intercambiar el orden de las derivadas:
+
+\[ \pd{x'}{λ} = \pd{}{λ}\pd{x}{t} = \pd{}{t}\pd{x}{λ} = V_1' \]
+
+Aplicamos ahora integración por partes para dejarlo todo en términos de $V_1$ y $V_2$, y no de sus derivadas. 
+
+\begin{gather*} \int_a^b \underbrace{x'}_u \underbrace{V_1'\dif t}_{\dif v} = \eval{x'V_1}_a^b - \int_a^b V_1 x'' \dif t \\
+\int_a^b \underbrace{e^xy'}_u \underbrace{V_2'\dif t}_{\dif v} = \eval{e^xy'V_2}_a^b - \int_a^b V_2(e^xx'y' + e^xy'')\dif t 
+\end{gather*}
+
+Finalmente, nos queda
+
+\begin{align*} \tilde{F}'(0) &= \frac{1}{2} \left[ \eval{2x'V_1 + e^x2y'V_2}_a^b + \int_a^b -V_1 2 x'' + e^xV_1y'^2-V_2(ex'2y' + e^x2y'') \dif t \right] = \\
+&= \frac{1}{2}\left[\eval{2x'V_1+e^x2y'V_2}_a^b + \int_a^b V_1(e^xy'^2-2x'') + V_2(-e^x2y'-e^x2y'') \dif t \right]
+\end{align*}
+
+\paragraph{Ecuaciones de Euler-Lagrange de este Lagrangiano} La curva va a ser un punto crítico del funcional integral. Fijamos los extremos: si todas las curvas salen del mismo punto $a$ y llegan al mismo punto $b$, entonces $V(a) = 0$ y $V(b) = 0$. Es decir, la primera parte de $\tilde{F}'$ desaparece y resolvemos dos ecuaciones:
+
+\[ \begin{cases} e^xy'^2 - 2x'' &= 0 \\
+-e^xx'2y' - e^x2y'' &= 0\end{cases} \begin{cases}  x'' &= \frac{1}{2}e^xy'^2 \\ 
+y'' &= -x'y' \end{cases}\]
+
+de tal forma que $\tilde{F}'(0) = 0$ para toda forma posible de variar α. 
+
+Para resolverlo, sabemos que si $(x(t), y(t))$ es solución del sistema existen constantes $c_1, c_2$ tales que \[ \begin{cases} x'^2 + e^x y'^2&=c_1 \\
+e^xy'&= c_2 \end{cases} \]
+
+Vamos a ello:
+
+\begin{gather*}
+(e^xy')' = e^xx'y' + e^xy'' = e^x(x'y'+y'') = e^x(x'y' -x'y') = 0 \\
+(x'^2 + e^xy'^2)' = 
+\end{gather*}
+
+
+\end{problem}
+
+\begin{problem}[4] Sea $S$ una superficie, y $α(t)$ una geodésica birregular plana en $S$. 
+
+\ppart Demostrar que el plano que contiene a α es perpendicular a $S$.
+\ppart Demuestra que α es línea de curvatura de $S$.
+\ppart Geodésicas planas en una superficie de revolución.
+\solution
+
+\spart $P$ es normal a $S$ si es normal a $T_αS$, es decir, si sus normales son ortogonales. Por lo tanto, $N_α⊆P$. Tenemos que ver entonces que $\cb (t) \perp N_α$, donde $N$ es la normal a la superficie $S$. 
+
+Sabemos que α es geodésica, por lo tanto está parametrizada por arco. Al ser una geodésica, va con velocidad constante por la superficie. Cualquier aceleración que tenga deberá ser ortogonal a la superficie y por lo tanto $α''(t)$ está en la dirección de la normal: $α'' = λ(t) N_α(t)$. Operamos, y como α era birregular.
+
+\[ α''(t) = \cv(t) \cn(t) = λ(t)N_α \]
+
+\spart Hay que ver que $(N○α)'(t) = λ(t) α'(t)$. Es decir, que su tangente sea siempre una curvatura principal. Operamos sabiendo que $\cn(t) = \pm N_α(t)$:
+
+\[ (N○α)'(t) = \cn' = -\cv \ct + \underbrace{\ctr}_0 \cb = -\cv α'(t) \]
+
+\spart Si $α$ es birregular y geodésica plana en $S$, es una línea de curvatura según el apartado anterior. Al ser una superficie de revolución, son los paralelos o meridianos\footnote{También llamada curva generatriz}. Ahora bien, ¿son todos geodésicas?
+
+Sólo son los meridianos (acordémonos de la esfera: sólo los meridianos son círculos máximos) son geodésicas siempre. Un paralelo será geodésica su la generatriz en ese punto es perpendicular a $N$. Necesito que el vector tangente a la generatriz sea normal a la normal a la superficie. El vector tangente a la generatriz tiene que ser paralelo al eje de giro.
+
+\end{problem}
+
 \begin{problem}[15] \textbf{Paraguas de Whitney}. Tenemos una superficie $S$ dada por la parametrización
 
 \[ Φ(u,v) = (u,uv,v^2) \]
@@ -1324,4 +1427,92 @@ Tenemos que comprobar que no hay más rectas contenidas en el paraguas de Whitne
 \]
 que no es una recta ni de coña. La demostración rigurosa podríamos hacerla o viendo que la curvatura no es constante o bien viendo que su proyección sobre los planos coordenados no es una recta.
 
+\end{problem}
+
+\begin{problem}[4]
+Sea $Φ(u,v)$ una parametrización de una superficie con métrica de Riemann \[ Q \equiv e^v\dif u^2 + (1+u^2)\dif v^2 \].  
+
+\ppart Sea $α(s) = Φ(u(s), v(s))$. Halla EL para el funcional de energía.
+\ppart Coge la curva $v = 0$, parametrizamos por arco. Hallar el vector de curvatura geodésica a lo largo de $α_0$ dado de forma
+
+\[ \cv[g,α_0,Q] = a_1(s) Φ_u + a_2(s) Φ_v \]
+\solution
+
+\spart Hallamos el funcional de energía \[ E(α) = \int_a^b Q_{α(t)} (α'(t)) \dif t = \int_a^b e^v u'^2 + (1+u)v'^2 \dif t \]. El de longitud es igual pero poniendo $\sqrt{Q}$ en lugar de $Q$.
+
+Hallamos el nosequécojonesseráeso
+
+\[ \tilde{E}'(0) = \int_a^b e^v V_2 u'^2 e^v 2u'V_1'+2uV_1v'^2 + (1+u^2)2v'V_2' \dif t \]
+
+Cuando uso partes y supongo que en los extremos $V_1=V_2=0$ queda
+
+\[ \tilde{F}'(0) = \int_a^b V_1(2uv'^2-e^vv'2u'^2-e^v4u'u'') + V_2(e^vu'^2-4uu'v'-2(1+u')v'') \dif t \]
+
+\spart $α_0(s) = Φ(s,0)$. En la métrica que nos dan, 
+
+\[\md{α_0'(s)}^2 =  Q(α_0'(s)) = e^v(s) · 1^2 + (1+s^2) ·0^2 = e^0 = 1 \], vemos que en la métrica que nos dan está parametrizada por arco.
+
+Para hallar los valores, tenemos una formulita:
+
+\[ \begin{pmatrix}
+a_1(s) \\ a_2(s) 
+\end{pmatrix} = \inv{[Q]} \left(\deriv{}{s}\left([Q]\begin{pmatrix}
+u'(s) \\ v'(s)
+\end{pmatrix}\right) - \frac{1}{2} \left[\begin{matrix}
+Q_u(\ct[α_0]) \\ Q_v(\ct[α_0]) \end{matrix}\right]\right) \] donde
+
+\[ [Q] = \begin{pmatrix}
+e^v & 0 \\ 0 & 1+u^2
+\end{pmatrix};\quad \begin{matrix}
+Q_u &= 0 \dif u ^2 + 2u \dif v^2 \\
+Q_v &= e^v\dif u^2 + 0\dif v^2
+\end{matrix} \]
+
+Seguimos calculando: \begin{gather*}
+Q_v(\ct[α_0]) = e^0 = 1 \\
+Q_u(\ct[α_0]) = 0
+\end{gather*}
+
+\[ \inv{[Q]} = \begin{pmatrix}
+e^{-v} & 0 \\ 0 & \frac{1}{1+u^2}
+\end{pmatrix} \], que evaluado en $α_0$ es \[ \inv{[Q]} = \begin{pmatrix} 1 & 0 \\ 0 & \frac{1}{1+s^2} \end{pmatrix} \]
+
+Seguimos con más operaciones
+
+\begin{gather*} [Q]\begin{pmatrix}
+u' \\ v
+\end{pmatrix} = \begin{pmatrix}u' \\ (1+s^2)v' \end{pmatrix} \\
+\deriv{}{s} [Q] \begin{pmatrix}
+u' \\ v
+\end{pmatrix}  = \begin{pmatrix}
+u'' \\ (1+s^2)v'' + 2sv'
+\end{pmatrix} \end{gather*}
+
+Juntándolo todo \footnote{Matadme.}
+
+\[
+\begin{pmatrix}
+a_1(s) \\ a_2(s)
+\end{pmatrix} = \begin{pmatrix}
+u'' \\ v'' +\frac{2s}{1+s^2}v'
+\end{pmatrix} - \frac{1}{2}\begin{pmatrix}
+0 \\ \frac{1}{1+s^2}
+\end{pmatrix} = \frac{1}{2} \begin{pmatrix} 0 \\ 1+s^2 \end{pmatrix} \] y finalmente
+
+\[ \cv[g,α_0, Q] = \frac{1}{2}(1+s^2) Φ_v \]
+
+
+\end{problem}
+
+\begin{problem}[9] Tenemos una superficie $S$ y una parametrización $ψ(u,v)$, con métrica \[ Q = u\dif u^2 + u\dif v^2 \] con $u>0$. 
+
+\ppart Hallar la ecuación de la parametrización geodésica.
+
+\solution
+
+\spart Si $ψ(u(t), v(t))$ es geodésica, entonces
+
+\[ \deriv{}{t}\left([Q] \begin{pmatrix} u' \\ v' \end{pmatrix}\right) - \frac{1}{2} \begin{pmatrix} Q_u(α') \\ Q_v(α') \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \]
+
+Me rindo.
 \end{problem}
