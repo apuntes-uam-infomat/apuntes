@@ -832,6 +832,8 @@ En este caso, lo que haremos será cancelarlos, lo que nos da el sistema \[ \beg
 La función de Liapounov sería la distancia habitual al cuadrado $E(x,y) = x^2 + y^2$ y $\pd{E}{x} G + \pd{E}{y} G = -6x^4 - 14y^4 < 0$, es decir, un punto asintóticamente estable.
 \end{example}
 
+Una de las principales ventajas del método de Liapounov es que, a diferencia del método de linealización, también vale para puntos críticos no aislados (por ejemplo, puntos críticos distribuidos en una curva que cumple $F=G=0$). El matiz es que en un punto crítico no aislado no podemos tener estabilidad asintótica.
+
 \begin{example} \[\begin{cases} x' = -xy^4 \\ y'=yx^4 \end{cases} \]
 
 En este caso el método de linealización no nos da puntos críticos aislados (la matriz es nula) así que vamos a Liapounov.
@@ -843,5 +845,100 @@ E(x,y) &= Ax^{2n} + y^{2m} \\
 \pd{E}{x}F + \pd{E}{y}G &= -2nAx^{2n}y^4 + 2my^{2m}x^4
 \end{align*}
 
-Con $2n=2m=4$ y $A>1$ tendríamos una función de Liapounov estricta.
+Con $2n=2m=4$ y $A<1$ tendríamos una función de Liapounov estricta. Entonces tendríamos que \[ \pd{E}{x}(-xy^4) + \pd{E}{y}(yx^4) = 4(A-1)x^4y^4 \], que es siempre menor o igual que cero. Demostramos estabilidad pero no estabilidad asintótica.
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\inputtikz{8-Ej3}
+\label{img8-Ej3}
+\caption{Ocho soluciones: los cuatro puntos críticos (verde) y las cuatro trayectorias (rojo).}
+\end{wrapfigure}
+
+La pregunta es si realmente no hay estabilidad asintótica o es que no hemos visto bien la función de Liapounov. 
+
+Si nos fijamos, vemos que $(0,0)$ no es un punto crítico aislado: las rectas $(x,0)$ y $(y,0)$ son también puntos críticos, y por lo tanto no podemos tener un punto asintóticamente estable.
+
+Haciendo más cálculos, vemos que las soluciones son conjuntos de nivel de la forma \[ x^4 + y^4 = k \], como podemos ver en la figura \ref{img8-Ej3}.
 \end{example}
+
+
+\paragraph{Aplicación del teorema} Vamos a aplicar el teorema de Liapounov para demostrar algo que teníamos pendiente: que la estabilidad asintótica en el sistema linealizado implica estabilidad asintótica en el sistema completo.
+
+\begin{proof}
+Partimos de la siguiente notación: $(0,0)$ es un punto crítico aislado. La derivada de $x$ es
+
+\[ x' = F(x,y) = \pd{F}{x}(0,0)x + \pd{F}{y}(0,0)y + f(x,y) \equiv ax + by + f(x,y) \]. 
+
+La segunda forma equivalente parte del desarrollo de Taylor, con $f$ el error (esto es, $\lim_{(x,y)\to (0,0)} \frac{f(x,y)}{\sqrt{x^2+y^2}}$). Análogamente,
+
+\[ y' = G(x,y) = \pd{G}{x}(0,0)x + \pd{G}{y}(0,0)y + f(x,y) \equiv cx + dy + g(x,y) \]. 
+
+Recordamos ahora el diagrama de la estabilidad\footnote{Poner el diagrama} en función de la traza $T=a+d$ y del determinante $D=ad-bc$. Si tenemos estabilidad asintótica en el sistema linealizado, tenemos que $T < 0$ y que $D > 0$.
+
+La idea de la demostración es llevar a cabo dos pasos. El primero es construir una función de Liapounov para el sistema linealizado. El segundo, comprobar que sigue siendo válida para el sistema completo en un entorno de $(0,0)$.
+
+La función que buscaremos será de la forma \[ E(x,y) = \frac{1}{2}\left(Ax^2 + 2Bxy + Cy^2\right) \]. Sacamos factor común $A$ y completamos cuadrados:
+
+\begin{align*}
+ E(x,y) &= \frac{A}{2}\left(x^2 + 2\frac{B}{A}xy + \frac{C}{A}y^2\right) = \\
+ &= \frac{A}{2}\left[\left(x+\frac{B}{A}y\right)^2 + \left(\frac{C}{A} - \frac{B^2}{A^2}\right)y^2\right]
+\end{align*}
+
+De aquí sacamos que $A>0$ y que $\frac{C}{A}>\frac{B^2}{A^2}$. Miramos ahora las derivadas parciales: queremos comprobar que $\pd{E}{x}(ax+by) + \pd{E}{y} (cx+dy) < 0$. Operando
+
+\begin{align*}
+\pd{E}{x} &= Ax+By \\
+\pd{E}{y} &= Bx + Cy \\
+\pd{E}{x} (ax+by) + \pd{E}{x}(cx+dy) &= 
+	\underbrace{(Aa+Bc)}_{-1}x^2 +
+	\underbrace{(Bb+Cd)}_{-1}y^2 +
+	\underbrace{(Ab+aB+Bd+Cc)}_{0}xy
+\end{align*}
+
+Buscamos los valores de $A,B,C$ que nos dan los valores que aparecen en la ecuación. Es decir, buscamos resolver el sistema
+
+\[ \begin{cases} Aa + Bc &= -1 \\ 
+Bb+Cd &= -1 \\
+Ab + aB +Bd + Cc &= 0
+\end{cases} \]
+
+Una vez fijas esas constantes, nos queda  \[ \pd{E}{x} (ax+by) + \pd{E}{x}(cx+dy) = -(x^2+y^2) \], que es menor que $0$ fuera de $(0,0)$. 
+
+Con la función de Liapounov encontrada (sabemos que existe en cualquier caso), lo aplicamos al sistema completo estudiando
+
+\begin{equation}\label{eqLiapDem1} \pd{E}{x} (ax+by +f(x,y)) + \pd{E}{x}(cx+dy+g(x,y)) = -(x^2+y^2) + \pd{E}{x} f(x,y) + \pd{E}{y}g(x,y) \end{equation}.
+
+Habremos terminado si demostramos que eso es menor que $0$ cuando estamos cerca del origen. Recordamos que \[ \pd{E}{x} = Ax+By \; \pd{E}{y} = Bx + Cy \] y operamos:
+
+\[ (Ax+By)f(x,y) ≤ \underbrace{\max\{\abs{A}, \abs{B}}_M (\abs{x} + \abs{y}) · \abs{f(x,y)} \]
+
+Sabiendo que $\abs{x} = \sqrt{x^2} ≤ \sqrt{x^2+y^2}$ (análogo con $\abs{y}$), tenemos que
+
+\[ M(\abs{x} + \abs{y}) · \abs{f(x,y)} ≤ 2M\sqrt{x^2+y^2}\abs{f(x,y)} = 2M(x^2+y^2) \frac{\abs{f(x,y)}}{\sqrt{x^2+y^2}} \]
+
+Sustituyendo en \eqref{eqLiapDem1}
+
+\begin{multline*} -(x^2+y^2) + \pd{E}{x} f(x,y) + \pd{E}{y}g(x,y) ≤ -(x^2+y^2) + 2M(x^2+y^2) \frac{\abs{f(x,y)}}{\sqrt{x^2+y^2}} + 2N(x^2+y^2) \frac{\abs{g(x,y)}}{\sqrt{x^2+y^2}} \\ 
+= (x^2+y^2)\left(-1 +
+	2M \underbrace{\frac{\abs{f(x,y)}}{\sqrt{x^2+y^2}}}_{(1)} +
+	2N \underbrace{\frac{\abs{g(x,y)}}{\sqrt{x^2+y^2}}}_{(2)}\right) \end{multline*}
+
+Al ser $(1)$ y $(2)$ errores que tendían a $0$ cuando $(x,y) \to (0,0)$, con una bola suficientemente pequeña tendremos que todo eso es menor que cero y tendremos por lo tanto un punto crítico asintóticamente estable en el sistema completo.
+
+\end{proof}
+
+\subsubsection{Funciones de Liapounov e inestabilidad}
+
+Podemos estudiar la inestabilidad de ciertos puntos a través de las funciones de Liapounov.
+
+La primera idea sería invertir el sentido de tiempo. Reparametrizamos con $s=-t$, y entonces
+
+\begin{align*}
+\tilde{x}(s) &= x(-t) \\
+\tilde{y}(s) &= y(-t) \\
+\tilde{x}'(s) &= -F(\tilde{x}, \tilde{y}) \\
+\tilde{y}'(s) &= -G(\tilde{x}, \tilde{y}) 
+\end{align*}
+
+Si tenemos una función de Liapounov $E(\tilde{x}, \tilde{y})$, con \[ \pd{E}{x} (-F) + \pd{E}{y}(-G) < 0 \], es decir, estabilidad asintótica en $(\tilde{x}, \tilde{y})$, esto querría decir que  \[ \pd{E}{\tilde{x}}F + \pd{E}{\tilde{y}}G < 0 \], es decir, inestabilidad en $(x,y)$. 
+
+Este método es muy sencillo, pero perfectamente inútil para puntos de silla. En estos puntos hay zonas en las que el origen parece que atrae las trayectorias, y otras en las que parece que las rechaza. Tendríamos que tratar de encontrar un teorema que no tenga en cuenta todo el entorno del origen, sino sólo una zona - recordemos que con que haya una trayectoria el punto crítico ya es inestable -.
