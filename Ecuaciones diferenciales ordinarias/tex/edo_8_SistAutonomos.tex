@@ -930,7 +930,7 @@ Al ser $(1)$ y $(2)$ errores que tendían a $0$ cuando $(x,y) \to (0,0)$, con un
 
 Podemos estudiar la inestabilidad de ciertos puntos a través de las funciones de Liapounov.
 
-La primera idea sería invertir el sentido de tiempo. Reparametrizamos con $s=-t$, y entonces
+La primera idea sería \textbf{invertir el sentido de tiempo}. Reparametrizamos con $s=-t$, y entonces
 
 \begin{align*}
 \tilde{x}(s) &= x(-t) \\
@@ -941,4 +941,124 @@ La primera idea sería invertir el sentido de tiempo. Reparametrizamos con $s=-t
 
 Si tenemos una función de Liapounov $E(\tilde{x}, \tilde{y})$, con \[ \pd{E}{x} (-F) + \pd{E}{y}(-G) < 0 \], es decir, estabilidad asintótica en $(\tilde{x}, \tilde{y})$, esto querría decir que  \[ \pd{E}{\tilde{x}}F + \pd{E}{\tilde{y}}G < 0 \], es decir, inestabilidad en $(x,y)$. 
 
-Este método es muy sencillo, pero perfectamente inútil para puntos de silla. En estos puntos hay zonas en las que el origen parece que atrae las trayectorias, y otras en las que parece que las rechaza. Tendríamos que tratar de encontrar un teorema que no tenga en cuenta todo el entorno del origen, sino sólo una zona - recordemos que con que haya una trayectoria el punto crítico ya es inestable -.
+Este método es muy sencillo, pero perfectamente inútil para puntos de silla. En estos puntos hay zonas en las que el origen parece que atrae las trayectorias, y otras en las que parece que las rechaza. Tendríamos que tratar de encontrar un teorema que no tenga en cuenta todo el entorno del origen, sino sólo una zona - recordemos que con que haya una trayectoria el punto crítico ya es inestable -. Otro criterio más útil es el de Chetaev.
+
+\begin{theorem} \name[Criterio]{de Chetaev} Dado el sistema de siempre \[ \begin{cases} x' = F(x,y) \\ y' = G(x,y) \end{cases} \] con $(0,0)$ punto crítico, consideramos el disco $D_R= \{ x^2 + y^2 ≤ R^2 \}$. Sea $V∈C^1(D_R)$, y un conjunto $U = \{ (x,y) ∈ D_R \st V(x,y) > 0 \}$ (ver imagen \ref{img8-Chetaev}).
+
+Si se dan las dos condiciones siguientes:
+
+\begin{itemize}
+\item $∀δ > 0 \; ∃(x_δ,y_δ) ∈ U \st x_δ + y_δ ≤ δ^2$. Es decir, el centro no está aislado de $U$.
+\item $\displaystyle\pd{V}{x}(x,y)F(x,y) + \pd{V}{y}(x,y) G(x,y) > 0\; ∀(x,y) ∈ U$. \footnote{Esta condición también nos dice que no hay más puntos críticos en $U$.}
+\end{itemize}
+
+Entonces, tenemos inestabilidad en el punto crítico.
+\end{theorem}
+
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{8-Chetaev}
+\label{img8-Chetaev}
+\caption{Bola de radio $R$ $D_R$.}
+\end{figure}
+
+\begin{proof}
+
+
+Consideramos la trayectoria $(x(t), y(t))$ con $(x(0), y(0)) = (x_δ, y_δ)$. Como $(x_δ, y_δ) ∈ U$, entonces con $V(x_δ, y_δ) = C_δ > 0$.
+
+Sea $g(t) = V(x(t), y(t))$. Su derivada es 
+
+\[ g'(t) = \pd{V}{x}x' + \pd{V}{y}y' = \pd{V}{x}F + \pd{V}{y}G > 0 \] según hipótesis. Es decir, que $g$ es creciente mientras $(x(t), y(t)) ⊆ U$, por lo tanto, $g(t) ≥ g(0) = C_δ > 0$.
+
+A partir de aquí tenemos que demostrar que para cualquier punto de partida en $U$, la trayectoria se sale de la bola $D_R$. Hagámoslo por reducción al absurdo.
+
+Supongamos que $(x(t), y(t)) ⊆ U\; ∀t≥ 0$. Como $D_R$ es un conjunto compacto y $V$ es continua, entonces $V$ alcanza su máximo $M > 0$ en $D_R$. 
+
+Sea $A_δ = \{ (x,y) ∈ D_R \st V(x,y) ≥ C_δ \}$. Si $(x(t), y(t)) ⊆ U$ y al ser $g(t) >C_δ\, ∀t ≥ 0$, resulta que $(x(t), y(t)) ⊆ A_δ\;∀t≥0$. 
+
+Este conjunto $A_δ$ es acotado por la bola de radio $R$. También es cerrado: si escribimos $A_δ = D_R \cap V^{-1}([C_δ, ∞))$, $[C_δ, ∞)$ es abierto, $V$ continua, por lo que $V^{-1}([C_δ, ∞)$ es cerrado.
+
+Ahora consideramos \[ γ = \min_{A_δ} \pd{V}{x} F + \pd{V}{y} G \], que es positivo. Reescribimos 
+
+\[ g(t) = g(0) + \int_0^t g'(s) \dif s = C_δ + \int_0^t \pd{V}{x}F + \pd{V}{y} G \dif s ≥ C_δ + γt \], que para $t$ suficientemente grande tendremos que es mayor que $M$: $C_δ + γt > M$.
+
+Dado que la trayectoria no puede salir de $U$ atravesando la línea $V=0$, entonces tiene que salir por el borde de la bola. Contradicción con la hipótesis, y por lo tanto la trayectoria se sale siempre y hay inestabilidad.
+\end{proof}
+
+\begin{example}[Coordenadas polares]
+Tenemos el siguiente sistema
+
+\[ \begin{cases} x' = 3x - y - ex^{x^2+y^2} \\ 
+y' = x+ 3y -ye^{x^2+y^2} \end{cases} \]
+
+Veamos qué pasa si pasamos a polares. El cambio de variables es
+
+\[ \begin{cases} x = r\cos θ \\ y = r \sin θ \end{cases} 
+\begin{cases} r^2 = x^2+y^2 \\ \tan θ = \frac{y}{x} \end{cases}
+\begin{cases} rr' = xx' + yy' \\ r^2θ' = y'x - x' y \end{cases} \]
+
+Ahora deberíamos operar en estas ecuaciones para que todo nos quede en términos de $r$ y θ.
+
+\begin{align*}
+ rr' &= xx' + yy' = \\
+ &= \cdots = \\
+ &= 3(x^2+y^2) - (x^2+y^2)e^{x^2+y^2} \\
+ &= 3r^2 - r^2e^{r^2} \\ 
+ &= r^2(3-e^{r^2}) 
+r' = r(3-e^{r^2}) 
+\end{align*}
+
+\begin{align*}
+r^2θ' &= y'x - x'y =\\
+ &= x(x+3y-ye{x^2+y^2}) -y(3x-y-xe^{x^2+y^2}) = \\
+ &= \cdots = \\
+ &= x^2 + y^2 = r^2 \\
+θ' &= 1
+\end{align*}
+
+El sistema que nos queda es mucho más simple: \[ \begin{cases} r' = r(3-e^{r^2}) \\ θ' = 1 \end{cases} \].
+
+De la segunda ecuación vemos que las trayectorias siempre avanzan de forma lineal, en sentido antihorario.
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\inputtikz{8-Ej4}
+\label{img8-Ej4}
+\caption{Plano de fases.}
+\end{wrapfigure}
+
+
+De la primera obtenemos dos soluciones explícitas, $r=0$ y $r=\sqrt{\log 3}$, un punto y una circunferencia.
+
+De aquí podemos extraer el comportamiento de más trayectorias. Si $r<\sqrt{\log 3}$, $r'>0$ y por lo tanto $r$ crece, acercándose a la circunferencia de radio $\sqrt{\log 3}$. Análogamente, para $r > \sqrt{\log 3}$ $r'$ es negativo y las trayectorias se acercan a la circunferencia dada.
+
+Lo importante del análisis del plano de fases es que todas las soluciones terminan convergiendo a la circunferencia de radio $\sqrt{\log 3}$.
+\end{example}
+
+\begin{example}
+\[ \begin{cases}
+x' = x-y+\frac{xy-x^3-xy^2}{\sqrt{x^2+y^2}} \\
+y' = x+y - \frac{x^2+x^2y+y^3}{\sqrt{x^2+y^2}}
+\end{cases} \]
+
+Este engendro tiene como puntos críticos $(0,0)$ y $(1,0)$. Pasando a coordenadas polares llegamos al sistema
+
+\[ \begin{cases}
+r' = r(1-r) \\
+θ' = 1-\cos θ = 2\sin^2 \frac{θ}{2}
+\end{cases} \]
+
+\begin{wrapfigure}{l}{0.4\textwidth}
+\inputtikz{8-Ej5}
+\label{img8-Ej5}
+\caption{Plano de fases. Los puntos críticos están en morado.}
+\end{wrapfigure}
+
+A primera vista, vemos que $θ' > 0$, es decir, que giramos siempre igual que antes, en sentido antihorario. También vemos soluciones explícitas en $r=0$ y $r=1$, y en $θ=0$ con $r$ variable. Además, si $r > 1$, $r'<0$ y $r<1 \implies r' > 0$. 
+
+Esto nos da varias trayectorias iniciales (ver figura \ref{img8-Ej5}): el punto origen, las semirrectas $(0,0) -> (1,0)$ y $(∞,0) -> (1,0)$ (en naranja) y la circunferencia, homoclínica (sale de $(1,0)$ y entra en $(1,0)$, en rojo). 
+
+Pero además, lo que serían las espirales del ejercicio anterior no pueden cruzar el semieje positivo de las $X$, por lo tanto acaban siempre en el punto crítico $(1,0)$. Es decir, ese es un punto crítico que nunca veríamos linealizando, al que entran todas las trayectorias menos una (que de hecho vuelve a caer en él).
+
+\end{example}
