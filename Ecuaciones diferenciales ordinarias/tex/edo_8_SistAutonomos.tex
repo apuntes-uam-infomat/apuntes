@@ -1,3 +1,5 @@
+\newcommand{\sist}[2]{\[ \left\{\begin{array}{rcl} x' &=& #1 \\ y' &=& #2 \end{array}\right. \]}
+
 \section{Sistemas autónomos. Plano de fases}
 
 Ya hemos pasado por un tema de sistemas lineales donde aprendimos a resolver cosas de la forma \[ \begin{cases}x'= a_{11}x + a_{12}y \\ y'=a_{21}x + a_{22}y \end{cases} \]. Ahora veremos sistemas de la forma \[ \begin{cases} x'(t) = F(x,y) \\ y'(t) = G(x,y) \end{cases} \]. Trabajaremos en dimensión dos para dibujar de forma mucho más precisa los sistemas, pero la teoría será genérica.
@@ -1106,7 +1108,9 @@ Vamos a ver si somos capaces de controlar el signo de eso. En la región de la d
 
 \subsection{Teoremas de Poincaré y Bendixson}
 
-\begin{theorem}[de Poincaré] Dado un sistema \[ \begin{cases}x' &= F(x,y) \\ y' &=G(x,y) \end{cases} \] con $F,G∈C^1$, si existe una trayectoria cerrada entonces rodea al menos un punto crítico.
+Partimos del sistema de siempre \sist{F(x,y)}{G(x,y)}, buscamos las trayectorias cerradas que pueda haber. Para ello, veamos los siguientes teoremas.
+
+\begin{theorem}[de Poincaré] Dado un sistema \sist{F(x,y)}{G(x,y)} con $F,G∈C^1$, si existe una trayectoria cerrada entonces rodea al menos un punto crítico.
 
 Análogamente, si no tenemos puntos críticos en un sistema no podemos tener trayectorias cerradas.
 \end{theorem}
@@ -1114,7 +1118,185 @@ Análogamente, si no tenemos puntos críticos en un sistema no podemos tener tra
 \begin{definition}\name[Región]{simplemente conexa} Región conexa cuyo complementario también es conexo.
 \end{definition}
 
-\begin{theorem}[de Bendixson] Sea Ω región simplemente conexa. Supongamos \[ \pd{F}{x} + \pd{G}{y} ≠0 \] en Ω. Entonces no hay ninguna trayectoria cerrada contenida en Ω. 
+\begin{theorem}[de Bendixson] Sea Ω región acotada y simplemente conexa. Supongamos \[ \pd{F}{x} + \pd{G}{y} ≠0 \] en Ω. Entonces no hay ninguna trayectoria cerrada contenida en Ω. 
 \end{theorem}
 
+\begin{proof}
+La demostración se basa en el teorema de Green. Recordemos que este teorema dice que, si tenemos una curva $\Gamma^+$ que rodea a una región $D$, entonces \[ \int_{\Gamma^+} (P,Q) \dif \gamma = \iint\limits_D \pd{Q}{x} - \pd{P}{y} \dif x \dif y \]
+
+Elegimos $(P,Q) \equiv (-G, F)$ y supongamos $(x(t), y(t)) \equiv Γ$ la trayectoria cerrada contenida en Ω. Sea $D$ la región encerrada en Ω. Entonces
+
+\[ \int_{Γ^+} (-G, F)\dif σ = \iint\limits_D \pd{F}{x} + \pd{G}{y} \dif x \dif y ≠ 0 \] por hipótesis. Por otra parte, 
+
+\[  \int_{Γ^+} (-G, G)\dif σ = \pm \int_0^T \left\langle(-G, F), (F, G)\right\rangle \dif t = \pm \int_0^T -GF + FG \dif t = 0 \], contradicción. Es decir, no puede existir Γ trayectoria cerrada.
+
+El hecho de que el conjunto sea simplemente conexo nos vale para que la frontera de $D$ sea la curva y nada más. Si tuviese un "hueco" tendríamos que añadir una frontera adicional.
+\end{proof}
+
 Estos dos teoremas son criterios para ver en qué casos \textbf{no puede haber} trayectorias periódicas. Faltaría un tercer criterio, un criterio positivo que nos diga cuándo podemos estar seguros de que hay trayectoria periódica.
+
+\begin{theorem}[de Poincaré-Bendixson] Supongamos que $R$ es una región acotada en la que no hay puntos críticos, tal que para existe una trayectoria $(x(t), y(t))$, de tal forma que si $(x(t_0), y(t_0))∈R$, entonces $(x(t), y(t)) ∈R \; ∀t ≥ t_0$. 
+
+Entonces: 
+
+\begin{itemize}
+\item O bien $(x(t), y(t))$ es una trayectoria cerrada.
+\item O bien $(x(t), y(t))$ se aproxima en espiral a una trayectoria cerrada en el cierre de la región $\bar{R}$.
+\end{itemize}
+\end{theorem}
+
+Este teorema se va a aplicar a conjuntos no simplemente conexos, de tal forma que no es incompatible con los dos anteriores que habíamos visto. Lo que hacemoes es "sacar" el punto crítico de la región $R$.
+
+Veamos cómo sacar esto con un ejemplo.
+
+\begin{example}
+\sist{y}{-x+y(1-x^2-2y^2)}. Este sistema tiene como punto crítico $(0,0)$. La divergencia es \[ \pd{F}{x} + \pd{G}{y} = 1 - 1(1-x^2-2y^2) = \cdots \], que no tiene signo constante en ningún entorno de $(0,0)$, de modo que no podemos aplicar el teorema de Bendixson.
+
+Si sustituimos en polares, \begin{align*} rr' &= xx' + yy' = \\ &= xy + y(-x+y(1-x^2-2y^2)) = \\ &= xy-xy + y^2(1-x^2-2y^2) = \\ &= y^2(1-x^2-2y^2) = \\ &=
+r^2\sin^2 θ (1-r^2\cos^2 θ -2r^2\sin^2 θ) \\ 
+r' &= r\sin^2 θ(1-r^2(\cos^2θ + 2\sin^2θ )) \end{align*} que se puede acotar entre $r\sin^2 θ (1-2r^2)$, positivo o cero si $r ≤ \frac{1}{\sqrt{2}}$; y $r\sin^2θ (1-r^2)$, negativo o cero si $r≥ 1$.
+
+Cogemos dos radios $R_0 < \frac{1}{\sqrt{2}}$ y $R_1 > 1$. Las trayectorias entran al anillo a través de $R_0$ y a través de $R_1$
+\end{example}
+
+\subsubsection{Combinación con el método de Liapounov}
+
+Vamos a ver ahora cómo combinar esto que hemos visto con el método de Liapounov.
+
+\begin{example} Partimos del sistema \sist{-x^3-y}{x^5}. Buscamos la estabilidad del $(0,0)$ (punto crítico aislado) por el método de Liapounov.
+
+Buscamos una función $E$ de la forma \[ E(x,y) = x^{2n} + Ay^{2m} \]. Los coeficientes que salen son $n = 3$, $A=3$ y $m=2$, de tal forma que $E(x,y) = x^6 + 3y^2$ y \[ \pd{E}{x} F + \pd{E}{y} G = -6x^8 ≤ 0 \], que nos da un punto estable. 
+
+El problema es que al no ser un menor estricto, no podemos obtener directamente estabilidad asintótica. O bien buscamos una función más ingeniosa o buscamos otra forma de hacerlo.
+
+Si el punto es estable pero no asintóticamente estable, las trayectorias van a caer a un atractor. El enemigo para la estabilidad asintótica son las trayectorias cerradas. Es decir, si demuestro que no hay trayectorias cerradas, las soluciones tienen que caer al punto crítico y el punto es asintóticamente estable.
+
+Sabemos que cualquier trayectoria cerrada tiene que estar en la región en la que la función de Liapounov sea $0$. En este caso particular, la región es $M = \{ (0,y) \}$, una recta. En esta región no cabe ninguna trayectoria cerrada, por lo tanto el punto es asintóticamente estable.
+\end{example}
+
+¿Qué ocurriría si lo que tenemos son trayectorias que salen del anillo, como en la figura \ref{img8-PoincBendxInv}? 
+
+En este caso podríamos invertir el tiempo, recorriendo la trayectorias en sentido contrario y estaríamos en la situación del teorema de Poincaré-Bendixson, donde habría una trayectoria cerrada.
+
+\begin{example}
+Consideramos el sistema \sist{εx-y-x\sin (x^2+y^2)}{x+εy-y\sin(x^2+y^2)}, con $0 < ε < 1$. Buscamos los puntos críticos y nos sale el $(0,0)$. Aplicamos linealización y llegamos a la matriz \[ \begin{pmatrix}
+ε & -1 \\ 1 & ε 
+\end{pmatrix} \]. Calculamos autovalores: \[ (ε-λ)^2 + 1 = 0 \implies λ = ε\pm i \]. Es decir, tendremos un foco inestable que se conserva en el sistema completo.
+
+Pasando a polares, tenemos que 
+
+\begin{gather*}
+r' = r(ε-\sin r^2) \\
+θ' = 1 
+\end{gather*}
+
+
+¿Qué podemos decir de la primera ecuación? La forma más fácil es verlo de forma gráfica (imagen \ref{img8-Ej7}: dibujamos $\sin r^2$ y vemos cuántas veces es cortado por una recta de altura ε. Tendremos soluciones en $r(n)$ y $R(n)$ para $n$ entero, con 
+
+\[ \sqrt{2nπ} < r(n) < R(n) < \sqrt{(2n+1)π} \]
+
+Si además nos fijamos en el signo de $r'$, vemos que cualquier trayectoria que esté entre dos circunferencias acaba cayendo en las trayectorias rojas, que son atractoras. Las verdes son repulsoras.
+
+Podríamos modificar el sistema eliminando la parte lineal, de tal forma que tendríamos como puntos críticos las circunferencias de radio $\sqrt{kπ}$, con $k∈ℕ$.
+
+Si pasásemos a coordenadas polares tendríamos que \[ r'=-r\sin r^2\quad θ'=0 \]. El ángulo es constante, luego las trayectorias van a ser semirrectas que parten del origen.
+
+\end{example}
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{8-Ej7-B}
+\label{img-Ej7}
+\caption{Vista gráfica del sistema}
+\end{figure}
+
+\subsubsection{Caso de estudio: epidemia de gripe}
+
+Vamos a ver un ejemplo interesante: una epidemia de gripe. La enfermedad tiene una infección rápida en corto espacio de tiempo, por lo que consideramos población constante, y además es una información no mortal. 
+
+Consideramos tres funciones: $S(t)$ individuos sanos, $E(t)$ enfermos y $C(t)$ curados (que no se pueden volver a infectar). 
+
+El número de individuos sanos disminuirá con el aumento de los contagios, que se será directamente proporcional al número de encuentros entre individuos sanos y enfermos. Una buena manera de medir esa probabilidad de contacto es el producto, así que nos quedaría la ecuación
+
+\[ S'(t) = -αS(t) E(t) \]
+
+Con los individuos enfermos, su población aumenta al mismo ritmo que disminuye la población de individuos sanos, y además disminuye de forma proporcional al número de curaciones, lo que nos da las dos siguientes ecuaciones:
+
+\[ E'(t) = α S(t) E(t) - βE(t) \] y \[ C'(t) = βE(t) \]
+
+Además definimos la población total como $T(t) = S(t) + E(t) + C(t)$, que si sustituimos vemos que es constante: $T(t) = T_0$.
+
+Aunque al principio veíamos que era un sistema en dimensión 3, realmente la última ecuación no nos importa mucho: tendremos en cuenta sólo las dos primeras. También normalizaremos para hablar de porcentajes y de poblaciones entre 0 y 1:
+
+\[ \tilde{S} = \frac{S}{T_0} \quad \tilde{E} = \frac{E}{T_0} \quad \tilde{C} = \frac{C}{T_0} \]
+
+Estudiamos el sistema \[ \left\{\begin{array}{rcl} S' &=& -αSE \\ E' &=& E(αS - β) \end{array}\right. \], que tiene como puntos críticos la recta $(S_0, 0)$.
+
+Tomamos un punto crítico cualquiera $(S_0,0)$ y vemos qué pasa. Linealizando llegamos a la matriz
+
+\[ \begin{pmatrix}
+0 & -αS_0 \\ 0 & αS_0 -β
+\end{pmatrix} \]
+
+Calculando autovalores vemmos que son $λ_1 = 0$ y $λ_2 = αS_0 - β$ con autovectores $(1,0)$ y $(αS_0, -(αS_0 - β))$ respectivamente. Si nos fijamos, el primer autovalor es coherente con el hecho de que los puntos críticos no sean aislados: si nos movemos en horizontal tenemos otros puntos críticos al lado.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{8-Epidemia}
+\label{img8-Epidemia}
+\caption{Soluciones aproximadas del sistema que modeliza una epidemia.}
+\end{figure}
+
+En cuanto al segundo autovalor, vemos que si $S_0 > \frac{β}{α}$, entonces $λ_2 > 0$. En caso contrario, tendríamos $λ_2 < 0$. Luego si $S_0$ es grande, la trayectoria sale del punto crítico, y si es pequeño la trayectoria sale. Si hacemos el análisis de isoclinas (imagen \ref{img8-Epidemia}, vemos que cuando $S_0 = \frac{β}{α}$ tenemos que $E' = 0$.
+
+Cuando tenemos muchos individuos sanos, la tasa de contagio es alta, los infectados crecen y luego acaban bajando. Además, nos damos cuenta que cuando hay pocos individuos sanos (esto es, muchos curados o vacunados), la enfermedad siempre remite. Es decir, que no hace falta vacunar al $100\%$ de la población: con un porcentaje suficientemente alto, la epidemia siempre remite.
+
+¿Qué cambiaría si la enfermedad fuese mortal? Tendríamos una tasa de variación de curados $C' = (β-ε) E$, donde ε es una constante relacionada con la tasa de mortalidad. No podríamos trabajar con población constante, pero el sistema tendría más o menos el mismo comportamiento.
+
+\subsubsection{Caso de estudio: invasión zombie}
+
+Vamos a estudiar un caso más pesimista: una invasión zombie. Tenemos tres clases: $S, Z, M$, sanos, zombies y muertos respectivamente. Las ecuaciones serían, para la variación de sanos:
+
+\[ S' = -βSZ - δS \] donde δ es la diferencia es mortalidad y natalidad, y β la tasa de individuos que mueren por encuentros con zombies. 
+
+La variación de zombies es
+
+\[ Z' = βSZ + ξM - αSZ \], con ξ el porcentaje de zombies que resucitan y α el número de zombies que mueren por acción de los sanos. 
+
+Por último, la variación de muertos es
+
+\[ M' = δS + αSZ - ξM \] con las constantes de antes.
+
+Suponemos que el período de tiempo es corto y δ es $0$: no nace ni muere nadie por razones que no sean las que hemos dicho. 
+
+Al igual que en el anterior caso, la población total es constante y podemos normalizar. Los puntos críticos son de dos tipos: $(S_0, 0,0)$ y $(0,Z_0, 0)$. Es decir, que o bien todo el eje $Z$ o todo el eje $S$ son puntos críticos, aunque teniendo en cuenta que hemos normalizado sólo nos interesa la intersección con el plano $S+Z+M = 1$, esto es, los puntos críticos son $(1,0,0)$ y $(0,1,0)$.
+
+Hacemos el método de linealización. La matriz de derivadas es
+
+\[ \begin{pmatrix}
+-βz & -βs & 0 \\
+(β-α)z & (β-α)s & ξ \\
+αz & αs & -ξ 
+\end{pmatrix} \]
+
+En $(1,0,0)$, tenemos \[ \begin{pmatrix}
+0 & -β & 0 \\
+0 & (β-α) & ξ \\
+0 & α & -ξ 
+\end{pmatrix} \], con autovalores $0$ y $\frac{(β-α) + ξ \pm \sqrt{\cdots}}{2}$. Si $β>α$, tenemos que la parte real de los autovalores es positiva, luego es inestable. En el caso del punto crítico $(0,1,0)$, su parte real es negativa, luego es estable. Por lo tanto, el resultado es extinción de los individuos sanos.
+
+\subsubsection{Caso de estudio: Sistema de Lorentz y caos}
+
+El sistema de Lorentz era
+
+\[ \left\{\begin{array}{rcl} 
+x' &=& σ(y-x) \\ 
+y' &=& Rx - y -xz \\
+z' &=& xy -bz
+ \end{array}\right. \]
+ 
+La historia de este sistema está relacionada con el teorema de Poincaré-Bendixson. En dimensión dos, las trayectorias acotadas que no caían a puntos críticos se \textit{enroscan} alrededor de trayectorias cerradas.
+ 
+Todos esperaban que esto también se aplicase a dimensión 3, pero el sistema de arriba, creado por Lorentz para tratar de modelizar el clima, demostró que no ocurría. Las trayectorias, que se quedaban acotadas, no caían a puntos críticos pero tampoco caían a trayectorias cerradas. Por métodos numéricos, se vio que se agrupaban alrededor de una superficie que no era solución del sistema: el \textbf{atractor extraño de Lorentz}.
+ 
+Además, este sistema era muy sensible a cambios. Los teoremas de existencia, unicidad y continuidad respecto a los datos daban garantía de que las soluciones se mantenían próximas. Eso sí: siempre que el tiempo estuviese acotado. Según avanza el tiempo, las soluciones pueden divergir significativamente.
