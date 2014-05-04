@@ -1,20 +1,22 @@
 \documentclass[nochap]{apuntes}
 
 \usepackage{changepage}
+\usepackage{tikztools}
 \usetikzlibrary{calc}
+
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikzgen/]
 
 \title{Geometría de curvas y superficies}
 \author{Guillermo Julián Moreno}
 \date{13 / 14 C2}
-
-\usepackage{tikz}
 
 \begin{document}
 
 \maketitle
 \newpage
 \pagestyle{plain}
-\section{Curvas en el plano}
+\section{Introducción a curvas y superficies}
 
 \subsection{Parametrización de curvas}
 Existen varias formas de representar curvas en $\real^2$.
@@ -127,7 +129,7 @@ la inversa sería
 Ahora sustituimos en nuestra curva las $t$ por $t(s)$. Si por ejemplo nuestra curva fuese $α(t) = (t, e^t)$ y tomamos $t(s)$ lo que nos ha dado antes, tendríamos que nuestra curva PPA sería
 \[ α(t(s)) = (\arccos s, e^{\arccos s}) \]
 
-\section{Curvatura y diedro de Frenet}
+\section{Curvas planas}
 
 \begin{defn}[Curvatura] Dada una curva regular en $ℝ^N$, el campo \mv{k} de los vectores curvatura de la misma es el formado por la derivada segunda $β''(s)$, siendo β una parametrización por longitud de arco.
 \end{defn}
@@ -243,7 +245,7 @@ Tal y como hacíamos en curvas en el plano, en el espacio partimos del triedro d
 
 \[ \cb = \ct × \cn \]
 
-de tal forma que $\{\cb,\ct,\cn\}$ es una base del espacio $ℝ^3$. Además, $\{\ct,\cn\}$ es una base del \textbf{plano osculador}\index{Plano!osculador}.
+de tal forma que $\{\ct,\cn,\cb\}$ es una base del espacio $ℝ^3$. Además, $\{\ct,\cn\}$ es una base del \textbf{plano osculador}\index{Plano!osculador}.
 
 El tiedro de Frenet satisface el siguiente sistema:
 
@@ -255,12 +257,104 @@ El tiedro de Frenet satisface el siguiente sistema:
 
 donde τ es la torsión, que nos da una medida de lo \textit{no plana} que es la curva. De hecho, si $τ = 0$, la curva es plana.
 
+\begin{defn}[Curva\IS birregular] Se dice que una curva $\appl{α}{I}{ℝ^3}$ es birregular si $α'(t)$ y $α''(t)$ son linealmente independientes (no se anulan) para todo $t∈I$.
+\end{defn}
+
+\section{Superficies: primera forma fundamental}
+
+En esta sección vamos a pasar a estudiar las superficies en el espacio, más concretamente las superficies suaves o regulares.
+
+\begin{defn}[Superficie\IS suave]\index{Superficie!regular} Dada una parametrización $\appl{Φ(u,v)}{A⊆ℝ^2}{ℝ^n}$ de una superficie, se dice que es regular si el vector normal no es nunca cero. Esto es, \[ Φ_u(u,v) × Φ_v(u,v) ≠ 0 \quad ∀(u,v) ∈ A \]. Dicho de otra forma, Φ tiene que ser un difeomorfismo.
+\end{defn}
+
+Una forma familiar de parametrizar las superficies es a través de rectas (generatrices) que se mueven a lo largo de una curva directriz. Por ejemplo, un cono es una superficie reglada: lo generamos con las rectas entre un punto fijo y todos los puntos de una circunferencia (la curva directriz).
+
+Podemos materializar esta idea en una ecuación, una representación paramétrica de una superficie reglada:
+
+\[ Φ(t,u) = p(t) + u·r(t) \], donde $p$ sería la parametrización de la curva directriz y $r$ el vector director de la recta en cada punto.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{SuperficieReglada}
+\label{imgSuperficieReglada}
+\caption{Podemos reglar la silla usando dos familias de rectas distintas}
+\end{figure}
+
+En algunos casos las superficies se pueden reglar de dos maneras diferentes. Por ejemplo, la silla $z=xy$ (imagen \ref{imgSuperficieReglada}) se puede reglar de dos formas distintas, ya sea con las rectas paralelas al eje $X$ o con las paralelas al eje $Y$.
+
+¿Qué vamos a querer hacer en las superficies? Lo normal será medir la longitud de curvas en la superficie, encontrar el área de regiones de la superficie o ver el ángulo entre dos curvas. 
+
+Para esas tareas, en el espacio usamos el producto escalar. Necesitamos generalizar este concepto para las superficies, y para ello recurrimos a las métricas.
+
+\begin{defn}[Métrica\IS Riemanniana] La métrica riemmaniana de una superficie $S$ en un punto $p$ se define como una aplicación suave $\appl{Q}{T_pS×T_pS}{ℝ}$ definida positiva\footnote{$Q$ es definida positiva si $Q(\vu, \vv) > 0\quad ∀(\vu,\vv)≠(\vec{0},\vec{0}) ∈ T_pS×T_pS$.}\end{defn}
+
+La métrica $Q$ nos da, para cada punto $p∈S$, una \textit{forma de medir}, una especie de producto escalar que podemos aplicar a los vectores tangentes a la superficie en ese mismo punto.
+
+Ahora necesitamos encontrar una métrica para cada superficie $S$ parametrizada por la aplicación $Φ(u,v)$. Hemos dicho que es un producto escalar, así que vamos a calcular cuál es el producto escalar de dos vectores cualquiera $\va,\vb$ que pertenezcan al espacio tangente de $S$. 
+
+Recordemos que el espacio tangente tiene como base los vectores $\pd{Φ}{u}=Φ_u$ y $\pd{Φ}{v} = Φ_v$. Por lo tanto, podemos reescribir $\va = a_1Φ_u + a_2Φ_v$ y $\vb = b_1Φ_u + b_2Φ_v$. Si calculamos su producto escalar:
+\begin{align*}
+\pesc{\va, \vb} &= \pesc{a_1Φ_u + a_2Φ_v, b_1Φ_u+b_2Φ_v} = \\
+	&= a_1b_1 \pesc{Φ_u, Φ_u} + (a_1b_2 + a_2b_1) \pesc{Φ_u,Φ_v} + a_2b_2\pesc{Φ_v, Φ_v} = \\
+	&= a_1b_1E + (a_1b_2 + a_2b_1) F +  a_2b_2G
+\end{align*}
+
+Esta métrica, que hemos hallado a partir del producto escalar euclídeo, se llama la \textbf{primera forma fundamental}\index{Primera forma fundamental}, denotada como $I_Φ$ y comprime todas las propiedades métricas de la superficie. Otra forma de expresarla sería como una matriz simétrica:
+
+\[ I_Φ (\va, \vb) = \va^T \begin{pmatrix} E & F \\ F & G \end{pmatrix} \vb \]
+
+Recordemos que los coeficientes se hallan a partir de las derivadas de la parametrización:
+\begin{align*}
+E &= \pesc{Φ_u, Φ_u} \\
+F &= \pesc{Φ_u,Φ_v} \\
+G &= \pesc{Φ_v, Φ_v}
+\end{align*}
+
+A partir de la primera forma fundamental, podemos expresar el elemento de línea como \[\dif s^2 = E\dif u^2 + 2F\dif u\dif v + G\dif v^2\], lo que nos permite calcular la longitud de una curva $(u(t), v(t))$ en la superficie \[ L = \int_I \sqrt{ E\left(\od{u}{t}\right)^2 + 2F\od{u}{t}\od{v}{t} + G\left(\od{v}{t}\right)^2 } \dif t \] y el área de una región $M⊆S$:
+
+\[  A = \iint\limits_M \sqrt{EG-F^2} \dif u \dif v \]
+
+\subsection{Isometrías}
+
+Una vez que ya sabemos medir en superficies, nos interesará ver si dos superficies tienen una estructura similar en este sentido, esto es, si son isométricas. 
+
+\begin{defn}[Isometría\IS local] Sean $S,M$ dos superficies. Se dice que $\appl{h}{S}{M}$ es una isometría local si es $C^1$ y conserva las distancias. Esto es, dada una función distancia $d_S$ y $d_M$ para ambas superficies respectivamente, se tiene que
+
+\[ d_S(a,b) = d_M(h(a), h(b)) \]
+\end{defn}
+
+\begin{defn}[Isometría\IS global] Una aplicación $\appl{h}{S}{M}$ es global si además de ser isometría local es aplicación biyectiva. \end{defn}
+
+Una propiedad interesante de las isometrías es su relación con la primera forma fundamental. Habíamos dicho que la primera forma fundamental es la manera que tenemos de medir distancias en la superficie, por lo que si la isometría conserva las distancias la primera forma fundamental también habría de conservarse, ¿no? Formalicémoslo.
+
+\begin{theorem} Dadas dos parametrizaciones $\appl{Φ}{A⊆ℝ^2}{S}$ y $\appl{Ψ}{A⊆ℝ^2}{M}$ de las respectivas superficies $S$ y $M$, definidas en el mismo dominio $A$, consideramos una aplicación suave \begin{align*}\appl{h}{S&}{M} \\ Φ(u,v) &\xrightarrow{h} Ψ(u,v) \end{align*}
+
+Entonces, $h$ es una isometría si y sólo si $I_Φ \equiv I_Ψ$, esto es, se conservan los coeficientes de la primera forma fundamental.
+\end{theorem}
+
+\section{Curvatura de superficies: Segunda forma fundamental}
+
+Hasta ahora hemos visto cómo medir en superficies. Sin embargo, el estudio de estos objetos no se queda ahí. También querremos saber cómo de curvadas están, y esta es la motivación para introducir varios conceptos. El primero es de la curvatura normal, que nos indica \textit{cuánto} se separa la superficie de su plano tangente. Una curvatura normal pequeña nos indicará una superficie más cercana al plano tangente, mientras que si es muy grande nos indica que en ese punto la superficie es uy curvada. 
+
+Por simplificar, asociaremos la curvatura normal a una curva en la superficie. 
+
+\begin{defn}[Aceleración\IS normal] Dado un campo normal unitario $N$ de la superficie $S$, definimos la aceleración normal de α en $S$ como 
+\[ a_α(t) = α''(t) \cdot N_{α(t)}\]
+\end{defn}
+
+\begin{defn}[Curvatura\IS normal] Dado un campo normal unitario $N$ de la superficie $S$, definimos la curvatura normal de α en $S$ como 
+
+\[ k_{α,n}(t) = N_{α(t)} \cdot \cv(t) \]
+\end{defn}
+
+Es decir, la curvatura normal es la componente del vector curvatura de la curva normal a la superficie. Si tenemos la suerte de que α sea PPA, tenemos que $\cv(t) \equiv α''(t)$, y la aceleración normal y la curvatura normal coinciden.
+
 \section{Vete tú a saber qué}
 
 \begin{theorem}[Teorema\IS de Minding] Dos superficies con la misma curvatura gaussiana constante son localmente isométricas. \label{thmMinding}\end{theorem}
 
 \appendix
 \chapter{Apéndices}
-\input{tex/geo_Ejercicios.tex}
+% \input{tex/geo_Ejercicios.tex}
 
 \end{document}
