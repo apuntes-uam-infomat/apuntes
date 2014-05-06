@@ -98,6 +98,7 @@
 \rac#m
 \real#m
 \cplex#m
+\vec{arg0}#m
 \pesc{arg0}#m
 \md{arg0}#m
 \vx#m
