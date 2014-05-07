@@ -1,36 +1,42 @@
-\begin{tikzpicture}[declare function={f(\n)=\n*\n;}, scale=2, 
+\begin{tikzpicture}[declare function={f(\n)=\n*\n;}, scale=4, 
 	back/.style={ rounded corners, fill opacity=0.8, text opacity=1, fill=white, dotted, draw=gray!30!white}]
 
-\foreach \a in {90, 110, ..., 270}
-	\draw[gray, variable=\x, domain=0:1.5] plot ({\x * sin(\a)}, {f(\x)}, {\x * cos(\a)});
+\pgfmathsetmacro{\h}{1}
 
-\foreach \r in {0.1,0.15,...,1.5}
+\foreach \a in {180, 190, ..., 270}
+	\draw[gray, variable=\x, domain=0:\h] plot ({\x * sin(\a)}, {f(\x)}, {\x * cos(\a)});
+
+\foreach \r in {0.1,0.15,...,\h}
 {
 	\draw[gray!50!white, variable=\x, domain=pi:3*pi/2] plot ({\r * sin(\x r)}, {f(\r)}, {\r * cos(\x r)});
-	\draw[gray!20!white, variable=\x, domain=pi/2:pi] plot ({\r * sin(\x r)}, {f(\r)}, {\r * cos(\x r)});
 } 
 
-\pgfmathsetmacro{\r}{0.8}	
+\pgfmathsetmacro{\r}{0.7}	
 \pgfmathsetmacro{\a}{225}
 \pgfmathsetmacro{\x}{\r * sin(\a)}
 \pgfmathsetmacro{\y}{\r * cos(\a)}
 \pgfmathsetmacro{\z}{f(\r)}
+\pgfmathsetmacro{\zo}{f(\r)}
+\pgfmathsetmacro{\s}{0.1}
+\pgfmathsetmacro{\se}{-0.1}
 
-\draw[green, thick, variable=\x, domain=-0.3:1.6] plot ({\x * sin(\a)}, {f(\x)}, {\x * cos(\a)}) node[above] {$\sigma(t)$};
+\draw[green, thick, variable=\x, domain=-0.3:(\h + 0.1)] plot ({\x * sin(\a)}, {f(\x)}, {\x * cos(\a)}) node[above] {$\sigma(t)$};
 
 \node[circle, fill, black, inner sep=1pt, label={[back, xshift=-3]left:$p=\sigma(0)$}] (P) at (\x, \z, \y) {};
-\coordinate (N) at (0, {f(\r)}, 0);
-\draw[->] (P) -- (N)  node[right, back] {$\vn$};
+\coordinate (N) at (0, {f(\r) + \s}, 0);
+\draw[->] (P) -- node[midway, above, yshift=5, back] {$\vn$} (N);
 
-\pgfmathsetmacro{\r}{1.3}
+\pgfmathsetmacro{\r}{0.9}
 \pgfmathsetmacro{\x}{\r * sin(\a)}
 \pgfmathsetmacro{\y}{\r * cos(\a)}
 \pgfmathsetmacro{\z}{f(\r)}
 
 \node[circle, fill, black, inner sep=1pt, label={[back, xshift=-3]left:$\sigma(\epsilon)$}] (PN) at (\x, \z, \y) {};
-\coordinate (NN) at (0, {f(\r) - 0.2}, 0);
-\draw[dashed, ->] (PN) -- (NN) node[right, back] {$\vn_\epsilon$};
+\coordinate (NN) at ($(PN)!0.7!(0, {f(\r) + \se}, 0)$);
+\coordinate (NT) at ($(NN) - (PN) + (P)$);
+\draw[blue, ->] (PN) -- node[midway, above, back, yshift=5] {$\vn_\epsilon$} (NN) ;
+\draw[blue, dashed, ->] (P) -- node[midway, below, back, yshift=-5] {$\vn_\epsilon$} (NT);
 
-\draw[thick, red,->] (N) -- node[midway, right, back, dashed, xshift=4] {$\mathcal{L}(\vv)$} (NN);
+\draw[very thick, red,->] (N) -- node[midway, right, back, dashed, xshift=6] {$\mathcal{L}(\vv) = \vn_\epsilon - \vn$} (NT);
 
 \end{tikzpicture}

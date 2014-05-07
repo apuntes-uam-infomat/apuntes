@@ -110,6 +110,7 @@
 \vu#m
 \vn#m
 \vv#m
+\ve#m
 \thethm#m
 \theejr#m
 \begin{remark}#
@@ -138,6 +139,8 @@
 \begin{theorem}#
 \begin{theorem}[titulo]#
 \begin{theorem}[titulo][indice]#
+\concept{arg1}#m
+\concept[None]{arg1}#m
 \printtheorems#m
 \begin{proof}#
 \begin{expla}#

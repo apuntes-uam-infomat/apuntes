@@ -13,7 +13,7 @@
 \author{Guillermo Julián Moreno}
 \date{13 / 14 C2}
 
-\newcommand{\wein}{\mathcal{L}}
+\newcommand{\wein}{\ensuremath{\mathcal{L}}}
 
 \begin{document}
 
@@ -366,22 +366,141 @@ El endomorfismo de Weingarten y la segunda forma fundamental surgen de manera na
 
 Vamos a empezar con nuestra superficie $M$ y un punto $p∈ M$. Consideramos un entorno $W$ del punto $p$. Sea $\appl{n}{W}{ℝ^3}$ la aplicación que lleva cada punto de $W$ a su correspondiente vector normal unitario. Queremos ver cuánto varía el vector normal y hacia dónde en ese entorno, así que introducimos la noción de derivada direccional:
 
-\begin{defn}[Derivada\IS direccional] Dada una aplicación $\appl{f}{S}{ℝ^3}$, la derivada de $f$ en la dirección $\vv$ en $\va$ (notación: $\nabla_{\vv} f(\va)$) se define como la derivada de $f○α$, con α una curva tal que $α(0) = p$ y $α'(0) = \vv$, en $t=0$.
+\begin{defn}[Derivada\IS direccional] Dada una aplicación $\appl{f}{S}{ℝ^3}$, la derivada de $f$ en la dirección $\vv$ en $\va$ (notación: $\Dif_{\vv} f(\va)$) se define como la derivada de $f○α$, con α una curva tal que $α(0) = p$ y $α'(0) = \vv$, en $t=0$.
 \end{defn}
 
 De aquí podemos sacar el endomorfismo de Weingarten, también llamado \textbf{operador de forma}\index{Operador!de forma}, que nos indica cómo varía el vector normal en una dirección determinada. 
 
-\begin{defn}[Endomorfismo\IS de Weingarten] Definimos la aplicación \textbf{lineal} de Weingarten para una superficie $S$ en un punto $p$ como $\appl{\wein}{T_pS}{T_pS}$, dada por \[ \wein(\vx) = - \nabla_{\vx} \vn \] con $\vn$ el vector normal a $S$ en $p$.
+\begin{defn}[Endomorfismo\IS de Weingarten] Definimos la aplicación \textbf{lineal} de Weingarten para una superficie $S$ en un punto $p$ como $\appl{\wein}{T_pS}{T_pS}$, dada por \[ \wein(\vx) = - \Dif_{\vx} \vn \] con $\vn$ el vector normal a $S$ en $p$.
 \end{defn}
 
-Esto es, el vector $\wein(\vx)$ nos dice hacia dónde varía el vector normal cuando nos movemos en la superficie en la dirección $\vx$ desde el punto $p$, tal y como se ve en la figura \ref{imgWeingarten}
+Esto es, el vector $\wein(\vx)$ nos dice hacia dónde varía el vector normal cuando nos movemos en la superficie en la dirección $\vx$ desde el punto $p$, tal y como se ve en la figura \ref{imgWeingarten}. Se puede demostrar que la aplicación es en efecto un endomorfismo, y que $∀\vx ∈ T_pS \quad \wein(\vx) ∈ T_pS$ mostrando que sigue siendo ortogonal al vector normal.
 
 \begin{figure}[hbtp]
 \centering
 \inputtikz{Weingarten}
 \label{imgWeingarten}
-\caption{Representación del endomorfismo de Weingarten: es la variación del vector normal en la dirección dada (es decir, a lo largo de una curva σ con $σ'(0) = \vv$.}
+\caption{Representación del endomorfismo de Weingarten: es la variación del vector normal en la dirección dada (es decir, a lo largo de una curva σ con $σ'(0) = \vv$).}
 \end{figure}
+
+Partiendo del endomorfismo de Weingarten llegamos a la segunda forma fundamental:
+
+\begin{defn}[Segunda forma fundamental][Forma fundamental!segunda] Dada una superficie $S$ por una parametrización $Φ(u,v)$, denotamos la segunda forma fundamental como \[ II_Φ(\vv) = \pesc{\wein(\vv), \vv} = e \dif u^2 + 2 f \dif u \dif v + g \dif v^2 = 
+\vv^T · \begin{pmatrix} e & f \\ f & g\end{pmatrix} · \vv\], con \begin{align*}
+e &= \pesc{\vn, Φ_{uu}} \\
+f &= \pesc{\vn, Φ_{uv}} \\
+g &= \pesc{\vn, Φ_{vv}}
+\end{align*}
+
+Recordamos que el producto escalar que estamos usando es el definido por la métrica, es decir, por la primera forma fundamental. Por lo tanto, $\pesc{\wein(\vv), \vv} = I(\wein(\vv), \vv)$.
+\end{defn}
+
+La segunda forma fundamental evaluada en $\vv$ nos da una \textit{medida} de cuánto varía el vector normal en la dirección de $\vv$ al movernos hacía ahí. Cuanto mayor sea, mayor será la variación del vector normal en la dirección de $\vv$ y por lo tanto mayor la curvatura de la superficie. Si operamos con el vector tangente de una curva $α$, tenemos que \[ II_Φ(α') = α'' \]. 
+
+\begin{proof}
+Sabemos que $∀s$ a lo largo de α,  $\pesc{α', n ○ α} = 0$. Derivando, \[ 0 = \pesc{α', \vn ○ α}' = \pesc{α'', \vn ○α} + \pesc{α', (\vn ○α)'} \]. Cuando $s=0$, tenemos que 
+
+\begin{align*}
+\pesc{α'', \vn} + \pesc{\ct, \Dif_{\ct} \vn} &= 0 \\
+\pesc{α'', \vn} &= - \pesc{\ct, \wein(\ct)} \\
+k_n &= II(\ct) 
+\end{align*}
+\end{proof}
+
+Antes de seguir, tenemos que ver de dónde vienen los coeficientes $e,f,g$ de la segunda forma fundamental. Sabemos que $II$ es una forma cuadrática, por lo que viene dada por la matriz
+
+\[ II(\vv) = \vv^T \begin{pmatrix} e & f \\ f & g\end{pmatrix}  \vv \] en la base $\{Φ_u, Φ_v\}$. Para saber cuánto valen, operamos con los vectores $Φ_u$ y $Φ_v$, que en la base que consideramos son $(1,0)$ y $(0,1)$ respectivamente:
+
+\begin{align*}
+II((1,0)) &= \begin{pmatrix}1 & 0\end{pmatrix} \begin{pmatrix} e & f \\ f & g\end{pmatrix}\begin{pmatrix}1 \\ 0\end{pmatrix} = e \\
+II((0,1)) &= \begin{pmatrix}0 & 1\end{pmatrix} \begin{pmatrix} e & f \\ f & g\end{pmatrix}\begin{pmatrix}0 \\ 1\end{pmatrix} = g \\
+\end{align*}
+
+Hallamos $f$ como $II((1,0), (0,1))$. Centrémonos en el primer caso, $II((1,0))$. La segunda forma fundamental está definida a partir de \wein, por lo tanto
+
+\[ e = II((1,0)) = \pesc{\wein(Φ_u), Φ_u} = \pesc{\vn_u, Φ_u} \] donde $\vn_u = - \Dif_u \vn$. ¿Cómo hallamos ese valor? Podemos partir de que $\pesc{\vn, Φ_u} = 0$ y a partir de ahí derivar con respecto a $u$ otra vez:
+
+\begin{align*}
+\pesc{\vn, Φ_u}' &= 0 \\
+- \pesc{\vn_u, Φ_u} + \pesc{\vn, Φ_{uu}} &= 0 \\
+\pesc{\vn_u,Φ_u} &= \pesc{\vn, Φ_{uu}}
+\end{align*}
+
+Análogamente obtenemos los coeficientes para $f$ y $g$.
+
+\subsection{Curvaturas}
+
+Nos interesa el estudio de dos curvaturas, las \concept[Curvatura!principal]{curvaturas principales} a las que llamaremos $κ_1$ y $κ_2$, que se definirán respectivamente como 
+
+\begin{align*}
+κ_1 &= \max_{\md{\vv} = 1} II(\vv) \\
+κ_2 &= \min_{\md{\vv} = 1} II(\vv) \\
+\end{align*}
+
+Sin embargo, así visto es difícil calcular esas dos curvaturas. Vamos a usar algo de álgebra lineal, aprovechando que $II$ es una aplicación autoadjunta.
+
+\begin{defn}[Aplicación\IS autoadjunta] Una aplicación $\appl{A}{V}{V}$ de un espacio vectorial en sí mismo es autoadjunta con el producto escalar $\pesc{·,·}$ si se cumple que, $∀\va, \vb ∈ V$ \[\pesc{A\va, \vb} = \pesc{\va, A\vb} \]
+\end{defn}
+
+\begin{theorem}[Teorema\IS espectral] Dada $A$ una aplicación autoadjunta en $ℝ^N$, todos sus autovalores son reales.
+\end{theorem}
+
+\begin{proof}(\href{http://www.proofwiki.org/wiki/Eigenvalues_of_Self-Adjoint_Operator_are_Real}{Fuente}) Si $A$ es una matriz real de dimensión $n$, ya sabemos que tiene $n$ autovalores, que no tienen por qué ser reales. Supongamos que $λ$ es una autovalor de $A$ asociado al autovector $\vv$. Entonces
+
+\[ λ\pesc{\vv, \vv} = \pesc{λ\vv, \vv} = \pesc{A\vv, \vv} = \pesc{\vv, A\vv} \]
+
+Usando la propiedad de simetría conjugada del producto escalar, nos queda \[ \pesc{\vv, A\vv} = \conj{\pesc{A\vv, \vv}} = \conj{\pesc{λ\vv, \vv}} = \conj{λ}\pesc{\vv, \vv} \] luego $λ=\conj{λ}$. Es decir, λ es un autovalor real.
+\end{proof}
+
+El Teorema espectral nos dice que habrá por lo tanto una base ortonormal de autovectores con autovalores reales asociados para el endomorfismo de Weingarten $\wein$. Con esta información podemos\footnote{Esto está basado en el \href{http://math.mit.edu/~stevenj/18.303/minmax.pdf}{teorema Min-Max}.} operar sobre $II(\vv)$. 
+
+Si $\{\ve_1, \ve_e\}$ es una base de autovectores normales asociados a los autovalores $\{λ_1, λ_2\}$ con $λ_1 ≥ λ_2$, podemos descomponer $\vv = a \ve_1 + b \ve_2$. Entonces, usando que $\wein$ es una aplicación bilineal, 
+
+\[ \wein(\vv) = \wein(a \ve_1 + b \ve_2) = \wein(a \ve_1) + \wein(b \ve_2) = aλ_1\ve_1 + bλ_2\ve_2 \]
+
+Con esta información, podemos calcular $II(\vv)$:
+
+\[ II(\vv) = \pesc{\wein{\vv}, \vv} = \pesc{aλ_1\ve_1 + bλ_2\ve_2, a \ve_1 + b \ve_2} = a^2λ_1 + b^2λ_2
+\]
+ya que, si la base es ortonormal, $\pesc{\ve_1, \ve_2} = 0$.
+
+Si consideramos los vectores con módulo 1, $a^2 + b^2=1$ y entonces podemos acotar \[ a^2λ_1 + b^2λ_2 ≥ a^2λ_1 + b^2λ_1 = λ_1 \], y de forma análoga con $λ_2$. Esto es, los autovalores acotan por ambos extremos el valor de $II(\vv)$ con $\md{\vv} = 1$, luego son las curvaturas principales que buscábamos. 
+
+Puede darse el caso de que ambas curvaturas principales sean iguales. Denotaremos puntos de este tipo como \concept[Punto!umbilical]{puntos umbilicales}.
+
+A partir de aquí definimos la curvatura más definitoria de una superficie: la curvatura gaussiana\footnote{
+También se puede definir la curvatura media como la media de ambas curvaturas, pero todavía no sé para qué puñetas se usa, así que voy a pasar por encima.}
+
+\begin{defn}[Curvatura\IS gaussiana] Dada una superficie $S$ con curvaturas principales $κ_1,κ_2$, se define la curvatura gaussiana como \[ K = κ_1κ_2 \], que también se puede expresar en función del determinante del operador de forma o endomorfismo de Weingarten:
+
+\[ K = \det \wein \]
+\end{defn}
+
+El problema que tenemos ahora es hallar la matriz del endomorfismo de Weingarten \wein. Para ello simplemente operamos de forma matricial. Por un lado, \[ II(\vv) = \vv^T \begin{pmatrix}e & f \\ f & g\end{pmatrix} \vv \]. Por otro, \[ II(\vv) = \pesc{\wein(\vv), \vv} = \pesc{\vv, \wein(\vv)} = I(\vv, \wein(\vv)) = \vv^T \begin{pmatrix} E & F \\ F & G \end{pmatrix} \underbrace{[\wein] \vv}_{\wein(\vv)} \]. Simplemente despejando con cuidado tenemos
+
+\[ [\wein] = \begin{pmatrix} E & F \\ F & G \end{pmatrix}^{-1} \begin{pmatrix}e & f \\ f & g\end{pmatrix}  \]
+
+De aquí podemos sacar una fórmula para la curvatura gaussiana en función de las formas fundamentales:
+
+\[ K = \det \wein = \frac{eg-f^2}{EG-F^2} \]
+
+También podemos hallar una condición más sencilla para hallar autovectores (direcciones de curvatura principal). Si $\vv$ es autovector de \wein\, con autovalor λ, operando:
+
+\begin{align*}
+\wein(\vv) &= λ\vv \\
+\begin{pmatrix} E & F \\ F & G \end{pmatrix}^{-1} \begin{pmatrix}e & f \\ f & g\end{pmatrix}  \vv &= λ \vv \\
+\begin{pmatrix}e & f \\ f & g\end{pmatrix}  \vv &= λ \begin{pmatrix} E & F \\ F & G \end{pmatrix} \vv \\
+\vv^T \begin{pmatrix}e & f \\ f & g\end{pmatrix}  \vv &= λ \vv^T \begin{pmatrix} E & F \\ F & G \end{pmatrix} \vv \\
+\frac{II(\vv)}{I(\vv)} &= λ
+\end{align*}
+
+Es decir, $\vv$ es curvatura principal si el cociente de la segunda y primera forma fundamental es constante. Si no podemos operar ese cociente, también podemos ver que los vectores $\begin{pmatrix}e & f \\ f & g\end{pmatrix}  \vv$ y $ \begin{pmatrix} E & F \\ F & G \end{pmatrix} \vv$ son proporcionales, luego el determinante de la matriz formada por ambos vectores columna deberá ser cero, esto es, si $\vv=aΦ_u + Φ_b$, 
+
+\[ \det \begin{pmatrix}
+Ea + Fb & ea + fb \\
+Fa + Gb & fa + gb 
+\end{pmatrix} = 0 \]
+
 
 \section{Vete tú a saber qué}
 
@@ -390,5 +509,13 @@ Esto es, el vector $\wein(\vx)$ nos dice hacia dónde varía el vector normal cu
 \appendix
 \chapter{Apéndices}
 \input{tex/geo_Ejercicios.tex}
+\chapter{Otros recursos}
+\begin{itemize}
+\item \href{http://math.nyu.edu/~nica/hermitian.pdf}{Sobre matrices hermíticas, cociente de Rayleigh y teorema Min-Max}.
+\item \href{http://www.math.miami.edu/~galloway/dgnotes/chpt5.pdf}{The Second Fundamental Form - math.miami.edu}.
+\item \href{http://people.duke.edu/~ad159/files/m140/19.pdf}{The Weingarten Map - Adrian Down - 2006}.
+\end{itemize}
+
+\printindex
 
 \end{document}
