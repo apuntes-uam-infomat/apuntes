@@ -15,8 +15,12 @@
 
 \geometry{left=3.5cm, right=2.5cm, marginparwidth=2.25cm, marginparsep=0.7cm}
 
-\newcommand{\wein}{\ensuremath{\mathcal{L}}}
+\newcommand{\wein}{\ensuremath{\mathcal{W}}}
+\newcommand{\lfi}{\ensuremath{\mathcal{L}}}
+\newcommand{\vV}{\mathbf{V}}
 
+\renewcommand{\(}{\begin{equation}}
+\renewcommand{\)}{\end{equation}}
 \begin{document}
 
 \maketitle
@@ -273,7 +277,7 @@ En esta sección vamos a pasar a estudiar las superficies en el espacio, más co
 \begin{defn}[Superficie\IS suave]\index{Superficie!regular} Dada una parametrización $\appl{Φ(u,v)}{A⊆ℝ^2}{ℝ^n}$ de una superficie, se dice que es regular si el vector normal no es nunca cero. Esto es, \[ Φ_u(u,v) × Φ_v(u,v) ≠ 0 \quad ∀(u,v) ∈ A \]. Dicho de otra forma, Φ tiene que ser un difeomorfismo.
 \end{defn}
 
-Una forma familiar de parametrizar las superficies es a través de rectas (generatrices) que se mueven a lo largo de una curva directriz. Por ejemplo, un cono es una superficie reglada: lo generamos con las rectas entre un punto fijo y todos los puntos de una circunferencia (la curva directriz).
+Una forma familiar de parametrizar las superficies es a través de rectas (generatrices) que se mueven a lo largo de una curva directriz. Por ejemplo, un cono es una \concept{superficie\IS reglada}: lo generamos con las rectas entre un punto fijo y todos los puntos de una circunferencia (la curva directriz).
 
 Podemos materializar esta idea en una ecuación, una representación paramétrica de una superficie reglada:
 
@@ -496,17 +500,216 @@ También podemos hallar una condición más sencilla para hallar autovectores (d
 \frac{II(\vv)}{I(\vv)} &= λ
 \end{align*}
 
-Es decir, $\vv$ es curvatura principal si el cociente de la segunda y primera forma fundamental es constante. Si no podemos operar ese cociente, también podemos ver que los vectores $\begin{pmatrix}e & f \\ f & g\end{pmatrix}  \vv$ y $ \begin{pmatrix} E & F \\ F & G \end{pmatrix} \vv$ son proporcionales, luego el determinante de la matriz formada por ambos vectores columna deberá ser cero, esto es, si $\vv=aΦ_u + Φ_b$, 
+Es decir, $\vv$ es curvatura principal si el cociente de la segunda y primera forma fundamental es constante. Si no podemos operar ese cociente, también podemos ver que los vectores $\begin{pmatrix}e & f \\ f & g\end{pmatrix}  \vv$ y $ \begin{pmatrix} E & F \\ F & G \end{pmatrix} \vv$ son proporcionales, luego el determinante de la matriz formada por ambos vectores columna deberá ser cero, esto es, si $\vv=aΦ_u + bΦ_v$, 
 
-\[ \det \begin{pmatrix}
+\( \det \begin{pmatrix}
 Ea + Fb & ea + fb \\
 Fa + Gb & fa + gb 
-\end{pmatrix} = 0 \]
+\end{pmatrix} = 0 \label{eqCurvatura} \)
 
+Resolviendo para $a,b$ obtenemos las direcciones de las curvaturas principales.
 
-\section{Vete tú a saber qué}
+\subsection{Clasificación de puntos}
+
+Una vez que tenemos las dos curvaturas principales $κ_1,κ_2$ de un punto, podemos clasificarlo:
+
+\begin{itemize}
+\item \concept{Punto\IS hiperbólico} $κ_1 < 0, κ_2 > 0$, con lo que $K<0$
+\item \concept{Punto\IS elíptico} Ambas curvaturas principales tienen el mismo signo.
+\item \concept{Punto\IS parabólico} $K=0$, con una de las curvaturas principales distinta de 0.
+\item \concept{Punto\IS plano} Ambas curvaturas principales 0.
+\end{itemize}
+
+\begin{theorem} Sea $S$ una superficie conexa con todos sus puntos umbilicales ($κ_1=κ_2=κ$). Si κ es $0$, $S$ es un trozo de plano. Si no, $S$ es un trozo de esfera de radio $\frac{1}{\abs{κ}}$.
+\end{theorem}
+
+\subsection{Líneas de curvatura}
+
+Buscaremos parametrizar las superficies a través de las curvaturas principales, de tal forma la primera y segunda formas fundamentales sean diagonales ($I= E\dif u^2 + G\dif v^2$), esto es, con el coeficiente de $\dif u\dif v$ igual a 0. Para lograr esto introducimos el concepto de líneas de curvatura:
+
+\begin{defn}[Línea\IS de curvatura] Dada una superficie $S$, una curva regular $Γ⊂S$ es una línea de curvatura de $S$ si cada recta tangente a Γ es una dirección principal de curvatura de $S$ en el punto correspondiente.
+
+Es decir, si la parametrización de Γ es $α(t)$, entonces el vector $α'(t) = u'Φ_u + v'Φ_v$ define una dirección principal de curvatura de $S$ en $α(t)$.
+\end{defn}
+
+A partir de esta definición, podemos sustituir en la ecuación \eqref{eqCurvatura} y nos queda 
+
+\( \det \begin{pmatrix}
+Eu' + Fv' & eu' + fv' \\
+Fu' + Gv' & fv' + gv' 
+\end{pmatrix} = 0 \label{eqLineasCurvatura} \)
+
+Resolviendo para $(u',v')$ llegamos a una familia de curvas que podemos resolver por EDOs. Veamos un ejemplo.
+
+\begin{example} Consideramos la silla $z=xy$, con la parametrización $Φ(u,v) = (u,v,uv)$. Calculamos:
+
+\begin{align*}
+ρN &= (-v, -u, 1) \\ 
+I  &= (1+v^2) \dif u^2 + 2uv\dif u \dif v + (1+u^2) \dif v^2 \\
+ρII &= 2\dif u \dif v
+\end{align*}
+
+con $ρ = \frac{1}{\md{N}}$, que sacamos fuera para evitar cálculos adicionales. Aplicando la ecuación \eqref{eqLineasCurvatura} nos queda
+
+\[ 0 = \det \begin{pmatrix}
+(1+v^2)u' + uvv' & v' \\
+uvu' + (1+u^2)v' & u'
+\end{pmatrix} = (1+v^2)u'^2 - (1+u^2)v'^2 \]
+\end{example}
+
+A partir de aquí despejamos e integramos para obtener lo que buscamos.
+
+\subsection{Líneas asintóticas}
+
+\begin{defn}[Línea\IS asintótica] Una curva $α⊂S$ es una línea asintótica si tiene curvatura normal nula. Es decir, que cumple
+
+\[ II(α') = e(u,v) u'^2 + 2f(u,v)u'v' + g(u,v)v'^2 = 0 \]
+\end{defn}
+
+Si resolvemos la EDO y hacemos el cambio de coordenadas, llegaríamos a que $II = 2f \dif u \dif v$, con $(u,v)$ \concept[Coordenada\IS asintótica]{coordenadas asintóticas}.
+
+\section{Geodésicas}
+
+Otro de los aspectos más interesantes de las superficies son las curvas geodésicas, las que minimizan la distancia entre sus puntos. Las obtenemos calculando la curva que minimize la longitud, esto es,
+
+\[ α_g = \argmin_{α⊂S} \int_a^b \md{α'(t)} \dif t \]
+
+Ahora bien, ¿cómo calculamos eso? Si tuviésemos que hallar números recurriríamos a las derivadas (por ejemplo, hallar el mínimo de una función $f(x,y)$). Sin embargo, lo que buscamos es hallar una aplicación $α_g$. Hay que buscar nuevas herramientas, y estas están en el cálculo de variaciones.
+
+\subsection{Cálculo de variaciones}
+
+Definimos los dos conceptos básicos que vamos a necesitar.
+
+\begin{defn}[Operador] Un operador es una aplicación entre espacios de funciones.
+\end{defn}
+
+\begin{defn}[Funcional] Un funcional es una aplicación $\appl{A}{X}{ℝ}$, donde $X$ es un espacio de funciones, de tal forma que que a cada función $f$ le corresponde un número real $A(f)$.
+\end{defn}
+
+En nuestro caso, para hallar las geodésicas, nos interesarán especialmente los funcionales relacionados con las integrales. Para ello, definimos el lagrangiano:
+
+\begin{defn}[Lagrangiano] Sea $U⊆ℝ^N$ un abierto. Un Lagrangiano en $U$ es una función escalar definida para velocidades en puntos de $U$, una aplicación $\appl{L}{U×ℝ^N}{ℝ}$.
+\end{defn}
+
+A partir de aquí definimos el funcional integral asociado a un lagrangiano:
+
+\begin{defn}[Funcional\IS integral] Dado un lagrangiano $L$ y un intervalo $[a,b]$, el funcional integral asociado es la aplicación 
+
+\begin{align*}
+\appl{\lfi}{C&}{ℝ} \\
+α & \mapsto^\lfi \int_a^b L(α(t), α'(t)) \dif t
+\end{align*}
+con $C = \{ \appl{α}{[a,b]}{U} \tq α\text{ es suave} \}$ el espacio de curvas paramétricas suaves en $U$.
+\end{defn}
+
+Por ejemplo, la longitud de una curva $\mop{longitud}(α) = \int_a^b \md{α'(t)} \dif t$ se puede expresar como el funcional integral del lagrangiano $L(\vx, \vy) = \md{\vy}$. Si quisiésemos considerar el trabajo de un campo de fuerzas $\vf$ en $U$, el funcional integral sería $L(\vx, \vy) = \vf(\vx) \cdot \vy$.
+
+\subsection{Primera variación}
+
+Siguiendo con las analogías con la búsqueda de máximos/mínimos numéricos, el funcional hace las veces de la función en el mundo tradicional. Ahora nos falta definir el análogo de la derivada. Si recordamos su definición, lo que hacíamos era estudiar lo que ocurría en un entorno de $x+h$, con $h$ pequeño. Esto eso, introducíamos una variación en la función. aquí vamos a hacer lo mismo deformando la curva:
+
+\begin{defn}[Deformación\IS de una curva] Una deformación de la curva $α_0(t)$ es una aplicación de dos variables independientes $\appl{α(t,λ)}{[a,b]×(-ε, ε)}{U}$ que cumple que $α$ es función suave y que $α(t, 0) = α_0(t)$. $λ$ es el parámetro de deformación.
+\end{defn}
+
+También definimos la velocidad inicial de deformación de la curva, que nos indica hacia dónde se deforma la curva en cada punto:
+
+\begin{defn}[Velocidad\IS inicial de deformación] La velocidad inicial de deformación de una deformación $α(t,λ)$ es el campo de velocidades $\vV(t)$ a lo largo de $α_0(t)$ definido de la siguiente manera:
+
+\[ \vV (t) = \eval{\dfrac{∂α}{∂λ}}_{λ=0} = α_λ(t,0) \]
+\end{defn}
+
+Partiendo de aquí, vemos que el funcional integral depende sólo del parámetro λ, es decir, 
+
+\[ \lfi_α (λ) = \int_a^b L(α(t,λ), α_t(t,λ))) \dif t \]
+
+\begin{defn}[Primera variación\IS del funcional] La primera variación del funcional es el número $\lfi_α'(0)$.
+\end{defn}
+
+Vemos que $\lfi$ no depende más que de la velocidad inicial de deformación, no de cómo se deforme después. Es decir, nos da una idea \textit{local} de cómo varía el funcional integral cuando deformamos la curva. Además, $\lfi$ es un operador lineal.
+
+\subsubsection{Cálculo de la primera variación}
+
+¿Cómo calculamos la primera variación? Suponiendo que las funciones son bonitas y todo eso y podemos pasar dentro de la integral la derivada, después podremos derivar el integrando, dar el valor particular, e integrar por partes para quitar las derivadas de $\vV$. De esta forma, nos quedará \[ \lfi'(0) = \eval{TE}_{t=a}^{b} + I \] con $TE$ un término de evaluación y $I$ una parte integral que se escribe de la forma \[ \int_a^b \va(t) \cdot \vV(t) \dif t \] con $\va$ un campo vectorial que sólo depende del funcional $\lfi$ y la curva.
+
+\begin{figure}[hbtp]
+\inputtikz{VariacionesCurvas}
+\caption{Variación de las curvas y puntos de inicio y final}
+\end{figure}
+
+Además, consideraremos sólo \concept[Deformación\IS de extremos fijos]{deformaciones de extremos fijos} (esto es, $α(a,λ) = α_0(a)$ y $α(b,λ) = α_0(b)$), por lo que $\vV(a) = \vV(b) = 0$, el término de evaluación $TE$ se hace cero y nos queda \[ \lfi'(0) = \int_a^b \va(t) · \vV(t) \dif t \]. Como $\va$ es único\footnote{No me apetece demostrarlo.}, pues ya tenemos todo.
+
+A partir de aquí, la forma de minimizar es encontrar α que sea extremo local de esa función. Un camino $α_0(t)$ cumplirá las \concept{ecuaciones\IS de Euler-Lagrange} si para cualquier deformación de $α_0$ $\lfi'(0)=0$. Como consideraremos deformaciones de extremos fijos, la ecuación será
+
+\[ \lfi'(0) = \int_a^b \va(t) \vV(t) \dif t = 0 \]
+
+Sin embargo, la versión más familiar será la siguiente: \[ \int_a^b A V_x (t) + B V_y(t) = 0 \], de tal forma que nos quedará el sistema $A=0, B=0$, con $A$ y $B$ términos en los que habrá derivadas primeras y segundas de $u(t)$ y $v(t)$.
+
+\subsection{Geodésicas}
+
+Con las herramientas del cálculo de variaciones podemos pasar a tratar las geodésicas. Buscamos minimizar el funcional de longitud, que viene dado por el lagrangiano $L(\vx, \vv) = \md{\vv} = Q(\vv)$, con $Q$ la métrica de la superficie. Suponemos $α_0$ regular y vamos a calcular su primera variación
+
+\[ 
+\lfi_{α_0}'(λ) = \pd{}{λ} \int_a^b \sqrt{α_t(t,λ) ,α_t(t,λ)} \dif t = \int_a^b \frac{2α_t · α_{tλ}}{2\sqrt{α_t·α_t}} \dif t = \int_a^b  \ct[α_0] \vV' \dif t \]
+
+Integrando por partes,  \[ \lfi_{α_0}'(λ) = \eval{\ct[α_0] · \vV}_{t=a}^b - \int_a^b \vV · \ct[\alpha_0]' \dif t =  \eval{\ct[α_0] · \vV}_{t=a}^b + \int_a^b \vV · ( - \cvv[α_0]) \dif t \]
+
+Por lo tanto, si buscamos $\lfi_{α_0}'(0) = 0$, tenemos que buscar que la curvatura de la curva en el espacio que estemos considerando sea $\cvv[α_0] = 0$, lo que nos lleva a la definición de línea geodésica:
+
+\begin{defn}[Línea\IS geodésica] Sea $(S,Q)$ una superficie dotada de una métrica de Riemann. Una línea geodésica para la métrica $Q$ es cualquier curva regular $α_0(t) ⊂ S$ que cumple \[ \cvv[g,α_0,Q] = 0 \], esto es, $α''(t)$ es perpendicular a $T_{α(t)} S$ para todo $t$.
+
+Un camino $α(t) ⊂ S$ es un camio geodésico si se cumple una de las dos condiciones siguientes:
+
+\begin{itemize}
+\item Traza una línea geodésica para $Q$ y su rapidez riemanniana $Q(α_0')$ es constante.
+\item Es un camino constante $α_0(t) = p$, con $p$ un punto de $S$.
+\end{itemize}
+\end{defn}
+
+El primer problema que se nos plantea es hallar $\cvv[g,α_0,Q]$. Este vector no es el vector curvatura de toda la vida de la curva, sino la curvatura en la superficie que consideramos. Es decir, es la componente tangencial a $S$ de $\ct[α_0]$. Definámoslo algo más formalmente:
+
+\begin{defn}[Vector\IS curvatura geodésica] Dada una superficie $S$ con métrica de Riemann $Q$ y una curva regular $α_0(t) ⊂ S$, el vector curvatura geodésica de $α_0$ respecto de $Q$ es el único campo de vectores $\cvv[g,α_0,Q]$ tangente a $S$ que cumple la siguiente igualdad para toda deformación de extremos fijos $α(t,λ)$ que no la saca de $S$:
+
+\[ \od{}{λ}_{λ=0} \mop{Longitud}_Q(α(·,λ)) = \int_a^b Q(\cvv[g,α_0,Q] \vV) \dif t \]
+\end{defn}
+
+Parece obvio que, de esta forma, el vector curvatura espacial de $α_0$ se descompone en dos componentes ortogonales:
+
+\[ \cvv[\alpha_0] = \cvv[n,α_0,Q] + \cvv[g,α_0,Q] \], por un lado la tangente a la superficie y por otro lado la normal. Luego\footnote{He buscado formas de sacar el vector curvatura geodésica más sencillas pero todas son un chorrón de cálculos que no me apetece poner} el vector curvatura geodésica es de la forma 
+
+\[ \cvv[g,α_0,Q] = a_1(s) Φ_u + a_2(s) Φ_v \]
+
+con $a_1$ y $a_2$ sacados de este engendro:
+
+\[ \begin{pmatrix}
+a_1(s) \\ a_2(s)
+\end{pmatrix} = \inv{[Q]} \left[ \dfrac{\dif}{\dif s} \left( [Q] \begin{pmatrix}
+u'(s) \\ v'(s) 
+\end{pmatrix} \right) - \frac{1}{2} \begin{pmatrix}
+Q_u(\ct[α_0]) \\
+Q_v(\ct[α_0])
+\end{pmatrix} \right] \]
+
+Es importante notar que una isometría lleva vectores curvatura geodésica a vectores curvatura geodésica.
+
+Otra forma de hallar los vectores curvatura geodésica puede ser a través de la segunda forma fundamental si la tenemos a mano. Recordemos que $II(α') = α''$, luego
+
+\[ \cvv[α] = II(α') \cdot N + \cvv[g] \implies \cvv[g] = \cvv[α] - II(α') \cdot N \]
+
+Esta fórmula nos da algo bastante más fácil para hallar líneas geodésicas si tenemos la 2FF:
+
+\[ \cvv[α] = II(α') \cdot N \]
+
+\section{Curvatura Gaussiana}
 
 \begin{theorem}[Teorema\IS de Minding] Dos superficies con la misma curvatura gaussiana constante son localmente isométricas. \label{thmMinding}\end{theorem}
+
+La curvatura gaussiana se puede calcular sólo a partir de la métrica $Q$. Se toma $Q = ω_1^2 + ω_2^2$, se elige $ω_3$ tal que 
+
+\begin{align*}
+\dif ω_1 &= ω_2 \wedge ω_3 \\
+\dif ω_2 &= ω_3 \wedge ω_1 
+\end{align*}
+luego \[ \dif ω_3 = K ω_1 \y ω_2 \] con $K$ la curvatura gaussiana. 
 
 \appendix
 \chapter{Apéndices}
