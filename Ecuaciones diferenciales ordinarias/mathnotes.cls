@@ -5,7 +5,7 @@
 
 \RequirePackage[spanish,es-noquoting,es-noshorthands]{babel}
 \RequirePackage{etoolbox}
-\RequirePackage{makeidx}
+\RequirePackage{imakeidx}
 \RequirePackage{fancyhdr}
 \RequirePackage{chngcntr}
 \RequirePackage{hyperref}
