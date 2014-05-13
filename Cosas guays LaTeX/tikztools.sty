@@ -128,3 +128,39 @@
 	\coordinate (OD) at (\x, {#2});
 	\draw[->, /cnorm/remainingkeys] (O) -- ($(O)!\cnlen!90:(OD)$);
 }
+
+
+\pgfkeys{
+	/angle/.is family,
+	/angle,
+	name/.estore in = \aname,
+	name/.value required,
+	radius/.estore in = \aradius,
+	radius/.value required,
+	sepradius/.estore in = \asepradius,
+	sepradius/.value required,
+	default/.style = 
+	  { name={}, radius=5mm, sepradius=3mm },
+	.unknown/.code={%
+		\let\currname\pgfkeyscurrentname%
+		\let\currval\pgfkeyscurrentvalue%
+		
+		\ifx#1\pgfkeysnovalue%
+			\pgfkeys{angle/remainingkeys/.append style/.expand once={\currname}}%
+		\else%
+	 		\pgfkeys{angle/remainingkeys/.append style/.expand twice={\expandafter\currname\expandafter=\currval}}%
+		\fi%
+	}%
+}
+
+\newcommand{\tikzangle}[4][]{ %
+	\pgfkeys{/angle, default, #1}
+	\begin{scope}
+			\path[clip] (#2) -- (#3) -- (#4);
+			\fill[red, draw=black, opacity=0.2, /angle/remainingkeys] (#2) circle (\aradius);
+			\node (bisect_a) at ($(#2)!5mm!(#3)$) {};
+			\node (bisect_b) at ($(#2)!5mm!(#4)$) {};
+			\node (bisect) at ($(bisect_a)!0.5!(bisect_b)$) {};
+			\node[anchor=center] at ($(#2)!\aradius + \asepradius!(bisect)$) {\aname};
+	\end{scope}
+}
