@@ -123,10 +123,11 @@ Para que el coeficiente de correlación sea exactamente 1, los puntos tienen que
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \section{Tema 2 - Muestreo aleatorio}
 
-\begin{problem}[1] Se desea estimar el momento de orden 4, $\alpha_3 = \esp{X^3}$ en una v.a. $X$ con distirbución exponencial de parámetro 2, es decir, la función de distribución de $X$ es $F(t) = \prob{X \leq t} = 1 - e^{-2t}$ para $t\geq0$. Definir un estimador natural para $\alpha_3$ y calcular su error cuadrático medio.
+\begin{problem}[1] Se desea estimar el momento de orden 4, $\alpha_3 = \esp{X^3}$ en una v.a. $X$ con distribución exponencial de parámetro 2, es decir, la función de distribución de $X$ es $F(t) = \prob{X \leq t} = 1 - e^{-2t}$ para $t\geq0$. Definir un estimador natural para $\alpha_3$ y calcular su error cuadrático medio.
 
 \solution
 
@@ -213,148 +214,193 @@ la llamada discrepancia de Cramer-Von Mises entre $\fd_n$ y $F$. \ppart ¿Conver
 \spart 
 \[ C_n = \int_\real \left(\fd_n(t) - F(t)\right)^2 \, dF(t) = \int_\real \left(\fd_n(t) - F(t)\right)^2 f(t) \, dt \]
 
-Como por el teorema de Glivenko-Cantelli (\ref{thmGlivenko}) tenemos que 
+\newpage
+Tenemos que 
 
-\[ \fd_n(t) - F(t) ≤ \sup_t \abs{\fd_n(t) - F(t)} = \md{\fd_n - F}_\infty \]
+\[ \fd_n(t) - F(t) \leq \sup_t \abs{\fd_n(t) - F(t)} = \md{\fd_n - F}_\infty \]
 
 entonces 
 
-\[ \int_\real \left(\fd_n(t) - F(t)\right)^2 f(t) \, dt ≤  \md{\fd_n - F}_\infty^2 \int_\real f(t) \,dt = \md{\fd_n - F}_\infty^2 \]
+\[ \int_\real \left(\fd_n(t) - F(t)\right)^2 f(t) \, dt \leq \md{\fd_n - F}_\infty^2 \int_\real f(t) \,dt = \md{\fd_n - F}_\infty^2 \]
 
-Igualmente por Glivenko-Cantelli, 
+Finalmente, por el teorema de Glivenko-Cantelli (\ref{thmGlivenko}) tenemos que 
 
 \[ \md{\fd_n - F}_\infty^2 \convcs 0  \qed \]
 
 \spart
 
-Para calcular la distirbución asintótica de \[ D_n = \sqrt{n}\left(\fd_n(t) - F(t)\right) \] usamos el Teorema Central del Límite (\ref{thmCentral}). Necesitamos algo que se asemeje a una media muestral, y de hecho
+Para calcular la distribución asintótica de
 
-\[ \fd_n(t) = \frac{1}{n} \sum_{i=1}^n \ind_{(-\infty, t]} (X_i) = \frac{1}{n} \sum_{i=1}^n Y_i = \avg{Y} \]
+\[ D_n = \sqrt{n}\left(\fd_n(t) - F(t)\right) \]
 
-Por otra parte, $Y = \ind_{(-\infty, t]}(X)$ y por lo tanto \[ \esp{Y} = \esp{\ind_{(-\infty, t]}(X)} = \prob{X ≤ t} = F(t) \]
+usamos el Teorema Central del Límite (\ref{thmCentral}). Necesitamos algo que se asemeje a una media muestral, y de hecho
+
+\[
+\fd_n(t) =
+\frac{1}{n} \sum_{i=1}^n \ind_{(-\infty, t]} (X_i) =
+\frac{1}{n} \sum_{i=1}^n Y_i =
+\avg{Y}
+\]
+
+Por otra parte, $Y = \ind_{(-\infty, t]}(X)$ y por lo tanto \[ \esp{Y} = \esp{\ind_{(-\infty, t]}(X)} = \prob{X \leq t} = F(t) \]
 
 Ya podemos aplicar el TCL, pero nos falta saber cuál es la desviación típica de $Y$. Como es una distribución de Bernoulli 
 
 \[ \mathbb{V}(Y) = p(1-p) = F(t)(1-F(t)) \]
 
-y por lo tanto 
+y por lo tanto aplicando el TCL
 
 \[ D_n \convdist N\left(0, \sqrt{F(t)(1-F(t))}\right) \]
 \end{problem}
 
-\begin{problem}[5] Sea $X$ una v.a. cuya función de densidad depende de un parámetro desconocido $\theta \in \real$, concretamente \[ f(x;\theta) = \frac{1}{\pi}\frac{1}{1+(x-\theta)^2} \] para $x\in \real$. Comprobar que $\theta$ coincide con la mediana y la moda de $X$ pero que la media $\esp{X}$ no está definida.
+\newpage
+\begin{problem}[5] Sea $X$ una v.a. cuya función de densidad depende de un parámetro desconocido $\theta \in \real$, concretamente
+\[ f(x;\theta) = \frac{1}{\pi}\frac{1}{1+(x-\theta)^2} \]
+para $x\in \real$. Comprobar que $\theta$ coincide con la mediana y la moda de $X$ pero que la media $\esp{X}$ no está definida.
 
 Diseñar un experimento de simulación en R, tomando algún valor concreto de $\theta$, orientado a comprobar cómo se comportan la mediana muestral y la media muestral como estimadores de $\theta$: mientras la mediana muestral se acerca al verdadero valor de $\theta$ al aumentar $N$, la media muestral oscila fuertemente y no se acerca a $\theta$ aunque se aumente el tamaño muestral $n$.
 
 \solution Viendo la función, vemos que es simétrica con respecto al eje $x= \theta$. Por lo tanto, el punto que deja a izquierda y derecha la misma probablidad, la mediana, es precisamente $\theta$. 
 
-De la misma forma, la moda es el valor máximo de la distribución, que se ve claramente que ocurre cuando $x=\theta$.
+La moda es el valor máximo de la distribución,
+\[ f'(x;\theta) = \frac{1}{\pi} \frac{-2(x-\theta)}{(1+(x-\theta)^2)^2} = 0 \dimplies x = \theta \]
+Y se ve que es un máximo porque es el punto en el que el signo de la derivada pasa de positivo a negativo.
 \end{problem}
 
 \begin{problem}[6]
 Se extrae una muestra aleatoria de tamaño $n = 600$ de una v.a. cuya desviación típica es $\sigma = 3$.
-Calcular aproximadamente la probabilidad \[\prob{\abs{\gor{X} - \mu} < 0.1}\]
+Calcular aproximadamente la probabilidad
+\[\prob{\abs{\avg{X} - \mu} < 0.1}\]
+
 \solution
 Tenemos 2 posibilidades: Tipificar o con Chebichev.
 
 Según Chebichev, tenemos que 
 
-\[ \prob{\abs{X - \esp{X}} < ε} ≤ \frac{\var{X}}{ε^2} \]
+\[ \prob{\abs{X - \esp{X}} < \epsilon} \leq \frac{\var{X}}{\epsilon^2} \]
 
-Tenemos que $μ=\esp{\avg{X}}$, tenemos que hallar $\var{\avg{X}}$:
+Tenemos que $\mu = \esp{\avg{X}}$, tenemos que hallar $\var{\avg{X}}$:
 
-\[ \var{\avg{X}} = \frac{\var{X}}{n} = \frac{σ^2}{n} = 0.015 \]
+\[ \var{\avg{X}} = \frac{\var{X}}{n} = \frac{\sigma^2}{n} = 0.015 \]
 
 Y por lo tanto,
 
-\[ \prob{\abs{\avg{X} - μ} < 0.1} ≤ 1.5 \]
+\[ \prob{\abs{\avg{X} - \mu} < 0.1} \leq 1.5 \]
 
-Que no es muy útil que digamos. Así que pasamos a tipificar:
+Que no es una aproximación muy buena. Así que pasamos a tipificar:
 
-\[ Z = \frac{\gor{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \sim N(0,1) \]
+\[ Z = \frac{\avg{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \sim N(0,1) \]
 
 Entonces:
 
-\[\prob{\abs{\gor{X} - \mu} < 0.1} = 1- \prob{\abs{\gor{X} - \mu} > 0.1} = 1 - \prob{\abs{Z} > \frac{0.1\sqrt{n}}{\sigma}} = 0.59\] 
+\[
+\prob{\abs{\avg{X} - \mu} < 0.1} =
+1 - \prob{\abs{\avg{X} - \mu} > 0.1} =
+1 - \prob{\abs{Z} > \frac{0.1\sqrt{n}}{\sigma}} =
+0.59
+\] 
 
-(Recordamos que $\var{\gor{X}} = \frac{\var{X}}{\sqrt{n}}$ y que $\esp{\gor{X}} = \mu = \esp{X}$)
+(Recordemos que $\var{\avg{X}} = \frac{\var{X}}{n}$ y que $\esp{\avg{X}} = \mu = \esp{X}$)
 
 \end{problem}
 
-\begin{problem}[7] Sea $X$ una v.a con distribución absolutamente continua. Sea $F$ la correspondiente función de distribución y $f = F'$ continua en todo punto la función de densidad. para $r\in \{1,\dotsc,n\}$, denotemos por $X_{(r)}$ el $r$-simo estadístico ordenado de una muestra de tamaño $n$ extraída de $X$. Calcular la función de distirbución y la de densidad de la v.a. $X_{(r)}$.
+\begin{problem}[7] Sea $X$ una v.a con distribución absolutamente continua. Sea $F$ la correspondiente función de distribución y $f = F'$ continua en todo punto la función de densidad. Para $r\in \{1,\dotsc,n\}$, denotemos por $X_{(r)}$ el $r$-simo estadístico ordenado de una muestra de tamaño $n$ extraída de $X$. Calcular la función de distribución y la de densidad de la v.a. $X_{(r)}$.
 
 \solution
 
-Por definición
+Por definición, la función de distribución es:
 
 \[ F_{X_{(r)}} (x) = \prob{X_{(r)} ≤ x }\]
 
 que es la probabilidad que al menos $r$ elementos de la muestra sean menores o iguales que $x$. Luego la probabilidad es igual a
 
 \begin{gather*}
-\sum_{j=r}^n \prob{\text{exactamente j observaciones de la muestra son ≤ x}} =  \\
+\sum_{j=r}^n \prob{\text{exactamente j observaciones de la muestra\footnotemark son $\leq$ x}} =  \\
 = \sum_{j=r}^n \prob{B(n, F(x)) = j} = \sum_{j=r}^n \comb{n}{j}F(x)^j \left(1 - F(x)\right)^{n-j}
 \end{gather*}
+\footnotetext{que una observación sea exactemente $\leq x$ es una Bernouilli, y la suma de Bernouillis es la Binomial}
 
-Ahora sólo falta calcular la densidad de $X_{(r)}$, y la obtenemos derivando
+Ahora sólo falta calcular la densidad de $X_{(r)}$, y la obtenemos derivando la función de distribución:
 
+\newpage
 \begin{gather*}
  f_{X_{(r)}} (x) = \\
  = \sum_{j=r}^n \left(\comb{n}{j}j(F(x)^{j-1}(1-F(x))^{n-j}f(x) - (F(x))^j(n-j)(1-F(x))^{n-j-1} f(x)\right) = \\
  = \sum_{j=r}^n \comb{n}{j} j(F(x)^{j-1}(1-F(x))^{n-j}f(x)  - \sum_{j=r}^n\comb{n}{j} (F(x))^j(n-j)(1-F(x))^{n-j-1} f(x) = \\
  = \comb{n}{r} r(F(x))^{r-1} (1-F(x))^{n-1}f(x) + \sum_{j=r+1}^n \comb{n}{j}j(F(x))^{j-1} f(x) (1-F(x))^{n-j} \\
  \quad \quad - \sum_{j=r}^n\comb{n}{j}(n-j)(F(x))^j (1-F(x))^{n-j-1}f(x) = \\
- n\comb{n-1}{r-1}(F(x))^{r-1} (1-F(x))^{n-r} f(x)    +   \sum_{l=r}^{n-1}n\comb{n-1}{l}(F(x))^l (1-F(x))^{n-l-1} f(x) \\
+ n\comb{n-1}{r-1}(F(x))^{r-1} (1-F(x))^{n-r} f(x) + \sum_{l=r}^{n-1}n\comb{n-1}{l}(F(x))^l (1-F(x))^{n-l-1} f(x) \\
  \quad\quad -  \sum_{j=r}^{n-1}n\comb{n-1}{j}(F(x))^j (1-F(x))^{n-j-1} f(x)
 \end{gather*} 
 
-Los dos últimos términos se cancelan y nos queda que 
+Los dos últimos términos se cancelan y nos queda que:
 
 \[ f_{X_{(r)}} (x) = n\comb{n-1}{r-1}(F(x))^{r-1} (1-F(x))^{n-r} f(x) \]
 
-Consideremos los dos casos particulares del mínimo y máximo de la muestra. Con el mínimo, $r=1$ y entonces
-
-\[ F_{X_{(1)}} (x)= \prob{X_{(1)} ≤ x} = \sum_{j=1}^n\comb{n}{j}(F(x))^j(1-F(x))^{n-j} = 1 - (1-F(x))^n \]
+Consideremos los dos casos particulares del mínimo y máximo de la muestra. Con el mínimo, $r=1$ y entonces:
+\vspace{-10pt} % demasiado espacio en blanco entre el texto y esta ecuación.
+\begin{gather*}
+F_{X_{(1)}} (x) =
+\prob{X_{(1)} \leq x} =
+\sum_{j=1}^n\comb{n}{j}(F(x))^j(1-F(x))^{n-j} =\footnotemark
+1 - (1-F(x))^n
+\end{gather*}
+\footnotetext{$1 = 1^{n} = (1 - F(x) + F(x))^n = \sum\limits_{j=0}^{n}\comb{n}{j}(F(x))^j(1-F(x))^{n-j} $}
 
 En el caso del máximo:
-
-\[ F_{X_{(n)}} (x) = \prob{X_{(n)} ≤ x } = (F(x))^n \]
-
+\begin{gather*}
+F_{X_{(n)}} (x) =
+\prob{X_{(n)} \leq x } =
+\prod\limits_{j=1}^{n}\prob{X_{(j)} \leq x } =
+\footnotemark (F(x))^n
+\end{gather*}
+\footnotetext{$\forall j$ $X_{(j)} \sim X \implies \prob{X \leq x} = F(x)$}
 \end{problem}
 
+\newpage
 \begin{problem}[8] Sea $\hat{f}_n$ un estimador kernel de la densidad basado en un núcleo $K$ que es una función de densidad con media finita. Comprobar que, en general, $\hat{f}_n(t)$ es un estimador sesgado de $f(t)$ en el sentido de que \textbf{no} se tiene $\esp{\hat{f}_n(t)} = f(t)$ para todo $t$ y para toda densidad $f$.
 
 \solution
 
+Lo que buscamos es calcular el sesgo:
+
+\begin{equation} \label{eq8H2}
+\text{sesgo}\,(\hat{f}_n(t)) = \esp{\hat{f}_n(t)} - f(t)
+\end{equation}
+
 \begin{gather*}
-\esp{\hat{f}_n(t)} = \esp{\frac{1}{nh}\sum_{i=1}^n K \left(\frac{t-X_i}{h}\right)} = \\
-= \frac{1}{nh}\sum_{i=1}^n \esp{K\left(\frac{t-X_i}{h}\right)} = \frac{1}{h} \esp{K\left(\frac{t-X}{h}\right)} = \\
-= \frac{1}{h} \int_\real K \left(\frac{t-x}{h}\right) f(x) \,dx = 
+\esp{\hat{f}_n(t)} =
+\esp{\frac{1}{nh}\sum_{i=1}^n K \left(\frac{t-X_i}{h}\right)} =
+\frac{1}{nh}\sum_{i=1}^n \esp{K\left(\frac{t-X_i}{h}\right)} =\\
+= \frac{1}{h} \esp{K\left(\frac{t-X}{h}\right)} =
+\frac{1}{h} \int_\real K \left(\frac{t-x}{h}\right) f(x) \,dx = ...
 \end{gather*}
 
 Haciendo un cambio de variable $x = t-hz$, $dx = -h\,dz$, los límites se invierten,
 
-\[ = \frac{1}{h} \int_{-\infty}^\infty K \left(\frac{t-x}{h}\right) f(x) \,d(x)  = \frac{-1}{h} \int_\infty^{-\infty} K(z) f(t-hz) h \,dz  = \int_{-\infty}^\infty Kz f(t-hz)\,dz \]
+\[
+... = \frac{1}{h} \int_{-\infty}^\infty K \left(\frac{t-x}{h}\right) f(x) \,d(x) =
+\frac{1}{h} \int_\infty^{-\infty} K(z) f(t-hz) (- h) \,dz =
+\int_{-\infty}^\infty K(z) f(t-hz)\,dz
+\]
 
-Ahora buscamos calcular el sesgo:
-
-\[ \text{sesgo}\,(\hat{f}_n(t)) = \esp{\hat{f}_n(t)} - f(t) = \]
-
-Usando que $K$ es función de densidad y que $\int K = 1$, nos queda
+Usando que $K$ es función de densidad \implies $\int K = 1$, (\ref{eq8H2}) nos queda
 
 \begin{gather*}
- = \int_{-\infty}^\infty K(z) f(t-hz)\,dz - \int_{-\infty}^\infty K(z) f(t)\, dz = \\
- = \int_{-\infty}^\infty K(z) \left[f(t-hz)-f(t)\right]\,dz =\\
- = hf'(t)\int_{-\infty}^\infty zK(z)\,dz + \frac{1}{2} h^2 f''(t) \int_{-\infty}^\infty z^2K(z)\,dz + \frac{1}{6}h^3 f'''(t) \int_{-\infty}^\infty z^3K(z)\,dz + \dotsb  
+... = \int_{-\infty}^\infty K(z) f(t-hz)\,dz - \int_{-\infty}^\infty K(z) f(t)\, dz =
+\int_{-\infty}^\infty K(z) \left[f(t-hz)-f(t)\right]\,dz =\\
+= hf'(t)\int_{-\infty}^\infty zK(z)\,dz + \frac{1}{2} h^2 f''(t) \int_{-\infty}^\infty z^2K(z)\,dz + \frac{1}{6}h^3 f'''(t) \int_{-\infty}^\infty z^3K(z)\,dz + \dotsb  
 \end{gather*}
 
-al hacer el desarrollo de Taylor. Como $K$ es una función simétrica, las integrales con índice impar (con $z=1, 3,\dotsc$) se anulan. Sin embargo, el segundo término no lo hace. Por lo tanto, el sesgo de un estimador kernel \textbf{no es nunca cero}. 
+Al hacer el desarrollo de Taylor, como $K$ es una función simétrica, las integrales con índice impar (con $z=1, 3,\dotsc$) se anulan. Sin embargo, el segundo término no lo hace. Por lo tanto, el sesgo de un estimador kernel \textbf{no es nunca cero}. 
 
 El sesgo del estimador kernel depende de $h$ (el parámetro de suavizado o \textit{bandwith}) en potencias pares. Por eso, se toma de manera tal que $h\convs 0$ y entonces $\text{sesgo}\,\hat{f}_n(t) \convs 0$ pero manteniendo un equilibrio para que la varianza también sea pequeña y no tengamos picos en el histograma (ver sección \ref{secEst}).
 
 \end{problem}
-\section{Tema 3 - Estimación puntual paramétrica}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Tema 3 - Estimación puntual paramétrica}
 
 \begin{problem}[2]
 Supongamos que $X$ mide el error cometido en la medici'on de una magnitud. $X$ es una v.a. normal de media 0 y varianza $\theta$. 	
@@ -531,7 +577,10 @@ y entonces el estimador es \[\tilde{\theta} = \avg{X}\sqrt{\frac{2}{\pi}} \]
 
 \textbf{Consistencia:} $\hat{\theta}^2 = \frac{1}{2} \gor{Y}, Y_i = X_i^2$
 
-Por la ley fuerte de los grandes números (\ref{thmGrandes}) sabemos que: $\gor{Y} \convs[cs] E_{\theta}(Y) = E_{\theta}(X^2) = 2\theta^2$
+Por la ley fuerte de los grandes números (\ref{thmGrandes}) sabemos que:
+\begin{gather*}
+$\gor{Y} \convs[cs] E_{\theta}(Y) = E_{\theta}(X^2) = 2\theta^2$
+\end{gather*}
 
 Vamos a aplicar el teorema de Slutsky.
 
@@ -672,6 +721,8 @@ porque \[ logLn(\theta) = \displaystyle\left\{\begin{array}{cc}
 \end{array}\right.\]
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{Tema 4 - Intervalos de confianza}
 
 \begin{problem}[1 y 2]
@@ -899,7 +950,7 @@ De ahí sólo tenemos que despejar $λ$ para hallar nuestro intervalo de confian
 
 Sin embargo, el método delta (\ref{defMetDelta}) nos dice algo distinto:
 
-\[ \sqrt{n}(g(\avg{X}) - g(λ))\convdist N(0,\abs{g'(μ)}\sqrt{\var{X}}) \]
+\[ \sqrt{n}(g(\avg{X}) - g(λ))\convdist N(0,\abs{g'(\mu)}\sqrt{\var{X}}) \]
 
 Entonces tenemos que 
 
@@ -972,9 +1023,10 @@ Vamos a utilizar la segunda opción (es un resultado que pondría una referencia
 
 $s^2$ por lo tanto no es eficiente $\left( \text{porque la Cota de FCR es: } \displaystyle\frac{2\theta}{n}\right)$ Por ser $\theta$ la varianza de una $N(\mu,\sigma)$, de la que nos sabemos de memoria la cota de FCR.
 
-
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{Tema 5 - Contraste de hipótesis}
 \subsection{Hoja 5A}
 
@@ -982,11 +1034,11 @@ $s^2$ por lo tanto no es eficiente $\left( \text{porque la Cota de FCR es: } \di
 
 \ppart ¿Proporcionan estos datos suficiente evidencia estadística a nivel $0.05$ a favor de la hipótesis de que la concentración media de metilmercurio en las raciones de sushi de atún en la población considerada es superior a 0.6 ppm? El p-valor, ¿es menor o mayor que 0.01?
 
-\ppart Obtener, a partir de estos datos, un intervalo de confianza de nivel 0.95 para la concentración media de metilmercurio $μ$ en toda la población. Calcular el mínimo tamaño muestral mínimo que habría que utilizar para, con una probabilidad de 0.95, estimar la concentración media de metilmercurio con un error máximo de 0.06 ppm.
+\ppart Obtener, a partir de estos datos, un intervalo de confianza de nivel 0.95 para la concentración media de metilmercurio $\mu$ en toda la población. Calcular el mínimo tamaño muestral mínimo que habría que utilizar para, con una probabilidad de 0.95, estimar la concentración media de metilmercurio con un error máximo de 0.06 ppm.
 
 \solution
 
-\spart Empezamos definiendo la hipótesis nula, que será que $μ≤0.6$ ya que queremos una evidencia muy fuerte para rechazar que la concentración suba del nivel mínimo.
+\spart Empezamos definiendo la hipótesis nula, que será que $\mu≤0.6$ ya que queremos una evidencia muy fuerte para rechazar que la concentración suba del nivel mínimo.
 
 La región de rechazo en este caso es 
 
@@ -1009,13 +1061,13 @@ El p-valor es por lo tanto $0.004$. Esto quiere decir que la probabilidad de obt
 
 \spart El intervalo de confianza sería 
 
-\[ IC_{0.95} (μ) = \left(\avg{x}\pm t_{n-1;\frac{α}{2}}\frac{s}{\sqrt{n}} \right) = (0.656, 0.932) \]
+\[ IC_{0.95} (\mu) = \left(\avg{x}\pm t_{n-1;\frac{α}{2}}\frac{s}{\sqrt{n}} \right) = (0.656, 0.932) \]
 
-Como además $0.6\notin IC_{0.95}(μ)$, rechazaríamos $H_0:\,μ=0.06$ a nivel $α=0.05$.
+Como además $0.6\notin IC_{0.95}(\mu)$, rechazaríamos $H_0:\,\mu=0.06$ a nivel $α=0.05$.
 
 Para hallar el tamaño muestral mínimo buscamos que 
 
-\[ IC_{0.95}(μ) = (\avg{x} \pm 0.06)\]
+\[ IC_{0.95}(\mu) = (\avg{x} \pm 0.06)\]
 
 Despejando, tenemos que resolver
 
@@ -1095,11 +1147,11 @@ Si quisiésemos ser más conservadores, sustiuiríamos $\avg{x}$ por el valor m�
 \spart Definimos las dos variables aleatorias que tenemos: $X$ es el gasto medio bimensual en la primera ciudad, y $Y$ el gasto en la segunda. Tomamos las esperanzas y varianzas:
 
 \begin{gather*}
-\esp{X} = μ_1,\;\var{X} = σ_1^2 \\
-\esp{Y} = μ_2,\;\var{Y} = σ_2^2 
+\esp{X} = \mu_1,\;\var{X} = \sigma_1^2 \\
+\esp{Y} = \mu_2,\;\var{Y} = \sigma_2^2 
 \end{gather*}
 
- Definimos la hipótesis nula: $H_0:\, μ_1≤μ_2$, es decir, que el gasto medio en la primera ciudad no es mayor que en la segunda.
+ Definimos la hipótesis nula: $H_0:\, \mu_1≤\mu_2$, es decir, que el gasto medio en la primera ciudad no es mayor que en la segunda.
  
  Tenemos que suponer que $X$ e $Y$ son normales para poder definir bien el estadístico del contraste. Si usásemos cualquier otra distribución el estadístico del contraste toma una distribución mucho más complicada que no podríamos determinar correctamente. También suponemos que son independientes.                       
 
@@ -1280,21 +1332,21 @@ que sí es una función creciente de $T_n=\sum x_i^2$. Por lo tanto esta es una 
 
 \end{problem}
 
-\begin{problem}[5] Sea $X_1,\dotsc, X_{16}$ una muestra de tamaño 16 de una población normal de esperanza $μ$ y varianza $σ^2=1$. Se desea contrastar $H_0:\,μ=0$ frente a $H_1:\,μ≠0$.
+\begin{problem}[5] Sea $X_1,\dotsc, X_{16}$ una muestra de tamaño 16 de una población normal de esperanza $\mu$ y varianza $\sigma^2=1$. Se desea contrastar $H_0:\,\mu=0$ frente a $H_1:\,\mu≠0$.
 
 \ppart Calcula la región crítica del contraste de razón de verosimilitudes de nivel $α=0.05$. ¿Qué decisión se toma a nivel $α=0.05$ si con 16 datos se ha obtenido una media muestra $\avg{x}=1$?
 
-\ppart Para el contraste anterior, ¿cuál es el valor de la función de potencia evaluada en $μ=0.75$?
+\ppart Para el contraste anterior, ¿cuál es el valor de la función de potencia evaluada en $\mu=0.75$?
 \solution
 
 \spart
 Calculamos la función de verosimilitud:
 
-\[ f(\sample[x];μ) = \frac{1}{(2π)^{n/2}} e^{-\frac{1}{2}\sum(x_i-μ)^2} \]
+\[ f(\sample[x];\mu) = \frac{1}{(2π)^{n/2}} e^{-\frac{1}{2}\sum(x_i-\mu)^2} \]
 
 Nuestro espacio paramétrico es 
 \begin{gather*}
-Θ_0 = \{ μ=0 \} \\
+Θ_0 = \{ \mu=0 \} \\
 Θ = ℝ 
 \end{gather*}
 
@@ -1308,13 +1360,13 @@ La región de rechazo es
 
 \[ R=\{ Λ_n < k_α \} \] 
 
-donde $k_α$ es tal que $\prob[μ=0]{R} = α$. La región de rechazo se puede expresar de forma equivalente
+donde $k_α$ es tal que $\prob[\mu=0]{R} = α$. La región de rechazo se puede expresar de forma equivalente
 
 \[ R=\{ -2\log Λ_n > c_α\} = \{ n\avg{x}^2> c_α \} \]
 
 con $c_α$ cumpliendo la misma condición que $k_α$. Es decir
 
-\[ α = \prob[μ=0]{n\avg{X}^2 > c_α} \]
+\[ α = \prob[\mu=0]{n\avg{X}^2 > c_α} \]
 
 Sabemos que la distribución de una media de normales es también una normal: $\avg{X} \sim N\left(0,\frac{1}{\sqrt{n}}\right)$. De la misma forma $\sqrt{n}\avg{X}^2\sim N(0,1)$ y finalmente $n\avg{x}^2\sim χ_1^2$. Entonces
 
@@ -1324,7 +1376,7 @@ A nivel $α=0.05$, tenemos que \[ R = \{ 15 > 3.84 \] y por lo tanto rechazamos
 
 \spart Tenemos que
 
-\[ β_n(μ=0.75) = \prob[μ=0.75]{\mathrm{rechazar}\,H_0} = \prob[=0.75]{R} = \prob[μ=0.75]{n\avg{X}^2> χ_{1;α}^2} \] 
+\[ β_n(\mu=0.75) = \prob[\mu=0.75]{\mathrm{rechazar}\,H_0} = \prob[=0.75]{R} = \prob[\mu=0.75]{n\avg{X}^2> χ_{1;α}^2} \] 
 
 Evaluando
 
