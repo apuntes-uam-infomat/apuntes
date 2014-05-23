@@ -13,7 +13,7 @@ makelatex() {
 		cp $includes/*.cls ./
 	fi	
 	echo "Compilando $1"
-	latexmk -pdf -silent >> $logfile 2>&1 && cp *.pdf ../output || echo ">>>>>>>> Error procesando $1 <<<<<<<<"
+	latexmk -pdf -silent >> $logfile 2>&1 && cp *.pdf ../output || echo -e ">>>>>>>> \e[31mError \e[mprocesando \e[34m$1\e[m <<<<<<<<"
 	if $install ; then
 		echo "Eliminando archivos temporales..."
 		rm *.sty
