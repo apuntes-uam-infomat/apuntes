@@ -19,7 +19,7 @@ makelatex() {
 		rm *.sty
 		rm *.cls
 	fi
-	cd ..
+	cd -
 }
 
 read -p "Instalar paquetes (opcional)? (y/n) " iyn
