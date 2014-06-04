@@ -1,5 +1,12 @@
+%
+% Soluciones a los ejercicios de Estadística I.
+%
+% Curso 2013-2014
+%
+
 \section{Tema 1 - Estadística descriptiva}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[2] Demostrar que \[ \sum_{i=1}^n \left(x_i-\avg{x}\right)^2 = \min_{a\in \real} \sum_{i=1}^n(x_i-a)^2 \]
 
 \solution
@@ -16,6 +23,7 @@ n \avg{x} = n a \\
 Esto quiere decir que la media muestral es el valor que minimiza la distancia con cada uno de los datos de la muestra.
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[5]Determina si es verdadero o falso:
 
 \ppart Si añadimos 7 a todos los datos de un conjunto, el primer cuartil aumenta en 7 unidades y el rango intercuartílico no cambia.
@@ -75,6 +83,7 @@ Por lo tanto el coeficiente de asimetría sí varía.
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[7]
 Relaciona los histogramas con los boxplot
 \solution
@@ -88,6 +97,7 @@ Fijándose en los intervalos entre los que se mueven los datos es la forma más 
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[8]
 Del diagrama de dispersión presentado se pregunta:
 
@@ -107,6 +117,7 @@ Del diagrama de dispersión presentado se pregunta:
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[10]
 ¿Qué valor tiene que tomar $x$ para que el coeficiente de correlación sea 1?
 
@@ -127,6 +138,7 @@ Para que el coeficiente de correlación sea exactamente 1, los puntos tienen que
 \newpage
 \section{Tema 2 - Muestreo aleatorio}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[1] Se desea estimar el momento de orden 4, $\alpha_3 = \esp{X^3}$ en una v.a. $X$ con distribución exponencial de parámetro 2, es decir, la función de distribución de $X$ es $F(t) = \prob{X \leq t} = 1 - e^{-2t}$ para $t\geq0$. Definir un estimador natural para $\alpha_3$ y calcular su error cuadrático medio.
 
 \solution
@@ -173,6 +185,7 @@ donde lo que más nos importa es la convergencia a cero, que indica que cuanto m
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[2] Supongamos que la muestra tiene tamaño $n=50$ y que la distribución de las $X_i$ es una $N(4,1)$. 
 
 \ppart Obtener, utilizando la desigualdad de Chebichev, una cota superior para la probabilidad $\prob{\abs{\avg{X} - 4} > 0.3}$.
@@ -202,6 +215,58 @@ y calculamos.
 
 \end{problem}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[3]
+Utilizando $R$ dibuja la función de densidad y la función de distribución de una v.a. con distribución beta de parámetros $a = 3$, $b = 6$.\\
+A continuación dibuja, sobrepuestas en cada uno de los gráficos, las aproximaciones a F y f obtenidas respectivamente mediante la función empírica y un estimador kernel.\\
+Verificar empíricamente el grado de aproximación, en las estimaciones de F y f, que se obtiene mediante un experimento de simulación basado en 200 muestras de tamaño 20. Es decir, considerando, por ejemplo, la estimación de F, se trata de simular 200 muestras de tamaño 20; para cada una de ellas evaluar el error (medido en la norma del supremo) que se comete al aproximar F por $\mathbb{P}_n$. Por último, calcular el promedio de los 200 errores obtenidos. Análogamente para la estimación de f.
+
+\solution
+\begin{verbatim}
+# Dibuja la función de densidad y la funcion de distribución de una v.a. con 
+# distribución beta de parametros a=3 y b=6.
+
+a = 3
+b = 6
+n = 20
+t = seq(0,1,0.01)
+densidad = dbeta(t, a, b, ncp = 0, log = FALSE)
+fndistrib = pbeta(t, a, b, ncp = 0, log = FALSE)
+X = rbeta(n,a, b, ncp = 0)
+kernelest = density(X,kernel="gaussian")
+M = max(max(densidad),max(kernelest$y))
+distremp = ecdf(X)
+
+layout(matrix(1:2,2,1))
+layout.show(2)
+
+plot(t,densidad,type="l",lwd=2,col="tomato3",xlab="",ylab="",ylim=c(0,M),
+     main="Densidad y estimador kernel",font.main=1,cex.main=1)
+lines(kernelest,type="l",lwd=2,col="navyblue")
+mtext("Distribución beta(3,6)",side=3,line=3,cex=1.5)
+plot(t,fndistrib,type="l",lwd=2,col="tomato3",xlab="",ylab="",ylim=c(0,1),
+     main="Función de distribución poblacional y empírica",font.main=1,cex.main=1)
+lines(distremp,do.points=FALSE,lwd=2,col="navyblue")
+
+# Verificar empiricamente el grado de aproximacion:
+nMC = 200
+Supremo1 = rep(0,nMC) ; Supremo2 = rep(0,nMC)
+for (i in 1:nMC){
+  XMC = rbeta(n,a, b, ncp = 0)
+  kernelMC = density(XMC,kernel="gaussian")
+  densidadMC = dbeta(kernelMC$x, a, b, ncp = 0, log = FALSE)
+  Supremo1[i] = max(abs(kernelMC$y - densidadMC))
+  distempMC = ecdf(XMC)
+  Supremo2[i] = max(abs(distempMC(t) - fndistrib))
+}
+Error1 = mean(Supremo1)
+Error2 = mean(Supremo2)
+\end{verbatim}
+\end{problem}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[4] Denotemos por 
 
 \[ C_n = \int_\real \left(\fd_n(t) - F(t)\right)^2 \, dF(t) \]
@@ -214,7 +279,6 @@ la llamada discrepancia de Cramer-Von Mises entre $\fd_n$ y $F$. \ppart ¿Conver
 \spart 
 \[ C_n = \int_\real \left(\fd_n(t) - F(t)\right)^2 \, dF(t) = \int_\real \left(\fd_n(t) - F(t)\right)^2 f(t) \, dt \]
 
-\newpage
 Tenemos que 
 
 \[ \fd_n(t) - F(t) \leq \sup_t \abs{\fd_n(t) - F(t)} = \md{\fd_n - F}_\infty \]
@@ -253,7 +317,8 @@ y por lo tanto aplicando el TCL
 \[ D_n \convdist N\left(0, \sqrt{F(t)(1-F(t))}\right) \]
 \end{problem}
 
-\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[5] Sea $X$ una v.a. cuya función de densidad depende de un parámetro desconocido $\theta \in \real$, concretamente
 \[ f(x;\theta) = \frac{1}{\pi}\frac{1}{1+(x-\theta)^2} \]
 para $x\in \real$. Comprobar que $\theta$ coincide con la mediana y la moda de $X$ pero que la media $\esp{X}$ no está definida.
@@ -267,6 +332,7 @@ La moda es el valor máximo de la distribución,
 Y se ve que es un máximo porque es el punto en el que el signo de la derivada pasa de positivo a negativo.
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[6]
 Se extrae una muestra aleatoria de tamaño $n = 600$ de una v.a. cuya desviación típica es $\sigma = 3$.
 Calcular aproximadamente la probabilidad
@@ -304,6 +370,7 @@ Entonces:
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[7] Sea $X$ una v.a con distribución absolutamente continua. Sea $F$ la correspondiente función de distribución y $f = F'$ continua en todo punto la función de densidad. Para $r\in \{1,\dotsc,n\}$, denotemos por $X_{(r)}$ el $r$-simo estadístico ordenado de una muestra de tamaño $n$ extraída de $X$. Calcular la función de distribución y la de densidad de la v.a. $X_{(r)}$.
 
 \solution
@@ -357,7 +424,8 @@ F_{X_{(n)}} (x) =
 \footnotetext{$\forall j$ $X_{(j)} \sim X \implies \prob{X \leq x} = F(x)$}
 \end{problem}
 
-\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[8] Sea $\hat{f}_n$ un estimador kernel de la densidad basado en un núcleo $K$ que es una función de densidad con media finita. Comprobar que, en general, $\hat{f}_n(t)$ es un estimador sesgado de $f(t)$ en el sentido de que \textbf{no} se tiene $\esp{\hat{f}_n(t)} = f(t)$ para todo $t$ y para toda densidad $f$.
 
 \solution
@@ -402,9 +470,10 @@ El sesgo del estimador kernel depende de $h$ (el parámetro de suavizado o \text
 \newpage
 \section{Tema 3 - Estimación puntual paramétrica}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[1]
 Sea X una v.a. con distribución exponencial de parámetro $\theta$.\\
-Calcula la funció de distribución, la de densidad y la función cuantílica de la v.a. $ Y = \theta X^{1/3} $.
+Calcula la función de distribución, la de densidad y la función cuantílica de la v.a. $ Y = \theta X^{1/3} $.
 \solution
 \begin{gather*}
 \footnotemark\text{Como X }\sim exp(\theta) \,(\theta > 0) \y Y = \theta X^{1/3} \dimplies X = (\frac{Y}{\theta})^{3}\\
@@ -428,6 +497,7 @@ F^{-1}(p) = \inf_{p \in [0,1]}\{ y \tq 1 - e^{-\frac{y^3}{\theta^2}} \geq p \}
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[2]
 Supongamos que $X$ mide el error cometido en la medición de una magnitud. $X$ es una v.a. normal de media 0 y varianza $\theta$. 	
 \[X\leadsto N(0,\sqrt{\theta}), \theta>0, \Theta = (0,\infty)\]
@@ -504,6 +574,7 @@ Donde $\var{Y} = \var[\theta]{X^2} = \esp{(X^2)^2} - \esp{X^2}^2 = 3\theta^2 - \
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[3] Se dispone de un gran lote de piezas producidas en una cadena de montaje. Denotemos por $p$ la proporción de piezas defectuosas en ese lote. Supongamos que se seleccionan al azar sucesivamente (con reemplazamiento) piezas del lote hasta que se encuentra una defectuosa. Sea $X$ la variable aleatoria que indica el número de la extracción en la que aparece la primera pieza defectuosa.
 
 \ppart Calcular $\prob{X=k}$ para $k=1,2,\dotsc$ Obtener el estimador de $p$ por el método de los momentos, a partir de una muestra $X_1,\dotsc , X_n$.
@@ -545,10 +616,10 @@ Entiendo que esto no termina de contestar a la distribución asintótica del est
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[4]
 Estudiar si es eficiente el estimador de máxima verosimilitud de una poisson.
 \solution
-
 
 \[ P(X = k) = e^{-\lambda} \frac{\lambda^{k}}{k!} \]
 
@@ -577,6 +648,7 @@ Calculamos la varianza:
 Como tenemos la igualdad podemos afirmar que \textbf{si} es un estimador eficiente.
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[5]
 Distribución de Rayleigh, cuya función de densidad es:
 \[f(x;\theta) = \frac{x}{\theta^2} e^{\frac{-x^2}{2\theta^2}} \mathbb{I}_{[0,\infty)} (x), \theta > 0\]
@@ -619,7 +691,6 @@ Sea $g(x) = \sqrt{\frac{1}{2}x}$ definida sobre $[0,\infty)$.
 
 Teorema de Slutsky (\ref{thmSlutsky}) $\implies g\left(\gor{Y}\right) = \sqrt{\frac{1}{2} \frac{\sum x_i^2}{n}} \convcs g(E_{\theta}) = \sqrt{\frac{1}{2}\theta^2} = \theta \implies $ El e.m.v. de $\theta$, $\hat{\theta}$ es consistente c.s.
 
-
 \spart
 
 Queremos aplicar el método delta:
@@ -648,7 +719,9 @@ y por lo tanto es efectivamente asintóticamente normal.
 \end{problem}
 
 
-\begin{problem}[8] Sea $X \sim N(µ,\sqrt{\theta})$. Estamos interesados en la estimación de $\theta$ basados en muestras $X_1,\dotsc,X_n$ de tamaño $n$. Calcular la cota de Fréchet-Cramer-Rao (\ref{thmCotaFCR}) para estimadores insesgados.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[8]
+Sea $X \sim N(\mu,\sqrt{\theta})$. Estamos interesados en la estimación de $\theta$ basados en muestras $X_1,\dotsc,X_n$ de tamaño $n$. Calcular la cota de Fréchet-Cramer-Rao (\ref{thmCotaFCR}) para estimadores insesgados.
 
 \solution
 
@@ -660,24 +733,26 @@ Podíamos calcular la información de Fisher como
 
 Usaremos la segunda expresión. Calculamos primero el logaritmo:
 
-\[ \log f(X;\theta) = \frac{-1}{2}\log 2\pi - \frac{1}{2}\log \theta - \frac{1}{2\theta}(x-µ)^2 \]
+\[ \log f(X;\theta) = \frac{-1}{2}\log 2\pi - \frac{1}{2}\log \theta - \frac{1}{2\theta}(x-\mu)^2 \]
 
 y derivamos dos veces
 
 \begin{gather*}
- \dpa{}{\theta} \log f(X;\theta) = \log f(X;\theta) = -\frac{1}{2\theta} + \frac{1}{2\theta^2}(x-µ)^2 \\
- \frac{∂^2}{∂\theta^2} \log f(X;\theta) = \frac{1}{2\theta^2} - \frac{2}{2\theta^3} (x-µ)^2 = \frac{1}{\theta^2} \left(\frac{1}{2} - \frac{1}{\theta}(x-µ)^2\right) 
+ \dpa{}{\theta} \log f(X;\theta) = \log f(X;\theta) = -\frac{1}{2\theta} + \frac{1}{2\theta^2}(x-\mu)^2 \\
+ \frac{∂^2}{∂\theta^2} \log f(X;\theta) = \frac{1}{2\theta^2} - \frac{2}{2\theta^3} (x-\mu)^2 = \frac{1}{\theta^2} \left(\frac{1}{2} - \frac{1}{\theta}(x-\mu)^2\right) 
  \end{gather*}
  
  Calculamos ahora la esperanza:
  
- \[ \esp{\frac{1}{\theta^2} \left(\frac{1}{2} - \frac{1}{\theta}(x-µ)^2\right) } = -\frac{1}{\theta^2}\left(\frac{1}{2} - \frac{1}{\theta} \underbrace{\esp{X-µ}^2}_{\theta}\right) = \frac{1}{2\theta^2} \]
+ \[ \esp{\frac{1}{\theta^2} \left(\frac{1}{2} - \frac{1}{\theta}(x-\mu)^2\right) } = -\frac{1}{\theta^2}\left(\frac{1}{2} - \frac{1}{\theta} \underbrace{\esp{X-\mu}^2}_{\theta}\right) = \frac{1}{2\theta^2} \]
  
  y por lo tanto la cota FCR vale $\dfrac{2\theta^2}{n}$, el valor mínimo.
 
 \end{problem}
 
-\begin{problem}[9] Sea $X_1,\dotsc,X_n$ una muestra de una v.a. con función de densidad 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[9]
+Sea $\sample[X]$ una muestra de una v.a. con función de densidad 
 
 \[ f(x;\theta) = \theta x^{\theta - 1} \]
 
@@ -703,13 +778,13 @@ Calculamos ahora la varianza (aplicando $\displaystyle \var{\gor{X}} = \frac{\va
 \end{problem}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[11]
-\footnote{Este ejercicio es del parcial del año pasado}
+(Este ejercicio es del parcial del año pasado)
 
-ashkjdf
 \solution
 
-$X\leadsto Unif[0,\theta]$
+$X \leadsto Unif[0,\theta]$
 Con \[ f(x) = \displaystyle\left\{\begin{array}{cc}
 \frac{1}{\theta} & 0\leq x \leq \theta\\
 0 & x \notin [0,\theta]
@@ -725,7 +800,6 @@ Vamos a calcular la función de distribución:
 \end{array}\right.\]
 
 Nos piden dibujar las funciones. 
-
 
 
 Vamos a calcular \[L_n(\theta;x_i) = \prod_{i=1}^n f_{\theta} (x_i) = \left\{\begin{array}{cc}
@@ -756,6 +830,7 @@ porque \[ logLn(\theta) = \displaystyle\left\{\begin{array}{cc}
 \newpage
 \section{Tema 4 - Intervalos de confianza}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[1 y 2]
 
 \ppart Representa un estimador de la función de densidad de la v.a. X = cantidad de contaminación por mercurio (en p.p.m.) en los peces capturados en los ríos norteamericanos Lumber y Wacamaw (ver fichero Datos-mercurio.txt). Comparar esta densidad estimada con la densidad normal de igual media y desviación típica (representada en la misma gráfica). En vista de las dos funciones dirías que la función de densidad de X es aproximadamente normal?
@@ -770,6 +845,7 @@ Solucionado por Amparo, descargable \href{http://www.uam.es/personal_pdi/ciencia
 
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[3]
 
 \ppart Representa en un mismo gráfico las densidades de las distribuciones $\chi^2_k $ con k = 4,8,20,30.
@@ -835,6 +911,7 @@ Sustituyendo y estandarizando:
 Una diferencia bastante distinta a lo que decía R. Tras un debate entre Miguel y Amparo de 10 minutos no se ha llegado a ninguna conclusión.
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[4]
 \ppart Utilizando el fichero Datos-lipidos.txt, estima, mediante un intervalo de confianza de nivel
 0.95, la proporción de pacientes que tienen una concentración de colesterol superior o igual a
@@ -845,6 +922,8 @@ Una diferencia bastante distinta a lo que decía R. Tras un debate entre Miguel 
 Solucionado por Amparo, descargable 
 \href{http://www.uam.es/personal_pdi/ciencias/abaillo/MatEstI/T4DatosLipidos.pdf}{aqui}
 \end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[5] Sea una v.a. con función de densidad $f(x;\theta) = \theta x^{-(\theta + 1)}\ind_{[1,\infty)} $
 
 \ppart Obtener el e.m.v.
@@ -905,6 +984,7 @@ IC_{1-\alpha}(\theta) =
 \]
 \end{problem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[6]
 Sea $\sample$ una muestra de una v.a. uniforme en el interalo $[0,\theta]$ con $0 < \theta < 1$. Obtener una cantidad pivotal para $\theta$ a partir del emv. Usando esta cantidad pivotal construye un intervalo de confianza para $\theta$ de nivel prefijado $1-\alpha$.
 
@@ -938,64 +1018,65 @@ Es decir, tenemos que buscar que $q_1-q_2$ sea más pequeño y además tienen qu
 
 \end{problem}
 
-\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[7]
-Construye tres intervalos de confianza asintóticos diferentes para el parámetro $λ$ de una distribución de Poisson usando los tres métodos siguientes:
+Construye tres intervalos de confianza asintóticos diferentes para el parámetro $\lambda$ de una distribución de Poisson usando los tres métodos siguientes:
 
 \ppart Utiliza el comportamiento asintótico de la media muestral, estima de forma consistente la varianza y aplica el teorema de Slutsky.
 
 \ppart Igual que el anterior, pero sin estimar la varianza
 
-\ppart Aplicando el método delta para \textit{estabilizar la varianza}, es decir, buscando una función $g$ tal que $\sqrt{n}(g(\avg{X}) - g(λ))\convdist N(0,1)$.
+\ppart Aplicando el método delta para \textit{estabilizar la varianza}, es decir, buscando una función $g$ tal que $\sqrt{n}(g(\avg{X}) - g(\lambda))\convdist N(0,1)$.
 
 \solution
 
 \spart El TCL (\ref{thmCentral}) nos dice que
 
-\[ \sqrt{n}\frac{\avg{X} - λ}{\sqrt{λ}} \convdist N(0,1) \]
+\[ \sqrt{n}\frac{\avg{X} - \lambda}{\sqrt{\lambda}} \convdist N(0,1) \]
 
 Entonces tenemos que 
 \begin{equation}
- 1-\alpha = \prob{-z_{\alpha/2}\leq\sqrt{n}\frac{\avg{X} - λ}{\sqrt{λ}} \leq z_{\alpha/2}} \label{eqEj7}
+ 1-\alpha = \prob{-z_{\alpha/2}\leq\sqrt{n}\frac{\avg{X} - \lambda}{\sqrt{\lambda}} \leq z_{\alpha/2}} \label{eqEj7}
  \end{equation}
 
-Sustituyo $λ$ en el denominador por una estimación consistente $\hat{λ}\convs[P, c.s]λ$:
+Sustituyo $\lambda$ en el denominador por una estimación consistente $\hat{\lambda}\convs[P, c.s]\lambda$:
 
-\[ \sqrt{n}\frac{\avg{X} - λ}{\sqrt{\hat{λ}}} \convdist N(0,1) \]
+\[ \sqrt{n}\frac{\avg{X} - \lambda}{\sqrt{\hat{\lambda}}} \convdist N(0,1) \]
 
-Como sabemos que $λ=\esp{X}$, tomamos la media muestral como el estimador: $\hat{λ} = \avg{X}$. La convergencia nos queda entonces como
+Como sabemos que $\lambda = \esp{X}$, tomamos la media muestral como el estimador: $\hat{\lambda} = \avg{X}$. La convergencia nos queda entonces como
 
 
-\[ \sqrt{n}\frac{\avg{X} - λ}{\sqrt{\avg{X}}} \convdist N(0,1) \]
+\[ \sqrt{n}\frac{\avg{X} - \lambda}{\sqrt{\avg{X}}} \convdist N(0,1) \]
 
-y por lo tanto tomamos $ \sqrt{n}\dfrac{\avg{X} - λ}{\sqrt{\avg{X}}}$ como nuestra cantidad pivotal. Despejamos ahora en (\ref{eqEj7}):
+y por lo tanto tomamos $ \sqrt{n}\dfrac{\avg{X} - \lambda}{\sqrt{\avg{X}}}$ como nuestra cantidad pivotal. Despejamos ahora en (\ref{eqEj7}):
 
 \[ \prob{\avg{X} - z_{\alpha/2} \sqrt{\frac{\avg{X}}{n}} 
-	\leq λ
+	\leq \lambda
 	\leq \avg{X} + z_{\alpha/2} \sqrt{\frac{\avg{X}}{n}}}
 	\]
 
-\pagebreak
-\spart Partimos de nuevo de (\ref{eqEj7}), pero no tenemos que estimar $λ$. Esta ecuación es equivalente a 
+\spart Partimos de nuevo de (\ref{eqEj7}), pero no tenemos que estimar $\lambda$. Esta ecuación es equivalente a 
 
-\[ \prob{n\frac{(\avg{X}-λ)^2}{λ} \leq z_{\alpha/2}^2} \]
+\[ \prob{n\frac{(\avg{X}-\lambda)^2}{\lambda} \leq z_{\alpha/2}^2} \]
 
-De ahí sólo tenemos que despejar $λ$ para hallar nuestro intervalo de confianza.
+De ahí sólo tenemos que despejar $\lambda$ para hallar nuestro intervalo de confianza.
 
-\spart Tenemos que buscar que se satisfaga la ecuación \[ \sqrt{n}(g(\avg{X}) - g(λ))\convdist N(0,1) \]
+\spart Tenemos que buscar que se satisfaga la ecuación \[ \sqrt{n}(g(\avg{X}) - g(\lambda))\convdist N(0,1) \]
 
 Sin embargo, el método delta (\ref{defMetDelta}) nos dice algo distinto:
 
-\[ \sqrt{n}(g(\avg{X}) - g(λ))\convdist N(0,\abs{g'(\mu)}\sqrt{\var{X}}) \]
+\[ \sqrt{n}(g(\avg{X}) - g(\lambda))\convdist N(0,\abs{g'(\mu)}\sqrt{\var{X}}) \]
 
 Entonces tenemos que 
 
-\[ \abs{g'(λ)}\sqrt{λ} = 1 \implies g'(λ) = \frac{1}{\sqrt{λ}} \]
+\[ \abs{g'(\lambda)}\sqrt{\lambda} = 1 \implies g'(\lambda) = \frac{1}{\sqrt{\lambda}} \]
 
-e integrando vemos que $g(λ) = 2\sqrt{λ} $.
+e integrando vemos que $g(\lambda) = 2\sqrt{\lambda} $.
 \end{problem}
 
-\begin{problem}[8]\nopagebreak[3]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[8]
 \ppart Se desea evaluar aproximadamente, por el \textit{método de Montecarlo}, la integral 
 \[ p = \int_0^1f(x)\,dx \] 
 de una función continua $\appl{f}{[0,1]}{[0,1]}$. Para ello se generan 500 observaciones independientes $(X_i,Y_i)$ con $i=1,\dotsc,500$ con distribución uniforme en el cuadrado $[0,1]×[0,1]$ y se estima $p$ mediante
@@ -1003,7 +1084,6 @@ de una función continua $\appl{f}{[0,1]}{[0,1]}$. Para ello se generan 500 obse
 donde la v.a. $Z_i$ vale 1 si $Y_i \leq f(X_i)$ y $0$ en caso contrario. ¿Qué distribución tienen las $Z_i$? Suponiendo que, en una muestra concreta hemos obtenido $\sum_{i=1}^{500} z_i = 255$, obtener un intervalo de confianza de nivel $0.99$ para la correspondiente estimación de $p$.
 
 \solution
-\pagebreak
 \spart La v.a. sigue una distribución de Bernoulli, de tal forma que
 
 \begin{equation} \prob{Z=1}=\prob{Y \leq f(X)} \label{eqEj8} \end{equation}
@@ -1033,36 +1113,40 @@ Buscamos un $n$ que cumpla: \[z_{0.005} \sqrt{\frac{\frac{1}{3}\cdot\frac{2}{3}}
 
 \end{problem}
 
-\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[9]
-Sea X una v.a. con distribución normal de media $\mu$ y variandza $\theta$. Estamos interesados en la estimación de $\theta$ basados en muestras $X_1,...,X_n$. Si $s^2$ denota la cuasivarianza muestras, calcular $\var{s^2}$ y compararla con la cota de Fréchet-Cramer-Rao obtenida en la relación 3 de problemas.
+Sea X una v.a. con distribución normal de media $\mu$ y varianza $\theta$. Estamos interesados en la estimación de $\theta$ basados en muestras $X_1,...,X_n$. Si $s^2$ denota la cuasivarianza muestral, calcular $\var{s^2}$ y compararla con la cota de Fréchet-Cramer-Rao obtenida en la relación 3 de problemas.
 \solution
 
-Comentarios previos: Sabemos que $s^2$ es un estimador insesgado de \[\var{X} = \frac{1}{n-1} \sum_{i=1}^n (X_i - \gor{X})^2\]
+Comentarios previos: Sabemos que $s^2$ es un estimador insesgado de
+\[ \var{X} = \frac{1}{n - 1} \sum_{i=1}^n (X_i - \gor{X})^2 \]
 
 Vamos a calcular $\var{s^2}$
 
 Posibilidades:
 \begin{itemize}
-\item Aunque es un poco largo\[
-\var{s^2} = \esp{s^2}-\left[\esp{s^2}\right]^2
+\item Aunque es un poco largo
+\[
+\var{s^2} = \esp{s^4} - \left[\esp{s^2}\right]^2
 \]
 
-\item Si $X\sim N(\mu,\sigma)$ entonces \[\frac{(n-1)s^2}{\sigma^2} \sim \chi_{n-1}^2 \]
+\item Si $X \sim N(\mu,\sigma)$ entonces \[\frac{(n-1)s^2}{\sigma^2} \sim \chi_{n-1}^2 \]
 \end{itemize}
 
-Vamos a utilizar la segunda opción\footnote{ver (\ref{ChiSquared})}:
+Vamos a utilizar la segunda opción\footnote{ver (\ref{ChiSquared})} y que $\var{\chi^2_{n - 1}} = 2 (n - 1)$:
 
 \begin{gather*}
 \var{s^2} =
 \var{\frac{n-1}{\sigma^2}s^2\cdot\frac{\sigma^2}{n-1}} =
 \frac{\sigma^4}{(n-1)^2} \var{\frac{n-1}{\sigma^2}s^2} =\\
-= \frac{\sigma^4}{(n-1)^2} \var{\chi^2_{n-1}} \stackrel{\sigma = \theta}{=}
+= \frac{\sigma^4}{(n-1)^2} \var{\chi^2_{n-1}} \stackrel{\sigma^2 = \theta}{=}
 \frac{\theta^2}{(n-1)^2}2(n-1) =
 \frac{2\theta^2}{n-1}
 \end{gather*}
 
-$s^2$ por lo tanto no es eficiente $\left( \text{porque la Cota de FCR es: } \displaystyle\frac{2\theta}{n}\right)$ Por ser $\theta$ la varianza de una $N(\mu,\sigma)$, de la que nos sabemos de memoria la cota de FCR.
+$s^2$ por lo tanto no es eficiente $\left( \text{porque la Cota de FCR es: } \displaystyle\frac{2\theta}{n}\right)$.
+Por ser $\theta$ la varianza de una $N(\mu,\sigma)$, cuya cota de FCR se calcula en el problema 8H3.
 
 \end{problem}
 
@@ -1071,7 +1155,9 @@ $s^2$ por lo tanto no es eficiente $\left( \text{porque la Cota de FCR es: } \di
 \section{Tema 5 - Contraste de hipótesis}
 \subsection{Hoja 5A}
 
-\begin{problem}[1] En octubre de 2007 el periódico \textit{The New York Times} realizó un muestreo en 20 restaurantes y tiendas de Nueva York con objeto de analizar la variable $X$, que representa el contenido en ppm de metilmercurio en el sushi de atún que se pone a la venta. La media y la cuasi-desviación típica muestrales obtenidas con estas 20 observaciones de $X$ fueron $\avg{x} = 0.794,\, s=0.2953$. Supongamos que $X$ tiene distribución aproximadamente normal.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[1]
+En octubre de 2007 el periódico \textit{The New York Times} realizó un muestreo en 20 restaurantes y tiendas de Nueva York con objeto de analizar la variable $X$, que representa el contenido en ppm de metilmercurio en el sushi de atún que se pone a la venta. La media y la cuasi-desviación típica muestrales obtenidas con estas 20 observaciones de $X$ fueron $\avg{x} = 0.794,\, s=0.2953$. Supongamos que $X$ tiene distribución aproximadamente normal.
 
 \ppart ¿Proporcionan estos datos suficiente evidencia estadística a nivel $0.05$ a favor de la hipótesis de que la concentración media de metilmercurio en las raciones de sushi de atún en la población considerada es superior a 0.6 ppm? El p-valor, ¿es menor o mayor que 0.01?
 
@@ -1079,8 +1165,13 @@ $s^2$ por lo tanto no es eficiente $\left( \text{porque la Cota de FCR es: } \di
 
 \solution
 
-\spart Empezamos definiendo la hipótesis nula, que será que $\mu\leq0.6$ ya que queremos una evidencia muy fuerte para rechazar que la concentración suba del nivel mínimo.
+\spart Empezamos definiendo la hipótesis nula, que será que $\mu \leq 0.6$ ya que queremos una evidencia muy fuerte para rechazar que la concentración suba del nivel mínimo.
 
+Tenemos el siguiente contraste a nivel $\alpha = 0.05$:
+\begin{gather*}
+H_0 : \;\;\; \mu \leq 0.6\\
+H_1 : \;\;\; \mu > 0.6
+\end{gather*}
 La región de rechazo en este caso es 
 
 \[ R = \{ T > t_{19;\alpha} \}\]
@@ -1098,17 +1189,17 @@ Si quisiésemos obtener el p-valor concreto del contraste, buscaríamos el valor
 [1] 0.004221168
 \end{verbatim}
 
-El p-valor es por lo tanto $0.004$. Esto quiere decir que la probabilidad de obtener la muestra que hemos conseguido suponiendo que $H_0$ es cierta (esto es, suponiendo que la media de ppm de metilmercurio en el atún es menor que $0.6$) es extremadamente baja, y o bien hemos obtenido una muestra muy, muy extraña o $H_0$ es falsa. Por lo tanto, lo razonable sería rechazar la hipótesis nula y decir que, de media, la concentración de metilmercurio media es mayor que $0.6$.
+El p-valor es por lo tanto $0.004$. Esto quiere decir que la probabilidad de obtener la muestra que hemos conseguido suponiendo que $H_0$ sea cierta (esto es, suponiendo que la media de ppm de metilmercurio en el atún es menor que $0.6$) es extremadamente baja, y o bien hemos obtenido una muestra muy, muy extraña o $H_0$ es falsa. Por lo tanto, lo razonable sería rechazar la hipótesis nula y decir que, de media, la concentración de metilmercurio es mayor que $0.6$.
 
 \spart El intervalo de confianza sería 
 
-\[ IC_{0.95} (\mu) = \left(\avg{x}\pm t_{n-1;\frac{\alpha}{2}}\frac{s}{\sqrt{n}} \right) = (0.656, 0.932) \]
+\[ IC_{0.95} (\mu) = \left(\avg{x} \mp t_{n-1;\frac{\alpha}{2}}\frac{s}{\sqrt{n}} \right) = (0.656, 0.932) \]
 
 Como además $0.6\notin IC_{0.95}(\mu)$, rechazaríamos $H_0:\,\mu=0.06$ a nivel $\alpha=0.05$.
 
 Para hallar el tamaño muestral mínimo buscamos que 
 
-\[ IC_{0.95}(\mu) = (\avg{x} \pm 0.06)\]
+\[ IC_{0.95}(\mu) = (\avg{x} \mp 0.06)\]
 
 Despejando, tenemos que resolver
 
@@ -1119,18 +1210,26 @@ Como no conocemos $s$, lo sustituimos por una aproximación, la cuasivarianza mu
 \[ t_{n-1;0.025} \approx z_{0.025} = 1.96 \]
 
 y entonces $n > 93$.
+
+Otra forma de aproximar el $t_{n-1; 0.025}$ sería sustituirlo por $t_1$ ya que a menos grados de libertad, menor peso tienen las colas, luego $t_{n-1; 0.025} < t_{1; 0.025}$.
+
+Despejando obtenemos que n > 3910.
+
+Finalmente, otra forma de aproximarlo sería tomar $n - 1 = 20$, ya que sabemos que el n va a ser mayor que 20. Con esta aproximación obtenemos que n > 105.
 \end{problem}
 
-\newpage
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \begin{problem}[2]
 \solution
-\centerline{\includegraphics[page=1,scale=0.8328]{pdf/_T5DatosMercurio.pdf}} % scale obtenido empíricamente para que quepa en la página
-\includepdf[pages=2-]{pdf/_T5DatosMercurio.pdf}
+\centerline{\includegraphics[page=1,scale=0.8328]{pdf/_Solucion_T5_a_P2.pdf}} % scale obtenido empíricamente para que quepa en la página
+\includepdf[pages=2-]{pdf/_Solucion_T5_a_P2.pdf}
 \end{problem}
 
 \newpage
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[4] Los niveles en sangre de una hormona denominada FSH están asociados con la fertilidad femenina. Las mujeres que tienen un nivel de FSH ``alto'' (superior a 10 IU/L) tienen en general más dificultad para concebir que aquellas que tienen niveles bajos de FSH. En un estudio realizado recientemente, se analizó la posible relación entre el grupo sanguíneo y la fertilidad. Para ello se midieron los niveles de FSH en una muestra de 254 mujeres en edad fértil con grupo sanguíneo ``O'' y resultó que 43 de ellas tenían niveles altos de FSH y, por tanto, podrían tener dificultades para concebir. En otra muestra, independiente de la anterior, de 309 mujeres cuyo grupo sanguíneo no es O, resultó que 27 tenían niveles altos de FSH. 
 
 \ppart ¿Proporcionan estos datos suficiente evidencia estadística, al nivel 0.05, a favor de la hipótesis de que las mujeres con grupo sanguíneo 0 tienen más dificultades para concebir que las que tienen otro grupo sanguíneo?
@@ -1186,7 +1285,10 @@ Si quisiésemos ser más conservadores, sustiuiríamos $\avg{x}$ por el valor m�
 
 \end{problem}
 
-\begin{problem}[5] El gasto telefónico medio bimensual en una muestra de 10 usuarios elegidos al azar en una ciudad ha resultado ser 90 euros y la cuasidesviación típica 11 euros. En otra ciudad se ha tomado, de modo independiente, otra muestra de 12 usuarios y los valores obtenidos para la media y la cuasidesviación típica muestrales han sido, respectivamente, 80 y 10.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[5]
+El gasto telefónico medio bimensual en una muestra de 10 usuarios elegidos al azar en una ciudad ha resultado ser 90 euros y la cuasidesviación típica 11 euros. En otra ciudad se ha tomado, de modo independiente, otra muestra de 12 usuarios y los valores obtenidos para la media y la cuasidesviación típica muestrales han sido, respectivamente, 80 y 10.
 
 \ppart ¿Proporcionan estos datos suficiente evidencia estadística, al nivel 0.05, a favor de la hipótesis  de que el gasto medio en la primera ciudad es más alto que el gasto medio en la segunda? Suponer que las varianzas de las variables que indican los gastos telefónicos en ambas ciudades son iguales. Indicar claramente las restantes suposiciones necesarias para garantizar la validez del procedimiento empleado.
 
@@ -1209,14 +1311,11 @@ La región de rechazo es
 
 \[ R = \left\{ \avg{x} - \avg{y} > t_{n_1+n_2-2, \alpha} s_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}\right\} \] 
 
-Calculando, tenmos que 
-
+Calculando, tenemos que 
 \begin{gather*}
-\avg{x}-\avg{y} = 10\\
-s_p^2 = 109.45 \\
-R= \{10 > 7.73 \}
+\avg{x}-\avg{y} = 10 \text{ y } s_p^2 = 109.45 \\
+R = \{10 > 7.73 \}
 \end{gather*}
-
 y por lo tanto rechazamos la hipótesis nula.
 
 \spart Calculamos la región de rechazo para $\alpha=0.01$:
@@ -1227,6 +1326,8 @@ y por lo tanto para nivel $0.01$ no hay evidencia para rechazar $H_0$. Entonces,
 
 \end{problem}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[6]
 Se realiza un experimento para comparar los incrementos en los niveles plasmáticos de insulina producidos por la ingesta de carne y de pescado. Para ello se midieron los incrementos (medido esn picomoles por litro) producidos en la concentración de insulina en la sangre de 6 voluntarios, 90 minutos después de comer un bistec de 250 gramos. Dos días más tarde se realizó de nuevo el experimento con las mismas 6 personas, después de consumir un filete de pescado. En la tabla se observan los resultados:
 
@@ -1277,16 +1378,34 @@ Donde $\displaystyle \frac{\gor{d}}{s_d/\sqrt{n}}$ es el estadístico del contra
 
 De los datos extraemos $\gor{d} = 12.5;s_d=10.97$.
 
-Para $\alpha = 0.05$ calculamos el cualtil correspondiente de la $t$ de Student. Para $\alpha = 0.05$ es 9.02.
+Para $\alpha = 0.05$ calculamos el cuantil correspondiente de la $t$ de Student. Para $\alpha = 0.05$ es 9.02.
 
 De aquí deducimos que sí hay evidencia para rechazar la hipótesis nula (porque  $\displaystyle \frac{\gor{d}}{s_d/\sqrt{n}} > 9.02$).
 
 \spart Tomando $\alpha = 0.01$ no se cumple la condición de rechazo, no pudiendo negar entonces la hipótesis nula.
 
-\spart Es el típico ejercicio mecánico de extraer el tamaño muestral. % TODO
+\spart Es el típico ejercicio mecánico de extraer el tamaño muestral. % TODO: serás vago
 \end{problem}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[7]
+Se ha comprobado que la probabilidad de curación espontánea (sin medicación alguna) de cierta enfermedad es de 0.4. Un laboratorio ha obtenido un nuevo medicamento para tratar la enfermedad y quiere demostrar que es eficaz. Para ello, se aplica el tratamiento a 100 pacientes que sufren la enfermedad en silencio y se observa cuántos de ellos se leen este texto.
+
+\ppart Si se han curado 50 personas de las 100. ¿puede afirmarse que el medicamento es eficaz a nivel $\alpha = 0.05$? Calcula el p-valor del contraste.
+
+\ppart ¿Cuántas personas de las 100 deberían curarse como mínimo para poder afirmar al nivel $\alpha = 0.001$ que el tratamiento es eficaz?
+
+\ppart Supongamos que la probabilidad de curación con el tratamiento fuese realmente de 0.5 y que se realiza el test de nivel 0.05 con 100 personas. ¿Cuál sería la probabilidad de error, es decir, la probabilidad de rechazar el medicamento como inútil?
+
+\solution
+
+\end{problem}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[8] 
 
 \ppart Supongamos que en una determinada población de referencia, formada por adultos sanos, el nivel en sangre de la enzima hepática GGT (gamma-glutamil-transpeptidasa) sigue aproximadamente una distribución normal con media poblacional $42 IU/L$ y desviación típica poblacional 13. Calcular aproximadamente el porcentaje de personas en la población que tienen un nivel de GGT superior a 80.
@@ -1295,14 +1414,43 @@ De aquí deducimos que sí hay evidencia para rechazar la hipótesis nula (porqu
 
 \solution
 
-Sí. % Vamos Rafa!
-% TODO
+\spart
+Sea $X \sim N(42, 13)$,
+
+\[
+\prob{X > 80} =
+\prob{\frac{X-42}{13} > \frac{80 -42}{13}} =
+0.0017
+\]
+
+\spart
+Sea $Y$ el nivel de GGT en sangre
+
+Tenemos el siguiente contraste a nivel $\alpha = 0.05$:
+\begin{gather*}
+H_0 : \;\;\; \mu \leq 42\\
+H_1 : \;\;\; \mu > 42
+\end{gather*}
+La región de rechazo es
+
+\[ R = \{ z = \frac{\avg{y} - 42}{s/\sqrt{61}} > Z_{0.05} \} \]
+
+Y por lo tanto rechazamos $H_0$ ya que $5.95 > 1.645$. Podemos calcular el p-valor de la siguiente manera
+
+\[
+\text{p-valor} =
+\prob{N(0, 1) > 5.95} = 7*10^{-8}
+\]
+
+Con lo cual, es muy razonable rechazar la hipótesis nula.
 
 \end{problem}
 
-\pagebreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \subsection{Hoja 5B}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[1]
 Tenemos una $X \sim \mop{exp}(\theta)$. Queremos contrastar para $\alpha = 0.01$ las dos siguientes hipótesis: $H_0: \theta = 5$ frente a $H_1: \theta = \theta_1$, siendo $\theta_1 > 5$ un valor prefijado.
 
@@ -1405,7 +1553,8 @@ Luego no hay evidencia muestral para rechazar la hipótesis nula, tal y como hab
 
 \end{problem}
 
-\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[2]
 
 En una piscifactoría se desea contrastar la hipótesis nula de que el porcentaje de peces adultos que miden menos de 20 cm es como máximo del 10\% . Para ello, se toma una muestra de 6 peces y se rechaza $H_0$ si se encuentra más de uno con longitud inferior a 20 cm.
@@ -1476,6 +1625,7 @@ Simplemente debemos calcular el valor de la función de potencia. Es decir, sust
 \end{problem}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[3]
 El error que se comete en la medición de una magnitud es una v.a. $X$ cuya función de densidad es 
 
@@ -1509,7 +1659,17 @@ Por lo que
 
 \end{problem}
 
-\pagebreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{problem}[4]
+\solution
+\centerline{\includegraphics[page=1,scale=0.7835]{pdf/_Solucion_T5_b_P4.pdf}} % scale obtenido empíricamente para que quepa en la página
+\includepdf[pages=2-]{pdf/_Solucion_T5_b_P4.pdf}
+\end{problem}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[5]
 Sea $X_1,\dotsc, X_{16}$ una muestra de tamaño 16 de una población normal de esperanza $\mu$ y varianza $\sigma^2 = 1$. Se desea contrastar $H_0:\,\mu = 0$ frente a $H_1:\,\mu \neq 0$.
 
