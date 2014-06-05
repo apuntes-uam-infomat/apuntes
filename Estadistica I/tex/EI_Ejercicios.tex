@@ -1400,9 +1400,48 @@ Se ha comprobado que la probabilidad de curación espontánea (sin medicación a
 \ppart Supongamos que la probabilidad de curación con el tratamiento fuese realmente de 0.5 y que se realiza el test de nivel 0.05 con 100 personas. ¿Cuál sería la probabilidad de error, es decir, la probabilidad de rechazar el medicamento como inútil?
 
 \solution
+\spart
+Sea $X \sim Bernouilli(p)$, luego $\sum\limits^{100}_i x_i = $ ``número de pacientes que se curan''. Tenemos el siguiente contraste a nivel $\alpha = 0.05$:
+\begin{gather*}
+H_0 : \;\;\; p \leq 0.4\\
+H_1 : \;\;\; p > 0.4
+\end{gather*}
+La región de rechazo es
+
+\[ R = \{ z = \frac{\avg{x} - 0.4}{\sqrt{\frac{0.4 \cdot 0.6}{100}}} > z_{0.05} \} \]
+
+Como $\frac{\avg{x} - 0.4}{\sqrt{\frac{0.4 \cdot 0.6}{100}}} = 2.041 > 1.645 \implies$ hay evidencia muestral para afirmar que el medicamento es eficaz a nivel $\alpha = 0.05$ (rechazo $H_0$).
+
+El pvalor se calcula así
+\begin{verbatim}
+> pnorm(2.041, lower.tail=FALSE)
+[1] 0.02062541
+\end{verbatim} 
+Luego a nivel $\alpha = 0.01 < $ p-valor, no habría suficiente evidencia muestral para rechazar la hipótesis nula.
+
+\spart
+\[
+\frac{\avg{x} - 0.4}{\sqrt{\frac{0.4 \cdot 0.6}{100}}} > z_{0.001}
+\implies \sum\limits^{100} x_i > 55.1
+\]
+
+\spart
+Como $p = 0.5 \rightarrow H_1$ es cierta $\implies$ solo puede cometerse el error de tipo II. Luego
+
+\begin{gather*}
+\prob[p = 0.5]{\text{error tipo II}} =
+\prob[p = 0.5]{\text{aceptar } H_0} =
+1 - \prob[p = 0.5]{R} =
+1 - \beta_n(0.5) =\\
+= 1 - \prob{\frac{\avg{X} - 0.4}{\sqrt{\frac{0.4 \cdot 0.6}{100}}} > z_{0.05}} =
+1 - \prob{\avg{X} > 0.4 + z_{0.05} \sqrt{\frac{0.4 \cdot 0.6} {100}}}
+\stackrel{X \approx N(p, \sqrt{\frac{p \cdot(1-p)}{n}}) = N(0.5, 0.05)}{=}\\
+= 1 - \prob{Z = \frac{\avg{X} - 0.5}{0.05} > \frac{0.4 + z_{0.05} \cdot \sqrt{\frac{0.4 \cdot 0.6}{100}} - 0.5}{0.05}} =\\
+= 1 - \prob{Z > -0.388} =
+1 - (1 - \prob{Z > 0.388}) = 0.35
+\end{gather*}
 
 \end{problem}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
