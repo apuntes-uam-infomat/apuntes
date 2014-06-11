@@ -638,31 +638,37 @@ La probabilidad sigue una distribución geométrica de parámetro $p$:
 
 \spart Calculamos la función de verosimilitud:
 
-\[ L(p;x_1,\dotsc,x_n) = \prod_{i=1}^n f(x_i;p) = \prod_{i=1}^n (1-p)^{x_i - 1}p = (1-p)^{\sum_{i=1}^n x_i - 1} p^n \]
+\[ L_n(p;x_1,\dotsc,x_n) = \prod_{i=1}^n f(x_i;p) = \prod_{i=1}^n (1-p)^{x_i - 1}p = (1-p)^{\sum\limits_{i=1}^n x_i - 1} p^n \]
 
 Tomamos logaritmos
 
-\[ \log L(p) = \log(1-p) \left(\sum_{i=1}^n x_i - 1\right) + n\log p \]
+\[ \log L_n(p) = \log(1 - p) \sum_{i=1}^n (x_i - 1) + n \log{p} \]
 
 y derivando
+\begin{gather*}
+\dpa{}{p} \log L_n(p) = \frac{-1}{1-p} \sum_{i=1}^n (x_i - 1) + \frac{n}{p} = 0 \dimplies \\
+\frac{1 - \hat{p}}{\hat{p}} = \frac{1}{n} \sum_{i=1}^n (x_i - 1) \dimplies
+1 - \hat{p} = \hat{p} (\avg{x} - 1) \dimplies
+\text{emv}(p) = \hat{p} = \frac{1}{\avg{x}}
+\end{gather*}
 
-\[ \deriv{}{p} \log L(p) = \frac{-1}{1-p} \left(\sum_{i=1}^n x_i - 1\right)  + \frac{n}{p} \] 
+Vamos a calcular su distribución asintótica, aplicando el método delta.
 
-\[n(1-p) = p \sum_{i=1}^n x_i - 1 \dimplies p = \frac{n}{n + \displaystyle \sum_{i=1}^n (x_i-1)} = T_n\]
+Para ello observamos que tomando $g(x) = \frac{1}{x}$, tenemos que $g(\avg{x}) = \hat{p}$.
 
-El $emv(p) = \displaystyle\frac{1}{1 + \gx}$.
+Comprobamos que $g(\esp{X}) = \frac{1}{\esp{X}} = \frac{1}{\frac{1}{p}} = p $
 
-Vamos a calcular su distribución asintótica. Para ello llamamos $Y = \displaystyle \frac{1}{1+x}$.
+Luego por el método delta y aplicando el TCL:
 
-Calculamos $\gor{Y} = \displaystyle\frac{1}{1+\gx}$ (esto está medio inventado).
+\[ \sqrt{n} (g(\avg{X}) - g(\esp{X})) = \sqrt{n} (\hat{p} - p) \convs[d] N\left(0, \abs{g'(\esp{X})}\sqrt{\var{X}}\right) \]
 
-Suponiendo que ese resultado es correcto, por el TCL tenemos:
+Como $g'(x) = \frac{-1}{x^2}$, y $\var{X} = \frac{1 - p}{p^2} $, entonces
 
-\[\sqrt{n} \left(T_n - \frac{1}{1+\gx}\right) \convs[d] N\left(0,\sqrt{\var{X}}\right)\]
-
-Entiendo que esto no termina de contestar a la distribución asintótica del estimador, con lo que ``despejando'' $T_n$ obtenemos:
-
-\[T_n \convs[d] N\left(\frac{1}{1+\gx} , \sqrt{n}\sqrt{ \var{X}}\right)\]
+\[
+N\left(0, \abs{g'(\esp{X})}\sqrt{\var{X}}\right) =
+N\left(0, \frac{1}{\frac{1}{p^2}} \frac{\sqrt{1-p}}{p} \right) =
+N\left(0, p \sqrt{1-p} \right)
+\]
 
 \end{problem}
 
@@ -671,7 +677,7 @@ Entiendo que esto no termina de contestar a la distribución asintótica del est
 Estudiar si es eficiente el estimador de máxima verosimilitud de una poisson.
 \solution
 
-\[ P(X = k) = e^{-\lambda} \frac{\lambda^{k}}{k!} \]
+\[ P(X = x) = e^{-\lambda} \frac{\lambda^{x}}{x!} \]
 
 El cálculo del estimador de máxima verosimilitud se hizo en clase llegando a $\lambda = \gor{x}$ (\ref{ejEmvPoisson}).
 
@@ -679,17 +685,17 @@ Para ver si es eficiente vemos si es su varianza es igual a la cota de FCR. Nece
 
 Para calcular la información de fisher derivamos el logaritmo de la densidad
 
-\[log f(\lambda;x_1,...,x_n) = -\lambda + k log(\lambda) - \sum log...\]
+\[ \log {f(\lambda; x)} = -\lambda + x \log{\lambda} - \log{x!} \]
 
-\[\dpa{}{\lambda} log f (\lambda;x_1,...,x_n) = - 1 + \frac{x_k}{\lambda} + 0\]
+\[\dpa{}{\lambda} \log{f (\lambda; x)} = - 1 + \frac{x}{\lambda} + 0 \]
 
 Para calcular la información de Fisher podemos volver a derivar o elevar al cuadrado. Elegimos volver a derivar
 
-\[\dpa{^2}{^2\lambda} log f (\lambda;x_1,...,x_n) = -\frac{x_k^2}{\lambda^2}\]
+\[\dpa{^2}{^2\lambda} \log{f (\lambda; x)} = -\frac{x}{\lambda^2}\]
 
-Entonces tenemos que \[I(\lambda) = \esp{-\dpa{^2}{^2\lambda} log f (\lambda;x_1,...,x_n)} = \esp{\frac{x_k}{\lambda^2}} = \frac{1}{\lambda^2}\esp{X} = \frac{1}{\lambda}\]
+Entonces tenemos que \[ I(\lambda) = \esp{-\dpa{^2}{^2\lambda} \log{f (\lambda; x)}} = \esp{\frac{x}{\lambda^2}} = \frac{1}{\lambda^2}\esp{X} = \frac{1}{\lambda} \]
 
-La cota de FCR será entonces $\displaystyle\frac{1}{n\frac{1}{\lambda}} = \frac{\lambda}{n}$.
+La cota de FCR será entonces $\displaystyle\frac{1}{n \frac{1}{\lambda}} = \frac{\lambda}{n}$.
 
 Calculamos la varianza:
 
