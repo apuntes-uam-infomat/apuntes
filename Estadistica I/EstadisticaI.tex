@@ -74,17 +74,19 @@ Si el dato en la posición $p(n+1)$ no es un número entero, entonces se interpo
 El tercer momento con respecto a la media se define como \[ \frac{1}{n}\sum_{i=1}^n\left(x_i-\avg{x}\right)^3 \] que, en su versión adimensional dividimos por $\sigma^3$.
 \end{defn}
 
-Al ser una función cúbica, los valores que se alejen mucho de la media tendrán un valor muy alto en valor absoluto (positivo o negativo según se aleje por la derecha o izquierda, respectivamente). Si la distribución de datos es muy asimétrica, los valores más altos no se cancelan con los valores altos del otro lado (porque no hay) y saldrá un valor más alejado de cero.\footnote{Está explicado como el p. culo, ya.}
+Un valor diferente de 0 indica asimetría de las muestras. Sin embargo, 0 no garantiza simetría, solo que ambas colas se compensan.
 
 \subsection{Representación gráfica de datos}
 
 \begin{defn}[Box-plot]
 El diagrama de caja o \textit{box-plot}  (imagen \ref{imgCaja}) nos permite visualizar las medidas de dispersión respecto a la mediana. Hay que añadir una nueva medida, el \textbf{rango intercuartílico}\index{Rango!intercuartílico}, la diferencia entre el primer y el tercer cuartil: \[RI = Q_3 - Q_1 \]
 
-\easyimg{DiagramaCaja.png}{Diagrama de caja}{imgCaja}
+\newpage
+A partir del rango intercuartílico obtenemos los límites inferior y superior de la representación:
+
+\easyimg{img/DiagramaCaja.png}{Diagrama de caja}{imgCaja}
 \end{defn}
 
-A partir del rango intercuartílico obtenemos los límites inferior y superior de la representación:
 
 \begin{defn}[Límite inferior/superior][Límite!inferior]\index{Límite!superior} Se define el límite superior (LS) y el inferior (LI) de la siguiente forma:
 
@@ -103,11 +105,11 @@ Definimos una serie, las marcas de intervalos $a^n_1, \dotsc, a^n_n$, donde $n$ 
 
 \[ \hat{f}^n(t) = \frac{\card{\left\{i \tq x_i \in \left( a_j^n, a_{j+1}^n \right]\right\}}}{n h_n} = \frac{\displaystyle\sum_{i=1}^m \ind_{(a_j^n, a_{j+1}^n]} (x_i)}{n h_n} \]
 
-Recordemos que \[ \ind_A (n) = \begin{cases} 1 & n \in A \\ 0 & n \notin A\end{cases}\]
+Recordemos la \textbf{función indicatriz}\index{Función!indicatriz} \[ \ind_A (n) = \begin{cases} 1 & n \in A \\ 0 & n \notin A\end{cases}\]
 
-A grandes rasgos, lo que hace en una función es definir un número de intervalos fijos de ancho $h_n$. Al evaluar $\hat{f}^n(t)$ buscamos en qué intervalo cae $t$ y contamos cuántas de nuestras mediciones caen también en ese intervalo.
+A grandes rasgos, lo que hace en una función es definir un número de intervalos fijos de ancho $h_n$. Al evaluar $\hat{f}^n(t)$ buscamos en qué intervalo cae $t$ y contamos cuántas de nuestras mediciones están también en ese intervalo.
 
-\easyimg{DensidadAHistograma.png}{El histograma es una aproximación de la función de densidad real en base a la muestra que hemos obtenido.}{lblDensidad}
+\easyimg{img/DensidadAHistograma.png}{El histograma es una aproximación de la función de densidad real en base a la muestra que hemos obtenido.}{lblDensidad}
 
 \end{defn}
 
@@ -133,11 +135,11 @@ La elección del núcleo $K$ no afecta especialmente a lo bien aproximada que es
 
 La elección del $h_n$ más habitual es el que minimiza la distancia $L^2$ entre $\hat{f}$ y $f$, es decir, el parámetro que minimice $\displaystyle\int\left(\hat{f}_h-f\right)^2$. Sin embargo, hay un problema: no sabemos qué es $f$. Hay trucos que imagino que veremos más tarde.
 
-\easyimgw{Suavizado.png}{Los efectos que causa elegir una ventana más grande o más pequeña en el estimador}{lblSuavizado}{1}
+\easyimgw{img/Suavizado.png}{Los efectos que causa elegir una ventana más grande o más pequeña en el estimador}{lblSuavizado}{1}
 
 Las funciones kernel más usadas son la uniforme, $\frac{1}{2}\ind_{[-1, 1]}$, la gaussiana $\frac{1}{\sqrt{2 \pi}}e^{-\frac{t^2}{2}}$ y la de Epanechnikov, que matemáticamente es la que mejor aproxima $f$.
 
-El estimador kernel $\hat{f}_n(t)$ es la función de densidad de una medida de probabilidad que es la convolución \footnote{Ya aprenderemos en al algún momento de nuestra vida qué narices es una convolución} de dos medidas de probabilidad: una, $K_h(x)$ (el kernel reescalado) y otra que da probabilidad $\frac{1}{n}$ a cada punto de la muestra $\{x_i\}$ (distribución o medida empírica).
+El estimador kernel $\hat{f}_n(t)$ es la función de densidad de una medida de probabilidad que es la convolución \footnote{http://en.wikipedia.org/wiki/Convolution} de dos medidas de probabilidad: una, $K_h(x)$ (el kernel reescalado) y otra que da probabilidad $\frac{1}{n}$ a cada punto de la muestra $\{x_i\}$ (distribución o medida empírica).
 
 \paragraph{Generación de datos del estimador kernel} Supongamos que $K$ es el núcleo gaussiano. Podemos generar datos artificiales de la densidad así:
 
@@ -154,21 +156,24 @@ En esta sección estudiaremos dos variables $(X, Y)$ para explorar la relación 
 \begin{defn}[Diagrama\IS de dispersión]
 El diagrama de dispersión representa cada variable en función de la otra para que podamos ver la posible relación entre ambas. Ver figura \ref{lblDispersion}.
 
-\easyimg{Dispersion.png}{Diagrama de dispersión}{lblDispersion}
+\easyimg{img/Dispersion.png}{Diagrama de dispersión}{lblDispersion}
 \end{defn} 
 
+\newpage
 \subsection{Regresión}
 
 \begin{defn}[Recta de regresión]
 
-La recta de regresión de $y$ sobre $x$ es la recta de forma $\hat{y} = \hat{a} + \hat{b}x$ que más se aproxima a los datos, minimizando los cuadrados de la distancia: \[ (\hat{a},\hat{b}) =\argmin_{a, b} \sum_{i=1}^n\left(y_i - a - bx_i)\right)^2 \]
+La recta de regresión de $y$ sobre $x$ es la recta de forma $\hat{y} = \hat{a} + \hat{b}x$ que más se aproxima a los datos, minimizando los cuadrados de la distancia: \[ (\hat{a},\hat{b}) =\argmin_{a, b} \sum_{i=1}^n\left(y_i - a - bx_i\right)^2 \]
 \end{defn}
 
 La recta de regresión se calcula obteniendo primero $\hat{b}$:
 
 \[ \hat{b} = \frac{\sigma_{x,y}}{\sigma^2_x} \]
 
-donde \[ \sigma_{x,y} = \frac{1}{n} \left( \sum_{i=1}^n x_i y_i\right)  - \avg{x}\avg{y} \] y después, sabiendo que la recta pasa por el punto $(\avg{x}, \avg{y})$, obtenemos $\hat{a}$ \[ \hat{a} = \avg{y} - \hat{b}\avg{x} \]
+donde $\sigma_{x,y}$ se denomina \textbf{covarianza muestral de x e y}\index{Covarianza muestral}:
+\[ \sigma_{x,y} = \frac{1}{n} \sum_{i=1}^n (x_i - \avg{x})(y_i - \avg{y}) = \frac{1}{n} \left( \sum_{i=1}^n x_i y_i \right)  - \avg{x}\avg{y} \]
+y después, sabiendo que la recta pasa por el punto $(\avg{x}, \avg{y})$, obtenemos $\hat{a}$ \[ \hat{a} = \avg{y} - \hat{b}\avg{x} \]
 
 El valor $b$ se denomina \textbf{coeficiente de regresión lineal}\index{Regresión lineal!coeficiente de} o parámetro de la regresión. Cada valor $e_i= y_i - \hat{y}_i$ se denomina \textbf{residuo}\index{Residuo}. Hay que notar que
 
@@ -191,7 +196,7 @@ El coeficiente de correlación lineal o coeficiente de Pearson
 \[ r = \frac{\hat{\sigma}_{x,y}}{\hat{\sigma}_x \hat{\sigma}_y} \] que cumple las siguientes condiciones:
 
 \begin{gather*}
-0 ≤ r^2 ≤ 1 \\
+0 \leq r^2 \leq 1 \\
 \hat{\sigma}_e^2 = \hat{\sigma}_y^2(1-r^2) \\
 r = \hat{b}\frac{\hat{\sigma}_x}{\hat{\sigma}_y} 
 \end{gather*}
@@ -202,9 +207,9 @@ nos indica el grado de ajuste lineal entre las dos variables. Un valor absoluto 
 
 \chapter{Muestreo aleatorio}
 
-La muestra aleatoria de una cierta v.a. $X$ se denomina como la \textbf{muestra aleatoria} o simplemente \textbf{muestra}.\index{Muestra}
+La muestra aleatoria de una cierta v.a.\footnote{variable aleatoria} $X$ se denomina como la \textbf{muestra aleatoria} o simplemente \textbf{muestra}.\index{Muestra}
 
-Durante este tema, usaremos conceptos de Probabilidad, que repasaré aquí brevemente porque no me apetece escribir demasiado.
+Durante este tema, usaremos conceptos de Probabilidad, que repasaré aquí brevemente\footnote{repasa PROB I}.
 
 \section{Conceptos de probabilidad}
 
@@ -213,23 +218,25 @@ Durante este tema, usaremos conceptos de Probabilidad, que repasaré aquí breve
 \end{defn}
 
 \begin{defn}[Función\IS de distribución]
-\[F(t) = \prob{X ≤ t} \]
+\[F(t) = \prob{X \leq t} \]
 \end{defn}
 
 \begin{defn}[Media\IS de una distribución] \index{Esperanza} También llamada esperanza de X:
 \[ \esp X  = \int_{-\infty}^\infty F(t)\,dt \]
 \end{defn}
 
+\newpage
 \begin{theorem}[Teorema\IS de cambio de espacio de integración] Sea $g$ una función real medible tal que $\esp{g(X)}$ es finita, entonces 
 
-\[ \esp{g(X))} = \int_\real g(x) \dif F(x) = \int_\real g(x) \dif P(x) \]. 
+\[ \esp{g(X))} = \int_\real g(x) \dif F(x) = \int_\real g(x) \dif P(x) \]
 
-En particular \[ µ =\int_\real x \dif F(x)  \] y \[ \sigma^2 = \int_\real \left(x - µ\right)^2 \dif F(x) \]
+\noindent En particular \[ \esp{X} := \mu =\int_\real x \dif F(x)  \]
+y \[ \var{X} := \sigma^2 = \int_\real \left(x - \mu\right)^2 \dif F(x) \]
 \end{theorem}
 
-\begin{defn}[Momento] El momento $µ_k$ es la esperanza de X elevado a una potencia de orden $k$. Es el valor esperado de la distancia de orden $k$ con respecto a la media
+\begin{defn}[Momento] El momento $\mu_k$ es la esperanza de X elevado a una potencia de orden $k$. Es el valor esperado de la distancia de orden $k$ con respecto a la media
 
-\[ µ_k = \esp{(X-µ)^k} \]
+\[ \mu_k = \esp{(X-\mu)^k} \]
 \end{defn}
 
 \subsection{Distribuciones aleatorias}
@@ -242,7 +249,7 @@ Queremos buscar convergencias entre variables aleatorias.
 
 \begin{defn}[Convergencia\IS en distribución]\index{Convergencia!débil}
 
-Se dice que $X_n$ converge débilmente o en distribución a $X$ si la función de distribución de $X_n$ $F_n(x)$ tiende a $F(x)$ para todo $x$ punto de continuidad de $F$, donde $F$ y $F_n$ son las funciones de distribución de $X$ y $X_n$ respectivamente.
+Se dice que $X_n$ converge débilmente o en distribución a $X$ si la función de distribución de $X_n$, $F_n(x)$, tiende a $F(x)$ para todo $x$ punto de continuidad de $F$; donde $F$ y $F_n$ son las funciones de distribución de $X$ y $X_n$ respectivamente.
 
 Esto es equivalente a decir que  
 
@@ -251,17 +258,21 @@ Notación:
 \[ X_n  \convdist X \text{ ó }  X_n \convs[w] X \] 
 \end{defn}
 
+\newpage
 \begin{defn}[Convergencia\IS en probabilidad] 
 Se dice que $X_n$ converge en probabilidad a $X$ si $\forall \epsilon > 0$ se tiene que 
 
-\[\prob{\abs{X_n-X} > \epsilon} \convs 0 \].
+\[\prob{\abs{X_n-X} > \epsilon} \convs 0 \]
 
- Es decir, que para cualquier error que tomemos el error cometido en la aproximación va a tender a cero siempre que tome un $X_n$ suficientemente grande.
+Es decir, que para cualquier error que tomemos el error cometido en la aproximación va a tender a cero siempre que tomemos un $X_n$ suficientemente grande.
 
 Notación: \[ X_n \convprob X \]
 \end{defn}
 
-\begin{defn}[Convergencia\IS casi segura] También denotada c.s o a.s en inglés, convergencia en casi todo punto (c.t.p) o convergencia con probabilidad 1. Se dice que $X_n$ converge a $X$ casi seguro si el conjunto de puntos que no son convergentes tiende a ser vacío. Es decir \[ \prob{X_n \convs X} = 1\]. Otra forma de interpretarlo es: $X_n \convs X$ cuando el conjunto de los $\omega$ tales que $X(\omega)$ es el límite de la sucesión $X_n(\omega)$ tiene probabilidad 1.
+\begin{defn}[Convergencia\IS casi segura] También denotada c.s o a.s en inglés, convergencia en casi todo punto (c.t.p) o convergencia con probabilidad 1.\\
+Se dice que $X_n$ converge a $X$ casi seguro si el conjunto de puntos que no son convergentes tiende a ser vacío. Es decir
+\[ \prob{X_n \convs X} = 1\]
+Otra forma de interpretarlo es: $X_n \convs X$ cuando el conjunto de los $\omega$ tales que $X(\omega)$ es el límite de la sucesión $X_n(\omega)$ tiene probabilidad 1.
 
 Más estrictamente, la condición se expresa como \[\prob{\omega \in \Omega\tq X_n(\omega) \convs X(\omega)} = 1\]
 
@@ -272,10 +283,10 @@ Notación \[ X_n\convcs X \]
 \begin{theorem}Se puede probar que si $\{X_n\}$ es una sucesión de variables aleatorias y $X$ es variable aleatoria, 
 
 \[ X_n\convcs X \implies X_n \convprob X \implies X_n \convdist X \]
-La recíproca no tiene por qué darse.
+La recíproca no es cierta.
 \end{theorem}
 
-
+\newpage
 \begin{theorem}[Teorema\IS de Slutsky]\label{thmSlutsky} Sean $\{X_n\}$, $\{Y_n\}$ sucesiones de variables aleatorias tales que $X_n\convdist X$, $Y_n\convprob c$ con $c\in\real$ constante. Entonces
 
 \begin{enumerate}
@@ -287,39 +298,39 @@ La recíproca no tiene por qué darse.
 
 \subsubsection{Desigualdades básicas}
 
-\begin{theorem}[Desigualdad\IS de Markov]\label{desMarkov} Sea $X$ v.a. Entonces, $\forall \epsilon > 0$, \[ \prob{\abs{X} > \epsilon} ≤ \frac{\esp{X}}{\epsilon} \]
+\begin{theorem}[Desigualdad\IS de Markov]\label{desMarkov} Sea $X$ v.a. Entonces, $\forall \epsilon > 0$, \[ \prob{\abs{X} > \epsilon} \leq \frac{\esp{X}}{\epsilon} \]
 \end{theorem}
 
-\begin{theorem}[Desigualdad\IS de Chebichev] En las mismas condiciones del teorema anterior, se cumple que  \[ \prob{\abs{X - \esp{X}} > \epsilon} ≤ \frac{\var {X}}{\epsilon^2} \]
+\begin{theorem}[Desigualdad\IS de Chebichev] Sea $X$ v.a. Entonces, $\forall \epsilon > 0$, se cumple que  \[ \prob{\abs{X - \esp{X}} > \epsilon} \leq \frac{\var {X}}{\epsilon^2} \]
 \end{theorem}
 
+\newpage
 \section{Problema de inferencia}
 \subsection{Interpretación estadística de la ley de los grandes números}
 
-\begin{theorem}[Ley\IS de los grandes números] Sea $\{x_k\}$ una sucesión de v.a.i.i.d con media finita $µ$. Se verifica entonces que 
+\begin{theorem}[Ley\IS de los grandes números] Sea $\{x_k\}$ una sucesión de v.a.i.i.d. con media finita $\mu$. Se verifica entonces que 
 \label{thmGrandes}
-\[ \avg{X} = \frac{\displaystyle\sum_{i=1}^n x_i}{n} \convcs µ \]
-
+\[ \avg{X} = \frac{1}{n}\displaystyle\sum_{i=1}^n x_i \convcs \mu \]
 \end{theorem}
 
 \subsection{Función de distribución empírica}
 
 \begin{defn}[Función\IS de distribución empírica] La función de distribución empírica asociada a la muestra $\{x_n\}$ se define mediante
 
-\[ \prob{X ≤ t} =  \fd_n(t) = \frac{1}{n}\sum_{i=1}^n \ind_{(-\infty, t]} (x_i) \]
+\[ \prob{X \leq t} =  \fd_n(t) = \frac{1}{n}\sum_{i=1}^n \ind_{(-\infty, t]} (x_i) \]
 
 Es decir, $\fd_n(t)$ es la proporción de puntos de la muestra que caen en el intervalo $(-\infty, t]$.
 \end{defn}
 
 Sin embargo, surge una duda: ¿converge la función de distribución empírica a la función de distribución original?
 
-Intuitivamente, podemos pensar que cuantos más puntos cojamos más se aproximará a la función de distribución original. De hecho, eso es lo que demuestra el siguiente teorema:
+Intuitivamente, podemos pensar que cuantos más puntos cojamos, más se aproximará a la función de distribución original. De hecho, eso es lo que demuestra el siguiente teorema:
 
-\begin{theorem}[Teorema\IS de Glivenko-Cantelli] Sean $\{x_n\}$ v.a.i.i.d con función de distribución $F$. Se verifica que
+\begin{theorem}[Teorema\IS de Glivenko-Cantelli] Sean $\{x_n\}$ v.a.i.i.d. con función de distribución $F$. Se verifica que
 \label{thmGlivenko}
 \[ \md{\fd_n - F}_\infty=\sup_{t\in\real} \abs{\fd_n(t) - F(t)} \convcs 0 \]
 
-donde $\md{\fd_n - F}_\infty$ es el \index{Estadístico! de Kolmogorov-Smirnov} \textbf{estadístico de Kolmogorov-Smirnov}.
+donde $\md{\fd_n - F}_\infty$ es el \textbf{estadístico de Kolmogorov-Smirnov}\index{Estadístico! de Kolmogorov-Smirnov}.
 
 \end{theorem}
 
@@ -332,7 +343,8 @@ Empezamos demostrando la convergencia de los términos intermedios. Es decir, qu
 
 Tenemos que \[ \fd_n(t) = \frac{1}{n}\sum_{i=1}^n \ind_{(-\infty, t]} (x_i) \]
 
-A cada uno de los términos de los términos de la suma $\ind_{(-\infty, t]}(x_i)$ los podemos llamar $y_i$. Estos valores son una muestra de la distribución \[ Y = \ind_{(-\infty, t]}(X) \]. Por lo tanto y por la LGN (\ref{thmGrandes}) \[ \fd_n(t) = \frac{1}{n}\sum_{i=1}^n Y_i = \avg{Y} \convcs \esp{Y} \]
+A cada uno de los términos de los términos de la suma $\ind_{(-\infty, t]}(x_i)$ los podemos llamar $y_i$. Estos valores son una muestra de la distribución \[ Y = \ind_{(-\infty, t]}(X) \]
+Por lo tanto y por la LGN (\ref{thmGrandes}) \[ \fd_n(t) = \frac{1}{n}\sum_{i=1}^n Y_i = \avg{Y} \convcs \esp{Y} \]
 
 pero
 
@@ -341,7 +353,7 @@ pero
 Ahora tenemos que demostrar que el límite por la izquierda converge. Es decir, hay que demostrar que \begin{equation}
  \fd_n(t^-) \convcs F(t^-)  \label{eqConvIzq}
 \end{equation}. Esa convergencia se da si y sólo si en un conjunto de probabilidad $1$ se tiene que $ \fd_n(t^-) \convs F(t^-) $. Según la definición de límite, esto se da si y sólo si \begin{equation}
- \forall \epsilon > 0\; \exists N \tq n ≥ N \implies \abs{\fd_n(t^-) - F(t^-) } < \epsilon \label{eqLim1} \end{equation}
+ \forall \epsilon > 0\; \exists N \tq n \geq N \implies \abs{\fd_n(t^-) - F(t^-) } < \epsilon \label{eqLim1} \end{equation}
 
 Sabemos que 
 \begin{equation}
@@ -356,37 +368,39 @@ Seguimos:
 
 Tomamos $x\in(t-\delta, t)$ con un delta que cumpla tanto la condición en (\ref{eqLim2}) como en (\ref{eqLim3}). Entonces
 
-\[ \abs{\fd_n(t^-) - F(t^-)} =  \abs{\fd_n(x) - F(x) + F(x) - F(t^-)} ≤ \underbrace{\abs{\fd_n(x) - F(x)}}_{(a)} + \underbrace{\abs{F(x) - F(t^-)}}_{(b)} \]
+\[ \abs{\fd_n(t^-) - F(t^-)} =  \abs{\fd_n(x) - F(x) + F(x) - F(t^-)} \leq \underbrace{\abs{\fd_n(x) - F(x)}}_{(a)} + \underbrace{\abs{F(x) - F(t^-)}}_{(b)} \]
 
 Sabemos que $(a)$ es menor que $\frac{\epsilon}{2}$ por (\ref{eqLim1}) y que $(b)$ también es menor que $\frac{\epsilon}{2}$ por (\ref{eqLim3}), por lo tanto 
 
 \[ \abs{\fd_n(t^-) - F(t^-)}  < \epsilon \]
 
-Buscamos ahora una partición finita de $\real$ dada por $t_0 = -\infty ≤ t_1 ≤ \dotsb ≤ t_k = \infty$ tal que para todo $\epsilon > 0$ se cumpla que $\abs{F(t_i^-) - F(t_{i-1})} ≤ \epsilon$. Lo construimos de forma recursiva: dado $t_{i-1}$ tomamos
+Buscamos ahora una partición finita de $\real$ dada por $t_0 = -\infty \leq t_1 \leq \dotsb \leq t_k = \infty$ tal que para todo $\epsilon > 0$ se cumpla que $\abs{F(t_i^-) - F(t_{i-1})} \leq \epsilon$. Lo construimos de forma recursiva: dado $t_{i-1}$ tomamos
 
-\[ t_i =\sup_{z\in\real} \{ F(z) ≤ F(t_{i-1} + \epsilon \} \]
+\[ t_i =\sup_{z\in\real} \{ F(z) \leq F(t_{i-1} + \epsilon \} \]
 
-El siguiente paso: para todo $t_{i-1} ≤ t ≤ t_i$ se tiene que 
+El siguiente paso: para todo $t_{i-1} \leq t \leq t_i$ se tiene que 
 
-\[ \fd_n(t) - F(t) ≤ \fd_n(t_i^-) - F(t_i^-) + \epsilon \]
+\[ \fd_n(t) - F(t) \leq \fd_n(t_i^-) - F(t_i^-) + \epsilon \]
 
-Como $\fd_n$ es no decreciente (es una función de distribución), tenemos también que 
+Como $\fd_n $ es no decreciente (es una función de distribución), tenemos también que 
 
-\[ \fd_n(t) - F(t) ≥ \fd_n(t_{i-1}) - F(t_{i-1}) - \epsilon \]
+\[ \fd_n(t) - F(t) \geq \fd_n(t_{i-1}) - F(t_{i-1}) - \epsilon \]
 
 Con estas dos últimas ecuaciones, llegamos a que 
 
-\[ \sup_{t\in\real} \abs{\fd_n(t) - F(t)} ≤ \max\left\lbrace \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i) - F(t_i)},\; \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i^-) - F(t_i^n)} \right\rbrace + \epsilon \]
+\[ \sup_{t\in\real} \abs{\fd_n(t) - F(t)} \leq \max\left\lbrace \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i) - F(t_i)},\; \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i^-) - F(t_i^n)} \right\rbrace + \epsilon \]
 
-Por (\ref{eqConvCsGC}), sabemos que $\abs{\fd_n(t_i) - F(t_i)} \convcs 0$, y por lo tanto \[ \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i) - F(t_i)} \convcs 0 \].
+Por (\ref{eqConvCsGC}), sabemos que $\abs{\fd_n(t_i) - F(t_i)} \convcs 0$, y por lo tanto \[ \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i) - F(t_i)} \convcs 0 \]
 
-De la misma forma, usando (\ref{eqConvIzq}) tenemos que \[ \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i^-) - F(t_i^n)} \convcs 0 \]. Por lo tanto, todo ese máximo enorme vale 0, de tal forma que 
+De la misma forma, usando (\ref{eqConvIzq}) tenemos que \[ \max_{i=1,\dotsc ,k} \abs{\fd_n(t_i^-) - F(t_i^n)} \convcs 0 \]
+Por lo tanto, todo ese máximo enorme vale 0, de tal forma que 
 
-\[ \lim_{n\to\infty} \sup_{t\in\real} \abs{\fd_n(t) - F(t)}  =  \lim_{n\to\infty} \md{\fd_n - F}_\infty ≤ \epsilon \]
+\[ \lim_{n\to\infty} \sup_{t\in\real} \abs{\fd_n(t) - F(t)}  =  \lim_{n\to\infty} \md{\fd_n - F}_\infty \leq \epsilon \]
 
 para cualquier $\epsilon > 0$ arbitrario que cojamos. Es decir, que \[ \md{\fd_n - F}_\infty=\sup_{t\in\real} \abs{\fd_n(t) - F(t)} \convcs 0 \]
 \end{proof}
 
+\newpage
 \section{Estadísticos}
 
 Cuando extraemos una muestra $\{x_n\}$ de $X$ se pueden calcular algunas \textit{medidas resumen}. Cualquiera de ellas se puede expresar matemáticamente como una función $T(x_1,\dotsc,x_n)$ de la muestra. 
@@ -398,14 +412,14 @@ Sea $T(x_1,\dotsc,x_n)$ una función cuyo dominio incluye el espacio muestral de
 Como la distribución de $T$ se calcula a partir de la distribución de las variables $X_i$ que constituyen la muestra, la denominaremos distribución de $T$ en el muestreo (\textit{sampling distribution).}
 
 \begin{defn}[Error\IS típico]\index{Error!estándar}
-El error estándar o error típico $\sigma$ de un estadístico $T$ es la desviación típica de su distribución en el muestreo. Como en ocasiones depende de alguna cantidad desconocida, también se denomina error típico a una estimación de ese valor.
+El error estándar o error típico $\sigma$ de un estadístico $T$, es la desviación típica de su distribución en el muestreo. Como en ocasiones depende de alguna cantidad desconocida, también se denomina error típico a una estimación de ese valor.
 \end{defn}
 
 En ocasiones, se cumple que $\dfrac{T}{\sigma}$ sigue una distribución t de Student, lo que nos permitirá definir intervalos de confianza.
 
 \subsection{Media muestral y poblacional}
 
-\begin{defn}[Media\IS muestral] La media muestral \[ \avg{X} = \frac{\sum_{i=1}^n X_i}{n} \] se puede expresar de la siguiente forma
+\begin{defn}[Media\IS muestral] La media muestral \[ \avg{X} = \frac{1}{n}\sum_{i=1}^n X_i \] se puede expresar de la siguiente forma
 
 \[ \avg{X} = \int_\real x\,d\fd_n(x) \]
 \end{defn}
@@ -413,40 +427,54 @@ En ocasiones, se cumple que $\dfrac{T}{\sigma}$ sigue una distribución t de Stu
 \index{Media!poblacional}
 La definición es análoga con la de la \textbf{media poblacional}
 
-\[ µ = \int_\real x \,dF(x) \]
+\[ \mu = \int_\real x \,dF(x) \]
 
-Esto nos da una clave de la estadística: sustituir todo lo que desconozco de la población con su análogo muestral (en este caso, pasamos de la función de distribución teórica a la función de distribución empírica). Sólo quedaría ver si los estimadores que resultan son adecuados.
+Esto nos da una clave de la estadística: sustituir todo lo que desconozco de la población con su análogo muestral\footnote{método plugin} (en este caso, pasamos de la función de distribución teórica a la función de distribución empírica). Sólo quedaría ver si los estimadores que resultan son adecuados.
 
-La media muestral tiene otras relaciones muy importantes con $µ$:
+\newpage
+La media muestral tiene otras relaciones muy importantes con $\mu$:
 
 \begin{enumerate}
-\item $\avg{X}$ es \index{Estimador!insesgado}\index{Estimador!centrado} \textbf{estimador insesgado o centrado} de µ: $ \esp{\avg{X}} = µ$
-\item $\var{\avg{X}} = \dfrac{\sigma^2}{n}$. Como es inversamente proporcional, está claro que cuantos más datos haya mejor nos aproximaremos a lo que queremos estimar.
+\item $\avg{X}$ es \index{Estimador!insesgado}\index{Estimador!centrado} \textbf{estimador insesgado o centrado} de $\mu$: $ \esp{\avg{X}} = \mu $
+\item $\var{\avg{X}} = \dfrac{\sigma^2}{n}$. Como es inversamente proporcional, está claro que cuantos más datos haya, mejor nos aproximaremos a lo que queremos estimar.
 \end{enumerate}
 
-\begin{theorem}[Teorema\IS central del límite] Suponemos que $\{X_n\}$ son v.a.i.i.d. con media $µ$ y desviación típica $\sigma$ finitas. Entonces
+\begin{theorem}[Teorema\IS central del límite] Suponemos que $\{X_n\}$ son v.a.i.i.d. con media $\mu$ y desviación típica $\sigma$ finitas. Entonces
 \label{thmCentral}
-\[ \sqrt{n}\frac{\avg{X}-µ}{\sigma} \convdist N(0,1) \]
+\[ \sqrt{n}\frac{\avg{X}-\mu}{\sigma} \convdist Z \sim N(0,1)\]
 
 Si denotamos la función de distribución de la normal como \[ \Phi(x) = \int_{-\infty}^x \frac{1}{\sqrt{2\pi}} e^{-\frac{t^2}{2}}\] entonces
 
-\[ \forall t\in\real\quad \prob{ \sqrt{n}\frac{\avg{X}-µ}{\sigma} ≤ t } \convs \Phi(t) \]
+\[
+\forall t\in\real\quad \prob{ \sqrt{n}\frac{\avg{X}-\mu}{\sigma} \leq t } \convs
+\Phi(t) = \prob{Z \leq t}
+\]
 
-Por tanto, para $n$ grande se tiene
+Por tanto, para $n$ grande se cumple
 
-\[ \prob{\sqrt{n} \left(\avg{X} - µ\right) ≤ x} ≈ \Phi(\frac{x}{\sigma}) \]
+\[ \prob{\sqrt{n} \left(\avg{X} - \mu\right) \leq x} ≈ \Phi(\frac{x}{\sigma}) \]
 
-\textbf{aunque las $X_i$ no tengan distribución normal.}
+\textbf{aunque las $X_i$ no tengan distribución normal}.\\
+\noindent Es decir:
+\[
+\sqrt{n}\frac{\avg{X} - \mu}{\sigma} \dimplies
+\sqrt{n}(\avg{X} - \mu) \approx N(0,\sigma) \dimplies
+\]
+\[
+X - \mu \approx N(0,\frac{\sigma}{\sqrt{n}}) \dimplies
+X \approx N(\mu,\frac{\sigma}{\sqrt{n}})
+\]
 
 \end{theorem}
 
+\newpage
 \subsection{Varianza muestral y poblacional}
 
 Una medida importante de dispersión de una variable aleatoria es la varianza \begin{equation}
- \mathbb{V}(X)=\sigma^2 = \int_\real(x-µ)^2 \,dF(x) \label{eqVarianza}
+ \mathbb{V}(X)=\sigma^2 = \int_\real(x-\mu)^2 \,dF(x) \label{eqVarianza}
 \end{equation}
 
-\begin{defn}[Varianza\IS muestral]El análogo muestral de $\sigma^2$ es la \textbf{varianza muestral.}. Utilizando el criterio \textit{plugin} en (\ref{eqVarianza})
+\begin{defn}[Varianza\IS muestral]El análogo muestral de $\sigma^2$ es la \textbf{varianza muestral}. Utilizando el criterio \textit{plugin} en (\ref{eqVarianza})
 
 \[\hat{\sigma}^2_n = \int_\real (x-\avg{X})^2\,d\fd_n(x) = \frac{1}{n}\sum_{i=1}^n(X_i - \avg{X})^2 \]
 \end{defn}
@@ -465,32 +493,31 @@ Por lo tanto, la varianza muestral es un estimador sesgado. No es un problema gr
 
 también tiende a cero. Es decir, es \index{Asintóticamente!insesgado} \textbf{asintóticamente insesgado}.
 
-\begin{defn}[Cuasivarianza\IS muestral] En lugar de usar $\hat{\sigma}^2_n$ usamos la cuasivarianza muestral, definida como
-
-\[ S^2 = \frac{n}{n-1}\hat{\sigma}^2_n \] de tal forma que se tiene
-
+\begin{defn}[Cuasivarianza\IS muestral]
+En lugar de usar $\hat{\sigma}^2_n$ usamos la cuasivarianza muestral, definida como
+\[ S^2 = \frac{n}{n-1}\hat{\sigma}^2_n \]
+de tal forma que se tiene
 \begin{gather*}
 \esp{S^2} = \sigma^2 \\
 S^2 \convcs \sigma^2 
 \end{gather*}
 \end{defn}
-
 \subsection{Estadísticos de orden}
 
-\begin{defn}[Estadístico\IS de orden]Dada una muestra $\{X_n\}$, se denotan como \[ X_{(1)} ≤ \dotsb ≤ X_{(n)} \] las observaciones de la muestra ordenadas de menor a mayor, llamados \textbf{estadísticos de orden}. Cuando la distribución de las v.a. es continua, la probabilidad de coincidencia en valores es $0$ y con probabilidad $1$ se tiene que \[ X_{(1)} < \dotsb < X_{(n)} \]
+\pagebreak
+\begin{defn}[Estadístico\IS de orden]
+Dada una muestra $\{X_n\}$, se denotan como \[ X_{(1)} \leq \dotsb \leq X_{(n)} \] las observaciones de la muestra ordenadas de menor a mayor, llamados \textbf{estadísticos de orden}. Cuando la distribución de las v.a. es continua, la probabilidad de coincidencia en valores es $0$ y con probabilidad $1$ se tiene que \[ X_{(1)} < \dotsb < X_{(n)} \]
 \end{defn}
 
 Los estadísticos de orden pueden utilizarse para definir la mediana o los cuartiles. Sin embargo, podemos usar la función cuantílica para definir mejor estos conceptos.
 
 \begin{defn}[Función\IS cuantílica] La función cuantílica en $p$ es el punto que deja una probabilidad $p$ a la izquierda, de tal forma que una proporción $p$ de los individuos de la población $X$ sería menor que el cuantil poblacional de orden $p$.
 
-La función cuantílica correspondiente a la función de distribución $F$ como la función 
-
-
+La función cuantílica correspondiente a la función de distribución $F$ se define
 
 \begin{gather*}
 \appl{\inv{F}}{\real}{(0,1)} \\
-\inv{F}(p) = \inf \left\lbrace x \tq F(x) ≥ p \right\rbrace 
+\inv{F}(p) = \inf \left\lbrace x \tq F(x) \geq p \right\rbrace 
 \end{gather*}
 \end{defn}
 
@@ -498,7 +525,7 @@ La función cuantílica nos permite obtener los \textbf{cuantiles poblacionales 
 
 \chapter{Estimación paramétrica}
 
-En este tema, supondremos que la muestra, absolutamente continua o discreta, con función de densidad o probabilidad $f(.;\theta)$ que es totalmente conocida salvo el valor de un parámetro $\theta$ del cuál sólo se conoce su rango de posibles valores $\Theta$, al que se llama el \textbf{espacio paramétrico.}\index{Espacio!paramétrico}
+En este tema supondremos que la muestra es absolutamente continua o discreta, con función de densidad o probabilidad $f(.;\theta)$ que es totalmente conocida salvo el valor de un parámetro $\theta$ del cuál sólo se conoce su rango de posibles valores $\Theta$, al que se llama el \textbf{espacio paramétrico.}\index{Espacio!paramétrico}
 
 \section{Estimadores}
 
@@ -515,10 +542,11 @@ Podemos evaluar la calidad de un estimador con el \textbf{error cuadrático medi
 
 Si sumamos y restamos $\esp{T_n}$, nos queda que 
 
-\[ \ECM (T_n) = \var{T_n} + \sesgo^2 T_n \]
+\[ \ECM (T_n) = \var{T_n} + \sesgo^2(T_n) \]
 
 que nos describe el error cuadrático medio en función de la varianza y del sesgo de $T_n$.
 
+\newpage
 \subsection{Propiedades interesantes de los estimadores}
 Buscaremos varias propiedades interesantes de los estimadores:
 
@@ -547,13 +575,13 @@ Otra forma de probarlo sería usar la desigualdad de Markov (\ref{desMarkov}). B
 
 entonces
 
-\[ \prob{\abs{T_n - \theta} > \epsilon}   = \prob{(T_n - \theta)^2 > \epsilon^2} \]
+\[ \prob{\abs{T_n - \theta} > \epsilon} = \prob{(T_n - \theta)^2 > \epsilon^2} \]
 
 que por Markov tenemos que
 
-\[ \prob{(T_n - \theta)^2 > \epsilon^2} ≤ \frac{\esp{T_n-\theta}^2}{\epsilon^2} \]
+\[ \prob{(T_n - \theta)^2 > \epsilon^2} \leq \frac{\esp{T_n - \theta}^2}{\epsilon^2} \]
 
-y entonces sólo nos quedaría probar que $\esp{T_n-\theta}^2 \convs 0$.
+y entonces sólo nos quedaría probar que $\esp{T_n - \theta}^2 \convs 0$.
 
 También podemos usar condiciones suficientes
 
@@ -566,7 +594,7 @@ entonces $T_n \convcs \theta$.
 
 Con esta condición, bastaría ver que la probabilidad o la esperanza convergen y automáticamente se cumpliría la condición.
 
-\begin{example} Sean $\{X_n\}$ v.a.i.i.d con distribución uniforme en el intervalo $[0,\theta]$ con $\theta > 0$. Estudiar la consistencia de los siguientes estimadores de $\theta$
+\begin{example} Sean $\{X_n\}$ v.a.i.i.d. con distribución uniforme en el intervalo $[0,\theta]$ con $\theta > 0$. Estudiar la consistencia de los siguientes estimadores de $\theta$
 
 \paragraph{a)}
 
@@ -576,7 +604,7 @@ Este estimador se basa en que $\esp{X} = \frac{\theta}{2}$. Esto se estima media
 
 Como $T_n$ se expresa como una función continua de la media muestral, por la LFGN y el teorema de la aplicación continua 
 
-\[ T_n = g(\avg{X}) \convcs g(µ) = 2µ = 2\esp{X} = \theta \]
+\[ T_n = g(\avg{X}) \convcs g(\mu) = 2\mu = 2\esp{X} = \theta \]
 
 y por lo tanto tiene consistencia fuerte.
 
@@ -614,15 +642,15 @@ Si quisiésemos explorar cuál de los dos estimadores es mejor, usaríamos el er
 
 ¿Cómo se puede probar la normalidad asintótica? La herramienta se llama el \textbf{método delta}\label{defMetDelta} \index{Método!delta} y es consecuencia casi inmediata del teorema del valor medio y de las propiedades de la convergencia en distribución: intentaremos expresar el estimador que se propone como una función $C^1$ de la media muestral y aplicar entonces el Teorema Central del Límite (\ref{thmCentral}).
 
-Si llamamos $T_n = g(\avg{X})$ con $g\in C^1$ entonces podemos expresar, con un $µ^\ast$ entre $\avg{X}$ y $µ$
+Si llamamos $T_n = g(\avg{X})$ con $g\in C^1$ entonces podemos expresar, con un $\mu^\ast$ entre $\avg{X}$ y $\mu$
 
-\[ \sqrt{n} (g(\avg{X}) - g(µ)) \underset{TVM}{=} g'(µ^\ast) \sqrt{n}(\avg{X} -µ) \]
+\[ \sqrt{n} (g(\avg{X}) - g(\mu)) \underset{TVM}{=} g'(\mu^\ast) \sqrt{n}(\avg{X} -\mu) \]
 
-Como $\avg{X}\convcs µ$ entonces $µ^\ast \convcs µ$ y por lo tanto y usando el Thm. de la aplicación continua (\ref{thmApContinua}) $g'(µ^\ast)\convcs g'(µ)$. Al final 
+Como $\avg{X}\convcs \mu$ entonces $\mu^\ast \convcs \mu$ y por lo tanto y usando el Thm. de la aplicación continua (\ref{thmApContinua}) $g'(\mu^\ast)\convcs g'(\mu)$. Al final 
 
-\[ g'(µ^\ast) \sqrt{n}(\avg{X} -µ) \convdist N(0, \abs{g'(µ)}\sigma) \]
+\[ g'(\mu^\ast) \sqrt{n}(\avg{X} -\mu) \convdist N(0, \abs{g'(\mu)}\sigma) \]
 
-En general, se habla de normalidad asintótica con tasa $a_n$ si se cumple que \[ a_n (T_n - \theta) \convdist N(0,\sigma) \], con $a_n$ sucesión creciente y mayor que cero.
+En general, se habla de normalidad asintótica con tasa $a_n$ si se cumple que \[ a_n (T_n - \theta) \convdist N(0,\sigma) \] con $a_n$ sucesión creciente y mayor que cero.
 
 \subsection{Estimador de máxima verosimilitud (EMV)}
 
@@ -635,14 +663,14 @@ Intuitivamente, lo que pensamos con este método es que la función de masa mide
 \[ L_n(\theta;x_1,\dotsc,x_n) = L_n(\theta) = \prod_{i=1}^n f(x_i;\theta) \]
 \end{defn}
 
-\begin{defn}[Estimador\IS de máxima verosimilitud] También llamado EMV o MLE (\textit{maximum likelihood estimator}) es el argumento que maximiza la función de verosimilitud:
+\begin{defn}[Estimador\IS de máxima verosimilitud]\label{defEMV} También llamado EMV o MLE (\textit{maximum likelihood estimator}) es el argumento que maximiza la función de verosimilitud:
 
 \[ \hat{\theta}_n = \hat{\theta}_n(x,\dotsc,x_n) = \argmax_{\theta\in\Theta} L_n(\theta;x_1,\dotsc,x_n) \]
 
 cuando ese máximo está bien definido.
 \end{defn}
 
-Para evitar usar derivadas en un producto potencialmente muy largo, podemos maximizar el logaritmo de la verosimilitud, que es creciente y está bien definido porque la densidad es siempre mayor que cero, y los casos en los que sea cero no los estudiamos porque no ocurren (probabilidad 0).
+Para evitar usar derivadas en un producto potencialmente muy largo, podemos maximizar el logaritmo de la verosimilitud, que es creciente y está bien definido porque la densidad es siempre mayor que cero, y los casos en los que sea cero no los estudiamos porque no ocurren (ocurren con probabilidad 0).
 
 \subsubsection{Cálculo efectivo}
 
@@ -658,75 +686,114 @@ El valor del estimador se obtiene como solución de la \index{Ecuación!de veros
 
 Dada una muestra $\{x_n\}$ de $X$. Entonces
 
-\[ L_n(\lambda) = \prod_{i=1}^n f(x_i;\lambda) = \prod_{i=1}^n \prob{X=x} = \prod_{i=1}^n e ^{-\lambda}\frac{\lambda^x}{x!} = e^{-n\lambda}\frac{\lambda^{\sum_{i=1}^nx_1}}{x_1!\dotsb x_n!} \]
+\[
+L_n(\lambda) =
+\prod_{i=1}^n f(x_i;\lambda) =
+\prod_{i=1}^n \prob{X=x} =
+\prod_{i=1}^n e ^{-\lambda}\frac{\lambda^x}{x!} =
+e^{-n\lambda}\frac{\lambda^{\sum\limits_{i=1}^nx_i}}{x_1!\dotsb x_n!}
+\]
 
 Tomamos logaritmos:
-
-\[ \log  L_n(\lambda) = -n\lambda + \log\lambda \sum_{i=1}^n x_i- \log\left(x_1!\dotsb x_n!\right) \]
-
+\[
+\log L_n(\lambda) =
+-n\lambda + \log\lambda \sum_{i=1}^n x_i- \log\left(x_1!\dotsb x_n!\right)
+\]
 y derivando
+\[
+\dpa{}{\lambda}\log L_n(\lambda) =
+-n +\frac{1}{\lambda} \sum_{i=1}^n x_i
+\]
 
-\[ \dpa{}{\lambda}\log  L_n(\lambda)  = -n +\frac{1}{\lambda} \sum_{i=1}^n x_i \]
-
-de tal forma que nos queda \[ \hat{\lambda} = \frac{\sum_{i=1}^n x_i}{n} = \avg{x} \].
+de tal forma que nos queda \[ \hat{\lambda} = \frac{1}{n}\sum\limits_{i=1}^n x_i = \avg{x} \]
 
 En la imagen (\ref{imgPoisson}) vemos cómo las diferentes funciones se aproximan a $\lambda = 1$.
 
-\easyimg{VerosimilitudPoisson.png}{Diferentes funciones de verosimilitud para diferentes muestras de la distribución de Poisson}{imgPoisson}
+\easyimg{img/VerosimilitudPoisson.png}{Diferentes funciones de verosimilitud para diferentes muestras de la distribución de Poisson}{imgPoisson}
 
-\subparagraph{Distribución normal de parámetros $µ,\sigma$} Tenemos \[f(x;µ,\sigma) = \frac{1}{\sqrt{2\pi}\sqrt{\sigma^2}}e^{\frac{-1}{2}\frac{(x-µ)^2}{\sigma^2}} \]
+\subparagraph{Distribución normal de parámetros $\mu,\sigma$} Tenemos \[f(x;\mu,\sigma) = \frac{1}{\sqrt{2\pi}\sqrt{\sigma^2}}e^{\frac{-1}{2}\frac{(x-\mu)^2}{\sigma^2}} \]
 
+\newpage
 La función de verosimilitud es
 
-\[ L_n = \prod_{i=1}^n f(x_i;µ,\sigma) = \frac{1}{(2\pi)^{n/2} (\sigma^2)^{n/2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^n(x_i-µ)^2} \]
+\[ L_n = \prod_{i=1}^n f(x_i;\mu,\sigma) = \frac{1}{(2\pi)^{n/2} (\sigma^2)^{n/2}} e^{-\frac{1}{2\sigma^2}\sum\limits_{i=1}^n(x_i-\mu)^2} \]
 
 Tomamos logaritmos:
 
-\[ \log L_n = - \frac{n}{2}\log 2\pi - \frac{n}{2} \log \sigma^2 - \frac{1}{2\sigma^2} \sum_{i=1}^n(x_i-µ)^2 \]
+\[ \log L_n = - \frac{n}{2}\log (2\pi) - n \log \sigma - \frac{1}{2\sigma^2} \sum_{i=1}^n(x_i-\mu)^2 \]
 
-Derivamos con respecto de $µ$
+Derivamos con respecto de $\mu$
 
-\[ \dpa{\log L_n}{µ} = - \frac{1}{\sigma^2} \sum_{i=1}^n(x_i-µ)(-1) = - \frac{1}{\sigma^2}\left( \sum_{i=1}^nx_i - nµ\right) \]
+\[
+\dpa{\log L_n}{\mu} =
+- \frac{1}{\sigma^2} \sum_{i=1}^n(x_i-\mu)(-1) =
+- \frac{1}{\sigma^2}\left( \sum_{i=1}^nx_i - n\mu\right) = 0 \leftrightarrow
+\mu = \avg{x}
+\]
 
-de tal forma que $\hat{µ} = \avg{x}$.
+de tal forma que $\hat{\mu} = \avg{x}$.
 
 Hacemos lo mismo con $\sigma$
-
-\[ \dpa{\log L_n}{\sigma} = - \frac{n}{2}\frac{1}{\sigma^2} - \frac{1}{2}\sum_{i=1}^n(x_i-µ)^2 \frac{-1}{\sigma^4} = \frac{1}{2\sigma^2}\left(-n + \sum_{i=1}^n\left(x_i-µ\right)^2\frac{1}{\sigma^2}\right) = 0 \]
-
-y por lo tanto \[\hat{\sigma}^2 = \frac{1}{n}\sum_{i=1}^n(x_i-\avg{x})^2 = \sigma^2 \]
+\begin{gather*}
+\dpa{\log L_n}{\sigma} =
+- \frac{n}{\sigma} + \frac{1}{\sigma^3} \sum_{i=1}^n(x_i-\mu)^2 =\\
+= \frac{1}{\sigma}\left(-n + \frac{1}{\sigma^2} \sum_{i=1}^n\left(x_i-\mu\right)^2\right) = 0 \leftrightarrow
+\sigma^2 = \frac{1}{n}\sum_{i=1}^n(x_i-\avg{x})^2
+\end{gather*}
+luego $\hat{\sigma}^2 = \sigma^2$.
 
 \subparagraph{Distribución Weibull} La función de densidad de la distribución de Weibull, que toma dos parámetros $k$ y $\theta$, es
 
-\[ f(x; \theta, k) = \frac{k}{\theta}\left(\frac{x}{\theta}\right)^{k-1}e^{-\left(\frac{x_i}{\theta}\right)^k}\ind_{[0, \infty)}(x) \]
+\[
+f(x; \theta, k) =
+\frac{k}{\theta}\left(\frac{x}{\theta}\right)^{k-1} e^{-\left(\frac{x}{\theta}\right)^k}\ind_{[0, \infty)}(x)
+\]
 
 La función de verosimilitud para los dos parámetros es:
 
 \begin{gather*}
- L_n(k,\theta) = \prod_{i=1}^n f(x_i, \theta, k) = \prod_{i=1}^n \frac{k}{\theta}\left(\frac{x_i}{\theta}\right)^{k-1}e^{-\left(\frac{x_i}{\theta}\right)^k} = \\
- = k^n \theta^{-n}\left(\prod_{i=1}^n x_i\right)^{k-1} \theta^{-n(k-1)} e^{-\frac{1}{\theta^2}\sum_{i=1}^nx_i^k} = k^n\theta^{nk} \left(\prod_{i=1}^n x_i\right)^{k-1} e^{-\frac{1}{\theta^k}\sum_{i=1}^nx_i^k}
- \end{gather*}
+L_n(k,\theta) =
+\prod_{i=1}^n f(x_i, \theta, k) =
+\prod_{i=1}^n \frac{k}{\theta}\left(\frac{x_i}{\theta}\right)^{k-1}e^{-\left(\frac{x_i}{\theta}\right)^k} = \\
+= k^n \theta^{-n}\left(\prod_{i=1}^n x_i\right)^{k-1} \theta^{-n(k-1)} e^{-\frac{1}{\theta^k}\sum\limits_{i=1}^nx_i^k} =
+k^n\theta^{-nk} \left(\prod_{i=1}^n x_i\right)^{k-1} e^{-\frac{1}{\theta^k}\sum\limits_{i=1}^nx_i^k}
+\end{gather*}
 
 Tomamos logaritmos:
 
-\[ \log L = n\log k - nk\log \theta + (k-1)\sum_{i=1}^n\log x_i - \frac{1}{\theta^k} \sum_{i=1}^n \left(\frac{x_i}{\theta}\right)^k\]
+\[
+\log L =
+n\log k - nk\log \theta + (k-1)\sum\limits_{i=1}^n\log x_i - \frac{1}{\theta^k} \sum\limits_{i=1}^n x_i^k
+\]
 
 y derivamos con respecto de ambas variables
 
-\[ \dpa{\log L}{\theta} = -nk \frac{1}{\theta} - (-k) \theta^{-k-1} \sum_{i=1}^nx_i^k = \frac{k}{\theta}\left(-n + \frac{1}{\theta^k}\sum_{i=1}^nx_k^k\right) = 0 \]
+\[
+\dpa{\log L}{\theta} =
+-nk \frac{1}{\theta} - (-k) \theta^{-k-1} \sum_{i=1}^nx_i^k =
+\frac{k}{\theta}\left(-n + \frac{1}{\theta^k}\sum_{i=1}^nx_k^k\right) = 0
+\]
 
-\[ \dpa{\log L}{k} = \frac{n}{k} -n\log\theta + \sum_{i=1}^n \log x_i - \sum_{i=1}^n\left(\frac{x_i}{\theta}^k\right) \log\frac{x_1}{\theta} = 0 \]
+\[
+\dpa{\log L}{k} =
+\frac{n}{k} -n\log\theta + \sum_{i=1}^n \log x_i - \sum_{i=1}^n\left(\frac{x_i}{\theta}^k\right) \log\frac{x_1}{\theta} = 0
+\]
 
 Con la primera ecuación, tenemos que
 
-\[ \frac{1}{\theta^k} = \frac{\sum_{i=1}^n x_i^k}{n} \therefore \hat{\theta} = \left(\frac{n}{\sum_{i=1}^n x_i^k}\right)^\frac{1}{k} \]
+\[
+\theta^k =
+\frac{1}{n}\sum\limits_{i=1}^n x_i^k \dimplies
+\hat{\theta} =
+\left(\frac{1}{n}\sum\limits_{i=1}^n x_i^k \right)^\frac{1}{k}
+\]
 
-De la segunda ecuación resulta prácticamente imposible despejar $k$. Sin embargo, podemos usar métodos numéricos para obtener el valor de $k$. 
+De la segunda ecuación resulta prácticamente imposible despejar $k$. Sin embargo, podemos usar métodos numéricos para obtener el valor de $k$.
 
 \begin{theorem}[Invarianza del EMV] Si $\tau$ es una función biyectiva y $\hat{\theta}$ es el e.m.v. de $\theta$, entonces el e.m.v. de $\tau(\theta)$ es $\tau(\hat\theta)$
 \end{theorem}
 
-Por ejemplo, tomamos $X\sim N(µ, \sigma)$. Ya habíamos calculado el e.m.v. de la varianza, que era la varianza muestral. ¿Cómo calcular entonces el e.m.v. de la desviación típica? Sabiendo que $\sigma = \sqrt{\sigma^2}$, tomamos $\tau(\theta) = \sqrt{\theta}$ que es una función biyectiva en $\real^+$ y por lo tanto podemos decir que $\text{emv}\,(\sigma) = \sqrt{\hat\sigma^2}$
+Por ejemplo, tomamos $X\sim N(\mu, \sigma)$. Ya habíamos calculado el e.m.v. de la varianza, que era la varianza muestral. ¿Cómo calcular entonces el e.m.v. de la desviación típica? Sabiendo que $\sigma = \sqrt{\sigma^2}$, tomamos $\tau(\theta) = \sqrt{\theta}$ que es una función biyectiva en $\real^+$ y por lo tanto podemos decir que $\text{emv}\,(\sigma) = \sqrt{\hat\sigma^2}$
 
 \subsubsection{Motivación del método}
 Estudiamos la siguiente función
@@ -738,6 +805,7 @@ que por la L.G.N. (\ref{thmGrandes}) converge a una función $\Psi(\theta)$ que 
 
 donde \[ \Psi(\theta) = \mathbb{E}_{\theta_0} \left[\log f(X;\theta)\right] = \int\log f(x;\theta) f(x;\theta_0) \, dx \]
 
+\newpage
 \begin{theorem}[Teorema\IS MV1] \label{thmMV} Sea $X\sim f(.;\theta_0)$. Supongamos que se satisfacen las siguientes condiciones:
 
 \subparagraph{MV0) Parametrización adecuada} Las distribuciones son distintas si el parámetro $\theta$ es distinto.
@@ -759,10 +827,11 @@ En el teorema se habla del soporte, definámoslo formalmente:
 
 Para la demostración, primero veremos la siguiente desigualdad:
 
-\begin{theorem}[Desigualdad\IS de Jensen] Supongamos que $X$ es una v.a. tal que $\esp{X}< \infty$ (su esperanza existe y es finita) y que $\varphi$ es una función convexa (como una parábola $y=x^2$, más o menos) tal que $\esp{\varphi(X)} < \infty$.
+\begin{theorem}[Desigualdad\IS de Jensen] Supongamos que $X$ es una v.a. tal que $\esp{X}< \infty$ (su esperanza existe y es finita) y que $\varphi$ es una función convexa\footnotemark tal que $\esp{\varphi(X)} < \infty$.
 
-Entonces \[ \esp{\varphi(X)} ≥ \varphi(\esp{X}) \] \label{desJensen}
+Entonces \[ \esp{\varphi(X)} \geq \varphi(\esp{X}) \] \label{desJensen}
 \end{theorem}
+\footnotetext{como una parábola $y = x^2$, más o menos}
 
 Con esto, podemos pasar a la demostración del teorema (\ref{thmMV}):
 
@@ -786,7 +855,7 @@ y por lo tanto  \[ - \mathbb{E}_{\theta_0}  \left(-\log \frac{f(X_i;\theta)}{f(X
 Entonces, $\forall \epsilon > 0$ 
 
 \begin{gather*}\prob{\abs{\frac{1}{n} \sum_{i=1}^n \log \frac{f(X_i;\theta)}{f(X_i;\theta_0)} - \mathbb{E}_{\theta_0}\left(\log \frac{f(X;\theta)}{f(X;\theta_0)}\right)} > \epsilon} \convs 0 \dimplies \\
-\prob{\abs{\frac{1}{n} \sum_{i=1}^n \log \frac{f(X_i;\theta)}{f(X_i;\theta_0)} - \mathbb{E}_{\theta_0}\left(\log \frac{f(X;\theta)}{f(X;\theta_0)}\right)} ≤ \epsilon} \convs 1
+\prob{\abs{\frac{1}{n} \sum_{i=1}^n \log \frac{f(X_i;\theta)}{f(X_i;\theta_0)} - \mathbb{E}_{\theta_0}\left(\log \frac{f(X;\theta)}{f(X;\theta_0)}\right)} \leq \epsilon} \convs 1
 \end{gather*}
 
 Tomo $\displaystyle \epsilon = \frac{1}{2}\abs{\mathbb{E}_{\theta_0}\left(\log \frac{f(X;\theta)}{f(X;\theta_0)}\right)}$ y entonces 
@@ -837,7 +906,7 @@ En algún punto del interior del intervalo $\Omega$ hay un máximo local. Como p
 
 Se cumple que cada uno de esos puntos de máximo satisfacen la ecuación de verosimilitud (\ref{eqMV2}). En consecuencia $\hat\theta_n$ satisface también esa misma ecuación. Por lo tanto
 
-\[ \prob{\abs{\hat\theta_n - \theta_0} < \epsilon} \convs 1 \dimplies \prob{\abs{\hat\theta_n - \theta_0} ≥ \epsilon} \convs 0 \]
+\[ \prob{\abs{\hat\theta_n - \theta_0} < \epsilon} \convs 1 \dimplies \prob{\abs{\hat\theta_n - \theta_0} \geq \epsilon} \convs 0 \]
 
 y entonces
 
@@ -848,11 +917,11 @@ y entonces
 
 Supongamos el conjunto de todos los estimadores de un parámetro $\theta$. Su error cuadrático medio es 
 
-\[ \ECM \hat\theta = \var{\hat\theta} + \sesgo^2 \hat\theta \]
+\[ \ECM(\hat\theta) = \var{\hat\theta} + \sesgo^2(\hat\theta) \]
 
 Si queremos buscar el \textit{mejor} estimador, buscamos los que minimicen el ECM. Por lo tanto, nos interesaremos en el subconjunto de estimadores insesgados ($\sesgo \hat\theta = 0$). Sin embargo, no tenemos una forma clara de distinguir cuál es mejor entre esos estimadores insesgados. En esta sección vamos a buscar una \textit{escala}, a la que llamaremos la \textbf{información de Fisher}, que nos dará una cota para la varianza de un estimador. 
 
-Suponemos que en la integral $\int f(x;\theta)\,dx$ se puede derivar dos veces bajo el signo integral (esto es, que $\int \frac{∂^2}{∂\theta^2} f(x;\theta)\,dx$ existe) y que además se puede permutar la integral y la derivada parcial (vemos condiciones suficientes en el apéndice \ref{secConds}, página \pageref{secConds}). Entonces
+Suponemos que en la integral $\int f(x;\theta)\,dx$ se puede derivar dos veces bajo el signo integral (esto es, que $\int \frac{\partial^2}{\partial\theta^2} f(x;\theta)\,dx$ existe) y que además se puede permutar la integral y la derivada parcial (vemos condiciones suficientes en el apéndice \ref{secConds}, página \pageref{secConds}). Entonces
 
 \[ \int f(x;\theta)\, dx = 1 \implies \dpa{}{\theta} \int f(x;\theta)\,dx = 0 \]
 
@@ -863,17 +932,18 @@ Por tanto
 Si derivamos de nuevo en la integral
 
 \begin{gather*}
-\frac{∂^2}{∂\theta^2} \int f(x;\theta)\,dx = 0  = \int \frac{∂^2}{∂\theta^2} f(x;\theta)\,dx = \\
-=\int \frac{∂^2}{∂\theta^2} \log f(x;\theta) f(x;\theta)\,dx + \int\dpa{}{\theta} \log f(x;\theta) \cdot \dpa{}{\theta}f(x;\theta)\,dx = \wtf \\
-=\int \frac{∂^2}{∂\theta^2}\log f(x;\theta) f(x;\theta)\, dx + \int \left(\dpa{}{\theta}\log f(x;\theta)\right)^2 f(x;\theta)\,dx = \\
-= \mathbb{E}_\theta \left[\frac{∂^2}{∂\theta^2}\log f(X;\theta) \right] 
+\frac{\partial^2}{\partial\theta^2} \int f(x;\theta)\,dx = 0  = \int \frac{\partial^2}{\partial\theta^2} f(x;\theta)\,dx = \\
+=\int \frac{\partial^2}{\partial\theta^2} \log f(x;\theta) f(x;\theta)\,dx + \int\dpa{}{\theta} \log f(x;\theta) \cdot \dpa{}{\theta}f(x;\theta)\,dx = \wtf \\
+=\int \frac{\partial^2}{\partial\theta^2}\log f(x;\theta) f(x;\theta)\, dx + \int \left(\dpa{}{\theta}\log f(x;\theta)\right)^2 f(x;\theta)\,dx = \\
+= \mathbb{E}_\theta \left[\frac{\partial^2}{\partial\theta^2}\log f(X;\theta) \right] 
 	+ \mathbb{E}_\theta \left[ \left(\dpa{}{\theta} \log f(X;\theta)\right)^2\right] = 0
 \end{gather*}
 
-El segundo valor se llama información de Fisher:
+\noindent El segundo valor se llama información de Fisher:
+
 \begin{defn}[Información\IS de Fisher] Se denota por $I(\theta)$ la información de Fisher del parámetro $\theta$
 
-\[ I(\theta) =\esp[\theta]{\left(\dpa{}{\theta} \log f(X;\theta)\right)^2} \]
+\[ I(\theta) =\esp[\theta]{-\frac{\partial^2}{\partial\theta^2} \log f(X;\theta)} =\esp[\theta]{\left(\dpa{}{\theta} \log f(X;\theta)\right)^2} \]
 
 Representa intuitivamente la \textit{cantidad de información} acerca del valor del parámetro $\theta$ contenida en una observación de $X$.
 \end{defn}
@@ -884,7 +954,7 @@ La información de Fisher nos da una cota inferior para la varianza.
 
 \begin{theorem}[Cota\IS de Fréchet-Cramér-Rao] Dado $\hat\theta$ un estimador insesgado de $\theta$, entonces
 \label{thmCotaFCR}
-\[ \var{\hat\theta} ≥ \frac{1}{nI(\theta)} \]
+\[ \var{\hat\theta} \geq \frac{1}{nI(\theta)} \]
 
 donde $\frac{1}{nI(\theta)}$ se llama la \textbf{cota de Fréchet-Cramér-Rao}.
 \end{theorem}
@@ -895,17 +965,17 @@ donde $\frac{1}{nI(\theta)}$ se llama la \textbf{cota de Fréchet-Cramér-Rao}.
 
 La desigualdad de Cauchy-Schwartz establece que \footnote{Por ejemplo, porque no tengo ni idea de dónde sale esto.}
 
-\[ \var[\theta]{T_n} ≥ \frac{\text{Cov}_\theta^2 (Z,T_n)}{\var[\theta]{Z}} \]
+\[ \var[\theta]{T_n} \geq \frac{\text{Cov}_\theta^2 (Z,T_n)}{\var[\theta]{Z}} \]
 
 Veremos que el numerador vale 1 si $T_n$ es un estimador insesgado, y que $\var[\theta]{Z} = n I(\theta)$.
 
 Primero observamos que
 
-\[ \esp[\theta]{Z} = \sum_{i=1}^n \esp{\frac{∂}{∂\theta} \log f(X_i;\theta)} = 0 \]
+\[ \esp[\theta]{Z} = \sum_{i=1}^n \esp{\frac{\partial}{\partial\theta} \log f(X_i;\theta)} = 0 \]
 
 Y la varianza
 
-\[ \var[\theta]{Z} = \sum_{i=1}^n \var[\theta]{\frac{∂}{∂\theta} \log f(X_i;\theta)} = \sum_{i=1}^n \esp{\left(\dpa{}{\theta} \log f(X;\theta)\right)^2}[\theta] = n I(\theta) \]
+\[ \var[\theta]{Z} = \sum_{i=1}^n \var[\theta]{\frac{\partial}{\partial\theta} \log f(X_i;\theta)} = \sum_{i=1}^n \esp{\left(\dpa{}{\theta} \log f(X;\theta)\right)^2}[\theta] = n I(\theta) \]
 
 La primera parte está demostrada.
 
@@ -947,34 +1017,34 @@ y entonces nos queda que
 
 Como $T_n$ es un estimador insesgado $\esp[\theta]{T_n}  = \theta$ y entonces $\text{Cov}\,(Z,T_n) = 1$. Por lo tanto, nos queda que 
 
-\[ \var{\hat\theta} ≥ \frac{1}{nI(\theta)} \]
+\[ \var{\hat\theta} \geq \frac{1}{nI(\theta)} \]
 
 Además, si $T_n$ no fuese un estimador insesgado
 
-\[ \var{\hat\theta} ≥ \frac{\left(dpa{}{\theta} \esp[\theta]{T_n} \right)^2}{n I(\theta)} \]
+\[ \var{\hat\theta} \geq \frac{\left(dpa{}{\theta} \esp[\theta]{T_n} \right)^2}{n I(\theta)} \]
 
 y por lo tanto
 
-\[ \text{ECM}(T_n) ≥ \frac{\left(\dpa{}{\theta} \esp[\theta]{T_n}\right)^2}{n I(\theta)} + \text{Sesgo }^2 (T_n) \]
-
+\[ \text{ECM}(T_n) \geq \frac{\left(\dpa{}{\theta} \esp[\theta]{T_n}\right)^2}{n I(\theta)} + \text{Sesgo }^2 (T_n) \]
 \end{proof}
 
-\begin{defn}[Estimador\IS eficiente] Se dice que un estimador es eficiente si su varianza es igual a la cota de Fréchet-Cramér-Rao (\ref{thmCotaFCR}), es decir
+\begin{defn}[Estimador\IS eficiente]
+Se dice que un estimador es eficiente si su varianza es igual a la cota de Fréchet-Cramér-Rao (\ref{thmCotaFCR}), es decir
 \[ \var{\hat\theta} = \frac{1}{nI(\theta)} \]
 \end{defn}
 
-
+\vspace{-10mm} % increíble la cantidad de espacio que se pierde sin esta línea
 \subsubsection{Eficiencia asintótica}
 \begin{theorem}[Teorema\IS MV3] Supongamos que se verifican las condiciones MV0 - MV3 (ver teoremas \ref{thmMV}, \ref{thmMV2}) y además:
 
 \subparagraph{MV4)} La integral $\int f(x;\theta)\,dx$ se puede derivar dos veces bajo el signo integral.
 \subparagraph{MV5)} Para cada $x$ la densidad $f(x;\theta)$ es tres veces diferenciable con respecto a $\theta$, con la tercera derivada continua en $\theta$.
 \subparagraph{MV6)} La información de Fisher es estrictamente positiva y finita: $0 < I(\theta_0) < \infty$
-\subparagraph{MV7)} Para cada $\theta_0\in \Theta$ existen un número $c > 0$ y una función $M(x)$, que pueden depender de $\theta_0$, tales que \[ \esp[\theta_0]{M(X)} < \infty \] y \[ \abs{\frac{∂^3\log f}{∂\theta^3}(x;\theta)} ≤ M(x)\; \forall x;\;\forall\theta \in (\theta_0 - c,\theta_0 + c) \]
+\subparagraph{MV7)} Para cada $\theta_0\in \Theta$ existen un número $c > 0$ y una función $M(x)$, que pueden depender de $\theta_0$, tales que \[ \esp[\theta_0]{M(X)} < \infty \] y \[ \abs{\frac{\partial^3\log f}{\partial\theta^3}(x;\theta)} \leq M(x)\; \forall x;\;\forall\theta \in (\theta_0 - c,\theta_0 + c) \]
 
-Entonces, si $\hat{θ}_n(\sample)$ es cualquier sucesión consistente de soluciones de las ecuaciones de verosimilitud, se verifica
+Entonces, si $\hat{\theta}_n(\sample)$ es cualquier sucesión consistente de soluciones de las ecuaciones de verosimilitud, se verifica
 
-\[ \sqrt{n}\left(\hat{θ}_n-θ_0\right) \convdist N\left(0,\frac{1}{\sqrt{I(θ_0)}}\right) \]
+\[ \sqrt{n}\left(\hat{\theta}_n-\theta_0\right) \convdist N\left(0,\frac{1}{\sqrt{I(\theta_0)}}\right) \]
 
 \end{theorem}
 
@@ -1006,11 +1076,11 @@ Vamos a demostrar que esto converge en tres pasos:
 
 Tendremos por lo tanto que 
 
-\[ \sqrt{n}\left(\hat\theta_n-\theta_0\right) \convdist \frac{N(0, \sqrt{I(θ_0)}}{I(θ_0)+0} \]
+\[ \sqrt{n}\left(\hat\theta_n-\theta_0\right) \convdist \frac{N(0, \sqrt{I(\theta_0)}}{I(\theta_0)+0} \]
 
 Y usando la tercera condición del teorema de Slutsky (\ref{thmSlutsky}), tendremos que  
 
-\[  \frac{N(0, \sqrt{I(θ_0)}}{I(θ_0)+0}  \convdist N\left(0,\frac{1}{\sqrt{I(θ_0)}}\right) \] 
+\[  \frac{N(0, \sqrt{I(\theta_0)}}{I(\theta_0)+0}  \convdist N\left(0,\frac{1}{\sqrt{I(\theta_0)}}\right) \] 
 
 \paragraph{Parte 1: Numerador}
 
@@ -1051,12 +1121,12 @@ Operamos ahora con la segunda parte
 
 \begin{gather*}
 \esp[\theta_0]{\frac{f''(X_i;\theta_0)}{f(X_i;\theta_0)}} = \int_\real \frac{f''(X_i;\theta_0)}{f(X_i;\theta_0)}f(X_i;\theta_0)\,dx = \\
-= \int_\real \left.\frac{∂^2}{∂\theta^2}f(x;\theta)\right|_{\theta=\theta_0}\,dx 
+= \int_\real \left.\frac{\partial^2}{\partial\theta^2}f(x;\theta)\right|_{\theta=\theta_0}\,dx 
 \end{gather*}
 
 y como según el enunciado del teorema podemos permutar la derivada con la integral dos veces, tenemos que
 
-\[ \int_\real \left.\frac{∂^2}{∂\theta^2}f(x;\theta)\right|_{\theta=\theta_0}\,dx =  \left.\frac{∂^2}{∂\theta^2}\int_\real f(x;\theta)\,dx\right|_{\theta=\theta_0} = \left.\frac{∂^2}{∂\theta^2}0\right|_{\theta=\theta_0}  = 0 \]
+\[ \int_\real \left.\frac{\partial^2}{\partial\theta^2}f(x;\theta)\right|_{\theta=\theta_0}\,dx =  \left.\frac{\partial^2}{\partial\theta^2}\int_\real f(x;\theta)\,dx\right|_{\theta=\theta_0} = \left.\frac{\partial^2}{\partial\theta^2}0\right|_{\theta=\theta_0}  = 0 \]
 
 Por lo tanto
 
@@ -1066,13 +1136,13 @@ Por lo tanto
 
 \[\frac{1}{2n}\left(\hat\theta_n-\theta_0\right)\tilde\Psi_n'''(\theta_n^\ast) \convprob 0 \]
 
-Por hipótesis del teorema, $\hat\theta_n$ se considera consistente y entonces \[ \left(\hat\theta_n-\theta_0\right) \convs 0 \]. Analizaremos ahora la segunda parte de esa ecuación, $\tilde\Psi_n'''(\theta_n^\ast)$, y demostraremos que tiende a una constante.
+Por hipótesis del teorema, $\hat\theta_n$ se considera consistente y entonces \[ \left(\hat\theta_n-\theta_0\right) \convs 0 \] Analizaremos ahora la segunda parte de esa ecuación, $\tilde\Psi_n'''(\theta_n^\ast)$, y demostraremos que tiende a una constante.
 
-\[ \tilde\Psi_n'''(\theta_n^\ast) = \frac{1}{n}\sum_{i=1}^n \frac{∂^3}{∂\theta^3}\log f(X_i;\theta) \]
+\[ \tilde\Psi_n'''(\theta_n^\ast) = \frac{1}{n}\sum_{i=1}^n \frac{\partial^3}{\partial\theta^3}\log f(X_i;\theta) \]
 
 Como $\hat\theta_n$ es consistente, $\theta_n^\ast$, que es un punto intermedio entre $\hat\theta_n$ y $\theta_0$, también tiende a $\theta_0$ en probabilidad. Entonces podemos aplicar la hipótesis MV7 del teorema y acotar la derivada parcial:
 
-\[ \abs{\frac{∂^3}{∂\theta^3}\log f(X_i;\theta)} ≤ M(X_i) \]
+\[ \abs{\frac{\partial^3}{\partial\theta^3}\log f(X_i;\theta)} \leq M(X_i) \]
 
 y por lo tanto podemos acotar en probabilidad
 
@@ -1083,10 +1153,10 @@ Este término converge a una constante por lo tanto, y entonces se cumple que
 \[\frac{1}{2n}\left(\hat\theta_n-\theta_0\right)\tilde\Psi_n'''(\theta_n^\ast) \convprob 0 \]
 \end{proof}
 
-
+\pagebreak
 \subsection{Método de los momentos}
 \index{Estimador!por el método de los momentos}
-Sea $X\sim f(x;\theta)$, donde $\theta = (\theta_1,\dotsc,\theta_p)$ es un parámetro p-dimensional, con $p≥1$. 
+Sea $X\sim f(x;\theta)$, donde $\theta = (\theta_1,\dotsc,\theta_p)$ es un parámetro p-dimensional, con $p\geq1$. 
 
 Si los momentos $\alpha_k(\theta) = \esp[\theta_0]{X^k},\;k=1,\dotsc,p$ son funciones sencillas de los $\theta_i$, un procedimiento natural para obtener un estimador de $\theta$ es resolver en $\theta_1,\dotsc,\theta_p$ el sistema de ecuaciones
 
@@ -1098,7 +1168,7 @@ m_p = \alpha_p(\theta)
 
 donde cada $m_k$ es el momento muestral:
 
-\[ m_k = \frac{\sum_{i=1}^n X_i^k}{n} \]
+\[ m_k = \frac{1}{n}\sum\limits_{i=1}^n X_i^k \]
 
 La idea es estimar el parámetro de tal forma que los momentos muestrales coincidan con los momentos poblacionales. Por la LGN, cuando $n\to\infty$ entonces $m_k \to \alpha_k(\theta_0)$. 
 
@@ -1114,7 +1184,7 @@ Por tanto, la solución de $\avg{X} = \esp[\theta]{X}$ es $\tilde\theta_n = 3\av
 
 \[ \var[\theta]{\tilde\theta_n} = \var[\theta]{3\avg{X}} = 9\frac{\sigma^2}{n} = \frac{3-\theta^2}{n} \]
 
-ya que \[ \sigma^2 = \var[\theta]{X}= \esp[\theta]{X^2} - \esp[\theta]{X}^2 = \frac{1}{3}-\frac{\theta^2}{9} \]. Este estimador es consistente ya que, por la LGN, $3\avg{X} \convs 3\esp[\theta]{X}$.
+ya que \[ \sigma^2 = \var[\theta]{X}= \esp[\theta]{X^2} - \esp[\theta]{X}^2 = \frac{1}{3}-\frac{\theta^2}{9} \] Este estimador es consistente ya que, por la LGN, $3\avg{X} \convs 3\esp[\theta]{X}$.
 
 Supongamos un ejemplo más complicado: $X\sim Beta(a,b)$.
 
@@ -1148,7 +1218,7 @@ De manera formal, la estadística bayesiana considera que el parámetro es una v
 
 Entonces, si antes teníamos una v.a. $X\sim f(x;\theta)$, ahora lo que diremos es que $X$ sigue una distribución condicionada por un parámetro: $X\sim f(x|\theta)$.
 
-En este caso, la muestra $X_1,\dotsc,X_n$ contiene información de la muestra y también de nuestro parámetro. Es decir, que podemos considerar la función de distribución de la muestra como \[ \prod_{i=1}^n f(x_i|\theta) \]. Para juntar toda esta información usaremos el Teorema de Bayes:
+En este caso, la muestra $X_1,\dotsc,X_n$ contiene información de la muestra y también de nuestro parámetro. Es decir, que podemos considerar la función de distribución de la muestra como \[ \prod_{i=1}^n f(x_i|\theta) \] Para juntar toda esta información usaremos el Teorema de Bayes:
 
 \begin{theorem}[Teorema\IS de Bayes] Sea $A_1,A_2,\dotsc$ una partición del espacio muestral y sea $B$ un suceso cualquiera. Entonces
 
@@ -1245,48 +1315,48 @@ Normal & Normal \\
 
 \section{Estimación por intervalos de confianza}
 \label{secConfianza}
-Al igual que en el tema anterior, vamos a obtener información sobre un parámetro desconocido $θ∈Θ$ a partir de una muestra $X_1,…,X_n$. Habíamos logrado una estimación puntual, pero, ¿por qué va a ser válido sólo ese valor? ¿Podría ser válido un valor cercano al estimador?
+Al igual que en el tema anterior, vamos a obtener información sobre un parámetro desconocido $\theta\in\Theta$ a partir de una muestra $X_1,…,X_n$. Habíamos logrado una estimación puntual, pero, ¿por qué va a ser válido sólo ese valor? ¿Podría ser válido un valor cercano al estimador?
 
 Este tema responde a esa pregunta: ofrece un intervalo que típicamente contiene a un estimador puntual, de posibles valores para un parámetro. Veremos cómo construir ese intervalo y la información que ofrecen.
 
-\begin{defn}[Intervalo\IS de confianza] Sea una muestra $X_1,…,X_n$ de una v.a. con una función de distribución $F(.;θ)$, con $θ∈Θ⊂ℝ$ un parámetro desconocido. Sean dos estadísticos $T_n^{(1)}(X_1,…,X_n)$ y $T_n^{(2)}(X_1,…,X_n)$ con $T_n^{(1)} < T_n^{(2)}$ y un valor $α∈(0,1)$. Supongamos que se verifica
+\begin{defn}[Intervalo\IS de confianza] Sea una muestra $X_1,…,X_n$ de una v.a. con una función de distribución $F(.;\theta)$, con $\theta\in\Theta⊂\real$ un parámetro desconocido. Sean dos estadísticos $T_n^{(1)}(X_1,…,X_n)$ y $T_n^{(2)}(X_1,…,X_n)$ con $T_n^{(1)} < T_n^{(2)}$ y un valor $\alpha\in(0,1)$. Supongamos que se verifica
 
-\[ \prob[θ]{T_n^{(1)}(\sample ) < θ < T_n^{(2)}(\sample) } = 1-α\; ∀θ\]
+\[ \prob[\theta]{T_n^{(1)}(\sample ) < \theta < T_n^{(2)}(\sample) } = 1-\alpha\; \forall\theta\]
 
-Entonces para una realización concreta de la muestra $\sample[x]$ se dice que el intervalo $(T_n^{(1)}(\sample[x]) ,T_{n}^{(2)}(\sample[x]))$ es un intervalo de confianza para $θ$ con nivel de confianza $1-α$ y lo denotaremos como
+Entonces para una realización concreta de la muestra $\sample[x]$ se dice que el intervalo $(T_n^{(1)}(\sample[x]) ,T_{n}^{(2)}(\sample[x]))$ es un intervalo de confianza para $\theta$ con nivel de confianza $1-\alpha$ y lo denotaremos como
 
-\[ IC_{1-α}(θ) \]
+\[ IC_{1-\alpha}(\theta) \]
 \end{defn}
 
-Probemos esta definición con una muestra $\sample$ de v.a.i.i.d. $N(μ,σ)$ donde $μ$ es un parámetro desconocido y $σ$ es conocida. Se sabe que 
+Probemos esta definición con una muestra $\sample$ de v.a.i.i.d. $N(\mu,\sigma)$ donde $\mu$ es un parámetro desconocido y $\sigma$ es conocida. Se sabe que 
 
-\[ \avg{X} \sim N\left(μ,\frac{σ}{\sqrt{n}}\right) \]
+\[ \avg{X} \sim N\left(\mu,\frac{\sigma}{\sqrt{n}}\right) \]
 
 y, tipificando,
 
-\[ \frac{\avg{X}-μ}{\frac{σ}{\sqrt{n}}} \sim~ N(0,1) \]
+\[ \frac{\avg{X}-\mu}{\frac{\sigma}{\sqrt{n}}} \sim~ N(0,1) \]
 
-Por tanto, si para cualquier $α∈(0,1)$, $z_α$ denota el cuantil $1-α$ en la normal estándar ($Φ(z_α) = 1-α$, siendo $Φ$ la función de distribución de la $N(0,1)$) tenemos
+Por tanto, si para cualquier $\alpha\in(0,1)$, $z_\alpha$ denota el cuantil $1-\alpha$ en la normal estándar ($Φ(z_\alpha) = 1-\alpha$, siendo $Φ$ la función de distribución de la $N(0,1)$) tenemos
 
-\[ \prob[μ]{-z_{α/2} < \frac{\avg{X}-μ}{\frac{σ}{\sqrt{n}}}  < z_{α/2}} = 1-α \]
+\[ \prob[\mu]{-z_{\alpha/2} < \frac{\avg{X}-\mu}{\frac{\sigma}{\sqrt{n}}}  < z_{\alpha/2}} = 1-\alpha \]
 
 y, despejando
 
-\[ \prob[μ]{\avg{X} - z_{α/2}\frac{σ}{\sqrt{n}} < μ < \avg{X} + z_{α/2}\frac{σ}{\sqrt{n}}} = 1-α \]
+\[ \prob[\mu]{\avg{X} - z_{\alpha/2}\frac{\sigma}{\sqrt{n}} < \mu < \avg{X} + z_{\alpha/2}\frac{\sigma}{\sqrt{n}}} = 1-\alpha \]
 
 Y por lo tanto, el intervalo
 
-\[ \left(\avg{x} - z_{α/2}\frac{σ}{\sqrt{n}}, \avg{x} + z_{α/2}\frac{σ}{\sqrt{n}}\right)\]
+\[ \left(\avg{x} - z_{\alpha/2}\frac{\sigma}{\sqrt{n}}, \avg{x} + z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\right)\]
 
-es un \textbf{intervalo de confianza de nivel $1-α$ para $μ$}.
+es un \textbf{intervalo de confianza de nivel $1-\alpha$ para $\mu$}.
 
-Intuitivamente y en términos frecuentistas, si por ejemplo $1-α=0.95$ y extraemos muchas muestras de una $N(0,1)$ aproximadamente en el 95\% de los casos el intervalo contendrá el verdadero valor de $\mu$.
+Intuitivamente y en términos frecuentistas, si por ejemplo $1-\alpha = 0.95$ y extraemos muchas muestras de una $N(0,1)$ aproximadamente en el 95\% de los casos el intervalo contendrá el verdadero valor de $\mu$.
 
 \subsection{Intervalos de confianza asintóticos basados en el TCL}
 
-Si $X$ no es normal, sabemos que si $μ$ y $σ$ son finitas, encontes $\avg{X} \sim N\left(μ,\frac{σ}{\sqrt{n}}\right)$ por el TCL (\ref{thmCentral}). Entonces
+Si $X$ no es normal, sabemos que si $\mu$ y $\sigma$ son finitas, encontes $\avg{X} \sim N\left(\mu,\frac{\sigma}{\sqrt{n}}\right)$ por el TCL (\ref{thmCentral}). Entonces
 
-\[ 1-\alpha = \simeq \prob{-z_{α/2} ≤ \frac{\avg{X} - μ}{\frac{σ}{\sqrt{n}}}≤z_{α/2}} \]
+\[ 1-\alpha = \simeq \prob{-z_{\alpha/2} \leq \frac{\avg{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \leq z_{\alpha/2}} \]
 
 Es decir, obtenemos un intervalo de confianza aproximado si el tamaño de la muestra es grande.
 
@@ -1296,54 +1366,54 @@ Es decir, obtenemos un intervalo de confianza aproximado si el tamaño de la mue
 
 y reemplazando $p$ por su estimador natural $\hat{p} = \avg{X}$ obtenemos que el intervalo de confianza aproximado para $p$ es 
 
-\[ \left( \avg{x} - z_{α/2} \sqrt{\frac{\avg{x}(1-\avg{x})}{n}}, \avg{x} + z_{α/2} \sqrt{\frac{\avg{x}(1-\avg{x}}{n}} \right) \]
+\[ \left( \avg{x} - z_{\alpha/2} \sqrt{\frac{\avg{x}(1-\avg{x})}{n}}, \avg{x} + z_{\alpha/2} \sqrt{\frac{\avg{x}(1-\avg{x}}{n}} \right) \]
 
 \subsection{Método de la cantidad pivotal}
 \index{Cantidad!pivotal}
-Una metodología general para obtener un intervalo de confianza para $θ$ consiste en encontrar una función $Q(θ;\sample)$, llamada \textbf{cantidad pivotal} cuya distribución no dependa de $θ$ y sea conocida, al menos de modo aproximado. A partir de esta distribución, fijado un valor $α∈(0,1)$ se obtienen dos valores $q_1(α), q_2(α)$ tales que 
+Una metodología general para obtener un intervalo de confianza para $\theta$ consiste en encontrar una función $Q(\theta;\sample)$, llamada \textbf{cantidad pivotal} cuya distribución no dependa de $\theta$ y sea conocida, al menos de modo aproximado. A partir de esta distribución, fijado un valor $\alpha\in(0,1)$ se obtienen dos valores $q_1(\alpha), q_2(\alpha)$ tales que 
 
-\[ \prob[θ]{q_1(α) < Q(θ;\sample) < q_2(α)} = 1-α \]
+\[ \prob[\theta]{q_1(\alpha) < Q(\theta;\sample) < q_2(\alpha)} = 1-\alpha \]
 
-Despejando $θ$ se obtiene una expresión del tipo 
+Despejando $\theta$ se obtiene una expresión del tipo 
 
-\[ \prob[θ]{T_n^{(1)}(\sample) < T_n^{(2)}(X_1,\dotsc,X_n)} = 1- α \]
+\[ \prob[\theta]{T_n^{(1)}(\sample) < T_n^{(2)}(X_1,\dotsc,X_n)} = 1- \alpha \]
 
 \subsection{Construcción de intervalos de confianza habituales}
 
-\subsubsection{Distribución $χ^2$}
-\index{Distribución!$χ^2$}
-Estamos interesados en obtener intervalos de confianza exactos, válidos para cualquier $n$, para $σ^2$ en una normal. Para ello presentaremos una distribución auxiliar que tiene una especial importancia en estadística, la \textbf{distribución $χ_k^2$}, que en realidad es la distribución $Γ(\frac{1}{2}, \frac{k}{2})$. 
+\subsubsection{Distribución $\chi^2$}
+\index{Distribución!$\chi^2$}\label{ChiSquared}
+Estamos interesados en obtener intervalos de confianza exactos, válidos para cualquier $n$, para $\sigma^2$ en una normal. Para ello presentaremos una distribución auxiliar que tiene una especial importancia en estadística, la \textbf{distribución $\chi_k^2$}, que en realidad es la distribución $Γ(\frac{1}{2}, \frac{k}{2})$. 
 Esta distribución surge del estudio de la distribución de las formas cuadráticas $X'AX$. En particular, si $\{Z_n\}$ son vectores aleatorios, entonces
-\[ \sum Z_k^2 \sim χ^2 \]
+\[ \sum Z_k^2 \sim \chi^2 \]
 
 De hecho, aplicando esto a una suma de varias v.a. $\sample$ $S^2$, nos queda que
 
-\[ \frac{(n-1)S^2}{σ^2} \sim χ^2_{n-1} \]
+\[ \frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1} \]
 
-Este resultado proporciona directamente una cantidad pivotal y, en consecuencia, un intervalo de confianza de nivel $1-α$ para $σ^2$:
+Este resultado proporciona directamente una cantidad pivotal y, en consecuencia, un intervalo de confianza de nivel $1-\alpha$ para $\sigma^2$:
 
 \[ \left(
-	 \frac{(n-1)s^2}{χ^2_{n-1;α/2}},\; \frac{(n-1)s^2}{χ^2_{n-1;1-α/2}}
+	 \frac{(n-1)s^2}{\chi^2_{n-1;\alpha/2}},\; \frac{(n-1)s^2}{\chi^2_{n-1;1-\alpha/2}}
 \right) \]
 
 \subsubsection{Distribución $t$ de Student}
 \index{Distribución!$t$ de Student}
-Sea $Z\sim N(0,1)$ y $W\sim χ_k^2$. Supongamos que $Z$ y $W$ son independientes. Entonces la distribución de la v.a.
+Sea $Z\sim N(0,1)$ y $W\sim \chi_k^2$. Supongamos que $Z$ y $W$ son independientes. Entonces la distribución de la v.a.
 
 \[ T = \frac{Z}{\sqrt{W/k}} \]
 
 se denomina distribución $t$ de Student con $k$ grados de libertad. Su forma se aproxima a una normal $N(0,1)$.
 
-\begin{theorem}[Lema\IS de Fischer-Cochran] Si \sample son v.a.i.i.d con distribución $N(μ,σ)$ entonces $\avg{X}$ y $S^2$ (desviación) son estadísticos independientes.
+\begin{theorem}[Lema\IS de Fischer-Cochran] Si \sample son v.a.i.i.d. con distribución $N(\mu,\sigma)$ entonces $\avg{X}$ y $S^2$ (desviación) son estadísticos independientes.
 \end{theorem}
 
-Este teorema tiene una consecuencia importante, y es que podemos obtener un intervalo de confianza exacto para $μ$ en $N(μ,σ)$ aún cuando σ es desconocida.
+Este teorema tiene una consecuencia importante, y es que podemos obtener un intervalo de confianza exacto para $\mu$ en $N(\mu,\sigma)$ aún cuando $\sigma$ es desconocida.
 
 \subsection{Intervalos de confianza bayesianos}
 
-En un problema de inferencia con un enfoque bayesiano, el elemento fundamental para realizar la inferencia es la distribución a posteriori $π(θ|\sample[x])$. A partir de esa distribución se define una \textbf{región creíble}\index{Región!creíble} de nivel $1-α$ como un subconjunto $A⊆Θ$ tal que 
+En un problema de inferencia con un enfoque bayesiano, el elemento fundamental para realizar la inferencia es la distribución a posteriori $\pi(\theta|\sample[x])$. A partir de esa distribución se define una \textbf{región creíble}\index{Región!creíble} de nivel $1 - \alpha$ como un subconjunto $A \subseteq \Theta$ tal que 
 
-\[ \int_A π(θ|\sample[x])\,dθ=1-α \]
+\[ \int_A π(\theta|\sample[x])\,d\theta = 1 - \alpha \]
 
 \chapter{Contraste de hipótesis}
 
@@ -1351,143 +1421,149 @@ En un problema de inferencia con un enfoque bayesiano, el elemento fundamental p
 
 El objetivo de la teoría de contraste de hipótesis es \textbf{elegir entre dos posibilidades excluyentes}, las hipótesis nula e alternativa, relativas al valor de un parámetro poblacional a partir de la información proporcionada por los datos muestrales.
 
-Sea $\sample$ una muestra aleatoria de una v.a. $X$ con función de distribución $F_θ$ donde $θ∈Θ$. Dada una partición del espacio paramétrico $Θ=Θ_0 \cup Θ_1$, deseamos decidir, en base a la muestra obtenida, si $θ$ está en $Θ_0$ o en $Θ_1$. En el primer caso se cumple la hipótesis nula, en el segundo la alternativa. Ambas hipótesis son excluyentes.
+Sea $\sample$ una muestra aleatoria de una v.a. $X$ con función de distribución $F_\theta$ donde $\theta \in \Theta$. Dada una partición del espacio paramétrico $\Theta=\Theta_0 \cup \Theta_1$, deseamos decidir, en base a la muestra obtenida, si $\theta$ está en $\Theta_0$ o en $\Theta_1$. En el primer caso se cumple la hipótesis nula, en el segundo la alternativa. Ambas hipótesis son excluyentes.
 
-Para resolver el problema definiremos una región de rechazo. Esta región $R⊆ℝ^n$ nos permitirá valorar si el parámetro está en $Θ_0$ o en $Θ_1$ en base a la muestra obtenida. De esta forma, si $(\sample[x])∈R$, se rechaza la hipótesis nula.
+Para resolver el problema definiremos una región de rechazo. Esta región $R\subseteq\real^n$ nos permitirá valorar si el parámetro está en $\Theta_0$ o en $\Theta_1$ en base a la muestra obtenida. De esta forma, si $(\sample[x]) \in R$, se rechaza la hipótesis nula.
 
 El paso más importante del contraste de hipótesis es construir la región de rechazo $R$, y a partir de entonces los pasos son muy mecánicos. En el apéndice \ref{secRegRechazo}, página \pageref{secRegRechazo}, tenemos varias muestras de regiones de rechazo.
 
 En el test de hipótesis podemos cometer dos tipos de fallos:
 
 \begin{itemize}
-\item \textbf{Error de tipo I} Rechazar $H_0$ cuando $H_0$ es cierta.
-\item \textbf{Error de tipo II} Aceptar $H_0$ cuando $H_0$ es falsa.
+\item \textbf{Error de tipo I} Rechazar $H_0$ cuando $H_0$ es cierta.\label{errorTipoI}\index{Error!de tipo I}
+\item \textbf{Error de tipo II} Aceptar $H_0$ cuando $H_0$ es falsa.\label{errorTipoII}\index{Error!de tipo II}
 \end{itemize}
 
 Para medir la probabilidad de cometer uno de esos fallos definimos la función de potencia
 
-\begin{defn}[Función\IS de potencia] La función de potencia de un test con región de rechazo $R$ para contrastar $H_0: θ∈Θ_0$ frente a $H_1:θ∈Θ_1$ es la función
+\begin{defn}[Función\IS de potencia] La función de potencia de un test con región de rechazo $R$ para contrastar $H_0: \theta \in \Theta_0$ frente a $H_1:\theta \in \Theta_1$ es la función
 
 \begin{align*}
-\appl{β_n}{Θ&}{[0,1]} \\
-θ&\longmapsto β_n(θ) = \prob[θ]	{(\sample) ∈ R}
+\appl{\beta_n}{\Theta&}{[0,1]} \\
+\theta&\longmapsto \beta_n(\theta) = \prob[\theta]	{(\sample) \in R}
 \end{align*}
 
-y nos da la probabilidad de rechazar la hipótesis $Θ_0$.\label{defFuncPotencia}
+y nos da la probabilidad de rechazar la hipótesis $\Theta_0$.\label{defFuncPotencia}
 \end{defn}
 
 
 \subsection{Teoría de Neyman-Pearson}
 \label{secNeymanPearson}
-Nos gustaría que $β_n(Θ_0) = 0$ y que $β_n(Θ_1) =1$, pero normalmente no pasará esto, sino que $β_n$ será una función continua y suave del parámetro. 
+Nos gustaría que $\beta_n(\Theta_0) = 0$ y que $\beta_n(\Theta_1) =1$, pero normalmente no pasará esto, sino que $\beta_n$ será una función continua y suave del parámetro. 
 
 La teoría de Neyman-Pearson trata de responder a este problema con los dos siguientes pasos:
 
 \paragraph{Acotar la máxima probabilidad de error de tipo I}
 
 \begin{itemize}
-\item Se fija un \textbf{nivel de significación}\index{Nivel!de significación} $α∈(0,1)$. Típicamente se toma $α=0.05$.
+\item Se fija un \textbf{nivel de significación}\index{Nivel!de significación} $\alpha \in (0,1)$. Típicamente se toma $\alpha = 0.05$.
 \item Se define el \textbf{tamaño de un test}\index{Tamaño!de un test} como la máxima probabilidad de error de tipo I, o como
 
-\[ \max_{θ∈Θ_0} \prob[θ]{R} = \max_{θ∈Θ} β_n(θ) \]
+\[ \max_{\theta \in \Theta_0} \prob[\theta]{R} = \max_{\theta \in \Theta} \beta_n(\theta) \]
 
-\item Se busca una región de rechazo $R$ tal que \[ \max_{θ∈Θ_0} \prob[θ]{R} ≤ α \]
+\item Se busca una región de rechazo $R$ tal que \[ \max_{\theta \in \Theta_0} \prob[\theta]{R} \leq \alpha \]
 \end{itemize}
 
-Tal y como hemos definido $α$, se puede considerar que el nivel de significación nos indica la probabilidad de cometer un error de tipo I, es decir, de rechazar $H_0$ cuando es cierta. Por lo tanto, cuanto menor es el nivel de significación más \textit{seguros} estamos de que no estamos rechazando $H_0$ por error.
+Tal y como hemos definido $\alpha$, se puede considerar que el nivel de significación nos indica la probabilidad de cometer un error de tipo I, es decir, de rechazar $H_0$ cuando es cierta. Por lo tanto, cuanto menor es el nivel de significación más \textit{seguros} estamos de que no estamos rechazando $H_0$ por error.
 
 \paragraph{Minimizar la probabilidad de error de tipo II}
 
-Se intenta buscar una región de rechazo $R$ que maximice la función de potencia cuando $θ∈Θ_1$.
+Se intenta buscar una región de rechazo $R$ que maximice la función de potencia cuando $\theta \in \Theta_1$.
 
-Aquí podemos ver por qué las dos hipótesis no son simétricas. Los tests de hipótesis están diseñados para controlar la probabilidad máxima de rechazar $H_0$ cuando es cierta. En consecuencia, suelen ser conservadores con la hipótesis nula: hace falta mucha evidencia muestral para rechazar $H_0$. Observemos que es posible que, con los mismos datos, $H_0$ se rechace para un nivel de significación $α=0.05$ y se acepte para $α=0.01$. 
+Aquí podemos ver por qué las dos hipótesis no son simétricas. Los tests de hipótesis están diseñados para controlar la probabilidad máxima de rechazar $H_0$ cuando es cierta. En consecuencia, suelen ser conservadores con la hipótesis nula: hace falta mucha evidencia muestral para rechazar $H_0$. Observemos que es posible que, con los mismos datos, $H_0$ se rechace para un nivel de significación $\alpha = 0.05$ y se acepte para $\alpha = 0.01$. 
 
-Además de la asimetría, tenemos que pensar que al aceptar $H_0$ no significa que la hayamos demostrado, sino simplemente que no se ha encontrado suficiente evidencia empírica a nivel prefijado $α$ en contra de $H_0$. \textbf{No es una demostración matemática}.
+Además de la asimetría, tenemos que pensar que al aceptar $H_0$ no significa que la hayamos demostrado, sino simplemente que no se ha encontrado suficiente evidencia empírica a nivel prefijado $\alpha$ en contra de $H_0$. \textbf{No es una demostración matemática}.
 
+\newpage
 \section{Problema de una muestra}
 
 En una primera aproximación, los problemas de contraste de hipótesis  pueden clasificarse en problemas de una muestra o de dos, según haya sólo una población de interés o queramos comparar dos poblaciones y dispongamos de una muestra de cada una de ellas. Presentaremos las ideas básicas en el caso de los problemas de una muestra pero pueden extenderse de modo análogo a los de dos muestras. 
 
 \paragraph{Dualidad con los intervalos de confianza}
 
-En algunos casos de hipótesis nula simple, aparece una dualidad entre el contraste de hipótesis y los intervalos de confianza (\ref{secConfianza}). Si tenemos $H_0:\; μ=μ_0$, entonces aceptar $H_0$ significa que $μ ∈ IC_{1-α}(θ)$, es decir, que está en el intervalo de confianza. La región de rechazo sería entonces
+En algunos casos de hipótesis nula simple, aparece una dualidad entre el contraste de hipótesis y los intervalos de confianza (\ref{secConfianza}). Si tenemos $H_0:\; \mu = \mu_0$, entonces aceptar $H_0$ significa que $\mu \in IC_{1 - \alpha}(\theta)$, es decir, que está en el intervalo de confianza. La región de rechazo sería entonces
 
-\[ R=\{ (\sample[x])\tq θ(\sample[x]) \notin IC_{1-α}(θ) \} \]
+\[ R = \{ (\sample[x])\tq \theta(\sample[x]) \notin IC_{1 - \alpha}(\theta) \} \]
 
-\begin{defn}[p-valor del contraste] Se define el p-valor del contraste como el ínfimo de los niveles de significación $α$ para los que rechazo $H_0$.
+\begin{defn}[p-valor del contraste] Se define el p-valor del contraste como el ínfimo de los niveles de significación $\alpha$ para los que se rechaza $H_0$.
 
-De esta forma, si $α$ es menor que el p-valor, aceptaremos $H_0$ y si es mayor, la rechazaremos.
+De esta forma, si $\alpha$ es menor que el p-valor, aceptaremos $H_0$ y si es mayor, la rechazaremos.
 \end{defn}
 
-¿Qué información nos va a dar el p-valor? Supongamos que tenemos, por ejemplo, un p-valor pequeño ($<0.01$). Con este valor rechazaríamos la hipótesis nula para los valores más habituales de niveles de significación ($0.01, 0.05, 0.1$). Por lo tanto, en este caso lo razonable sería rechazar $H_0$.
+¿Qué información nos va a dar el p-valor? Supongamos que tenemos, por ejemplo, un \textbf{p-valor pequeño} ($ < 0.01$). Con este valor rechazaríamos la hipótesis nula para los valores más habituales de niveles de significación ($0.01, 0.05, 0.1$). Por lo tanto, en este caso \textbf{lo razonable sería rechazar $H_0$}.
 
-Por otra parte, supongamos que tenemos un p-valor grande ($>0.1$). En este caso, aceptaríamos la hipótesis nula para los valores más habituales de $α$, y entonces lo más razonable sería aceptar $H_0$.
+Por otra parte, supongamos que tenemos un \textbf{p-valor grande} ($ > 0.1 $). En este caso, aceptaríamos la hipótesis nula para los valores más habituales de $\alpha$, y entonces \textbf{lo razonable sería aceptar $H_0$}.
+
+Un p-valor que se encuentra entre 0.01 y 0.1 se considera \textbf{dudoso}. Lo razonable es revisar la muestra, y si es posible, aumentar su tamaño. \textbf{No se puede decidir} de manera razonable entre $H_0$ y $H_1$.
 
 De forma general, el p-valor de contraste nos dice la probabilidad de observar la muestra que hemos obtenido suponiendo que $H_0$ es cierta. Si es muy bajo, nos indicará que es muy poco probable que la muestra obtenida haya salido así por pura casualidad.
 
+\pagebreak
 \subsection{Regiones de rechazo para contrastes habituales} 
 \subsubsection{Contraste de la media de una distribución}
 
-En todo caso se rechaza $H_0$ cuando $(\sample) ∈ R$. Para hallar las regiones de rechazo buscaremos los \textbf{estadísticos de contraste}\index{Estadístico!de contraste}, medidas de lo razonable que es la hipótesis nula y que depende de la muestra obtenida. Cuando la hipótesis nula sea cierta, el estadístico del contraste estará en zonas de alta probabilidad.
+En todo caso se rechaza $H_0$ cuando $(\sample) \in R$. Para hallar las regiones de rechazo buscaremos los \textbf{estadísticos de contraste}\index{Estadístico!de contraste}, medidas de lo razonable que es la hipótesis nula y que depende de la muestra obtenida. Cuando la hipótesis nula sea cierta, el estadístico del contraste estará en zonas de alta probabilidad.
 
 \paragraph{Distribución normal con varianza conocida}
 
 Primero construiremos el estadístico del contraste $Z$, que depende de la media muestral obtenida.
 
-\[ Z = \frac{\avg{X}-μ_0}{σ/\sqrt{n}} \]
+\[ Z = \frac{\avg{X}-\mu_0}{\sigma/\sqrt{n}} \]
 
-Si $H_0:\;μ=μ_0$ es cierta entonces $Z\sim N(0,1)$. Entonces las regiones de rechazo son 
+Si $H_0:\;\mu=\mu_0$ es cierta entonces $Z\sim N(0,1)$. Entonces las regiones de rechazo son 
 
 \begin{table}[hbtp]
 \centering
 \begin{tabular}{|c|c|}
 \hline  $H_0$ & $R$  \\ 
-\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{Z} ≥ z_{\frac{α}{2}}\}$ \\ 
-\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq Z ≥ z_{\frac{α}{2}}\}$ \\ 
-\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq Z ≤ z_{\frac{α}{2}}\}$ \\ 
+\hline  $\mu=\mu_0$ & $\{ (\sample[x]) \tq \abs{Z} \geq z_{\frac{\alpha}{2}}\}$ \\ 
+\hline  $\mu\leq\mu_0$ & $\{ (\sample[x]) \tq Z \geq z_{\frac{\alpha}{2}}\}$ \\ 
+\hline  $\mu\geq\mu_0$ & $\{  (\sample[x]) \tq Z \leq z_{\frac{\alpha}{2}}\}$ \\ 
 \hline 
 \end{tabular}
-\caption{Regiones de rechazo para una normal $N(μ,σ)$.} 
+\caption{Regiones de rechazo para una normal $N(\mu,\sigma)$.} 
 \end{table}
 
 \paragraph{Distribución normal con varianza desconocida} 
 
-Sea $\sample$ una muestra aleatoria de $X\sim N(μ,σ)$ con $σ$ desconocido. Entonces el estadístico del contraste sigue una distribución $T$ de Student de $n-1$ grados de libertad:
+Sea $\sample$ una muestra aleatoria de $X\sim N(\mu,\sigma)$ con $\sigma$ desconocido. Entonces el estadístico del contraste sigue una distribución $T$ de Student de $n-1$ grados de libertad:
 
-\[ T=\frac{\avg{X} - μ_0}{s/\sqrt{n}} \]
+\[ T=\frac{\avg{X} - \mu_0}{s/\sqrt{n}} \]
 
 \begin{table}[hbtp]
 \centering
 \begin{tabular}{|c|c|}
 \hline  $H_0$ & $R$  \\ 
-\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{T} ≥ t_{\frac{α}{2}}\}$ \\ 
-\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq T ≥ t_{\frac{α}{2}}\}$ \\ 
-\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq T ≤ t_{\frac{α}{2}}\}$ \\ 
+\hline  $\mu=\mu_0$ & $\{ (\sample[x]) \tq \abs{T} \geq t_{\frac{\alpha}{2}}\}$ \\ 
+\hline  $\mu\leq\mu_0$ & $\{ (\sample[x]) \tq T \geq t_{\frac{\alpha}{2}}\}$ \\ 
+\hline  $\mu\geq\mu_0$ & $\{  (\sample[x]) \tq T \leq t_{\frac{\alpha}{2}}\}$ \\ 
 \hline 
 \end{tabular} 
-\caption{Regiones de rechazo para una normal $N(μ,σ)$ con $σ$ desconocida.}
+\caption{Regiones de rechazo para una normal $N(\mu,\sigma)$ con $\sigma$ desconocida.}
 \end{table}
 
-\paragraph{Tests de nivel aproximado $α$ (muestras grandes) para la media de cualquier distribución}
+\pagebreak
+\paragraph{Tests de nivel aproximado $\alpha$ (muestras grandes) para la media de cualquier distribución}
 
- Sea $\sample$ una muestra aleatoria de $X$ con $\esp{X} = μ < ∞$. Entonces el estadístico del contraste es 
+ Sea $\sample$ una muestra aleatoria de $X$ con $\esp{X} = \mu < \infty$. Entonces el estadístico del contraste es 
  
- \[ Z= \frac{\avg{X}-μ_0}{S/\sqrt{n}}\stackrel{TCL}{\sim} N(0,1) \]
+ \[ Z= \frac{\avg{X}-\mu_0}{S/\sqrt{n}}\stackrel{TCL}{\sim} N(0,1) \]
  
- si $H_0:\, μ=μ_0$ es cierta. Por lo tanto, nos quedamos con las siguientes regiones:
+ si $H_0:\, \mu=\mu_0$ es cierta. Por lo tanto, nos quedamos con las siguientes regiones:
 
 \begin{table}[hbtp]
 \centering
 \begin{tabular}{|c|c|}
 \hline  $H_0$ & $R$  \\ 
-\hline  $μ=μ_0$ & $\{ (\sample[x]) \tq \abs{Z} ≥ z_{\frac{α}{2}}\}$ \\ 
-\hline  $μ≤μ_0$ & $\{ (\sample[x]) \tq Z ≥ z_{\frac{α}{2}}\}$ \\ 
-\hline  $μ≥μ_0$ & $\{  (\sample[x]) \tq Z ≤ z_{\frac{α}{2}}\}$ \\ 
+\hline  $\mu=\mu_0$ & $\{ (\sample[x]) \tq \abs{Z} \geq z_{\frac{\alpha}{2}}\}$ \\ 
+\hline  $\mu\leq\mu_0$ & $\{ (\sample[x]) \tq Z \geq z_{\frac{\alpha}{2}}\}$ \\ 
+\hline  $\mu\geq\mu_0$ & $\{  (\sample[x]) \tq Z \leq z_{\frac{\alpha}{2}}\}$ \\ 
 \hline 
 \end{tabular} 
 \caption{Regiones de rechazo para la media de cualquier distribución}
 \end{table}
 
+\pagebreak[3]
 \section{Contrastes para dos muestras}
 
 Supongamos que tenemos 2 muestras $X_1,...,X_N$ y $Y_1,...,Y_N$. Siendo $\mu_1$ la esperanza de $X$ y $\mu_2$ la esperanza de $Y$.
@@ -1498,8 +1574,7 @@ Podemos plantear hipótesis del tipo
 \item $H_0: \,\,\, \mu_1\leq\mu_2$
 \item $H_0: \,\,\, \sigma_1 = \sigma_2$
 \end{itemize}
-Este útlimo caso (si las varianzas son iguales) suele ser un requisito previo antes de plantearte contrastes como el segundo ejemplo.
-
+Este último caso (si las varianzas son iguales) suele ser un requisito previo antes de plantearte contrastes como el segundo ejemplo.
 
 Uno de los test más usuales es el de igualdad de medias para dos poblaciones \textbf{homocedásticas} \index{Muestra!homocedástica}, es decir, con $\sigma_1=\sigma_2$.
 
@@ -1507,16 +1582,18 @@ Si \[\left.\begin{array}{cc}
 X\sim N(\mu_1,\sigma)\\
 Y\sim N(\mu_2,\sigma)
 \end{array}\right\}\text{ Independientes } \begin{array}{cc}
-\gor{X} -\mu_1 \sim N\left(0,\frac{\sigma}{n_1}\right)\\
-\gor{Y} - \mu_2 \sim N\left(0,\frac{\sigma}{n_2}\right)
+\gor{X} -\mu_1 \sim N\left(0,\frac{\sigma}{\sqrt{n_1}}\right)\\
+\gor{Y} - \mu_2 \sim N\left(0,\frac{\sigma}{\sqrt{n_2}}\right)
 \end{array}\]
 Entonces:
-\[\frac{(\gor{X}-\mu_1) - (\gor{Y} - \mu_2)}{\sigma\sqrt{\frac{1}{n_2} + \frac{1}{n_2}}}\sim N(0,1)\]
+\[\frac{(\gor{X}-\mu_1) - (\gor{Y} - \mu_2)}{\sigma\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}\sim N(0,1)\]
 
-Todo esto suponiendo que $\sigma_1=\sigma_2$, desconociendo su valor real. Nos gustaría por tanto, tener en el estadístico un estimador de $\sigma$ .
+Todo esto suponiendo que $\sigma_1=\sigma_2$, desconociendo su valor real. Nos gustaría por tanto, tener en el estadístico un estimador de $\sigma$.
 
-Con este razonamiento sabemos podemos deducir que la región de rechazo es:
+\pagebreak
+Con este razonamiento podemos deducir que la región de rechazo es:
 
+% FALTA
 
 \paragraph{Contraste de igualdad de medias}
 Si \[\left.\begin{array}{cc}
@@ -1527,7 +1604,7 @@ X_1,...,X_{n_1}\to \frac{(n_1-1)S_1^2}{\sigma_1^2} \sim \chi^2_{(n_1-1)}\\
 Y_1,...,Y_{n_1}\to \frac{(n_1-1)S_2^2}{\sigma_2^2} \sim \chi^2_{(n_2-1)}\\
 \end{array}\]
 
-Para seguir con el contraste de igualdad de medias necesitamos definir la distribución \textbf{Fisher-Snedecor} con $n_1\,y\,n_2$ grados de libertad. \index{Distribuci\'on! $F$ de Fisher}. La distribución se parece mucho a la $\chi^2$, y su función de distribución se obtiene así:
+Para seguir con el contraste de igualdad de medias necesitamos definir la distribución \textbf{Fisher-Snedecor} con $n_1\,y\,n_2$ grados de libertad. \index{Distribución!$F$ de Fisher}. La distribución se parece mucho a la $\chi^2$, y su función de distribución se obtiene así:
 
 \[Q_1 \sim \chi_{n_1}^2 \,;\, Q_2 \sim \chi_{n_2}^2\]
 \[F \sim\displaystyle \frac{\displaystyle Q_1/n_1}{\displaystyle Q_2/n_2}\]
@@ -1537,15 +1614,13 @@ Volviendo al caso donde estábamos podemos definir un estadístico de esta maner
 \[\frac{\frac{(n_1-1)S_1^2}{\sigma_1^2(n_1-1)}}{\frac{(n_2-1)S_2^2}{\sigma_2^2 (n_2-1)}} \sim F_{n_1-1,n_2-1}\]
 Sigue una F de Fisher.
 
-Simplificando y suponiendo cierta la hipótesis de homocedacidad ($\sigma_1 = \sigma_2$) tenemos que $F = \displaystyle \frac{S_1^2}{S_2^2} \sim F_{n_1-1,n_2-1}$. 
+Simplificando y suponiendo cierta la hipótesis de homocedasticidad ($\sigma_1 = \sigma_2$) tenemos que $F = \displaystyle \frac{S_1^2}{S_2^2} \sim F_{n_1-1,n_2-1}$. 
 
 Este es el estadístico del contraste para comparar varianzas de dos poblaciones normales. Si el valor nos queda en las colas de la distribución, rechazaremos la hipótesis de igualdad de varianzas.
 
 Con este razonamiento podemos construir la región de rechazo, que es
-\[R = \left\{ \abs{\gx - \gy} > t_{n_1+n_2-2;σ/2}s_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}} \right\} \]
-
+\[R = \left\{ \abs{\gx - \gy} > t_{n_1+n_2-2;\sigma/2}s_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}} \right\} \]
 siendo
-
 \[ s_p^2 = \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1+n_2-2} \]
 
 la \textbf{varianza combinada}\index{Varianza!combinada}.
@@ -1556,9 +1631,12 @@ Sean $X,Y$ poblaciones de datos emparejados  tal que $\esp{X} = \mu_1$ y $\esp{Y
 
 ¿Qué significa datos emparejados? Muestras tomadas ambas a los mismo individuos de la mezcla después de una medicina por ejemplo, siendo $X$ la medida antes e $Y$ después. Esto quiere decir que $X,Y$ no son independientes.
 
-El \textbf{procedimiento estándar} para este tipo de casos es suponer que $D =X-Y \sim N(\mu_d,\sigma)$
+\pagebreak
+\noindent El \textbf{procedimiento estándar} para este tipo de casos es suponer que
+\[ D = X - Y \sim N(\mu_d,\sigma) \]
 
-Y ahora expresamos nuestra hipótesis en función de $D$, de la que sabemos que $\esp{D} = \mu_d = \mu_1-\mu_2$.
+Y ahora expresamos nuestra hipótesis en función de $D$, de la que sabemos que
+\[ \esp{D} = \mu_d = \mu_1-\mu_2 \]
 
 \begin{itemize}
 \item Si $H_0: \mu_1=\mu_2 \dimplies H_0: \mu_d=0 $. La región de rechazo de esta hipótesis será \[R = \left\{\frac{\abs{\gor{d}}}{S_d / \sqrt{n}} > t_{n-1;\frac{\alpha}{2}}\right\}\]
@@ -1568,82 +1646,93 @@ Y ahora expresamos nuestra hipótesis en función de $D$, de la que sabemos que 
 \end{example}
 En el apéndice encontramos un ejercicio realizado en $\mathcal{R}$ ¿¿¿¿?????
 
+\newpage
 \section{Consistencia de tests. Tests insesgados y UMP}
 
-\begin{defn}[Sucesión\IS consistente] Se dice que una sucesión de tests con un nivel prefijado $α$ es consistente cuando
+\begin{defn}[Sucesión\IS consistente] Se dice que una sucesión de tests con un nivel prefijado $\alpha$ es consistente cuando
 
-\[ \lim_{n\to ∞} β_n(θ) = 1\,∀θ∈Θ_1= Θ\setminus Θ_0 \]
+\[
+\lim_{n \to \infty} \beta_n(\theta) =
+1 \; \forall \theta \in \Theta_1 =
+\Theta \setminus \Theta_0
+\]
 
 Es decir, que la probabilidad de rechazar la hipótesis nula cuando es falsa, dada por la función de potencia (\ref{defFuncPotencia}), tienda a uno con muestras suficientemente grandes.
 \end{defn}
 
-
 \begin{defn}[Test\IS insesgado] Se dice que un test es insesgado cuando
 
-\[ β_n(θ)≤α\;∀θ∈Θ_0 \]
+\[ \beta_n(\theta) \leq \alpha \; \forall \theta \in \Theta_0 \]
 
-, es decir, cuando cumple la teoría de Neyman-Pearson (ver sección \ref{secNeymanPearson}); y además \[ β_n(θ)≥α \;∀θ∈Θ_1 \]
-
+es decir, cuando cumple la teoría de Neyman-Pearson (ver sección \ref{secNeymanPearson}); y además
+\[\beta_n(\theta)\geq\alpha \;\forall\theta\in\Theta_1 \]
 \end{defn}
 
-\begin{defn}[Test\IS UMP] Se dice que un test es uniformemente más potente (UMP) dentro de una clase $\mathcal{B}_{n,α}$ de tests de nivel $α$ basados en muestras de tamaño $n$ cuando
+\begin{defn}[Test\IS UMP] Se dice que un test es uniformemente más potente (UMP) dentro de una clase $\mathcal{B}_{n,\alpha}$ de tests de nivel $\alpha$ basados en muestras de tamaño $n$ cuando
 
-\[ β_n(θ) ≥ \tilde{β}_n(θ),\;∀θ∈Θ_1 \]
+\[ \beta_n(\theta) \geq \tilde{\beta}_n(\theta), \; \forall \theta \in \Theta_1 \]
 
-siendo $\tilde{β}_n$ la función de potencia de cualquier otro test de la clase  $\mathcal{B}_{n,α}$.
+siendo $\tilde{\beta}_n$ la función de potencia de cualquier otro test de la clase  $\mathcal{B}_{n,\alpha}$.
 \end{defn}
 
 \subsection{Lema de Neyman-Pearson}
 
-Recordemos la función de verosimilitud, que medía lo verosímil que es el valor del parámetro $θ$ a la vista de la muestra. Para comparar dos hipótesis simples $H_i:\,θ=θ_i$, calcularíamos la función de verosimilitud para esos dos valores y veríamos cuál es más probable. Extendiendo esta idea llegamos al lema de Neyman-Pearson
+Recordemos la función de verosimilitud, que medía lo verosímil que es el valor del parámetro $\theta$ a la vista de la muestra. Para comparar dos hipótesis simples $H_i: \, \theta = \theta_i$, calcularíamos la función de verosimilitud para esos dos valores y veríamos cuál es más probable. Extendiendo esta idea, llegamos al lema de Neyman-Pearson.
 
+\pagebreak
 \begin{theorem}[Lema\IS de Neyman-Pearson]\label{thmNeymanPearson}
-Se considera el problema de hipótesis simple y alternativa simple, es decir, que $H_0:\,θ=θ_0$ frente a $H_1:\,θ=θ_1$. Denotemos \[ f_n(\sample[x];θ) = \prod_{i=1}^n f(x_i;θ) \]
+Se considera el problema de hipótesis simple y alternativa simple, es decir, que
+\begin{gather*}
+H_0:\,\theta=\theta_0\\
+H_1:\,\theta=\theta_1
+\end{gather*}
+\indent Denotemos
+\[ f_n(\sample[x];\theta) = \prod_{i=1}^n f(x_i;\theta) \]
 
-Dado $α∈(0,1)$, supongamos que la región de rechazo
+Dado $\alpha\in(0,1)$, supongamos que la región de rechazo
 
-\[ R^\ast = \left\{ (\sample[x]\tq \frac{f_n(\sample[x];θ_1)}{f_n(\sample[x];θ_0} > k \right\} \]
+\[ R^\ast = \left\{ (\sample[x]\tq \frac{f_n(\sample[x];\theta_1)}{f_n(\sample[x];\theta_0)} > k \right\} \]
 
 verifica $P_{\theta_0}(R^{\ast}) = \alpha$. Entonces
 
-\[ \prob[θ_1]{R^\ast} ≥ \prob[θ_1]{R} \]
+\[ \prob[\theta_1]{R^\ast} \geq \prob[\theta_1]{R} \]
 
-siendo $R$ la región crítica de cualquier otro test tal que $\prob[θ_0]{R} ≤ α$. En otras palabras, $R^\ast$ es el \textbf{test óptimo de nivel α} para el problema considerado.
-
+siendo $R$ la región crítica de cualquier otro test tal que $ \prob[\theta_0]{R} \leq \alpha $.\\
+En otras palabras, $ R^\ast $ es el \textbf{test óptimo\index{Test!óptimo} de nivel $\alpha$} para el problema considerado.
 \end{theorem}
 
 \begin{proof} Denotamos $\vx = (\sample[x])$ para cortar.
 
-Tenemos que probar que $\prob[\theta_1]{R^\ast} - \prob[θ_1]{R}$ es mayor o igual que cero.
+Tenemos que probar que $\prob[\theta_1]{R^\ast} - \prob[\theta_1]{R}$ es mayor o igual que cero.
 
-\[ \prob[θ_1]{R^\ast} - \prob[θ_1]{R} = \int_{R^\ast\cap R^c} f_n(\vx;θ_1)\dif\vx - \int_{R^{\ast c}\cap R} f_n(\vx;θ_1)\dif\vx \]
+\[ \prob[\theta_1]{R^\ast} - \prob[\theta_1]{R} = \int_{R^\ast\cap R^c} f_n(\vx;\theta_1)\dif\vx - \int_{R^{\ast c}\cap R} f_n(\vx;\theta_1)\dif\vx \]
 
 Por definición de $R^\ast$
 
-\[ \int_{R^\ast\cap R^c} f_n(\vx;θ_1)\dif\vx ≥ k \int_{R^\ast\cap R^c} f_n(\vx;θ_0)\dif\vx \]
+\[ \int_{R^\ast\cap R^c} f_n(\vx;\theta_1)\dif\vx \geq k \int_{R^\ast\cap R^c} f_n(\vx;\theta_0)\dif\vx \]
 
 y también 
 
-\[ \int_{R^{\ast c}\cap R} f_n(\vx;θ_1)\dif\vx ≥ k \int_{R^{\ast c}\cap R} f_n(\vx;θ_0)\dif\vx \]
+\[ \int_{R^{\ast c}\cap R} f_n(\vx;\theta_1)\dif\vx \geq k \int_{R^{\ast c}\cap R} f_n(\vx;\theta_0)\dif\vx \]
 
 Por lo tanto, 
-
 \begin{align*}
-\prob[θ_1]{R^\ast} - \prob[θ_1]{R} &≥ k\left[\int_{R^\ast\cap R^c} f_n(\vx;θ_0)\dif\vx - \int_{R^{\ast c}\cap R} f_n(\vx;θ_0)\dif\vx \right] = \\
-&= k\left[\int_{R^\ast}f_n(\vx;θ_0)\dif \vx - \int_R f_n(\vx;θ_0)\dif x\right] = \\
-&= k\left[\prob[θ_0]{R^\ast} - \prob[θ_0]{R}\right] ≥ 0
+\prob[\theta_1]{R^\ast} - \prob[\theta_1]{R} &\geq k\left[\int_{R^\ast\cap R^c} f_n(\vx;\theta_0)\dif\vx - \int_{R^{\ast c}\cap R} f_n(\vx;\theta_0)\dif\vx \right] = \\
+&= k\left[\int_{R^\ast}f_n(\vx;\theta_0)\dif \vx - \int_R f_n(\vx;\theta_0)\dif x\right] = \\
+&= k\left[\prob[\theta_0]{R^\ast} - \prob[\theta_0]{R}\right] \geq 0
 \end{align*}
 
 \end{proof}
 
+\newpage
 \subsection{Familias paramétricas con cociente de verosimilitudes monótono y tests óptimos}
 
 En la subsección anterior hemos construido tests óptimos en problemas de hipótesis simple y alternativa simple. Pasaremos ahora a definirlos en modelos más complejos.
 
 
-\begin{defn}[Familia\IS paramétrica CVM] Se dice que $f(\cdot|θ)$ es una familia paramétrica con cociente de verosimilitudes monótono (CVM) si existe un estadístico $T_n(\sample[x])$ tal que, para todo $θ_1,θ_2$ con $θ_1<θ_2$ la razón de verosimilitudes 
+\begin{defn}[Familia\IS paramétrica CVM] Se dice que $f(\cdot|\theta)$ es una familia paramétrica con \textbf{cociente de verosimilitudes monótono} (CVM) si existe un estadístico $T_n(\sample[x])$ tal que, para todo $\theta_1,\theta_2$ con $\theta_1 < \theta_2$ la razón de verosimilitudes
 
-\[ \frac{f_n(\sample[x];θ_2)}{f_n(\sample[x];θ_1)} \]
+\[ \frac{f_n(\sample[x];\theta_2)}{f_n(\sample[x];\theta_1)} \]
 
 es una función monótona no decreciente de $T_n(\sample[x])$.
 \label{defFamCVM}
@@ -1653,33 +1742,51 @@ Podemos ver algunos ejemplos de este tipo de familias.
 
 \paragraph{Distribución exponencial}
 
-Tomemos $X\sim \text{exp}(θ)$ con $θ>0$ y $f(x;θ) = θe^{-θx}$ para $x>0$. El cociente de las dos funciones es
+Tomemos $X\sim \text{exp}(\theta)$ con $\theta > 0$ y $f(x;\theta) = \theta e^{-\theta x}$ para $x > 0$. El cociente de las dos funciones es
 
-\[ \frac{θ_2^ne^{-θ_2\sum x_i}}{θ_1^ne^{-θ_1\sum x_i}} = \left(\frac{θ_2}{θ_1}\right)^ne^{(θ_1-θ_2)\sum x_i } \]
+\[
+\frac{\theta_2^ne^{-\theta_2 \sum x_i}}{\theta_1^ne^{-\theta_1\sum x_i}} =
+\left(\frac{\theta_2}{\theta_1}\right)^n e^{(\theta_1 - \theta_2)\sum x_i }
+\]
 
-con $θ_1-θ_2 < 0$. Entonces, si consideramos
+con $\theta_1-\theta_2 < 0$. Entonces, si consideramos
 
-\[ T_n(\sample[x]) = -\sum x_i \] 
+\begin{gather*}
+T_n(\sample[x]) = \frac{1}{\sum x_i}
+\; \text{ ó } \;
+T_n(\sample[x]) = -\sum x_i
+\end{gather*}
 
-pasa algo con nuestras vidas y la estadística en general que no he llegado a copiar.
+Tenemos tenemos un estimador monótonamente creciente y
+\[
+\left(\frac{\theta_2}{\theta_1}\right)^n e^{(\theta_1 - \theta_2)\sum x_i } =
+\left(\frac{\theta_2}{\theta_1}\right)^n e^{(\theta_1 - \theta_2)\frac{1}{T} }
+\]
 
 \begin{theorem}\label{thmNeymanPearson2}
 Supongamos que $F(\cdot;\theta)$ cumpla la propiedad CVM (cociente de verosimilitudes monótono) y que $k_{\alpha}$ es tal que:
-\[P_{\theta_0} \{t_n > k_{\alpha} = \alpha\}\]
-Además suponemos que $P_{\theta_0} \{T_n = c\} = 0, \forall \theta,c$. 
+\[P_{\theta_0} \{t_n > k_{\alpha}\} = \alpha\]
+Además suponemos que $P_{\theta_0} \{T_n = c\} = 0, \; \forall \theta,c$. 
 
-\textbf{Entonces:} $R=\{(x,q,...,x_n): T_n(x_1,...,x_n) > k_{\alpha}\}$ es la región crítica de un test óptimo (uniformemente más potente) de nivel $\alpha$ para contrastar $H_0: \theta \leq \theta_0\,;\, H_1: \theta > \theta_0$.
+\noindent \textbf{Entonces:}
+\[ R=\{(\sample[x]): T_n(\sample[x]) > k_{\alpha}\}\]
+es la región crítica de un \textbf{test óptimo\footnotemark de nivel $\alpha$} para contrastar
+\begin{gather*}
+H_0: \theta \leq \theta_0\\
+H_1: \theta > \theta_0.
+\end{gather*}
 \end{theorem}
+\footnotetext{Uniformemente más potente (UMP)}
 
 Vamos a ver otro ejemplo:
 
 \begin{example}
 Ya hemos visto que la exponencial tiene CVM (cociente verosimilitudes monótono).
 
-Por el teorema tenemos que el \textbf{test óptimo} de nivel $\alpha$ para $H_0: \theta \leq \theta_0\,;\, H_1: \theta > \theta_0$.
+Por el teorema tenemos que el \textbf{test óptimo}\index{Test!óptimo} de nivel $\alpha$ para $H_0: \theta \leq \theta_0\,;\, H_1: \theta > \theta_0$.
 
 Podemos construir la región de rechazo 
-\[R = \{(x_1,...,x_n): \frac{1}{\sum_{i=1}^n x_i} > k_{\alpha}\}\] donde \[P_{\theta_0} \left\{\sum_{i=1}^n X_i < \frac{1}{k_{\alpha}}\right\} = \alpha\]
+\[R = \{(x_1,\dotsc,x_n): \frac{1}{\sum_{i=1}^n x_i} > k_{\alpha}\}\] donde \[P_{\theta_0} \left\{\sum_{i=1}^n X_i < \frac{1}{k_{\alpha}}\right\} = \alpha\]
 \end{example}
 
 \begin{example}
@@ -1689,51 +1796,60 @@ Se deja como ejercicio para el lector la comprobación de que la propiedad de CV
 
 \subsection{Construcción de tests. Test de cociente de verosimilitudes}
 
-\begin{defn}[Estadístico\IS del contraste de razón de verosimilitudes]
+\begin{defn}[Estadístico\IS del contraste de razón de verosimilitudes]\index{Test!de cociente de verosimilitudes}
 
-Sea $f(\ast;θ)$ donde $θ =(\sample[θ])∈Θ⊆ℝ^k$, siendo $Θ$ un \textit{intervalo} $ℝ^k$. Dada una muestra $x=(\sample[x])$, sea \[ f_n(x;θ) =\prod_{i=1}^{n} f(x_1;θ) \]
+Sea $f(\ast;\theta)$ donde $\theta =(\sample[\theta])\in\Theta\subseteq\real^k$, siendo $\Theta$ un \textit{intervalo} $\real^k$. Dada una muestra $x=(\sample[x])$, sea \[ f_n(x;\theta) =\prod_{i=1}^{n} f(x_1;\theta) \]
 
-Consideremos el problema de contrastar $H_0: \,θ_i=c_i$ para $i=1,\dotsc, r ≤ k$ y $H_1:\, θ_1≠c_i$ para algún $i=1,\dotsc, r$. 
+Consideremos el problema de contrastar a nivel $\alpha$:
+\begin{gather*}
+H_0: \,\theta_i = c_i \text{ para } i = 1,\dotsc, r \leq k\\
+H_1: \, \theta_1 \neq c_i \text{ para algún } i = 1,\dotsc, r.
+\end{gather*}
 
-El estadístico del contraste de razón de verosimilitudes es
-
-\[ Λ_n = \frac{\sup_{θ∈Θ_0}f_n(x;θ)}{\sup_{θ∈Θ}f_n(x;θ)} = \frac{\sup_{θ∈Θ_0}f_n(x;θ)}{f_n(x;\hat{θ}} \]
-
-donde $\hat{θ}$ es el e.m.v (\ref{defEMV}) de $θ$, y 
+El estadístico del \textbf{contraste de razón de verosimilitudes}\index{Estadístico!del contraste de razón de verosimilitudes} es
+\[
+\Lambda_n =
+\frac{\sup_{\theta\in\Theta_0}f_n(x;\theta)}{\sup_{\theta\in\Theta}f_n(x;\theta)} =
+\frac{\sup_{\theta\in\Theta_0}f_n(x;\theta)}{f_n(x;\hat{\theta})}
+\]
+donde $\hat{\theta}$ es el e.m.v. (\ref{defEMV}) de $\theta$, y 
 \end{defn}
 
-Si $H_0$ es cierta y el verdadero valor de $θ$ están en $Θ_0$ entonces $A_n\eqsim1$, porque $\hat{θ}_n$ tiende al verdadero valor del parámetro. Si $H_0$ es falsa, el e.m.v. de $θ$ tiende a un valor fuera de $Θ_0$. Entonces $Λ_n$ tomará un valor significativamente menor que 1.
+\begin{itemize}
+\item Si $H_0$ es cierta y el verdadero valor de $\theta$ están en $\Theta_0$ entonces $\Lambda_n \to 1$, porque $\hat{\theta}_n$ tiende al verdadero valor del parámetro.
+\item Si $H_0$ es falsa, el e.m.v.($\theta$) tiende a un valor fuera de $\Theta_0$. Entonces $\Lambda_n$ tomará un valor significativamente menor que 1.
+\end{itemize}
 
 De esta forma, podemos construir una región de rechazo
 
-\[ R = \{(\sample[x]\tq Λ_n(\sample[x]) < k_α \} \]
+\[ R = \{(\sample[x]\tq \Lambda_n(\sample[x]) < k_\alpha \} \]
 
-Hallar $k_α$ según la probabilidad de error que queramos es algo complejo. Por eso nos apoyamos en el siguiente teorema:
+Hallar $k_\alpha$ según la probabilidad de error que queramos es algo complejo. Por eso nos apoyamos en el siguiente teorema:
 
+\pagebreak[0]
 \begin{theorem}
 Supongamos que 
 \begin{enumerate}
-\item El e.m.v. $\hat{θ}_n$ es estimador consistente en probabilidad del parámetro $θ$.
-\item Para todo $x$, la función $\log f(x;θ)$ tiene derivadas parciales terceras respecto a los componentes de $θ$ continueas.
-\item En las integrales que involucran a la función $f(x;θ)$ se pueden permutar las derivadas con el signo integral.
-\item La matriz de información de Fisher \[ \mathcal{I}(θ) = \left(\frac{∂^2}{∂θ_i∂θ_j} \log f(X;θ)\right)_{1≤i,j≤k} \] es invertible para cada $θ$.
+\item El e.m.v. $\hat{\theta}_n$ es estimador consistente en probabilidad del parámetro $\theta$.
+\item Para todo $x$, la función $\log f(x;\theta)$ tiene derivadas parciales terceras respecto a los componentes de $\theta$ contínuas.
+\item En las integrales que involucran a la función $f(x;\theta)$ se pueden permutar las derivadas con el signo integral.
+\item La matriz de información de Fisher \[ \mathcal{I}(\theta) = \left(\frac{\partial^2}{\partial\theta_i\partial\theta_j} \log f(X;\theta)\right)_{1\leq i,j\leq k} \] es invertible para cada $\theta$.
 \end{enumerate}
 
-Entonces, bajo $H_0$, 
-
-\[ -2\log Λ_n\convdist χ^2 \]
+Entonces, bajo $H_0$, \[ -2\log \Lambda_n \convdist \chi^2_r \]
 \end{theorem}
 
-\subsubsection{Aplicación a tests de bondad de ajuste} Sea $X$ una v.a. discreta que toma los valores $a_1,\dotsc a_k$. Denotemos $p_i = \prob{X=a_i}$. Supongamos que se desea contrastar
+\subsubsection{Aplicación a tests de bondad de ajuste}\index{Test!de bondad de ajuste}\label{bondadDeAjuste}
+Sea $X$ una v.a. discreta que toma los valores $a_1,\dotsc a_k$. Denotemos $p_i = \prob{X=a_i}$. Supongamos que se desea contrastar
 
-\[ H_0:\, p_i=p_{i0}\; i=1,\dots,k \]
+\[ H_0:\, p_i = p_{i0}\; i=1,\dots,k \]
 
-basado en una muestra $\sample[x]$. Obsérvese que, en este caso, con la notación del teorema, $r=k-1$ porque cuando se fijan $k-1$ probabilidades $p_i$ queda fijada la probabilidad restante. Por tanto, se rechaza al nivel $α$ cuando
+basado en una muestra $\sample[x]$. Obsérvese que, en este caso, con la notación del teorema, $r = k - 1$ porque cuando se fijan $k - 1$ probabilidades $p_i$, queda fijada la probabilidad restante. Por tanto, se rechaza $H_0$ al nivel $\alpha$ cuando
 
-\[ - 2 \log Λ_n > χ_{k-1;α}^2 \]
+\[ - 2 \log \Lambda_n > \chi_{k-1;\alpha}^2 \]
 
-Consideramos $f(\sample[x];\sample[p][k])$ como la probabilidad de haber observado la muestra $\sample[x]$ con los valores de los parámetros $\sample[p][k]$. Entonces el numerador de $Λ_n$ es 
-
+Consideramos $f(\sample[x];\sample[p][k])$ como la probabilidad de haber observado la muestra $\sample[x]$ con los valores de los parámetros $\sample[p][k]$.\\
+Entonces el numerador de $\Lambda_n$ es 
 \[ \frac{n!}{O_1!\dotsb O_k!}p_{10}^{O_1}\dotsb p_{k0}^{O_k} \]
 
 siendo $ O_j=\card{i\tq x_i = a_j}$ las \textit{frecuencias observadas} de los distintos valores de la variable. Nótese que, bajo $H_0$, $(\sample[O][k])$ tiene distribución multinomial $\mathcal{M}(n:p_{10},\dotsc , p_{k0})$. 
@@ -1746,27 +1862,77 @@ y por lo tanto el denominador queda
 
 \[ \frac{n!}{O_1!\dotsb O_k!} \left(\frac{O_1}{n}\right)^{O_1} \dotsb \left(\frac{O_k}{n}\right)^{O_k} \]
 
-Sustituyendo en $Λ_n$ es inmediato ver que que el estadístico de contraste se puede expresar en la forma 
-
-\[ - 2 \log Λ_n \]
-
+Sustituyendo en $\Lambda_n$ es inmediato ver que que el estadístico de contraste se puede expresar en la forma 
+\[
+-2 \log \Lambda_n =
+2 \sum\limits_{i=1}^{k} O_i\log{\left(\frac{O_i}{e_i}\right)}
+\]
+donde $e_i = np_{i0} \; i=1,\dotsc,k$ son las ``\textit{frecuencias esperadas (bajo $H_0$)}'' de los distintos valores de la variable en una muestra de tamaño n.
 
 \begin{example}[Experimento de Mendel] Un ejemplo clásico de este tipo de ajuste se puede ver en el experimento de Mendel, en el que se cruzaron plantas de guisantes con fenotipo rugoso-amarillo con otras de fenotipo liso-verde. En la segunda generación se podían observar cuatro fenotipos cuyas respectivas probabilidades, según la teoría de la herencia mendeliana, debían ser 
 
 \[ p_{10} = \frac{9}{16},\,p_{20}=\frac{3}{16},\,p_{30}=\frac{3}{16},\,p_{40}=\frac{1}{16} \]
 
-Observados $n=556$ guisantes en la segunda generación del experimento se obtuvieron los siguientes números con los fenotipos.
+Observados $n=556$ guisantes en la segunda generación del experimento, se obtuvieron los siguientes números de guisantes con estos fenotipos:
 
-
-\[ 0_1=315,\,O_2=101,\,O_3= \]
+\[ 0_1=315,\,O_2=101,\,O_3=108,\,O_4=32. \]
 
 ¿Proporcionan estos resultados alguna evidencia en contra de la teoría mendeliana?
 
-Aplicamos el test para contrastar $H_0$ tomada como los valores esperados. 
+Aplicamos el test para contrastar $H_0: p_1=\frac{9}{16},\dotsc,p_4=\frac{1}{16}. $
+\[
+e_1 = 556 \, \frac{9}{16} = 312.75,\;\;
+e_2 = e_3 = 556 \, \frac{3}{16} = 104.25,\;\;
+e_4 = 556 \, \frac{1}{16} = 34.75,\;
+\]
+Obtenemos el estadístico
+\[
+-2\log{\Lambda_n} =
+2 \sum\limits_{i=1}^{k} O_i\log{\left(\frac{O_i}{e_i}\right)} =
+0.4754
+\]
+El p-valor, calculado a partir de la distribución $\chi^2_3$, es 0.9281 lo que no indica ninguna evidencia estadística en contra de $H_0$.
 
-Copia página 40 diapositivas y artículo original de Fisher de la página.
+\pagebreak
+Hay una controversia clásica en la historia de la ciencia en el sentido de que los resultados de Mendel eran ``demasiado buenos'',
+es decir, había demasiada concordancia entre las $O_i$ y las $e_i$ (por ejemplo, R.A. Fisher era de esta opinión; ver su artículo de 1936,
+``Has Mendel’s work been rediscovered?'', en \textit{The Annals of Science}).
 
+Se ha sugerido que este supuesto ``exceso de concordancia'' podría deberse a un ``sesgo de repetición'' (\textit{confirmation bias}) producido por la repetición de los resultados hasta que las $O_i$ concordasen fuertemente con las $e_i$. También se ha conjeturado que algún ayudante de Mendel pudo actuar con ``exceso de celo'' manipulando los resultados. En todo caso, las ideas básicas de Mendel eran acertadas y han tenido una influencia decisiva.
 \end{example}
+
+\subsection{Tests Bayesianos}\index{Test!Bayesiano}
+Se desea contrastar
+\[
+H_0 \,:\, \theta \in \Theta_0 \text{ frente a } H_1 \,:\, \theta \in \Theta \setminus \Theta_0
+\]
+Obteniendo la información de una muestra $\sample[x].$
+
+La metodología bayesiana supone que la densidad que ha generado los datos es $f(\cdot\vert\theta)$ y que el parámetro $\theta$ puede considerarse como una v.a. con distribución a priori $\pi(\theta)$. A partir de aquí, se calcula la distribución a posteriori $\pi(\theta\vert\sample[x])$ dada por
+\[
+\pi(\theta\vert\sample[x]) =
+\frac{f_n(\sample[x]\vert\theta)\pi(\theta)}{\int_\Theta f_n(\sample[x]\vert\theta)\pi(\theta) d\theta}, \text{ donde}
+\]
+\[
+f_n(\sample[x]\vert\theta) =
+\prod\limits_{i=1}^{n} f(x_i;\theta).
+\]
+
+El elemento fundamental en la inferencia bayesiana es siempre la distribución a posteriori. A partir de ella se pueden calcular las probabilidades a posteriori de ambas hipótesis:
+\begin{gather*}
+\prob{\theta \in \Theta_0 \vert\sample[x]} =
+\pi(H_0 \vert \sample[x]) =
+\int_{\Theta_0} \pi(\theta \vert \sample[x]) d\theta,\\
+\prob{\theta \in \Theta_1 \vert\sample[x]} =
+\pi(H_1 \vert \sample[x]) =
+1 - \pi(H_0 \vert \sample[x])
+\end{gather*}
+
+y se toma la decisión en función de sus valores. Típicamente, se optará por $H_1$ cuando
+\[ \pi(H_1 \vert \sample[x]) \geq \beta, \; \beta \in (0,1)\]
+$\beta$ es un valor que se fija dependiendo de la gravedad que se atribuya al error de tipo I (\ref{errorTipoI}).
+
+\textit{Observación:} la metodología bayesiana de contraste de hipótesis depende fuertemente de la elección de la distribución a priori $\pi$.
 
 \appendix
 \chapter{Anexos}
@@ -1776,13 +1942,14 @@ Copia página 40 diapositivas y artículo original de Fisher de la página.
 Sea una función $p(x,\theta)$ con $x\in \real$ y $\theta \in \mathbb{T}$ donde $\mathbb{T}$ es un intervalo abierto de los reales. Supongamos que
 \begin{enumerate}
 \item $p(x,\theta)$ es integrable con respecto a $x$ para cada $\theta$ (se cumple automáticamente si $p$ es función de densidad.
-\item Para casi todo punto\footnote{Para todo $x$ salvo los que tienen probabilidad 0} existe $\dfrac{∂}{∂\theta} p(x,\theta)\;\forall\theta$.
-\item Existe una función integrable $\appl{g}{\real}{\real}$ tal que \[ \abs{\dfrac{∂}{∂\theta} p(x,\theta)}≤g(x)\;\forall\theta \]
+\item Para casi todo punto\footnote{Para todo $x$ salvo los que tienen probabilidad 0} existe $\dfrac{\partial}{\partial\theta} p(x,\theta)\;\forall\theta$.
+\item Existe una función integrable $\appl{g}{\real}{\real}$ tal que \[ \abs{\dfrac{\partial}{\partial\theta} p(x,\theta)}\leq g(x)\;\forall\theta \]
 \end{enumerate}
 
-Entonces para todo $θ$ 
+Entonces para todo $\theta$ 
 \[ \dpa{}{\theta}\int_\real p(x,\theta)\,dx=\int_\real \dpa{}{\theta} p(x,\theta)\,dx \]
 
+\newpage
 \section{Distribuciones notables}
 \label{secDistr}
 \includepdf[pages={2-last}, nup=1x3]{pdf/_Distribuciones.pdf}
@@ -1793,19 +1960,21 @@ Entonces para todo $θ$
 
 \chapter{Ejercicios}
 \input{tex/EI_Ejercicios.tex}
-\newpage
-\includepdf[pages={1-3}]{pdf/_T5DatosMercurio.pdf}
-\newpage
 
+\newpage
 \chapter{Exámenes}
-\section{Enero 2013}
-\includepdf[pages=-]{pdf/_ExamenEnero.pdf}
-\includepdf[pages=-]{pdf/_ExamenEnero_Sol.pdf}
 
-\section{Junio 2013}
+\includepdf[pages=-,addtotoc={1,section,1,Enero 2013,Enero2013}]{pdf/_ExamenEnero2013.pdf}
+\includepdf[pages=-,addtotoc={1,subsection,1,Solución,Enero2013Sol}]{pdf/_ExamenEnero2013_Sol.pdf}
 
-\includepdf[pages=-]{pdf/_ExamenJunio.pdf}
-\includepdf[pages=-]{pdf/_ExamenJunio_Sol.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Junio 2013,Junio2013}]{pdf/_ExamenJunio2013.pdf}
+\includepdf[pages=-,addtotoc={1,subsection,1,Solución,Junio2013Sol}]{pdf/_ExamenJunio2013_Sol.pdf}
+
+\includepdf[pages=-,addtotoc={1,section,1,Enero 2014,Enero2014}]{pdf/_ExamenEnero2014.pdf}
+\includepdf[pages=-,addtotoc={1,subsection,1,Solución,Enero2014Sol}]{pdf/_ExamenEnero2014_Sol.pdf}
+
 \printindex
+
+
 \end{document}
 
