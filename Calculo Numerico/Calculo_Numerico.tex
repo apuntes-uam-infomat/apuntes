@@ -1,0 +1,609 @@
+\documentclass[nochap]{apuntes}
+
+%
+\author{Guillermo Julián Moreno}
+\date{12/13 C2}
+\title{Cálculo Numérico}
+
+%
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\usepackage{listings}
+\usepackage{color}
+\lstset{ %
+basicstyle=\footnotesize,
+commentstyle=\color{mygray},
+breakatwhitespace=false,
+  breaklines=true,
+  extendedchars=true,
+}
+
+\makeindex
+
+\begin{document}
+
+\pagestyle{plain}
+\maketitle
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introducción}
+\subsection{Objetivos y necesidades del análisis numérico}
+
+El análisis numérico es la rama de las matemáticas que tiene como objetivo el diseño y el estudio de métodos que permitan obtener efectivamente soluciones numéricas de problemas matemáticos.
+
+\section{Errores}
+
+Llamamos $V$ al resultado verdadero (número, función, vector), y $N$ a la solución numérica. De esta forma, definimos los siguientes conceptos:
+
+\begin{defn}[Error\IS absoluto] El error absoluto se calcula como $E = V - N$. Si $E > 0$ es un error por defecto, si $E<0$ es un error por exceso.
+\end{defn}
+
+\begin{defn}[Error\IS relativo] Definimos el error relativo como \[ \abs{\frac{E}{V}}\], con $V \neq 0$\end{defn}
+
+\begin{defn}[Error\IS porcentual] El error porcentual es el error relativo en porcentaje. Obvio, ¿verdad?.\end{defn}
+
+\subsection{Coste operativo y eficiencia}
+
+Elegimos un método numérico para resolver un problema matemático de tal manera que cometiendo errores dentro de un límite predeterminado necesitamos el mínimo trabajo para resolverlo (calcular la solución numérica).
+
+A la hora de medir la eficiencia de un método, tenemos en cuenta el error cometido, el coste de tiempo y el tamaño de memoria necesario para crear el cálculo.
+
+\index{Método de Horner}
+\paragraph{Ejemplo: evaluación de un polinomio - Método de Horner} En la evaluación básica de un polinomio, necesitaríamos $2n - 1$ multiplicaciones y $n$ sumas para un polinomio de grado $n$. Sin embargo, el método de Horner proporciona un método más rápido. Definimos
+
+\begin{align*}
+q_{n-1} &= a_n \\
+q_{n-2} &= q_{n-1} x_0 + a_{n-1} \\
+&  \cdots \\
+q_{n - 1 - i} &= q_{n - i} x_0 + a_{n-i};\;\; i = 1,\dotsc , n \\
+q_{-1} &= q_0 x_ 0 + a_0\\
+p(x_0) &= q_{-1}
+\end{align*}
+
+Cada operación $q_{n-1-i}$ consiste de una suma y una multplicación. En total habrá $n$ sumas y $n$ multiplicaciones. Este método sería equivalente al método de Ruffini de división de polinomios:\\
+\begin{center}
+\begin{tabular}{c | c c c c}
+  & $a_n$  & $a_{n-1}$ & $\cdots$ & $a_0$ \\ 
+$x_0$ &  & $q_{n-1} x_0$ & $\cdots$ & $q_0x_0$ \\ 
+\hline 
+ & $q_{n-1}$ & $q_{n-2}$ & $\cdots$ & $q_{-1}$ \\ 
+\end{tabular} 
+\end{center}
+
+\begin{defn}[Notación $o$]
+Dadas dos funciones $f, g$, decimos que $f = o(g)$ cuando $x\to x_0$ si \[\lim_{x\to x_0} \frac{f(x)}{g(x)} = 0\]
+\end{defn}
+
+\begin{defn}[Notación O]
+Dadas dos funciones $f, g$ $f= O(g)$ cuando $x\to x_0$ si dado $r_0>0$,  tenemos que 
+\[ \forall x \tq \abs{x-x_0} < r_0;\quad \abs{f(x)} ≤ k\abs{g(x)}\]
+\end{defn}
+
+\section{Interpolación}
+\subsection{Interpolación polinómica de Taylor}
+
+\begin{defn}[Polinomio de Taylor]
+$P_N(x)$ es el polinomio de Taylor de grado $≤N$ de la función $f$ en $x_0$ si 
+
+\[ P_N^{i)}(x_0) = f^{i)}(x_0)\;\forall i = 0, 1,\dotsc, N\]
+\end{defn}
+
+\paragraph{Ejemplo: polinomio de Taylor de $f=\sin x$}
+Dado que $f^{2i-1)}(0) = (-1)^{i+1}$ y $f^{2i)}(0) = 0$, tenemos que 
+
+\[ P_{2N-1}(x) = P_{2N}(x) = \sum_{i=1}^N\frac{(-1)^{i+1}x^{2i-1}}{(2i-1)!} \]
+
+\paragraph{Ejemplo: polinomio de Taylor de $f(x) = e^x$ en $x=0$}
+Dado que $f^{i)}(0)=1\;\forall i$, 
+
+\[ P_N(x) = \sum_{i=1}^N\frac{x^i}{i!} \]
+
+\begin{theorem}
+Sea $N≥1$, $f$ una función $N$ veces derivable en $x_0$. Sea $P_N$ el polinomio de Taylor de grado $N$ de la función $f$ en $x_0$. Entonces
+\[ f = P_N + o\left((x-x_0)^N\right) \]
+
+Además, $P_N$ es el único polinomio de grado $≤N$ que verifica la condición.
+\end{theorem}
+
+\begin{proof}
+\[
+0 = \lim_{x\to x_0} \frac{f(x) - P_N(x)}{(x-x_0)^N} \overset{0/0}{=} \lim_{x\to x_0} \frac{f'(x)-P'_N(x)}{N(x-x_0)^{N-1}}
+\]
+
+Repitiendo, llegaremos a 
+
+\[ \lim_{x\to x_0} \frac{f^{N-1)}(x) - P^{N-1)}_N(x)}{N!(x-x_0)}  \overset{0/0}{=} \lim_{x\to x_0} \frac{f^{N)}(x) - P^{N)}_N(x)}{N!} = 0 \]
+
+De esta forma, demostramos que $f-P_N = o\left((x-x_0)^N\right)$. Falta demostrar que el polinomio es único.
+
+Supongamos que existen $R(x), Q(x)$ polinomios de grado $≤N$ que cumplen la condición del teorema. Entonces
+
+\[
+\lim_{x\to x_0} \frac{f -R}{(x-x_0)^N} = 0 = \lim_{x\to x_0} \frac{f - Q}{(x-x_0)^N} = \lim_{x\to x_0} \frac{f - Q - (f - R)}{(x-x_0)^N} = \lim_{x\to x_0} \frac{R - Q}{(x-x_0)^N} 
+\]
+
+Para que se cumpla, tenemos que tener $R(x_0) = Q(x_0)$. Aplicando L'Hopital, tendríamos que $R'(x_0)=Q'(x_0)$, y así sucesivamente hasta llegar a $R^{N)}(x_0) = Q^{N)}(x_0)$, por lo que $R(x) = Q(x)$.
+\end{proof}
+
+\begin{defn}[Obtención del polinomio de Taylor][Polinomio de Taylor!obtención]
+Dada una función $f$ en un punto $x_0$, su polinomio de Taylor de grado $≤N$ es
+
+\[ P(x) = \sum_{n=0}^N f^{n)}(x_0)\frac{(x-x_0)^n}{n!}\]
+\end{defn}
+
+\begin{theorem}[Forma de Lagrange]
+Sean $x, x_0 \in \real$ fijos y con $x>x_0$. Sea $f$ una función $N$ veces diferenciable en el intervalo $[x_0, x]$ y $N+1$ veces diferenciable en el intervalo $(x_0, x)$. Entonces, existe $\xi \in (x_0, x)$ tal que $f(x)-P(x) = f^{N+1)}(\xi)\frac{(x-x_0)^{N+1}}{(N+1)!}$
+\end{theorem}
+
+\begin{proof}
+Definimos $M=\frac{f(x)-P(x)}{(x-x_0)^{N+1}}$, esto es una constante porque $x$ y $x_0$ son fijos. Definimos la función 
+
+\[ F(t) = f(t) - P(t) - M(t-x_0)^{N+1} \]
+
+$N$ veces diferenciable en $[x_0, x]$. Tendríamos que
+
+\[ F^{N+1)} = f^{N+1)}(t) - M(N+1)! \]
+
+Si existe \[ \xi\in (x_0, x) \tq F^{N+1)}(\xi) = 0 \implies M = \frac{f^{N+1)}(\xi)}{(N+1)!} \implies \frac{f(x)-P(x)}{(x-x_0)^{N+1}} = \frac{f^{N+1)}(\xi)}{(N+1)!} \] y por lo tanto hemos demostrado el teorema.
+\end{proof}
+
+\begin{theorem}
+\[ f(x) - P_N(x) = \int_{x_0}^{x} \frac{f^{N+1)}(s)}{N!}(s-x_0^N)\;ds \]
+\end{theorem}
+
+\subsection{Interpolación polinómica de Lagrange}
+
+Dado un número entero $N>0$, consideramos $N+1$ puntos distintos \[ x_0, x_1,\dotsc,x_N\in \real \] y los correspondientes valores de una función $f$ \[ f(x_0), f(x_1), \dotsc, f(x_N) \] buscamos encontrar el poliniomio de grado $≤N$ tal que se cumple la condición Lagrange:
+\begin{equation} P(x_i) = f(x_i) \forall i= 0, \dotsc, N \label{eqLaplace}\end{equation}
+
+\begin{theorem}
+Existe un único polininomio de grado $≤N$ que cumple (\ref{eqLaplace}). A este polinomio se le conoce como polinomio de Lagrange de $f$ en los puntos $x_0, \dotsc, x_N$.
+\end{theorem}
+
+\begin{proof}
+Sea $P(x) = a_Nx^N +\dotsb + a_1x + a_0$. Exigimos que satisfaga (\ref{eqLaplace}). Por lo tanto, escribiendo las ecuaciones para cada punto $x_i\quad P(x_i)=f(x_i)$ tendremos un sistema de ecuaciones lineales de $N+1$ incógnitas ($a_0,\dotsc,a_N$) y $N+1$ ecuaciones. La matriz de coeficientes es la matriz de Vandermonde \index{Vandermonde!Matriz de}, cuyo determinante es 
+\[det(A) = \prod_{0≤i<j≤N}(x_j - x_i) \]
+
+Como los puntos $x_i$ son distintos, ninguno de los factores del producto será cero y por lo tanto el determinante tampoco será cero. Es decir, que el sistema tiene solución y el polinomio existe, con solución única.
+\end{proof}
+
+Dado que resolver el sistema de ecuaciones es muy costoso, veremos tres métodos para obtener el polinomio: el de coeficientes indeterminados, el de Laplace y el método de Newton.
+
+\subsubsection{Método de Lagrange}
+Utilizamos $N+1$ polinomios para que su combinación nos dé el polinomio de Lagrange. Dados los puntos distintos, construyo $N+1$ polinomios de grado $≤N$ tal que 
+\[\begin{cases}P_i(x_j) = 0& i\neq j \\ P_i(x_i) = 1 \end{cases}\]
+
+Es decir, que \label{polLagrange}
+\[ P_i(x) = \frac{(x-x_0)\dotsb (x-x_{i-1})(x-x_{i+1})\dotsb (x-x_N)}{(x_i - x_0)\dotsb  (x_i-x_{i-1})(x_i-x_{i+1})\dotsb(x_i-x_N)} \]
+
+y el polinomio de Lagrange se construiría 
+
+\[ P(x) = \sum f(x_i)P_i(X) \]
+
+que cumple las condiciones requeridas. 
+
+\textit{Nota: a $P_i$ también se le llama $l_i$}
+
+\subsubsection{Método de Newton}
+
+La idea del método de Newton es reutilizar los polinomios anteriores. Para $P_0$, tenemos que $P_0(x) = f(x_0)$. Con el siguiente polinomio tenemos $P_1(x) = P_0(x) + Q_1(x)$. De $Q_1$ buscamos que \begin{gather*}Q_1(x_0) = 0\\Q_1(x_1) = f(x_1)\end{gather*}
+
+por lo tanto tenemos que 
+
+\[ Q_1(x) = (f(x_1) - f(x_0))\frac{x-x_0}{x_1-x_0} \]
+
+Para llegar al polinomio de grado $N$, basta determinar un coeficiente al que llamamos diferencia dividida por un coeficiente y sumado al polinomio anterior:
+
+\[ P_N(x) =f[x_0,\dotsc,x_N](x-x_0)\dotsb(x-x_{N-1}) + P_{N-1}(x) \]
+
+\begin{defn} [Diferencia dividida]
+Sea $N>0$ y $\{x_i\}$ nodos; y $f$ una función definida en los nodos. Se llama diferencia dividida de la función $f$ en los nodos $x_0,\dotsc,x_N$ al coeficiente de $x^N$ del polinomio interpolador de Lagrange. Lo denotamos como $f[x_0,\dotsc,x_N]$, y vale
+
+\begin{gather*}
+f[x_i] = f(x_i) \\
+f[x_i,x_j] = \frac{f(x_i) - f(x_j)}{x_i-x_j} = \frac{f[x_i] - f[x_j]}{x_i-x_j} 
+\end{gather*}
+\end{defn}
+
+\begin{theorem}
+\[ f[x_k,\dotsc,x_{k+j}] =\frac{f[x_{k+1},\dotsc,x_{k+j}] - f[x_k, \dotsc ,x_{k+j -1}]}{x_{k+j}-x_k} \]
+\end{theorem}
+
+
+\begin{remark} En general, \[ \lim_{N\to\infty}f(x) -P_N(x)\neq 0 \forall x \in [a, b] \] \end{remark}
+
+Para facilitar las cosas, este es el pseudocódigo MATLAB que hallaría el polinomio interpolador de una serie de puntos (que se pasan como lista de valores en \texttt{x} y en \texttt{y}) usando el método de Newton:
+
+\begin{lstlisting}[language=matlab]
+function [ poly ] = newton_poly(x, y)
+    grade = length(x);
+    if grade == 1
+        poly = y(1);
+    else
+        c = [0 div_diffs(x, y)]; 
+        for j=2:grade
+            c = c * [1,  -(x(j))]); % Multiplicamos las diferencias divididas por (x - x_j)
+        end
+        poly = c + newton_poly(x(2:length(x)), y(2:length(y)))); % Sumamos el obtenido al polinomio anterior, quitando el primer punto.
+    end
+end
+\end{lstlisting}
+
+\subsection{Interpolación polinómica a trozos}
+
+Dados $a = x_0 < x_1 < \dotsb < x_N = b$, lo denotamos como la partición $\Delta$ de $L = [a,b]$  El tamaño de la partición será $h = \max x_i - x_{i-1}$.
+
+\begin{defn}
+Llamamos $M_n^m(\Delta)$ al conjunto de todas las funciones derivables $n$ veces (si $n= 0$, continuas) en el intervalo $[a,b]$ que restringidas a cada intervalo $(x_{i-1}, x_i)$ es un polinomio de grado menor o igual que $m$.
+\end{defn}
+
+A las funciones de $M_0^1(\Delta)$ se las conoce como funciones lineales a trozos de la partición $\Delta$.
+
+\begin{theorem}
+Dada una partición $\Delta = \{x_0,\dotsc,x_N\}$ de $[a,b]$ y $f(x_0),\dotsc, f(x_N)$, entonces existe una única función $s\in M_0^1(\Delta)$ que verifica
+
+\begin{equation}
+s(x_i)  = f(x_i)\quad \forall i =0,1,\dotsc ,  N \label{eqIPT}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Supongamos que $r,s \in M_0^1(\Delta)$ satisfacen \ref{eqIPT}. Entonces, sea $t(x)  = s(x) - r(x)$. Tenemos que $\forall x_i \quad t(x_i) = 0$. Como la función es lineal, tenemos que $t\equiv 0$ para $x \in (x_0, x_1)$. De la misma forma, tenemos que $t(x)\equiv 0\;\forall x\in(x_{i-1}, x_i)$, entonces $t\equiv 0 \; \forall x\in (a,b) \implies r\equiv s$.
+\end{proof}
+
+\subsection{Error de interpolación}
+
+Al interpolar una función, cometemos un cierto error que queremos acotar. Es decir, dada una función $f$ y su polinomio interpolador $P$, queremos saber cuánto vale $f(x) - P(x)$ en un cierto intervalo $[a, b]$.
+
+
+\begin{theorem}
+Sean $x_0,\dotsc, x_n$ nodos en $[a,b]$ distintos do a dos. Supongamos que $f$ es $N+1$ veces diferenciable en $(a,b)$. Sea
+
+\[ a = \min\{x_0,\dotsc,x_N\} < \max \{x_0,\dotsc,\x_N\} = b \]
+
+Entonces, $\exists \xi \in (a,b)$ tal que 
+
+\[ f(x) - P(x) = \frac{f^{N+1)}(\xi)}{(N+1)!}(x-x_0)\dotsb (x-x_N) \]
+
+donde $P$ es el polinomio interpolador de Lagrange.
+\end{theorem}
+
+\begin{corol} Si se cumplen las condiciones del teorema anterior, enconces, existe $\xi \in (a,b)$ tal que 
+
+\[ \frac{f^{N+1)(\xi)}}{(N+1)!} = f[x_0,\dotsc,x_N, x] \]
+
+de tal forma que podríamos redefinir el error como 
+
+\[ f(x) - P(x) = f[x_0,\dotsc, x_n, x] \prod_{i=0}^n(x-x_i) \]
+
+donde $ f[x_0,\dotsc, x_n, x]$ es la notación para diferencias divididas.
+\end{corol}
+
+\subsection{Interpolación de Hermite}
+
+\[ P_{2N+1} = \sum_{i=0}^N f(x_i) H_i(x) + f'(x_i)K_i(x) \]
+
+Al polinomio $P_{2N+1}$ se le conoce como polinomio interpolador de Hermite de $f$ en $x_0,\dotsc,x_N$. 
+
+\begin{theorem}
+Para $N≥0$, sea $f$ $2N+2$ veces diferenciable entre $\min\{x_i\} = a$ y $\max\{x_i\} = b$, y $x$ un punto distinto de los nodos. Entonces existe $\xi\in (a,b)$ tal que \[ f(x) - P_{2N+1}(x) = \frac{f^{2N+2)}(\xi)}{(2N+2)!}(x-x_0)^2\dotsb (x-x_N)^2 \]
+
+Además, si existe $K_{2N+2} > 0$ tal que $\abs{f^{2N+2)}(x)} ≤ K_{2N+2} \; \forall x\in (a,b)$, entonces 
+\[ \abs{f(x) -P_{2N+1}(x)} ≤ \frac{K_{2N+2}}{(2N+2)!}(x-x_0)^2\dotsb (x-x_N)^2 \quad \forall x\in (a,b) \]
+\end{theorem}
+
+\subsection{Interpolación de Splines (trazadores)}
+\index{Trazadores}
+
+Buscamos una función $S(x)$, definida en un intervalo $[a, b]$ con la partición $\Delta$ con $a = x_0 < \dotsb < x_N = b$ tal que para unos valores $\{y_i\}_{i=0}^N$ se verifica que $S(x_i) = y_i$ y que ademas $s, s', s''$ sean continuas.
+
+$S(x)$ es un splin cúbico si para cada subintervalo $(x_{i-1}, x_i)$, $S(x)$ es un polinomio cúbico. Llamamos $S_i(x) =a_ix^3+b_ix^2+c_ix + d_i$ el polinomio en el intervalo $(x_{i-1}, x_i)$. Hay que determinar $4N$ constantes para idefntificar el splin cúbico:
+
+\begin{gather*}
+s_1(x_0) = y_0 \\
+s_1(x_1) = s_2(x_1) = y_1 \\
+\cdots
+\end{gather*}
+
+En total, tenemos 2 ecuaciones para cada punto intermedio y una para cada extremo. En total, $2N$ ecuaciones. Con esto conseguimos que $s$ sea continua. Ahora buscamos la continuidad en la primera derivada. Es decir, con $s'_1(x_1) = s'_2(x_1)$, lo que nos da otras $N-1$ ecuaciones. Hacemos lo mismo con $s''$, otras $N-1$ ecuaciones.
+
+Por lo tanto, nos faltan dos ecuaciones más, que serán condiciones que pongamos en los bordes según el tipo de problema.
+
+\paragraph{Construcción} 
+
+Definimos $M_i=s''(x_i)$. Para $x\in (x_{i-1}, x_i)$ tenemos que
+
+\[ s''(x) = M_i\frac{x-x_{i-1}}{x_i - x_{i-1}} + M_{i-1}\frac{x_i - x}{x_i - x_{i-1}}  \]
+
+Integrando dos veces
+
+\[ s(x) = \frac{M_i}{6}\frac{(x-x_{i-1})^3}{x_i - x_{i-1}} + \frac{M_{i-1}}{6}\frac{(x_i - x)^3}{x_i - x_{i-1}}  + A_i(x-x_{i-1}) + B_i \]
+
+Cogemos las condiciones de los nodos y despejamos en la ecuación. Si $s(x_{i-1}) = y_{i-1}$, tenemos que 
+\[ B_i = y_{i-1} - \frac{M_{i-1}}{6} (x_i-x_{i-1})^2 \]
+
+Y con $s(x_i) = y_i$, nos queda que
+
+\[ A_i = \frac{y_i-y_{i-1}}{x_i - x_{i-1}} - \frac{(M_i-M_{i-1})(x_i-x_{i-1})}{6} \]
+
+Derivando $s(x)$
+
+\[ s'(x) = \frac{M_i}{2}\frac{(x-x_{i-1})^2}{x_i - x_{i-1}} - \frac{M_{i-1}}{2}\frac{(x_i - x)^2}{x_i - x_{i-1}}  + A_i \]
+
+podemos exigir la condición de continuidad de la primera derivada en los nodos:
+
+\begin{gather*} \frac{M_i}{2}(x_i-x_{i-1})+\frac{y_i-y_{i-1}}{x_i - x_{i-1}} -\frac{(M_i-M_{i-1})(x_i-x_{i-1})}{6} =\\= -\frac{M_i}{2}(x_{i+1}-x_i) +\frac{y_{i+1}-y_{i}}{x_{i+1} - x_{i}} - -\frac{(M_{i+1}-M_{i})(x_{i+1}-x_{i})}{6} 
+\end{gather*}
+
+Despejando ese engendro, tenemos un sistema de $N+1$ incógnitas y $N-1$ ecuaciones. Tenemos varias opciones para suplir la falta de ecuaciones:
+
+\begin{itemize}
+\item Podemos definir $M_0$ y $M_N$. En particular, si $M_0=M_N=0$, se conoce como interpolación natural. 
+\item Dar un valor a la derivada del polinomio en los bordes. 
+\item También podemos definir la función como periódica: $s(a) = s(b);\;s'(a)=s'(b);\;s''(a)=s''(b)$.
+\end{itemize}
+
+\begin{theorem}
+Dada una función en $(a,b)$ cuatro veces diferenciable y tal que existe $K_4$ que verifica  \[ \abs{f^{4)}(x)} ≤K_4 \quad \forall x \in (a,b) \]
+
+Sea $\Delta = \{ x_i\} $ la partición del intervalo, sea $h=\max_{i=1,\dotsc , N} x_i-x_{i-1}$ y sea $L$ tal que \[ \frac{h}{x_i-x_{i-1}} ≤ L \quad\forall i=1,\dotsc , N \]. 
+
+Entonces el splin cúbico bajo alguna de las condiciones de antes, y tal que $s(x_i) = f(x_i)$, verifica que \[ \abs{f^{k)}(x) - s^{k)}(x)} ≤ c_k K_4 L h ^{4-k} \]
+\end{theorem}
+
+\subsection{Ejercicios}
+
+\paragraph{Ejercicio 23} Probar que \[l_i(x) = \frac{W(x)}{(x-x_i)W'(x)} \] donde $W(x) = (x-x_0)\dotsb(x-x_N)$.
+
+Recordamos las condiciones del polinomio de Lagrange, y vemos de forma trivial que
+
+\[ l_i(x_j) = 0\;(i\neq j)\ \]
+
+Tenemos que ver ahora que $l_i(x_i) = 1$. Dada la construcción de la derivada, se nos anulan todos los polinomios menos uno en $x_i$:
+
+\[ W'(x_i) = \prod_{\substack{j = 0\\ j \neq i}}^N(x_i -x_j) \]
+
+Y dado que $W'(x_i)(x_i-x_i)=W(x_i)$, queda demostrada la igualdad.
+
+\section{Resolución de ecuaciones no lineales}
+
+El objetivo de esta sección será encontrar los ceros de una función. En el caso de polinomios de grado 1 y 2, la fórmula es conocida. En polinomios de orden tres, las posibilidades son las fórmulas de Tartaglia o Del Ferro. En el caso de orden 4, la de Ferrari. Sin embargo, nosotros buscamos una aproximación numérica que nos permita encontrar las raíces para cualquier polinomio. Para ello usaremos varios métodos.
+
+\subsection{Método de la bisección}
+
+Tenemos una función $\appl{f}{[a,b]}{\real}$ continua y suponemos  $f(a) > 0$, $f(b) < 0$, por lo que por Bolzano existe $x\in (a,b) \tq f(x) = 0$.
+
+Tomamos un punto intermedio $x_1 = \frac{a+b}{2}$. Si $f(x_1)$ hemos encontrado la raíz. Si no, hacemos el mismo procedimiento que en la demostración de Bolzano y acabamos acotando el cero.
+
+\subsection{Método de la secante}
+
+Hacemos interpolación lineal entre los dos puntos, cogemos la raíz del polinomio de interpolación. Si esa raíz es la de $f$, genial. Si no, repetimos.
+
+\subsection{Método de punto fijo}
+
+La idea de este método es buscar los puntos fijos de una función $g(x)$, es decir, un $\alpha$ tal que $g(\alpha) = \alpha$. Podemos definir una sucesión de $x_n$ de tal forma que \[x_{n+1} = g(x_n) \]. Empezamos con un $x_0$ que estimamos a grandes rasgos, y comprobamos si la sucesión converge. Si lo hace, el límite será $\alpha$. 
+
+¿Cómo usamos este método para encontrar los ceros de la función $f(x)$?  Primero construimos la función como $f(x) = x - g(x)$, de tal forma que el punto fijo $\alpha = g(\alpha)$ es un cero de $f$. Vamos construyendo la sucesión, que convergerá si
+
+\[ \lim_{n\to\infty} x_{n+1} - x_n = 0 = e_{n+1}\]
+
+Ahora bien, tenemos que saber qué funciones nos permiten obtener un punto fijo.
+
+\begin{theorem}
+Supongamos $\alpha$ punto fijo de $g$. Sea $g$ diferenciable en un entorno de $\alpha$, con $\abs{g'(\alpha)} < 1$. Entonces, existe $x_0 \in \real$ tal que podemos construir la sucesión anterior que converge a $\alpha$, y que además cumple que \[\lim_{n\to\infty} \frac{e_{n+1}}{e_n} = g'(\alpha) \]
+\end{theorem} 
+
+\subsection{Método de Newton}
+
+El método de Newton se basa en iterar sobre la derivada. Con una estimación $x_0$ inicial, vamos sacando los valores $x_i$ con la siguiente fórmula
+
+\[ x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)} \]
+
+hasta que estemos contentos con el resultado. El siguiente pseudocódigo MATLAB ejecuta el algoritmo de forma recursiva:
+
+\begin{lstlisting}[language=matlab]
+function [ x, y, ban ] = newton(fun,funder,initial,tolerance,max_iters)
+    der_val = funder(initial);
+    ini_val = fun(initial);
+    
+    if der_val == 0 % Si la derivada es cero, lo siento, no podemos seguir.
+        x = initial;
+        y = 0;
+        ban = 2;
+        return
+    end
+    
+    next = initial - ini_val / der_val; % Calculamos la siguiente x
+    fnext = fun(next);
+    
+    if fnext == 0 % La funcion vale 0 en next? Genial, hemos acabado.
+        x = next;
+        y = fnext;
+        ban = 0;
+    elseif abs(fnext) < tolerance % Nos acercamos suficiente al cero? Listos.
+        x = next;
+        y = fnext;
+        ban = 0;
+    elseif max_iters <= 0 % Vaya, nos hemos pasado de iteraciones.
+        x = next;
+        y = fnext;
+        ban = 1;
+    else
+        [x, y, ban] = newton(fun, funder, next, tolerance, max_iters - 1); % Una iteracion mas.
+    end
+
+end
+\end{lstlisting}
+\section{Resolución de sistemas lineales}
+\subsection{Eliminación gaussiana}
+
+\begin{theorem}
+Sea $A$ matriz con submatrices menores de orden $k = 1,2,\dotsc, d$ son invertibles. Entonces, el método de eliminación gaussiana para 
+\begin{equation}
+ Ax = b \label{eqElim}
+ \end{equation}
+\end{theorem}
+
+\begin{proof}
+El método consiste en construir $A^kx=b^k$ sistemas equivalentes a (\ref{eqElim}) para $k = 2,\dotsc, d$. $A^1 = A\, ,b^1 = b$. $A^2$ consiste en eliminar $x_1$ para las ecuaciones desde $2$ hasta $d$. Es decir, a cada una de las ecuaciones $i$ las multiplicamos por $l_{i1} = \frac{a_{i1}}{a_{11}}$.
+\end{proof}
+
+\textit{No tengo mucha idea de qué quiere decir esto, pero vamos, es el método de Gauss de toda la vida. Si no lo sabes, vete dando por suspenso.}
+
+\subsubsection{Pivotaje total}
+
+La eliminación gaussiana con pivotaje total implica escoger en el paso $i$ la fila con el coeficiente $a_{i,i}$ más grande.
+
+\subsection{Factorización LU}
+
+La factorización LU nos permite descomponer una matriz dada en dos componentes, una triangular inferior y otra superior (lower y upper). Construimos la matriz $L$ de la siguiente forma:
+
+\[ L =
+\begin{pmatrix}
+       1 &        &            &        &            & 0 \\
+-l_{2,1} & \ddots &            &        &            &   \\
+         &        &          1 &        &            &   \\
+  \vdots &        & -l_{n+1,n} & \ddots &            &   \\
+         &        &     \vdots &        &       1    &   \\
+-l_{N,1} &        & -l_{N,n}   &        & -l_{N,N-1} & 1 \\
+\end{pmatrix} \]
+
+donde \[ l_{i,n} := -\frac{a_{i,n}}{a_{n,n}} \]. Dado que $L$ es triangular inferior, $\inv{L}$ es igual pero cambiando de signo los $l_{i,n}$, por lo tanto obtenemos fácilmente $U$ como $U = \inv{L} A$
+
+\subsubsection{Resolución}
+
+Operamos con $A=LU$ para resolver el sistema $Ax = b$
+
+\begin{gather*}
+LUx = b \\
+Ux = \inv{L} b \\
+\end{gather*}
+
+Al ser $U$ triangular superior, podemos ir despejando desde abajo y resolviendo las incógnitas.
+
+\subsection{Factorización QR}
+
+\begin{theorem}[Factorización\IS QR]
+Sea $A$ matriz $m\x n$ con $m≥n$. Entonces, existen
+
+\begin{itemize}
+\item $Q$ matriz $m\x n$ ortogonal tal que $\trans{Q}Q = I_n$
+\item $R$ matriz triangular superior de orden $n$.
+\end{itemize}
+
+tal que $A = QR$. Además, si $\text{rang}(A) = n$ entonces $R$ es no singular.
+\end{theorem}
+
+¿Cómo obtenemos la matriz Q? Usando el algoritmo de Gram-Schmidt, generamos una matriz $Q$ equivalente a $A$ (genera el mismo subespacio vectorial) ortonormalizando sus vectores.
+
+\begin{defn}[Algoritmo de Gram-Schmidt][Gram-Schmidt]
+Dada una serie de vectores $\{a_i\}$ linealmente independientes, queremos obtener un conjunto de vectores $\{e_i\}$ ortogonales entre sí y de norma 1 que además generan el mismo subespacio vectorial. Para ello, vamos creando vectores $\{u_i\}$ ortogonales a los anteriores y que después normalizaremos. Es decir, el primero sería \[u_1 = a_1 \]. Para que el segundo sea ortogonal al primero, le quitamos a $a_2$ su proyección sobre el anterior vector, de tal forma que queda ortogonal a él:
+
+\[ u_2 = a_2 - \text{proj}_{u_1}(a_2) \]
+
+siendo \[\text{proj}_{u}(v) = \frac{\pesc{u, v}}{\pesc{u, u}} u \]
+
+Repetiríamos el proceso con todos los vectores. La fórmula general sería por lo tanto
+
+\[ u_k = a_k - \sum_{j=1}^{k-1} \frac{\pesc{u_j, a_k}}{\pesc{u_k, u_j}} u_j \]
+
+Y simplemente normalizaríamos los $u_k$ para obtener el conjunto $\{e_k\}$ de vectores ortonormales.
+\end{defn}
+
+La matriz $Q$ la obtenemos sencillamente tomando como columnas los vectores columna de $A$ ortonormalizados por Gram-Schmidt.
+
+Como $Q$ es ortonormal, su inversa es $\trans{Q}$, de tal forma que si $A = QR$, entonces $R = \trans{Q}A$.
+
+\subsubsection{Resolución}
+Una vez que tenemos $Q$ y $R$, esto nos permite resolver un sistema de ecuaciones lineales de la forma $Ax=b$. Podemos usar que $A = QR$ para tener
+\begin{gather*}
+QRx = b \\
+\trans{Q}QRx = \trans{Q}b \\
+Rx = \trans{Q} b \\
+\end{gather*}
+
+El sistema resultante será de la forma
+
+\[ \begin{pmatrix}
+ r_{1,1} & &\dotsb & & r_{1, n} \\
+0 & \ddots & & &  \\
+\vdots & &\ddots & & \vdots \\
+ &  & & &  \\
+0 & & \cdots & 0 & r_{n, 1} \\
+\end{pmatrix} \begin{pmatrix} x_0 \\  \\ \vdots \\ \\ x_n\\ \end{pmatrix} =   \begin{pmatrix} qb_0 \\  \\ \vdots \\ \\ qb_n\\ \end{pmatrix}\]
+
+Que se puede resolver fácilmente de abajo arriba, empezando por $x_n = \frac{qb_n}{r_{n,1}}$ y sustituyendo sucesivamente en el resto de ecuaciones.
+
+\subsubsection{Cálculo de autovalores}
+
+La factorización QR da pie a obtener los autovalores $\lambda_i$ de una matriz de forma aproximada. En cada paso, descomponemos la matriz $A_k$ en los dos factores $Q_k R_k$, y después definimos $A_{k+1} = R_k Q_k$ (atención al cambio de orden). De esta forma, acabamos obteniendo \[ A_n = \trans{\left(Q_1\dotsb Q_n\right)} A_1 \left(Q_1\dotsb Q_n\right) \]
+
+donde $\left(Q_1\dotsb Q_n\right)$ será el conjunto de autovectores y $A_n$ una matriz diagonal (aproximadamente) con los autovalores. Las dos siguientes condiciones aseguran la convergencia:
+
+\begin{itemize}
+\item Los autovalores deben ser simples.
+\item Los autovalores deben ser distintos en valor absoluto.
+\end{itemize}
+
+\newpage
+\printindex
+
+\section{Integración numérica}
+
+La idea de esta sección es obtener resultados numéricos de integrales definidas, especialmente las que no tengan una primitiva.
+
+\begin{defn}[Regla de cuadratura]
+A la expresión numérica que nos aproxima o calcula de manera exacta $ I(f) = \int_a^bf(x)\,dx$ se le llama regla de cuadratura. La regla de cuadratura necesita unos nodos $\{x_n\} \in [a, b]$ y unos pesos $\{\alpha_n\}\in \real$ o coeficientes de la regla. De esta forma la integral se expresará como
+
+\[ I(f) = \sum \alpha_i f(x_i) \]
+\end{defn}
+
+\begin{defn}[Orden de exactitud]
+Una regla de cuadratura $I$ tiene grado de exactitud $M\in \nat$ si halla exactamente la integral de cada polinomio de grado $≤M$ pero hay alguno de grado $p>m$ que no calcula exactamente. 
+\end{defn}
+
+Tenemos varias reglas de cuadratura definidas, las más conocidas son:
+
+\begin{description}
+\item[Rectángulo] \[ I(f) = (b-a)f(a) \]. Grado de exactitud ($M$) 0.
+\item[Punto medio] \[ I(f) = (b-a) f\left(\frac{a+b}{2}\right) \] $M = 1$
+\item[Trapecio] \[ I(f) = \frac{b-1}{2}f(a) + \frac{b-a}{2} f(b) \] $M = 1$
+\item[Simpson]\[ I(f) = \frac{b-a}{6}f(a) + 4\frac{b-a}{6}f\left(\frac{a+b}{2}\right) + \frac{b-a}{6}f(b) \] $M=3$
+\end{description}
+
+El problema principa de la cuadratura reside en encontrar los $\alpha_i$. Sin embargo, esos valores son independientes  de la función (siempre que usemos los mismos puntos) y por tanto se pueden calcular una única vez. Hay varios métodos para ello.
+
+\subsection{Cuadratura por interpolación}
+
+Construimos el polinomio de Lagrange de la función en los puntos $\{x_n\}$, y lo integramos, de forma que 
+
+\[ I(P(x)) = \sum f(x_i) I(l_i(x)) \]
+
+donde $l_i(x)$ se refiere a los polinomios de interpolación de Lagrange en cada punto (ver página \pageref{polLagrange}). Esos polinomios son integrables analíticamente, por lo que simplemente los integramos en el intervalo $[a,b]$ para hallar los coeficientes de la cuadratura.
+
+\subsection{Método de coeficientes indeterminados}
+
+Dado $I_n(f) = \sum^n \alpha_i f(x_i)$, queremos que tenga orden de exactitud $k$. Por lo tanto, exigimos que sea exacto para los polinomios $\{1, x, x^2,\dotsc, x^k\}$. Con ello acabaremos con un sistema de ecuaciones
+
+\begin{align*}
+\int_a^b 1 \, dx &= \sum \alpha_i \\
+\int_a^b x\, dx &= \sum x_i \alpha_i \\
+\int_a^b x^2\, dx &= \sum x_i^2 \alpha_i \\
+\cdots
+\end{align*}
+
+Que, resolviendo, nos dará una fórmula de cuadratura de orden de exactitud $k$.
+
+\subsection{Método de Taylor}
+
+NPI de nada.
+
+\subsection{Cuadratura gaussiana}
+
+Buscamos que $\alpha_i$ y $x_i$ necesitamos para un mayor orden de exactitud. 
+
+
+\end{document}
