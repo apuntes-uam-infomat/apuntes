@@ -1,0 +1,54 @@
+#!/bin/bash
+
+name=$1
+abbr=$2
+
+[ -z $abbr ] && abbr=$(echo "$name" | tr -d ' ')
+
+echo "Creating folder structure for subject $name. Filename: $abbr"
+
+mkdir "$name"
+cd "$name"
+
+extra_folders="img pdf tex tikzgen"
+
+for folder in $extra_folders; do 
+	mkdir $folder
+	touch $folder/.keep
+	echo "Created directory $name/$folder with .keep file."
+done
+
+touch "$abbr.tex"
+
+current_year=$(date +%y)
+
+if [ $(date +%m ) -ge 08 ] ; then # ¿Primer o segundo cuatrimestre?
+	docdate="$current_year/$((current_year + 1)) C1"
+else
+	docdate="$((current_year - 1))/$current_year C2"
+fi
+
+
+cat << EOF > "$abbr.tex"
+\documentclass{apuntes}
+
+\title{$name}
+\author{}
+\date{$docdate}
+
+% Paquetes adicionales
+
+% --------------------
+
+\begin{document}
+\pagestyle{plain}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\end{document}
+EOF
+
+
+echo "Done."
