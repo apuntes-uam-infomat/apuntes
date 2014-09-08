@@ -11,7 +11,7 @@
 % Tipo de letra
 \renewcommand*\familydefault{\sfdefault}
 
-\RequirePackage[includemp, left=3cm,right=2cm,top=3cm,bottom=2cm, marginparwidth=1.6cm, marginparsep=0.7cm]{geometry} % Márgenes
+\RequirePackage[includemp, left=3cm,right=1cm,top=3cm,bottom=2cm, marginparwidth=1.6cm, marginparsep=0.7cm]{geometry} % Márgenes
 \RequirePackage{imakeidx} % Creación de índices
 \RequirePackage{titling} % No tengo claro para qué es esto
 \RequirePackage{fancyhdr} % Cabeceras de página

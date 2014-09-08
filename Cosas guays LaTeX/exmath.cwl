@@ -169,3 +169,6 @@
 \cb[\alpha]#m
 \ctr#m
 \ctr[\alpha]#m
+\dst#m
+\bola#m
+\sdst#m
