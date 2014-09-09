@@ -1,7 +1,7 @@
 \documentclass{apuntes}
 
 \title{Topología I}
-\author{Guillermo Julián Moreno y Cristina Kasner Tourné}
+\author{Guillermo Julián Moreno \\ Cristina Kasner Tourné}
 \date{14/15 C1}
 % Paquetes adicionales
 \usepackage{tikztools}
@@ -64,10 +64,13 @@ En ocasiones querremos especificar la distancia ($\bola_{\dst}$) o el conjunto (
 
 Las bolas tienen ciertas propiedades muy sencillas. Dados \sdst, $x∈X$, $r>0$, $y∈\bola(x,r)$ entonces $\bola(y,r-\dst(x,y)) ⊆ \bola(x,r)$.
 
+\begin{wrapfigure}{r}{0.4\textwidth}
+\inputtikz{I_BolaContenida}
+\caption{La bola verde ($\bola(y, r-\dst(x,y)$) contenida dentro de $\bola(x, r)$.}
+\label{figBolaContenida}
+\end{wrapfigure}
 
-
-% TODO: Haz dibujo.
-Esto se puede demostrar con un dibujo, pero tenemos que demostrarlo más formalmente: 
+Esto se puede demostrar con un dibujo (\ref{figBolaContenida}), pero tenemos que demostrarlo más formalmente: 
 
 \begin{proof}
 $∀z∈\bola(x, r-\dst(x,y))$ tenemos que $\dst(x,z) ≤ \dst(x,y) + \dst(y,z) < \dst(x,y) + r - \dst(x,y) = r$, y por lo tanto $z ∈ \bola(x,r)$.
@@ -79,11 +82,79 @@ Vamos a definir ahora el cierre, aunque sólo como notación:
 
 \begin{defn}[Cierre] Dado \sdst espacio métrico, $x∈X$, $r≥0$, definimos \[ \overline{\bola}(x,r) ≝ \{ y∈ X\tq \dst(x,y) ≤ r\} \] como la bola cerrada de centro $x$ y radio $r$.\end{defn}
 
+\begin{defn}[Conjunto\IS abierto] Sea \sdst un espacio métrico. Entonces damos dos definiciones
+
+\begin{enumerate}
+\item $A⊆X$ es abierto en \sdst si $∀x∈A\; ∃δ=δ_x > 0$ tal que $\bola(x,δ_x) ⊆ A$.
+\item La familia de abiertos es $\topl_d \equiv \{ A ⊆ X \tq A \text{abierto} \}$.
+\end{enumerate}
+\end{defn}
+
+La familia de abiertos que acabamos de definir es una \concept{topología}, y cumple las siguientes propiedades.
+
+\begin{enumerate}
+\item $\emptyset, X ∈ \topl_d$.
+\item $A,B ∈ \topl_d \implies A \cap B ∈ \topl_d$.
+\item $A_j ∈ \topl_d\; ∀j∈ J \implies \bigcup_{j∈J} A_j ∈ \topl_d$
+\end{enumerate}
+
+Demostremos las dos últimas propiedades:
+
+\begin{proof}
+\paragraph{Prop. 2} Sea $x∈A\cap B$. Entonces $x∈A$ y $x∈B$, luego existen $δ_x^A, δ_x^B$ tales que $\bola(x, δ_x^A) ⊆ A$ y $\bola(x, δ_x^B) ⊆ B$ respectivamente. Sea ahora $δ=\min(δ_x^A, δ_x^B)$. Entonces $\bola(x,δ) ⊆ A\cup B$.
+
+\paragraph{Prop. 3} La propiedad es equivalente a la pregunta de, si dado $x∈\bigcup_{j∈J}$, se cumple que $∃δ > 0 \tq \bola(x,δ)⊆\bigcup_{j∈J} A_j$.
+
+Es obvio que $∃j_x ∈ J\tq x∈ A_{j_x}$, luego \[ ∃ δ > 0 \tq \bola(x,δ) ⊆ A_{j_x} ⊆ \bigcup_{j∈J} A_j \]
+\end{proof}
+
+Por otra parte, también podemos hacer una observación: por inducción, la intersección de una familia \textit{finita} de conjuntos también es un abierto.
+
+Una vez hecho esto, ya podemos pasar a definir qué es un espacio topológico y una topología.
+
+\begin{defn}[Topología]
+Sea $X$ un conjunto. Entonces una familia $\topl$ de subconjuntos de $X$ es una topología en $X$ si y sólo si cumple las tres propiedades que acabamos de ver:
+
+\begin{enumerate}
+\item $\emptyset, X ∈ \topl$.
+\item $A,B ∈ \topl \implies A \cap B ∈ \topl$.
+\item $A_j ∈ \topl\; ∀j∈ J \implies \bigcup_{j∈J} A_j ∈ \topl$
+\end{enumerate}
+\end{defn}
+
+\begin{defn}[Espacio\IS topológico] Un espacio topológico es un par $(X, \topl)$ donde $\topl$ es una topología en $X$.
+\end{defn}
+
+Los elementos de \topl son los \textit{abiertos} de la topología. 
+
+También podemos definir el conjunto cerrado:
+
+\begin{defn}[Conjunto\IS cerrado]
+Dado un espacio topológico \stopl, $F⊆X$ es cerrado si y sólo si $F^C \equiv X \setminus F$ es abierto.
+\end{defn}
+
+Podemos definir dos topologías "comunes", por así decirlo, las obvias para cualquier conjunto. Tenemos la \concept{topología\IS trivial} (el mínimo) dada por \[ \topl_{triv.} = \{ \emptyset, X \} \], y la \concept{topología\IS discreta}, que sería el máximo: \[ \topl_{disc.} = \parts{X} \].
+
+Y volviendo a nuestro bonito mundo de los reales, tenemos las \concept[Topología\IS usual]{topologías usuales} en $ℝ^m$ o $\topl_{ℝ^m}$. Para $m=1$, diremos que \[ A ∈ \topl_ℝ ≝ ∀x∈A\; ∃a,b∈ℝ \tq x∈ (a,b) ⊆ A \]. Esto es, que siempre podemos encontrar un intervalo contenido en $A$ que a su vez contenga a $x$. Equivalentemente, $A$ será una unión de intervalos abiertos.
+
+Para dimensión $m>1$, definimos su topología usual como 
+\begin{gather*}
+	ℝ^m ⊇ A ∈ \topl_{R^m} ≝ ∀x∈A\; ∃ \begin{matrix} a_1, \dotsc, a_m \\ b_1, \dotsc, b_m \end{matrix} ∈ ℝ  \\
+	\text{tales que} x∈ (a_1, b_1) × \dotsb × (a_m, b_m) ⊆ A
+\end{gather*}
+
+\begin{defn}[Espacio\IS topológico metrizable] Dado \stopl un espacio topológico, se dice que es metrizable si existe una distancia $\dst$ en $X$ tal que $\topl = \topl_{\dst}$. 
+
+$\dst$ no es necesariamente única.
+\end{defn}
+
+Por ejemplo, $\topl_ℝ$ es metrizable. Coincide $\topl= \topl_{\dst}$ con $\dst(x,y) = \abs{x- y}$.
+
 \appendix
 \chapter{Ejercicios}
 
 \input{tex/TopologiaI_Ejs.tex}
 
-
+\printindex
 
 \end{document}
