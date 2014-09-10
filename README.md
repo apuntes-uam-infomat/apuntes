@@ -16,7 +16,7 @@ Para que git meta en el control de código archivos PDF, hay que renombrarlos co
 
 ## Descarga
 
-Puedes descargar los apuntes en PDF, actualizados diariamiente, [aquí](https://db.tt/fX1jP4wp).
+Puedes descargar los apuntes en PDF, actualizados diariamiente, [aquí](https://www.dropbox.com/sh/kbymf37cykz77ha/AADuRd3CoU6UUCZMtK0GdEtPa?dl=0).
 
 ## Autores
 
