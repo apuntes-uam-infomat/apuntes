@@ -1,15 +1,36 @@
 #!/bin/bash
+tred=$(tput setaf 1)
+treset=$(tput sgr0)
+
 latex_dir=$(dirname $(kpsewhich article.cls))
 echo "Creating completion file..."
 python cwlcreator.py exmath.sty exmath.cwl
-cp -vf *.cwl ~/.config/texstudio 
+
+cp -vf *.cwl ~/.config/texstudio
+
 echo "Copying packages..."
-cp -v *.sty $latex_dir
-echo "Packages copied."
+if ! cp -v *.sty $latex_dir ; then
+	echo "${tred}Error copying packages! Did you run with sudo?${treset}"
+	exit
+else
+	echo "Packages copied."
+fi
+
 echo "Copying classes..."
-cp -v *.cls $latex_dir
-echo "Classes copied"
+
+if ! cp -v *.cls $latex_dir ; then
+	echo "${tred}Error copying classes! Did you run with sudo?${treset}"
+	exit
+else
+	echo "Classes copied"
+fi
+
 echo "Updating package cache..."
-texhash
-echo "Package cache updated."
+
+if ! texhash ; then
+	echo "${tred}Couldn't update cache${treset}"
+else
+	echo "Package cache updated."
+fi
+
 echo "Finished"
