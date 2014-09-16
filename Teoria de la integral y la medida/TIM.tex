@@ -7,6 +7,7 @@
 % Paquetes adicionales
 \usepackage{tikztools}
 \usepackage{fastbuild}
+\usetikzlibrary{arrows}
 % --------------------
 \begin{document}
 \pagestyle{plain}
@@ -269,14 +270,14 @@ Tomemos el intervalo [0,1) y supongamos que queremos medir un conjunto $A\subset
 \item $0\leq m(A) \leq 1$
 \item La medida de un intervalo deberá coincidir con su longitud $m(I)=\abs{I}$
 \item Invariable por traslaciones $m(A+t) = m(A)$.
-\item Dada una familia de conjuntos disjuntos $A_i\subset [0,1)$, $m(\cup_{1}^{\infty} A_i) = \sum_{1}^{\infty}a_i$
+\item Dada una familia de conjuntos disjuntos $A_i\subset [0,1)$, $m(\cup_{1}^{\infty} A_i) = \sum_{1}^{\infty}m(A_i)$
 \end{itemize}
 
-¿Puedo asegurar que $\forall A \subset [0,1) \exists m(A)$  con las condiciones pedidas? La respuesta es \textbf{NO}.
+¿Puedo asignar a cualquier $A~\subset~[0,1)~\mapsto~m(A)$? La respuesta es \textbf{No}
 
 La forma de solucionar este problema consiste en dejar de querer medir todos los conjuntos posibles en el intervalo [0,1) y limitarnos a trabajar con aquellos conjuntos que si podemos medir.
 
-Vamos a definir una relación de equivalencia en el intervalo [0,1): xRy $\Leftrightarrow$ x-y$\in \mathbb{Q}$. R divide a [0,1) en clases de equivalencia E=$\lbrace$ un elemento de cada clase $\rbrace$
+Vamos a definir una relación de equivalencia en el intervalo [0,1): xRy $\Leftrightarrow$ x-y~$\in~\mathbb{Q}$. R divide a [0,1) en clases de equivalencia E=$\lbrace$ un elemento de cada clase $\rbrace$
 
 \[E_q = \lbrace E\cap [0, 1-q) +q \rbrace \cup \lbrace E\cap (1-q, 1) + q - 1\rbrace\]
 Si $q \neq q' \ q,q'\in \mathbb{Q} \Rightarrow E_q\cap E_{q'} = \emptyset$
@@ -334,27 +335,35 @@ De la tercera propiedad puedes extraerse que $ m^*(S) = m^*(O)$
 \item Con un argumento similar al empleado para demostrar la primera propiedad, queda claro que
 \[m^*(S) \leq inf \lbrace m^*(O)\tq S \subset O \ abierto \rbrace \]
 
-Supongamos que es posible $m^*(S) < inf m^*(O)$.
+Supongamos que es posible $m^*(S) < inf\left\{m^*(O)\right\}$.
 
-En este caso, si tomo un $a$ tal que $ m^*(S) < a < inf m^*(O)$ entonces existirían unos $\lbrace I_k\rbrace$ tales que $m^*(S) \leq \sum \abs{I_k} \leq a$, ya que si no el ínfimo sería $a$.
+En este caso, si tomo un $a$ tal que $ m^*(S) < a < inf\left\{ m^*(O)\right\}$ entonces existirían unos $\lbrace I_k\rbrace$ tales que $m^*(S) \leq \sum \abs{I_k} \leq a$, ya que si no el ínfimo sería $a$.
 
-Pero por ser los $I_k$ abiertos su unión es un abierto, que llamaremos $O_1$. Entonces $m^*(O_1) \leq a$ pero esto nos lleva a una contradicción ya que habíamos dicho que $a < inf m^*(O)$.
+Pero por ser los $I_k$ abiertos su unión es un abierto, que llamaremos $O_1$. Entonces $m^*(O_1) \leq a$ pero esto nos lleva a una contradicción ya que habíamos dicho que $a < inf\left\{m^*(O)\right\}$.
 
-Por tanto queda claro que no puede ser $m^*(S) < inf m^*(O)$.
+Por tanto queda claro que no puede ser $m^*(S) < inf\left\{m^*(O)\right\}$.
 \end{enumerate}
 \end{proof}
+
+\begin{example}
+	$m^*(a,b) = b - a$
+\end{example}
+
+\begin{example}
+	$m^*\{a\} = 0$, porque tomaremos el intervalo más pequeño que contenga al punto a. Este intervalo puede ser de tamaño $\epsilon$.
+\end{example}
 
 Dada una familia de conjuntos $\lbrace S_n\rbrace_{n=1}^{\infty}$  entonces:
 \[m^*(\bigcup S_n) \leq \sum m^*(S_n)\]
 
-\newpage
+
 \begin{defn}[Medida exterior de un compacto]
 Dado un conjunto $K$ compacto y una familia $\lbrace I_k \rbrace$ tal que $K \subset \bigcup I_j$ entonces podemos extraer una colección finita $\lbrace I_k^{'} \rbrace$ tal que $K \subset \bigcup_1^N I_k^{'}$
-\[m^*(K) = inf \lbrace \sum_1^N \abs{I_j^{'}} \tq K\subset \bigcup_1^N I_j^{'} \rbrace\]
+\[m^*(K) = inf\left\{\sum_1^N \abs{I_j^{'}} \tq K\subset \bigcup_1^N I_j^{'} \right\}\]
 \end{defn}
 
 \begin{theorem}
-Si K es un compacto, dado un $\epsilon > 0, \ \exists O$ abierto, unión finita de intervalos abiertos disjuntos, que recubre a K y tal que 
+Si K es un compacto, dado un $\epsilon > 0, \ \exists O$ abierto, unión finita de intervalos abiertos disjuntos, que recubre a K ($K\subset O$) y tal que 
 \[m^*(O\smallsetminus K) < \epsilon\]
 
 Es decir, podemos hacer que la diferencia entre el compacto K y el abierto O que lo recubre sea todo lo pequeña que queramos.
@@ -370,15 +379,13 @@ Y tenemos que:
 puesto que los $I_n$ son disjuntos y completan $A \smallsetminus K$ que era finito
 
 Por ser una suma finita:
-\[ \forall \epsilon \exists N \ tq \ \sum_{N}^{\infty} < \epsilon\]
+\[ \forall \epsilon \ge 0,  \exists N : \sum_{n > N}^{\infty}\abs{I_n} < \epsilon\]
 
 Llamo ahora $I_n^{'}=\overline{I_n} \ para \ n=1,2,...,N$ y tenemos obviamente $\abs{I_n^{'}}=\abs{I_n}$ por ser $I_n^{'}$ el cierre de $I_n$
 
 \[O=A \smallsetminus \bigcup_1^{\infty}I_n^{'}= A \bigcap (\bigcup_1^{\infty}I_n^{'})^c = \ abierto \]
 Por tanto O es una unión finita de abiertos.
 \end{proof}
-
-
 
 
 \end{document}
