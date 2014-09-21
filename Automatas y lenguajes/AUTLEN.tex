@@ -23,7 +23,7 @@ Vamos a trabajar con tres elementos fundamentales:
 \item \textbf{Máquinas/Autómata}
 \begin{itemize}
 \item Autómatas finitos $\Rightarrow$ Expresiones regulares
-\item Autómatas de pila $\Rightarrow$ Lenguajes libres de contexto
+\item Autómatas de pila $\Rightarrow$ Lenguajes independientes del contexto
 \end{itemize}
 \item \textbf{Problemas} ¿Qué se puede computar?. Conjeturas que se creen ciertas pero cuya veracidad, por ahora, no se ha demostrado.
 
@@ -75,6 +75,10 @@ Lenguaje que sólo contiene $\lambda$.
 \end{defn}
 El lenguaje $\lbrace \lambda \rbrace$ es distinto del lenguaje vacío aunque $\lambda$ sea la palabra vacía.
 
+\begin{defn}[Lenguaje \Sigma^+ ] 
+\[ \Sigma^+ = \Sigma \setminus \lbrace \lambda \rbrace \]
+\end{defn}
+
 \subsection{Operadores de utilidad}
 Añado esta sección ya que el profesor lo ha aclarado en ningún momento ni parece tener intención de hacerlo.
 
@@ -103,7 +107,7 @@ Y con esto vemos como se forman todas las posibles combinaciones de bits de dife
 \begin{defn}[Gramática]
 Hay varias definiciones para este término. No son muy precisas pero nos dan una idea de su significado:
 \begin{enumerate}
-\item Mecanmismo para formalizar matemáticamente un lenguaje
+\item Mecanismo para formalizar matemáticamente un lenguaje
 \item Conjunto de reglas que determinan cómo formar las cadenas de un lenguaje
 \end{enumerate}
 \end{defn}
@@ -122,29 +126,42 @@ Estas reglas constituyen una gramática que nos permite generar un lenguaje. En 
 %TODO Ejemplo de árbol de derivación con estas reglas
 \end{example}
 
-\begin{defn}[Símbolos terminales]
-Símbolos que pueden aparecer en la cadena final. En el ejemplo anterior serían elementos terminales aquellos escritos en minúscula. Para ellos no existe ninguna regla que indique cómo se derivan.
+\begin{defn}[Símbolos terminales (T) ]
+Conjunto de símbolos que pueden aparecer en la cadena final. En el ejemplo anterior serían elementos terminales aquellos escritos en minúscula. Para ellos no existe ninguna regla que indique cómo se derivan.
 \end{defn}
 
-\begin{defn}[Símbolos no terminales]
-Símbolos que no pueden aparecer en la cadena final. Simplemente son usados para definir las reglas de derivación
+\begin{defn}[Símbolos no terminales (N) ]
+Conjunto de símbolos que no pueden aparecer en la cadena final. Simplemente son usados para definir las reglas de derivación.
 \end{defn}
 
-\begin{defn}[Reglas de producción]
-Explican cómo se transforma un símbolo no terminal en un conjunto de símbolos terminales o no terminales
+\begin{defn}[Reglas de producción (P) ]
+Explican cómo se transforma un símbolo no terminal en un conjunto de símbolos terminales o no terminales.
 \end{defn}
 
-\begin{defn}[Símbolo inicial / Axioma]
-Indica dónde empieza a construirse la cadena. En el ejemplo anterior, el axioma sería el símbolo ORACIÓN. Una gramática sólo puede tener un úncio axioma.
+\begin{defn}[Símbolo inicial / Axioma (S) ]
+Indica dónde empieza a construirse la cadena. En el ejemplo anterior, el axioma sería el símbolo ORACIÓN. Una gramática sólo puede tener un único axioma.
 \end{defn}
+
+\begin{defn}[Gramática (G)]
+Conjunto formado por T, N, P y S.
+
+G = \lbrace T, N, P, S \rbrace
+\end{defn}
+
 
 Vamos a ver algunos ejemplos de gramáticas y los lenguajes que generan:
 \begin{example}
-Tomemos la gramática:
+Tomemos la gramática generada por las reglas:
 \begin{enumerate}
 \item S $\Rightarrow$ aSb
 \item S $\Rightarrow$ $\lambda$
 \end{enumerate}
+
+T = \lbrace a, b \rbrace
+
+N = \lbrace S \rbrace
+
+Y su axioma es S.
 
 El lenguaje generado por esta gramática serían todas las palabras de la forma: $a^i\lambda b^i$ con $ i=0,1,... \infty$
 \end{example}
@@ -154,13 +171,12 @@ Ahora vamos a tratar de construir la gramática que define un lenguaje dado:
 L(G)=$\lbrace a^nb^{n+1}, n \geq 0 \rbrace$
 
 La gramática que define este lenguaje es:
-Tomemos la gramática:
 \begin{enumerate}
 \item S $\Rightarrow$ aSb
 \item S $\Rightarrow$ b
 \end{enumerate}
 
-El automata asociado a este lenguaje sería:
+El autómata finito asociado a este lenguaje sería:
 \begin{center}
 \includegraphics[scale=0.75]{automata1.png}
 \end{center}
@@ -170,8 +186,8 @@ El automata asociado a este lenguaje sería:
 Son lenguajes que pueden ser admitidos por autómatas finitos
 \end{defn}
 
-\begin{defn}[Gramáticas libres de contexto]
-Son aquellas donde a la izquierda sólo aparece un único símbolo no terminal
+\begin{defn}[Gramáticas independiente del contexto]
+Son aquellas cuyas reglas tienen un único símbolo no terminal en el lado izquierdo.
 \end{defn}
 
 
@@ -205,7 +221,7 @@ Se representa como:
 \item Q = conjunto de estados
 \item $\Sigma$ =  alfabeto de entrada
 \item $\delta$ = función de transición: $\delta : Q\times \Sigma \rightarrow Q$
-\item $q_0$ = estado inicial
+\item $q_0$ = estado inicial $\in$ Q
 \item F = conjunto de estados finales
 \end{itemize}
 \end{defn}
@@ -218,14 +234,14 @@ Implica que la función de transición es inyectiva. Dado un estado y una entrad
 \begin{defn}[Función de transición extendida\IS]
 Consiste en una extensión de la función de transición a cadenas. Se representa como $\delta ^*$:
 \[\delta^*(q, w)=q_1\]
-Siendo $w\in \Sigma ^*$, $q$ el estado en el que comenzamos y $q_1$ el estado al que llegamos tras parsear toda la palabra.
+Siendo $w\in \Sigma ^*$, $q$ el estado en el que comenzamos y $q_1$ el estado al que llegamos tras procesar toda la palabra.
 \end{defn}
 
 \newpage
 
 \begin{defn}[Lenguage aceptado\IS por un AFD]
-El lenguage aceptado por un automata finito determinista, A, es el conjunto de palabras que llevan al autómata al estado final.
-\[L(A) = \lbrace w \in \Sigma^* \ : \ \delta^*(q_0, w) = F \rbrace\]
+El lenguage aceptado por un automata finito determinista, A, es el conjunto de palabras que llevan al autómata a un estado final.
+\[L(A) = \lbrace w \in \Sigma^* \ : \ \delta^*(q_0, w) \in F \rbrace\]
 \end{defn}
 
 Veamos algún ejemplo:
@@ -247,8 +263,7 @@ La ventaja de un autómata no determinista es que podemos explorar varias ramas 
 \end{example}
 
 \begin{defn}[Transición $\lambda$]
-Transición que puede ocurrir sin recibir ningún valor de entrada. Un autómata que desde un estado pueda moverse leyendo algún valor o con una transición de este tipo se considera no determinista
-%TODO Comprobar si basta con transición landa para no deterministmo.
+Transición que puede ocurrir sin consumir ningún valor de entrada. Un autómata que tenga transiciones de este tipo se considera no determinista.
 \end{defn}
 
 \begin{defn}[Automata finito no determinista. AFN\IS]
@@ -257,11 +272,13 @@ Automata con función de transición de la forma:
 Es decir, dado un estado y una entrada posiblemente vacía salto a un conjunto de estados.
 \end{defn}
 
-\begin{defn}[Función de transición extendida\IS]
+\begin{defn}[Función de transición de un AFN extendida\IS]
 Consiste en una extensión de la función de transición a cadenas. Se representa como $\delta ^*$:
 \[\delta^*(q, w) = E\]
-Siendo $w\in \Sigma ^*$, $q$ el estado en el que empezamos y $E$ el conjunto de estados a los que llegamos tras parsear toda la palabra.
+Siendo $w\in \Sigma ^*$, $q$ el estado en el que empezamos y $E$ el conjunto de estados a los que llegamos tras procesar toda la palabra.
 \end{defn}
+
+\newpage
 
 \begin{defn}[Lenguage aceptado\IS por un AFN]
 El lenguage aceptado por un automata finito no determinista, A, es el conjunto de palabras que llevan al autómata a un estado final.
@@ -286,6 +303,22 @@ El autómata queda:
 Siendo L la transición $\lambda$
 \end{example}
 
+\begin{defn}[Fuentes de indeterminismo de un AF]
+\begin{enumerate}
+\item con la misma entrada, varias transiciones posibles para un mismo estado.
+\item hay transiciones lambda
+\item se puede transitar a $\emptyset$ (transiciones no definidas)
+\end{enumerate}
+\end{den}
+
+\begin{theorem}
+Los autómatas finitos no deterministas y deterministas son equivalentes.
+\[ AFN \iff AFD \]
+\end{theorem}
+Se utilizan los AFN por comodidad, porque las demostraciones formales son más sencillas.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Expresiones regulares}
 \begin{defn}[Expresión regular]
 Forma alternativa de representar un lenguage regular
@@ -317,10 +350,21 @@ L($\alpha . \beta$) = L($\alpha $). L($\beta$)
 \item $\alpha^*$ (Cierre)
 
 L($\alpha^*$) = L($\alpha$)$^*$
-\item $\beta^*$ (Cierre)
 
 L($\beta^*$) = L($\beta$)$^*$
+
+El cierre es la repetición de cero o más veces de las expresiones regulares a las que aplica.
 \end{enumerate}
+
+\newpage
+Orden de precedencia de los operadores (de más a menos):
+\begin{enumerate}
+\item *
+\item .
+\item +
+\end{enumerate}
+Cuando la precedencia no esté clara o se quiera alterar, se pueden usar paréntesis.
+
 
 \section{Equivalencia entre AF y ER}
 Vamos a ver cual es la relación existente entre los autómatas finitos y las expresiones regulares.
