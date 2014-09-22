@@ -176,3 +176,6 @@
 \topl#m
 \stopl#m
 \base#m
+\toplb#m
+\adh{arg0}#m
+\iffdef#m
