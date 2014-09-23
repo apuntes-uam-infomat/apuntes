@@ -442,6 +442,7 @@ Hacia la derecha, si $x∈\intr{W}$ entonces sabemos que $∃A∈\toplb$ tal que
 \item $\intr{W} = \bigcup A$ tales que $A∈\topl, A⊆W$ (los abiertos contenidos en $W$.
 \item $W$ es abierto si y sólo si $\intr{W} = W$.
 \end{enumerate}
+\label{propInterior}
 \end{prop}
 
 \begin{proof} La primera parte es trivial.
@@ -462,6 +463,7 @@ $\intr{W}$ es el abierto más grande contenido en $W$.
 \begin{defn}[Adherencia] Sea \stopl un espacio topológico, $W⊆X$. La adherencia $\adh{W}$ de $W$ se define como todos los entornos de $X$ que "cortan" a $W$. Más formalmente
 
 \[ x ∈ \adh{W} \iffdef A∩W ≠ \emptyset \; ∀ A ∈ \topl \tq x∈A \]
+\label{defAdherencia}
 \end{defn}
 
 Como ocurría con otras propiedades de conjuntos, si la topología está generada por una base nos vale con comprobar la definición para los elementos de la base.
@@ -486,10 +488,87 @@ Sigamos con ejemplos. Tomamos $X=[0,1]^2$ con la topología lexicográfica, y $W
 
 Está claro que $W⊆\adh{W}$. La diagonal (puntos $p_d$ en la figura \ref{figAdhWLex}) también está en la adherencia: cualquier abierto que cojamos alrededor de ese punto interseca con $W$. Además, cualquier punto $p_b$ del borde superior (salvo la esquina $(1,1)$) está en la adherencia, ya que los abiertos serán bandas como la verde, que intersecan igualmente con $W$.
 
-\appendix
-\chapter{Ejercicios}
+\begin{prop} Dado \stopl un espacio topológico y $W⊆X$, se tiene que 
+\begin{enumerate}
+\item $W⊆\adh{W}$.
+\item $\adh{W} = \left(\mop{Int}(W^c)\right)^c$. Como consecuencia $\adh{W}$ es cerrado.
+\item $\adh{W} = \bigcap_{F⊇W} F$ donde $F$ son todos los cerrados que contienen a $W$.
+\item $W$ es cerrado si y sólo si $W = \adh{W}$.\\
+\end{enumerate}\end{prop}
 
-\input{tex/TopologiaI_Ejs.tex}
+Para demostrar estas propiedades, muy similares a las del interior (\ref{propInterior}), usaremos la dualidad abierto-cerrado, unión-intersección e interior-adherencia, que nos será muy útil en el futuro.
+
+\begin{proof}
+\begin{enumerate}
+\item Claro a partir de la definición (\ref{defAdherencia}).
+\item Lo que estamos diciendo es que $\adh{W}^c = \mop{Int}(W^c)$. Empezamos diciendo que si $x∉\adh{W}$, entonces $∃A∈\topl \tq x∈A$ y $A∩W=\emptyset$. Es decir, que $A⊆W^c$, luego $x∈\mop{Int}(W^c)$.
+\item Lo deja como ejercicio, usando la segunda definición y las propiedades del interior. 
+\item Ídem.
+\end{enumerate}
+\end{proof}
+
+\subsubsection{Frontera de un conjunto}
+
+\begin{defn}[Frontera] Dado \stopl un espacio topológico y $W⊆X$, se dice que 
+
+\[ x∈\mop{Fr}(W) \iffdef A∩W ≠ \emptyset \y A∩W^c ≠ \emptyset\; ∀A ∈ \topl \tq x∈A \]
+
+Es decir, la frontera son todos los puntos cuyos entornos cortan a $W$ y $W^c$. 
+\label{defFrontera}
+\end{defn}
+
+Como viene siendo habitual, si tenemos una topología generada por una base, bastan comprobar para los elementos de la base.
+
+\begin{prop} Sea \stopl un espacio topológico y $W⊆X$, entonces
+
+\begin{enumerate}
+\item $\mop{Fr}(W) = \adh{W} ∩ \adh{W^c}$, y por lo tanto es cerrado.
+\item $\mop{Fr}(W) = \adh{W} \setminus \intr{W}$.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item Claro a partir de la definición (\ref{defFrontera}).
+\item Antes hemos visto que $\adh{W^c} = \left(\mop{Int}((W^c)^c)\right)^c$, o dicho de otra forma $\adh{W^c} = (\intr{W})^c = X \setminus \intr{W}$. Entonces $\mop{Fr}(W) = \adh{W} ∩ \adh{W^c} = \adh{W} ∩ (X\setminus \intr{W}) = \adh{W} \setminus \intr{W}$.
+\end{enumerate}
+\end{proof}
+
+\begin{remark} La definición nos permite escribir la adherencia como unión de conjuntos disjuntos: \[ \adh{W} = \intr{W} ∪ \mop{Fr}(W) \]
+\end{remark}
+
+\paragraph{Ejemplos} Empezamos con el simple: $ℚ$ en $ℝ$ con la topología usual y con $\topl_{[,)}$. En ambos casos tenemos que \[ \mop{Fr}(ℚ) = \adh{ℚ} \setminus \intr{ℚ} = ℝ \], ya que en cualquier intervalo de longitud mayor que cero hay racionales e irracionales.
+
+Y volvemos a la lexicográfica: sea $W=\{ (x,y) ∈ [0,1]^2 \tq x+y < 3/2 \}$. Sabemos que $\mop{Fr}(W) = \adh{W} \setminus \intr{W}$, y ya habíamos calculado la adherencia (azul en la figura \ref{figFrontWLex}) como
+
+\[ \adh{W} = \left\{ (x,y) ∈ [0,1]^2 \tq x + y ≤ \frac{3}{2} \right\} υ \left\{ (x,1) \tq \frac{1}{2} ≤ x < 1 \right\} \]
+
+Por otra parte (ver figura \ref{figConjuntoWLex}), el interior era
+
+\[ \intr{W} = W \setminus \left\{ (x,0) \tq \frac{1}{2} < x \right\} \]
+
+De esta forma, nos queda que \[ \mop{Fr}(W) = \{ (x,y) ∈ [0,1]^2 \tq \} \]
+
+\begin{figure}[hbtp]
+\inputtikz{I_FronteraConjuntoWLex}
+\caption{Frontera del conjunto $W$, en verde, con los dibujos de la adherencia (azul, figura \ref{figAdhWLex}) y el interior (rojo, figura \ref{figConjuntoWLex}).}
+\label{figFrontWLex}
+\end{figure}
+
+Más ejemplos: sea \sdst un espacio métrico y $\topl_{\dst}$ la topología inducida por la distancia. Consideramos $x∈X$ y $r>0$, y $W=\bola(x,r)$. ¿Cuáles son el interior, adherencia y frontera del conjunto?
+
+Está claro que $\intr{W} = \bola(x,r)$ por ser las bolas abiertas. La adherencia es algo más complicada. Es obvio que \[ \adh{W} ⊆ \adh{\bola}(x,r) ≝ \{ y∈X \tq \dst(x,y) ≤ r \} \] (que es la bola cerrada, no la adherencia de la bola), pero pueden ser distintos. En $ℝ^n$ con la distancia euclídea sí son iguales. Pero consideremos la distancia \[ \dst(x,y) = \begin{cases}
+0 & x = y \\ 1 & x ≠ y \end{cases} \] que nos genera la topología discreta, en la que todos los conjuntos son a la vez abiertos y cerrados. Si $r=1$, entonces \[ W = \bola(x,1) = \{ x \} \implies \adh{W} = W = \{ x \} \] 
+
+¿Y cuál es la bola cerrada? $\adh{\bola}(x,1) = X$, obviamente no es lo mismo aunque desde luego $\adh{W} ⊆ \adh{\bola}(x,1)$.
+
+Además, en esta topología, tendríamos que $\mop{Fr}(\{ x \} ) = \emptyset$.
+
+
+%\appendix
+%\chapter{Ejercicios}
+
+%\input{tex/TopologiaI_Ejs.tex}
 
 \printindex
 
