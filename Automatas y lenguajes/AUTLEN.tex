@@ -169,12 +169,12 @@ El lenguaje generado por esta gramática serían todas las palabras de la forma:
 
 \begin{example}
 Ahora vamos a tratar de construir la gramática que define un lenguaje dado:
-L(G)=$\lbrace a^nb^{n+1}, n \geq 0 \rbrace$
+L(G)=$\lbrace (ab)^na, n \geq 0 \rbrace$
 
 La gramática que define este lenguaje es:
 \begin{enumerate}
-\item S $\Rightarrow$ aSb
-\item S $\Rightarrow$ b
+\item S $\Rightarrow$ abS
+\item S $\Rightarrow$ a
 \end{enumerate}
 
 El autómata finito asociado a este lenguaje sería:
@@ -410,8 +410,8 @@ Consiste en probar que toda palabra de lenguaje se puede obtener con esta gramá
 \item \textbf{Forma buena}
 Consiste en utilizar inducción:
 \[Base: aa, bb \in L\]
-\[Hipótesis:\ \forall w \in R \tq \abs{w} \leq 2n \Rightarrow w \in L\]
-\[Inducción: w'\in L \ \abs{w'} = 2n+2 \Rightarrow w' = axa | bxb \tq \abs{x} = 2n \Rightarrow x \in L \Rightarrow w' \in L\]
+\[Hipotesis:\ \forall w \in R \tq \abs{w} \leq 2n \Rightarrow w \in L\]
+\[Induccion: w'\in L \ \abs{w'} = 2n+2 \Rightarrow w' = axa | bxb \tq \abs{x} = 2n \Rightarrow x \in L \Rightarrow w' \in L\]
 
 Esta inducción nos permite demostrar que toda palabra del lenguaje puede obtenerse siguiendo esa gramática. La otra parte de la demostración es igual en el método regular y el bueno.
 \end{enumerate}
@@ -449,13 +449,60 @@ La gramática que genera este lenguaje es:
 \begin{example}
 Dado el lneguaje:
 \[L = \lbrace w \in (a+b)^* \tq n_a(w)=n_b(w)\rbrace\]
-
+\newpage
 La gramática que genera este lenguaje es:
 \begin{itemize}
-\item
-\item
-\item
-\item
+\item $S \rightarrow aSb | bSa | \lambda$
+\item $S \rightarrow SS$
 \end{itemize}
+
+Para construirla nos hemos fijado en que una palabra w puede ser de 4 formas:
+\[w = \left\{ \begin{array}{lcc}
+             aw_0b &   con  & w_0 \in L \\
+             \\ bw_0a &  con & w_0 \in L \\
+             \\ aw_0a  \Rightarrow  w = w_1w_2  & con  & w_1,w_2 \in L\\
+             \\ nw_0b  \Rightarrow  w = w_1w_2  &  con &  w_1,w_2 \in L
+             \end{array}
+   \right.\]
 \end{example}
+
+Una palabra puede ser derivada de diferentes formas a partir de una misma gramática. Para estos casos vamos a definir derivaciones ``leftmost" y ``rightmost":
+\begin{defn}[Leftmost]
+Consiste en derivar, en cada paso, el elemento no terminal colocado más a la izquierda. Se deja para el lector el arduo trabajo de deducir que signifca una derivación ``rightmost"
+\end{defn}
+
+Esto nos lleva a definir un nuevo concepto:
+
+\begin{defn}[Ambigüedad]
+Una gramática se define como ambigua si existen dos o más \textbf{árboles de derivación distintos} para la misma sentencia.
+
+Otra forma de definirlo sería considerar ambiguas aquellas gramáticas para las que existen dos \textbf{derivaciones leftmost (o rightmost)} distintas para la misma sentencia.
+\end{defn}
+
+\begin{example}
+Consideremos la gramática dada por las reglas:
+\begin{itemize}
+\item $E \rightarrow E + E | E \times E | I$
+\item $I \rightarrow a | b | c$
+\end{itemize}
+
+Se trata de una gramática ambigua ya que la sentencia $a+b\times c$ tiene dos derivaciones distintas leftmost.
+\begin{enumerate}
+\item $E \rightarrow E + E \rightarrow I + E \rightarrow a + E \rightarrow a + E \times E \rightarrow a + I \times E \rightarrow a + b \times E \rightarrow a + b \times I \rightarrow a + b \times c$
+\item $E \rightarrow E \times E \rightarrow E + E \times E \rightarrow I + E \times E \rightarrow a + E \times E \rightarrow a + I \times E \rightarrow a+b \times E \rightarrow a + b \times I \rightarrow a + b \times c$
+\end{enumerate}
+\end{example}
+
+Ya vimos que dos gramáticas son equivalentes si generan el mismo lenguaje pero vamos a recalcar que hay \textbf{infinitas} gramáticas que generan el mismo lenguaje. 
+
+Dada una gramática G=(T,N,S P) para obtener otra equivalente basta con hacer otra:
+\[G' =(T, N \cup \lbrace Z \rbrace, Z, P \cup \lbrace Z \rightarrow E \rbrace)\]
+
+\appendix
+\chapter{Ejercicios}
+
+\input{tex/Ejercicios.tex}
+
+
+\printindex
 \end{document}
