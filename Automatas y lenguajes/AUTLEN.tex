@@ -507,15 +507,91 @@ Esto no es posible ya que siempre necesito llegar hasta la mitad de la palabra `
 
 Es aquí donde surgen los autómatas a pila. Estos autómatas se caracterizan por que en cada salto indicamos una entrada, saca el símbolo de la cima de la pila y añade una cadena a la pila.
 
+Para el lenguaje dado, el autómata a pila que lo representa sería:
+%TODO autómata a pila del lenguaje ese.
+En teoría, las etiquetas de los arcos del autómata deberían ser de la forma:
+\[A_b^c\]
+donde $A$ sería la entrada leída, $b$ el elemento que extraemos del tope de la pila y $c$ la cadena que insertamos en la pila.
+
+Con el fin de poder dibujar esto autómata cómodamente, la notación que usaremos será:
+\[bAc\]
+donde $b,A,c$ tienen el mismo significado que el indicado anteriormente.
+
 \begin{example}
 Queremos encontrar un autómata que represente el lenguaje:
 \[L = \lbrace a^nb^n, n \geq 0\rbrace\]
 
 El autómata de pila que representa este lenguaje es:
-%TODO Aprender a representar un puto automata de pila
+\end{example}
+%TODO Completar con la clase del lunes. Creo que con completar la explicacioncilla del ejemploy el anterior que introduce los automatas a pila será suficiente.
+
+\begin{defn}[Autómata a pila]
+Un autómata a pila se representa como:
+\[A=(Q, \Sigma, \delta, q_0, F, \topl, A_0)\]
+siendo:
+\begin{itemize}
+\item $Q$: conjunto de estados
+\item $\Sigma$: alfabeto de entrada
+\item $\delta$: función de transición: $\delta:Q\times(\Sigma \cup \{\lambda\})\times \tau \rightarrow 2^{Q\times \topl^*}$
+\item $q_0$: estado inicial $\in Q$
+\item $F$: conjunto de estados finales
+\item $\topl$: alfabeto de la pila
+\item $A_0$: símbolo inicial de la pila $\in \tau$
+\end{itemize}
+Básicamente consiste en un autómata, como los vistos hasta ahora, acompañado de una pila en la que realizaremos inserciones, extracciones y/o aserciones en cada transición.
+\end{defn}
+
+Vamos a ver un pequeño ejemplo que explica cómo entender la función de transición:
+\begin{example}
+La evaluación de la función de transición:
+\[\sigma(q,a,x)=\{(p,y)\}\]
+Implica que, estando en el estado 'q', ante una entrada 'a', habiendo en la cima de la pila un 'x' pasamos al estado 'p', insertando en la pila 'y'.
 \end{example}
 
+En estos autómatas los conceptos de determinismo o no determinismo se mantienen. Es decir, un autómata a pila será no determinista si dada una entrada y un elemento a extraer de la cima de la pila tiene varias acciones que puede llevar a cabo. En caso contrario, será determinista.
 
+\obs Aunque un autómata finito determinista es equivalente a uno no determinista, con autómatas a pila no ocurre lo mismo.
+
+\begin{defn}[Autómata a pila determinista]
+Un autómata a pila será determinista si cumple las siguientes condiciones:
+\begin{itemize}
+\item No hay transiciones $\lambda$ o, si las hay, no hay ninguna otra transición con un símbolo diferente.
+\item Dada una situación $\delta (p,x,a)$ contiene como mucho un elemento $(q,b)$.
+\end{itemize}
+\end{defn}
+
+\begin{defn}[Descripción instantánea]
+Se trata de una representación de la situación actual del autómata. Para poder conocer con precisión la situación necesitamos saber:
+\begin{enumerate}
+\item Nodo en el que nos encontramos
+\item Entrada que falta por leer
+\item Contenido de la pila
+\end{enumerate}
+
+Dada una descripción instantánea podemos continuar el procesamiento de la cadena sin perder información.
+\end{defn}
+
+\begin{defn}[Precedencia entre descripciones instantáneas]
+Decimos que una descripción instantánea precede a otra:
+\[(q,xX,aA) \vdash (p, X, bA)\]
+si:
+\[(p,b) \in \sigma(q, X, a)\]
+siendo p,q nodos del autómata, x el primer símbolo de entrada, X la cadena de entrada, a el caracter que hay en la cima de la pila y A,b cadena de caracteres que insertamos en la pila.
+
+Es decir, una descripción instantánea precede a otra si hay una transición que nos lleva de una a otra.
+
+\end{defn}
+
+\begin{defn}[Precedecia *]
+Decimos que hay precedencia * entre dos descripciones:
+\[(q,xX,aA) \vdash^* (p, X, bA)\]
+cuando hay una secuencia $d_0,d_1,...$ de precedencias tales que:
+\[(q,xX,aA) \vdash d_0 \vdash d_1 \vdash ... \vdash (p, X, bA)\]
+\end{defn}
+
+Basándonos en estas definiciones, podemos representar el lenguaje aceptado por un autómta a pila como:
+\[L(A) = \lbrace w \in \Sigma^* \tq (q_0, w, A_0) \vdash^* (p, \lambda, X)\rbrace\]
+con $p\in F, X \in \topl^*$
 
 
 \appendix
