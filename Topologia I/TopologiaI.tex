@@ -550,7 +550,7 @@ Por otra parte (ver figura \ref{figConjuntoWLex}), el interior era
 De esta forma, nos queda que \[ \mop{Fr}(W) = \{ (x,y) ∈ [0,1]^2 \tq \} \]
 
 \begin{figure}[hbtp]
-\inputtikz{I_FronteraConjuntoWLex}
+%\inputtikz{I_FronteraConjuntoWLex}
 \caption{Frontera del conjunto $W$, en verde, con los dibujos de la adherencia (azul, figura \ref{figAdhWLex}) y el interior (rojo, figura \ref{figConjuntoWLex}).}
 \label{figFrontWLex}
 \end{figure}
@@ -603,7 +603,7 @@ En los espacios métricos con distancias razonables, la adherencia, interior y d
 \begin{prop} Sea \sdst un espacio métrico con la topología inducida por la distancia $\topl_{\dst}$, y sea $W⊆X$. 
 
 \begin{enumerate}
-\item $x∈\int{W} \iff ∃δ> 0 \tq \bola(x,δ) ⊆ W$.
+\item $x∈\intr{W} \iff ∃δ> 0 \tq \bola(x,δ) ⊆ W$.
 \item $x∈\adh{W} \iff ∀ε>0\; \bola(x,ε) ∩ ≠ \emptyset$.
 \item $x∈\mop{Fr}(W) \iff ∀ε>0\; \bola(x,ε) ∩W ≠ \emptyset \y \bola(x, ε) ∩W^c ≠ \emptyset$.
 \item $x$ es punto aislado de $W$ si y sólo si $∃δ>0 \tq \bola(x,δ) ∩ W = \{ x\}$.
@@ -614,6 +614,194 @@ En los espacios métricos con distancias razonables, la adherencia, interior y d
 
 En las proposiciones 2,3 y 5 basta con comprobarlo para una sucesión $ε_n \to 0$, por ejemplo $ε_n=\frac{1}{n}$.
 \end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item Queremos demostrar que $x∈\intr{W} \iff ∃δ> 0 \tq \bola(x,δ) ⊆ W$, y para ello recordamos la definición: $x∈\intr{W} \iffdef ∃A∈\topl \tq x∈A ⊆ W$. La implicación hacia la izquierda es sencilla si tomamos simplemente el abierto $A = \bola(x,δ)$.
+
+En la otra dirección, la hipótesis es que $∃A∈\topl \tq x∈A⊆W$. Al ser una topología inducida por la distancia, podemos encontrar una bola $\bola(x,δ)⊆A⊆W$.
+
+\item Son bastante sencillas.
+\item 
+\item 
+\item
+\item $x∈\adh{W} \iff ∃x_n∈W \tq x_n\convs x$. Hacia la derecha, podemos ir cogiendo bolas $\bola(x,1/n)∩W ≠ \emptyset$, cada vez más pequeñas, y escoger puntos $x_n∈\bola(x,1/n)$, de tal forma que $\dst(x_n, x) \convs 0$, o de otra forma $x_n \convs x$.
+
+Para el otro lado, es cierto y además para cualquier espacio topológico. Tenemos que $x_n\convs x$ para $x_N∈W$, queremos probar que $x∈\adh{W}$. Por la propia definición de convergencia, podemos encontrar un $n_A$ tal que $x_n∈A$ para todo $n≥n_A$, luego $A∩W ≠ \emptyset$. 
+
+\item Y ya para acabar, hay que demostrar que $x∈W' \iff ∃x_n∈W, x_n≠x \; ∀n∈ℕ$ y $x_n\convs x$. Hacia la izquierda, sabemos que $\bolac(x,\frac{1}{n})∩W ≠ \emptyset$, luego $∃x_n∈W∩\bolac(x, 1/n)$, es decir, que $x_n∈W$ y además $x_n≠x$, luego ya hemos encontrado la sucesión que buscábamos.
+
+La implicación hacia la izquierda es igual en cualquier espacio topológico. $∀A∈\topl$ con $x∈A$, tenemos que $∃n_A \tq x_n∈A \; ∀n≥a$ por definición de convergencia. Luego es claro que $(A\setminus \{ x\}∩W ≠ \emptyset$ y entonces $x∈W'$.
+\end{enumerate}
+\end{proof}
+
+\begin{remark} Si \sdst es un espacio métrico y $x_n\to x$ y  $x≠z$, entonces $x_n$ no converge a $z$. Es decir, el límite es único.\end{remark}
+
+\begin{proof}
+Si $x≠z$, entonces $\dst(x,z)>0$. Sea $δ$ con $0<δ<\frac{\dst(x,z)}{2}$. Por definición de convergencia, existe $n_δ \tq x_n ∈ \bola(x,δ) \; ∀ n≥n_δ$. Por otra parte, $\bola(x,δ) ∩ \bola(x,δ) = \emptyset$, y entonces $x_n∈\bola(z,δ) \,∀n≥n_δ$, luego es imposible que $x_n$ converja a $z$.
+\end{proof}
+
+Atención porque esto sólo pasa en espacios métricos: si cogemos un espacio raro el límite puede dejar de ser único. 
+
+Lo que importa realmente del argumento no es que sea métrico, si no que podamos coger dos bolas disjuntas para puntos distintos. Formalicémoslo:
+
+
+\begin{defn}[Espacio\IS Hausdorff]
+Un espacio topológico \stopl es Hausdorff si $∀x,y \in X$ con $x≠y$ existen $V_x$ entorno de $x$ y $V_y$ entorno de y tal que $V_x∩V_y≠\emptyset$
+\end{defn}
+
+\begin{prop} Sea \stopl espacio topológico de Haussdorff. Entonces
+\begin{enumerate}
+\item Si $x_n\to x$ entonces $x_n$ no converge a $y$ $∀y≠x$ (es decir, el límite de una sucesión, si existe, es único).
+\item $\{x\}$ es cerrado $∀x \in X$.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item Supongo $x_n\to x$ y $x≠y$
+
+	\begin{enumerate}
+	\item Por definición, $\exists V_x,V_y$ entornos de $x$ e $y$ con $V_x∩V_y≠\emptyset$.
+	\item Si $x_n\to x$ y $x\in V_x$, por definición de convergencia $\exists n_0$ tal que $x_n\in V_x ∀n ≥n_0$. Luego $x_n\notin V_y ∀n ≥ n_0$ y por lo tanto $ x_n$ no converge a $y$.
+	\end{enumerate}
+
+\item Queremos demostrar que  $\adh{\{x\}} = \{x\}$, y lo haremos por doble contenido. El contenido a la izquierda es trivial ($\{x\} ⊆ \adh{\{x\}}$) así que sólo tenemos que hacerlo a la derecha.
+
+Si $y≠x$, entonces existen $V_y$ entorno de $y$ y $V_x$ entorno de $x$ tales que $V_x∩V_y≠\emptyset$, por lo tanto $V_y∩\{x\}=\emptyset$ , de tal forma que $y\notin \adh{\{x\}}$ y $\adh{\{x\}} ⊆ \{x\}$.
+\end{enumerate}
+\end{proof}
+
+\begin{remark}
+La propiedad 2 ($\{x\}$ cerrado $∀x \in X$) es equivalente a decir que $∀ x,y \in X$ con $x≠y$ existen entornos respectivos $V_x$ y $V_y$ tal que $x\notin V_y$ , $y\notin V_x$.
+Espacios topológicos con esa propiedad se llaman $T_1$ (Hausdoff es $T_2$)
+\end{remark}
+
+Por ejemplo, $(ℝ^m, \topl_{usual})$, $(ℝ^2, \topl_{Lex.})$, o \sdst son espacios Hausdorff.
+
+\subsection{Topología de subespacios}
+
+\begin{defn}[Topología\IS de subespacio]
+Dado \stopl espacio topológico y  $S⊆X$, se define la topología de subespacio en $S$ por:
+$V\in \topl^{sub} \equiv \topl^{sub}_S \equiv \exists A\in \topl$ tal que $V = A∩S$.
+\end{defn}
+
+Ejercicio: comprobar que es una topología.
+
+\begin{prop}
+\stopl e.t, $S⊆X$
+\begin{enumerate}
+\item $C(⊆S)$ es cerrado en $\topl^{sub} \iff \exists F$ cerrado en \stopl tal que $C=F∩S$.
+\item Si $\topl = \toplb$, la topología generada por una base $\base$, entonces
+	\begin{enumerate}
+	\item $\base_S \equiv \{B∩S : B\in \base\}$ es una base para una top en $S$
+	\item $\topl^{sub} = \topl_{\base_S}$
+	\end{enumerate}
+\item Si $\topl = \topl_d$ es la topología inducida por una distancia $\dst(x,y)$ en $X$, entonces $\topl^{sub} = \topl_{\dst|_{S×S}}$, tomando $\dst|_{S×S}$ como la restricción de la distancia al conjunto $S$:
+\begin{align*}
+	\appl{\dst|_{S×S}}{S×S&}{[0,\infty)} \\
+	(x,y)&\longmapsto \dst(x,y)
+\end{align*}
+
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item $C$ cerrado en $\topl^{sub}$ si y sólo si $S\setminus C ∈ \topl^{sub}$, lo cual es equivalente a a que $∃A∈\topl$  tal que $S\setminus C = A∩S$. 
+
+Si $F≝X\setminus A$, entonces $A=X\setminus F$, luego volviendo a lo que teníamos nos queda que $S\setminus C = (X\setminus F) ∩ S = S\setminus (F∩S)$, equivalente a $C=F∩S$.
+\item
+\item
+\end{enumerate}
+\end{proof}
+
+\section{Continuidad} 
+
+En esta sección estudiaremos las funciones $f$ entre dos espacios topológicos $(X,\topl_X)$ y $(Y, \topl_Y)$. Usaremos la forma habitual $\appl{f}{X}{Y}$, aunque para ser más concretos las denotaremos como $\appl{f}{(X,\topl_X)}{(Y, \topl_Y)}$.
+
+\begin{defn}[Función\IS continua]
+Sea $x_0∈X$. Se dice que $f$ es continua en $x_0$ si y sólo si $∀V$ entorno de $f(x_0)$, existe un $U∈\topl_X$ entorno de $x_0$ tal que $f(x)∈V\; ∀x∈U$.
+
+Es decir, que $f(U)⊆V$ y que $x_0∈⊆\inv{f}(V)$.
+
+Por otra parte, y como hacíamos en otras asignaturas, se dice que una función es continua si es continua en todos los puntos de su dominio.
+\end{defn}
+
+\begin{remark} En el caso de espacios métricos $(X, \dst_X), (Y, \dst_Y)$, se dice que $f$ es continua en $x_0$ si y sólo si $∀ε>0\;∃δ>0 \tq \dst_X(x,x_0) < δ \implies \dst_Y(f(x), f(x_0)) < ε$, que es decir de forma más general la forma que hemos puesto de continuidad.
+
+Además, para topologías generadas por bases, basta considerar entornos que están en la base, como siempre.
+\end{remark}
+
+Veamos un ejemplo simple sobre continuidad de funciones. Más concretamente, continuidad de funcionales usando sólo la definición de continuidad basada en topologías.
+
+\begin{example} Tomamos $X$ como el conjunto de las funciones continuas $X=C([0,1])≝\{ \appl{f}{[0,1]}{ℝ} \tq f ∈ C^1\}$, y definimos la distancia como \begin{align*}
+\md{f}_{∞} &≝ \max_{x∈[0,1]} \abs{f(x)} \\ 
+\dst(f,g) &≝ \md{f-g}_{∞}\end{align*}
+
+A partir de esto definimos el siguiente funcional: 
+\begin{align*}
+\appl{F}{(X, \dst_X)&}{(ℝ, \topl_{usual})} \\
+f&\longmapsto F(f) ≝ \int_0^1f(x) \dif x 
+\end{align*}
+
+Afirmamos que $F$ es continua es $f_0 ∈ X$. Podemos encontrar la definición de epsilon/delta de la siguinte forma:
+
+\begin{align*}
+\dst_{ℝ}(F(f), F(f_0)) &= \abs{F(f) - F(f_0)} = \abs{\int_0^1 f(x) \dif x - \int_0^1 f_0(x)\dif x} = \\
+&= \int_0^1 f(x) - \dotsc
+\end{align*}
+
+% Faltan cosas porque he llegado tarde a clase. Si alguien tiene el ejemplo completo que lo copie, porfaplis.
+
+\end{example}
+
+A partir del ejemplo, podemos desarrollar nuevas propiedades:
+
+\begin{prop} Sean $(X_1, \topl_1), (X_2, \topl_2)$ espacios topológicos y $\appl{f}{X_1}{X_2}$. Entonces
+
+\begin{enumerate}
+\item $f$ es continua si y sólo si la imagen inversa de un abierto en $X_2$ es abierta en $X_1$. Es decir, si y sólo si $∀A∈\topl_2 \; \inv{f}(A) ∈ \topl_1$.
+\item $f$ es continua si y sólo si la imagen inversa de un cerrado en $X_2$ es cerrada en $X_2$.
+\item $f$ es continua si y sólo si $f(\adh{W}) ⊆ \adh{f(W)}\; ∀W⊆X_1$.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item Empezamos tomando como hipótesis que $f$ es continua en $x\; ∀x∈X_1$. Tomamos $A∈\topl_2$ y estudiamos su imagen inversa $\inv{f}(A)$ para ver si está en$\topl_1$. Si $x∈\inv{f}(A)$, entonces $f(x) ∈ A$.  Si $A$ es abierto en $X_2$ y $f(x)∈A$, entonces por la definición de continuidad de $f$, $∃V_x$ entorno de $X$ val que $f(V_x)⊆A$. 
+
+Es decir, que $x∈V_x⊆\inv{f}(A)$. Como esto pasa para todo punto, podemos escribir $\inv{f}(A)$ como la unión de todos los $V_x$, la unión de abiertos es abierta y entonces ya tenemos que $A$ es abierto.
+
+En el otro sentido, tomamos como hipótesis que la imagen inversa de un abierto es abierta. Sea $x∈X$, queremos saber si $f$ es continua en $x$. 
+
+La definición de continuidad nos decía que dado un entorno $W$ cualquiera de $f(x)$, existía un entorno $V_x$ de $x$ tal que $f(V_x) ⊆ W$. Dicho de otra forma, cercanía en el dominio implica cercanía en la imagen.
+
+Entonces, partiendo de dos premisas ($W∈\topl_2 \implies \inv{f}(W) ∈ \topl_1$, $f(x)∈W \iff x∈\inv{f}(W)$) nos queda que $V=\inv{f}(W)∈ \topl_1$, $x∈V$ y $f(V)⊆W$. % No me queda muy claro esto pero lo dejo así.
+
+\item Queremos demostrar que la imagen inversa de cerrados es cerrada, y vamos a usar la propiedad de que el complementario de un cerrado es abierto. Vemos claramente que $\inv{f}(X_2\setminus A ) = X_1 \setminus \inv{f}(A)$. A partir de esto es muy sencillo probarlo tomando complementarios, y no lo voy a copiar.
+
+\item Tomamos como hipótesis que $f$ es continua, y queremos demostrar que $f(\adh{W}) ⊆ \adh{f(W)}\; ∀W⊆X_1$. Está claro que $\adh{f(W)}$ es cerrado, y que al ser $f$ continua entonces $\inv{f}(\adh{f(W)})$ es cerrado también. Además, es seguro que $W⊆\inv{f}(\adh{f(W)})$. Uniendo las dos cosas, tenemos que $\adh{W} ⊆ \inv{f}(\adh{f(W)})$. 
+\end{enumerate}
+\end{proof}
+
+Vamos a ir ahora a por algunas propiedades sobre la composición de funciones.
+
+\begin{prop} Sean $(X,\topl_X), (Y, \topl_Y), (Z, \topl_Z)$ espacios topológicos. Entonces 
+
+\begin{enumerate}
+\item Si $\appl{f}{X}{Y}$ y $\appl{g}{Y}{Z}$  son continuas entonces $\appl{g○f}{X}{Z}$ también lo es.
+\item Si $\appl{f}{X}{Y}$ es constante entonces $f$ es continua.
+\item Si $\appl{f}{X}{Y}$continua y $S$ subespacio de $X$ (es decir, $S⊆X$ con $\topl^{sub}$), entonces $\appl{f|_S}{S}{Y}$ es continua.
+\item Sea $\appl{f}{X}{Y}$ y $W$ tales que $f(X) ⊆ W ⊆ Y$. Denotemos $\appl{f^W}{X}{W}$ con $W$ en la topología de subespacios. Entonces $f$ es continua si y sólo si $f^W$ es continua.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item Sea $A$ abierto en $Z$, entonces tenemos que demostrar que $(g○f)^{-1}(A)$ es abierto en $X$. Sabemos que $\inv{(g○f)}(A) = \inv{f} ()$ y nosequé.
+\end{enumerate}
+\end{proof}
 
 \appendix
 \chapter{Ejercicios}

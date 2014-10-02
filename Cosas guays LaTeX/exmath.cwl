@@ -180,3 +180,5 @@
 \adh{arg0}#m
 \iffdef#m
 \bolac#m
+\algb{arg0}#m
+\salgb#m
