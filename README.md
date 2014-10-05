@@ -26,6 +26,7 @@ Puedes descargar los apuntes en PDF, actualizados diariamente, [aquí](https://w
 * [Pedro Valero Mejía](http://github.com/pevalme)
 * [Jorge Martín Pérez](https://github.com/MartinPJorge)
 * [Eduardo Miravalls Sierra](https://github.com/EduardoMiravalls)
+* [Alberto Parramón Castillo](https://github.com/AlbertoParramon)
 
 ### Puñetas de LaTeX
 
