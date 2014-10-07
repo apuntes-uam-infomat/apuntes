@@ -56,13 +56,13 @@ Número de símbolos que contiene
 \end{defn}
 
 \begin{defn}[Lenguaje]
-Conjunto de palabras
+Conjunto de palabras, cualquier subconjunto de $\Sigma^*$
 \end{defn}
 
 Hay algunos casos particulares de lenguajes:
 \subsection{Lenguajes particulares}
 \begin{defn}[Lenguaje universal (sobre $\sum$)]
-Denotado por $\sum^*$ representa el conjunto de todas las palabras que se pueden formar
+Denotado por $\sum^*$ representa el conjunto de todas las palabras que se pueden formar con los símbolos de $\Sigma$, incluido $\lambda$.
 \end{defn}
 
 \begin{defn}[Lenguaje de un autómata]
@@ -70,13 +70,13 @@ Conjunto de palabras que acaban en un estado final del autómata y son aceptadas
 \end{defn}
 
 \begin{defn}[Lenguaje vacío]
-Lenguaje que no contiene ningún elemento
+Lenguaje que no contiene ningún elemento: $\phi$
 \end{defn}
 
 \begin{defn}[Lenguaje $\lbrace \lambda \rbrace$]
 Lenguaje que sólo contiene $\lambda$.
 \end{defn}
-El lenguaje $\lbrace \lambda \rbrace$ es distinto del lenguaje vacío aunque $\lambda$ sea la palabra vacía.
+El lenguaje $\lbrace \lambda \rbrace$ es distinto del lenguaje vacío aunque $\lambda$ sea la palabra vacía. En particular $|\{\lambda\}|=1$ y $|\phi|=0$
 
 \begin{defn}[Lenguaje $\Sigma^+$ ] 
 \[ \Sigma^+ = \Sigma \setminus \lbrace \lambda \rbrace \]
@@ -91,27 +91,26 @@ Tenemos dos operadores importantes:
 \begin{enumerate}
 \item \begin{defn}[Estrella]
 El operador estrella se corresponde con la suma infinita:
-\[a^* = 0 + a + a^2 + a^3 + ...\]
+\[a^* = \lambda \cup a \cup a^2 \cup a^3 \cup ...\]
 Donde el 0 implica que esa ``a" no aparece ninguna vez. Según en que cuerpo nos moviésemos podrá tener distinto significado. Técnicamente sería el elemento nulo de la suma.
 \end{defn}
 \item \begin{defn}[Suma]
 Este operador se corresponde con la suma infinita:
-\[a^+ = a + a^2 + a^3 + ...\]
-(El nombre de este operador no lo tengo claro en castellano)
+\[a^+ = a \cup a^2 \cup a^3 \cup ...\]
 \end{defn}
 \end{enumerate}
-En otras palabras, estos conceptos nos sirven para entender por qué $\Sigma ^*$  representa todas las palabras posibles. Para poder entender esto debemos entender la multiplicación como una concatenación y la suma como un \textit{OR}. Así el "elemento neutro de la suma" sería la cadena vacía.
+En otras palabras, estos conceptos nos sirven para entender por qué $\Sigma ^*$  representa todas las palabras posibles. Para poder entender esto debemos entender la multiplicación como una concatenación y la suma como un \textit{OR}. Así el "elemento neutro del producto" sería la cadena vacía.
 
 Tomemos ahora el alfabeto binario $\Sigma = \lbrace 0, 1 \rbrace$
 Entonces:
-\[\Sigma ^* = (0+1)^* = \emptyset + (0+1)+(0+1)^2+(0+1)^3+... = \]
-\[= \emptyset + 0 + 1 + 00 + 01 +10 +11 +000+001+010+011+100+101+110+111+...\]
+\[\Sigma ^* = (0+1)^* = \lambda + (0+1)+(0+1)^2+(0+1)^3+... = \]
+\[= \lambda + 0 + 1 + 00 + 01 +10 +11 +000+001+010+011+100+101+110+111+...\]
 Y con esto vemos como se forman todas las posibles combinaciones de bits de diferente longitud. Si en lugar de este alfabeto hubiésemos tomado nuestro alfabeto castellano habríamos obtenido todas las posibles combinaciones de letras.
 
 \section{Expresiones regulares}
 
 \begin{defn}[Expresión regular]
-Forma de representar un lenguaje regular
+Forma alternativa de representar un lenguaje regular
 \end{defn}
 
 Dado un alfabeto $\Sigma$ existen tres tipos de expresiones regulares primitivas:
@@ -127,7 +126,7 @@ L($\emptyset$) = $\emptyset$
 L($a$) = $\lbrace a \rbrace$
 \end{enumerate}
 
-A partir de estas expresiones regulares primitivas podemos construir expresiones regulares complejas aplicando la siguiente regla
+A partir de estas expresiones regulares primitivas podemos construir expresiones regulares compuestas aplicando la siguiente regla
 
 Siendo $\alpha, \beta$ dos expresiones regulares primitivas o compuestas sobre $\Sigma$ también lo son:
 \begin{enumerate}
@@ -186,14 +185,14 @@ Hay varias definiciones para este término. No son muy precisas pero nos dan una
 \begin{example}
 Tomemos las reglas:
 \begin{enumerate}
-\item ORACIÓN $\Rightarrow$ SUJETO + PREDICADO
-\item SUJETO $\Rightarrow$ ARTÍCULO + NOMBRE
+\item ORACIÓN $\Rightarrow$ SUJETO . PREDICADO
+\item SUJETO $\Rightarrow$ ARTÍCULO . NOMBRE
 \item PREDICADO $\Rightarrow$ VERBO
-\item ARTÍCULO $\Rightarrow$ el ó un
-\item NOMBRE $\Rightarrow$ coche ó perro
-\item VERBO $\Rightarrow$ come ó corre
+\item ARTÍCULO $\Rightarrow$ el | un
+\item NOMBRE $\Rightarrow$ coche | perro
+\item VERBO $\Rightarrow$ come | corre
 \end{enumerate}
-Estas reglas constituyen una gramática que nos permite generar un lenguaje. En este caso el lenguaje estaría formado todas las cadenas que se pueden construir a partir de estas reglas.
+Estas reglas constituyen una gramática que nos permite generar un lenguaje. En este caso el lenguaje estaría formado todas las cadenas que se pueden construir a partir de estas reglas. Empezando siempre por el axioma (en este caso: "ORACIÓN").
 %TODO Ejemplo de árbol de derivación con estas reglas
 \end{example}
 
@@ -216,7 +215,7 @@ Indica dónde empieza a construirse la cadena. En el ejemplo anterior, el axioma
 \begin{defn}[Gramática (G)]
 Conjunto formado por T, N, P y S.
 
-\[ G = \lbrace T, N, P, S \rbrace \]
+\[ G = ( T, N, P, S) \]
 \end{defn}
 
 
@@ -235,12 +234,12 @@ N = \lbrace S \rbrace
 
 Y su axioma es S.
 
-El lenguaje generado por esta gramática serían todas las palabras de la forma: $a^i\lambda b^i$ con $ i=0,1,... \infty$
+El lenguaje generado por esta gramática serían todas las palabras de la forma: $a^i b^i$ con $ i=0,1,... \infty$
 \end{example}
 
 \begin{example}
 Ahora vamos a tratar de construir la gramática que define un lenguaje dado:
-L(G)=$\lbrace (ab)^na, n \geq 0 \rbrace$
+L=$\lbrace (ab)^na, n \geq 0 \rbrace$
 
 La gramática que define este lenguaje es:
 \begin{enumerate}
@@ -282,13 +281,13 @@ Dos gramáticas son equivalentes si generan el mismo lenguaje
 \end{defn}
 
 \section{Gramáticas independientes del contexto}
-Como ya vimos una gramática dependiente del contexto puede representarse como una cuádrupla G=(N,T,S,P), es decir, consta de símbolos no terminales, símbolos terminales, un axioma y unas reglas de producción.
+Como ya vimos una gramática puede representarse como una cuádrupla G=(N,T,S,P), es decir, consta de símbolos no terminales, símbolos terminales, un axioma y unas reglas de producción.
 
 En el caso de una gramática independiente del contexto las reglas de P son de la forma:
 \begin{itemize}
 \item $A \rightarrow x$
 
-Con $A\in N$ y $x \in \Sigma^*$
+Con $A\in N$, $x \in \Sigma^*$ y $\Sigma=T\cup N$
 \end{itemize}
 
 \begin{example}
