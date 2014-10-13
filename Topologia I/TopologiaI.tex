@@ -177,7 +177,7 @@ Además de por la distancia, podemos considerar las \textbf{topologías generada
 
 Recordemos cómo definíamos una topología en $\topl_ℝ$. Decíamos que $A∈\topl_ℝ$ si y sólo si $∀x∈A\; ∃(a,b)$ tales que $x∈(a,b) ⊆ A$. 
 
-\begin{defn}[Base]
+\begin{defn}[Base]\label{defBase}
 Sea $X$ un conjunto y $\base$ una familia de subconjuntos de $X$ (e.d. $\base ⊆ \parts{X}$). Entonces $\base$ es una base si y sólo si 
 
 \begin{enumerate}
@@ -187,7 +187,7 @@ Sea $X$ un conjunto y $\base$ una familia de subconjuntos de $X$ (e.d. $\base �
 \end{defn}
 
 
-\begin{defn}[Topología\IS generada por una base] La topología $\topl_\base$ se define por \[ A ∈ \topl_\base \iff ∀x ∈ A\; \exists B∈\base \tq x∈B⊆A \]
+\begin{defn}[Topología\IS generada por una base] \label{TopologiaGeneradaBase} La topología $\topl_\base$ se define por \[ A ∈ \topl_\base \iff ∀x ∈ A\; \exists B∈\base \tq x∈B⊆A \]
 \end{defn}
 
 Tenemos que demostrar, eso sí, que eso que hemos definido ahí es realmente una topología.
@@ -550,7 +550,7 @@ Por otra parte (ver figura \ref{figConjuntoWLex}), el interior era
 De esta forma, nos queda que \[ \mop{Fr}(W) = \{ (x,y) ∈ [0,1]^2 \tq \} \]
 
 \begin{figure}[hbtp]
-%\inputtikz{I_FronteraConjuntoWLex}
+\inputtikz{I_FronteraConjuntoWLex}
 \caption{Frontera del conjunto $W$, en verde, con los dibujos de la adherencia (azul, figura \ref{figAdhWLex}) y el interior (rojo, figura \ref{figConjuntoWLex}).}
 \label{figFrontWLex}
 \end{figure}
@@ -646,11 +646,11 @@ Atención porque esto sólo pasa en espacios métricos: si cogemos un espacio ra
 Lo que importa realmente del argumento no es que sea métrico, si no que podamos coger dos bolas disjuntas para puntos distintos. Formalicémoslo:
 
 
-\begin{defn}[Espacio\IS Hausdorff]
+\begin{defn}[Espacio\IS Hausdorff]\label{defHausdorff}
 Un espacio topológico \stopl es Hausdorff si $∀x,y \in X$ con $x≠y$ existen $V_x$ entorno de $x$ y $V_y$ entorno de y tal que $V_x∩V_y≠\emptyset$
 \end{defn}
 
-\begin{prop} Sea \stopl espacio topológico de Haussdorff. Entonces
+\begin{prop} Sea \stopl espacio topológico de Hausdorff. Entonces
 \begin{enumerate}
 \item Si $x_n\to x$ entonces $x_n$ no converge a $y$ $∀y≠x$ (es decir, el límite de una sucesión, si existe, es único).
 \item $\{x\}$ es cerrado $∀x \in X$.
@@ -721,9 +721,9 @@ Si $F≝X\setminus A$, entonces $A=X\setminus F$, luego volviendo a lo que tení
 En esta sección estudiaremos las funciones $f$ entre dos espacios topológicos $(X,\topl_X)$ y $(Y, \topl_Y)$. Usaremos la forma habitual $\appl{f}{X}{Y}$, aunque para ser más concretos las denotaremos como $\appl{f}{(X,\topl_X)}{(Y, \topl_Y)}$.
 
 \begin{defn}[Función\IS continua]
-Sea $x_0∈X$. Se dice que $f$ es continua en $x_0$ si y sólo si $∀V$ entorno de $f(x_0)$, existe un $U∈\topl_X$ entorno de $x_0$ tal que $f(x)∈V\; ∀x∈U$.
+Sea $x_0∈ X$. Se dice que $f$ es continua en $x_0$ si y sólo si $∀V$ entorno de $f(x_0)$, existe un $U∈\topl_X$ entorno de $x_0$ tal que $f(x)∈V\; ∀x∈U$.
 
-Es decir, que $f(U)⊆V$ y que $x_0∈⊆\inv{f}(V)$.
+Es decir, que $f(U)⊆ V$ y que $x_0∈ U ⊆\inv{f}(V)$.
 
 Por otra parte, y como hacíamos en otras asignaturas, se dice que una función es continua si es continua en todos los puntos de su dominio.
 \end{defn}
@@ -735,9 +735,11 @@ Además, para topologías generadas por bases, basta considerar entornos que est
 
 Veamos un ejemplo simple sobre continuidad de funciones. Más concretamente, continuidad de funcionales usando sólo la definición de continuidad basada en topologías.
 
-\begin{example} Tomamos $X$ como el conjunto de las funciones continuas $X=C([0,1])≝\{ \appl{f}{[0,1]}{ℝ} \tq f ∈ C^1\}$, y definimos la distancia como \begin{align*}
+\begin{example} Tomamos $X$ como el conjunto de las funciones continuas $X=C([0,1])≝\{ \appl{f}{[0,1]}{ℝ} \tq f ∈ C^1\}$, y definimos la distancia como
+\begin{align*}
 \md{f}_{∞} &≝ \max_{x∈[0,1]} \abs{f(x)} \\ 
-\dst(f,g) &≝ \md{f-g}_{∞}\end{align*}
+\dst(f,g) &≝ \md{f-g}_{\infty}
+\end{align*}
 
 A partir de esto definimos el siguiente funcional: 
 \begin{align*}
@@ -745,14 +747,21 @@ A partir de esto definimos el siguiente funcional:
 f&\longmapsto F(f) ≝ \int_0^1f(x) \dif x 
 \end{align*}
 
-Afirmamos que $F$ es continua es $f_0 ∈ X$. Podemos encontrar la definición de epsilon/delta de la siguinte forma:
+Afirmamos que $F$ es continua es $f_0 ∈ X$. Podemos encontrar $\epsilon$ y $\delta$ de la siguinte forma:
 
 \begin{align*}
 \dst_{ℝ}(F(f), F(f_0)) &= \abs{F(f) - F(f_0)} = \abs{\int_0^1 f(x) \dif x - \int_0^1 f_0(x)\dif x} = \\
-&= \int_0^1 f(x) - \dotsc
+&= \abs{\int_0^1 f(x) - f_0(x) \dif x} \leq \int_0^1 \abs{f(x)-f_0(x) \dif x} \leq \\
+&\leq \int_0^1 \md{f(x) - f_0(x)}_{\infty} \dif x \leq \md{f - f_0}_{\infty} = \dst_{X}(f, f_0) < \delta
 \end{align*}
 
-% Faltan cosas porque he llegado tarde a clase. Si alguien tiene el ejemplo completo que lo copie, porfaplis.
+Luego, como $\dst_{\mathbb{R}}(F(f), F(f_0)) < \epsilon$, $\forall \epsilon > 0$ , tenemos que:
+
+\begin{align*}
+\delta = \epsilon \wedge dst_{X}(f, f_0) < \delta = \epsilon \implies \dst_{\mathbb{R}}(F(f), F(f_0)) \leq dst_{X}(f, f_0) - \delta
+\end{align*} \qed
+
+De hecho, hemos obtenido un resultado más fuerte: el $\delta$ no depende del punto, luego F es \underline{uniformemente contínua}.
 
 \end{example}
 
@@ -802,6 +811,133 @@ Vamos a ir ahora a por algunas propiedades sobre la composición de funciones.
 \item Sea $A$ abierto en $Z$, entonces tenemos que demostrar que $(g○f)^{-1}(A)$ es abierto en $X$. Sabemos que $\inv{(g○f)}(A) = \inv{f} ()$ y nosequé.
 \end{enumerate}
 \end{proof}
+
+\begin{remark} Si tenemos una aplicación $\appl{f}{(X,\topl_X)}{(Y, \topl_Y)}$ donde $\topl_Y = \toplb$ con $\base$ una base, entonces $f$ es continua si y sólo si $\inv{f}(B)∈\topl_X\;∀B∈\base$.
+\end{remark}
+
+\begin{defn}[Homeomorfismo] Un homeomorfismo entre espacios topológicos $(X,\topl_X)$, $(Y, \topl_Y)$ es una aplicación biyectiva $\appl{f}{X}{Y}$ y tal que tanto $f$ como $\inv{f}$ son continuas. En este caso se dice que $(X,\topl_X)$, $(Y, \topl_Y)$ son homeomorfos.
+\end{defn}
+
+\begin{defn}[Propiedad\IS topológica] Una propiedad de un espacio topológico $(X, \topl_X)$ es topológica si la comparten todos los espacios topológicos homeomorfos a $(X, \topl_X)$.\end{defn}
+
+\begin{remark} La topología de subespacios usual en $\bola(0,1)$ es $\topl_{\dst}$ donde $\dst$ es la distancia euclídea en $\bola(0,1)$. \end{remark}
+
+Podemos demostrar que $ℝ^2$ y $\bola(0,1)$ son homeomorfos, tomando la biyección 
+
+\begin{align*}
+\appl{f}{ℝ^2&}{\bola(0,1)} \\
+\vx&\longmapsto \frac{\vx}{1+\md{\vx}} = \vy
+\end{align*}
+
+Demostramos que es biyectiva: \[ \md{\vy} = \frac{\md\vx}{1 + \md{\vx}} \implies \md{\vx} = \frac{\md{\vy}}{1- \md{\vy}} \], luego \[ \vx = \frac{\vy}{1-\md{\vy}} \]. 
+
+Otro ejemplo: vamos a demostrar que $[0,1]$ y $(0,1)$ no son homeomorfos. La propiedad que nos va a interesar sería la compacidad, pero todavía no tenemos la maquinaria para hacerlo. 
+
+Lo que haremos será ver qué ocurre si quitamos un punto. Cualquier punto que quitemos en $(0,1)$ nos dejará dos trozos no conexos. Ahora bien, si lo hacemos en $[0,1]$, podemos quedarnos con un trozo conexo si el punto es $0$ o $1$.
+
+Vamos a demostrar que no son homeomorfos viendo que si $\appl{f}{[0,1]}{(0,1)}$ es continua, entonces no es sobreyectiva.
+
+Un pequeño aparte: tenemos que entender que cada intervalo está con la topología del subespacio. En el caso de $\topl_{[0,1]}^{sub}$, la topología del subespacio sería la generada por los elementos de la base de $\topl_ℝ$ intersección $[0,1]$. Es decir, la base es \begin{multline*} \base = \{ (a,b) ∩ [0,1] \tq a < b, a,b∈ℝ \} \equiv \\ \equiv \left\{ [0,1], [0,b), (a, 1], (c,d) \tq 0 < b,a < 1,\; 0<c<d<1 \right\} \end{multline*}
+
+Volviendo a lo que íbamos: no tendremos problema por parte de la imagen inversa. En este caso, la imagen inversa de un abierto $(0,1)$ es un abierto: $[0,1]$ es abierto en la topología de su subespacio (es el total).
+
+Donde sí vamos a lograr algo es viendo que $f$ continua en $[0,1]$ alcanza un máximo. Es decir, $∃x_0 ∈ [0,1]$ tal que $f(x) ≤ f(x_0)\; ∀x∈[0,1]$. 
+
+Por otra parte, es obvio que $f(x_0)∈(0,1)\implies f(x_0) < 1$. Juntando estas dos conclusiones llegamos a que $(f(x_0), 1) ∩ f([0,1]) = \emptyset$. Es decir, $f$ no es sobreyectiva (por ejemplo, $\frac{1+f(x_0)}{2}$ no está en la imagen).
+
+Otra forma sería ver que si $f$ fuese inyectiva, tendría que ser monótona creciente o decreciente. Podríamos suponer sin pérdida de generalidad que fuese creciente, y entonces $f(0) < f(x)\; ∀x∈(0,1]$. Sin embargo, siempre podríamos encontrar un $y ∈ (0, f(0))$ por lo que no sería sobreyectiva.
+
+\paragraph{Propiedad topológica Hausdorff} Recordamos los espacios Hausdorff (ver \ref{defHausdorff}).  Queremos demostrar que si $(X,\topl_X)$ es Hausdorff y  $(X,\topl_X)$ es homeomorfo a $(Y, \topl_Y)$, entonces $(Y, \topl_Y)$ es Hausdorff igualmente.
+
+Tomamos $x_1∈V_1$ y $x_2∈V_2$, ambos en $X$, con $y_j=f(x_j)$. Hay que comprobar que $y_j∈f(V_j)$, que $f(V_j)$ es abierto en $Y$ y que la intersección $f(V_1) ∩ F(V_2) = \emptyset$.
+
+\begin{remark} Si $f$ es un homemorfismo entonces $\inv{f}$ es continua. Dicho de otra forma, la imagen inversa de la inversa de un abierto es abierto. % WTF.
+
+También se puede decir que $f$ es homeomorfismo si $f$ es biyectiva, y que la imagen inversa de $\inv{f}$ de un abierto es abierto, y que $f$ de un abierto es abierto también.
+\end{remark}
+
+\begin{defn}[Función\IS abierta] Sean $(X,\topl_X)$, $(Y, \topl_Y)$ espacios topológicos y $\appl{f}{X}{Y}.$ Se dice que $f$ es abierta si y sólo si $∀A∈\topl_X$ se tiene que $f(A) ∈ \topl_Y$.
+
+Por otra parte, se dice que una función es una \concept[Función! cerrada]{función cerrada} si y sólo si para todo $C$ cerrado en $X$, $f(C)$ es cerrado en $Y$.
+\end{defn}
+
+Por ejemplo, si $Y$ es Hausdorff (\ref{defHausdorff}) y $f$ es constante, entonces es cerrada. La razón es que en un espacio Hausdorff, un único punto siempre es un conjunto cerrado.
+
+Las dos definiciones no son excluyentes. Un homeomorfismo es aplicación abierta y cerrada, por ejemplo. También podríamos construir una aplicación $f$ abierta y cerrada sin que sea necesario homeomorfismo. Podemos coger una $f$ constante e $Y$ con la topología discreta, o con $\topl_Y = \{ \emptyset, \{p\}, \{p\}^c, Y\}$.
+
+\section{Topología producto}
+
+Ahora consideraremos dos espacios topoloógicos $(X_1, \topl_1), (X_2, \topl_2)$, y estudiaremos la topología en $X_1×X_2$.
+
+\begin{prop} Sea $\base = \{ V_1 × V_2 \tq V_i ∈ \topl_i \}$. $\base$ es una base para una topología en $X_1 × X_2$. $\topl_\base$ es la topología producto y se denota $\topl_1 \otimes \topl_2$ (habitualmente $\topl_1× \topl_2$).
+\end{prop}
+
+\begin{proof}
+Vamos a demostrar que efectivamente es una topología. Está claro que $\bigcup_{B∈\base} B = X_1 × X_2$, ya que $X_1$ y $X_2$ son el total y están en sus respectivas topologías, por lo que $X_1× X_2∈\base$.
+
+Por otra parte, queremos demostrar que la intersección también está.  Si tenemos $B, C ∈ \base$ y  $x∈B∩C$, entonces existe un $\tilde{B}∈\base$ tal que $X∈\tilde{B}⊆B∩C$.
+
+Para ello usaremos que $(V_1×V_2) ∩ (\hat{V}_1 × \hat{V}_2) = (V_1 ∩ \hat{V}_1) × (V_2 ∩ \hat{V}_2)$, luego $B∩C ∈ \base$. Podría copiar la demostración pero no me da tiempo.
+
+\end{proof}
+
+La topología producto no se limita a sólo dos espacios topológicos.
+
+\begin{prop} Más generalmente, si $\{X_j,\topl_j\}_{j=1,\dotsc, m}$ es un conjunto de espacios topológicos, entonces $\base = \{ V_1× V_2 × \dotsb × V_m \tq V_j ∈ \topl_j\}$ es una base para una topología producto $\topl_1 \otimes \topl_2 \dotsb \otimes \topl_m$.
+\end{prop}
+
+Como ejercicio, podemos considerar tres espacios topológicos, y estudiar si la topología producto es asociativa, es decir, si 
+
+\[ \topl_1 \otimes \topl_2 \otimes \topl_3 = (\topl_1 \otimes \topl_2)\otimes \topl_3 = \topl_1 \otimes (\topl_2 \otimes \topl_3 ) \]
+
+Otro ejemplo, ¿son iguales $\topl_{ℝ^2} = \topl_ℝ \otimes \topl_ℝ$? En el primer caso, la base $\base_1$ de $ℝ^2$ son elementos de la forma $(a_1,b_1) × (a_2, b_2)$, es decir, rectángulos. La segunda base $\base_2$ está formada por los elementos $V_1 × V_2$ donde $V_i ∈ \topl_ℝ$.
+
+Para demostrarlo vamos a ver lo de siempre: las bases molan. Si tenemos $\base$ una base y $\topl$ una topología con $B⊆\topl$, entonces $\topl_\base⊆\topl$. Es decir, $\topl_\base ⊆ \topl \iff \base ⊆ \topl$. 
+
+Como consecuencia de esa observación, si $\base_1,\base_2$ son bases entonces $\topl_{\base_1} ⊆ \topl_{\base_2} \iff \base_1 ⊆ \topl_{\base_2}$ y, por tanto \[ \topl_{\base_1} = \topl_{\base_2} \iff \base_1 ⊆ \topl_{\base_2} \y \base_2 ⊆ \topl_{\base_1} \]
+
+Con esto ya podemos volver a nuestra vida normal y demostrar que $\topl_{ℝ^2} = \topl_ℝ \otimes \topl_ℝ$. Si $B∈\base_1$ con $B=(a_1,b_1) × (a_2, b_2)$, entonces como $(a_1,b_1)$ y $(a_2, b_2)$ son abiertos en $\topl_ℝ$, $B∈\base_2$ y $\base_1 ⊆ \base_2 ⊆ \topl_{\base_2}$. Con esto hemos demostrado el contenido hacia la izquierda ( $\topl_{ℝ^2} ⊆ \topl_ℝ \otimes \topl_ℝ$).
+
+Vamos ahora para el otro lado. Si $B∈\base_2$ con $B=V_1 ×V_2$, con $V_i ∈ \topl_ℝ$, tenemos que $V_1 = \bigcup_{j∈ J_1}(a_j, b_j)$ y análogamente con $V_2 = \bigcup_{k∈K_2} (c_k, d_k)$. Entonces 
+
+\[ V_1 × V_2 = \bigcup_{\substack{j∈J_1 \\ k∈K_2}} (a_j, b_j) ×(c_k, d_k) \], por lo tanto $V_1×V_2$ es unión de elementos de $\base_1$ y por lo tanto está en $\topl_{\base_1}$, luego $\base_2 ⊆ \topl_{\base_1}$ y tenemos la inclusión para el otro lado, y entonces $\topl_{\base_1} = \topl_{\base_2}$.
+
+Pero la justificación de esto no sólo nos vale para $ℝ$, sino que puede ser mucho más general si no escribimos explícitamente los intervalos de $ℝ$, que no son más que abiertos de la topología.
+
+\begin{prop} Sean $(X, \topl_{\base_X})$, $(Y, \topl_{\base_Y})$. Entonces \[ \topl_{\base_X} \otimes  \topl_{\base_Y} = \topl_\base \] donde \[ \base =\left\{ B × \hat{B} \tq B ∈ \base_X, \hat{B} ∈ \base_Y \right\} \].
+\end{prop}
+
+\begin{prop} Sean $(X_1, \dst_1)$ y $(X_2, \dst_2)$ espacios métricos. Entonces $\topl_{\dst_1} \otimes \topl_{\dst_2} = \topl_{\dst}$ donde \[ \dst\left((x_1, x_2), (y_1, y_2)\right) = \dst_1(x_1, y_1) + \dst(x_2, y_2)\]
+\end{prop}
+
+La demostración se deja como ejercicio para el lector, aunque es parecido al ejercicio 18 de la hoja 1.
+
+\subsection{Funciones continuas y topología producto}
+
+La gran ventaja de la topología producto nos va a venir a la hora de comprobar continuidad de funciones en espacios producto. Vamos a verlo.
+
+\begin{prop} Sean $(X_1, \topl_1), (X_2, \topl_2)$ espacios topológicos. Entonces
+
+\begin{enumerate}
+\item Sean $\appl{P_j}{(X_1×X_2, \topl_1×\topl_2)}{(X_j, \topl_j)}$ con $P_1((x_1, x_2)) = x_1$ y $P_2((x_1, x_2)) = x_2$ las proyecciones. Entonces $P_1$ y $P_2$ son continuas.
+
+\item Sea $\appl{f}{(X, \topl)}{(X_1×X_2, \topl_1 \otimes \topl_2)}$ tal que $x\longmapsto f(x) = (f_1(x), f_2(x))$. Entonces $f$ es continua si y sólo si $f_1, f_2$ son continuas.
+
+\item Si $\appl{f, g}{(X, \topl)}{(ℝ, \topl_ℝ)}$ son continuas entonces $f\pm g$, $fg$ y $\frac{f}{g}$ son continuas, en el último caso suponiendo que $g(x) ≠ 0$.
+\end{enumerate}
+
+Las propiedades se mantienen para un producto finito de espacios.
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item Si $P_1$ es continua, entonces $\inv{P_1}(A_1) ∈ \topl_1 \otimes \topl_2\quad ∀ A_1 ∈ \topl_1$. Tenemos que ver primero qué es $\inv{P_1}(A_1)$. Al ser la proyección, $\inv{P_1}(A_1) = A_1 × X_2$, que es claramente un abierto en la topología producto (es un elemento de la base).
+
+\item Podemos decir que $f_1 = P_1 ○ f$ y $f_2 = P_2 ○ f$. La implicación a la derecha es obvia: si $f$ es continua, como $P_1$ y $P_2$ son continuas entonces $P_1 ○ f$ y $P_2 ○ f$ son continuas.
+\end{enumerate}
+\end{proof}
+ 
+
 
 \appendix
 \chapter{Ejercicios}
