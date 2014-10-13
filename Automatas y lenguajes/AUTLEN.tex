@@ -1,5 +1,4 @@
 \documentclass{apuntes}
-\usepackage{pdfpages}
 
 % Paquetes adicionales
 
@@ -47,7 +46,7 @@ Conjunto finito de símbolos no vacío.
 
 \begin{defn}[Palabra (Cadena)]
 Secuencia finita de símbolos tomados de un alfabeto.
-La palabra vacía se representa por $\lambda$
+La palabra vacía tiene 0 símbolos y se representa por $\lambda$
 \end{defn}
 Será conveniente acostumbrarnos a usar el término ``cadena" en lugar del término ``palabra" ya que representa mejor el concepto que queremos representar.
 
@@ -90,12 +89,12 @@ Son lenguajes que pueden ser admitidos por autómatas finitos
 \subsection{Operadores de utilidad}
 Tenemos dos operadores importantes:
 \begin{enumerate}
-\item \begin{defn}[Estrella]
+\item \begin{defn}[Cierre estrella (star-closure)]
 El operador estrella se corresponde con la suma infinita:
 \[a^* = \lambda \cup a \cup a^2 \cup a^3 \cup ...\]
 Donde el 0 implica que esa ``a" no aparece ninguna vez. Según en que cuerpo nos moviésemos podrá tener distinto significado. Técnicamente sería el elemento nulo de la suma.
 \end{defn}
-\item \begin{defn}[Suma]
+\item \begin{defn}[Cierre positivo (positive-closure)]
 Este operador se corresponde con la suma infinita:
 \[a^+ = a \cup a^2 \cup a^3 \cup ...\]
 \end{defn}
@@ -156,7 +155,7 @@ Orden de precedencia de los operadores (de más a menos):
 Cuando la precedencia no esté clara o se quiera alterar, se pueden usar paréntesis.
 
 \begin{example}
-Encontrar los lenguajes definido por las siguientes expresiones regulares:
+Encontrar los lenguajes definidos por las siguientes expresiones regulares:
 \begin{enumerate}
 \item$a.(b+a).b$\\
  Cadenas de tres símbolos que empiezan por 'a' y acaban por 'b' y el símbolo central es una 'a' o una 'b': \{abb,aab\}
@@ -186,8 +185,8 @@ Hay varias definiciones para este término. No son muy precisas pero nos dan una
 \begin{example}
 Tomemos las reglas:
 \begin{enumerate}
-\item ORACIÓN $\Rightarrow$ SUJETO . PREDICADO
-\item SUJETO $\Rightarrow$ ARTÍCULO . NOMBRE
+\item ORACIÓN $\Rightarrow$ SUJETO PREDICADO
+\item SUJETO $\Rightarrow$ ARTÍCULO NOMBRE
 \item PREDICADO $\Rightarrow$ VERBO
 \item ARTÍCULO $\Rightarrow$ el | un
 \item NOMBRE $\Rightarrow$ coche | perro
@@ -197,28 +196,47 @@ Estas reglas constituyen una gramática que nos permite generar un lenguaje. En 
 %TODO Ejemplo de árbol de derivación con estas reglas
 \end{example}
 
-\begin{defn}[Símbolos terminales (T) ]
-Conjunto de símbolos que pueden aparecer en la cadena final. En el ejemplo anterior serían elementos terminales aquellos escritos en minúscula. Para ellos no existe ninguna regla que indique cómo se derivan.
+\begin{defn}[Símbolos terminales (T)]
+Conjunto de símbolos que pueden aparecer en la cadena final (o sentencia). En el ejemplo anterior serían elementos terminales aquellos escritos en minúscula. Para ellos no existe ninguna regla que indique cómo se derivan.
 \end{defn}
 
-\begin{defn}[Símbolos no terminales (N) ]
+\begin{defn}[Símbolos no terminales (N)]
 Conjunto de símbolos que no pueden aparecer en la cadena final. Simplemente son usados para definir las reglas de derivación.
 \end{defn}
 
-\begin{defn}[Reglas de producción (P) ]
+\noindent Los conjuntos T y N deben ser disjuntos, es decir $T \cap N = \emptyset$. Utilizaremos el símbolo $\Sigma$ para referirnos a la unión de ambos, $\Sigma = T \cup N$.
+
+\begin{defn}[Reglas de producción (P)]
 Explican cómo se transforma un símbolo no terminal en un conjunto de símbolos terminales o no terminales.
 \end{defn}
 
-\begin{defn}[Símbolo inicial / Axioma (S) ]
+\begin{defn}[Símbolo inicial / Axioma (S)]
 Indica dónde empieza a construirse la cadena. En el ejemplo anterior, el axioma sería el símbolo ORACIÓN. Una gramática sólo puede tener un único axioma.
 \end{defn}
 
 \begin{defn}[Gramática (G)]
-Conjunto formado por T, N, P y S.
+Cuádrupla formada por T, N, P y S.
 
 \[ G = ( T, N, P, S) \]
 \end{defn}
 
+Una gramática permite generar cadenas para un lenguaje. Por ejemplo, para la gramática anterior:
+
+ORACIÓN $\rightarrow$ 
+
+SUJETO PREDICADO $\rightarrow$ 
+
+ARTÍCULO NOMBRE PREDICADO $\rightarrow$ 
+
+el NOMBRE PREDICADO $\rightarrow$ 
+
+el coche PREDICADO $\rightarrow$ 
+
+el coche VERBO $\rightarrow$ 
+
+el coche corre 
+
+Este proceso se llama derivación. Cada una de las cadenas en una derivación se denomina {\em forma sentencial}. La última de ellas es una cadena válida del lenguaje generado por la gramática, y se denomina {\em sentencia}. Está formada únicamente por símbolos terminales de la gramática. El lenguaje generado por una gramática, $L(G)$, es el conjunto de todas las sentencias posibles, es decir el conjunto de todas las cadenas de símbolos no terminales que pueden derivarse a partir del axioma.
 
 Vamos a ver algunos ejemplos de gramáticas y los lenguajes que generan:
 \begin{example}
@@ -255,7 +273,7 @@ El autómata finito asociado a este lenguaje sería:
 \end{example}
 
 
-\begin{defn}[Gramáticas independiente del contexto]
+\begin{defn}[Gramáticas independientes del contexto]
 Son aquellas cuyas reglas tienen un único símbolo no terminal en el lado izquierdo.
 \end{defn}
 
@@ -277,6 +295,22 @@ A la derecha tenemos únicamente símbolos terminales o bien símbolos terminale
 Si el elemento no terminal está a la izquierda se denomina gramática lineal por la derecha. En caso contrario, gramática lineal por la izquierda
 \end{example}
 
+{\bf Nota a lo anterior:} Una gramática es {\em lineal por la derecha} (right-linear) si todas sus reglas de producción son de una de las dos formas siguientes:
+
+\begin{itemize}
+\item B $\Rightarrow$ aA
+\item B $\Rightarrow$ a
+\end{itemize}
+ 
+\noindent con $A, B \in N$ y $a \in T^{*}$. Una gramática es {\em lineal por la izquierda} (left-linear) si todas sus reglas de producción son de una de las dos formas siguientes:
+
+\begin{itemize}
+\item B $\Rightarrow$ Aa
+\item B $\Rightarrow$ a
+\end{itemize}
+ 
+\noindent con $A, B \in N$ y $a \in T^{*}$. Una gramática es {\em regular} si es lineal por la izquierda o lineal por la derecha. Todas las gramáticas regulares son independientes del contexto.  
+
 \begin{defn}[Equivalencia de gramáticas]
 Dos gramáticas son equivalentes si generan el mismo lenguaje
 \end{defn}
@@ -294,41 +328,54 @@ Con $A\in N$, $x \in \Sigma^*$ y $\Sigma=T\cup N$
 \begin{example}
 El lenguage:
 \[L = \lbrace ww^R : w \in (a+b)^*\rbrace\]
-es independiente del contexto puesto que puede representarse por medio de una gramática independiente del contexto, que sería:
+es independiente del contexto puesto que puede representarse por medio de una gramática G independiente del contexto, que sería:
 \begin{itemize}
 \item $S \rightarrow aSa$
 \item $S \rightarrow bSb$
 \item $S \rightarrow \lambda$
 \end{itemize}
 
-Pero ahora debemos comprobar que esta gramática representa ese lenguaje. Habría dos formas de hacerlo: 
+Para demostrar que el lenguaje generado por la gramática, L(G), es el mismo que L, habría que hacer dos cosas:
+
 \begin{enumerate}
-\item \textbf{Forma regular}
-Consiste en probar que toda palabra de lenguaje se puede obtener con esta gramática para posteriormente probar que toda palabra generada por esa gramática forma parte del lenguaje.
-
-\item \textbf{Forma buena}
-Consiste en utilizar inducción:
-\[Base: aa, bb \in L\]
-\[Hipotesis:\ \forall w \in R \tq \abs{w} \leq 2n \Rightarrow w \in L\]
-\[Induccion: w'\in L \ \abs{w'} = 2n+2 \Rightarrow w' = axa | bxb \tq \abs{x} = 2n \Rightarrow x \in L \Rightarrow w' \in L\]
-
-Esta inducción nos permite demostrar que toda palabra del lenguaje puede obtenerse siguiendo esa gramática. La otra parte de la demostración es igual en el método regular y el bueno.
+\item Probar que cualquier palabra de $L(G)$ está en $L$.
+\item Probar que cualquier palabra de $L$ está en $L(G)$.
 \end{enumerate}
+
+El punto 1 es fácil de ver, pues está claro que cualquier cadena generada por $G$ es simétrica (siempre que añadimos una $a$ al principio añadimos otra al final, y lo mismo para $b$.
+
+Para demostrar el punto 2 vamos a probar que si $w \in L$ entonces $w \in L(G)$ usando inducción:
+
+\begin{itemize}
+\item Todas las cadenas de $L$ tienen un número par de símbolos: $|w| = 2n$  $\forall w \in L$, $n=0,1,2,...$
+
+\item Para $n=0$ tenemos $w = \lambda \in L$ y se cumple que $w \in L(G)$. Tomamos este caso como base de la inducción.
+
+\item Supongamos que se cumple la hipótesis para $n$: si $w \in L$ con $|w| = 2n$ entonces $w \in L(G)$.
+
+\item Demostremos que se cumple la hipótesis para $n+1$:
+
+Sea $w \in L$ con $|w| = 2n+2$. Entonces $w$ debe ser de la forma $ava$ o $bvb$ con $v \in L$ y $|v| = 2n$. Por hipótesis tenemos que $v \in L(G)$, es decir se puede generar a partir del axioma $S$. Finalmente si $w = ava$ podemos generarla a partir del axioma con la regla $S \rightarrow aSa$, y si $w = bvb$ podemos generarla a partir del axioma con la regla $S \rightarrow bSb$. Por tanto también $w \in L(G)$. 
+
+\end{itemize}
+
 \end{example}
 
 \begin{defn}[Derivación directa]
-Dada una gramática independiente del contexto G=(N,T,S,P) y sean u, v dos formas sentenciales, decimos que w es derivación directa de v:
+Dada una gramática independiente del contexto G=(N,T,S,P) y sean $v$, $w$ dos formas sentenciales, decimos que w es derivación directa de v:
 \[v \rightarrow w\ \equiv v=xZy \wedge w=x\alpha y \wedge \exists \ regla \ en \ P \tq Z \rightarrow \alpha\]
 \end{defn}
 
+\noindent con $Z \in N$ y $\alpha \in \Sigma^{*}$.
+
 \begin{defn}[Derivación]
-Dada una gramática G=(N,T,S,P) y sean u, v dos formas sentenciales, decimos que w es derivación de v si existe una cadena de formas sentenciales, tales que:
-\[v \rightarrow a_1 \rightarrow a_2 \rightarrow ... \rightarrow w\]
+Dada una gramática G=(N,T,S,P) y sean $v$, $w$ dos formas sentenciales, decimos que w es derivación de v, y lo escribimos $v \rightarrow^{+} w$, si existe una cadena de formas sentenciales $a_{0}$, $a_{1}$, $a_{2}$,... $a_{n}$, tales que:
+\[v = a_0 \rightarrow a_1 \rightarrow a_2 \rightarrow ... \rightarrow a_n = w\]
 \end{defn}
 
 \begin{defn}[Lenguaje generado por G]
 Dada una gramática G=(N,T,S,P) definimos el lenguaje generado por ella como:
-\[L(G) = \lbrace w \in T^*: S \rightarrow w \rbrace\]
+\[L(G) = \lbrace w \in T^*: S \rightarrow^{+} w \rbrace\]
 \end{defn}
 
 
@@ -365,7 +412,7 @@ Para construirla nos hemos fijado en que una palabra w puede ser de 4 formas:
    \right.\]
 \end{example}
 
-Una palabra puede ser derivada de diferentes formas a partir de una misma gramática. Para estos casos vamos a definir derivaciones ``leftmost" y ``rightmost":
+Una sentencia puede ser derivada de diferentes formas a partir de una misma gramática. Para estos casos vamos a definir derivaciones ``leftmost" y ``rightmost":
 
 \begin{defn}[Leftmost]
 Consiste en derivar, en cada paso, el elemento no terminal colocado más a la izquierda. Se deja para el lector el arduo trabajo de deducir que significa una derivación ``rightmost"
@@ -401,7 +448,7 @@ Dada una gramática G=(T,N,S P) para obtener otra equivalente basta con hacer ot
 \newpage
 
 \chapter{Autómatas finitos: deterministas y no deterministas}
-\begin{defn}[Autómata]
+\begin{defn}[Autómata finito determinista]
 Se representa como:
 \[ A=(Q, \Sigma, \delta, q_0, F)\]
  donde:
@@ -410,14 +457,15 @@ Se representa como:
 \item $\Sigma$ =  alfabeto de entrada
 \item $\delta$ = función de transición: $\delta : Q\times \Sigma \rightarrow Q$
 \item $q_0$ = estado inicial $\in$ Q
-\item F = conjunto de estados finales
+\item F = conjunto de estados finales, $F \subset Q$
 \end{itemize}
 \end{defn}
 
-\begin{defn}[Autómata Finito Determinista. AFD\IS]
-Implica que la función de transición es inyectiva. Dado un estado y una entrada sólo hay un estado al que podamos pasar.
-\[\delta: Q \times \Sigma \rightarrow Q\]
-\end{defn}
+% La función de transición no es inyectiva, dos elementos del dominio pueden tener la misma imagen (desde dos estados distintos se puede pasar al mismo estado).
+%\begin{defn}[Autómata Finito Determinista. AFD\IS]
+%Implica que la función de transición es inyectiva. Dado un estado y una entrada sólo hay un estado al que podamos pasar.
+%\[\delta: Q \times \Sigma \rightarrow Q\]
+%\end{defn}
 
 \begin{defn}[Función de transición extendida\IS]
 Consiste en una extensión de la función de transición a cadenas. Se representa como $\delta ^*$:
@@ -438,7 +486,7 @@ El autómata resultado es:
 \begin{center}
 \includegraphics[scale=0.75]{automata2.png}
 \end{center}
-\obs: Un autómata determinista tiene que tener todas las transiciones definidas, se sobreentiende que las transiciones que no están dibujadas van a un quinto estado en el cual se quedan colgadas.
+\obs: Un autómata determinista tiene que tener todas las transiciones definidas, se sobreentiende que las transiciones que no están dibujadas van a un sexto estado en el cual se quedan colgadas.
 
 Este autómata es determinista y su transición de estados dada una entrada "101" sería:
 
@@ -471,7 +519,7 @@ La ventaja de un autómata no determinista es que podemos explorar varias ramas 
 
 
 \begin{defn}[Transición $\lambda$]
-Transición que puede ocurrir sin consumir ningún valor de entrada. Un autómata que tenga transiciones de este tipo se considera no determinista.
+Transición que puede ocurrir sin consumir ningún valor de entrada. Un autómata finito que tenga transiciones de este tipo se considera no determinista.
 \end{defn}
 
 \begin{defn}[Autómata finito no determinista. AFN\IS]
@@ -508,6 +556,8 @@ El autómata queda:
 \end{center}
 \end{example}
 
+\noindent {\bf Nota:} En el autómata anterior falta una transición $\lambda$ desde el estado $0$ hasta el estado $1$.
+
 \begin{defn}[Fuentes de indeterminismo de un AF]
 Un autómata finito no determinista se caracteriza por tener alguna de las siguientes propiedades:
 \begin{enumerate}
@@ -538,12 +588,13 @@ En este autómata, podemos avanzar al estado 'q1'  a través de la transición $
 \begin{theorem}
 Los autómatas finitos no deterministas y deterministas son equivalentes.
 \end{theorem}
-Se utilizan los AFN por comodidad, porque las demostraciones formales son más sencillas.
+
+Esto significa que dado un autómata finito determinista que acepta un determinado lenguaje, existe otro no determinista que acepta el mismo lenguaje, y viceversa. Se utilizan los AFN por comodidad, porque las demostraciones formales son más sencillas.
 
 \section{Equivalencia entre AF y ER}
 Vamos a ver cuál es la relación existente entre los autómatas finitos y las expresiones regulares.
 
-Como ya vimos una gramática regular puede expresarse como una cuádrupla G=(N,T,S,R), es decir, consta de símbolos no terminales, símbolos terminales, un símbolo inicial o axioma y unas reglas de producción.
+Como ya vimos una gramática puede expresarse como una cuádrupla G=(N,T,S,R), es decir, consta de símbolos no terminales, símbolos terminales, un símbolo inicial o axioma y unas reglas de producción.
 
 Recordamos también que una gramática regular es aquella que es lineal por la derecha o lineal por la izquierda
  
@@ -563,10 +614,10 @@ Hay 4 formas de representar un lenguaje regular, y en ellas reside la equivalenc
 
 \chapter{Autómatas a pila}
 Dado el lenguaje:
-\[L=\lbrace ww^R \tq w \in (a+b)^*\rbrace\]
-que representa palabras capiúas, vamos a intentar construir un autómata finito para él.
+\[L=\lbrace ww^R \tq w \in (0+1)^*\rbrace\]
+que representa palabras capicúas sobre $\lbrace 0, 1\rbrace$ con un número par de símbolos, vamos a intentar construir un autómata finito para él.
 
-Esto no es posible ya que siempre necesito llegar hasta la mitad de la palabra ``almacenando" lo qe hemos leído para después comprobar que lo leemos al revés. Puesto que la palabra puede tener longitud arbitraria necesitaremos una cantidad de memoria arbitraria y esto no es viable.
+Esto no es posible ya que siempre necesito llegar hasta la mitad de la palabra ``almacenando" lo que hemos leído para después comprobar que lo leemos al revés. Puesto que la palabra puede tener longitud arbitraria necesitaremos una cantidad de memoria arbitraria y esto no es viable (sería necesario un autómata con un número infinito de estados).
 
 Es aquí donde surgen los autómatas a pila. Estos autómatas se caracterizan por que en cada salto indicamos una entrada, saca el símbolo de la cima de la pila y añade una cadena a la pila.
 
@@ -598,13 +649,18 @@ siendo:
 \item $\topl$: alfabeto de la pila
 \item $A_0$: símbolo inicial de la pila $\in \tau$
 \end{itemize}
-Básicamente consiste en un autómata, como los vistos hasta ahora, acompañado de una pila en la que realizaremos inserciones, extracciones y/o aserciones en cada transición.
+
+\noindent {\bf Nota:} En realidad el codominio de $\delta$ es el conjunto de subconjuntos finitos de $Q\times \topl^*$.
+
+Básicamente consiste en un autómata, como los vistos hasta ahora, acompañado de una pila en la que realizaremos inserciones y extracciones en cada transición.
 \end{defn}
 
 Vamos a ver un pequeño ejemplo que explica cómo entender la función de transición:
 \begin{example}
 La evaluación de la función de transición:
 \[\delta(q,a,x)=\{(p,y)\}\]
+
+\noindent con $q, p \in Q$, $a \in \Sigma$, $x \in \topl$ y $y \in \topl^{*}$. 
 Implica que, estando en el estado 'q', ante una entrada 'a', habiendo en la cima de la pila un 'x' pasamos al estado 'p', insertando en la pila 'y', y sacando la 'x'.
 \end{example}
 
@@ -615,8 +671,8 @@ En estos autómatas los conceptos de determinismo o no determinismo se mantienen
 \begin{defn}[Autómata a pila determinista]
 Un autómata a pila será determinista si cumple las siguientes condiciones:
 \begin{itemize}
-\item No hay transiciones $\lambda$ o, si las hay, no hay ninguna otra transición con un símbolo diferente. Es decir, si de un estado A pudieras pasar a otro B por una transición lambda, no habría otra posible transición desde el estado A.
-\item Dada una situación $\delta (p,x,a)$ transita como mucho un elemento $(q,b)$.
+\item No hay transiciones $\lambda$ o, si las hay, no hay ninguna otra transición con un símbolo diferente. Es decir, si desde un estado p y con a en la pila pudieras pasar a otro q por una transición lambda, no habría otra posible transición desde el estado p y con a en la pila.
+\item Dada una situación (estado p, símbolo de entrada x y símbolo a en la cima de la pila) $\delta (p,x,a)$ contiene como mucho un elemento $(q,b)$.
 \end{itemize}
 \end{defn}
 
@@ -624,8 +680,8 @@ Un autómata a pila será determinista si cumple las siguientes condiciones:
 Se trata de una representación de la situación actual del autómata. (q,X,A) es una descripción instantánea donde:\\
 \begin{enumerate}
 \item q = Nodo/estado en el que nos encontramos
-\item X = Entrada que falta por leer
-\item A = Contenido de la pila
+\item X = Entrada que falta por leer, $X \in \Sigma^{*}$
+\item A = Contenido de la pila, $A \in \topl^{*}$
 \end{enumerate}
 
 Dada una descripción instantánea podemos continuar el procesamiento de la cadena sin perder información.
@@ -635,19 +691,21 @@ Dada una descripción instantánea podemos continuar el procesamiento de la cade
 Decimos que una descripción instantánea precede a otra:
 \[(q,xX,aA) \vdash (p, X, bA)\]
 si:
-\[(p,b) \in \sigma(q, X, a)\]
-Siendo 'p','q' nodos del autómata, 'x' el siguiente símbolo de entrada que se va a leer, 'X' el resto de la cadena de entrada; 'a' el carácter que hay en la cima de la pila, 'A' el resto del contenido de la pila y,'b' un símbolo que insertamos en la pila. En este transición se lee 'x', se saca 'a' de la cima de la pila y se introduce 'b'.
+\[(p,b) \in \delta(q, x, a)\]
+Siendo 'p','q' nodos del autómata, 'x' el siguiente símbolo de entrada que se va a leer, 'X' el resto de la cadena de entrada; 'a' el carácter que hay en la cima de la pila, 'A' el resto del contenido de la pila y,'b' una cadena de símbolos que insertamos en la pila. En este transición se lee 'x', se saca 'a' de la cima de la pila y se introduce 'b'.
 
 Es decir, una descripción instantánea precede a otra si hay una transición que nos lleva de una a otra.
 
 \end{defn}
 
 \begin{defn}[Precedencia *]
-Decimos que hay precedencia * entre dos descripciones:
-\[(q,xX,aA) \vdash^* (p, X, bA)\]
-cuando hay una secuencia $d_0,d_1,...$ de precedencias tales que:
-\[(q,xX,aA) \vdash d_0 \vdash d_1 \vdash ... \vdash (p, X, bA)\]
+Decimos que hay precedencia * entre dos descripciones instantáneas:
+\[(q,X,A) \vdash^* (p, Y, B)\]
+cuando hay una secuencia $d_0,d_1,..., d_n$ de descripciones instantáneas tales que:
+\[(q,X,A) = d_0 \vdash d_1 \vdash ... \vdash d_n = (p, Y, B)\]
 \end{defn}
+
+\noindent con $p, q \in Q$, $X, Y \in \Sigma^{*}$ y $A, B \in \topl^{*}$.
 
 Basándonos en estas definiciones, podemos representar el lenguaje aceptado por un autómata a pila como:
 \[L(A) = \lbrace w \in \Sigma^* \tq (q_0, w, A_0) \vdash^* (p, \lambda, X)\rbrace\]
@@ -664,14 +722,24 @@ El autómata de pila que representa este lenguaje es:
 \end{center}
 \end{example}
 
+\newpage
+\chapter{Compiladores}
+Un compilador se encarga de generar el código máquina
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={2-9}, scale=0.72]{pdf/ga.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={10-17}, scale=0.72]{pdf/ga.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={18-25}, scale=0.72]{pdf/ga.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={26-27}, scale=0.72]{pdf/ga.pdf}
 
 \appendix
 \chapter{Ejercicios}
 
 \input{tex/Ejercicios.tex}
-\chapter{Ejercicios para casa: 1º Hoja}
+\chapter{Ejercicios 1º Hoja}
 \includepdf[pages={1-}]{pdf/HOJA1.pdf}
-
 
 \printindex
 \end{document}
