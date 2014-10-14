@@ -2,6 +2,7 @@
 \ProvidesClass{apuntes}[2013/04/20 Note taking class]
 
 \RequirePackage{pdfpages}
+\RequirePackage{datetime}
 
 \LoadClass[titlepage]{custombase}
 \DeclareOption{nochap}{\def\thesection{\arabic{section}}
@@ -16,6 +17,7 @@
 \lhead{\small \itshape \thetitle\, -\, \thedate\, -\, UAM} 
 \rhead{\small \theauthor} 
 \cfoot{\thepage\ de \pageref{LastPage}}
+\rfoot{\tiny{\today\, \currenttime}}
 }
 
 \setlength{\parskip}{2mm}
