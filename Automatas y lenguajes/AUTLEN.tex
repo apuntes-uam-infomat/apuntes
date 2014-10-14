@@ -10,6 +10,7 @@
 \author{Pedro Valero y Alberto Parramón}
 
 \date{2014/2015}
+\usepackage{forest}
 
 \begin{document}
 \pagestyle{plain}
@@ -723,16 +724,175 @@ El autómata de pila que representa este lenguaje es:
 \end{example}
 
 \newpage
-\chapter{Compiladores}
+\chapter{Gramáticas de atributos}
 Un compilador se encarga de generar el código máquina
+%TODO añadir algo de introducción
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={2-9}, scale=0.72]{pdf/ga.pdf}
+En primer lugar debemos saber que un compilador realiza tres tareas:
+\begin{enumerate}
+\item \textbf{Análisis morfológico}. A estas alturas consideramos que ya nos viene hecho y no nos preocupamos por ello.
+\item \textbf{Análisis sintáctico}. Consiste en construir el árbol de derivación.
+\item \textbf{Análisis semántico}. Consiste en recorrer el árbol de derivación calculando atributos y realizando comprobaciones semánticas.
+\end{enumerate}
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={10-17}, scale=0.72]{pdf/ga.pdf}
+Vamos a centrarnos ahora en análisis semántico.
+\section{Análisis semántico}
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={2-9}, scale=0.72]{pdf/GramaticaAtributos.pdf}
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={18-25}, scale=0.72]{pdf/ga.pdf}
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={10-17}, scale=0.72]{pdf/GramaticaAtributos.pdf}
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={26-27}, scale=0.72]{pdf/ga.pdf}
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={18-25}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={26-27}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+
+En el último ejemplo se observa que recorremos el árbol de derivación de una forma un tanto ``rara''. Veamos cómo se explica este recorrido. 
+
+El resultado observado viene de haber realizado un recorrido en \textbf{profundad por la iquierda y con vuelta atrás}. Esta técnica consiste en recorrer siempre el hijo más a la izquierda, cuando no queden hijos a la izquierda, continuamos con el siguiente hijo más a la izquierda. Cuando no queden hijos volvemos al nodo superior y así sucesivamente.
+
+Si suponemos un caso simple en el que un nodo raíz tiene n hijos, podemos ver que al aplicar este procedimiento recorremos el nodo raíz n+1 veces.
+
+\begin{example}
+Vamos a tomar un caso sencillo con dos reglas sacadas del último ejemplo mostrado en las transparencias. La semántica es:
+\begin{itemize}
+\item \[L \rightarrow i \{st(i.nombre,L.tipo\}\]
+\item \[A \rightarrow i = E \{in TS (i.nombre)==true; gt(i.nombre)==E.tipo; sv(i.nombre, E.valor)\}\]
+\end{itemize}
+
+Para la primera regla, el orden en que se recorrería el árbol de derivación es:
+\begin{verbatim}
+- En el instnate 0 bajamos del nodo L al nodo i
+- En el instante i volvemos al nodo L
+\end{verbatim} 
+
+Como es lógico, la operación de setType representada en la gramática no puede realizarse hasta conocer el tipo de L, por lo que se realiza en el instante 1.
+
+Lo representaríamos como:
+\[L \rightarrow i \{1:st(i.nombre,L.tipo\}\]
+
+Vamos ahora con la segunda regla. El orden en el que se recorrería el árbol de derivación seria:
+\begin{verbatim}
+- En el instante 0 bajamos del nodo A al nodo i, en el instante 1 volvemos al A. 
+- En ese instante bajaríamos al nodo =, del que volveríamos en el instante 2.
+- Por último bajaríamos al nodo E y volveríamos del mismo en el instante 3
+\end{verbatim}
+
+Siguiendo esta secuencia y analizando en qué momento tenemos disponibles los valores para cada operación la segunda regla de la gramática sería de la forma:
+\[A \rightarrow i = E \{ 1: \ in TS (i.nombre)==true; 3: \ gt(i.nombre)==E.tipo; 3: \ sv(i.nombre, E.valor)\}\]
+
+\end{example}
+
+Veamos otro ejemplo completo
+\begin{example}
+Consideremos la gramática:
+\[G=\{\{(,)\}, \{L,I\}, L, P\}\]
+Con las reglas de derivación P:
+\begin{itemize}
+\item $L \rightarrow (I)$
+\item $I \rightarrow (I)$
+\item $I \rightarrow II$
+\item $I \rightarrow λ$
+\end{itemize}
+
+Queremos hacer que esta gramática nos devuelva la profundidad de una expresión, es decir, el máximo número de paréntesis contenidos en otros.
+
+Para ello, en primer lugar debemos añadir a los elementos L e I un atributo profundidad.
+
+Vamos a intentar hacerlo propagando el atributo profundidad hacia arriba. Por ello, un nodo terminal como sería λ debería tener profundidad 0. Por lo que la cuarta regla queda de la forma:
+\[I \rightarrow λ \{I.prof=0\}\]
+
+En las dos primeras reglas, debemos realizar una propagación hacia arriba, aumentando en uno la profundidad. Así estas dos primeras reglas quedan de la forma:
+\[L \rightarrow (I) \{L.prof = I.prof+1\}\]
+\[I_1 \rightarrow (I_2) \{I_1.prof=I_2.prof+1\}\]
+
+Para la tercera regla, podemos ver que la profundidad que asciende será el máximo de las profundiades de cada uno de los símbolos en los que deriva. La tercera regla quedaría:
+\[I_1 \rightarrow I_2I_3 \{I_1.prof = max(I_2.prof, I_3.prof)\}\]
+
+Si ahora analizamos los instantes en que se realizaría la función de cada regla y agrupamos todo lo indicado anteriormente lleamos a:
+\[G=\{\{(,)\}, \{L(prof),I(prof)\}, L, P\}\]
+Con P:
+\begin{itemize}
+\item $L \rightarrow (I) \{2: \ L.prof = I.prof+1\}$
+\item $I_1 \rightarrow (I_2) \{2: \ I_1.prof=I_2.prof+1\}$
+\item $I_1 \rightarrow I_2I_3 \{2: \ I_1.prof = max(I_2.prof, I_3.prof)\}$
+\item $I \rightarrow λ \{0: \ I.prof=0\}$
+\end{itemize}
+
+\end{example}
+
+\textcolor{red}{Completa este ejemplo \textbf{NIGGA}}
+
+\begin{forest}
+for tree={
+  draw,
+  minimum height=2cm,
+  anchor=north,
+  align=center,
+  child anchor=north
+},
+[{Supplier\\Selection}, align=center, name=SS
+  [{Production\\Development\\Capability}, name=PDC
+    [Max Size, name=MS]
+    [{Casting\\Complexity}]
+    [{Min. Sec.\\Thickness}]
+    [{Software\\ Aid}]
+    [{Pattern\\Making}]
+  ]
+  [{Manufacturing\\Capability}]
+  [{Quality\\Capability}]
+  [{Cost and \\Time}
+   [{Total\\Costing\\Cost}]
+   [{Sample\\Delivery\\Time}]
+  ]
+]
+%\node[anchor=west,align=left] 
+ % at ([xshift=-2cm]MS.west) {Level 3\\Criteria};
+%\node[anchor=west,align=left] 
+%  at ([xshift=-2cm]MS.west|-PDC) {Level 2\\ Group Criteria};
+%\node[anchor=west,align=left] 
+ % at ([xshift=-2cm]MS.west|-SS) {Level 1\\Overall Objective};
+\end{forest}
+
+\begin{example}
+Vamos a apoyarnos en la gramática definida en el ejemplo anterior y a modificar simplemente las acciones, con el fin de obtener un programa que cuente el número de listas (parejas de paréntesis). 
+
+Vamos a realizarlo de tres formas distintas: con síntesis, herencia y con información global. Estas diferentes formas dan lugar a diferentes acciones, pero el árbol de derivación sigue siendo el mismo.
+
+Cada una de las reglas de derivación serían:
+
+\begin{itemize}
+\item \textbf{Síntesis}
+\[G=\{\{(,)\}, \{L(n),I(n)\}, L, P\}\]
+\begin{itemize}
+\item $L \rightarrow (I) \{2: \ L.n = I.n+1\}$
+\item $I_1 \rightarrow (I_2) \{2: \ I_1.n=I_2.n+1\}$
+\item $I_1 \rightarrow I_2I_3 \{2: \ I_1.n = I_2.n + I_3.n)\}$
+\item $I \rightarrow λ \{0: \ I.n=0\}$
+\end{itemize}
+
+\item \textbf{Herencia}
+\[G=\{\{(,)\}, \{L(n),I(antes, despues)\}, L, P\}\]
+\begin{itemize}
+\item $L \rightarrow (I) \{0: \ I.antes=1, \ 2: \ L.n=I.despues\}$
+\item $I_1 \rightarrow (I_2) \{0: I_2.antes = I_1.antes, \ 2: \ I_2.despues=I_1.despues\}$
+\item $I_1 \rightarrow I_2I_3 \{0: \ I_2.antes = I_1.antes, \ 1: \ I_3.antes=I_2.despues, \ 2: \ I_1.despues=I_3.despues\}$
+\item $I \rightarrow λ \{0: \ I.despues=I.antes\}$
+\end{itemize}
+Hemos usado alguna acción que se sale de un esquema puro de herencia por ser imposible realizarlo de otra forma.
+
+\item \textbf{Información global}
+\[G=\{\{(,)\}, \{L,I\}, L, P\}\]
+\begin{itemize}
+\item $L \rightarrow (I) \{0: \ n=0; \ 1: \ n = n+1\}$
+\item $I_1 \rightarrow (I_2) \{0: \ n=n+1\}$
+\item $I_1 \rightarrow I_2I_3$
+\item $I \rightarrow λ $
+\end{itemize}
+Este caso es bastante más sencillo, pues en cada derivación tienes acceso al contador global y basta con incrementarlo, sin preocuparte por los sucesores.
+
+En este caso es realmente imporante indicar los instantes en que se realiza cad aacción puesto que de lo contrario habría lugar a confusión. (En los casos anteriores los atributos imponían un orden sin ambigüedad).
+
+\end{itemize}
+\end{example}
 
 \appendix
 \chapter{Ejercicios}
