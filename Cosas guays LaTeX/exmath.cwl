@@ -181,4 +181,10 @@
 \iffdef#m
 \bolac#m
 \algb{arg0}#m
+\algbA#m
+\algbM#m
+\algbC#m
+\algbB#m
+\algbT#m
 \salgb#m
+\sfin#m
