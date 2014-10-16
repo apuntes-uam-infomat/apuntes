@@ -188,3 +188,4 @@
 \algbT#m
 \salgb#m
 \sfin#m
+\gal#m
