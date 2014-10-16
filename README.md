@@ -34,3 +34,9 @@ Puedes descargar los apuntes en PDF, actualizados diariamente, [aquí](https://w
 * Tal y como está hecho el comando `\makefirstuc`, que se usa en el entorno de definiciones, peta por todo lo alto cuando el primer carácter es una tilde. Por ejemplo, `\begin{defn}[Índice]` no funciona, con un error raro de UTF8. La solución es meter la primera letra entre llaves, así: `\begin{defn}[{Í}ndice]`. Ya, es raro, pero no hay otra.
 * Cada vez que se cambian los paquetes hay que volver a instalarlos. Así que si por lo que sea dejan de compilar los apuntes con errores de comandos sin definir, vuelve a ejecutar el script de instalación (`Cosas guays LaTeX/install`) por si acaso.
 * Para que la compilación sea más rápida cuando hay dibujos Tikz, hay una instrucción que los "precompila" y los guarda para no recrearlos mientras no cambien (`\precompileTikz` dentro del paquete `tikztools`, por si tenéis curiosidad). Esa "caché" se guarda en el directorio `tikzgen` de cada carpeta de apuntes. Por desgracia, LaTeX es muy puñetero y si no encuentra ese directorio se va a quejar con un error raro, así que si no os compilan apuntes y tienen dibujos, probad a crear ese directorio.
+
+## Instalación de LaTeX
+
+### OS X
+
+Recomendada instalación a través de MacPorts. En la página [están todos los paquetes y lo que incluye cada uno](https://trac.macports.org/wiki/TeXLivePackages), aunque por resumir: _texlive-basic, texlive-bin-extra_ (para _texdoc_), _texlive-fonts-extra_, _texlive-lang-spanish_, _texlive-latex_, _texlive-latex-extra_, _texlive-math-extra_.
