@@ -726,62 +726,44 @@ El autómata de pila que representa este lenguaje es:
 \newpage
 \chapter{Gramáticas de atributos}
 Un compilador se encarga de generar el código máquina
-%TODO añadir algo de introducción
+
 
 En primer lugar debemos saber que un compilador realiza tres tareas:
 \begin{enumerate}
 \item \textbf{Análisis morfológico}. A estas alturas consideramos que ya nos viene hecho y no nos preocupamos por ello.
-\item \textbf{Análisis sintáctico}. Consiste en construir el árbol de derivación.
+\item \textbf{Análisis sintáctico}. Consiste en construir el árbol de derivación. Es decir, se comprueba que la sentencia obtenida sale de derivar el axioma.
 \item \textbf{Análisis semántico}. Consiste en recorrer el árbol de derivación calculando atributos y realizando comprobaciones semánticas.
 \end{enumerate}
 
 Vamos a centrarnos ahora en análisis semántico.
 \section{Análisis semántico}
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={2-9}, scale=0.72]{pdf/GramaticaAtributos.pdf}
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={10-17}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+Vamos a explicar brevemente la idea que hay detrás de esto:
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={18-25}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+Partiendo de una gramática independiente del contexto, y derivando el axioma hasta obtener una sentencia, queremos obtener alguna función específica de nuestra gramática. 
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={26-27}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+Es entonces cuando surgen las gramáticas de atributos, que añaden lo siguiente a la gramática independiente del contexto:
 
-En el último ejemplo se observa que recorremos el árbol de derivación de una forma un tanto ``rara''. Veamos cómo se explica este recorrido. 
+-Incorporan atributos a los nodos no terminales.
 
-El resultado observado viene de haber realizado un recorrido en \textbf{profundad por la iquierda y con vuelta atrás}. Esta técnica consiste en recorrer siempre el hijo más a la izquierda, cuando no queden hijos a la izquierda, continuamos con el siguiente hijo más a la izquierda. Cuando no queden hijos volvemos al nodo superior y así sucesivamente.
+-Incorporan funciones sobre esos atributos en las reglas de derivación. (Además veremos que estas funciones se podrán realizar en instantes concretos).
 
-Si suponemos un caso simple en el que un nodo raíz tiene n hijos, podemos ver que al aplicar este procedimiento recorremos el nodo raíz n+1 veces.
+-Incorporan una \textbf{información global} a la gramática.
 
-\begin{example}
-Vamos a tomar un caso sencillo con dos reglas sacadas del último ejemplo mostrado en las transparencias. La semántica es:
-\begin{itemize}
-\item \[L \rightarrow i \{st(i.nombre,L.tipo\}\]
-\item \[A \rightarrow i = E \{in TS (i.nombre)==true; gt(i.nombre)==E.tipo; sv(i.nombre, E.valor)\}\]
-\end{itemize}
+Por tanto, una vez obtenido el árbol de derivación, el análisis semántico recorrerá dicho árbol utilizando el recorrido en  \textbf{profundidad por la izquierda y con vuelta atrás} (lo explicamos más adelante) corroborando el buen funcionamiento de estas nuevas funciones.
 
-Para la primera regla, el orden en que se recorrería el árbol de derivación es:
-\begin{verbatim}
-- En el instnate 0 bajamos del nodo L al nodo i
-- En el instante i volvemos al nodo L
-\end{verbatim} 
+El paso de información de un nodo a otro del árbol se podrá realizar mediante tres métodos:
 
-Como es lógico, la operación de setType representada en la gramática no puede realizarse hasta conocer el tipo de L, por lo que se realiza en el instante 1.
+-Síntesis: la información se propaga del nodo inferior al nodo superior.
 
-Lo representaríamos como:
-\[L \rightarrow i \{1:st(i.nombre,L.tipo\}\]
+-Herencia: la información se propaga del nodo superior al nodo inferior.
 
-Vamos ahora con la segunda regla. El orden en el que se recorrería el árbol de derivación seria:
-\begin{verbatim}
-- En el instante 0 bajamos del nodo A al nodo i, en el instante 1 volvemos al A. 
-- En ese instante bajaríamos al nodo =, del que volveríamos en el instante 2.
-- Por último bajaríamos al nodo E y volveríamos del mismo en el instante 3
-\end{verbatim}
+-Usando la información global.
 
-Siguiendo esta secuencia y analizando en qué momento tenemos disponibles los valores para cada operación la segunda regla de la gramática sería de la forma:
-\[A \rightarrow i = E \{ 1: \ in TS (i.nombre)==true; 3: \ gt(i.nombre)==E.tipo; 3: \ sv(i.nombre, E.valor)\}\]
+Vamos a ver un ejemplo con detalle, explicando sobre él algunos de los conceptos:
 
-\end{example}
+Como hemos dicho, la idea es que dada una gramática independiente del contexto, podemos conseguir que esta realice funciones específicas. Lo conseguimos añadiendo atributos y especificaciones a las reglas de derivación.
 
-Veamos otro ejemplo completo
 \begin{example}
 Consideremos la gramática:
 \[G=\{\{(,)\}, \{L,I\}, L, P\}\]
@@ -793,22 +775,55 @@ Con las reglas de derivación P:
 \item $I \rightarrow λ$
 \end{itemize}
 
-Queremos hacer que esta gramática nos devuelva la profundidad de una expresión, es decir, el máximo número de paréntesis contenidos en otros.
+En primer lugar vamos a derivar el axioma y obtener una sentencia, nos queda (por ejemplo) el siguiente árbol de derivación:
 
-Para ello, en primer lugar debemos añadir a los elementos L e I un atributo profundidad.
+\begin{forest}
+for tree={
+  draw,
+  minimum height=1cm,
+  anchor=north,
+  align=center,
+  child anchor=north
+},
+[{L}, align=center, name=SS
+  [$($, tier=word]
+  [{I}, name=PDC
+    [{I}, name=MS
+      [{$($}, tier=word]
+      [{I}
+        [{λ}, tier=word]]
+      [{$)$}, tier=word]]
+    [{I}
+      [{$($}, tier=word]
+      [{I}
+        [{$($}, tier=word]
+        [{I}
+          [{λ}, tier=word]]
+        [{$)$}, tier=word]]
+      [{$)$}, tier=word]]
+    ]
+    [{$)$}, tier=word]
+ ]
+\end{forest}
 
-Vamos a intentar hacerlo propagando el atributo profundidad hacia arriba. Por ello, un nodo terminal como sería λ debería tener profundidad 0. Por lo que la cuarta regla queda de la forma:
+Vemos que semánticamente es correcto ya que se obtiene de derivar el axioma $L$.      	
+
+Queremos hacer que esta gramática nos devuelva la profundidad de una expresión, es decir, el máximo número de paréntesis contenidos unos en otros.
+
+Para ello, vamos a utilizar gramática de atributos, en primer lugar debemos añadir a los elementos L e I un atributo profundidad.
+
+Vamos a intentar hacerlo propagando el atributo profundidad hacia arriba (es decir, usando síntesis). Por ello, un nodo terminal como sería λ debería tener profundidad 0. Por lo que la cuarta regla queda de la forma:
 \[I \rightarrow λ \{I.prof=0\}\]
 
 En las dos primeras reglas, debemos realizar una propagación hacia arriba, aumentando en uno la profundidad. Así estas dos primeras reglas quedan de la forma:
 \[L \rightarrow (I) \{L.prof = I.prof+1\}\]
 \[I_1 \rightarrow (I_2) \{I_1.prof=I_2.prof+1\}\]
 
-Para la tercera regla, podemos ver que la profundidad que asciende será el máximo de las profundiades de cada uno de los símbolos en los que deriva. La tercera regla quedaría:
+Para la tercera regla, podemos ver que la profundidad que asciende será el máximo de las profundidades de cada uno de los símbolos en los que deriva. La tercera regla quedaría:
 \[I_1 \rightarrow I_2I_3 \{I_1.prof = max(I_2.prof, I_3.prof)\}\]
 
-Si ahora analizamos los instantes en que se realizaría la función de cada regla y agrupamos todo lo indicado anteriormente lleamos a:
-\[G=\{\{(,)\}, \{L(prof),I(prof)\}, L, P\}\]
+Si ahora analizamos los instantes en que se realizaría la función de cada regla y agrupamos todo lo indicado anteriormente llegamos a:
+\[G=\{\{(,)\}, \{L(prof),I(prof)\}, L, P, \emptyset \}\]
 Con P:
 \begin{itemize}
 \item $L \rightarrow (I) \{2: \ L.prof = I.prof+1\}$
@@ -817,40 +832,62 @@ Con P:
 \item $I \rightarrow λ \{0: \ I.prof=0\}$
 \end{itemize}
 
-\end{example}
+Así, hemos conseguido una gramática de atributos que realiza una función específica (obtener la profundidad). Lo hemos logrado a partir de una gramática independiente del contexto añadiendo atributos y el instante en el que debo realizar cada asignación en las reglas de derivación.
 
-\textcolor{red}{Completa este ejemplo \textbf{NIGGA}}
+Además, una gramática de atributos contiene una información global, en este caso no la vamos a usar por tanto la declaramos vacía (es el último símbolo que se ha añadido a G).
+
+También debemos saber que el árbol se recorre en \textbf{profundidad por la izquierda y con vuelta atrás}. Esta técnica consiste en recorrer siempre el hijo más a la izquierda, cuando no queden hijos a la izquierda, continuamos con el siguiente hijo más a la izquierda. Cuando no queden hijos volvemos al nodo superior y así sucesivamente.
+
+Si suponemos un caso simple en el que un nodo raíz tiene n hijos inmediatos, podemos ver que al aplicar este procedimiento recorremos el nodo raíz n+1 veces. Por tanto el nodo raíz tendrá n+1 instantes.
+
+Vamos a dejar claro a qué nos referimos con el instante en el que realizo la función de cada regla. Para ello, debemos saber que al realizar el análisis semántico cada nodo sabe qué regla de derivación se ha usado sobre él, y por tanto conocerá el número de hijos inmediatos que tiene. Así, por ejemplo un nodo I al que le aplicamos la regla $I_1 \rightarrow I_2 I_3$, tiene 3 instantes:
+
+-El instante 0, en el que se visita el nodo $I_1$.
+
+-El instante 1, en el que se vuelve al nodo $I_1$ después de haber visitado el nodo $I_2$.
+
+-El instante 2, en el que se vuelve al nodo $I_1$ después de haber visitado el nodo $I_3$.
+
+Veamos ahora como queda el árbol realizando el recorrido en profundidad por la izquierda y con vuelta atrás y aplicando las distintas funciones:
 
 \begin{forest}
 for tree={
   draw,
-  minimum height=2cm,
+  minimum height=1cm,
   anchor=north,
   align=center,
   child anchor=north
 },
-[{Supplier\\Selection}, align=center, name=SS
-  [{Production\\Development\\Capability}, name=PDC
-    [Max Size, name=MS]
-    [{Casting\\Complexity}]
-    [{Min. Sec.\\Thickness}]
-    [{Software\\ Aid}]
-    [{Pattern\\Making}]
-  ]
-  [{Manufacturing\\Capability}]
-  [{Quality\\Capability}]
-  [{Cost and \\Time}
-   [{Total\\Costing\\Cost}]
-   [{Sample\\Delivery\\Time}]
-  ]
-]
-%\node[anchor=west,align=left] 
- % at ([xshift=-2cm]MS.west) {Level 3\\Criteria};
-%\node[anchor=west,align=left] 
-%  at ([xshift=-2cm]MS.west|-PDC) {Level 2\\ Group Criteria};
-%\node[anchor=west,align=left] 
- % at ([xshift=-2cm]MS.west|-SS) {Level 1\\Overall Objective};
+[{L\\0:nada\\}, align=center, name=SS
+  [$($, tier=word]
+  [{$I^1$\\p=2 en instante 2}, name=PDC
+    [{$I^2$\\p=1 en instante 2}, name=MS
+      [{$($}, tier=word]
+      [{$I^4$\\p=0 en instante 0}
+        [{λ}, tier=word]]
+      [{$)$}, tier=word]]
+    [{$I^3$\\p=2 en instante 2}
+      [{$($}, tier=word]
+      [{$I^5$\\p=1 en instante 2}
+        [{$($}, tier=word]
+        [{$I^6$\\p=0 en instante 0}
+          [{λ}, tier=word]]
+        [{$)$}, tier=word]]
+      [{$)$}, tier=word]]
+    ]
+    [{$)$}, tier=word]
+ ]
 \end{forest}
+
+Hemos puesto superíndices a las I para poder referirnos ahora a ellas:
+
+El recorrido en profundidad de esté árbol quedaría:
+
+Empezamos en L, estamos en el instante 0 de L... bajamos a $($, como es terminal no hacemos nada... subimos a L, instante 1 de L... bajamos a $I^1$, instante 0 de $I^1$...bajamos a $I^2$, instante 0 de $I^2$... bajamos a $($ como es terminal no hacemos nada... subimos a $I^2$, instante 1 de $I^2$...bajamos a $I^4$, instante 0 de $I^4$, que como es un nodo que deriva con la regla $I\rightarrow \lambda$ le aplicamos la función $I.prof=0$... subimos a $I^2$, instante 2 de $I^2$, que como es un nodo que deriva con la regla $I_1\rightarrow (I_2)$, le aplicamos la función $I_1.prof=I_2.prof+1$, por tanto tenemos ahora mismo $I^2.prof=1$... bajamos a $)$, como es un nodo terminal no hacemos nada... subimos a $I^2$, instante 3 de $I^2$... subimos a $I^1$, instante 1 de $I^1$... bajamos a $I^3$, instante 0 de $I^3$... etc etc etc.
+
+\end{example}
+
+
 
 \begin{example}
 Vamos a apoyarnos en la gramática definida en el ejemplo anterior y a modificar simplemente las acciones, con el fin de obtener un programa que cuente el número de listas (parejas de paréntesis). 
@@ -889,10 +926,75 @@ Hemos usado alguna acción que se sale de un esquema puro de herencia por ser im
 \end{itemize}
 Este caso es bastante más sencillo, pues en cada derivación tienes acceso al contador global y basta con incrementarlo, sin preocuparte por los sucesores.
 
-En este caso es realmente imporante indicar los instantes en que se realiza cad aacción puesto que de lo contrario habría lugar a confusión. (En los casos anteriores los atributos imponían un orden sin ambigüedad).
+Además, usando información global es realmente importante indicar los instantes en que se realiza cada acción puesto que de lo contrario habría lugar a confusión. (En los casos anteriores los atributos imponían un orden sin ambigüedad).
 
 \end{itemize}
 \end{example}
+
+En las transparencias podéis ver estos tres ejemplos para diferenciar la herencia, la síntesis y la información global (llamada tabla de símbolos):
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={2-9}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={10-17}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={18-25}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={26-27}, scale=0.72]{pdf/GramaticaAtributos.pdf}
+
+\begin{example}
+Para ver claramente las diferencia entre análisis semántico y sintáctico nos podemos fijar en lo siguiente, según el ejemplo 1:
+
+int $\_x$,$\_y$
+
+$\_x=S$
+
+Esta bien semántica y sintácticamente.
+
+int $\_x, \_y$
+
+$\_z=7$
+
+Esta bien sintácticamente pero no semánticamente.
+\end{example}
+
+\begin{example}
+Vamos a tomar un caso sencillo con dos reglas sacadas del último ejemplo mostrado en las transparencias. La semántica es:
+\begin{itemize}
+\item \[L \rightarrow i \{st(i.nombre,L.tipo\}\]
+\item \[A \rightarrow i = E \{in TS (i.nombre)==true; gt(i.nombre)==E.tipo; sv(i.nombre, E.valor)\}\]
+\end{itemize}
+
+Para la primera regla, el orden en que se recorrería el árbol de derivación es:
+\begin{verbatim}
+- En el instnate 0 bajamos del nodo L al nodo i
+- En el instante i volvemos al nodo L
+\end{verbatim} 
+
+Como es lógico, la operación de setType representada en la gramática no puede realizarse hasta conocer el tipo de L y el nombre de i, por lo que se realiza en el instante 1.
+
+Lo representaríamos como:
+\[L \rightarrow i \{1:st(i.nombre,L.tipo\}\]
+
+Vamos ahora con la segunda regla. El orden en el que se recorrería el árbol de derivación seria:
+\begin{verbatim}
+- En el instante 0 bajamos del nodo A al nodo i, en el instante 1 volvemos al A. 
+- En ese instante bajaríamos al nodo =, del que volveríamos en el instante 2.
+- Por último bajaríamos al nodo E y volveríamos del mismo en el instante 3
+\end{verbatim}
+
+Siguiendo esta secuencia y analizando en qué momento tenemos disponibles los valores para cada operación la segunda regla de la gramática sería de la forma:
+\[A \rightarrow i = E \{ 1: \ in TS (i.nombre)==true; 3: \ gt(i.nombre)==E.tipo; 3: \ sv(i.nombre, E.valor)\}\]
+
+En este tercer ejemplo es importante añadir algunas comprobaciones más en las reglas, que no vienen en las trasparencias:
+
+-En la regla $A \rightarrow i=E$ comprobar $inTS(i.nombre)==true$ (es decir, ¿está en la tabla de símbolos i.nombre?)
+
+-En la regla $E_1 \rightarrow E_2 + E_3$ y $E_1 \rightarrow E_2 * E_3$ comprobar que $E_2.tipo=E_3.tipo$
+
+-En la regla $E \rightarrow i$ comprobar $inTS(i.nombre)==true$ y $gt(i.nombre)==E.tipo$ con gt=getType (es decir, ¿es el parametro tipo de i.nombre igual al de E?).
+\end{example}
+
+
 
 \appendix
 \chapter{Ejercicios}
