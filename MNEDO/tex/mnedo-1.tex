@@ -1,0 +1,184 @@
+\section{Hoja 1}
+
+% %Problem
+\begin{mathproblem}{1}
+Considerar el PVI:
+\begin{equation*}
+\begin{array}{c c c}
+y'=f(t) & t\in[t_0, T], & y(t_0) = 0.
+\end{array}
+\end{equation*}
+Probar utilizando el método de Euler que
+$$y_N=\sum_{k=0}^{N-1}f(t_k)h$$
+\end{mathproblem}
+El método de Euler tiene la expresión:
+$$y_{n+1} = y_n + hf(t_n, y_n)$$
+En este caso, dado que $f = f(t)$, se tiene 
+$$y_{n+1} = y_n + hf(t_n)$$
+Vamos a utilizar la inducción para la demostración:
+
+\begin{itemize}
+\item Hipótesis:
+
+Suponemos que $$y_N=\sum_{k=0}^{N-1}f(t_k)h$$
+se cumple $\forall N\in \mathbb{N}\backslash \{ 0 \}$
+
+\item Base de inducción: \framebox{$N=1$}
+
+Para $N=1$, por hipótesis, se tiene $$y_1=\sum_{k=0}^{N-1}f(t_k)h = hf(t_0)$$
+
+Utilizando el método de Euler obtenemos $$y_1 = y_0 + hf(t_0)$$
+
+Dado que $y_0 = y(t_0) = 0$ tenemos que la hipótesis es cierta para $N=1$.
+
+\item Inducción:
+
+Supongamos la hipótesis cierta para $N$. Vamos a demostrar que es válida para $N+1$.
+
+Por el método de Euler:
+$$y_{N+1}=y_{N}+f(t_{N})h$$
+
+Usando la hipótesis, sustituimos el primer término del lado derecho de la igualdad:
+$$y_{N+1}=\sum_{k=0}^{N-1}f(t_k)h+f(t_{N})h$$
+Por tanto se tiene:
+$$y_{N+1}=\sum_{k=0}^{N}f(t_k)h$$
+
+\qed
+
+
+% % Problem
+\begin{mathproblem}{2}
+Ver que el método de Euler falla cuando queremos aproximar la solución
+$$y(t) = t^{\frac{3}{2}}$$
+del PVI
+\begin{equation*}
+\begin{array}{c c}
+y' = \frac{3}{2}y^{\frac{1}{3}} &
+y(0) = 0
+\end{array}
+\end{equation*}
+¿Cuál es el problema? Justificar la respuesta.
+\end{mathproblem}
+El método de Euler tiene la expresión:
+$$y_{n+1} = y_n + hf(t_n, y_n)$$
+En este caso, dado que $f(t, y(t)) = \frac{3}{2}y^{\frac{1}{3}}$, se tiene 
+$$y_{n+1} = y_n + hf(y_n)$$
+
+Veamos si el método aproxima la solución dada:
+\begin{equation*}
+\begin{array}{l l}
+y_0 & = 0\\
+y_1 & = y_0 + hf(y_0) = 0 + hf(0) = 0\\
+\vdots & \\
+y_n & = y_{n-1} + hf(y_{n-1}) = 0 + hf(0) = 0
+\end{array}
+\end{equation*}
+Como se puede observar, el método de Euler aproxima la solución $y = 0$, que también es solución del PVI.
+
+Dado que tenemos dos soluciones distintas vemos que la función $f$ no es Lipschitz con respecto a $y(t)$.
+
+Para que $f$ sea Lipschitz con respecto a $y$, se tiene que cumplir que:
+$$|f(y) - f(\bar{y})| \le L|y-\bar{y} |$$
+para un cierto $L>0$.
+$$|f(y) - f(\bar{y})| = |\frac{3}{2}y^{\frac{1}{3}} - \frac{3}{2}\bar{y}^{\frac{1}{3}}| \le |y^{\frac{1}{3}} - \bar{y}^{\frac{1}{3}}| $$
+Si se tuviera que $$|y^{\frac{1}{3}} - \bar{y}^{\frac{1}{3}}| \le L|y -\bar{y}|$$ para un cierto $L>0$, entonces $f$ sería Lipschitz con respecto a $y$.
+Por el Teorema del valor medio se tiene:
+$$|y^{\frac{1}{3}} - \bar{y}^{\frac{1}{3}}| \le |f'(\xi)||y -\bar{y}|$$
+con $\xi \in (y, \bar{y})$. 
+
+Sin embargo, $f'(\xi) = \frac{1}{3\xi{\frac{2}{3}}}$ no está acotada en un entorno de 0. Por lo que no podemos asegurar la unicidad de soluciones en un entorno de dicho punto.
+\end{itemize}
+\qed
+
+
+% % Problem
+\begin{mathproblem}{3}
+Sea el PVI
+\begin{equation*}
+\begin{array}{c c c}
+y' = 1+y^2 & t\in [0,2] & y(0) = 0
+\end{array}
+\end{equation*}
+¿Podemos usar el método de Euler para aproximar la solución $y(t) = tan(t)$?
+\end{mathproblem}
+Vamos a ver si la función $f(y) = 1+y^2$ es Lipschitz con respecto a $y(t)$ para asegurar la existencia y unicidad de soluciones.
+Se tiene que cumplir que
+$$|f(y) - f(\bar{y})| < L|y-\bar{y}|$$
+Sin embargo, dado que
+\begin{equation*}
+\begin{array}{l l}
+|f(y)-f(\bar{y})| & = |1+y^2-(1-\bar{y}^2)| = |y^2-\bar{y}^2|\\
+& = |(y-\bar{y})(y+\bar{y})| = |y-\bar{y}||y+\bar{y}|
+\end{array}
+\end{equation*}
+se tendría que cumplir que $$|y+\bar{y}||y-\bar{y}| \leq L|y-\bar{y}|$$
+es decir, que 
+$$|y+\bar{y}| \leq L $$
+para un cierto $L>0$. Lo cual es imposible.\qed
+
+Por tanto, el método de Euler puede fallar al no estar asegurada la existencia y unicidad de soluciones.
+
+Veamos si falla:
+\begin{equation*}
+\begin{array}{l l}
+y_0 & = 0\\
+y_1 & = y_0+hf(y_0) = 0 + hf(0) = h\\
+y_2 & = y_1+hf(y_1) = y_1 + h(1+y_1^2) = h + y_1 + hy_1^2\\
+\vdots& \\
+y_n & = y_{n-1}+hf(y_{n-1}) = h + y_{n-1} + hy_{n-1}^2
+\end{array}
+\end{equation*}
+Dado que cada término es un polinomio de $h$ sin término independiente, vemos que $$\lim_{h\to 0} y_n = 0$$ Por lo que el método de Euler converge a $y=0$, que también es solución del PVI.
+
+
+% % Problem.
+\begin{mathproblem}{4}
+Calcular el residuo de los siguientes métodos:
+
+(a) Regla del trapecio:
+$$y_{n+1}=y_n+\frac{h}{2}(f(t_{n+1},y_{n+1})+f(t_n, y_n))$$
+
+(b) Euler modificado:
+$$y_{n+1}=y_n+hf(t_n+\frac{h}{2}, y_n+\frac{h}{2}f(t_n, y_n))$$
+
+(c) Leap-frog:
+$$y_{n+2} = y_n + 2hf(t_{n+1}, y_{n+1})$$
+\end{mathproblem}
+En este problema se va a utilizar la siguiente notación: 
+
+$y(t_n)$ es el valor exacto de la solución a un PVI en el punto $t_n$, mientras que $y_n$ es el valor aproximado de la función, en el mismo punto, obtenido por el método correspondiente. 
+
+Por tanto, el residuo viene dado por $R_n = y(t_{n+1}) - y_{n+1}$
+
+\vspace{5mm}
+\noindent\textbf{Regla del trapecio:}
+
+\begin{equation*}
+\begin{array}{l l l l}
+R_n = & y(t_{n+1}) - y_{n+1} & = \\
+ & y(t_{n+1}) - (y_n+\frac{h}{2}(f(t_{n+1},y_{n+1})+f(t_n, y_n))) & = & ^{(1)}\\
+ & y(t_n)+hy'(t_n)+\frac{h^2}{2}y''(t_n)+\frac{h^3}{3!}y''(\bar{\xi_n}) & - & ^{(2)}\\ 
+ & (y_n+\frac{h}{2}(f(t_{n+1},y_{n+1})+f(t_n, y_n))) & &  
+\end{array}
+\end{equation*}
+
+Usando que $y'(t) = f(t, y(t))$ y desarrollando el polinomio de Taylor de orden 2 de $f(t_{n+1}, y_{n+1}) = y'(t_{n+1})$ alrededor de $t_n$ se tiene:
+
+\begin{equation*}
+\begin{array}{l l l}
+R_n & = y(t_n)+hy'(t_n)+\frac{h^2}{2}y''(t_n)+\frac{h^3}{3!}y''(\bar{\xi_n}) &  \\
+	& - (y(t_n) + \frac{h}{2}(y'(t_n) + y'(t_n) + hy''(t_n) + \frac{1}{2}h^2y'''(\bar{\eta_n}))) & ^{(3)}
+\end{array}
+\end{equation*}
+
+Realizando unas pocas operaciones se obtiene que
+$$R_n = h^3\left(\frac{y'''(\bar{\xi_n})}{3!} - \frac{y'''(\bar{\eta_n})}{4}\right)$$
+
+\footnotetext[1]{Se ha desarrollado el polinomio de Taylor de orden 3 de $y(t_{n+1})$ alrededor de $t_n$}
+\footnotetext[2]{$\bar{\xi_n} \in [t_n, t_{n+1}]$ puede variar para cada componente.}
+\footnotetext[3]{$\bar{\eta_n} \in [t_n, t_{n+1}]$ puede variar para cada componente.}
+
+\vspace{5mm}
+\noindent\textbf{Newton Modificado:}
+
+\color{red}{En proceso}
