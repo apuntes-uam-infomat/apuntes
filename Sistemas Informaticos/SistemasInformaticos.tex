@@ -1,0 +1,370 @@
+\documentclass{apuntes}
+
+\title{Sistemas Informaticos}
+\author{Elena Gutiérrez y Pedro Valero}
+\date{14/15 C1}
+
+% Paquetes adicionales
+
+% --------------------
+
+\begin{document}
+\pagestyle{plain}
+\maketitle
+
+\tableofcontents
+\newpage
+\setcounter{chapter}{1}
+\chapter{Sistemas distribuidos basados en la WWW}
+
+Las partes 1 y 2 de este tema se consideran demasiado triviales y se deja como ejercicio para el lector el leerse los apuntes y haber realizado las prácticas. (Son las que hablan del XML, XSL y esas cosillas).
+
+\setcounter{section}{2}
+\section{Web interactiva (Aplicaciones Web)}
+Se hace necesario establecer comunicación entre programas del servidor con datos que proporciona el usuario, ya sea por medio de formularios (forms) o mediante la ejecución de programas en el propio servidor (Common Gateway Interface, CGI)
+
+\subsection{CGIs}
+Tecnología de la World Wide Web ( es una extensión del protocolo HTTP) que permite a un cliente (el navegador) solicitar los datos de un programa ejecutado en un servidor web. CGI especifica un estándar para transferir datos entre el cliente y el programa que corre en el servidor (reciben el nombre de CGIs). Fueron de las primeras prácticas de crear contenido dinámico para las páginas web. El servidor web pasa las solicitudes del cliente a un programa externo (éste suele estar escrito en lenguaje script). La salida de este programa es enviada al cliente en lugar del archivo estático tradicional.
+
+\textbf{Forma esquemática de actualización de un CGI}
+\begin{enumerate}
+\item El servidor recibe una petición por parte del cliente que activa un URL que contiene el CGI
+\item El servidor prepara el entorno para ejecutar la aplicación. Esta info procede en su mayoría del cliente (el formulario de entrada). EL servidor también envía a la aplicación, información de origen, URL que el usuario solicita, protocolo utilizado,...El paso de info a través del CGI se realiza mediante variables de entorno, línea de comandos y entrada y salida estándar (stdin y stdout). Los nombres de las variables de entorno pueden ser específicos del sistema.
+\begin{itemize}
+\item Variables de entorno independientes de la petición.
+\item Variables de entorno dependientes de la consulta en cuestión
+\item Variables de entorno relacionadas con la seguridad de acceso.
+\item Variables de entorno sobre info adicionan de la consulta
+\item Variables de entorno de la cabecera HTTP.
+\end{itemize}
+\item El  servidor ejecuta la aplicación y captura la salida estándar.
+\item La aplicación realiza su función y como resultado va generando un objeto MIME que la aplicación escribe en su salida estándar.
+\item El servidor envía la información producida junto con la info propia del cliente . Es responsabilidad de la aplicación informar del objeto MIME que se genera.
+\end{enumerate}
+
+\subsection{Formularios}
+\subsubsection{Protocolos}
+HTTP + páginas HTML
+
+\subsubsection{Funcionamiento básico}
+\begin{enumerate}
+\item El cliente solicita la página al servidor web.
+\item El servidor envía una pagina que contiene el formulario.
+\item El cliente lo rellena y lo devuelve al servidor.
+\item El servidor, por la URL que el cliente solicita ,ejecuta el programa al que pasa los datos recibidos del cliente.
+\item El programa genera una página con los resultados de su ejecución y la devuelve al cliente a través del servidor web.
+\end{enumerate}
+
+\subsubsection{Estructura y sintaxis}
+La estructura de un formulario es la que sigue:
+\begin{verbatim}
+<FORM ACTION=url METHOD=método de envío>
+<INPUT> | <TEXTAREA> | <SELECT> | <BUTTON>
+otros elementos HTML
+</FORM>
+\end{verbatim}
+
+Veamos con un poco más de detalle cuál es la función de cada campo del formulario:
+\begin{itemize}
+\item Action: Aquí se especifica la URL que se debe solicitar al enviar el formulario.
+\item Method: Metodo de envio de los datos asociados al formulario.Pueden viajar asociados a la URL que se pide o en el cuerpo del mensaje HTTP.
+\item Si METHOD = GET el mensaje HHTP es:
+\begin{verbatim}
+GET /logon?usuario=Superman&clave=loislane&nuevo=si
+HTTP/1.1
+(otras cabeceras HTTP)
+(línea en blanco).
+\end{verbatim}
+\item Si METHOD = POST,el mensaje habría sido:
+\begin{verbatim}
+POST /logon HTTP/1.1
+CONTENT-TYPE: application/x-www-form-urlencoded
+CONTENT-LENGT: xxx
+(otras cabeceras HTTP)
+(línea en blanco)
+usuario=Superman&clave=loislane&nuevo=s
+\end{verbatim}
+\end{itemize}
+
+\subsubsection{Ventajas e inconvenientes}
+\textbf{Ventajas:}
+\begin{itemize}
+\item Sencillez de programación.
+\item Permite el uso de cualquier lenguaje de programación (normalmente PERL e interpretados)
+\item El programa CGI no puede afectar al funcionamiento del servidor por ejecutarse como un proceso indpte.
+\item Estándar, de modo que generaliza la portabilidad entre servidores de distintos fabricantes.
+\end{itemize}
+\textbf{Inconvenientes:}
+\begin{itemize}
+\item Lento. Cada ejecucion requiere iniciar un proceso y termianrlo: reservas de memoria, apetrura de ficheros, conexiones a bases de datos...
+\item Funciona por sesiones de modo que el programa CGI termina con cada llamada y no mantiene el estado de la comunicación entre peticiones.
+\end{itemize}
+
+\section{Web Application Programming Interfaces (Web APIs)}
+\subsection{Introducción}
+Una \textbf{API} es una interfaz de programación de aplicaciones (del inglés API: Application Programming Interface). Es un conjunto de rutinas que provee acceso a funciones de un determinado software.
+Son publicadas por los constructores de software para permitir acceso a características de bajo nivel o propietarias, detallando solamente la forma en que cada rutina debe ser llevada a cabo y la funcionalidad que brinda, sin otorgar información acerca de cómo se lleva a cabo la tarea. Son utilizadas por los programadores para construir sus aplicaciones sin necesidad de volver a programar funciones ya hechas por otros, reutilizando código que se sabe que está probado y que funciona correctamente.
+En la web, las API's son publicadas por sitios para brindar la posibilidad de realizar alguna acción o acceder a alguna característica o contenido que el sitio provee. Algunas de las más conocidas son las API's de: Google Maps, Amazon, Flickr, Google Search, Futmondo, Xnxx, ...
+
+Surgen para mitigar el bajo rendimiento de la interfaz CGI. En este caso, los nuevos programas se enlazan junto con el servidor en una librería dinámica, El servidor llama a las funciones de la librería como tareas dentro del proceso servidor. El proceso, en este caso, no finaliza: se mantienen ficheros abiertos, conexiones a BD entre las llamadas. Se proporciona una API de acceso a datos y estado del servidor.
+
+Presenta inconvenientes. Un fallo en una rutina hace que pueda caer el servidor completo. Se hace uso de lenguajes como C, C++, que en este aspecto están limitados. Dificil de programar, pues es necesario conocer el funcionamiento del servidor para a aprovecharlas al máximo.
+
+Algunos ejemplos: Netscape (NSAPI), Microsoft (ISAPI), IBM (ICAPI, GWAPI)...
+
+\subsection{Interfaces Híbridas:}
+Tratan de evitar los inconvenientes que veíamos de las CGIs y las Web APIs:
+Los programas se realizan independientemente del servidor Web y en cualquier lenguaje.
+El servidor durante la inicialización puede arrancar los programas en procesos diferentes.
+El proceso de inicializar se realiza antes de recibir la petición, y quedan a la espera de recibirlas.
+
+Ya no hay comunicación por medio de variables de entorno, Se utilizarán mecanismos de comunicación entre procesos más rápidos como acceso remoto mediante mecanismos de comunicación o bien empleando los mismos elementos que empleaban los CGIs para facilitar la migración de programas CGI a nuevas interfaces.
+Es posible mantener el estado de la aplicación entre peticiones sucesivas y una vez que la petición es atendida, el programa vuelve a esperar otra petición.
+
+Ejemplos:
+\begin{itemize}
+\item FastCGI, de Open Market, Inc. Comunicación Servidor - Programas por Sockets.
+\item Netscape Web Application Interface (WAI). Comunicación mediante CORBA.
+\end{itemize}
+
+\subsection{Páginas dinámicas:}
+Se trata de extensiones del lenguaje HTML para permitir mayor capacidad de proceso. En el cliente (client side scripts) se lleva a cabo la inclusión de código que el cliente interpretará para variar dinámicamente la presentación de la página., proporcionando así “inteligencia” al navegador. En el servidor (server side scripts). Inclusión de código en el fichero que contiene la descripción de la página. De este modo, el servidor lo interpretará para variar la generación de la página antes de su envío al cliente.
+
+Se trata de una alternativa a la programación CGI.
+
+\section{El lenguaje PHP}
+\subsection{Introducción}
+Se trata de un lenguaje de programación interpretado para el servidor. Presenta una sintaxis parecida a C y C++ y permite acceso a formularios, archivos, bases de datos,..
+
+Para el acceso a información propia del servidor se utiliza un  array indexado con el nombre del parámetro al que se desea acceder. El nombre del array es \$\_SERVER[indice] donde índice puede ser: QUERY\_STRING, REMOTE\_HOST,....
+
+Existen otros arrays indexados como \$\_REQUEST, para el acceso a variables asociadas a la petición recibida (campos de un formulario)
+También existe \$\_SESSION que permite acceder a información de la sesión del usuario. Incluye los contenidos de tres tipos de variables:
+\begin{itemize}
+\item \$\_GET Parámetros recibidos en un comando HTTP GET
+\item \$\_POST Parámetros recibidos en un comando HTTP POST
+\item \$\_COOKIES Lista de cookies recibidas con la petición.
+\end{itemize}
+
+Otras variables ya definidas son:
+\begin{itemize}
+\item\$\_FILES
+\item\$\_ENV
+\item\$\_GLOBALS
+\end{itemize}
+
+PHP es un lenguaje de script del lado del servidor (similar a otros lenguajes como ASP, JSP o Coldfusion). Sus siglas significa PHP Hypertext Processor. En este caso, el script está incrustado en el código HTML y el servidor lo interpreta y ejecuta antes de servir la página al cliente. El cliente no ve el código PHP sino sus resultados. Es software abierto y gratuito, Para permitir el acceso a bases de datos, tenemos PHP + [PostgreSQL, MySQL], que es multiplataforma.
+
+\subsection{Características del lenguaje}
+\begin{verbatim}
+$variable : Permite declarar variables. (Recuerda: es case sensitive). Ha de comenzar por letra o _ y después letras, números o _ (Recordemos el examen de AUTLEN). En  cuanto a su ámbito, son globales al fichero, excepto si aparecen en una función , que son locales.
+echo $variable1.””.$variable2: Permite concatenar cadenas e imprimirlas.
+echo strpos("Hello world!","world") : Devuelve la posición en la que comienza la cadena que es el segundo argumento.
+echo strlen("Hello world!");: Devuelve la longitud de la cadena (no cuenta /0)
+\end{verbatim}
+
+Veamos un ejemplo de declaración de una función:
+\begin{verbatim}
+function functionName()
+{
+    code to be executed;
+}
+\end{verbatim}
+
+Ejemplo de declaración y uso de arrays:
+\begin{verbatim}
+$cars=array("Saab","Volvo","BMW","Toyota");
+<?php
+    $cars[0]="Saab";
+    $cars[1]="Volvo";
+    $cars[2]="BMW";
+    $cars[3]="Toyota";
+    echo $cars[0] . " and " . $cars[1] . " are Swedish cars.";
+?>
+\end{verbatim}
+Resultado: Saab and Volvo are Swedish cars.
+
+Ejemplo de declaración y uso de arrays \textbf{ASOCIATIVOS}
+\begin{verbatim}
+$ages = array("Peter"=>32, ”Mike"=>30, "Joe"=>34);
+<?php
+    $ages['Peter'] = "32";
+    $ages['Mike'] = "30";
+    $ages['Joe'] = "34";
+    echo "Peter is " . $ages['Peter'] . " years old.";
+?>
+\end{verbatim}
+Resultado: Peter is 32 years old.
+
+\subsection{Tipos de datos en PHP}
+PHP soporta 8 tipos de datos primitivos:
+\begin{itemize}
+\item Escalares: boolean, integer, double y string.
+\item Compuestos: Array y object
+\item Especiales: resource y NULL.
+\end{itemize}
+El tipo de dato no se suele especificar, sino que es en tiempo de ejecución cuando se determina en función del contexto. En este aspecto, algunas funciones interesantes son:
+\begin{itemize}
+\item gettype() que devuelve el tipo de una variable.
+\item istype() por ejemplo: is\_array(), is\_float(), is\_null(), is\_numeric(), is\_scalar()..
+\item var\_dump() muestra tipo y valor de una variable (interesa cuando usamos arrays).
+\end{itemize}
+
+\subsubsection{String}
+Las cadenas pueden parecer entre comillas simples o dobles:
+\begin{verbatim}
+- Simples: admiten caracteres de escape como \’ (comilla simple) y \\ (barra). Las variables no se expanden (es decir: ‘a vale $a’ muestra “a vale $a”)
+- Dobles: admiten más caracteres de escape como \n, \r, \t, \\, \$, \”. En este caso, las variables sí se expanden: “a vale 9”
+\end{verbatim}
+Para acceder a un carácter de la cadena usamos: \$letra = \$cadena{8};
+
+
+\subsubsection{Constantes}
+Se definen así:
+\begin{verbatim}
+define (“CONSTANTE”, “hola); es decir define (“NOMBRE“, “valor”).
+\end{verbatim}
+No llevan \$ delante y solo se pueden definir constantes de tipo escalar: boolean, integer, string y double.
+
+\subsection{Funciones: Paso por referencia}
+Si no indicamos nada los parámetros se pasan por valor.
+
+Ejemplo:
+\begin{verbatim}
+function incrementa (&$a)
+{
+    $a = $a + 1;
+}
+$a=1;
+incrementa ($a);
+print $a; // Muestra un 2
+\end{verbatim}
+
+Ejemplo de función y array:
+
+\begin{verbatim}
+<HTML>
+<HEAD>
+    <TITLE>Fecha</TITLE>
+    <?PHP
+        // Función que obtiene el nombre de un mes
+        function nombreMes ($mes)
+        {
+            $meses = array ("enero", "febrero", "marzo", "abril", "mayo",
+            "junio", "julio", "agosto", "septiembre",
+            "octubre", "noviembre", "diciembre");
+            $i=0;
+            $enc=false;
+            while ($i<12 and !$enc)
+            {
+                if ($i == $mes-1)
+                $enc = true;
+                else
+                $i++;
+            }
+            return ($meses[$i]);
+        }
+    ?>
+</HEAD>
+<BODY>
+    <H1>Tablas y funciones</H1>
+    <?PHP
+        $dia = date ("j");
+        $mes = date ("n");
+        $anyo = date ("Y");
+        print ("Hoy es " . $dia . " de " . nombreMes($mes) .
+        " de " . $anyo . "<BR>\n");
+    ?>
+</BODY>
+</HTML>
+\end{verbatim}
+
+\subsection{HTML + PHP: Formularios}
+Si declaramos en el html un elemento form con el campo method = “GET” entonces en el código php (incluido en otro fichero a parte) debemos acceder a los campos input mediante: GET[“atributo”] donde “atributo” es el valor del campo name del elemento input.
+
+Particularidades:
+\begin{enumerate}
+\item Si “atributo” era type = “text” : \$atributo = GET[“atributo”] guardará el texto que introdujimos.
+
+\item Si “atributo” era type = “radio” : Haremos \$atributo = GET[“atributo”] que guardara el campo value de la opción que hayamos pinchado.
+
+\item Si “atributo” era type = “checkbutton”  y por tanto name= valores[]: Haremos \$valores = GET[“valores”] que guardará en forma de array los valores que han sido marcados (y por tanto la longitud del array será igual al número de “tics” que hayan sido marcados). Podemos imprimirlos así:
+\begin{verbatim}
+$valores= $_GET['valores'];
+$n = count ($valores);
+for ($i=0; $i<$n; $i++)
+    print ("$valores[$i]<BR>\n");
+\end{verbatim}
+y solo se imprimirán aquellos campos “value “ de los que fueron marcados.
+
+\item Si “atributo” era de type=“button” guardaremos en \$atributo=\$\_GET[“atributo”] true or false (no se si eso exactamente pero el equivalente a esto en php). De este modo, tiene sentido poner:
+\begin{verbatim}
+if ($actualizar)
+    print("Se han actualizado los datos");
+\end{verbatim}
+\begin{obs} Este tipo no funciona igual que “submit”. En este último caso, podemos acceder al .php al que asociamos el formulario, sin embargo escribiendo button, aun poniendo la url en el campo action de form, no funciona?
+\end{obs}
+
+\item Podemos usar de manera análoga: password, <SELECT AREA>, <SELECT MULTIPLE> <TEXTAREA>
+
+\item Importante:
+Una de las ventajas de PHP es que se puede procesar y mostrar el formulario desde un mismo .php. La estructura debe ser la siguiente:
+\begin{verbatim}
+si se ha enviado el formulario:
+    si hay errores:
+        Mostrar formulario con errores
+    si no:
+        Procesar formulario
+si no:
+    Mostrar formulario
+\end{verbatim}
+La clave para que esto funcione es en el formulario indicar que el campo action es el mismo php que en el que nos encontramos. Además para comprobar que se ha pulsado o no el botón de submit, debemos usar la condición:
+if (isset($aceptar)) o bien if ($aceptar==”Aceptar”).
+Para ver un ejemplo, mirar el ejercicio que se pidió subir a moodle.
+\end{enumerate}
+
+\subsection{Cookies}
+Se trata de un pequeño fichero que el servidor introduce en el pc del cliente (con el permiso de su navegador). Cada vez que el navegador solicite una nueva página  a ese servidor, le enviará también la cookie.
+
+\subsubsection{Sintaxis}
+Se coloca antes de la etiqueta <html>
+\begin{verbatim}
+<?php
+setcookie("user", ”Bob Sponge", time() + 60 * 60);
+?>
+<html>
+...
+\end{verbatim}
+
+La variable \$\_COOKIE es un array que guarda (name,value, expire, path, domain) que son los campos que se introducen en la función setcookie.
+Para imprimirlos:
+
+\begin{verbatim}
+echo $_COOKIE[“user”;
+\end{verbatim}
+Para ver todas:
+\begin{verbatim}
+print_r($_COOKIE);
+\end{verbatim}
+Para verificar que una en concreto existe:
+\begin{verbatim}
+if(isset($_COOKIE[“user”]))....
+\end{verbatim}
+
+\subsection{Sesiones}
+Por último, en PHP encontramos una variable que es \$\_SESSION que guarda valores relativos a la sesión que se tiene abierta. Es útil cuando el servidor quiere llevar el rastro del usuario durante un tiempo finito, por ejemplo, cuando el cliente visita varios lugares de un supermercado añadiendo productos a un carrito de la compra.
+
+\subsubsection{Sintaxis}
+Algunas de las funciones más importantes son:
+\begin{itemize}
+\item \textbf{session\_start()}; Comienza la sesión
+\item \textbf{\$\_SESSION[‘name’] = “Elena”}; Establece el nombre o identificador  de la sesión
+\item \textbf{unset(\$\_SESSION[‘name])}; Borra el identificador del usuario (elimina una única variable del array \$\_SESSION). Otro ejemplo:
+\item \textbf{unset(\$\_SESSION['session\_var'])};
+\item \textbf{session\_unset()}; Borra los contenidos de la sesión pero mantiene el id y el nombre de la sesión.
+\item \textbf{session\_destroy()}; Elimina la sesión (no sólo los datos que fueron guardados en la misma)
+
+\end{itemize}
+
+\printindex
+\end{document}
