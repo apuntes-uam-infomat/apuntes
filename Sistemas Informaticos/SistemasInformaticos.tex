@@ -21,15 +21,19 @@ Las partes 1 y 2 de este tema se consideran demasiado triviales y se deja como e
 
 \setcounter{section}{2}
 \section{Web interactiva (Aplicaciones Web)}
-Se hace necesario establecer comunicación entre programas del servidor con datos que proporciona el usuario, ya sea por medio de formularios (forms) o mediante la ejecución de programas en el propio servidor (Common Gateway Interface, CGI)
+El model de Web hipertexto no permite más iteracción del usuario que seleccionar la URL y comienza a hacerse necesario establecer comunicación entre programas del servidor con datos que proporciona el usuario, ya sea por medio de formularios (forms) o mediante la ejecución de programas en el propio servidor (Common Gateway Interface, CGI)
 
 \subsection{CGIs}
-Tecnología de la World Wide Web ( es una extensión del protocolo HTTP) que permite a un cliente (el navegador) solicitar los datos de un programa ejecutado en un servidor web. CGI especifica un estándar para transferir datos entre el cliente y el programa que corre en el servidor (reciben el nombre de CGIs). Fueron de las primeras prácticas de crear contenido dinámico para las páginas web. El servidor web pasa las solicitudes del cliente a un programa externo (éste suele estar escrito en lenguaje script). La salida de este programa es enviada al cliente en lugar del archivo estático tradicional.
+\begin{defn}[CGI]
+El CGI define el método para que un servidor WWW pueda ejecutar programas externos y recoger información de ellos. Estos programas reciben el nombre de (reciben el nombre de CGIs)
+\end{defn}
+
+Esta tecnología de la World Wide Web (es una extensión del protocolo HTTP) permite que un cliente (el navegador) pueda solicitar los datos de un programa ejecutado en un servidor web. Fueron de los primeras métodos para crear contenido dinámico para las páginas web. El servidor web pasa las solicitudes del cliente a un programa externo (éste suele estar escrito en lenguaje script), y la salida de este programa es enviada al cliente en lugar del archivo estático tradicional.
 
 \textbf{Forma esquemática de actualización de un CGI}
 \begin{enumerate}
 \item El servidor recibe una petición por parte del cliente que activa un URL que contiene el CGI
-\item El servidor prepara el entorno para ejecutar la aplicación. Esta info procede en su mayoría del cliente (el formulario de entrada). EL servidor también envía a la aplicación, información de origen, URL que el usuario solicita, protocolo utilizado,...El paso de info a través del CGI se realiza mediante variables de entorno, línea de comandos y entrada y salida estándar (stdin y stdout). Los nombres de las variables de entorno pueden ser específicos del sistema.
+\item El servidor prepara el entorno para ejecutar la aplicación. La información necesaria procede en su mayoría del cliente (el formulario de entrada). EL servidor también envía a la aplicación, información de origen, URL que el usuario solicita, protocolo utilizado, etc. El paso de información a través del CGI se realiza mediante variables de entorno, línea de comandos y entrada y salida estándar (stdin y stdout). Los nombres de las variables de entorno pueden ser específicos del sistema. Hay diferentes tipos de variables de entorno:
 \begin{itemize}
 \item Variables de entorno independientes de la petición.
 \item Variables de entorno dependientes de la consulta en cuestión
@@ -39,7 +43,7 @@ Tecnología de la World Wide Web ( es una extensión del protocolo HTTP) que per
 \end{itemize}
 \item El  servidor ejecuta la aplicación y captura la salida estándar.
 \item La aplicación realiza su función y como resultado va generando un objeto MIME que la aplicación escribe en su salida estándar.
-\item El servidor envía la información producida junto con la info propia del cliente . Es responsabilidad de la aplicación informar del objeto MIME que se genera.
+\item El servidor envía la información producida junto con la información propia del cliente. Es responsabilidad de la aplicación informar del objeto MIME que se genera.
 \end{enumerate}
 
 \subsection{Formularios}
@@ -49,33 +53,34 @@ HTTP + páginas HTML
 \subsubsection{Funcionamiento básico}
 \begin{enumerate}
 \item El cliente solicita la página al servidor web.
-\item El servidor envía una pagina que contiene el formulario.
+\item El servidor envía una página que contiene el formulario.
 \item El cliente lo rellena y lo devuelve al servidor.
-\item El servidor, por la URL que el cliente solicita ,ejecuta el programa al que pasa los datos recibidos del cliente.
+\item El servidor, por la URL que el cliente solicita, ejecuta el programa al que pasa los datos recibidos del cliente.
 \item El programa genera una página con los resultados de su ejecución y la devuelve al cliente a través del servidor web.
 \end{enumerate}
 
+\newpage
 \subsubsection{Estructura y sintaxis}
 La estructura de un formulario es la que sigue:
 \begin{verbatim}
 <FORM ACTION=url METHOD=método de envío>
-<INPUT> | <TEXTAREA> | <SELECT> | <BUTTON>
-otros elementos HTML
+    <INPUT> | <TEXTAREA> | <SELECT> | <BUTTON>
+    otros elementos HTML
 </FORM>
 \end{verbatim}
 
 Veamos con un poco más de detalle cuál es la función de cada campo del formulario:
 \begin{itemize}
-\item Action: Aquí se especifica la URL que se debe solicitar al enviar el formulario.
-\item Method: Metodo de envio de los datos asociados al formulario.Pueden viajar asociados a la URL que se pide o en el cuerpo del mensaje HTTP.
-\item Si METHOD = GET el mensaje HHTP es:
+\item \textbf{Action:} Aquí se especifica la URL que se debe solicitar al enviar el formulario.
+\item \textbf{Method:} Metodo de envio de los datos asociados al formulario. Pueden viajar asociados a la URL que se pide o en el cuerpo del mensaje HTTP.
+\item Si \textbf{METHOD = GET} el mensaje HHTP es:
 \begin{verbatim}
 GET /logon?usuario=Superman&clave=loislane&nuevo=si
 HTTP/1.1
 (otras cabeceras HTTP)
 (línea en blanco).
 \end{verbatim}
-\item Si METHOD = POST,el mensaje habría sido:
+\item Si \textbf{METHOD = POST}, el mensaje habría sido:
 \begin{verbatim}
 POST /logon HTTP/1.1
 CONTENT-TYPE: application/x-www-form-urlencoded
@@ -91,36 +96,41 @@ usuario=Superman&clave=loislane&nuevo=s
 \begin{itemize}
 \item Sencillez de programación.
 \item Permite el uso de cualquier lenguaje de programación (normalmente PERL e interpretados)
-\item El programa CGI no puede afectar al funcionamiento del servidor por ejecutarse como un proceso indpte.
+\item El programa CGI no puede afectar al funcionamiento del servidor por ejecutarse como un proceso independiente.
 \item Estándar, de modo que generaliza la portabilidad entre servidores de distintos fabricantes.
 \end{itemize}
 \textbf{Inconvenientes:}
 \begin{itemize}
-\item Lento. Cada ejecucion requiere iniciar un proceso y termianrlo: reservas de memoria, apetrura de ficheros, conexiones a bases de datos...
+\item Lento. Cada ejecucion requiere iniciar un proceso y termianrlo: reservas de memoria, apertura de ficheros, conexiones a bases de datos...
 \item Funciona por sesiones de modo que el programa CGI termina con cada llamada y no mantiene el estado de la comunicación entre peticiones.
 \end{itemize}
 
 \section{Web Application Programming Interfaces (Web APIs)}
 \subsection{Introducción}
+\begin{defn}[API]
 Una \textbf{API} es una interfaz de programación de aplicaciones (del inglés API: Application Programming Interface). Es un conjunto de rutinas que provee acceso a funciones de un determinado software.
-Son publicadas por los constructores de software para permitir acceso a características de bajo nivel o propietarias, detallando solamente la forma en que cada rutina debe ser llevada a cabo y la funcionalidad que brinda, sin otorgar información acerca de cómo se lleva a cabo la tarea. Son utilizadas por los programadores para construir sus aplicaciones sin necesidad de volver a programar funciones ya hechas por otros, reutilizando código que se sabe que está probado y que funciona correctamente.
+\end{defn}
+
+Son publicadas por los constructores de software para permitir acceso a características de bajo nivel o propietarias, detallando sólamente la forma en que cada rutina debe ser llevada a cabo y la funcionalidad que brinda, sin otorgar información acerca de cómo se lleva a cabo la tarea. Son utilizadas por los programadores para construir sus aplicaciones sin necesidad de volver a programar funciones ya hechas por otros, reutilizando código que se sabe que está probado y que funciona correctamente.
+
 En la web, las API's son publicadas por sitios para brindar la posibilidad de realizar alguna acción o acceder a alguna característica o contenido que el sitio provee. Algunas de las más conocidas son las API's de: Google Maps, Amazon, Flickr, Google Search, Futmondo, Xnxx, ...
 
-Surgen para mitigar el bajo rendimiento de la interfaz CGI. En este caso, los nuevos programas se enlazan junto con el servidor en una librería dinámica, El servidor llama a las funciones de la librería como tareas dentro del proceso servidor. El proceso, en este caso, no finaliza: se mantienen ficheros abiertos, conexiones a BD entre las llamadas. Se proporciona una API de acceso a datos y estado del servidor.
+Surgen para mitigar el bajo rendimiento de la interfaz CGI. En este caso, los nuevos programas se enlazan junto con el servidor en una librería dinámica, El servidor llama a las funciones de la librería como tareas dentro del proceso servidor. El proceso, en este caso, no finaliza: se mantienen ficheros abiertos, conexiones a base de datos y demás entre las llamadas. Se proporciona una API de acceso a datos y estado del servidor.
 
-Presenta inconvenientes. Un fallo en una rutina hace que pueda caer el servidor completo. Se hace uso de lenguajes como C, C++, que en este aspecto están limitados. Dificil de programar, pues es necesario conocer el funcionamiento del servidor para a aprovecharlas al máximo.
+Presenta inconvenientes. Un fallo en una rutina hace que pueda caer el servidor completo. Se hace uso de lenguajes como C, C++, que en este aspecto están limitados. Dificil de programar, pues es necesario conocer el funcionamiento del servidor para aprovecharlas al máximo.
 
 Algunos ejemplos: Netscape (NSAPI), Microsoft (ISAPI), IBM (ICAPI, GWAPI)...
 
 \subsection{Interfaces Híbridas:}
-Tratan de evitar los inconvenientes que veíamos de las CGIs y las Web APIs:
+Tratan de evitar los inconvenientes que veíamos de las CGIs y las Web APIs.
 Los programas se realizan independientemente del servidor Web y en cualquier lenguaje.
 El servidor durante la inicialización puede arrancar los programas en procesos diferentes.
-El proceso de inicializar se realiza antes de recibir la petición, y quedan a la espera de recibirlas.
+Los programas se inicializan antes de recibir la petición, y quedan a la espera de recibirlas.
 
 Ya no hay comunicación por medio de variables de entorno, Se utilizarán mecanismos de comunicación entre procesos más rápidos como acceso remoto mediante mecanismos de comunicación o bien empleando los mismos elementos que empleaban los CGIs para facilitar la migración de programas CGI a nuevas interfaces.
 Es posible mantener el estado de la aplicación entre peticiones sucesivas y una vez que la petición es atendida, el programa vuelve a esperar otra petición.
 
+\newpage
 Ejemplos:
 \begin{itemize}
 \item FastCGI, de Open Market, Inc. Comunicación Servidor - Programas por Sockets.
@@ -128,18 +138,18 @@ Ejemplos:
 \end{itemize}
 
 \subsection{Páginas dinámicas:}
-Se trata de extensiones del lenguaje HTML para permitir mayor capacidad de proceso. En el cliente (client side scripts) se lleva a cabo la inclusión de código que el cliente interpretará para variar dinámicamente la presentación de la página., proporcionando así “inteligencia” al navegador. En el servidor (server side scripts). Inclusión de código en el fichero que contiene la descripción de la página. De este modo, el servidor lo interpretará para variar la generación de la página antes de su envío al cliente.
+Se trata de extensiones del lenguaje HTML para permitir mayor capacidad de proceso. En el cliente (client side scripts) se lleva a cabo la inclusión de código que el cliente interpretará para variar dinámicamente la presentación de la página, proporcionando así “inteligencia” al navegador. En el servidor (server side scripts) se realiza una inclusión de código en el fichero que contiene la descripción de la página. De este modo, el servidor lo interpretará para variar la generación de la página antes de su envío al cliente.
 
 Se trata de una alternativa a la programación CGI.
 
 \section{El lenguaje PHP}
 \subsection{Introducción}
-Se trata de un lenguaje de programación interpretado para el servidor. Presenta una sintaxis parecida a C y C++ y permite acceso a formularios, archivos, bases de datos,..
+Se trata de un lenguaje de programación interpretado para el servidor. Presenta una sintaxis parecida a C y C++ y permite acceso a formularios, archivos, bases de datos, etc.
 
 Para el acceso a información propia del servidor se utiliza un  array indexado con el nombre del parámetro al que se desea acceder. El nombre del array es \$\_SERVER[indice] donde índice puede ser: QUERY\_STRING, REMOTE\_HOST,....
 
 Existen otros arrays indexados como \$\_REQUEST, para el acceso a variables asociadas a la petición recibida (campos de un formulario)
-También existe \$\_SESSION que permite acceder a información de la sesión del usuario. Incluye los contenidos de tres tipos de variables:
+También existe \$\_SESSION que permite acceder a información de la sesión del usuario. El array \$\_REQUEST, tras una petición del cliente, incluye los contenidos de tres tipos de variables:
 \begin{itemize}
 \item \$\_GET Parámetros recibidos en un comando HTTP GET
 \item \$\_POST Parámetros recibidos en un comando HTTP POST
@@ -153,13 +163,17 @@ Otras variables ya definidas son:
 \item\$\_GLOBALS
 \end{itemize}
 
-PHP es un lenguaje de script del lado del servidor (similar a otros lenguajes como ASP, JSP o Coldfusion). Sus siglas significa PHP Hypertext Processor. En este caso, el script está incrustado en el código HTML y el servidor lo interpreta y ejecuta antes de servir la página al cliente. El cliente no ve el código PHP sino sus resultados. Es software abierto y gratuito, Para permitir el acceso a bases de datos, tenemos PHP + [PostgreSQL, MySQL], que es multiplataforma.
+PHP es un lenguaje de script del lado del servidor (similar a otros lenguajes como ASP, JSP o Coldfusion). Sus siglas significan PHP Hypertext Processor. En este caso, el script está incrustado en el código HTML y el servidor lo interpreta y ejecuta antes de servir la página al cliente. El cliente no ve el código PHP sino sus resultados. Es software abierto y gratuito, Para permitir el acceso a bases de datos, tenemos PHP + [PostgreSQL, MySQL], que es multiplataforma.
 
 \subsection{Características del lenguaje}
 \begin{verbatim}
-$variable : Permite declarar variables. (Recuerda: es case sensitive). Ha de comenzar por letra o _ y después letras, números o _ (Recordemos el examen de AUTLEN). En  cuanto a su ámbito, son globales al fichero, excepto si aparecen en una función , que son locales.
+$variable : Permite declarar variables. (Recuerda: es case sensitive). Ha de
+ comenzar por letra o _ y después letras, números o _ (Recordemos el examen
+  de AUTLEN). En  cuanto a su ámbito, son globales al fichero, excepto si
+   aparecen en una función , que son locales.
 echo $variable1.””.$variable2: Permite concatenar cadenas e imprimirlas.
-echo strpos("Hello world!","world") : Devuelve la posición en la que comienza la cadena que es el segundo argumento.
+echo strpos("Hello world!","world") : Devuelve la posición en la que
+ comienza la cadena que es el segundo argumento.
 echo strlen("Hello world!");: Devuelve la longitud de la cadena (no cuenta /0)
 \end{verbatim}
 
@@ -213,10 +227,12 @@ El tipo de dato no se suele especificar, sino que es en tiempo de ejecución cua
 \subsubsection{String}
 Las cadenas pueden parecer entre comillas simples o dobles:
 \begin{verbatim}
-- Simples: admiten caracteres de escape como \’ (comilla simple) y \\ (barra). Las variables no se expanden (es decir: ‘a vale $a’ muestra “a vale $a”)
-- Dobles: admiten más caracteres de escape como \n, \r, \t, \\, \$, \”. En este caso, las variables sí se expanden: “a vale 9”
+- Simples: admiten caracteres de escape como \’ (comilla simple) y \\ (barra). 
+Las variables no se expanden (es decir: ‘a vale $a’ muestra “a vale $a”)
+- Dobles: admiten más caracteres de escape como \n, \r, \t, \\, \$, \”. En
+ este caso, las variables sí se expanden: “a vale 9”
 \end{verbatim}
-Para acceder a un carácter de la cadena usamos: \$letra = \$cadena{8};
+Para acceder a un carácter de la cadena usamos: \$letra = \$cadena\{8\};
 
 
 \subsubsection{Constantes}
@@ -226,6 +242,7 @@ define (“CONSTANTE”, “hola); es decir define (“NOMBRE“, “valor”).
 \end{verbatim}
 No llevan \$ delante y solo se pueden definir constantes de tipo escalar: boolean, integer, string y double.
 
+\newpage
 \subsection{Funciones: Paso por referencia}
 Si no indicamos nada los parámetros se pasan por valor.
 
@@ -302,8 +319,8 @@ y solo se imprimirán aquellos campos “value “ de los que fueron marcados.
 if ($actualizar)
     print("Se han actualizado los datos");
 \end{verbatim}
-\begin{obs} Este tipo no funciona igual que “submit”. En este último caso, podemos acceder al .php al que asociamos el formulario, sin embargo escribiendo button, aun poniendo la url en el campo action de form, no funciona?
-\end{obs}
+%\begin{obs} Este tipo no funciona igual que “submit”. En este último caso, podemos acceder al .php al que asociamos el formulario, sin embargo escribiendo button, aun poniendo la url en el campo action de form, no funciona?
+%\end{obs}
 
 \item Podemos usar de manera análoga: password, <SELECT AREA>, <SELECT MULTIPLE> <TEXTAREA>
 
@@ -319,7 +336,7 @@ si no:
     Mostrar formulario
 \end{verbatim}
 La clave para que esto funcione es en el formulario indicar que el campo action es el mismo php que en el que nos encontramos. Además para comprobar que se ha pulsado o no el botón de submit, debemos usar la condición:
-if (isset($aceptar)) o bien if ($aceptar==”Aceptar”).
+if (isset(\$aceptar)) o bien if (\$aceptar==”Aceptar”).
 Para ver un ejemplo, mirar el ejercicio que se pidió subir a moodle.
 \end{enumerate}
 
@@ -336,7 +353,8 @@ setcookie("user", ”Bob Sponge", time() + 60 * 60);
 ...
 \end{verbatim}
 
-La variable \$\_COOKIE es un array que guarda (name,value, expire, path, domain) que son los campos que se introducen en la función setcookie.
+La variable \$\_COOKIE es un array que guarda (name,value, expire, path, domain) que son los campos que se introducen en la función setcookie. Esta información es la que viaja en un fichero cada vez que se produce una comunicación entre el servidor y el cliente.
+
 Para imprimirlos:
 
 \begin{verbatim}
