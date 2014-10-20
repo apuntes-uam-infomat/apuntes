@@ -186,6 +186,7 @@
 \algbC#m
 \algbB#m
 \algbT#m
+\algbP#m
 \salgb#m
 \sfin#m
 \gal#m
