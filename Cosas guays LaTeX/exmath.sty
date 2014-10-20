@@ -26,6 +26,9 @@
 \RequirePackage{mfirstuc} % Poner en mayúsculas primera letra de una palabra
 \RequirePackage{xspace} % Espaciado correcto detrás de comandos.
 \RequirePackage{subcaption} % Subfiguras
+\RequirePackage{etoolbox}
+\RequirePackage{tablefootnote}
+
 \let\mder\md
 
 \reversemarginpar
@@ -34,6 +37,26 @@
   \def\nextitem{\def\nextitem{#1}}% Separator
   \renewcommand*{\do}[1]{\nextitem #2 ##1}% How to process each item. IGN
   \docsvlist{#3}% Process list
+}
+
+\AtBeginEnvironment{proof}{%
+	\let\oldfootnote\footnote%
+	\let\footnote\tablefootnote%
+}
+
+\AfterEndEnvironment{proof}{%
+	\tfn@tablefootnoteprintout% 
+ 	\gdef\tfn@fnt{0}%
+}
+
+\AtBeginEnvironment{framed}{%
+	\let\oldfootnote\footnote%
+	\let\footnote\tablefootnote%
+}
+
+\AfterEndEnvironment{framed}{%
+	\tfn@tablefootnoteprintout% 
+ 	\gdef\tfn@fnt{0}%
 }
 
 \newcommand{\pbreak}{\mbox{} \\} % Salto de párrafo forzado.
