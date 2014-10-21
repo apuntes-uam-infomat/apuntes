@@ -1251,9 +1251,105 @@ Este teorema nos va a permitir, a partir de una medida exterior, quedarnos con l
 Sea $X \neq \emptyset$ y sea $µ^*$ una medida exterior en $X$. 
 
 Entonces
-\[\algbM = \{E \subset X: \ \forall A \subset X µ^*(A)=µ^*(A \cap E) + µ^*(A \cap E^c) \text{ es una } \ \salgb \]
-\[\text{ y } µ^*_{|\algbM} \text{ es una medida completa }\}\]
+%TODO intercambiar A <->E
+\[\algbM = \{E \subset X: \ \forall A \subset X \ µ^*(A)=µ^*(A \cap E) + µ^*(A \cap E^c)\}\]
+es una $\salgb$ y $µ^*_{|\algbM}$ es una medida completa.
 \end{theorem}
+\begin{proof}
+En primer lugar vamos a ver que $\algbM$ es cerrada por complementación.
+
+Esto es bastante obvio ya que la expresión que define $\algbM$ es simétrica para $E$ y $E^c$.
+
+Ahora vamos a ver que es cerrada por uniones finitas.
+
+Para ello partimos de dos elementos $A,B\in \algbM$. Entonces
+\[\forall E \in X, \ µ^*(E)=µ^*(E \cap A)+µ^*(E \cap A^c) = \]
+\[µ^*(E \cap A\cap B)+µ^*(E \cap A^c \cap B^c)+µ^*(E \cap A \cap B^c)+µ^*(E \cap A^c \cap B)\]
+
+Por otro lado, tenemos que
+\[A \cup B = (A\cap B)\cup(A\cap B^c)\cup (A^c \cap B) \implies\]
+\[\implies µ^*(E\cap (A\ cup B)) \leq µ^*(E \cap (A \cup B))+µ^*(E \cap (A \cup B^c))+µ^*(E \cap (A^c \cup B))\]
+
+Juntando los dos resultados llegamos a:
+\[µ (E) \geq µ^*(E \cap (A \cup B))+µ^*(E \cap (A \cup B)^c)\geq µ^*(E) \implies A \cup B \in \algbM\]
+
+
+Tenemos que ver, además, que $µ^*$ es finitamente aditiva. Para ello tomamos dos conjuntos $A, B \in \algbM$ tales que $A \cap B = \emptyset$.
+
+Entonces:
+\[µ^*(A \cup B) = µ^*((A \cup B) \cap A) + µ^*((A \cup B \cap A^c)= µ^*(A)+µ^*(B)\]
+
+
+Por último tenemos que ver que $\algbM$ es cerrada por uniones numerables, comprobando así que es una $\salgb$.
+
+Para comprobar esto basta con ver que es cerrada por uniones numerables disjuntas ya que, como ya vimos, esto implicaba el cierre para todo tipo de unión numerable.
+
+Para demostrarlo, vamos a considerar la sucesión $\{A_j\}_{j \in \nat} \subset \algbM$ con $A_i\cap A_j = \emptyset$, y definimos $B_n = \bigcup_{j=0}^{n} A_j$.
+
+Con esta notación tenemos que
+\[B= \bigcup_{j=0}^{\infty} A_j = \bigcup_{n=0}^{\infty} B_n\]
+
+Tras esto vemos
+\[\forall E \subset X, \ µ^*(E \cap B_n) = µ^*(E \cap B_n \cap A_n)+µ^*(E \cap B_n \cap A_n^c) = µ^*(E \cap A_n)+µ^*(E \cap B_n)\]
+
+Por inducción tenemos que:
+\[µ^*(E \cap B_n)= \sum_{j=0}^{n}(µ^*(E \cap A_j))\]
+
+Entonces
+\[µ^*(E)=µ^*(E \cap B_n) + µ^*(E \cap B_n^c)\]
+
+Ahora podemos combinar las dos últimas igualdades. Además, to que los $B_n$ son una sucesión creciente hacia B, sus complementarios decrecen hacia $B^c$ por lo que podemos escribir:
+\[µ^*(E) \geq \sum_{j=0}^{n}(µ^*(E \cap A_j)) +µ^*(E \cap B^c)\]
+
+Pero ya sabemos que la suma de las medidas exteriores es mayor que la medida de la unión y también tenemos que la unión de los conjuntos $E \cap A_j$ cumple:
+\[\bigcup_{j=1}^{\infty} E \cap A_j = E \cap B\]
+Y llegamos a que:
+\[µ^*(E)=µ^*(E \cap B_n) + µ^*(E \cap B_n^c)) \geq µ^*(E \cap B) +µ^*(E \cap B^c) = µ^*(E) \implies B \in \algbM\]
+
+Realmente aún nos faltaría ver que es numerablemente aditiva, pero esto puede demostrarse repitiendo los pasos anteriores considerando $E=B$.
+Quedaría:
+\[µ^*(B)=\sum_{j=0}^{\infty}µ^*(B \cap A_j) = \sum_{j=0}^{\infty} µ^*(A_j)\]
+
+Ahora vamos a comprobar que la medida es completa. Vemos claramente que si $µ^*(A)=0$ entonces $A \in \algbM$
+\[µ^*(E) \leq µ^*(E \cap A) + µ^*(E \cap A^c)\leq µ^*(E)\]
+\end{proof}
+%TODO estructurar en apartados la demostración. Él ha llegado hasta el sexto, todos del tirón.  Yo lo separaría en bloques.
+
+\section{Premedidas}
+\begin{defn}[Premedida]
+Sea $\algb{a} \subset \algbP(x)$ un álgebra, $\appl{µ_0}{\algb{a}}{[0, \infty]}$ es una promedida si:
+\begin{itemize}
+\item 
+\[µ_0(\emptyset)=0\]
+\item Si $\{A_j\}_{j \in \nat} \subset \algb{a}, A_i \cap A_j = \emptyset$ y $\bigcup_{j=0}^{\infty}A_j = \algb{a}$ entonces
+\[µ_0(\bigcup{j=0}^{\infty}A_j) = \sum_{j=0}^{n}µ_0(A_j)\]
+\end{itemize}
+\end{defn}
+
+A partir de una promedida $µ_0$ definimos una medida exterior $µ^*$ en $\algbP(X)$ de la forma:
+\[µ^*(E) = \inf \{\sum_{j=0}^{\infty} µ_0(A_j), \ A_j \in \algb{a}, \ E \subset \bigcup_{j=0}^{\infty}A_j\}\]
+
+\begin{prop}
+Con la notación anterior:
+\begin{enumerate}
+\item La medida exterior extiende la premedida:
+\[µ^*_{|\algb{a}}=µ_0\]
+\item Todo elemento del álgebra es $µ^*$-medible.
+\[\forall A \in \algb{a}, \ \forall E \subset X: µ^*(E)=µ^*(E \cap A)+µ^*(E \cap A^c)\]
+\end{enumerate}
+\begin{proof}
+Vamos a demostrar la segunda propiedad que es la interesante y la que realmente tiene algo que demostrar.
+
+Vamos a demostrar la igualdad demostrando las desigualdades en ambas direcciones. (un clásico vaya)
+\[A \in \algb{a} \text{ como } A \subset A, µ^*(A)\leq µ_0(A)\]
+
+Si $A \subset \bigcup_{j=0}^{\infty}A_j, \ A_j \in \algb{a}$, (sin pérdida de generalidad podemos supones los $A_j$ disjuntos), entonces:
+\[A = \bigcup(A \cap A_j)\]
+donde cada una de las intersecciones es un elemento del álgebra. Por tanto:
+\[µ_0(A) = \sum µ_0(A \cap A_j)\leq \sum µ_0(A_j)\]
+Puesto que la premedida de $A$ está por debajo de todas las sumas de la fomra $\sum µ_0(A_j)$, está por debajo del ínfimo de todos esos valores y por tanto está por debajo de la medida exterior.
+\end{proof}
+\end{prop}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
