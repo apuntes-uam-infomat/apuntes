@@ -1118,6 +1118,8 @@ Por ejemplo, $([0,1]×[0,1], <_{Lex})$ tiene la propiedad del supremo. Cojamos u
 
 En general, conexo en $(X, \topl_<)$ implica intervalo en $(X, <)$.
 
+\subsection{Construcción de conjuntos conexos}
+
 Más sobre este tema: ¿qué intervalos son conexos en $(ℝ^2, \topl_{Lex})$?
 
 Por ejemplo, el intervalo $\{x_0\} × ℝ$, ¿es conexo? Desde luego, y podemos justificarlo de varias formas. El conjunto es conexo si y sólo si lo es en la topología del subespacio, y en este caso la topología del subespacio son la de intervalos abiertos verticales, y nuestra recta $x=x_0$ no es más que unión de ellos. También podemos considerar una aplicación \begin{align*}
@@ -1183,7 +1185,75 @@ continua y $f([0,1]) = [\vx,\vy]$.
 \begin{defn}[Conjunto\IS estrellado] Un conjunto estrellado en $ℝ^m$ es un conjunto $E$ tal que $∃\vec{x_0}∈E$ tal que $∀\vx∈E$ se tiene que $[\vec{x_0}, \vx]⊆E$.
 \end{defn}
  
-Además los convexos también son conexos (son estrellados con respecto a cualquiera de sus puntos).
+Además los convexos también son conexos (son estrellados con respecto a cualquiera de sus puntos). Obviamente, entonces las bolas euclídeas, tanto abiertas como cerradas, son conexas.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{II_Peine}
+\caption{Peine topológico.}
+\label{figPeine}
+\end{figure}
+
+Un ejemplo muy interesante es el del peine (figura \ref{figPeine}). Este conjunto se define como 
+
+\[ P = \left(\bigcup_{n=1}^∞ \underbrace{\left(\left\{\frac{1}{2^{n-1}}\right\} × [0,1]\right)}_{C_n}\right) ∪ \underbrace{\left([0,1]×\{0\}\right)}_{C_0} \]
+
+y es conexo, ya que la intersección $C_0 ∩ C_n ≠ \emptyset\; ∀n$, y $C_n$ siempre es un segmento conexo. Como $P$ es una unión, es conexo. 
+
+Además, $P∪ \{ (0,1)\}$ también es conexo, ya que $P⊆ P ∪ \{ (0,1) \} ⊆ \adh{P} = P∪(\{0\}×[0,1])$.
+
+Eso sí, hay que tener cuidado porque $[0,1)$ no es homeomorfo a $(0,1)$. Para ello, usaremos el siguiente lema:
+
+\begin{lemma} Sean $(X, \topl_X), (Y, \topl_Y)$ espacios topológicos y $\appl{f}{X}{Y}$ homeomorfismo. Entonces, para todo $W⊆X$ se tiene que la aplicación restringida al subespacio \[ \appl{f|_W}{(W,\topl_X^{sub})}{(f(W), \topl_Y^{sub})} \] es un homeomorfismo. Está claro que en ese caso $W$ y $f(W)$ son homoemorfos.
+\end{lemma}
+
+Usando este lema, tenemos que como $W=(0,1) ⊆ [0,1]$ es conexo, si $\appl{f}{[0,1)}{(0,1)}$, entonces podemos construir una aplicación \[ \appl{f|_{(0,1)}}{(0,1)}{(0,1)\setminus\{f(0)\}} \]
+
+Sin embargo, denotando $f(0) = a ∈ (0,1)$, tendríamos que $f((0,1)) = (0,a) ∪ (a,1)$, lo que es imposible porque la imagen por una función continua de un conexo tiene que ser conexa. Luego $[0,1)$ y $(0,1)$ no son homoemorfos.
+
+Vamos a ver más construcciones para conjuntos conexos.
+
+\begin{prop} Sean $(X_j, \topl_j)$ con $j=1,2$ espacios topológicos. Entonces \begin{enumerate}
+
+\item Si $X_1, X_2$ son conexos, entonces $X_1×X_2$ también lo es.
+\item Si $A_j$ es conexo en $X_j$ entonces $A_1×A_2$ también lo es en $X_1×X_2$.
+\end{enumerate}
+\end{prop}
+
+Para la demostración necesitaremos antes el siguiente lema:
+
+\begin{lemma} Si $C⊆X_1×X_2$ es abierto, entonces $∀x_1∈X_1, ∀x_2∈X_2$ se tiene que los conjuntos \begin{gather*}
+C_{x_1} = \{y_2 \tq (x_1, y_2) ∈ C\} \\
+C_{x_2} = \{ y_1 \tq (y_1, x_2) ∈ C\}
+\end{gather*} son abiertos en $X_2$ y $X_1$ respectivamente.
+\end{lemma}
+
+\begin{proof}[Lema] Vamos a hacer la demostración e dos casos. El primero es con $C=V_1×V_2$ con $V_j$ abierto en $X_j$. Entonces, $C_{x_1}$ es o bien el vacío si $x∉V_1$, o bien $V_2$ si $x_1∈V_1$, en ambas instancias es abierto.
+
+Toca ahora el caso más general. Sea \[ C = \bigcup_{j∈J} V_1^j × V_2^j \] con $V_i^j$ abierto en $X_i$. Entonces \[ C_{x_1} = \left(\bigcup_{j∈J} V_1^j × V_2^j\right)_{x_1} = \bigcup_{j∈J} \left(V_1^j × V_2^j\right)_{x_1} = \bigcup_{j∈J} V_2^j ∈ \topl_2\], por lo que es abierto.
+\end{proof}
+
+Ahora vamos a demostrar la proposición que nos interesa.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{II_EspacioProductoConexo}
+\caption{Posibilidades para el espacio producto.}
+\label{figEspacioProductoConexo}
+\end{figure}
+
+\begin{proof}[Proposición]
+Si $X_1×X_2$ no es conexo, entonces $∃A,B$ abiertos de $\topl_1\otimes\topl_2$ no vacíos, $A∩B=\emptyset$, $A∪B=X_1×X_2$. ¿Qué casos pueden suceder? Lo vemos en la figura \ref{figEspacioProductoConexo}.  
+ 
+Entonces, en el primer caso, tenemos que $∃x_2∈X_2$ tal que $A_{x_2}≠\emptyset≠B_{x_2}$. Entonces \[ X_1 = (X_1×X_2)_{x_2} = (A∪B)_{x_2} = A_{x_2} ∪ B_{x_2} \], ambos abiertos y no vacíos. Además, $A_{x_2}∩B_{x_2} = \emptyset$, lo que nos daría una contradicción con el hecho de que $X_1$ es conexo.
+
+En el segundo caso, tenemos que $∀x_2∈X_2$ $A_{x_2} = \emptyset$ ó $B_{x_2} = \emptyset$. Sea \[ V_2 = \{ x_2 ∈ X_2 \tq A_{x_2} ≠ \emptyset\}\]. Afirmo que $A= X_1×V_2$ y que $B=X_1 × V_2^c$ y que $X_2 = V_2 ∪ V_2^c$, abiertos ($V_2 = p_2(A), V_2^c=p_2(B)$ y $p_2$ es abierta), disjuntos y no vacíos, contradicción con que $X_2$ es conexo. 
+
+\end{proof}
+
+Lo relevante de esta demostración es darse cuenta de que $\topl_{A_1}^{sub}\otimes\topl_{A_2}^{sub} = \topl_{A_1×A_2}^{sub}$. 
+
+Por ejemplo, podemos ver que la superficie de un cilindro es conexo. Es producto de una circunferencia en $ℝ^2$, conexa (imagen continua de un intervalo) y un intervalo en $ℝ$, luego es conexo.
 
 \appendix
 \chapter{Ejercicios}
