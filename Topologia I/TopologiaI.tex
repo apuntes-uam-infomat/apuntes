@@ -1139,7 +1139,7 @@ Aquí hemos usado la definición, pero no suele ser la forma más cómoda de tra
 \item Si $A,B$ son conexos y $A∩B ≠ \emptyset$ entonces $A∪B$ es conexo. Mas generalmente, si $C_0$ y $C_j, j∈J$ son conexos y $C_0∩C_j ≠ \emptyset\; ∀j∈J$, entonces $C_0 ∪ \left(\bigcup_{j∈J} C_j\right)$ es conexo.
 
 \item Si $W$ es conexo y $W⊆D⊆\adh{W}$, entonces $D$ es conexo. Es decir, que si a un conexo le añadimos puntos en su adherencia, se obtiene otro conexo.
-\end{enumerate}
+\end{enumerate} \label{propUnionConexa}
 \end{prop}
 
 \begin{proof}
@@ -1254,6 +1254,85 @@ En el segundo caso, tenemos que $∀x_2∈X_2$ $A_{x_2} = \emptyset$ ó $B_{x_2}
 Lo relevante de esta demostración es darse cuenta de que $\topl_{A_1}^{sub}\otimes\topl_{A_2}^{sub} = \topl_{A_1×A_2}^{sub}$. 
 
 Por ejemplo, podemos ver que la superficie de un cilindro es conexo. Es producto de una circunferencia en $ℝ^2$, conexa (imagen continua de un intervalo) y un intervalo en $ℝ$, luego es conexo.
+
+\subsection{Componentes conexas}
+
+\begin{defn} Sea $(X, \topl)$ un espacio topológico. Definimos la siguiente relación de equivalencia $\rel$ para $x,y∈X$ : 
+
+\[ x\rel y ≝ ∃W⊆X \text{ conexo } \tq x,y ∈ W \]
+\end{defn}
+
+\begin{prop} $\rel$ es una relación de equivalencia.
+\end{prop}
+
+\begin{proof} Demostremos las propiedades:
+
+\begin{enumerate}
+\item $x\rel x$, obvio si tomamos $W = \{ x \}$.
+\item $x\rel y \implies y \rel x$, también obvio ya que en la definición no hay ningún orden.
+\item $x\rel y \y y \rel z \implies z \rel x$. Aquí hay que hacer un poco más pero tampoco mucho. $x,y∈W_1$ y $y,z∈W_2$, ambos conexos. La intersección $W_1∩ W_2$ no es vacía (está $y$ al menos), así que usamos la proposición \ref{propUnionConexa} y entonces la unión es conexa.
+\end{enumerate}
+\end{proof}
+
+\begin{defn}[Componente\IS conexa] Las clases de equivalencia de $\rel$ son las componentes conexas de $X$.\end{defn}
+
+\begin{prop} La definición de componente conexa a partir de una relación de equivalencia nos permite sacar varias propiedades:
+
+
+\begin{enumerate}
+\item Las componentes conexas forman una partición de $X$.
+\item Las componentes conexas son los conexos ``más grandes'' de $X$, es decir:
+\begin{enumerate}
+\item Una componente conexa es conexo.
+\item Si $A$ es conexo existe una componente conexa $C$ tal que $A⊆C$.
+\end{enumerate}
+\item Las componentes conexas son cerrados en $X$.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item $\rel$ es una relación de equivalencia.
+\item Sea $C$ componente conexa y $x_0∈C$. Entonces $∀y∈C$, $y≠x_0$, $x_0\rel y$, por tanto $∃W_y$ conexo con $x_0, y ∈ W_y$. 
+
+De aquí sacamos que $x_0\rel z \quad∀z∈W_y$, ya que $x_0, z∈W_y$. Es decir, $W_y ⊆ C$. Queda claro entonces que \[ C = \bigcup_{y∈C\setminus\{x_0\}}W_y \]
+
+Por último, sea $W_{x_0} ≝ \{ x_0\}$, conexo. Es un conexo fijo y una familia de conexos tal que la intersección de cada uno de ellos con el fijo es distinto del vacío ($x_0 ∈ W_{x_0} ∩ W_y \;∀y$), así que podemos usar la proposición \ref{propUnionConexa} y entonces tenemos que \[ C = \left(\bigcup_{y ∈ C\setminus \{x_0\}} W_y \right) ∪ W_{x_0} \] es conexo.
+
+\item Si $C$ es componente conexa, entonces es conexo (lo acabamos de ver). En ese caso, $\adh{C}$ es conexo (ver la proposición \ref{propUnionConexa}), y entonces está contenido en una componente conexa. Y como las componentes conexas son disjuntas y $C∩\adh{C} ≠ \emptyset$, tiene que ser $C=\adh{C}$, luego $C$ es cerrado.
+
+\end{enumerate}
+\end{proof}
+
+\begin{prop} Si $A$ es abierto y cerrado en $X$ entonces $A$ es unión de componentes conexas de $X$.
+\end{prop}
+
+\begin{proof}
+Basta comprobar que si $C$ es una componente conexa y $C∩A≠\emptyset$, entonces $C⊆A$. Podemos escribir \[ C= (C∩A) ∪ (C∩A^c)\], unión de conexos disjuntos. Como $C$ es conexo, uno de los dos tiene que ser vacío. Como $C∩A≠\emptyset$, entonces $C∩A^c=\emptyset$, luego $C⊆A$.
+\end{proof}
+
+Vamos a ver varios ejemplos. Por ejemplo, en $(ℚ, \topl_{usual})$, ¿cuáles son las componentes conexas? Recordemos que $W⊆ℚ$ es conexo si y sólo si $(W, \topl_{ℚ}^{sub})$ es conexo, lo que ocurre si y sólo si $W⊆ℝ$ es conexo, es decir, si $W$ es un intervalo. Luego es obvio que $W$ tiene que ser un único punto: las componentes conexas de $ℚ$ son $\{q\}$, con $q∈ℚ$.
+
+Otro ejemplo: tomemos el anillo $A=\{ (x,y) ∈ ℝ \tq 1 < x^2 + y^2 < 4\}$, con la topología del orden lexicográfico. ¿Cómo son las componentes conexas?
+
+En $\topl_{Lex}$, los conexos eran los intervalos en rectas verticales, luego será obvio que en el anillo serán los intervalos abiertos contenidos en él.
+
+\begin{prop} Sean $(X, \topl_X), (Y, \topl_Y)$ espacios topológicos. Si $X$ e $Y$ son homeomorfos, entonces tienen el mismo número de componentes conexas.
+\end{prop}
+
+\begin{proof} (Idea). Si $\appl{f}{X}{Y}$ es un homeomorfismo, entonces la imagen de una componente conexa de $X$ es una componente conexa de $Y$.
+\end{proof}
+
+Contamos esta proposición para el siguiente ejemplo típico. Cojo un \textit{ocho} y un \textit{cero} dibujados en el plano (ver figura \ref{figOchoCero}). No son homeomorfos.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{II_OchoCero}
+\caption{Un ocho y un cero.}
+\label{figOchoCero}
+\end{figure}
+
+
 
 \appendix
 \chapter{Ejercicios}
