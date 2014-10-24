@@ -146,7 +146,7 @@ $$y_{n+2} = y_n + 2hf(t_{n+1}, y_{n+1})$$
 \end{mathproblem}
 En este problema se va a utilizar la siguiente notación: 
 
-$y(t_n)$ es el valor exacto de la solución a un PVI en el punto $t_n$, mientras que $y_n$ es el valor aproximado de la función, en el mismo punto, obtenido por el método correspondiente. 
+$y(t_{n+1})$ es el valor exacto de la solución a un PVI en el punto $t_{n+1}$, mientras que $y_{n+1}$ es el valor aproximado de la función, en el mismo punto, obtenido por el método correspondiente. 
 
 Por tanto, el residuo viene dado por $R_n = y(t_{n+1}) - y_{n+1}$
 
@@ -156,29 +156,82 @@ Por tanto, el residuo viene dado por $R_n = y(t_{n+1}) - y_{n+1}$
 \begin{equation*}
 \begin{array}{l l l l}
 R_n = & y(t_{n+1}) - y_{n+1} & = \\
- & y(t_{n+1}) - (y_n+\frac{h}{2}(f(t_{n+1},y_{n+1})+f(t_n, y_n))) & = & ^{(1)}\\
- & y(t_n)+hy'(t_n)+\frac{h^2}{2}y''(t_n)+\frac{h^3}{3!}y''(\bar{\xi_n}) & - & ^{(2)}\\ 
- & (y_n+\frac{h}{2}(f(t_{n+1},y_{n+1})+f(t_n, y_n))) & &  
+ & y(t_{n+1}) - (y(t_n)+\frac{h}{2}(f(t_{n+1},y(t_{n+1}))+f(t_n, y(t_n)))) & = &\\
+ & y(t_n)+hy'(t_n)+\frac{h^2}{2}y''(t_n)+\frac{h^3}{3!}y''(\bar{\xi_n}) & - & ^{(1)}\\ 
+ & (y(t_n)+\frac{h}{2}(f(t_{n+1},y(t_{n+1}))+f(t_n, y(t_n)))) & & \\
 \end{array}
 \end{equation*}
 
 Usando que $y'(t) = f(t, y(t))$ y desarrollando el polinomio de Taylor de orden 2 de $f(t_{n+1}, y_{n+1}) = y'(t_{n+1})$ alrededor de $t_n$ se tiene:
 
 \begin{equation*}
-\begin{array}{l l l}
-R_n & = y(t_n)+hy'(t_n)+\frac{h^2}{2}y''(t_n)+\frac{h^3}{3!}y''(\bar{\xi_n}) &  \\
-	& - (y(t_n) + \frac{h}{2}(y'(t_n) + y'(t_n) + hy''(t_n) + \frac{1}{2}h^2y'''(\bar{\eta_n}))) & ^{(3)}
+\begin{array}{l l}
+R_n & = y(t_n)+hy'(t_n)+\frac{h^2}{2}y''(t_n)+\frac{h^3}{3!}y''(\bar{\xi_n})\\
+	& - (y(t_n) + \frac{h}{2}(y'(t_n) + y'(t_n) + hy''(t_n) + \frac{1}{2}h^2y'''(\bar{\eta_n})))\\
 \end{array}
 \end{equation*}
 
 Realizando unas pocas operaciones se obtiene que
 $$R_n = h^3\left(\frac{y'''(\bar{\xi_n})}{3!} - \frac{y'''(\bar{\eta_n})}{4}\right)$$
-
-\footnotetext[1]{Se ha desarrollado el polinomio de Taylor de orden 3 de $y(t_{n+1})$ alrededor de $t_n$}
-\footnotetext[2]{$\bar{\xi_n} \in [t_n, t_{n+1}]$ puede variar para cada componente.}
-\footnotetext[3]{$\bar{\eta_n} \in [t_n, t_{n+1}]$ puede variar para cada componente.}
+donde $\bar{\xi_n}, \bar{\eta_n} \in [t_n, t_{n+1}]$ pueden variar para cada componente.
+\footnotetext[1]{Se ha desarrollado el polinomio de Taylor de orden 3 de $y(t_{n+1})$ alrededor de $t_n$}.
 
 \vspace{5mm}
 \noindent\textbf{Newton Modificado:}
+\begin{equation*}
+\begin{array}{l l}
+R_n = & y(t_{n+1}) - y_{n+1} \\
+    = & y(t_{n+1}) - \left( y(t_n) + hf(t_n+\frac{h}{2},y(t_n)+\frac{h}{2}f(t_n,y(t_n)))\right)\\
+\end{array}
+\end{equation*}
+Desarrollamos el polinomio de Taylor de los dos primeros términos del resultado anterior alrededor del punto $t_n+\frac{h}{2}$, teniendo en cuenta que $y(t_{n+1}) = y(t_n+h)$: 
+\begin{equation*}
+\begin{array}{l l}
+y(t_{n+1}) & = y(t_n+\frac{h}{2}) + f(t_n+\frac{h}{2}, y(t_n+\frac{h}{2}))\frac{h}{2}+\frac{1}{2}y''(t_n+\frac{h}{2})(\frac{h}{2})^2 + \frac{1}{3!}y'''(\bar{\gamma_n})(\frac{h}{2})^3\\
+y(t_{n}) & = y(t_n+\frac{h}{2}) - f(t_n+\frac{h}{2}, y(t_n+\frac{h}{2}))\frac{h}{2}+\frac{1}{2}y''(t_n+\frac{h}{2})(\frac{h}{2})^2 - \frac{1}{3!}y'''(\bar{\psi_n})(\frac{h}{2})^3
+\end{array}
+\end{equation*}
+obtenemos: 
+\begin{equation*}
+\begin{array}{l l}
+R_n & = hf(t_n+\frac{h}{2}, y(t_n+\frac{h}{2}))-hf(t_n+\frac{h}{2}, y(t_n)+\frac{h}{2}y'(t_n))\\
+  & - \frac{1}{24}y'''(\bar{\xi_n})h^3
+\end{array}
+\end{equation*}
+Teniendo en cuenta que $f$ es Lipschitz, podemos acotar los dos primeros términos del resultado anterior:
+$$R_n \le hL(y(t_n+\frac{h}{2})-(y(t_n)+\frac{h}{2}y'(t_n))) - \frac{1}{24}y'''(\bar{\xi_n})h^3$$
+Desarrollando el polinomio de taylor de $y(t_n+\frac{h}{2})$ alrededor de $t_n$:
+$$R_n \le h^3\left(\frac{1}{8}Ly''(\bar{\eta_n})-\frac{1}{24}y'''(\bar{\xi_n})\right)$$
+con $L$ una constante y $\bar{\xi_n}, \bar{\eta_n} \in [t_n, t_{n}+\frac{h}{2}]$ pueden variar para cada componente.
 
-\color{red}{En proceso}
+\vspace{5mm}
+\noindent\textbf{Leap-Frog:}
+\begin{equation*}
+\begin{array}{l l}
+R_n & = y(t_{n+2}) - y_{n+2} \\
+    & = y(t_{n+1}) - \left( y(t_n) + 2hf(t_{n+1}, y(t_{n+1}))\right)\\
+\end{array}
+\end{equation*}
+En este caso desarrollamos los dos primeros términos del resultado anterior alrededor del punto $t_{n+1}$:
+
+\begin{equation*}
+\begin{array}{l l}
+y(t_{n+2}) & = y(t_{n+1})+hf(t_{n+1}, y(t_{n+1})) + \frac{h^2}{2}y''(\bar{\gamma_n})\\
+y(t_{n}) & = y(t_{n+1})-hf(t_{n+1}, y(t_{n+1})) + \frac{h^2}{2}y''(\bar{\psi_n})\\
+\end{array}
+\end{equation*}
+obtenemos:
+$$R_n = 2h(f(t_{n+1}, y(t_{n+1}))) - 2hf(t_{n+1}, y(t_{n+1})) + h^2y''(\bar{\xi_n})$$
+Es decir
+$$R_n = h^2y''(\bar{\xi_n})$$
+donde $\bar{\xi_n} \in [t_n, t_{n+1}]$ puede variar para cada componente.
+
+
+
+% % Problem.
+\begin{mathproblem}{5}
+Dado $\theta \in [0,1]$, encontrar el orden del método:
+$$y_{n+1}=y_n+hf(t_n+(1-\theta)h, \theta y_n+(1-\theta)y_{n+1})$$
+\end{mathproblem}
+
+\color{red}{Estamos en ello.}
