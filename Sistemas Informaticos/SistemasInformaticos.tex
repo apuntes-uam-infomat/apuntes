@@ -25,10 +25,10 @@ El modelo de Web hipertexto no permite más iteracción del usuario que seleccio
 
 \subsection{CGIs}
 \begin{defn}[CGI]
-El CGI define el método para que un servidor WWW puede ejecutar programas externos y recoger información de ellos. Estos programas reciben el nombre de CGIs
+El CGI es un programa que recibe informacion de un servidor HTTP o WWW, de modo que permite al servidor ejecutar programas externos y recoger informacion que posteriormente enviara al cliente por medio de paginas HTML y el protocolo HTTP. 
 \end{defn}
 
-Esta tecnología de la World Wide Web (es una extensión del protocolo HTTP) permite que un cliente (el navegador) pueda solicitar los datos de un programa ejecutado en un servidor web. Fueron de los primeras métodos para crear contenido dinámico para las páginas web. El servidor web pasa las solicitudes del cliente a un programa externo (éste suele estar escrito en lenguaje script), y la salida de este programa es enviada al cliente en lugar del archivo estático tradicional.
+Esta tecnología de la World Wide Web (es una extensión del protocolo HTTP) permite que un cliente (el navegador) pueda solicitar los datos de un programa ejecutado en un servidor web. Fueron de los primeras métodos para crear contenido dinámico para las páginas web. El servidor web pasa las solicitudes del cliente a un programa externo, el CGI  (éste suele estar escrito en lenguaje script), y la salida de este programa es enviada al cliente en lugar del archivo estático tradicional.
 
 \textbf{Forma esquemática de actualización de un CGI}
 \begin{enumerate}
@@ -44,9 +44,29 @@ Esta tecnología de la World Wide Web (es una extensión del protocolo HTTP) per
 \item El  servidor ejecuta la aplicación y captura la salida estándar.
 \item La aplicación realiza su función y como resultado va generando un objeto MIME que la aplicación escribe en su salida estándar.
 \item El servidor envía la información producida junto con la información propia del cliente. Es responsabilidad de la aplicación informar del objeto MIME que se genera.
+
 \end{enumerate}
+\textbf{Importante} : Toda la comunicacion se realiza mediante el protocolo HTTP y el uso de páginas HTML, pues muestran el resultado de la ejecución del programa del CGI.
+
+
+
+\subsubsection{Ventajas e inconvenientes}
+\textbf{Ventajas:}
+\begin{itemize}
+\item Sencillez de programación.
+\item Permite el uso de cualquier lenguaje de programación (normalmente PERL e interpretados)
+\item El programa CGI no puede afectar al funcionamiento del servidor por ejecutarse como un proceso independiente.
+\item Estándar, de modo que generaliza la portabilidad entre servidores de distintos fabricantes.
+\end{itemize}
+\textbf{Inconvenientes:}
+\begin{itemize}
+\item Lento. Cada ejecucion requiere iniciar un proceso y termianrlo: reservas de memoria, apertura de ficheros, conexiones a bases de datos...
+\item Funciona por sesiones de modo que el programa CGI termina con cada llamada y no mantiene el estado de la comunicación entre peticiones.
+\end{itemize}
+
 
 \subsection{Formularios}
+A continuacion, una breve introduccion a los formularios HTML :
 \subsubsection{Protocolos}
 HTTP + páginas HTML
 
@@ -90,20 +110,13 @@ CONTENT-LENGT: xxx
 usuario=Superman&clave=loislane&nuevo=s
 \end{verbatim}
 \end{itemize}
+\textbf{Importante} La diferencia básica entre GET y POST radica en la forma en la que se envian los datos desde el cliente, una vez que este ha rellenado el formulario, al servidor.
 
-\subsubsection{Ventajas e inconvenientes}
-\textbf{Ventajas:}
-\begin{itemize}
-\item Sencillez de programación.
-\item Permite el uso de cualquier lenguaje de programación (normalmente PERL e interpretados)
-\item El programa CGI no puede afectar al funcionamiento del servidor por ejecutarse como un proceso independiente.
-\item Estándar, de modo que generaliza la portabilidad entre servidores de distintos fabricantes.
-\end{itemize}
-\textbf{Inconvenientes:}
-\begin{itemize}
-\item Lento. Cada ejecucion requiere iniciar un proceso y termianrlo: reservas de memoria, apertura de ficheros, conexiones a bases de datos...
-\item Funciona por sesiones de modo que el programa CGI termina con cada llamada y no mantiene el estado de la comunicación entre peticiones.
-\end{itemize}
+Usando el metodo GET indicamos que los datos se envian usando la URL. Esta consta de la direccion web seguido del simbolo ? y a continuacion parejas de datos nombre y valor (ahora separado cada par por el simbolo \&) que corresponden con los parametros que han sido rellenados por el cliente. A veces, ciertos caracteres introducidos en el form son sustituidos por otros en la URL. No olvidemos que una URL es una ruta a un recurso en otra máquina de modo que tenemos restricciones en cuanto a los nombres de los ficheros y carpetas a los que accedemos.
+
+Usando el metodo POST, la informacion introducida por el cliente en el form se puede decir que viaja oculta, pues no la podemos ver en la URL.
+
+Comparando ambas: El método POST exige el uso de otras tecnicas, como el lenguaje que posteriormente estudiaremos, PHP para recuperar los datos que el cliente introdujo en el form, mientras que usando GET podemos extraerlos directamente de a URL. Por otra parte, la ventaja de usar POST es que los datos no son visibles al usuario de la web, de modo que, en el caso de usar GET el usuario es capaz de modificar los parametros a traves de la URL puediendo modificar la informacion que el servidor tratará.
 
 \section{Web Application Programming Interfaces (Web APIs)}
 \subsection{Introducción}
@@ -113,7 +126,7 @@ Una \textbf{API} es una interfaz de programación de aplicaciones (del inglés A
 
 Son publicadas por los constructores de software para permitir acceso a características de bajo nivel o propietarias, detallando sólamente la forma en que cada rutina debe ser llevada a cabo y la funcionalidad que brinda, sin otorgar información acerca de cómo se lleva a cabo la tarea. Son utilizadas por los programadores para construir sus aplicaciones sin necesidad de volver a programar funciones ya hechas por otros, reutilizando código que se sabe que está probado y que funciona correctamente.
 
-En la web, las API's son publicadas por sitios para brindar la posibilidad de realizar alguna acción o acceder a alguna característica o contenido que el sitio provee. Algunas de las más conocidas son las API's de: Google Maps, Amazon, Flickr, Google Search, Futmondo, Xnxx, ...
+En la web, las API's son publicadas por sitios (\emph{websites}) para brindar la posibilidad de realizar alguna acción o acceder a alguna característica o contenido que el sitio provee. Algunas de las más conocidas son las API's de: Google Maps, Amazon, Flickr, Google Search,...
 
 Surgen para mitigar el bajo rendimiento de la interfaz CGI. En este caso, los nuevos programas se enlazan junto con el servidor en una librería dinámica, El servidor llama a las funciones de la librería como tareas dentro del proceso servidor. El proceso, en este caso, no finaliza: se mantienen ficheros abiertos, conexiones a base de datos y demás entre las llamadas. Se proporciona una API de acceso a datos y estado del servidor.
 
@@ -144,7 +157,10 @@ Se trata de una alternativa a la programación CGI.
 
 \section{El lenguaje PHP}
 \subsection{Introducción}
-Se trata de un lenguaje de programación interpretado para el servidor. Presenta una sintaxis parecida a C y C++ y permite acceso a formularios, archivos, bases de datos, etc.
+Se trata de un lenguaje de programación basado en \emph{script} interpretado por el servidor. Presenta una sintaxis parecida a C y C++ y permite acceso a formularios, archivos, bases de datos, etc.
+
+PHP es un lenguaje de script del lado del servidor (similar a otros lenguajes como ASP, JSP o Coldfusion). Sus siglas significan PHP Hypertext Processor.Los scripts PHP estan incrustados en el codigo HTML y el servidor los interpreta y ejecuta y transforma en HTML,  de modo que, el resultado que recibe el cliente no contiene código PHP. Es software abierto y gratuito, Para permitir el acceso a bases de datos, tenemos PHP + [PostgreSQL, MySQL], que es multiplataforma.
+
 
 Para el acceso a información propia del servidor se utiliza un  array indexado con el nombre del parámetro al que se desea acceder. El nombre del array es \$\_SERVER[indice] donde índice puede ser: QUERY\_STRING, REMOTE\_HOST,....
 
@@ -163,19 +179,27 @@ Otras variables ya definidas son:
 \item\$\_GLOBALS
 \end{itemize}
 
-PHP es un lenguaje de script del lado del servidor (similar a otros lenguajes como ASP, JSP o Coldfusion). Sus siglas significan PHP Hypertext Processor. En este caso, el script está incrustado en el código HTML y el servidor lo interpreta y ejecuta antes de servir la página al cliente. El cliente no ve el código PHP sino sus resultados. Es software abierto y gratuito, Para permitir el acceso a bases de datos, tenemos PHP + [PostgreSQL, MySQL], que es multiplataforma.
 
 \subsection{Características del lenguaje}
+
 \begin{verbatim}
 $variable : Permite declarar variables. (Recuerda: es case sensitive). Ha de
  comenzar por letra o _ y después letras, números o _ (Recordemos el examen
   de AUTLEN). En  cuanto a su ámbito, son globales al fichero, excepto si
    aparecen en una función , que son locales.
-echo $variable1.””.$variable2: Permite concatenar cadenas e imprimirlas.
+
+
+echo $variable1 . $variable2: Permite concatenar cadenas e imprimirlas.
+
+
 echo strpos("Hello world!","world") : Devuelve la posición en la que
  comienza la cadena que es el segundo argumento.
+
+
 echo strlen("Hello world!");: Devuelve la longitud de la cadena (no cuenta /0)
 \end{verbatim}
+
+
 
 Veamos un ejemplo de declaración de una función:
 \begin{verbatim}
@@ -232,7 +256,17 @@ Las variables no se expanden (es decir: ‘a vale $a’ muestra “a vale $a”)
 - Dobles: admiten más caracteres de escape como \n, \r, \t, \\, \$, \”. En
  este caso, las variables sí se expanden: “a vale 9”
 \end{verbatim}
+
 Para acceder a un carácter de la cadena usamos: \$letra = \$cadena\{8\};
+
+\textbf{Nota sobre la diferencia entre echo y print}:
+Ambas permiten imprimir con salida en el fichero HTML que el servidor genera. ¿La diferencia? Son basicamente 2:
+\begin{itemize}
+\item echo es más rapido pues no devuleve un valor a diferencia de print
+\item echo acepta el formato : echo expresion, [expresion], [expresion] mientras que print solo acepta el formato print([expresion]).
+\end{itemize}
+\textbf{Nota}: PHP es mas eficiente en el parseo de código si usamos comillas simples en lugar de dobles cuando la cadena que deseamos imprimir no contiene variables.
+
 
 
 \subsubsection{Constantes}
@@ -336,7 +370,11 @@ si no:
   Mostrar formulario
 \end{verbatim}
 La clave para que esto funcione es en el formulario indicar que el campo action es el mismo php que en el que nos encontramos. Además para comprobar que se ha pulsado o no el botón de submit, debemos usar la condición:
-if (isset(\$aceptar)) o bien if (\$aceptar==”Aceptar”).
+if (isset(\$aceptar)) o bien if (\$aceptar==”Aceptar”) donde el elemento HTML tiene la forma:
+\begin{verbatim}
+<INPUT TYPE="SUBMIT" NAME="aceptar" VALUE="Aceptar">
+\end{verbatim}
+
 Para ver un ejemplo, mirar el ejercicio que se pidió subir a moodle.
 \end{enumerate}
 
@@ -347,7 +385,7 @@ Se trata de un pequeño fichero que el servidor introduce en el pc del cliente (
 Se coloca antes de la etiqueta <html>
 \begin{verbatim}
 <?php
-setcookie("user", ”Bob Sponge", time() + 60 * 60);
+	setcookie("user", ”Bob Sponge", time() + 60 * 60);
 ?>
 <html>
 ...
@@ -358,7 +396,7 @@ La variable \$\_COOKIE es un array que guarda (name,value, expire, path, domain)
 Para imprimirlos:
 
 \begin{verbatim}
-echo $_COOKIE[“user”;
+echo $_COOKIE[“user”];
 \end{verbatim}
 Para ver todas:
 \begin{verbatim}
@@ -375,19 +413,22 @@ Por último, en PHP encontramos una variable que es \$\_SESSION que guarda valor
 \subsubsection{Sintaxis}
 Algunas de las funciones más importantes son:
 \begin{itemize}
-\item \textbf{session\_start()}; Comienza la sesión
+\item \textbf{session\_start()}; Comienza la sesión o la reanuda si ya existía.
 \item \textbf{\$\_SESSION[‘name’] = “Elena”}; Establece el nombre o identificador  de la sesión
-\item \textbf{unset(\$\_SESSION[‘name])}; Borra el identificador del usuario (elimina una única variable del array \$\_SESSION). Otro ejemplo:
-\item \textbf{unset(\$\_SESSION['session\_var'])};
+\item \textbf{unset(\$\_SESSION[‘name])}; Borra el identificador del usuario (elimina una única variable del array \$\_SESSION). Esta funcion puede ser aplicada a otras variables previamente declaradas en nuestro código y su comportamiento es destruir dicha variable. Ojo, si la variable en cuestión es global y llamamos a unset() dentro de una función, solo la variable local sera destruida.
+
+ Otro ejemplo:
+unset(\$\_SESSION['session\_var']);
+
 \item \textbf{session\_unset()}; Borra los contenidos de la sesión pero mantiene el id y el nombre de la sesión.
-\item \textbf{session\_destroy()}; Elimina la sesión (no sólo los datos que fueron guardados en la misma)
+\item \textbf{session\_destroy()}; Elimina la sesión (no sólo los datos que fueron guardados en la misma). Sería lo conveniente, cuando, por ejemplo, un usuario decide hacer \emph{log out} en una página web.
 \end{itemize}
 
 \section{Ejecución de código en el cliente: javascript, ajax, jQuery}
 
 \subsection{Javascript}
 \subsubsection{Introducción}
-Enriqueze las páginas HTML incorporando características dinámicas e iteractivas. Se ejecuta siempre en el cliente, sin necesidad de acudir al servidor en busca de información. Se emplea para manipular contenidos de forma dinámica, validación de formularios, etc.
+Enriquece las páginas HTML incorporando características dinámicas e iteractivas. Se ejecuta siempre en el cliente, sin necesidad de acudir al servidor en busca de información. Se emplea para manipular contenidos de forma dinámica, validación de formularios, etc.
 
 Es un lenguaje interpretado y orientado a objetos. Presenta una sintáxis muy similar a Java (y a C).
 
