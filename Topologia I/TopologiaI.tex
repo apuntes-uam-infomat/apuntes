@@ -1182,7 +1182,7 @@ t & \longmapsto t\vx + (1-t)\vy
 
 continua y $f([0,1]) = [\vx,\vy]$. 
 
-\begin{defn}[Conjunto\IS estrellado] Un conjunto estrellado en $ℝ^m$ es un conjunto $E$ tal que $∃\vec{x_0}∈E$ tal que $∀\vx∈E$ se tiene que $[\vec{x_0}, \vx]⊆E$.
+\begin{defn}[Conjunto\IS estrellado] Un conjunto estrellado en $ℝ^m$ es un conjunto $E$ tal que $∃\vec{x_0}∈E$ tal que $∀\vx∈E$ se tiene que $[\vec{x_0}, \vx]⊆E$. \label{defEstrellado}
 \end{defn}
  
 Además los convexos también son conexos (son estrellados con respecto a cualquiera de sus puntos). Obviamente, entonces las bolas euclídeas, tanto abiertas como cerradas, son conexas.
@@ -1257,7 +1257,7 @@ Por ejemplo, podemos ver que la superficie de un cilindro es conexo. Es producto
 
 \subsection{Componentes conexas}
 
-\begin{defn} Sea $(X, \topl)$ un espacio topológico. Definimos la siguiente relación de equivalencia $\rel$ para $x,y∈X$ : 
+\begin{defn} \label{defRelacConexion} Sea $(X, \topl)$ un espacio topológico. Definimos la siguiente relación de equivalencia $\rel$ para $x,y∈X$ : 
 
 \[ x\rel y ≝ ∃W⊆X \text{ conexo } \tq x,y ∈ W \]
 \end{defn}
@@ -1332,7 +1332,72 @@ Contamos esta proposición para el siguiente ejemplo típico. Cojo un \textit{oc
 \label{figOchoCero}
 \end{figure}
 
+Por ejemplo, podemos quitar dos puntos del ocho sin que deje de ser conexo, pero no podemos hacer lo mismo en el cero: da igual qué dos puntos cojamos que dejará de ser conexo.
 
+También podemos hacerlo por componentes conexas: podemos quitar tres puntos en el ocho (los rojos) y nos quedarían dos componentes conexas. Sin embargo, al hacer lo mismo en el cero nos quedarían tres componentes conexas.
+
+\subsection{Conexión por caminos}
+
+\begin{defn}[Conexión\IS por caminos] Se dice que un espacio topológico $(X, \topl)$ es conexo por caminos (cpc) si y sólo si $\,∀x,y∈X$ existe una aplicación $\appl{φ}{[a,b]}{X}$ continua tal que $φ(a) = x$, $φ(b) = y$.
+
+En el caso de un subespacio, $W⊆X$, $W$ es cpc si y sólo si $(W,\topl^{sub})$ es cpc. En otras palabras, si y sólo si $\,∀x,y∈W$ existe una aplicación continua $\appl{φ}{[a,b]}{X}$ tal que $φ(a) = x$, $φ(b)=y$ y con \[ \mop{Traza}(φ) ≝ \{ φ(t) \tq t ∈ [a,b]\} ⊆ X \].
+\end{defn}
+
+\begin{prop} Si un espacio o subespacio es conexo por caminos, entonces es conexo.
+\end{prop}
+
+\begin{proof}
+Podemos hacerlo de varias formas. Como $\mop{Traza}(φ)$ es conexo (es imagen continua de un intervalo), entonces $x\rel y$ con la relación definida en \ref{defRelacConexion} para componentes conexas para cualquier par $x,y∈ X$. Entonces $X$ tiene una única componente conexa y por lo tanto es conexo.
+
+De otra manera: tomo $x_0∈X$ fijo. Entonces, $∀y∈X\;∃φ_y$ que conecta $x_0$ con $y$. Luego podemos escribir \[ X = \{x_0\} ∪ \left(\bigcup_{y∈X} \mop{Traza}(φ_y)\right)\], que es conexo según la proposición \ref{propUnionConexa}.
+\end{proof}
+
+Veamos algunos ejemplos. Cojamos $W⊆ℝ^m$. Si $W$ es convexo, entonces es cpc. Recordemos que $W$ es conexo si \[ ∀x,y∈W,\;[x,y]⊆W\], luego es trivial encontrar la aplicación $φ$ continua para cada par $x,y$ que queramos.
+
+Una consecuencia muy sencilla es que las bolas euclídeas $\bola(x,r)$ son cpc.
+
+Otro ejemplo son los conjuntos estrellados \ref{defEstrellado}. Si $W⊆ℝ^m$ es estrellado, entonces es cpc. Recordemos que si $W$ es estrellado, entonces $∃x_0∈W$ tal que $∀y∈W$ el intervalo $[x_0, y] ⊆ W$. En este caso también es muy sencillo encontrar la aplicación φ que necesitamos:
+
+\begin{gather*}
+\appl{φ}{[0,2]}{W} \\
+φ(t) = \begin{cases} tx_0 + (1-t)x \\
+(t-1)y + (2-t)x_0
+\end{cases}\end{gather*}
+
+Obviamente tenemos que $φ(0) = x$, $φ(1) = y$ y además φ es continua.
+
+El peine topológico que habíamos visto antes (\ref{figPeine}) también es conexo por caminos, y podemos encontrar fácilmente la aplicación que buscamos. Eso sí, si quitásemos un punto de una de las barras verticales dejaría de ser cpc, pero seguiría siendo conexo.\footnote{No lo demuestra pero habla algo de la adherencia, y parece que tiene lógica}.
+
+\begin{prop} Varias propiedades interesantes análogas a las que habíamos visto con conexión.
+
+\begin{enumerate}
+	\item La imagen continua de un cpc es cpc.
+	\item Si $D_0$ es cpc, $D_j$ es cpc $∀j∈J$ y $D_0∩D_j≠∅\;∀j∈J$, entonces $D_0∪\bigcup_{j∈J} D_j$ es cpc. Como caso particular, la unión de dos $A,B$ cpc no disjuntos es cpc igualmente.
+	\item Sean $(X_1,\topl_1),(X_2,\topl_2)$ cpc. Entonces $(X_1×X_2, \topl_1\otimes\topl_2)$ es cpc.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+	\item Tomamos $(X_1,\topl_1),(X_2,\topl_2)$ espacios topológicos. Por hipótesis, $W⊆X_1$ es cpc y tenemos $\appl{f}{X_1}{X_2}$ continua. Entonces tenemos que demostrar que $f(W)$ es cpc.
+
+	Si tomamos $x_2, y_2 ∈ f(W)$, entonces $∃x_1, y_1 ∈ W$ con $f(x_1) = x_2, f(y_1) = y_1$. Como $W$ es cpc, entonces $∃\appl{φ_1}{[a,b]}{X_1}$ continua con $φ_1([a,b])⊆W,\,φ_1(a) = x_1,\,φ_1(b) = x_2$. Entonces $φ_2 = f ○ φ_1$ es continua, $φ_2(a) = x_2, \, φ_2(b) = y_2$ y $φ_2([a,b])⊆f(W)$.
+
+	\item Tenemos $x,y∈D_0∪\bigcup_{j∈J}D_j$. $∃j_x$ (posiblemente 0) tal que $x∈D_{j_x}$. De la misma forma, tenemos un $j_y$ tal que $y∈D_{j_y}$. 
+
+	Sabemos también que como $D_{j_x}∩D_0≠∅$ por hipótesis, entonces $∃x_0∈D_0∩D_{j_x}$, y análogamente existe un $y_0$.
+
+	Como $x_0,x∈D_{j_x}$ y es cpc, entonces existe la aplicación de siempre $\appl{φ_x}{x}{x_0}$\footnote{Abuso de notación muy hardcore pero lo ha escrito él y no me apetece escribirlo todo.}, y lo mismo con otra aplicación $φ_y$. Y como además $x_0, y_0∈D_0$ cpc, tenemos la aplicación $\appl{φ_0}{x_0}{y_0}$ y entonces podemos ``unirlas''
+	\footnote{Más formalmente: dadas $\appl{φ_1}{[a,b]}{Φ_1}$, $\appl{φ_2}{[b,c]}{Φ_2}$, entonces la ``unión'' es $\appl{φ_1\astφ_2}{[a,b+d-c]}{Φ_1∪Φ_2}$ con \[ φ_1\astφ_2(t) = \begin{cases} φ_1(t) & a≤t≤b \\ φ_2(t + c-b) & b ≤ t ≤ b+d-c\end{cases} \].} 
+	y ya tenemos la aplicación continua que necesitamos.
+
+	\item Si $X_1, X_2$ son cpc, entonces $X_1×X_2$ también lo es. Sean $\vx=(x_1, x_2), \vy=(y_1, y_w) ∈ X_1×X_2$. Entonces existen sendas aplicaciones $φ_1, φ_2$ que llevan el intervalo $[0,1]$ a $X_1$ y $X_2$ respectivamente qie npos dan el camino de conexión. Luego la aplicación que necesitamos en el espacio producto es \begin{align*} \appl{φ&}{[0,1]}{X_1×X_2} t & \longmapsto (φ_1(t), φ_2(t)) \end{align*} que es continua y demás zarandajas.
+\end{enumerate}
+\end{proof}
+
+\begin{remark}
+Si $X_1×X_2$ es cpc, entonces $X_1$, $X_2$ son cpc.
+\end{remark}
 
 \appendix
 \chapter{Ejercicios}
