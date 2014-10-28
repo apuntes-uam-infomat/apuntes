@@ -745,7 +745,7 @@ Vamos a centrarnos ahora en análisis semántico.
 
 Vamos a explicar brevemente la idea que hay detrás de esto:
 
-Partiendo de una gramática independiente del contexto, y derivando el axioma hasta obtener una sentencia, queremos obtener alguna función específica de nuestra gramática. 
+Partiendo de una gramática independiente del contexto, y derivando el axioma hasta obtener una sentencia, queremos obtener alguna función específica de nuestra gramática.
 
 Es entonces cuando surgen las gramáticas de atributos, que añaden lo siguiente a la gramática independiente del contexto:
 
@@ -811,7 +811,7 @@ for tree={
  ]
 \end{forest}
 
-Vemos que semánticamente es correcto ya que se obtiene de derivar el axioma $L$.      	
+Vemos que semánticamente es correcto ya que se obtiene de derivar el axioma $L$.
 
 Queremos hacer que esta gramática nos devuelva la profundidad de una expresión, es decir, el máximo número de paréntesis contenidos unos en otros.
 
@@ -973,7 +973,7 @@ Para la primera regla, el orden en que se recorrería el árbol de derivación e
 \begin{verbatim}
 - En el instnate 0 bajamos del nodo L al nodo i
 - En el instante i volvemos al nodo L
-\end{verbatim} 
+\end{verbatim}
 
 Como es lógico, la operación de setType representada en la gramática no puede realizarse hasta conocer el tipo de L y el nombre de i, por lo que se realiza en el instante 1.
 
@@ -982,7 +982,7 @@ Lo representaríamos como:
 
 Vamos ahora con la segunda regla. El orden en el que se recorrería el árbol de derivación seria:
 \begin{verbatim}
-- En el instante 0 bajamos del nodo A al nodo i, en el instante 1 volvemos al A. 
+- En el instante 0 bajamos del nodo A al nodo i, en el instante 1 volvemos al A.
 - En ese instante bajaríamos al nodo =, del que volveríamos en el instante 2.
 - Por último bajaríamos al nodo E y volveríamos del mismo en el instante 3
 \end{verbatim}
@@ -999,7 +999,181 @@ En este tercer ejemplo es importante añadir algunas comprobaciones más en las 
 -En la regla $E \rightarrow i$ comprobar $inTS(i.nombre)==true$ y $gt(i.nombre)==E.tipo$ con gt=getType (es decir, ¿es el parametro tipo de i.nombre igual al de E?).
 \end{example}
 
+\chapter{Analizador (morfológico y sintáctico}
+%TODO Falta clase del lunes
 
+\section{Tablas de análisis}
+Las tablas de análisis consisten en analizar una sentencia de forma ascendente, con el fin de saber si se trata de una sentencia válida para una gramática dada o no.
+
+Veamos un ejemplo:
+\begin{example}
+Dada la gramática:
+\begin{itemize}
+\item E $\rightarrow$ E + E
+\item E $\rightarrow$ E x E
+\item E $\rightarrow$ -E
+\item E $\rightarrow$ (E)
+\item E $\rightarrow$ 1
+\end{itemize}
+
+Y vamos a partir de la sentencia:
+\begin{center}
+(id+id)xid
+\end{center}
+
+Para ello vamos a contar con la ayuda de una pila y nos basaremos en dos reglas básicas:
+\begin{enumerate}
+\item \textbf{Reducción}
+Se aplicará siempre que sea posibles. No hay elección.
+
+Se lleva a cabo cuando los elementos de la cima de la pila coinciden con la parte derecha de alguna regla de nuestra gramática.
+
+En este caso se extraen los elementos de la pila y se sustituyen por la parte izquierda de la regla indicada anteriormente.
+
+\item \textbf{Desplazamiento}
+Se aplica cuando no puede realizarse ninguna reducción.
+
+Consiste en introducir en la cima de la pila el siguiente elemento de la sentencia que estamos analizando
+\end{enumerate}
+
+Aplicando estas reglas a nuestra sentencia obtenemos el siguiente resultado:
+\begin{center}
+\begin{tabular}{| c | c | c | c |}
+\hline
+Instante & Entrada & Pila & Acción \\
+\hline
+0 & (id+id)xid & - & Desplazamiento \\
+\hline
+1 & id+id)xid & ( & Desplazamiento \\
+\hline
+2 & +id)xid & (id & Reducción \\
+\hline
+3 & +id)xid & (E & Desplazamiento \\
+\hline
+4 & id)xid & (E+ & Desplazamiento \\
+\hline
+5 & )xid & (E+id & Reducción\\
+\hline
+6 & )xid & (E+E & Reducción \\
+\hline
+7 & )xid & (E & Desplazamiento \\
+\hline
+8 & xid & (E) & Reducción \\
+\hline
+9 & xid & E & Desplazamiento \\
+\hline
+10 & id & Ex & Desplazamiento \\
+\hline
+11 & - & Exid & Reducción \\
+\hline
+12 & - & ExE & Reducción \\
+\hline
+13 & - & E & Fin \\
+\hline
+\end{tabular}
+\end{center}
+Puesto que en la pila sólo queda el axioma, concluimos que la sentencia es válida para este lenguaje.
+\end{example}
+
+Tras este ejemplo podemos definir formalmente el algoritmo de análisis ascendnete.
+
+\begin{defn}[Análisis ascendente]
+Este algoritmo consiste de dos pasos:
+\begin{verbatim}
+Mientras queden elementos en la entrada:
+  desplazamos
+  mientras podemos reducir:
+      reducimos    
+
+Si en la pila sólo está el axioma:
+    OK. 
+En caso contrario:
+    ERROR.
+\end{verbatim}
+\end{defn}
+
+Una vez visto el análisis ascendente el siguiente paso es estudiar el análisis descendente. 
+
+En este caso, empezamos en el axioma y aplicamos derivaciones intentando llegar a la sentencia que queremos analizar.
+
+Vamos a trabajar con gramáticas sencillas en las que sólo haya una derivación posible en cada paso. En caso de no ser así deberíamos avanzar todo lo posible para despues hacer backtracking, comprobando que no dejamos caminos sin explorar.
+
+Veámoslo con un ejemplo:
+\begin{example}
+Dada la gramática:
+\begin{itemize}
+\item E $\rightarrow$ TB
+\item B $\rightarrow$ +TB | λ
+\item T $\rightarrow$ FX
+\item X $\rightarrow$ *FX | λ
+\item F $\rightarrow$ i | (E)
+\end{itemize}
+Queremos comprobar si es válida la sentencia:
+\begin{center}
+i*i
+\end{center}
+Para hacerlo apoyándonos en una pila, como en el ejemplo anterior, los pasos a seguir son los siguientes:
+
+\begin{tabular}{| c | c | c |}
+\hline
+Instante & Pila  & Acción\\
+\hline
+1 & E & Derivamos\\
+\hline 
+2 & B | T & Derivamos \\
+\hline
+3 & B | X | F & Derivamos\\
+\hline 
+4 & B | X | i & Estraemos pues i está en la sentencia dada\\
+\hline
+5 & B | X & Derivamos \\
+\hline
+6 & B | X | F | *  & Extraemos pues i está en la sentencia dada \\
+\hline
+7 & B | X | F & Derivamos \\
+\hline
+8 & B | X | i & Estraemos pues i está en la sentencia dada \\
+\hline
+9 & B | X & Derivación λ\\
+\hline
+10 & B & Derivación λ \\
+\hline
+\end{tabular}
+
+Si al finalizar nos queda la pila vacía concluimos que la sentencia estudiada es correcta
+\end{example}
+
+\subsection{Tablas LR(n)}
+Antes de nada vamos a ver qué es esto:
+
+\begin{defn}[Tabla LR(n)]
+Tabla empleada para el procesamiento de entrada desde la izquierda (\textbf{L}eft) mediante derivaciones \textbf{R}ight-most con \textbf{n} símbolos de entrada.
+%TODO WTH?
+\end{defn}
+
+Veamos un ejemplo de como funciona esto
+\begin{example}
+Consideremos la gramática G=(T, N, E, P):
+\begin{itemize}
+\item E $\rightarrow$ T | E+T
+\item T $\rightarrow$ i | (E)
+\end{itemize}
+
+El primer paso para realizar el análisis LR(O) consiste en añadir un axioma E' y la regla:
+\begin{center}
+E' $\rightarrow$ E\$
+\end{center}
+
+De forma que la gramática extendida quedaría:
+\begin{itemize}
+\item E' $\rightarrow$ E \$
+\item E $\rightarrow$ T | E+T
+\item T $\rightarrow$ i | (E)
+\end{itemize}
+%TODO Ni guarrada de que estamos haciendo.
+%TODO This is for you
+
+\end{example}
 
 \appendix
 \chapter{Ejercicios}
