@@ -506,6 +506,8 @@ Pero por lo visto anteriormente, tenemos que:
 \end{problem}
 
 \subsection{Hoja 3}
+A lo largo de esta hoja se piden realizar varias demostraciones. La terminología que ha establecido Patricio en estos ejercicios consiste en llamar comprobaciones a los ejercicios mas triviales, pruebas a los del un nivel intermedio y demostraciones a los que realmente requieren esfuerzo.
+
 \begin{problem}
 Sea $(X, \algbM, µ)$ un espacio de medida. Si $E,F \in \algbM$ comprueba que 
 \[µ(E)+µ(F)=µ(E\cup F) - µ (E\cap F)\]
@@ -517,25 +519,34 @@ En este caso tiene razón, ya que lo ocurre es conceptualmente muy sencillo. Al 
 
 Para escribir una demostración formal observemos que:
 \[E \cup F = (E \setminus F) \cup (F\setminus E) \cup (E \cap F)\]
-Si tomamos la medida de todo ello obtenemos:
+Puesto que se trata de una unión disjunta, si tomamos la medida de todo ello obtenemos:
 \[µ(E \cup F) = µ(E \setminus F) + µ(F\setminus E) + µ(E \cap F) = µ(E)-µ(F\cap E)+µ(F)-µ(E \cap F)+µ(E \cap F) =\]
 \[= µ(E) + µ (F) +µ (E \cap F)\]
-%TODO completar esta birria
 \end{problem}
 
 \begin{problem}
-Sea $(X, \algbM, µ)$ un espacio de medida y sea $E \in \algbM$. Para cada $A \in \algbM$ sea $µ_E(A)=µ(E\cap A$. 
+Sea $(X, \algbM, µ)$ un espacio de medida y sea $E \in \algbM$. Para cada $A \in \algbM$ sea $µ_E(A)=µ(E\cap A)$. 
 
 Comprueba que $µ_E$ es una medida en $\algbM$
 \solution
-Para comprobar esto necesitamos ver que dada una sucesión de conjuntos disjuntos contenidos en $\algbM$ la medida de su unión es la suma de sus medidas y que la medida del vacío es 0.
+Si recordamos la definición de medida en un espacio medible, vemos que se trata de una aplicación de los subconjuntos del espacio a los reales que cumple dos propiedades básicas:
+\begin{enumerate}
+\item La medida del vacío es 0
+\item La medida de una unión de conjuntos disjuntos es la suma de las medidas de cada uno de los conjuntos
+\end{enumerate}
 
-Es decir:
-\[µ_E(\bigcup A_n)=µ(E \cap (\bigcup A_n)) = µ(\bigcup(A_n \cap E))\]
+Si queremos probar que $µ_E$ es una medida deberemos comprobar que se satisfacen esas dos conciciones, es decir:
+\[µ_E(\emptyset) = 0\]
+\[µ_E(\bigcup A_n) = \sum µ_E(A_n)\]
+
+La primera propiedad es trivial, ya que, por ser µ una medida tenemos:
+\[µ_E(\emptyset)=µ(E \cap \emptyset)=µ(\emptyset)=0\]
+
+Para la segunda propiedad vemos que:
+\[µ_E(\bigcup A_n)=µ_E(E \cap (\bigcup A_n)) = µ_E(\bigcup(A_n \cap E)) \text{ con } A_i\cap A_j = \emptyset \ \forall i\neq j\]
 Puesto que los $A_n \cap E$ son disjuntos y $µ$ es una medida sobre $\algbM$ tenemos que:
-\[µ(\bigcup(A_n \cap E))=\sum µ_E(A_n)\]
+\[µ(\bigcup(A_n \cap E))=\sum µ(E \cap A_n) = \sum µ_E(A_n)\]
 
-Además habría que comprobar que la medida del vacío es 0 antes de poder garantizar que estamos ante una medida. Esta parte se deja como ejercicio para el lector.
 \end{problem}
 
 \begin{problem}
@@ -547,18 +558,19 @@ Además habría que comprobar que la medida del vacío es 0 antes de poder garan
 \solution
 \begin{enumerate}
 \item
-Por ser µ $\sfin$ tenemos que:
+Sabemos que, por definición de $\sfin$, el conjunto $X$ (sobre el que está definida la medida) puede expresarse como una unión de elementos de la $\salgb$ de medida finita. Es decir:
 \[\exists \{E_n\}_{n \in \nat} \subset \algbM \tq X = \bigcup E_n \text{ con } µ(E_n)< \infty \forall n\]
 
-Y para ver que µ es semifinita debemos ver que:
+Y para ver que µ es semifinita, por definición, debemos ver que todo subconjunto $E$ de la $\salgb$ tiene un subconjunto contenido también en la $\salgb$ de medida finita. Es decir:
 \[\forall E \subset \algbM \text{ con } µ(E)>0, \ \exists A \in \algbM \text{ con } A\neq \emptyset \ A \subset E \text{ y } 0<µ(A) < \infty\]
 
 Puesto que $X$ puede expresarse como unión de los $E_n$ está claro que:
 \[E= \bigcup (E \cap E_n)\]
-y por tanto
+y puesto que no podemos garantizar que sean disjuntos los elementos de la unión tenemos:
 \[µ(E)=µ(\bigcup (E \cap E_n))\leq \sum(µ(E \cap E_n))\]
 
 Entonces 
+%TODO WTF? 
 \[\exists n \tq 0<µ(E \cap E_n) < \infty\]
 Y basta con tomar $A=E \cap E_n \subset E$
 
@@ -575,18 +587,18 @@ Por lo que es semifinita
 Ahora vamos a comprobar que no es $\sfin$ por reducción al absurdo.
 
 Si fuese $\sfin$,
-\[\exists \{E_n\}_{n \in \nat} \ µ(E_n) < \infty\]
-es decir, el cardinal de $E_n$ sería finito  y $X= \bigcup_{n \in \nat }E_n$ lo que implicaría que $X$ es numerable, contradición la hipótesis inicial.
+\[\exists \{E_n\}_{n \in \nat} \subset \algbM \tq X = \bigcup E_n \text{ con } µ(E_n)< \infty \forall n\]
+es decir, el cardinal de $E_n$ sería finito  y $X= \bigcup_{n \in \nat }E_n$ lo que implicaría que $X$ es numerable, en contradición la hipótesis inicial.
 
 \end{enumerate}
 \end{problem}
 
 \begin{problem}
 Sea $X$ un conjunto finito y numerable, para $A \subset X$ se define
-%TODO copiar
+$µ(A)=0$ si A es finito y $µ(A)=\infty$ si A infinito.
 
 \begin{enumerate}
-\item Comprueba que µ es finitamente aditiva (en $(\algbP (X))$) pero no numerable aditiva
+\item Comprueba que µ es finitamente aditiva (en $(X, \algbP (X))$) pero no numerable aditiva
 \item Comprueba que existe una sucesión creciente de conjuntos $\{A_n\}$ tal que:
 \end{enumerate}
 \solution
