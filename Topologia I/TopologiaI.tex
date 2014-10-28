@@ -1399,6 +1399,76 @@ El peine topológico que habíamos visto antes (\ref{figPeine}) también es cone
 Si $X_1×X_2$ es cpc, entonces $X_1$, $X_2$ son cpc.
 \end{remark}
 
+\begin{figure}[hbtp]
+\centering
+\inputtikz{II_SenoTopologo}
+\caption{La llamada curva seno del topólogo.}
+\label{figSenoTopologo}
+\end{figure}
+
+Vamos a ver otro ejemplo interesante: el seno del topólogo (figura \ref{figSenoTopologo}), dada por el conjunto \[ S = \underbrace{\left\{ \left(x, \sin \frac{1}{x}\right) \tq 0 < x ≤ 1\right\}}_{S_b} ∪ \{(0,0)\} \]
+
+Está claro que $S_b$ es conexo por ser imagen continua del conexo $(0,1)$. Además, $S_b⊆S⊆\adh{S_b}$, así que todo $S$ es conexo. Sin embargo, no es conexo por caminos, y eso es más delicado. Vamos a demostrarlo diciendo que no existe una aplicación $\appl{φ}{[0,1]}{S}$ continua tal que $φ(0) = (1,\sin 1)$, $φ(1) = (0,0)$, y lo vamos a hacer por demostración al absurdo.
+
+Sea $I = \left\{ s ∈ [0,1] \tq φ_1(t) > 0 \,∀t≤s \right\}$. No es vacío (como $φ_1(0) = 1, 0∈I$) y está acotado superiormente por $1$. Sea $a=\sup I$. Entonces afirmamos que $φ_1(a) = 0$ y $φ_1(t) > 0\, ∀t<a$, y por tanto $φ_2(t) = \sin\left(\frac{1}{φ_1(t)}\right)$. ¿Por qué?
+
+Bien, si tenemos que $φ_1(a)  > 0$, entonces $a<1$, y por continuidad $∃δ>0$ tal que $a+δ<1$, $a-δ>0$ y $φ_1|_{(a-δ, a+δ)} > 0$, luego como $s∈I > 0$ entonces $a+\frac{δ}{2} ∈ I$, contradicción porque habíamos dicho que $a$ era el supremo.
+
+Por otro lado, si $t<a$, entonces $∃s∈I$ luego $φ_1(t) > 0$. 
+
+Si hacemos que $t$ converja a $a$ por la izquierda, entonces $φ_1(t) \diagdown φ_1(a) = 0$. Pero si $t<a$, entonces $φ(t) = \left(φ_1(t), \sin\left(\frac{1}{φ_1(t)}\right)\right)$ oscila entre $-1$ y $1$, luego el límite $\lim_{t\to a^-}φ(t)$ no existe.\footnote{Aquí no sé qué puñetas he escrito.}
+
+\subsubsection{Componentes conexas por caminos}
+
+Vamos a definirlas de forma análoga a como lo hicimos con las componentes conexas, primero con una relación de equivalencia.
+
+\begin{defn} Sea $(X, \topl)$ un espacio topológico. Entonces \[ x\rel y ≝ ∃\appl{φ}{[0,1]}{X}\] continua y tal que $φ(0) = x$, $φ(1) = y$.
+\end{defn}
+
+Esa $\rel$ que acabamos de definir es relación de equivalencia, y no hace falta demostrarlo porque es muy sencillo.
+
+\begin{defn}[Componente\IS conexa por caminos] Las clases de equivalencia de $\rel$ son las componentes conexas por caminos de $X$.\end{defn}
+
+\begin{prop} Sea $(X, \topl)$ un espacio topológico. Entonces \begin{enumerate}
+	\item Las componentes conexas por caminos forman una partición de $X$.
+	\item Las componentes conexas cpc son los subconjuntos cpc más grandes de $X$, es decir \begin{itemize}
+		\item Una componente cpc es cpc.
+		\item Si $A$ es cpc, existe $C$ componente cpc tal que $A⊆C$.
+	\end{itemize}
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+	\item Es una relación de equivalencia, trivial.
+	\item Vamos a demostrar que si $A$ es conexa por caminos tiene que ser por fuerza un subconjunto de una clase de equivalencia $C$. Sea $C$ una componente cpc, luego si $x,y∈C$ entonces $x\rel y$ y existe una φ continua que conecta $x,y$. Necesitamos, eso sí, que todos los valores de φ estén en $C$.
+
+	Afirmamos que $φ_1(a) ∈ C\;∀a∈[0,1]$, y por tanto $C$ es cpc. Lo justificamos construyendo la aplicación $\appl{φ_a}{[0,1]}{X}$ tal que $φ_a(t) = φ(ta)$, que es continua. De esta forma, $φ_a(0) = φ(0) = x$, y $φ_a(1) = φ(a)$, luego $x\rel φ(a)$, y como $C$ es clase de equivalencia entonces $φ(a) ∈ C$.
+
+	Ahora ya vamos a $A$: si $A$ es cpc, entonces $∀x,y∈A$ existe una aplicación $\appl{φ}{[0,1]}{X}$ continua que conecta $x$ e $y$, luego cualquier par de puntos en $A$ están en la misma clase de equivalencia, que será $C$.
+\end{enumerate}
+\end{proof}
+
+\begin{remark} Las componentes conexas son cerrados, pero las componentes cpc no tienen por qué serlo. \end{remark}
+
+\begin{prop} Sean $(X, \topl), (Y, \topl')$ espacios topológicos y $\appl{f}{X}{Y}$ un homeomorfismo. Entonces \begin{enumerate}
+	\item La imagen por $f$ de una componente conexa de $X$ es una componente conexa de $Y$.
+	\item La imagen por $f$ de una componente cpc de $X$ es una componente cpc de $Y$.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+	\item Sea $C$ componente conexa de $X$. Entonces $f(C)$ es conexo en $Y$. Si no fuese componente conexa de $Y$, existiría un conexo $W$ en $Y$ conexo tal que $f(C) ⊂ W$. En ese caso, como $\inf{f}$ es continua, $\inv{f}(W)$ es conexo en $X$ y entonces al ser $f$ biyectiva tendríamos que $\inv{f}(W) ⊂ C$, contradicción.
+	\item Demostración análoga a lo anterior.
+\end{enumerate}
+\end{proof}
+
+\begin{corol} Dos espacios homeomorfos tienen el mismo número de componentes conexas y el mismo número de componentes cpc (los dos números no tienen por que ser iguales, podemos tener dos componentes conexas y una cpc).
+
+No tiene por qué cumplirse que dos espacios con el mismo número de componentes conexas y cpc sean homeomorfos.
+\end{corol}
+
 \appendix
 \chapter{Ejercicios}
 
