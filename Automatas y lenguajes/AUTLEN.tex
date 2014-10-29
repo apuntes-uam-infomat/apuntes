@@ -999,24 +999,91 @@ En este tercer ejemplo es importante añadir algunas comprobaciones más en las 
 -En la regla $E \rightarrow i$ comprobar $inTS(i.nombre)==true$ y $gt(i.nombre)==E.tipo$ con gt=getType (es decir, ¿es el parametro tipo de i.nombre igual al de E?).
 \end{example}
 
-\chapter{Analizador (morfológico y sintáctico}
-%TODO Falta clase del lunes
 
-\section{Tablas de análisis}
-Las tablas de análisis consisten en analizar una sentencia de forma ascendente, con el fin de saber si se trata de una sentencia válida para una gramática dada o no.
+
+\chapter{Analizador morfológico}
+Empezamos este capítulo recordando la función de un compilador.
+
+Dado un archivo $fuente$ este archivo pasará a través de un analizador de código, que realiza tres funciones, utilizando para ello una tabla de símbolos que el mismo genera:
+
+-Análisis morfológico.
+
+-Análisis sintáctico.
+
+-Análisis semántico.\\
+
+Tras ser analizado, se genera un árbol de derivación como los vistos hasta ahora.
+
+Nos centramos ahora en el analizador morfológico (también llamado léxico o scanner). Este realiza principalmente la siguiente función:
+
+-Obtención de unidades sintácticas. Son los llamados tokens. Estos pueden ser identificadores, constantes, palabras reservadas ($if$, $them$, $for$,...) u otros símbolos (simples: $+$, $=$,... o dobles: $:=$,...).\\
+
+Pero también es importante en la consecución de las siguientes tareas secundarias:
+
+1)Eliminar delimitadores (espacios en blanco, tabuladores, saltos de línea...).
+
+2)Eliminación de comentarios en el código.
+
+3)Detecta errores morfológicos. (Símbolos inválidos, constantes e identificadores mal construidos...)
+
+4)Inicializa algunas tareas semánticas, es decir, calcula el valor de algunos atributos de constantes o identificadores.\\
+
+
+Lo vemos con un ejemplo: tenemos un lenguaje que admite el siguiente tipo de objetos:
+
+-Identificadores: letra seguida de cero o más dígitos y letras.
+
+-Constantes: (números enteros).
+
+-Palabras reservadas: $begin$, $end$, $int$, $print$.
+
+-Símbolos: simples: $;$; dobles: $:=$.\\
+
+
+Con este lenguaje, y dado el siguiente fichero de entrada $fuente$.
+
+\begin{verbatim}
+begin
+	int A;
+	A := 100;
+	print A;
+end
+\end{verbatim}
+
+El analizador morfológico generará un fichero de salida semejante al siguiente:
+
+\begin{verbatim}
+<"begin",TOK_BEGIN>
+<"int",TOK_INT>
+<"A",TOK_ID, valor='A'>
+.
+.
+.
+<"100",TOK_CONST, valor=100>
+.
+.
+.
+\end{verbatim}
+
+La 4ª tarea secundaria, que tenía el analizador morfológico, es la que realiza la función de crear un atributo valor e inicializarlo.
+
+\chapter{Analizador sintáctico}
+
+\section{Tablas de análisis (ascendente y descendente)}
+Las tablas de análisis consisten en analizar una sentencia, con el fin de saber si se trata de una sentencia válida para una gramática dada o no.
 
 Veamos un ejemplo:
 \begin{example}
 Dada la gramática:
 \begin{itemize}
-\item E $\rightarrow$ E + E
-\item E $\rightarrow$ E x E
-\item E $\rightarrow$ -E
-\item E $\rightarrow$ (E)
-\item E $\rightarrow$ 1
+\item 1) E $\rightarrow$ E + E
+\item 2) E $\rightarrow$ E x E
+\item 3) E $\rightarrow$ -E
+\item 4) E $\rightarrow$ (E)
+\item 5) E $\rightarrow$ id
 \end{itemize}
 
-Y vamos a partir de la sentencia:
+Vamos a realizar un \textbf{análisis ascendente} partiendo de la siguiente sentencia:
 \begin{center}
 (id+id)xid
 \end{center}
@@ -1024,7 +1091,7 @@ Y vamos a partir de la sentencia:
 Para ello vamos a contar con la ayuda de una pila y nos basaremos en dos reglas básicas:
 \begin{enumerate}
 \item \textbf{Reducción}
-Se aplicará siempre que sea posibles. No hay elección.
+Se aplicará siempre que sea posible. No hay elección.
 
 Se lleva a cabo cuando los elementos de la cima de la pila coinciden con la parte derecha de alguna regla de nuestra gramática.
 
@@ -1046,27 +1113,27 @@ Instante & Entrada & Pila & Acción \\
 \hline
 1 & id+id)xid & ( & Desplazamiento \\
 \hline
-2 & +id)xid & (id & Reducción \\
+2 & +id)xid & (id & Reducción(5) \\
 \hline
 3 & +id)xid & (E & Desplazamiento \\
 \hline
 4 & id)xid & (E+ & Desplazamiento \\
 \hline
-5 & )xid & (E+id & Reducción\\
+5 & )xid & (E+id & Reducción(5)\\
 \hline
-6 & )xid & (E+E & Reducción \\
+6 & )xid & (E+E & Reducción(1) \\
 \hline
 7 & )xid & (E & Desplazamiento \\
 \hline
-8 & xid & (E) & Reducción \\
+8 & xid & (E) & Reducción(4) \\
 \hline
 9 & xid & E & Desplazamiento \\
 \hline
 10 & id & Ex & Desplazamiento \\
 \hline
-11 & - & Exid & Reducción \\
+11 & - & Exid & Reducción(5) \\
 \hline
-12 & - & ExE & Reducción \\
+12 & - & ExE & Reducción(2) \\
 \hline
 13 & - & E & Fin \\
 \hline
@@ -1075,7 +1142,7 @@ Instante & Entrada & Pila & Acción \\
 Puesto que en la pila sólo queda el axioma, concluimos que la sentencia es válida para este lenguaje.
 \end{example}
 
-Tras este ejemplo podemos definir formalmente el algoritmo de análisis ascendnete.
+Tras este ejemplo podemos definir formalmente el algoritmo de análisis ascendente.
 
 \begin{defn}[Análisis ascendente]
 Este algoritmo consiste de dos pasos:
@@ -1096,7 +1163,7 @@ Una vez visto el análisis ascendente el siguiente paso es estudiar el análisis
 
 En este caso, empezamos en el axioma y aplicamos derivaciones intentando llegar a la sentencia que queremos analizar.
 
-Vamos a trabajar con gramáticas sencillas en las que sólo haya una derivación posible en cada paso. En caso de no ser así deberíamos avanzar todo lo posible para despues hacer backtracking, comprobando que no dejamos caminos sin explorar.
+Vamos a trabajar con gramáticas sencillas en las que sólo haya una derivación posible en cada paso. En caso de no ser así deberíamos avanzar todo lo posible para después hacer backtracking, comprobando que no dejamos caminos sin explorar.
 
 Veámoslo con un ejemplo:
 \begin{example}
@@ -1108,7 +1175,7 @@ Dada la gramática:
 \item X $\rightarrow$ *FX | λ
 \item F $\rightarrow$ i | (E)
 \end{itemize}
-Queremos comprobar si es válida la sentencia:
+Vamos a usar un \textbf{análisis descendente} para comprobar si es válida la sentencia:
 \begin{center}
 i*i
 \end{center}
@@ -1140,15 +1207,14 @@ Instante & Pila  & Acción\\
 \hline
 \end{tabular}
 
-Si al finalizar nos queda la pila vacía concluimos que la sentencia estudiada es correcta
+Si al finalizar nos queda la pila vacía concluimos que la sentencia estudiada es correcta.
 \end{example}
 
 \subsection{Tablas LR(n)}
-Antes de nada vamos a ver qué es esto:
 
 \begin{defn}[Tabla LR(n)]
 Tabla empleada para el procesamiento de entrada desde la izquierda (\textbf{L}eft) mediante derivaciones \textbf{R}ight-most con \textbf{n} símbolos de entrada.
-%TODO WTH?
+
 \end{defn}
 
 Veamos un ejemplo de como funciona esto
@@ -1168,10 +1234,14 @@ De forma que la gramática extendida quedaría:
 \begin{itemize}
 \item E' $\rightarrow$ E \$
 \item E $\rightarrow$ T | E+T
+\item E $\rightarrow$ E+T
 \item T $\rightarrow$ i | (E)
+\item T $\rightarrow$ (E)
 \end{itemize}
-%TODO Ni guarrada de que estamos haciendo.
-%TODO This is for you
+
+Ahora lo que hacemos es añadir un '.' delante del símbolo que estemos analizando en cada paso.
+
+Veamos con el siguiente ejemplo
 
 \end{example}
 
