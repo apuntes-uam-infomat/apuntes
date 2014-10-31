@@ -1004,65 +1004,57 @@ En este tercer ejemplo es importante añadir algunas comprobaciones más en las 
 \chapter{Analizador morfológico}
 Empezamos este capítulo recordando la función de un compilador.
 
-Dado un archivo $fuente$ este archivo pasará a través de un analizador de código, que realiza tres funciones, utilizando para ello una tabla de símbolos que el mismo genera:
-
--Análisis morfológico.
-
--Análisis sintáctico.
-
--Análisis semántico.\\
-
+Dado un archivo $fuente$ este archivo pasará a través de un analizador de código, que realiza tres funciones, utilizando para ello una tabla de símbolos que él mismo genera:
+\begin{itemize}
+\item Análisis morfológico
+\item Análisis sintáctico
+\item Análisis semántico
+\end{itemize}
 Tras ser analizado, se genera un árbol de derivación como los vistos hasta ahora.
 
 Nos centramos ahora en el analizador morfológico (también llamado léxico o scanner). Este realiza principalmente la siguiente función:
 
--Obtención de unidades sintácticas. Son los llamados tokens. Estos pueden ser identificadores, constantes, palabras reservadas ($if$, $them$, $for$,...) u otros símbolos (simples: $+$, $=$,... o dobles: $:=$,...).\\
+\textbf{Obtención de unidades sintácticas.} Son los llamados tokens. Estos pueden ser identificadores, constantes, palabras reservadas ($if$, $them$, $for$,...) u otros símbolos (simples: $+$, $=$,... o dobles: $:=$,...).\\
 
 Pero también es importante en la consecución de las siguientes tareas secundarias:
-
-1)Eliminar delimitadores (espacios en blanco, tabuladores, saltos de línea...).
-
-2)Eliminación de comentarios en el código.
-
-3)Detecta errores morfológicos. (Símbolos inválidos, constantes e identificadores mal construidos...)
-
-4)Inicializa algunas tareas semánticas, es decir, calcula el valor de algunos atributos de constantes o identificadores.\\
-
+\begin{enumerate}
+\item Eliminar delimitadores (espacios en blanco, tabuladores, saltos de línea...).
+\item Eliminación de comentarios en el código.
+\item Detecta errores morfológicos. (Símbolos inválidos, constantes e identificadores mal construidos...)
+\item Inicializa algunas tareas semánticas, es decir, calcula el valor de algunos atributos de constantes o identificadores.
+\end{enumerate}
 
 Lo vemos con un ejemplo: tenemos un lenguaje que admite el siguiente tipo de objetos:
-
--Identificadores: letra seguida de cero o más dígitos y letras.
-
--Constantes: (números enteros).
-
--Palabras reservadas: $begin$, $end$, $int$, $print$.
-
--Símbolos: simples: $;$; dobles: $:=$.\\
-
+\begin{itemize}
+\item Identificadores: letra seguida de cero o más dígitos y letras.
+\item Constantes: (números enteros).
+\item Palabras reservadas: $begin$, $end$, $int$, $print$.
+\item Símbolos: simples: $;$; dobles: $:=$.
+\end{itemize}
 
 Con este lenguaje, y dado el siguiente fichero de entrada $fuente$.
 
 \begin{verbatim}
-begin
-	int A;
-	A := 100;
-	print A;
-end
+    begin
+        int A;
+        A := 100;
+        print A;
+    end
 \end{verbatim}
 
 El analizador morfológico generará un fichero de salida semejante al siguiente:
 
 \begin{verbatim}
-<"begin",TOK_BEGIN>
-<"int",TOK_INT>
-<"A",TOK_ID, valor='A'>
-.
-.
-.
-<"100",TOK_CONST, valor=100>
-.
-.
-.
+    <"begin",TOK_BEGIN>
+    <"int",TOK_INT>
+    <"A",TOK_ID, valor='A'>
+    .
+    .
+    .
+    <"100",TOK_CONST, valor=100>
+    .
+    .
+    .
 \end{verbatim}
 
 La 4ª tarea secundaria, que tenía el analizador morfológico, es la que realiza la función de crear un atributo valor e inicializarlo.
@@ -1070,7 +1062,7 @@ La 4ª tarea secundaria, que tenía el analizador morfológico, es la que realiz
 \chapter{Analizador sintáctico}
 
 \section{Tablas de análisis (ascendente y descendente)}
-Las tablas de análisis consisten en analizar una sentencia, con el fin de saber si se trata de una sentencia válida para una gramática dada o no.
+Las tablas de análisis permiten analizar una sentencia, con el fin de saber si se trata de una sentencia válida para una gramática dada o no.
 
 Veamos un ejemplo:
 \begin{example}
@@ -1150,16 +1142,16 @@ Este algoritmo consiste de dos pasos:
 Mientras queden elementos en la entrada:
   desplazamos
   mientras podemos reducir:
-      reducimos    
+      reducimos
 
 Si en la pila sólo está el axioma:
-    OK. 
+    OK.
 En caso contrario:
     ERROR.
 \end{verbatim}
 \end{defn}
 
-Una vez visto el análisis ascendente el siguiente paso es estudiar el análisis descendente. 
+Una vez visto el análisis ascendente el siguiente paso es estudiar el análisis descendente.
 
 En este caso, empezamos en el axioma y aplicamos derivaciones intentando llegar a la sentencia que queremos analizar.
 
@@ -1186,11 +1178,11 @@ Para hacerlo apoyándonos en una pila, como en el ejemplo anterior, los pasos a 
 Instante & Pila  & Acción\\
 \hline
 1 & E & Derivamos\\
-\hline 
+\hline
 2 & B | T & Derivamos \\
 \hline
 3 & B | X | F & Derivamos\\
-\hline 
+\hline
 4 & B | X | i & Estraemos pues i está en la sentencia dada\\
 \hline
 5 & B | X & Derivamos \\
