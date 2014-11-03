@@ -180,6 +180,7 @@
 \adh{arg0}#m
 \iffdef#m
 \bolac#m
+\tops#m
 \algb{arg0}#m
 \algbA#m
 \algbM#m
