@@ -1179,23 +1179,23 @@ Instante & Pila  & Acción\\
 \hline
 1 & E & Derivamos\\
 \hline
-2 & B | T & Derivamos \\
+2 &
 \hline
-3 & B | X | F & Derivamos\\
+3 &
 \hline
-4 & B | X | i & Estraemos pues i está en la sentencia dada\\
+4 &
 \hline
-5 & B | X & Derivamos \\
+5 &
 \hline
-6 & B | X | F | *  & Extraemos pues i está en la sentencia dada \\
+6 &
 \hline
-7 & B | X | F & Derivamos \\
+7 &
 \hline
-8 & B | X | i & Estraemos pues i está en la sentencia dada \\
+8 &
 \hline
-9 & B | X & Derivación λ\\
+9 &
 \hline
-10 & B & Derivación λ \\
+10 &
 \hline
 \end{tabular}
 
@@ -1243,6 +1243,82 @@ Por tanto, si el análisis de una cadena llega a un estado final en este autóma
 
 Por ejemplo, supongamos que iniciamos el análisis, estamos por tanto en el estado S0, sólo podemos leer un paréntesis, una E, una i o una T. Si leemos el paréntesis pasamos al estado S2 en el que podemos leer una E, y por tanto las reglas que la E desencadena, y (aunque parezca redundante) como la E genera reglas en las que la T es el \textbf{primer} símbolo, también podemos encontrar las derivaciones de la T.
 
+\end{example}
+
+%TODO Añadir aquí las transparencias que el profesor dio en clase el lunes 3
+
+Veamos ahora un ejemplo de como aplicar el autómata de análisis completo dado en las transparencias.
+\begin{example}
+La siguiente tabla recoge el resultado detallado del análisis de la entrada:
+\[i+i+i\$\]
+\begin{tabular}{| c | c | c |}
+\hline
+Instante & Estado  & Entrada & Pila & Acción \\
+\hline
+0 & 0 & i+i+i\$ & & desplazar i, saltar a 4\\
+\hline
+1 & 4 & +i+i\$ & i & Reducción T -> i \\
+\hline
+2 & 0 & T + i + i \$ & & desplazar T, saltar a 7 \\
+\hline
+3 & 7 & +i+i\$ & T & reducción E -> T\\
+\hline
+4 & $\emptyset$ & E+i+i \$ & & desplazar E, saltar a 1 \\
+\hline
+5 & 1 & +i+i \$ & E & desplazar +, saltar a 2\\
+\hline
+6 & 2 & i+i \$ & E + & desplazar i, saltar a 4\\
+\hline
+7 & 4 & +i\$ & E+ i & reducción T -> i \\
+\hline
+8 & $\emptyset$ & E+T+i \$ & & ... \\
+\hline
+...
+\hline
+\end{tabular}
+\end{example}
+
+Este sería el resultado obtenido aplicando el algoritmo a lo bruto.
+
+Sin embargo existe la posibilidad de mejorar este algoritmo aplicando un sencillo \textbf{truco}:
+\begin{itemize}
+\item Guarda en la pila también el estado
+\item La cima de la pila contiene el estado actual
+\end{itemize}
+
+Aplicar este pequeño truco implica también una pequeña definición del algoritmo:
+
+Ahora la reducción implicará sacar también de la pila la parte derecha (incluyendo estados) y copiar la parte izquierda en la entrada.
+
+Rehagamos el ejemplo anterior con estas mejoras:
+\begin{example}
+La siguiente tabla recoge el resultado detallado del análisis de la entrada:
+\[i+i+i\$\]
+\begin{tabular}{| c | c | c |}
+\hline
+Instante & Estado  & Entrada & Pila1 & Pila2 & Acción \\
+\hline
+0 & 0 & i+i+i\$ & & 0 & desplazar i, saltar a 4\\
+\hline
+1 & 4 & +i+i\$ & i & 0i4 & Reducción T -> i \\
+\hline
+2 & 0 & T+i+i\$ & & 0& desplazar T, saltar a 7 \\
+\hline
+3 & 7 & +i+i\$ & T & 0T+ &reducción E -> T\\
+\hline
+4 & $\emptyset$ & E+i+i\$ & & 0 &desplazar E, saltar a 1 \\
+\hline
+5 & 1 & +i+i\$ & E & 0E1 & desplazar +, saltar a 2\\
+\hline
+6 & 2 & i+i\$ & E + & 0E1+2 & desplazar i, saltar a 4\\
+\hline
+7 & 4 & +i\$ & E+ i & 0E1+2i4 & reducción T -> i \\
+\hline
+8 & $\emptyset$ & T+i\$ & & 0E1+2 & ... \\
+\hline
+...
+\hline
+\end{tabular}
 \end{example}
 
 \appendix
