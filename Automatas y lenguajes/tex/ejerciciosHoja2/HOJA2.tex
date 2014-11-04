@@ -184,59 +184,41 @@ Se desa añadir a esta gramática un sistema de atributos que compruebe si se pu
 \item No está permitido el uso de información global
 \end{itemize}
 \solution
+Los atributos que debemos añadir son:
+\begin{itemize}
+\item \textbf{lista\_compra}
+Añadimos los atributos: items, coste y saldo
+\item \textbf{compra}
+Añadimos los atributos: item y coste
+\end{itemize}
 
-\begin{tabular}{|c|c|l|}
-\hline
-SÍMBOLO & ATRIBUTOS & DESCRIPCIÓN \\
-\hline
-\hline
-DINERO & valor & Valor numérico del dinero. \\
-\hline
-PRECIO & valor & Valor numérico del precio. \\
-\hline
-PRODUCTO & nombre & Nombre del producto. \\
-\hline
- lista\_compra & valorTotal & valor numérico de toda la compra. \\
- \cline{2-3}
-  & dinero & dato de dinero con diferentes utilidades  \\
-\hline
-compra & valor & valor de la compra \\
+La gramática de atributos resultante sería:
+\begin{verbatim}
+axioma          ::= DINERO lista_compra
+{Herencia; lista_compra.saldo = DINERO}
 
-\hline
-\end{tabular}
-
-\begin{tabular}{|c|l|}
-\hline
-INSTATE & ACCIÓN \\
-\hline
-\multicolumn{2}{|l|}{axioma ::= DINERO lista\_compra} \\
-\hline
- 0 & print("Disponible: " + DINERO.valor) \\ & lista\_compra.valorTotal = 0\\
- \hline
- 2 &
-  print("Total: " + lista\_compra.valorTotal) \\ &
-  print("Saldo: " + lista\_compra.dinero)\\
- \hline
-\multicolumn{2}{|l|}{lista\_compra\_1 ::= compra lista\_compra\_2} \\
-\hline
- 1 & lista\_compra\_1.valorTotal = lista\_compra\_2.valorTotal + compra.valor \\
-\hline
-\multicolumn{2}{|l|}{lista\_compra ::= compra} \\
-\hline
- 1 & lista\_compra.valorTotal = lista\_compra.valorTotal + compra.valor. \\
-\hline
-\multicolumn{2}{|l|}{compra ::= [PRODUCTO,PRECIO](NOTA:omitimos corchetes y coma en los instantes)}\\
-\hline
-2 & compra.valor=PRECIO.valor \\ & print(PRODUCTO.nombre + " : " + PRECIO.valor)\\
-\hline
-
-\end{tabular}
+lista_compra_1  ::= compra lista_compra_2
+{Herencia;
+    if lista_compra_1.saldo < compra.coste:
+        lista_compra_2.saldo = lista_compra_1.saldo
+    else
+        lista_compra_1.saldo = lista_compra_2.saldo - compra.coste
+        print compra}
 
 
+lista_compra    ::= compra
+{Herencia;
+    if lista_compra.saldo >= compra.coste:
+        print compra}
+
+compra          ::= [PRODUCTO, PRECIO]
+{compra.coste = PRODUCTO}
+{Síntesis; compra.item = PRODUCTO}
+\end{verbatim}
 \end{problem}
 
 \begin{problem}[5]
-Considérese la siguiente gramática independiente del contexto:2
+Considérese la siguiente gramática independiente del contexto:
 \begin{verbatim}
 romano ::= IList | I V | V IList
 IList  ::= IList I | λ
@@ -247,54 +229,30 @@ Se pide añadir a la gramática un sistema de atributos que compruebe si la sent
 
 \textbf{No está permitido el uso de información global}
 \solution
+\begin{verbatim}
+romano ::= IList
+{romano.esValido = IList.esValido}
 
-\begin{tabular}{|c|c|l|}
-\hline
-SÍMBOLO & ATRIBUTOS & DESCRIPCIÓN \\
-\hline
- & valor & Valor numérico del número. \\
-\cline{2-3}
-IList & ies & Número de ies que tiene \\
-\cline{2-3}
- & cadena & String con el número romano \\
-\hline
- 
-\end{tabular}
+romano ::= I V
+{romano.esValido = true}
 
-\begin{tabular}{|c|l|}
-\hline
-INSTATE & ACCIÓN \\
-\hline
-\multicolumn{2}{|l|}{romano ::= IList} \\
-\hline
- 0 & IList.valor=0\\ & IList.ies=0 \\ & IList.cadena=""\\
- \hline
-\multicolumn{2}{|l|}{romano ::= I V} \\
-\hline
- 0 & print("IV, número romano correcto, su valor es 4")\\
-\hline
-\multicolumn{2}{|l|}{romano ::= V IList} \\
-\hline
- 0 & IList.valor=5\\ &  IList.ies = 0\\ & IList.cadena="V"\\
-\hline
-\multicolumn{2}{|l|}{Ilist\_1 ::= Ilist\_2 I}\\
-\hline
- 0 & IList\_2.valor = IList\_1.valor + 1\\ & IList\_2.ies= IList\_1.ies+1\\ & IList\_2.cadena = IList\_1.cadena + "I"\\
-\hline
-\multicolumn{2}{|l|}{Ilist ::= $\lambda$}\\
-\hline
-0 & if(IList.ies<4) \\& print(IList.cadena + ", número romano correcto, su valor es " + IList.valor) \\ & else print(IList.cadena + ", no es un número romano correcto)\\
-\hline
+romano ::= V IList
+{síntesis; romano.esValido = IList.esValido}
 
+IList_1  ::= IList_2 I
+{Síntesis; if IList_2.esValido & IList_2.items < 3 , IList_1.esValido = true}
+{Síntesis; IList_1.items = IList_2.items + 1}
 
-\end{tabular}
-
+IList ::= λ
+{IList.esValido = true}
+{IList.items = 0}
+\end{verbatim}
 \end{problem}
 
 \begin{problem}[6]
 Considérese la gramática independiente del contexto resultante de añadir a la del ejercicio 5 el siguiente axioma:
 \begin{verbatim}
-S ::= romanod = IList
+S ::= romano = IList
 \end{verbatim}
 Esta gramática genera sentencias formadas por dos cadenas separadas por el signo '='. La primera cadena es igual que las generadas por la gramática del ejercicio 5. La segunda cadena es una lista de símbolos I.
 
@@ -302,60 +260,29 @@ Se pide añadir a la gramática un sistema de atributos que compruebe si, en el 
 
 \textbf{No está permitido el uso de información global}
 \solution
-\begin{tabular}{|c|c|l|}
-\hline
-SÍMBOLO & ATRIBUTOS & DESCRIPCIÓN \\
-\hline
-romano & valor & valor numérico del numero romano\\
-\hline
- & valor & Valor numérico del número. \\
-\cline{2-3}
-IList & ies & Número de ies que tiene \\
-\cline{2-3}
- & cadena & String con el número romano \\
-\hline
- 
-\end{tabular}
+\begin{verbatim}
+S      ::= romano = IList
+{Síntesis; if (romano.esValido & romano.value == IList.items), OK}
 
-\begin{tabular}{|c|l|}
-\hline
-INSTATE & ACCIÓN \\
-\hline
-\multicolumn{2}{|l|}{S ::= romano = IList} (NOTA: ignoramos el signo igual al contar instantes) \\
-\hline
- 2 & if(romano.ies<4)\{\\ & 		if(IList.valor = romano.valor) print("coincide con segunda cadena")\\ & else print("no coincide con segunda cadena") \}\\
- \hline
-\multicolumn{2}{|l|}{romano ::= IList} \\
-\hline
-0 & IList.cadena="" \\
-\hline
- 1 & romano.ies = IList.ies \\ & romano.valor=IList.valor\\ & if(romano.ies<4) print(", número romano correcto, su valor es" +romano.valor)\\ & else print(", no es un número romano correcto")\\
- \hline
-\multicolumn{2}{|l|}{romano ::= I V} \\
-\hline
- 0 & romano.valor=4 \\ & romano.ies = 1 \\ & print("IV")\\
- \hline
-\hline
-\multicolumn{2}{|l|}{romano ::= V IList} \\
-\hline
- 0  & IList.cadena="V"\\
- \hline
- 2 & romano.ies = IList.ies\\
- & romano.valor= IList.valor + 5\\
-\hline
-\multicolumn{2}{|l|}{Ilist\_1 ::= Ilist\_2 I}\\
-\hline
- 0 & IList\_2.cadena = IList\_1.cadena + "I"\\
- \hline
- 2 & IList\_1.valor = IList\_2.valor + 1\\ & IList\_1.ies= IList\_2.ies+1\\
-\hline
-\multicolumn{2}{|l|}{Ilist ::= $\lambda$}\\
-\hline
-0 & print(IList.cadena)\\
-\hline
+romano ::= IList
+{Síntesis; romano.esValido = IList.esValido}
+{Síntesis; if (IList.esValido), romano.value=IList.items}
 
+romano ::= I V
+{Síntesis; romano.esValido = true}
+{Síntesis; romano.value = 4}
 
-\end{tabular}
+romano ::= V IList
+{Síntesis; romano.esValido = IList.esValido}
+{Síntesis; if (Ilist.esValido) romano.value = IList.items + 5}
 
+IList_1  ::= IList_2 I
+{Síntesis; if (IList_2.esValido & IList_2.items < 3) , IList_1.esValido = true}
+{Síntesis; IList_1.items = IList_2.items + 1}
+
+IList ::= λ
+{IList.esValido = true}
+{IList.items = 0}
+\end{verbatim}
 \end{problem}
 \end{document}
