@@ -1202,7 +1202,7 @@ Instante & Pila & Acción\\
 Si al finalizar nos queda la pila vacía concluimos que la sentencia estudiada es correcta.
 \end{example}
 
-\subsection{Tablas LR(n)}
+\subsection{Tablas LR(0)}
 
 \begin{defn}[Tabla LR(n)]
 Tabla empleada para el procesamiento de entrada desde la izquierda (\textbf{L}eft) mediante derivaciones \textbf{R}ight-most con \textbf{n} símbolos de entrada.
@@ -1319,6 +1319,97 @@ Instante & Estado  & Entrada & Pila1 & Pila2 & Acción \\
 
 \large
 \textcolor{red}{Aquí tienes tu puta tablita puto pelaplátanos}
+\normalsize
+
+\newpage
+\subsection{LR(1)}
+Dada una gramática G(N,T,S, P), con $\sum = N \cup T$ vamos a definir un par de conceptos nuevos:
+
+\begin{defn}[Primero]
+El primero de A es el conjunto de terminales que pueden aparecer al principio de una cadena derivada de A.
+\end{defn}
+
+Veamos cómo calcular el primero de A. Para ello observamos que existen tres diferentes casos según α:
+\begin{enumerate}
+\item $α \in T$
+\begin{verbatim}
+primero(A)=α
+\end{verbatim}
+
+\item $α \in N$
+\begin{verbatim}
+primero(A)=primero(α)
+\end{verbatim}
+\item $α = α_1α_2...α_n \in T \cup N$
+
+Este sería el caso más interesante. Vamos a construir primero(A) por partes.
+\begin{verbatim}
+primero(A) añadimos primero(α1)-{λ}
+si λ pertenece a primero(α1):
+    añadimos primero(α2)-{λ}
+    si λ pertenece a primero(α2):
+        añadimos primero(α3)-{λ}
+        .
+        .
+        .
+\end{verbatim}
+\end{enumerate}
+
+Veamos un ejemplo
+\begin{example}
+Dada la gramática:
+\begin{itemize}
+\item $E \rightarrow TE'$
+\item $E' \to +TE'$
+\item $E' \to λ$
+\item $F \to FT'$
+\item $T' \to *FT'$
+\item $T' \to λ$
+\item $F \to (E)$
+\item $F \to i$
+\end{itemize}
+
+Vamos a calcular el primero de alunos símbolos. Por ejemplo:
+
+primero(E')=$\{+λ\}$
+
+primero(T')=$\{*, λ\}$
+
+primero(F)=$\{(,i\}$
+
+primero(T)=$\{(, i\}$
+
+primero(E)=$\{(, i\}$
+\end{example}
+
+Veamos la segunda definición:
+
+\begin{defn}[Siguiente]
+Dada una gramática, el siguiente de un elemento, A, es el conjunto de símbolos terminales que pueden aparecer justo después de A en alguna forma sentencial derivada del axioma.
+\end{defn}
+
+Para calcularlo, dada una regla $\appl{}{X}{αA\beta}$, con α, $\beta \in \sum^*$ añadimos a siguiente(A) primero(B).
+
+%TODO copiar forma general
+
+Veamos un ejemplo para poner en práctica lo aprendido
+\begin{example}
+Considerando la misma gramática del ejemplo anterior, tenemos:
+
+siguiente(E)=$\{)\}$
+
+siguiente(E')=$\{)\}$
+
+siguiente(T)=$\{+, )\}$
+
+siguiente(T')=$\{+, )\}$
+
+siguiente(F)= $\{*,+,)\}$
+\end{example}
+
+\obs $\$ \in $ Siguiente(S) siempre
+
+
 \appendix
 \chapter{Ejercicios}
 \input{tex/Ejercicios.tex}
