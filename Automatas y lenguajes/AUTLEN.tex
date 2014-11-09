@@ -730,8 +730,7 @@ El autómata de pila que representa este lenguaje es:
 
 \newpage
 \chapter{Gramáticas de atributos}
-Un compilador se encarga de generar el código máquina
-
+Un compilador se encarga de generar el código máquina a partir de un código dado.
 
 En primer lugar debemos saber que un compilador realiza tres tareas:
 \begin{enumerate}
@@ -748,22 +747,24 @@ Vamos a explicar brevemente la idea que hay detrás de esto:
 Partiendo de una gramática independiente del contexto, y derivando el axioma hasta obtener una sentencia, queremos obtener alguna función específica de nuestra gramática.
 
 Es entonces cuando surgen las gramáticas de atributos, que añaden lo siguiente a la gramática independiente del contexto:
+\begin{itemize}
+\item Incorporan atributos a los nodos no terminales.
 
--Incorporan atributos a los nodos no terminales.
+\item Incorporan funciones sobre esos atributos en las reglas de derivación. (Además veremos que estas funciones se podrán realizar en instantes concretos).
 
--Incorporan funciones sobre esos atributos en las reglas de derivación. (Además veremos que estas funciones se podrán realizar en instantes concretos).
-
--Incorporan una \textbf{información global} a la gramática. La información global está formada por un conjunto de variables que son accesibles desde cualquier nodo del árbol.
-
+\item Incorporan una \textbf{información global} a la gramática. La información global está formada por un conjunto de variables que son accesibles desde cualquier nodo del árbol.
+\end{itemize}
 Por tanto, una vez obtenido el árbol de derivación, el análisis semántico recorrerá dicho árbol utilizando el recorrido en  \textbf{profundidad por la izquierda y con vuelta atrás} (lo explicamos más adelante) corroborando el buen funcionamiento de estas nuevas funciones.
 
 El paso de información de un nodo a otro del árbol se podrá realizar mediante tres métodos:
 
--Síntesis: la información se propaga del nodo inferior al nodo superior.
+\begin{itemize}
+\item Síntesis: la información se propaga del nodo inferior al nodo superior.
 
--Herencia: la información se propaga del nodo superior al nodo inferior.
+\item Herencia: la información se propaga del nodo superior al nodo inferior.
 
--Usando la información global.
+\item Usando la información global.
+\end{itemize}
 
 Vamos a ver un ejemplo con detalle, explicando sobre él algunos de los conceptos:
 
@@ -839,7 +840,7 @@ Con P:
 
 Así, hemos conseguido una gramática de atributos que realiza una función específica (obtener la profundidad). Lo hemos logrado a partir de una gramática independiente del contexto añadiendo atributos y el instante en el que debo realizar cada asignación en las reglas de derivación.
 
-Además, una gramática de atributos contiene una información global, en este caso no la vamos a usar por tanto la declaramos vacía (es el último símbolo que se ha añadido a G).
+Además, una gramática de atributos contiene una información global. En este caso no la vamos a usar por lo que la declaramos vacía (es el último símbolo que se ha añadido a G).
 
 También debemos saber que el árbol se recorre en \textbf{profundidad por la izquierda y con vuelta atrás}. Esta técnica consiste en recorrer siempre el hijo más a la izquierda, cuando no queden hijos a la izquierda, continuamos con el siguiente hijo más a la izquierda. Cuando no queden hijos volvemos al nodo superior y así sucesivamente.
 
@@ -931,7 +932,7 @@ Hemos usado alguna acción que se sale de un esquema puro de herencia por ser im
 \end{itemize}
 Este caso es bastante más sencillo, pues en cada derivación tienes acceso al contador global y basta con incrementarlo, sin preocuparte por los sucesores.
 
-Además, usando información global es realmente importante indicar los instantes en que se realiza cada acción puesto que de lo contrario habría lugar a confusión. (En los casos anteriores los atributos imponían un orden sin ambigüedad).
+Usando información global es realmente importante \textbf{indicar los instantes en que se realiza cada acción} puesto que de lo contrario habría lugar a confusión. (En los casos anteriores los atributos imponían un orden sin ambigüedad).
 
 \end{itemize}
 \end{example}
@@ -947,19 +948,17 @@ En las transparencias podéis ver estos tres ejemplos para diferenciar la herenc
 \includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={26-27}, scale=0.72]{pdf/GramaticaAtributos.pdf}
 
 \begin{example}
-Para ver claramente las diferencia entre análisis semántico y sintáctico nos podemos fijar en lo siguiente, según el ejemplo 1:
-
-int $\_x$,$\_y$
-
-$\_x=S$
-
-Esta bien semántica y sintácticamente.
-
-int $\_x, \_y$
-
-$\_z=7$
-
-Esta bien sintácticamente pero no semánticamente.
+Para ver claramente las diferencia entre análisis semántico y sintáctico nos podemos fijar en lo siguiente, según el ejemplo 1, el código:
+\begin{verbatim}
+                           int _x,_y
+                               _x=S
+\end{verbatim}
+es correcto semántica y sintácticamente, mientras que el código:
+\begin{verbatim}
+                           int _x,_y
+                               _z=7
+\end{verbatim}
+es sintácticamente correcto pero no semánticamente.
 \end{example}
 
 \begin{example}
@@ -971,7 +970,7 @@ Vamos a tomar un caso sencillo con dos reglas sacadas del último ejemplo mostra
 
 Para la primera regla, el orden en que se recorrería el árbol de derivación es:
 \begin{verbatim}
-- En el instnate 0 bajamos del nodo L al nodo i
+- En el instante 0 bajamos del nodo L al nodo i
 - En el instante i volvemos al nodo L
 \end{verbatim}
 
@@ -991,12 +990,13 @@ Siguiendo esta secuencia y analizando en qué momento tenemos disponibles los va
 \[A \rightarrow i = E \{ 1: \ in TS (i.nombre)==true; 3: \ gt(i.nombre)==E.tipo; 3: \ sv(i.nombre, E.valor)\}\]
 
 En este tercer ejemplo es importante añadir algunas comprobaciones más en las reglas, que no vienen en las trasparencias:
+\begin{itemize}
+\item En la regla $A \rightarrow i=E$ comprobar $inTS(i.nombre)==true$ (es decir, ¿está en la tabla de símbolos i.nombre?)
 
--En la regla $A \rightarrow i=E$ comprobar $inTS(i.nombre)==true$ (es decir, ¿está en la tabla de símbolos i.nombre?)
+\item En la regla $E_1 \rightarrow E_2 + E_3$ y $E_1 \rightarrow E_2 * E_3$ comprobar que $E_2.tipo=E_3.tipo$
 
--En la regla $E_1 \rightarrow E_2 + E_3$ y $E_1 \rightarrow E_2 * E_3$ comprobar que $E_2.tipo=E_3.tipo$
-
--En la regla $E \rightarrow i$ comprobar $inTS(i.nombre)==true$ y $gt(i.nombre)==E.tipo$ con gt=getType (es decir, ¿es el parametro tipo de i.nombre igual al de E?).
+\item En la regla $E \rightarrow i$ comprobar $inTS(i.nombre)==true$ y $gt(i.nombre)==E.tipo$ con gt=getType (es decir, ¿es el parametro tipo de i.nombre igual al de E?).
+\end{itemize}
 \end{example}
 
 
@@ -1004,7 +1004,7 @@ En este tercer ejemplo es importante añadir algunas comprobaciones más en las 
 \chapter{Analizador morfológico}
 Empezamos este capítulo recordando la función de un compilador.
 
-Dado un archivo $fuente$ este archivo pasará a través de un analizador de código, que realiza tres funciones, utilizando para ello una tabla de símbolos que él mismo genera:
+Dado un archivo \textit{fuente}, este archivo pasará a través de un analizador de código, que realiza tres funciones, utilizando para ello una tabla de símbolos que él mismo genera:
 \begin{itemize}
 \item Análisis morfológico
 \item Análisis sintáctico
@@ -1016,7 +1016,7 @@ Nos centramos ahora en el analizador morfológico (también llamado léxico o sc
 
 \textbf{Obtención de unidades sintácticas.} Son los llamados tokens. Estos pueden ser identificadores, constantes, palabras reservadas ($if$, $them$, $for$,...) u otros símbolos (simples: $+$, $=$,... o dobles: $:=$,...).\\
 
-Pero también es importante en la consecución de las siguientes tareas secundarias:
+No obstante, el analizador morfológico también es importante en la consecución de las siguientes tareas secundarias:
 \begin{enumerate}
 \item Eliminar delimitadores (espacios en blanco, tabuladores, saltos de línea...).
 \item Eliminación de comentarios en el código.
@@ -1028,11 +1028,11 @@ Lo vemos con un ejemplo: tenemos un lenguaje que admite el siguiente tipo de obj
 \begin{itemize}
 \item Identificadores: letra seguida de cero o más dígitos y letras.
 \item Constantes: (números enteros).
-\item Palabras reservadas: $begin$, $end$, $int$, $print$.
-\item Símbolos: simples: $;$; dobles: $:=$.
+\item Palabras reservadas: \textit{begin}, \textit{end}, \textit{int}, \textit{print}.
+\item Símbolos: tanto simples: ';' como dobles: ':='.
 \end{itemize}
 
-Con este lenguaje, y dado el siguiente fichero de entrada $fuente$.
+Con este lenguaje, y dado el siguiente fichero de entrada  \textit{fuente}.
 
 \begin{verbatim}
     begin
@@ -1183,15 +1183,15 @@ Instante & Pila & Acción\\
 \hline
 3 & B | X | F & Derivamos\\
 \hline
-4 & B | X | i & Estraemos pues i está en la sentencia dada\\
+4 & B | X | i & Extraemos, pues i está en la sentencia dada\\
 \hline
 5 & B | X & Derivamos \\
 \hline
-6 & B | X | F | * & Extraemos pues i está en la sentencia dada \\
+6 & B | X | F | * & Extraemos, pues * está en la sentencia dada \\
 \hline
 7 & B | X | F & Derivamos \\
 \hline
-8 & B | X | i & Estraemos pues i está en la sentencia dada \\
+8 & B | X | i & Estraemos, pues i está en la sentencia dada \\
 \hline
 9 & B | X & Derivación λ\\
 \hline
@@ -1239,9 +1239,9 @@ Para realizar el análisis por este método vamos a construir un autómata finit
 \includegraphics[scale=0.65]{automata7.png}
 \end{center}
 
-Por tanto, si el análisis de una cadena llega a un estado final en este autómata, es que la cadena es correcta sintácticamente.
+Por tanto, si el análisis de una cadena llega a un estado final en este autómata, es que la cadena es sintácticamente correcta.
 
-Por ejemplo, supongamos que iniciamos el análisis, estamos por tanto en el estado S0, sólo podemos leer un paréntesis, una E, una i o una T. Si leemos el paréntesis pasamos al estado S2 en el que podemos leer una E, y por tanto las reglas que la E desencadena, y (aunque parezca redundante) como la E genera reglas en las que la T es el \textbf{primer} símbolo, también podemos encontrar las derivaciones de la T.
+Por ejemplo, supongamos que iniciamos el análisis. Estamos por tanto en el estado S0 y sólo podemos leer un paréntesis, una E, una i o una T. Si leemos el paréntesis pasamos al estado S2 en el que podemos leer una E, y por tanto las reglas que la E desencadena, y (aunque parezca redundante) como la E genera reglas en las que la T es el \textbf{primer} símbolo, también podemos encontrar las derivaciones de la T.
 
 \end{example}
 
@@ -1316,10 +1316,6 @@ Instante & Estado  & Entrada & Pila1 & Pila2 & Acción \\
 \hline
 \end{tabular}
 \end{example}
-
-\large
-\textcolor{red}{Aquí tienes tu puta tablita puto pelaplátanos}
-\normalsize
 
 \newpage
 \subsection{LR(1)}
@@ -1408,6 +1404,16 @@ siguiente(F)= $\{*,+,)\}$
 \end{example}
 
 \obs $\$ \in $ Siguiente(S) siempre
+
+A continuación se muestran las transparencias utilizadas en clase y que acompañan a la última parte de estos apuntes.
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={2-9}, scale=0.72]{pdf/lr_pres.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={10-17}, scale=0.72]{pdf/lr_pres.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={18-25}, scale=0.72]{pdf/lr_pres.pdf}
+
+\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={26-28}, scale=0.72]{pdf/lr_pres.pdf}
 
 
 \appendix
