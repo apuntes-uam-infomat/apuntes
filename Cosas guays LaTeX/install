@@ -1,12 +1,24 @@
 #!/bin/bash
 tred=$(tput setaf 1)
 treset=$(tput sgr0)
-
 latex_dir=$(dirname $(kpsewhich article.cls))
+
+function trycopy() {
+	file=$1
+	dir="$2"
+
+	if [ -d "$dir" ] ; then
+		cp -vf "$file" "$dir"
+	fi
+}
+
 echo "Creating completion file..."
 python cwlcreator.py exmath.sty exmath.cwl
 
-cp -vf *.cwl ~/.config/texstudio
+trycopy exmath.cwl ~/.config/texstudio/
+trycopy exmath.cwl ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/LaTeX-cwl/
+
+
 
 echo "Copying packages..."
 if ! cp -v *.sty $latex_dir ; then
