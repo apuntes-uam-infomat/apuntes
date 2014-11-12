@@ -181,6 +181,7 @@
 \iffdef#m
 \bolac#m
 \tops#m
+\topu#m
 \algb{arg0}#m
 \algbA#m
 \algbM#m
