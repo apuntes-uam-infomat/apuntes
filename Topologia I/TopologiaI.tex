@@ -1852,7 +1852,60 @@ Como ejercicio sobre este tema, podemos ver que en $ℝ^m$ con la distancia eucl
 \end{enumerate}
 
 Ocurre lo mismo desde la izquierda, con $y<x$.
+
+Para demostrarlo, vamos a ver dos ideas. Sea $\{A_i\}_{i∈I}$ un recubrimiento abierto de $[a,b]$. Entonces, dado $x∈[a,b)$, existe $y_x$ con $x<y_x≤b$ tal que existe un SRF para $
+[x, y_x]$.
+
+Encadenando estos intervalos podríamos ir ampliando el subrecubrimiento finito hasta llegar a $[a,b]$, siempre y cuando podamos ampliarlos tanto como para llegar a $b$. Es fácil ver que es imposible que no lleguemos, ya que si sólo llegamos hasta $c$, podemos aplicar de nuevo la misma idea y sacar más intervalos.
+
+Una vez que tenemos la idea, vamos a la demostración formal.
+
+Dado $x∈[a,b)$, $∃y=y_x$ con $x < y ≤ b$ tal que que existe un SRF de $\{A_i\}_{i∈I}$ para $[x,y]$.
+
+Vamos a demostrar esto viendo los dos casos que pueden ocurrir. En el primer caso, $∃y ∈ X$ con $y<x$ y tal que $(x,y) = ∅$. Como $x<b, y ≤ b$, existen $i_x, i_y$ tales que $x∈A_{i_x},\, y∈A_{i_y}$ y entonces el recubrimiento finito para $[x,y] = \{ x,y \}$ es $A_{i_x} ∪ A_{i_y}$, finito.
+
+La otra posibilidad que podemos tener es que no exista tal $y$, es decir, que $∀w ∈ X\; ∃z ∈ X$ con $w > z > x$. 
+
+Como $x∈[a,b]⊆\bigcup A_i$, sabemos que $∃i_x$ tal que $x∈A_{i_x}$. Así, $∃β>x$ tal que $[x,β) ⊆ A_{i_x}$. Podemos suponer $β<b$ (si no, tomamos $\min (β, b)$), luego $∃z∈X$ con $x<z<β≤b$. Es decir, $[x, z] ⊆ [x,β) ⊆ A_{i_x}$, y ya hemos encontrado nuestro SRF.
+
+Ahora tenemos que escribir bien en qué consiste lo de ``ampliar por la derecha''. Partimos de que para $x=a$ existe un $y_a$ con $a<y_a<b$ tal que existe un SRF para $[a,y_a]$, y definimos \[ D ≝ \{ y ∈ X \tq y ≤ b \y ∃ \text{ SRF para } [a,y] \}\]
+
+Nuestro objetivo es ver que $b ∈ D$ para encontrar el SRF de todo el intervalo.
+
+Sea $c = \sup D$, que está bien definido por ser $D$ acotado superiormente. Como $y_a∈D$, sabemos que $c > a$.
+
+Proponemos que $c∈D$, y vamos a demostrarlo por reducción al absurdo. Supongamos que $c ∉ D$. Sabemos que $c ≤ b$, así que $∃i_c$ tal que $c ∈ A_{i_c}$.  
+
+Por ser $A_{i_c}$ abierto, $∃α < c$ tal que $(α, c] ⊆ A_{i_c}$. No puede ser que $(α,c] ∩ D$ sea vacía, ya que en ese caso $c$ no podría ser el supremo de $D$ pues $c ∉ D$.
+
+Por otra parte, si $(α, c] ∩ D ≠ ∅$ entonces $∃x ∈ D$ tal que $x∈ (α,c] ⊆ A_{i_c}$. Así, $[a,c] ⊆ [a,x] ∪ (α, c]$, y entonces tenemos un SRF para $[a,c]$, luego $c∈D$, contradicción con hipótesis.
+
+Es decir, hemos demostrado que $c∈D$: sólo nos falta demostrar que $c=b$ para encontrar el SRF de $[a,b]$ y demostrar que es compacto.
+
+Si $c < b$, por el primer paso $∃y_c$ con $c < y_c ≤ b$ tal que existe un SRF para $[c, y_c]$, y en ese caso, igual que antes, tendríamos que $[a, y_c] = [a,c] ∪ [c, y_c]$, lo que nos permite encontrar un SRF para $[a,y_c]$, luego $c∈D$, contradicción porque hemos dicho que $y_c > c$.
 \end{proof}
+
+\begin{corol} $([0,1] × [0,1], \topl_{Lex})$ es compacto, y también cualquier intervalo cerrado $[a,b]_{Lex}$.\end{corol}
+
+¿Para qué nos sirve esto? Pues para ver cómo demostrar teoremas como el del punto fijo en espacios métricos y no sólo en $R$.
+
+\begin{theorem}[Teorema\IS del punto fijo] Sea \sdst un espacio métrico compacto y $\appl{f}{X}{X}$ una aplicación contractiva, esto es, una aplicación tal que $∃λ < 1$ con \[ \dst(f(x), f(y)) ≤ λ \dst(x,y)\; ∀x,y ∈ X \]. 
+
+Entonces $f$ tiene un único punto fijo, es decir, $\uexists x_f ∈ X$ tal que $f(x_f) = x_f$.
+\end{theorem}
+
+\begin{proof} Demostrar la unicidad es sencillo: si existen $x_1, x_2$ tales que $f(x_1) = x_1,\, f(x_2) = x_2$, tenemos que $\dst(x_1, x_2) = \dst(f(x_1), f(x_2)) ≤ λ \dst(x_1, x_2)$. Luego por ser $λ < 1$, sólo puede ser $\dst(x_1, x_2) = 0$ y entonces $x_1 = x_2$.
+
+Para demostrar la existencia vamos a tener que trabajar algo más. Sea $x_0 ∈ X$. Definimos por recursión una sucesión $x_n$ dada por $x_{n+1} = f(x_n)$ para $n≥ 0$. 
+
+Afirmamos que $\{x_n\}$ es sucesión de Cauchy. Sabemos que $\dst(x_n, x_{n+1}) ≤ λ^n \dst(x_0, x_1)$. \footnote{$\dst(x_n, x_{n+1}) ≤ \dst(f(x_n), f(x_{n+1})) ≤ λ \dst(x_{n-1}, x_n) ≤ \dotsb$} Entonces, si $n>m$, \begin{multline*} \dst(x_m, x_n) ≤ \dst (x_m, x_m+1) + \dst(x_{m-1}, x_m) + \dotsb + \dst(x_{n-1}, x_n) ≤ \\ ≤ (λ^m + \dotsb + λ^{n-1}) \dst(x_0, \dst(x_1)) \end{multline*}
+
+Tenemos multiplicando a una suma geométrica, luego \[ \dst(x_m, x_n) ≤ \sum_{k=m}^∞ λ^k \dst(x_0, x_1)\ = \frac{λ^m}{1-λ} \dst(x_0, x_1) \convs[][m] 0 \], así que efectivamente $\{x_n\}$ es de Cauchy.
+
+Por ser $X$ compacto, $X$ es completo y entonces $x_n \convs x$. Pero en ese caso, al tener $x_{n+1} = f(x_n)$ y ser $f$ continua, tenemos que $x= f(x)$.
+\end{proof}
+
+Si nos fijamos, en la demostración anterior no hemos usado que $X$ sea compacto: nos basta $X$ completo.
 
 \appendix
 \chapter{Ejercicios}
