@@ -1,0 +1,357 @@
+\documentclass[nochap]{apuntes}
+\title{Autómatas y Lenguajes: Hoja 1}
+\author{Pedro Valero}
+\date{}
+
+% Paquetes adicionales
+\usepackage{tikztools}
+\usepackage{fastbuild}
+\usetikzlibrary{arrows}
+
+\begin{document}
+\pagestyle{plain}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 1
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Sea la siguiente gramática:
+\begin{itemize}
+\item S ::= A
+\item S ::= B
+\item A ::= cA+b
+\item A ::= a
+\item B ::= cB+a
+\item B :== b
+\end{itemize}
+ Calcula los conjuntos primero y siguiente para cada símbolo no terminal
+\solution
+\textbf{Primeros:}
+
+\begin{itemize}
+\item Primero(A) =$\{c,a\}$
+\item Primero(B) =$\{c,b\}$
+\item Primero(S) =$\{a,c,b\}$
+\end{itemize}
+
+\textbf{Sigueintes}
+
+\begin{itemize}
+\item siguiente(A) =$\{\$,+\}$
+\item siguiente(B) =$\{\$, +\}$
+\item siguiente(S) =$\{\$\}$
+\end{itemize}
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 2
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Sea la siguiente gramática LR(0):
+\begin{itemize}
+\item E ::= T
+\item E ::= E + T
+\item T ::= i
+\item T ::= (E)
+\end{itemize}
+Calcula el cierre de la configuración inicial: E' ::= .ES
+\solution
+\begin{itemize}
+\item E' ::= .ES
+\item E ::= .T
+\item E ::= .E + T
+\item T ::= .i
+\item T ::=.(E)
+\end{itemize}
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 3
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Sea la siguiente gramática LR(0):
+\begin{itemize}
+\item E ::= T
+\item E ::= E + T
+\item T ::= i
+\item T ::= (E)
+\end{itemize}
+
+\ppart Calcula el cierre de la configuración E ::= (.L)
+
+\ppart Calcula el estado al que se llega desde el estado anterior tras conocer el símbolo no terminal L.
+\solution
+\ppart
+\begin{itemize}
+\item E ::= (.L)
+\item L ::= .L,E
+\item L ::= .E
+\item E ::= .(L)
+\item E ::= .i
+\end{itemize}
+
+\ppart
+\begin{itemize}
+\item E ::= (L.)
+\item L ::= L.,E
+\end{itemize}
+puesto que el punto se encuentra delante de símbolos terminales no es necesario cerrar la configuración.
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 4
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Sea la siguiente gramática
+
+\begin{itemize}
+\item D ::= iPSn
+\item P ::= :n
+\item S ::= λ
+\item S ::= n
+\end{itemize}
+
+\ppart Dibuja el diagrama de estados del analizador LR(0) para dicha gramática
+\ppart Calcula la tabla de análisis para el analizador LR(0)
+\ppart Indica justificadamente si la gramática es LR(0). Indica justificadamente si es SLR(1)
+\solution
+Para trabajar con esta gramática primero añadimos la regla: D' ::= D\$, con lo que nos queda el conjunto de reglas:
+\begin{itemize}
+\item D' ::= .D\$
+\item D ::= .iPSn
+\item P ::= .:n
+\item S ::= .λ
+\item S ::= .n
+\end{itemize}
+\ppart
+\begin{center}
+\includegraphics[scale=0.65]{automata_H3E4.png}
+\end{center}
+
+\ppart
+\begin{tabular}{| c | c | c | c | c | c | c | c | }
+\hline
+Estado & D & i & P & S & n & : & \$\\
+\hline
+SF0 & r4/S4 & r4/S1 & r4 & r4 & r4/SF3 & r4/S2 & r4\\
+\hline
+SF3 & r5 & r5 & r5 & r5 & r5 & r5  & r5\\
+\hline
+S1 & & & SF5 & & & S2 &\\
+\hline
+S4 & & & & & &  & SF1\\
+\hline
+SF5 & r4 & r4 & r4 & r4/S5 & r4 & r4 & r4\\
+\hline
+S2 & & & & & SF2 & &\\
+\hline
+SF1 & acc & acc & acc & acc & acc & acc & acc\\
+\hline
+S5 & & & & & SF4 & &\\
+\hline
+SF2 & r3 & r3 & r3 & r3 & r3 & r3 & r3\\
+\hline
+SF4 & r2 & r2 & r2 & r2 & r2 & r2 & r2\\
+\hline
+\end{tabular}
+\ppart \textbf{No se trata de una gramática LR(0)} ya que hay ocasiones en las que observamos un conflico desplazamiento-reducción. Por ejemplo, en el estado inicial podemos reducir la S o desplazar según la entrada dada.
+
+Sin embargo, \textbf{tampoco se trata de una gramática SLR(0)} ya que si forzamos a que las reducciones se produzcan en presencia del siguiente elemento no evitamos el conflicto. Como el siguiente de S es n, en presencia de esta n podremos aplicar la reducción S ::= λ o desplazar según la regla S ::= n
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 5
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Sea la siguiente gramática:
+\begin{itemize}
+\item S ::= bLd
+\item L ::= E;L
+\item L ::= λ
+\item E ::= i=c
+\item E ::= b
+\end{itemize}
+\ppart Dibuja el diagrama de estados del analizador LR(0) para dicha gramática
+\ppart Calcula la tabla de análisis para el analizador LR(0)
+\ppart Indica justificadamente si es SLR(1)
+
+\solution
+TODO
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 6
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Calcula los conjuntos primero y siguiente de todos los símbolos no terminales de las gramáticas siguientes
+
+\ppart
+\begin{itemize}
+\item X ::= Ye
+\item X ::= eYZf
+\item Y ::= g
+\item Y ::= Yg
+\item Z ::= h
+\end{itemize}
+
+\ppart
+\begin{itemize}
+\item Q ::= fXY
+\item X ::= cQ
+\item X ::= λ
+\item Y ::= iQ
+\item Y ::= λ
+\end{itemize}
+
+\ppart
+\begin{itemize}
+\item A ::= BXB
+\item X ::= .
+\item X ::= .
+\item X ::= e
+\item B ::= 0B
+\item B ::= 1B
+\item B ::= λ
+\end{itemize}
+
+\solution
+TODO
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 7
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Cacula los símbolos de adelanto para el cierre de las siguientes reglas y gramáticas:
+\ppart Cierre de E' ::= .E $\{ \$ \}$ para la siguiente gramática
+\begin{itemize}
+\item E' ::= E
+\item E ::= T
+\item E ::= E+T
+\item T ::= i
+\item T ::= (E)
+\end{itemize}
+
+\ppart Cierre de S' ::= .s $\{ \$ \}$ para la siguiente gramática
+\begin{itemize}
+\item S' ::= S
+\item S ::= L=R
+\item S ::= R
+\item L ::= *R
+\item L ::= i
+\item R ::= L
+\end{itemize}
+
+\ppart Cierre de E ::= (.E) $\{ \$ \}$ para la siguiente gramática
+\begin{itemize}
+\item E ::= (L)
+\item E ::= a
+\item L ::= L,E
+\item L ::= E
+\end{itemize}
+\solution
+\ppart
+El cierre, con los conjuntos de adelanto, sería
+\begin{itemize}
+\item E' ::= .E $\{\$\}$
+\item E ::= .T $\{+,\$\}$
+\item E ::= .E+T $\{+ \$\}$
+\item T ::= .i $\{\$\}$
+\item T ::= .(E) $\{\$\}$
+\end{itemize}
+
+\ppart
+\begin{itemize}
+\item S' ::= .S $\{\$\}$
+\item S ::= .L=R $\{\$\}$
+\item S ::= .R $\{\$\}$
+\item L ::= .*R $\{=\}$
+\item L ::= .i $\{=\}$
+\item R ::= .L $\{\$\}$
+\end{itemize}
+
+\ppart
+\begin{itemize}
+\item E ::= (.L) $\{\$\}$
+\item L ::= L,E $\{, )\}$
+\item L ::= E $\{, )\}$
+\end{itemize}
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 8
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Sea la siguiente gramática independiente del contexto:
+\begin{itemize}
+\item S ::= aSb
+\item S ::= ab
+\end{itemize}
+\ppart Dibuja el diagrama de estados del analizador LR(1) para dicha gramática
+\ppart Calcula la tabla de análisis para el analizador LR(1)
+\ppart Usa la tabla de análisis para analizar la sentencia $aabb$
+\ppart Dibuja esquemáticamente el diagrama de estados LALR(1). Es suficiente con indicar los nombres de los estados, especificando cuáles son la unión de otros en LR(1).
+\solution
+TODO
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 9
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Sea la siguiente gramática independiente del contexto:
+\begin{itemize}
+\item S ::= XX
+\item X ::= aX
+\item X ::= b
+\end{itemize}
+\ppart Dibuja el diagrama de estados del analizador LR(1) para dicha gramática
+\ppart Calcula la tabla de análisis para el analizador LR(1)
+\ppart Usa la tabla de análisis para analizar la sentencia $aabb$
+\ppart Dibuja esquemáticamente el diagrama de estados LALR(1). Es suficiente con indicar los nombres de los estados, especificando cuáles son la unión de otros en LR(1).
+\solution
+TODO
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% 		Problema 10
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Sea la siguiente gramática
+
+\begin{itemize}
+\item D ::= iPSn
+\item P ::= :n
+\item S ::= λ
+\item S ::= n
+\end{itemize}
+
+\ppart Dibuja el diagrama de estados del analizador LR(1) para dicha gramática
+\ppart Calcula la tabla de análisis para el analizador LR(1)
+\ppart Indica justificadamente si la gramática es LR(1). Indica justificadamente si es SLR(1)
+\solution
+TODO
+\end{problem}
+
+
+\end{document}
