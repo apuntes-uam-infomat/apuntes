@@ -1387,20 +1387,20 @@ Dada la gramática:
 \item $E \rightarrow TE'$
 \item $E' \to +TE'$
 \item $E' \to λ$
-\item $F \to FT'$
+\item $T \to FT'$
 \item $T' \to *FT'$
 \item $T' \to λ$
 \item $F \to (E)$
 \item $F \to i$
 \end{itemize}
 
-Vamos a calcular el primero de alunos símbolos. Por ejemplo:
+Vamos a calcular el primero de algunos símbolos. Por ejemplo:
 
-primero(E')=$\{+λ\}$
+primero(E')=$\{+, λ\}$
 
 primero(T')=$\{*, λ\}$
 
-primero(F)=$\{(,i\}$
+primero(F)=$\{(, i\}$
 
 primero(T)=$\{(, i\}$
 
@@ -1413,26 +1413,36 @@ Veamos la segunda definición:
 Dada una gramática, el siguiente de un elemento, A, es el conjunto de símbolos terminales que pueden aparecer justo después de A en alguna forma sentencial derivada del axioma.
 \end{defn}
 
-Para calcularlo, dada una regla $\appl{}{X}{αA\beta}$, con α, $\beta \in \sum^*$ añadimos a siguiente(A) primero(B).
+Para calcularlo, dada una regla $\appl{}{X}{\alpha A \{\beta_1,\beta_2,...\}}$, con $\alpha, \beta_i \in \sum^*$
+\begin{enumerate}
+\item añadimos primero($\beta_1$) $\setminus \lambda$  a siguiente(A).
+\item si $\lambda \in$ primero($\beta_1$), repetimos (1) con $\beta_2$.
+\end{enumerate}
+\begin{itemize}
+\item iteramos hasta que $\lambda \notin$ primero($\beta_j$) o se acaben los símbolos a su derecha.
+\item si se acaban los símbolos a su derecha, añadimos siguiente(X) a siguiente(A).
+\item si el algoritmo te lleva a que en siguiente de un símbolo se debe unir siguiente de ese mismo símbolo, se ignora.
+\end{itemize}
 
-%TODO copiar forma general
+\obs $\$ \in $ Siguiente(axioma) siempre.
 
-Veamos un ejemplo para poner en práctica lo aprendido
+Veamos un ejemplo para poner en práctica lo aprendido:
+
 \begin{example}
 Considerando la misma gramática del ejemplo anterior, tenemos:
 
-siguiente(E)=$\{)\}$
+\obs E es el axioma
 
-siguiente(E')=$\{)\}$
+siguiente(T)=primero(E') $\cup$ siguiente(E') $\cup$ siguiente(E) = $\{ +, ), \$\}$
 
-siguiente(T)=$\{+, )\}$
+siguiente(E')=siguiente(E) = $\{ ), \$ \}$
 
-siguiente(T')=$\{+, )\}$
+siguiente(E)=$\{ ), \$\}$
 
-siguiente(F)= $\{*,+,)\}$
+siguiente(F)=primero(T') $\cup$ siguiente(T) $\cup$ siguiente(T') = $\{ +, *, ), \$ \}$
+
+siguiente(T')=siguiente(T) = $\{ +, ), \$ \}$
 \end{example}
-
-\obs $\$ \in $ Siguiente(S) siempre
 
 
 \subsection{SLR(1)}

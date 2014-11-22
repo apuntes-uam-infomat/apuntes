@@ -40,3 +40,7 @@ Puedes descargar los apuntes en PDF, actualizados diariamente, [aquí](https://w
 ### OS X
 
 Recomendada instalación a través de MacPorts. En la página [están todos los paquetes y lo que incluye cada uno](https://trac.macports.org/wiki/TeXLivePackages), aunque por resumir: _texlive-basic, texlive-bin-extra_ (para _texdoc_), _texlive-fonts-extra_, _texlive-lang-spanish_, _texlive-latex_, _texlive-latex-extra_, _texlive-math-extra_.
+
+### Ubuntu
+
+Hay que instalar el paquete base y también los extras ya que se usan varios paquetes presentes ahí: _texlive-latex-base_, _texlive-latex-extra_, _texlive-latex-recommended_. También es interesante instalarse la documentación de cada de uno de esos paquetes.
