@@ -1500,27 +1500,109 @@ Conclusión: Para realizar una tabla de análisis SLR(1) basta con:
 \item Modificar las filas de la tabla que correspondan a estados finales. Poniendo huecos en blanco en todas las casillas salvo en aquellas en las que haya desplazamiento y aquellas en las que realmente reduzcamos, es decir, en las que el siguiente elemento del que vayamos a reducir coincida con el de la entrada.
 \end{enumerate}
 
-
-
-
 \end{example}
 
 
 \subsection{LR(1)}
-Dada una gramática G(N,T,S, P), con $\sum = N \cup T$ 
+Las tablas LR(1) surgen para corregir los conflictos desplazamiento/reducción que no es capaz de solventar el análisis SLR(1).
 
-Continuara....
+Veamos dos ejemplos en los que el análisis SLR(1) falla:
 
-A continuación se muestran las transparencias utilizadas en clase y que acompañan a la última parte de estos apuntes.
+\begin{example}
+Definimos la siguiente gramática extendida para aplicarle la tabla de análisis SLR(1):
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={2-9}, scale=0.72]{pdf/lr_pres.pdf}
+\begin{itemize}
+\item (0) E' $\rightarrow$ E \$
+\item (1) E $\rightarrow$ E+E
+\item (2) E $\rightarrow$ E*E
+\item (3) E $\rightarrow$ i
+\end{itemize}
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={10-17}, scale=0.72]{pdf/lr_pres.pdf}
+Genera el siguiente autómata:
+\begin{center}
+\includegraphics[scale=0.5]{img/automataslr1conflicto.jpg}
+\end{center}
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={18-25}, scale=0.72]{pdf/lr_pres.pdf}
+En el cual podemos observar que en el estado final $S_6$ podríamos desplazar o reducir para los símbolos '+' y '*'. Ya que siguiente(E)=$\{+,*\$\}$.
 
-\includepdf[frame=true, noautoscale=true, delta=10 10, nup=2x4,pages={26-28}, scale=0.72]{pdf/lr_pres.pdf}
+Por tanto nos quedaría la siguiente tabla de análisis:
 
+\begin{center}
+\includegraphics[scale=0.4]{img/tablaanalisisslr1conflicto.jpg}
+\end{center}
+\end{example}
+
+\begin{example}
+Definimos la siguiente gramática extendida para aplicarle la tabla de análisis SLR(1):
+
+\begin{itemize}
+\item (0) S' $\rightarrow$ S \$
+\item (1) S $\rightarrow$ xb
+\item (2) S $\rightarrow$ A
+\item (3) A $\rightarrow$ aAb
+\item (4) A $\rightarrow$ x
+\end{itemize}
+
+Genera el siguiente autómata:
+\begin{center}
+\includegraphics[scale=0.5]{img/automataslr1c1.jpg}
+\end{center}
+
+En el cual vuelve a ocurrir algo parecido a lo del ejemplo anterior. En este caso tenemos que:
+
+siguiente(S)=$\{\$\}$
+siguiente(A)=$\{b,\$\}$
+
+Por tanto nos quedaría la siguiente tabla de análisis:
+
+\begin{center}
+\includegraphics[scale=0.4]{img/tablaanalisisslr1c1.jpg}
+\end{center}
+\end{example}
+
+Mediante el análisis SLR(1) no añadíamos ningún estado más al autómata, únicamente cambiábamos la tabla de análisis. Ahora, con LR(1) vamos a añadir más estados a nuestro autómata. Así, para formar un autómata LR(1) realizamos los siguientes pasos:
+
+\begin{enumerate}
+\item Ahora la gramática extendida no va a tener una regla que sea $S' \rightarrow S\$$ sino que esta regla será $S' \rightarrow S\{\$\}$.
+\item Vamos a formar cada estado como en LR(0), poniendo un '.' delante del símbolo que estamos evaluando y \textbf{cerrando} ese símbolo como ya explicamos anteriormente.
+\item A cada regla que aparezca en cada estado del autómata se deberá añadir entre corchetes lo que llamaremos el \textbf{símbolo de adelanto}, este símbolo es el siguiente(X) si tenemos $X \rightarrow ABC...$, es decir, el siguiente del símbolo no terminal situado a la izquierda de la regla. IMPORTANTE: Se calculará el siguiente(X) mirando las reglas de derivación que hay en el estado en el que nos encontremos PERO sólo aquellas que han propiciado que aparezca esa regla de derivación en ese estado. Es decir, si tienes $X \rightarrow .A$, entonces esa regla propicia la aparición de las reglas de derivación de A (ya que tenemos que cerrar A), por tanto para calcular posteriormente el siguiente(A), miraremos solo $X \rightarrow .A$.
+\end{enumerate}
+
+Como resultado, tendremos un mayor número de estados ya que si el símbolo de adelanto cambia, habrá que definir un nuevo estado.
+
+\begin{example}
+Usando la gramática del ejercicio anterior, generamos el siguiente autómata usando LR(1):
+
+\begin{center}
+\includegraphics[scale=0.65]{img/automatalr1.jpg}
+\end{center}
+
+Como podemos observar, en este autómata se eliminan los conflictos que teníamos antes. Nos fijamos en la clave de esto.
+
+En el estado $S_3$, en LR(0) si venía una 'a', volvíamos al mismo estado, pero en este caso la cosa cambia. Si estamos en $S_3$ , el símbolo de adelanto de $A \rightarrow a.Ab$ es un \$ ya que venimos del estado $S_0$ y siguiente(A)=\$. Pero si viene una 'a', pasaríamos al estado $S_9$ y el símbolo de adelanto de esa misma regla sería una 'b', ya que venimos del estado $S_3$ y después de la A hay una b.
+
+Si aún no ha quedado claro, ya que la explicación es algo liosa, propongo que observen este diagrama:
+
+$S' \rightarrow S \{\$\}$  derivamos...
+
+$\rightarrow A \{\$\}$ derivamos...
+
+$\rightarrow aAb \{\$\}$ derivamos...
+
+$\rightarrow a(aAb\{b\})b \{\$\}$
+
+La segunda vez que derivamos A en aAb, el esperable siguiente elemento de A sería la b.
+
+Nos quedaría la siguiente tabla de análisis:
+
+\begin{center}
+\includegraphics[scale=0.4]{img/tablaanalisisslr1.jpg}
+\end{center}
+\end{example}
+
+\subsection{LALR(1)}
+
+to be continued... en resumen es igual que LR(1) solo que junta estados pudiendo aparecer conflictos reduccion/reduccion que en el caso de lr(1) no había. Y para que sirve? Pues solo para disminuir el tamaño de la tabla de análisis y que sea más rapido el mismo..., si no aparecen conflictos reduccion/reduccion merecerá la pena y si no..., pues no. 
 
 \appendix
 \chapter{Ejercicios}
