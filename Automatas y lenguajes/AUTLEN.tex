@@ -1354,30 +1354,19 @@ Para solucionar estos conflictos definimos primero(x) y siguiente(x):
 El primero de A es el conjunto de terminales que pueden aparecer al principio de una cadena derivada de A.
 \end{defn}
 
-Veamos cómo calcular el primero de A. Para ello observamos que existen tres diferentes casos según α:
+Veamos cómo calcular el primero de A. Para ello observamos que existen tres diferentes casos. Llamando α al primer elemento que se obtiene al derivar una regla:
 \begin{enumerate}
-\item $α \in T$
-\begin{verbatim}
-primero(A)=α
-\end{verbatim}
+\item $α \in T$ (Si α es un símbolo terminal):  primero(A)=α
+\item $α \in N$ (Si α es un símbolo no terminal): primero(A)=primero(α)
+\item $α \in N$ y $primero(α)=λ$ (Si α es un símbolo no terminal y el primero de ese simbolo no terminal es λ, o también si directamente el primero de α es λ): Para calcular primero(A), (aparte de λ) irías avanzando hasta encontrar un elemento que no fuera λ.
 
-\item $α \in N$
-\begin{verbatim}
-primero(A)=primero(α)
-\end{verbatim}
-\item $α = α_1α_2...α_n \in T \cup N$
-
-Este sería el caso más interesante. Vamos a construir primero(A) por partes.
-\begin{verbatim}
-primero(A) añadimos primero(α1)-{λ}
-si λ pertenece a primero(α1):
-    añadimos primero(α2)-{λ}
-    si λ pertenece a primero(α2):
-        añadimos primero(α3)-{λ}
-        .
-        .
-        .
-\end{verbatim}
+%\item $α = α_1α_2...α_n \in T \cup %N$: Este sería el caso más %interesante. Vamos a construir %primero(A) por partes.
+%\begin{verbatim}
+%primero(A) añadimos primero(α1)-{λ}
+%si λ pertenece a primero(α1):
+%    añadimos primero(α2)-{λ}
+%    si λ pertenece a primero(α2):
+%        añadimos primero(α3)-{λ}
 \end{enumerate}
 
 Veamos un ejemplo
@@ -1407,13 +1396,19 @@ primero(T)=$\{(, i\}$
 primero(E)=$\{(, i\}$
 \end{example}
 
-Veamos la segunda definición:
+\begin{example}
+Si tuviéramos la misma gramática que en el apartado anterior cambiando la regla $T' \rightarrow λ$ por $T' \rightarrow λT$, entonces:
+
+primero(T')=$\{*,λ, (, i\}$
+\end{example}
+
+
 
 \begin{defn}[Siguiente(A)]
 Dada una gramática, el siguiente de un elemento, A, es el conjunto de símbolos terminales que pueden aparecer justo después de A en alguna forma sentencial derivada del axioma.
 \end{defn}
 
-Para calcularlo, dada una regla $\appl{}{X}{\alpha A \{\beta_1,\beta_2,...\}}$, con $\alpha, \beta_i \in \sum^*$
+Para calcularlo formalmente, dada una regla $\appl{}{X}{\alpha A \{\beta_1,\beta_2,...\}}$, con $\alpha, \beta_i \in \sum^*$
 \begin{enumerate}
 \item añadimos primero($\beta_1$) $\setminus \lambda$  a siguiente(A).
 \item si $\lambda \in$ primero($\beta_1$), repetimos (1) con $\beta_2$.
@@ -1424,14 +1419,14 @@ Para calcularlo, dada una regla $\appl{}{X}{\alpha A \{\beta_1,\beta_2,...\}}$, 
 \item si el algoritmo te lleva a que en siguiente de un símbolo se debe unir siguiente de ese mismo símbolo, se ignora.
 \end{itemize}
 
-\obs $\$ \in $ Siguiente(axioma) siempre.
+\obs $\$ \in $ Siguiente(axioma) siempre (Al formar la gramática extendida). En este caso como el axioma es E, y ya existe un E', habría que definir una nueva regla del tipo $E'' \rightarrow E\$$
 
 Veamos un ejemplo para poner en práctica lo aprendido:
 
 \begin{example}
 Considerando la misma gramática del ejemplo anterior, tenemos:
 
-\obs E es el axioma
+E es el axioma, y por tanto tenemos que:
 
 siguiente(T)=primero(E') $\cup$ siguiente(E') $\cup$ siguiente(E) = $\{ +, ), \$\}$
 
@@ -1450,15 +1445,15 @@ siguiente(T')=siguiente(T) = $\{ +, ), \$ \}$
 Las tablas de análisis SLR(1) surgen para solucionar los conflictos desplazamiento/reducción. Lo vemos con un ejemplo:
 
 \begin{example}
-Definimos la siguiente gramática extendida para aplicarle tabla de análisis LR(0):
+Definimos la siguiente gramática extendida para aplicarle la tabla de análisis LR(0):
 
 \begin{itemize}
-\item B' $\rightarrow$ B \$
-\item B $\rightarrow$ bD;Ef
-\item D $\rightarrow$ d
-\item D $\rightarrow$ D;d
-\item E $\rightarrow$ e
-\item E $\rightarrow$ e;E
+\item (0) B' $\rightarrow$ B \$
+\item (1) B $\rightarrow$ bD;Ef
+\item (2) D $\rightarrow$ d
+\item (3) D $\rightarrow$ D;d
+\item (4) E $\rightarrow$ e
+\item (5) E $\rightarrow$ e;E
 \end{itemize}
 
 Genera el siguiente autómata:
@@ -1480,7 +1475,7 @@ Concluimos que no es por tanto un autómata LR(0) ya que tenemos conflictos que 
 Tabla que mejora la tabla de análisis LR(0). Modifica las transiciones de los estados finales del autómata. En el caso de LR(0) realizaban una reducción siempre, mientras que en SLR(1) se específica cuándo hay que realizar una reducción, cuándo un desplazamiento, y cuándo vas  a un estado de error.
 \end{defn}
 
-Por tanto el autómata quedará igual a simple vista (sólo que ahora habra más transiciones a estados de error aunque estas no aparezcan dibujadas). Los cambios lo mostraremos en la tabla de análisis.
+Por tanto el autómata quedará igual a simple vista (sólo que ahora habra más transiciones a estados de error aunque estas no aparezcan dibujadas). Los cambios los mostraremos en la tabla de análisis.
 
 Para ello vamos a usar el concepto de \textbf{Siguiente(x)}. Vamos a calcular los elementos siguientes de los no terminales B, D y E.
 
@@ -1495,6 +1490,15 @@ Se eliminan así los conflictos, quedando la tabla de análisis de la siguiente 
 \begin{center}
 \includegraphics[scale=0.4]{img/tablaanalisisslr1.jpg}
 \end{center}
+
+Como podemos observar, en el estado S7, se reduce siguiendo la regla (4) (ver las reglas de la gramática definidas al principio del ejemplo), pero sólo si el siguiente elemento de la entrada es una f, ya que siguiente(E)={f}.
+
+Conclusión: Para realizar una tabla de análisis SLR(1) basta con:
+\begin{enumerate}
+\item Hacer la tabla de análisis LR(0).
+\item Calcular los elementos siguientes de los símbolos no terminales.
+\item Modificar las filas de la tabla que correspondan a estados finales. Poniendo huecos en blanco en todas las casillas salvo en aquellas en las que haya desplazamiento y aquellas en las que realmente reduzcamos, es decir, en las que el siguiente elemento del que vayamos a reducir coincida con el de la entrada.
+\end{enumerate}
 
 
 
