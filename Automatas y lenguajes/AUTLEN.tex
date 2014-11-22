@@ -1061,7 +1061,8 @@ La 4ª tarea secundaria, que tenía el analizador morfológico, es la que realiz
 
 \chapter{Analizador sintáctico}
 
-\section{Tablas de análisis (ascendente y descendente)}
+\section{Introducción}
+
 Las tablas de análisis permiten analizar una sentencia, con el fin de saber si se trata de una sentencia válida para una gramática dada o no.
 
 Veamos un ejemplo:
@@ -1202,6 +1203,14 @@ Instante & Pila & Acción\\
 Si al finalizar nos queda la pila vacía concluimos que la sentencia estudiada es correcta.
 \end{example}
 
+
+A lo largo de esta sección profundizaremos sobre el análisis ascendente y el análisis descendente.
+
+
+\section{Tablas de análisis ascendente}
+
+Vamos a estudiar ahora 4 tablas de análisis y autómatas que se utilizan para realizar el análisis ascendente.
+
 \subsection{Tablas LR(0)}
 
 \begin{defn}[Tabla LR(n)]
@@ -1222,7 +1231,7 @@ El primer paso para realizar el análisis LR(O) consiste en añadir un axioma E'
 E' $\rightarrow$ E\$
 \end{center}
 
-De forma que la gramática extendida quedaría:
+De forma que se obtiene la siguiente \textbf{gramática extendida}:
 \begin{itemize}
 \item E' $\rightarrow$ E \$
 \item E $\rightarrow$ T
@@ -1236,88 +1245,99 @@ Ahora lo que hacemos es añadir un '.' delante del símbolo que estemos analizan
 Para realizar el análisis por este método vamos a construir un autómata finito determinista, que procesa una cadena de símbolos, empezando por el estado S0:
 
 \begin{center}
-\includegraphics[scale=0.65]{automata7.png}
+\includegraphics[scale=0.45]{img/automatalr0.jpg}
 \end{center}
 
-Por tanto, si el análisis de una cadena llega a un estado final en este autómata, es que la cadena es sintácticamente correcta.
+La forma de interpretar este autómata tiene alguna peculiaridad. Cuando llegamos a un estado final, lo que hacemos es \textbf{reducir} y volver al estado $S_0$.
 
-Por ejemplo, supongamos que iniciamos el análisis. Estamos por tanto en el estado S0 y sólo podemos leer un paréntesis, una E, una i o una T. Si leemos el paréntesis pasamos al estado S2 en el que podemos leer una E, y por tanto las reglas que la E desencadena, y (aunque parezca redundante) como la E genera reglas en las que la T es el \textbf{primer} símbolo, también podemos encontrar las derivaciones de la T.
+Si el análisis de una cadena llega al estado de aceptación ($S_{acc}$) en este autómata, se termina el análisis concluyendo que la cadena es sintácticamente correcta.
 
-\end{example}
-
-%TODO Añadir aquí las transparencias que el profesor dio en clase el lunes 3
-
-Veamos ahora un ejemplo de como aplicar el autómata de análisis completo dado en las transparencias.
-\begin{example}
-La siguiente tabla recoge el resultado detallado del análisis de la entrada:
-\[i+i+i\$\]
-\begin{tabular}{| c | c | c | c | c |}
-\hline
-Instante & Estado  & Entrada & Pila & Acción \\
-\hline
-0 & 0 & i+i+i\$ & & desplazar i, saltar a 4\\
-\hline
-1 & 4 & +i+i\$ & i & Reducción T -> i \\
-\hline
-2 & 0 & T + i + i \$ & & desplazar T, saltar a 7 \\
-\hline
-3 & 7 & +i+i\$ & T & reducción E -> T\\
-\hline
-4 & $\emptyset$ & E+i+i \$ & & desplazar E, saltar a 1 \\
-\hline
-5 & 1 & +i+i \$ & E & desplazar +, saltar a 2\\
-\hline
-6 & 2 & i+i \$ & E + & desplazar i, saltar a 4\\
-\hline
-7 & 4 & +i\$ & E+ i & reducción T -> i \\
-\hline
-8 & $\emptyset$ & E+T+i \$ & & ... \\
-\hline
-\end{tabular}
-\end{example}
-
-Este sería el resultado obtenido aplicando el algoritmo a lo bruto.
-
-Sin embargo existe la posibilidad de mejorar este algoritmo aplicando un sencillo \textbf{truco}:
+Para construir el autómata seguimos los siguientes pasos:
 \begin{itemize}
-\item Guarda en la pila también el estado
-\item La cima de la pila contiene el estado actual
+\item Partimos en el estado $S_0$ del axioma de la gramática extendida ($E'$). 
+\item Situamos un '.' delante del símbolo que analizamos, en este caso empezamos por el símbolo E. Ya que la regla de derivación del axioma es $E' \rightarrow E\$$. Por tanto nos queda $E' \rightarrow .E\$$
+\item Ahora tenemos que \textbf{cerrar} el símbolo que esta inmediatamente después del punto. Si es un terminal ya estaría cerrado. Si es un no terminal lo cerramos escribiendo las reglas de derivación del mismo, poniendo de nuevo un '.' delante del primer símbolo de cada una de las reglas y cerrando el símbolo inmediatamente posterior al '.'. Así terminamos el estado $S_0$
+\item Creamos los siguientes estados. La transición de un estado a otro se da a partir de la entrada de un símbolo. Si entra un símbolo que se encuentra inmediatamente después del '.', entonces se irá a un nuevo estado del autómata en el que ahora el '.' se encontrará en la siguiente posición dentro de la regla de derivación. Si llega un símbolo que no está inmediatamente después del '.', se saltará a un estado de error.
+\item Si se llega a un estado en el que el '.' queda a la derecha de la regla de derivación (sin ningún símbolo inmediatamente después), este estado será un \textbf{estado final}. Esto implica que nada más llegar a este estado se \textbf{reducirá} la regla (introduciendo en la entrada la pare izquierda de la regla )y volveremos al estado inicial $S_0$.
 \end{itemize}
 
-Aplicar este pequeño truco implica también una pequeña modificación del algoritmo:
+A partir de este autómata se puede crear una tabla, denominada \textbf{tabla de análisis} que resume el funcionamiento del autómata:
 
-Ahora la reducción implicará sacar también de la pila la parte derecha (incluyendo estados) y copiar la parte izquierda en la entrada.
+\begin{center}
+\includegraphics[scale=0.3]{img/tablaanallr0.jpg}
+\end{center}
 
-Rehagamos el ejemplo anterior con estas mejoras:
-\begin{example}
+En la cual vemos que se indica la acción a realizar según el estado en el que nos encontremos y el símbolo de entrada que leamos.
+
+Así, para realizar el análisis de una entrada nos basta con utilizar esta tabla y una pila en la que vayamos guardando las acciones que vamos realizando.
+
+A la hora de analizar una entrada realizamos los siguientes 5 tipos de acciones:
+\begin{itemize}
+\item ERROR: si llegamos a una casilla en blanco de la tabla se deduce que la entrada es incorrecta.
+\item Desplazar (símbolo terminal): Avanzamos un símbolo en la entrada y lo introducimos en la pila junto con el número del estado al que saltas. Corresponde a las casillas dx, siendo x el estado al que saltamos.
+\item Reducir: Sacar de la pila la parte derecha de la regla (doble de símbolos de los que tiene la parte derecha ya que sacamos símbolo y número de estado al que saltó). Tras la reducción se considera que volvemos al estado $S_0$ con símbolo de entrada el de la parte izquierda de la regla que se acaba de reducir. Corresponde a las casillas rx, siendo x la regla de la gramática que reducimos.
+\item Ir a (desplazamiento de símbolo no terminal). Saltar al estado indicando introduciendo en la pila el no terminal y el estado al que se salta. Se aplica justo después de realizar una reducción. No se avanza por tanto en la cadena de entrada. Corresponde a las casillas de la tabla en la que hay solo un número (estado al que saltamos). 
+\item Aceptar: Se acepta el símbolo e entrada si llegamos al estado de aceptación $S_{acc}$.
+\end{itemize}
+
 La siguiente tabla recoge el resultado detallado del análisis de la entrada:
 \[i+i+i\$\]
 \begin{tabular}{| c | c | c | c | c | c |}
 \hline
-Instante & Estado  & Entrada & Pila1 & Pila2 & Acción \\
+Instante & Entrada &  Pila2 & Acción \\
 \hline
-0 & 0 & i+i+i\$ & & 0 & desplazar i, saltar a 4\\
+0 & i+i+i\$ & 0 & d4: desplazar i, saltar a 4\\
 \hline
-1 & 4 & +i+i\$ & i & 0i4 & Reducción T -> i \\
+1 & +i+i\$ & 0i4 & r3: Reducción con regla 3, T -> i \\
 \hline
-2 & 0 & T+i+i\$ & & 0& desplazar T, saltar a 7 \\
+2 & +i+i\$ & 0& 7: desplazar T, ir a 7 \\
 \hline
-3 & 7 & +i+i\$ & T & 0T+ &reducción E -> T\\
+3 & +i+i\$ & 0T7 & r1: reducción E -> T\\
 \hline
-4 & $\emptyset$ & E+i+i\$ & & 0 &desplazar E, saltar a 1 \\
+4  & +i+i\$ & 0 & 1: desplazar E, ir a 1 \\
 \hline
-5 & 1 & +i+i\$ & E & 0E1 & desplazar +, saltar a 2\\
+5 & +i+i\$  & 0E1 & d2: desplazar +, saltar a 2\\
 \hline
-6 & 2 & i+i\$ & E + & 0E1+2 & desplazar i, saltar a 4\\
+6 & i+i\$  & 0E1+2 & d4: desplazar i, saltar a 4\\
 \hline
-7 & 4 & +i\$ & E+ i & 0E1+2i4 & reducción T -> i \\
+7 & +i\$ & 0E1+2i4 & r3: reducción T -> i \\
 \hline
-8 & $\emptyset$ & T+i\$ & & 0E1+2 & ... \\
+8 & +i\$ & 0E1+2 & 3: desplazar T, ir a 3 \\
+\hline
+9 & +i\$ & 0E1+2T3 & r2: reducción E -> E+T \\
+\hline
+10 & +i\$ & 0 & 1: desplazar E, ir a 1 \\
+\hline
+11 & +i\$ & 0E1 & d2: desplazar +, saltar a 2 \\
+\hline
+12 & i\$ & 0E1+2 & d4: desplazar i, saltar a 4 \\
+\hline
+13 & \$ & 0E1+2i4 & r3: reducción T -> E\\
+\hline
+14 & \$ & 0E1+2 & 3: desplazar T, ir a 3 \\
+\hline
+15 & \$ & 0E1+2T3 & r2: reducción E -> E+T \\
+\hline
+16 & \$ & 0 & 1: desplazar E, ir a 1 \\
+\hline
+17 & \$ & 0E1 & Acepar: desplazas \$ y saltas a $S_{acc}$ \\
 \hline
 \end{tabular}
 \end{example}
 
-\newpage
+\begin{example}
+Veamos un ejemplo del análisis de una expresión que termina en error:
+
+\begin{center}
+\includegraphics[scale=0.3]{img/tablaanallr0error.jpg}
+\end{center}
+\end{example}
+
+
+\begin{example}
+Aquí va un ejercicio que hicimos en clase y copiaré en otro momento
+\end{example}
+
 \subsection{LR(1)}
 Dada una gramática G(N,T,S, P), con $\sum = N \cup T$ vamos a definir un par de conceptos nuevos:
 
@@ -1358,20 +1378,20 @@ Dada la gramática:
 \item $E \rightarrow TE'$
 \item $E' \to +TE'$
 \item $E' \to λ$
-\item $F \to FT'$
+\item $T \to FT'$
 \item $T' \to *FT'$
 \item $T' \to λ$
 \item $F \to (E)$
 \item $F \to i$
 \end{itemize}
 
-Vamos a calcular el primero de alunos símbolos. Por ejemplo:
+Vamos a calcular el primero de algunos símbolos. Por ejemplo:
 
-primero(E')=$\{+λ\}$
+primero(E')=$\{+, λ\}$
 
 primero(T')=$\{*, λ\}$
 
-primero(F)=$\{(,i\}$
+primero(F)=$\{(, i\}$
 
 primero(T)=$\{(, i\}$
 
@@ -1384,26 +1404,36 @@ Veamos la segunda definición:
 Dada una gramática, el siguiente de un elemento, A, es el conjunto de símbolos terminales que pueden aparecer justo después de A en alguna forma sentencial derivada del axioma.
 \end{defn}
 
-Para calcularlo, dada una regla $\appl{}{X}{αA\beta}$, con α, $\beta \in \sum^*$ añadimos a siguiente(A) primero(B).
+Para calcularlo, dada una regla $\appl{}{X}{\alpha A \{\beta_1,\beta_2,...\}}$, con $\alpha, \beta_i \in \sum^*$
+\begin{enumerate}
+\item añadimos primero($\beta_1$) $\setminus \lambda$  a siguiente(A).
+\item si $\lambda \in$ primero($\beta_1$), repetimos (1) con $\beta_2$.
+\end{enumerate}
+\begin{itemize}
+\item iteramos hasta que $\lambda \notin$ primero($\beta_j$) o se acaben los símbolos a su derecha.
+\item si se acaban los símbolos a su derecha, añadimos siguiente(X) a siguiente(A).
+\item si el algoritmo te lleva a que en siguiente de un símbolo se debe unir siguiente de ese mismo símbolo, se ignora.
+\end{itemize}
 
-%TODO copiar forma general
+\obs $\$ \in $ Siguiente(axioma) siempre.
 
-Veamos un ejemplo para poner en práctica lo aprendido
+Veamos un ejemplo para poner en práctica lo aprendido:
+
 \begin{example}
 Considerando la misma gramática del ejemplo anterior, tenemos:
 
-siguiente(E)=$\{)\}$
+\obs E es el axioma
 
-siguiente(E')=$\{)\}$
+siguiente(T)=primero(E') $\cup$ siguiente(E') $\cup$ siguiente(E) = $\{ +, ), \$\}$
 
-siguiente(T)=$\{+, )\}$
+siguiente(E')=siguiente(E) = $\{ ), \$ \}$
 
-siguiente(T')=$\{+, )\}$
+siguiente(E)=$\{ ), \$\}$
 
-siguiente(F)= $\{*,+,)\}$
+siguiente(F)=primero(T') $\cup$ siguiente(T) $\cup$ siguiente(T') = $\{ +, *, ), \$ \}$
+
+siguiente(T')=siguiente(T) = $\{ +, ), \$ \}$
 \end{example}
-
-\obs $\$ \in $ Siguiente(S) siempre
 
 A continuación se muestran las transparencias utilizadas en clase y que acompañan a la última parte de estos apuntes.
 
