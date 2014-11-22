@@ -1338,10 +1338,19 @@ Veamos un ejemplo del análisis de una expresión que termina en error:
 Aquí va un ejercicio que hicimos en clase y copiaré en otro momento
 \end{example}
 
-\subsection{LR(1)}
-Dada una gramática G(N,T,S, P), con $\sum = N \cup T$ vamos a definir un par de conceptos nuevos:
+\subsection{Conflictos, y herramientas para solucionarlos}
+Vamos a definir nuevos conceptos que pondremos en práctica en esta sección.
 
-\begin{defn}[Primero]
+Las tablas LR(0) no son suficientes para representar todo tipo de gramáticas, podemos encontrarnos dos tipos de conflictos:
+
+\begin{itemize}
+\item Conflicto desplazamiento/reducción: Se producen cuando te encuentras en un estado final y además de la reducción, existe la posibilidad de desplazar.
+\item Conflicto reducción/reducción: Se producen cuando te encuentras en un estado final y puedes realizar una reducción utilizando dos reglas diferentes.
+\end{itemize}
+
+Para solucionar estos conflictos definimos primero(x) y siguiente(x):
+
+\begin{defn}[Primero(A)]
 El primero de A es el conjunto de terminales que pueden aparecer al principio de una cadena derivada de A.
 \end{defn}
 
@@ -1400,7 +1409,7 @@ primero(E)=$\{(, i\}$
 
 Veamos la segunda definición:
 
-\begin{defn}[Siguiente]
+\begin{defn}[Siguiente(A)]
 Dada una gramática, el siguiente de un elemento, A, es el conjunto de símbolos terminales que pueden aparecer justo después de A en alguna forma sentencial derivada del axioma.
 \end{defn}
 
@@ -1424,6 +1433,67 @@ siguiente(F)= $\{*,+,)\}$
 \end{example}
 
 \obs $\$ \in $ Siguiente(S) siempre
+
+
+\subsection{SLR(1)}
+
+Las tablas de análisis SLR(1) surgen para solucionar los conflictos desplazamiento/reducción. Lo vemos con un ejemplo:
+
+\begin{example}
+Definimos la siguiente gramática extendida para aplicarle tabla de análisis LR(0):
+
+\begin{itemize}
+\item B' $\rightarrow$ B \$
+\item B $\rightarrow$ bD;Ef
+\item D $\rightarrow$ d
+\item D $\rightarrow$ D;d
+\item E $\rightarrow$ e
+\item E $\rightarrow$ e;E
+\end{itemize}
+
+Genera el siguiente autómata:
+\begin{center}
+\includegraphics[scale=0.4]{img/automatalr0conflicto.jpg}
+\end{center}
+
+En el cual podemos observar que en el estado final $S_7$ tenemos dos posibles acciones si entra un ';', la de reducir (por ser estado final y encontrarse el '.' a la derecha de la regla) o la de desplazar al estado $S_{10}$
+
+Por tanto nos quedaría la siguiente tabla de análisis:
+
+\begin{center}
+\includegraphics[scale=0.3]{img/tablaanalisislr0conflicto.jpg}
+\end{center}
+
+Concluimos que no es por tanto un autómata LR(0) ya que tenemos conflictos que debemos solucionar. Para ello usaremos SLR(1).
+
+\begin{defn}[Tabla SLR(1)]
+Tabla que mejora la tabla de análisis LR(0). Modifica las transiciones de los estados finales del autómata. En el caso de LR(0) realizaban una reducción siempre, mientras que en SLR(1) se específica cuándo hay que realizar una reducción, cuándo un desplazamiento, y cuándo vas  a un estado de error.
+\end{defn}
+
+Por tanto el autómata quedará igual a simple vista (sólo que ahora habra más transiciones a estados de error aunque estas no aparezcan dibujadas). Los cambios lo mostraremos en la tabla de análisis.
+
+Para ello vamos a usar el concepto de \textbf{Siguiente(x)}. Vamos a calcular los elementos siguientes de los no terminales B, D y E.
+
+\begin{itemize}
+\item siguiente(B) $\rightarrow$ {\$}, por tanto las reducciones de B sólo se producirán delante del símbolo \$.
+\item siguiente(D) $\rightarrow$ {;}, por tanto las reducciones de B sólo se producirán delante del símbolo \$.
+\item siguiente(E) $\rightarrow$ {f}, por tanto las reducciones de B sólo se producirán delante del símbolo \$.
+\end{itemize}
+
+Se eliminan así los conflictos, quedando la tabla de análisis de la siguiente manera:
+ 
+\begin{center}
+\includegraphics[scale=0.4]{img/tablaanalisisslr1.jpg}
+\end{center}
+
+
+
+
+\end{example}
+
+
+\subsection{LR(1)}
+Dada una gramática G(N,T,S, P), con $\sum = N \cup T$ 
 
 A continuación se muestran las transparencias utilizadas en clase y que acompañan a la última parte de estos apuntes.
 
