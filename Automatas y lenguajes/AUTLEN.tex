@@ -1254,7 +1254,7 @@ Si el análisis de una cadena llega al estado de aceptación ($S_{acc}$) en este
 
 Para construir el autómata seguimos los siguientes pasos:
 \begin{itemize}
-\item Partimos en el estado $S_0$ del axioma de la gramática extendida ($E'$). 
+\item Partimos en el estado $S_0$ del axioma de la gramática extendida ($E'$).
 \item Situamos un '.' delante del símbolo que analizamos, en este caso empezamos por el símbolo E. Ya que la regla de derivación del axioma es $E' \rightarrow E\$$. Por tanto nos queda $E' \rightarrow .E\$$
 \item Ahora tenemos que \textbf{cerrar} el símbolo que esta inmediatamente después del punto. Si es un terminal ya estaría cerrado. Si es un no terminal lo cerramos escribiendo las reglas de derivación del mismo, poniendo de nuevo un '.' delante del primer símbolo de cada una de las reglas y cerrando el símbolo inmediatamente posterior al '.'. Así terminamos el estado $S_0$
 \item Creamos los siguientes estados. La transición de un estado a otro se da a partir de la entrada de un símbolo. Si entra un símbolo que se encuentra inmediatamente después del '.', entonces se irá a un nuevo estado del autómata en el que ahora el '.' se encontrará en la siguiente posición dentro de la regla de derivación. Si llega un símbolo que no está inmediatamente después del '.', se saltará a un estado de error.
@@ -1276,7 +1276,7 @@ A la hora de analizar una entrada realizamos los siguientes 5 tipos de acciones:
 \item ERROR: si llegamos a una casilla en blanco de la tabla se deduce que la entrada es incorrecta.
 \item Desplazar (símbolo terminal): Avanzamos un símbolo en la entrada y lo introducimos en la pila junto con el número del estado al que saltas. Corresponde a las casillas dx, siendo x el estado al que saltamos.
 \item Reducir: Sacar de la pila la parte derecha de la regla (doble de símbolos de los que tiene la parte derecha ya que sacamos símbolo y número de estado al que saltó). Tras la reducción se considera que volvemos al estado $S_0$ con símbolo de entrada el de la parte izquierda de la regla que se acaba de reducir. Corresponde a las casillas rx, siendo x la regla de la gramática que reducimos.
-\item Ir a (desplazamiento de símbolo no terminal). Saltar al estado indicando introduciendo en la pila el no terminal y el estado al que se salta. Se aplica justo después de realizar una reducción. No se avanza por tanto en la cadena de entrada. Corresponde a las casillas de la tabla en la que hay solo un número (estado al que saltamos). 
+\item Ir a (desplazamiento de símbolo no terminal). Saltar al estado indicando introduciendo en la pila el no terminal y el estado al que se salta. Se aplica justo después de realizar una reducción. No se avanza por tanto en la cadena de entrada. Corresponde a las casillas de la tabla en la que hay solo un número (estado al que saltamos).
 \item Aceptar: Se acepta el símbolo e entrada si llegamos al estado de aceptación $S_{acc}$.
 \end{itemize}
 
@@ -1486,7 +1486,7 @@ Para ello vamos a usar el concepto de \textbf{Siguiente(x)}. Vamos a calcular lo
 \end{itemize}
 
 Se eliminan así los conflictos, quedando la tabla de análisis de la siguiente manera:
- 
+
 \begin{center}
 \includegraphics[scale=0.4]{img/tablaanalisisslr1.jpg}
 \end{center}
@@ -1602,7 +1602,148 @@ Nos quedaría la siguiente tabla de análisis:
 
 \subsection{LALR(1)}
 
-to be continued... en resumen es igual que LR(1) solo que junta estados pudiendo aparecer conflictos reduccion/reduccion que en el caso de lr(1) no había. Y para que sirve? Pues solo para disminuir el tamaño de la tabla de análisis y que sea más rapido el mismo..., si no aparecen conflictos reduccion/reduccion merecerá la pena y si no..., pues no. 
+to be continued... en resumen es igual que LR(1) solo que junta estados pudiendo aparecer conflictos reduccion/reduccion que en el caso de lr(1) no había. Y para que sirve? Pues solo para disminuir el tamaño de la tabla de análisis y que sea más rapido el mismo..., si no aparecen conflictos reduccion/reduccion merecerá la pena y si no..., pues no.
+
+\section{Análisis ascendente}
+Vamos a estudiar cómo se desarrollan los algoritmos de análisis descendente.
+
+Ya los mencionamos anteriormente pero, para ver cómo funcionan, vamos a realizar algunos ejemplos por fuerza bruta, para captar la idea del asunto.
+
+\newpage
+\begin{example}
+Empezaremos por una gramática sencillita:
+\begin{itemize}
+\item S $\rightarrow$ aSb
+\item S $\rightarrow$ ab
+\end{itemize}
+y trataremos de ver si la cadena $aabb$ se deriva de esta gramática.
+
+Para empezar a estudiar el ejemplo, debemos tener en cuenta dos máximas del análisis descendente:
+
+\textbf{La cadena se lee desde la izquierda}
+
+\textbf{Realizaremos siempre derivaciones Left most}
+
+Vamos a realizar el ejercicio por \textit{fuerza bruta}.
+\begin{verbatim}
+Para empezar derivamos el axioma con la primera regla (en realidad daría igual
+cual coger).
+Obtenemos por tanto S->aSb y vemos que es compatible con la cadena buscada.
+
+Tomamos ahora el elemento no terminal situado más a la izquierda y lo derivamos.
+Obtenemos así S->aSb->aaSbb que vemos que es compatible con la entrada.
+
+Derivamos una vez más el siguiente elemento no terminal más a la izquierda.
+En esta ocasión llegamos a S->...->aaaSbbb que ya no es compatible con la
+cadena de modo que deshacemos la última operación.
+
+Tratamos de aplicar la segunda regla.
+Así obtenemos S->...->aaabbb que tampoco es compatible por lo que volvemos a deshacer el último paso.
+
+Nos hemos quedado sin reglas por aplicar, de modo que debemos deshacer una acción más.
+Volvemos al estado S->aSb y tratamos de aplicar la segunda regla:
+Llegamos a S->aSb->aabb y vemos que coincide con la cadena buscada.
+\end{verbatim}
+\end{example}
+
+Al explicar el algoritmo empleado hemos hecho alusión a la compatibilidad
+
+\begin{defn}[Compatibilidad]
+Para comprobar si la cadena que tenemos ahora mismo es \textbf{compatible} con la cadena que estamos buscando simplemente vemos si los primeros símbolos terminales (hasta el primer no terminal) coinciden
+\end{defn}
+
+Tal y como lo hemos explicado ,el algoritmo de análisis descendente presenta dos problemas graves:
+\begin{enumerate}
+\item Es extremadamente ineficiente
+\item Recursividad por la izquierda.
+
+Si nos encontramos con una gramática del tipo
+\begin{itemize}
+\item S $\rightarrow$ b
+\item S $\rightarrow$ Sb
+\end{itemize}
+y buscamos la cadena $abb$ entraríamos en un problema de recursión infinita pues aplicar la primera regla no nos da la solución final en ningún caso y con la segunda regla tendremos siemrpe al inicio de la cadena un símbolo que no es terminal.
+\end{enumerate}
+
+Para clasificar las gramáticas según puedan causarnos o no este problema vamos a definir un nuevo concepto
+
+\begin{defn}[Gramática LL(1)]
+Gramática en la que todas las reglas presentan en la parte derecha 1 símbolo no terminal seguido de un símbolo cualquiera (terminal o no terminal).
+
+Además, dos reglas con la misma parte izquierda deben un terminal distinto al inicio de su parte derecha.
+\end{defn}
+
+Estas gramática son muy interesantes ya que presentan un claro determinismo, que nos evita de hacer backtracking con lo que hacen la búsqueda muy eficiente.
+
+
+Vamos a estudiar dos métodos para el análisis de gramáticas de este tipo:
+\subsection{Forma normal de Greigbach}
+
+\begin{defn}[Forma normal de Greigbach]
+Decimos que una gramática está en forma normal de Greigbach si todas las reglas son de la forma:
+\[A \rightarrow a\beta \ a \in T, \ \beta \in N^*\]
+\end{defn}
+Todas las gramáticas pueden expresarse en forma normal de Greigbach. Una vez que una gramática está expresada de esta forma, comprobamos si es, además, LL(1) y si es así ya lo tenemos.
+
+Vamos a ver cómo tratar una gramática que no esté expresada en forma normal de Greigbach. En estos casos debemos solucionar, antes de nada, los dos problemas que nos impiden que la gramática esté en esta forma normal
+
+\begin{enumerate}
+\item \textbf{Eliminación de reglas recursivas por la izquierda}
+
+Dada una gramática de la forma
+\begin{itemize}
+\item A $\rightarrow$ A$\beta$
+\item A $\rightarrow$ α
+\end{itemize}
+la convertimos en otra
+\begin{itemize}
+\item A $\rightarrow$ αX
+\item X $\rightarrow$ $\beta$X|λ
+\end{itemize}
+
+\item \textbf{Eliminar símbolos no terminales del principio de la parte derecha de las reglas}
+
+Vamos a clasificar las reglas en tres tipos:
+\begin{enumerate}
+\item $A \rightarrow aZ$
+\item $A_i \rightarrow A_jα$ con $A_i$ precediendo a $A_j$
+\item $A_i \rightarrow A_jα$ con $A_j$ precediento a $A_i$
+\end{enumerate}
+
+El algoritmo a seguir sería:
+\begin{enumerate}
+\item Dejamos las reglas de Tipo 1 como están.
+\item Eliminamos las reglas de Tipo 3, empezando con aquellas cuyo símbolo de la parte derecha mayor precedencia
+\item Eliminamos las reglas de Tipo 2, empezando con aquellas cuyo símbolo de la parte izquierda tenga menor precedencia.
+\end{enumerate}
+\end{enumerate}
+
+Veamos un ejemplo de cómo aplicar este algoritmo
+\begin{example}
+Tomamos la gramática:
+\begin{itemize}
+\item $E \rightarrow E+T$
+\item $E \rightarrow T$
+\item $T \rightarrow T*T$
+\item $T \rightarrow F$
+\item $F \rightarrow i$
+\end{itemize}
+Primero eliminamos las reglas recursivas por la izquierda y nos quedamos en:
+\begin{itemize}
+\item $E \rightarrow TX$ (tipo 2)
+\item $X \rightarrow +TX$ (tipo 1)
+\item $T \rightarrow Y$ (tipo 2)
+\item $Y \rightarrow *FY|λ$ (tipo 1)
+\item $F \rightarrow i$ (tipo 1)
+\end{itemize}
+donde hemos indicado el tipo de cada regla, preparándonos así para el paso siguiente.
+Ahora tenemos que eliminar los símbolos no terminales del principio de la parte derecha de las reglas. Para ello aplicamos las siguientes transformaciones
+\begin{itemize}
+\item $T \rightarrow TY \ \implies T \rightarrow iY$
+\item $E \rightarrow TX \ \implies E \rightarrow iYX$
+\end{itemize}
+en el orden exacto en que se han indicado.
+\end{example}
 
 \appendix
 \chapter{Ejercicios}
