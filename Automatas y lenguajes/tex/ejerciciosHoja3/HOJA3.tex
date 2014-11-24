@@ -77,10 +77,10 @@ Calcula el cierre de la configuración inicial: E' ::= .ES
 \begin{problem}
 Sea la siguiente gramática LR(0):
 \begin{itemize}
-\item E ::= T
-\item E ::= E + T
-\item T ::= i
-\item T ::= (E)
+\item E ::= (L)
+\item E ::= i
+\item L ::= L,E
+\item L ::= E
 \end{itemize}
 
 \ppart Calcula el cierre de la configuración E ::= (.L)
@@ -99,7 +99,6 @@ Sea la siguiente gramática LR(0):
 \ppart
 \begin{itemize}
 \item E ::= (L.)
-\item L ::= L.,E
 \end{itemize}
 puesto que el punto se encuentra delante de símbolos terminales no es necesario cerrar la configuración.
 \end{problem}
@@ -125,11 +124,11 @@ Sea la siguiente gramática
 \solution
 Para trabajar con esta gramática primero añadimos la regla: D' ::= D\$, con lo que nos queda el conjunto de reglas:
 \begin{itemize}
-\item D' ::= .D\$
-\item D ::= .iPSn
-\item P ::= .:n
-\item S ::= .λ
-\item S ::= .n
+\item (0) D' ::= .D\$
+\item (1) D ::= .iPSn
+\item (2) P ::= .:n
+\item (3) S ::= .λ
+\item (4) S ::= .n
 \end{itemize}
 \ppart
 \begin{center}
@@ -139,32 +138,62 @@ Para trabajar con esta gramática primero añadimos la regla: D' ::= D\$, con lo
 \ppart
 \begin{tabular}{| c | c | c | c | c | c | c | c | }
 \hline
-Estado & D & i & P & S & n & : & \$\\
+Estado & i & n & : & \$ & D & P & S\\
 \hline
-SF0 & r4/S4 & r4/S1 & r4 & r4 & r4/SF3 & r4/S2 & r4\\
+SF0 & \textcolor{red}{r3/d1} & \textcolor{red}{r3/dF3} & \textcolor{red}{r3/d2} & r3 & d3 &  & \\
 \hline
-SF3 & r5 & r5 & r5 & r5 & r5 & r5  & r5\\
+SF3 & r4 & r4 & r4 & r4 &  &   & \\
 \hline
-S1 & & & SF5 & & & S2 &\\
+S1 &  &  & d2 &  &  & dF5 &\\
 \hline
-S4 & & & & & &  & SF1\\
+S4 &  &  &  & dacc &  &  & \\
 \hline
-SF5 & r4 & r4 & r4 & r4/S5 & r4 & r4 & r4\\
+SF5 & r3 &  \textcolor{red}{r3/dF3} & r3 & r3 & d5 &  & \\
 \hline
-S2 & & & & & SF2 & &\\
+S2 &  & dF2 &  &  &  &  &\\
 \hline
-SF1 & acc & acc & acc & acc & acc & acc & acc\\
+S5 &  & dF4  &  &  & &  &\\
 \hline
-S5 & & & & & SF4 & &\\
+SF2 & r2 & r2 & r2 & r2 &  &  & \\
 \hline
-SF2 & r3 & r3 & r3 & r3 & r3 & r3 & r3\\
-\hline
-SF4 & r2 & r2 & r2 & r2 & r2 & r2 & r2\\
+SF4 & r1 & r1 & r1 & r1 &  &  & \\
 \hline
 \end{tabular}
 \ppart \textbf{No se trata de una gramática LR(0)} ya que hay ocasiones en las que observamos un conflico desplazamiento-reducción. Por ejemplo, en el estado inicial podemos reducir la S o desplazar según la entrada dada.
 
-Sin embargo, \textbf{tampoco se trata de una gramática SLR(0)} ya que si forzamos a que las reducciones se produzcan en presencia del siguiente elemento no evitamos el conflicto. Como el siguiente de S es n, en presencia de esta n podremos aplicar la reducción S ::= λ o desplazar según la regla S ::= n
+Para ver si se trata de una gramática SLR(1) vamos a ver si somos capaces de solucionar los conflictos sabiendo cuales son los elementos siguientes:
+\begin{itemize}
+\item siguiente(D)={\$} : solo reducimos la regla 1 si después hay un '\$'.
+\item siguiente(P)={n} : solo reducimos la regla 2 si después hay una 'n'.
+\item siguiente(S)={n} : solo reducimos las reglas 3 y 4 si después hay una 'n'.
+\end{itemize}
+
+Sin embargo, \textbf{tampoco se trata de una gramática SLR(1)} ya que si forzamos a que las reducciones se produzcan en presencia del siguiente elemento no evitamos el conflicto. Como el siguiente de S es n, en presencia de esta n podremos aplicar la reducción S ::= λ o desplazar según la regla S ::= n. Quedando la siguiente tabla SLR(1):
+
+\begin{tabular}{| c | c | c | c | c | c | c | c | }
+\hline
+Estado & i & n & : & \$ & D & P & S\\
+\hline
+SF0 & d1 & \textcolor{red}{r3/dF3} & d2 & r3 & d3 &  & \\
+\hline
+SF3 &  & r4 &  &  &  &   & \\
+\hline
+S1 &  &  & d2 &  &  & dF5 &\\
+\hline
+S4 &  &  &  & dacc &  &  & \\
+\hline
+SF5 &  &  \textcolor{red}{r3/dF3} &  &  & d5 &  & \\
+\hline
+S2 &  & dF2 &  &  &  &  &\\
+\hline
+S5 &  & dF4  &  &  & &  &\\
+\hline
+SF2 &  & r2 &  &  &  &  & \\
+\hline
+SF4 &  &  &  & r1 &  &  & \\
+\hline
+\end{tabular}
+
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -186,7 +215,91 @@ Sea la siguiente gramática:
 \ppart Indica justificadamente si es SLR(1)
 
 \solution
-TODO
+\ppart Extendemos la gramática para realizar el análisis LR(0):
+
+\begin{itemize}
+\item (0) S' ::= S \$
+\item (1) S ::= bLd
+\item (2) L ::= E;L
+\item (3) L ::= λ
+\item (4) E ::= i=c
+\item (5) E ::= b
+\end{itemize}
+\begin{center}
+\includegraphics[scale=0.65]{automata5.png}
+\end{center}
+
+\ppart
+\begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c | }
+\hline
+Estado  & i & = & c & ; & b & d & \$ & L & E & S \\
+\hline
+S0 &  &  &  &  & dF0 &  &  &  &  & 1\\
+\hline
+S1 &  &  &  &  &  &  & dacc &  &  & \\
+\hline
+SF0 & \textcolor{red}{r3/d7} & r3 & r3 & r3 & \textcolor{red}{r3/dF3} & r3 & r3 & 3 & 4 & \\
+\hline
+S3 &  &  &  &  &  & dF1 &  &  &  & \\
+\hline
+SF1 & r1 & r1 & r1 & r1 & r1 & r1 & r1 &  &  & \\
+\hline
+S4 &  &  &  & dF4 &  &  &  &  &  & \\
+\hline
+SF4 & r3 & r3 & r3 & r3 & r3 & r3 & r3 & F5 & 4 & \\
+\hline
+SF5 & r2 & r2 & r2 & r2 & r2 & r2 & r2 &  &  & \\
+\hline
+SF3 & r5 & r5 & r5 & r5 & r5 & r5 & r5 &  &  & \\
+\hline
+S7 &  & d8 &  &  &  &  &  &  &  & \\
+\hline
+S8 &  &  & dF2 &  &  &  &  &  &  & \\
+\hline
+SF2 & r4 & r4 & r4 & r4 & r4 & r4 & r4 &  &  & \\
+\hline
+\end{tabular}
+\ppart \textbf{No se trata de una gramática LR(0)} ya que hay ocasiones en las que observamos un conflicto desplazamiento-reducción. 
+
+Para ver si se trata de una gramática SLR(1) vamos a ver si somos capaces de solucionar los conflictos sabiendo cuales son los elementos siguientes:
+\begin{itemize}
+\item siguiente(L)={d} : solo reducimos las reglas 2 y 3 si después hay una 'd'.
+\item siguiente(E)={;} : solo reducimos las reglas 4 y 5 si después hay un ';'.
+\item siguiente(S)={\$} : solo reducimos la regla 1 si después hay un '\$'.
+\end{itemize}
+
+Se corrigen los dos conflictos que hay ya que en el estado SF0 solo reduciremos si llega una 'd', por tanto en el caso de que llegue una 'b' o una 'i' desplazaremos. Quedando la tabla así:
+
+\begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c | }
+\hline
+Estado  & i & = & c & ; & b & d & \$ & L & E & S \\
+\hline
+S0 &  &  &  &  & dF0 &  &  &  &  & 1\\
+\hline
+S1 &  &  &  &  &  &  & dacc &  &  & \\
+\hline
+SF0 & d7 &  &  &  & dF3 & r3 &  & 3 & 4 & \\
+\hline
+S3 &  &  &  &  &  & dF1 &  &  &  & \\
+\hline
+SF1 &  &  &  &  &  &  & r1 &  &  & \\
+\hline
+S4 &  &  &  & dF4 &  &  &  &  &  & \\
+\hline
+SF4 &  &  &  &  &  & r3 &  & F5 & 4 & \\
+\hline
+SF5 &  &  &  &  &  & r2 &  &  &  & \\
+\hline
+SF3 &  &  &  & r5 &  &  &  &  &  & \\
+\hline
+S7 &  & d8 &  &  &  &  &  &  &  & \\
+\hline
+S8 &  &  & dF2 &  &  &  &  &  &  & \\
+\hline
+SF2 &  &  &  & r4 &  &  &  &  &  & \\
+\hline
+\end{tabular}
+
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -218,7 +331,7 @@ Calcula los conjuntos primero y siguiente de todos los símbolos no terminales d
 \ppart
 \begin{itemize}
 \item A ::= BXB
-\item X ::= .
+\item X ::= ,
 \item X ::= .
 \item X ::= e
 \item B ::= 0B
@@ -227,7 +340,42 @@ Calcula los conjuntos primero y siguiente de todos los símbolos no terminales d
 \end{itemize}
 
 \solution
-TODO
+\ppart
+\begin{itemize}
+\item primero(X)=\{e,g\}
+\item primero(Y)=\{g\}
+\item primero(Z)=\{h\}
+\end{itemize}
+\begin{itemize}
+\item siguiente(X)=\{\$\}
+\item siguiente(Y)=\{\$,e,h\}
+\item siguiente(Z)=\{\$,f\}
+\end{itemize}
+
+\ppart
+\begin{itemize}
+\item primero(X)=\{c,i,f\}
+\item primero(Y)=\{i,f\}
+\item primero(Q)=\{f\}
+\end{itemize}
+\begin{itemize}
+\item siguiente(X)=\{\$,i,f\}
+\item siguiente(Y)=\{\$,i,f\}
+\item siguiente(Q)=\{\$,i,f\}
+\end{itemize}
+
+\ppart
+\begin{itemize}
+\item primero(X)=\{",",.,e\}
+\item primero(A)=\{0,1,",",.,e\}
+\item primero(B)=\{0,1,",",.,e\}
+\end{itemize}
+\begin{itemize}
+\item siguiente(X)=\{\$,0,1\}
+\item siguiente(A)=\{\$,\}
+\item siguiente(B)=\{\$,",",.,e\}
+\end{itemize}
+
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -268,9 +416,9 @@ Cacula los símbolos de adelanto para el cierre de las siguientes reglas y gram�
 El cierre, con los conjuntos de adelanto, sería
 \begin{itemize}
 \item E' ::= .E $\{\$\}$
-\item E ::= .T $\{+,\$\}$
-\item E ::= .E+T $\{+ \$\}$
-\item T ::= .i $\{\$\}$
+\item E ::= .T $\{\$\}$
+\item E ::= .E+T $\{+,\$\}$
+\item T ::= .i $\{+,\$\}$
 \item T ::= .(E) $\{\$\}$
 \end{itemize}
 
@@ -279,16 +427,18 @@ El cierre, con los conjuntos de adelanto, sería
 \item S' ::= .S $\{\$\}$
 \item S ::= .L=R $\{\$\}$
 \item S ::= .R $\{\$\}$
-\item L ::= .*R $\{=\}$
-\item L ::= .i $\{=\}$
+\item L ::= .*R $\{=, \$\}$
+\item L ::= .i $\{=, \$\}$
 \item R ::= .L $\{\$\}$
 \end{itemize}
 
 \ppart
 \begin{itemize}
 \item E ::= (.L) $\{\$\}$
-\item L ::= L,E $\{, )\}$
-\item L ::= E $\{, )\}$
+\item L ::= .L,E $\{",", )\}$
+\item L ::= .E $\{",", )\}$
+\item E ::= .a $\{",", )\}$
+\item E ::= .(L) $\{",", )\}$
 \end{itemize}
 \end{problem}
 
@@ -378,7 +528,46 @@ Sea la siguiente gramática independiente del contexto:
 \ppart Usa la tabla de análisis para analizar la sentencia $aabb$
 \ppart Dibuja esquemáticamente el diagrama de estados LALR(1). Es suficiente con indicar los nombres de los estados, especificando cuáles son la unión de otros en LR(1).
 \solution
-TODO
+\ppart Extendemos la gramática para realizar el análisis LR(1):
+
+\begin{itemize}
+\item (0) S' ::= S
+\item (1) S ::= XX
+\item (2) X ::= aX
+\item (3) X ::= b
+\end{itemize}
+\begin{center}
+\includegraphics[scale=0.65]{automata9.png}
+\end{center}
+
+\ppart
+\begin{tabular}{| c | c | c | c | c | }
+\hline
+Estado  & a & b & X & S \\
+\hline
+S0 & d1 & dF0 & acc & 2\\
+\hline
+SF0 & r3  & r3 &  & \\
+\hline
+S1 & d1 & dF3 & F4 &  \\
+\hline
+SF3 & r3 & r3 &  & \\
+\hline
+SF4 & r2 & r2 &  &   \\
+\hline
+S2 & d3 & dF2 & F1 &  \\
+\hline
+SF1 & r1 & r1 &  &  \\
+\hline
+S3 & d3 & dF2 & F5 & \\
+\hline
+SF5 & r2 & r2 &  &  \\
+\hline
+SF2 & r3 & r3 &  &  \\
+\hline
+\end{tabular}
+
+
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
