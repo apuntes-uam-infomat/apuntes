@@ -10,7 +10,7 @@
 \usetikzlibrary{arrows}
 % --------------------
 
-%\precompileTikz
+\precompileTikz
 
 \begin{document}
 \pagestyle{plain}
@@ -2022,6 +2022,110 @@ Ejemplo de que $\dst(x,F)$ puede no alcanzarse si sólo se pide $F$ cerrado. Es 
 Tomamos, por ejemplo, $X = l^2$, el espacio de sucesiones $\{x_n\}_{n=1}^∞$ tales que $\sum x_n^2 < ∞$, con la siguiente distancia: \[ \dst(x,y) = \sqrt{\sum_{n=1}^∞ \abs{x_n - y_n}^2 }\] y tomamos el conjunto $F$ como  \[ F = \left\{ y ∈ l^2 \tq ∃m∈ℕ \text{ con } \begin{matrix} y_n &=& 0 & n ≠ m \\ y_m & = & 1 + \frac{1}{m} & \end{matrix}\right\} \]
 
 Tenemos que para $y∈F$, $\dst(0,y) = 1 + \frac{1}{m}$, cuyo ínfimo es $1$, luego $\dst(0, F) = 1$, sin embargo $\dst(0,y) > 1$ $∀y∈F$. Sólo faltaría demostrar que $F$ es cerrado, y se deja como ejercicio.
+
+\chapter{Conceptos básicos de homotopía}
+
+\section{Homotopía de caminos}
+
+Vamos a introducir una notación para los caminos en $X$ entre dos puntos: \[ C(X, x_0, x_1) = \{ \appl{f}{[0,1]}{X} \text{ continua } \tq f(0) = x_0, f(1) = x_1 \}\]
+
+\begin{prop} $\simeq_p$ es una relación de equivalencia en $C(X, x_0, x_1)$.
+\end{prop}
+
+\newcommand{\dfm}{\simeq_p}
+\newcommand{\restr}[2]{{#1}|_{#2}}
+\begin{proof}
+Vamos a demostrar las propiedades de relación de equivalencia:
+
+\begin{enumerate}
+	\item $f\dfm f$ trivialmente.
+	\item $f \dfm g \implies g \dfm f$. La transformación es fácil de ver, cogiendo $\hat{F}(t, s) = F(1-t, s)$.
+	\item $f \dfm g, g \dfm h \implies f \dfm h$. Tenemos las transformaciones $F_1$ y $F_2$ respectivamente, y queremos encontrar la que nos lleva de $f$ a $h$. La podemos definir ``acelerando'' las transformaciones y juntándolas:
+
+	\[F(t,s) = 
+	\begin{cases} 
+		F_1(2t, s) & 0 ≤ t ≤ \frac{1}{2}, s∈[0,1] \\ 
+		F_2(2t-1, s) & \frac{1}{2} ≤ t ≤ 1, s∈[0,1] 
+	\end{cases} \]
+
+	Se puede ver que $F$ es continua.
+\end{enumerate}
+\end{proof}
+
+En la demostración anterior hemos visto fácilmente que $F$ es continua, pero vamos a definir un lema que usaremos más tarde para formalizarlo.
+
+\begin{lemma} \label{lemContRestr} Sean $Y,Z$ espacios topológicos, sea $\appl{f}{Y}{Z}$ y sean $A,B$ cerrados en $Y$ tales que $A ∪ B = Y$ y las restricciones $f|_A, f|_B$ son continuas.
+
+Entonces $f$ es continua
+\end{lemma}
+
+\begin{proof} Si $f$ es continua, es lo mismo que decir que la imagen inversa de un cerrado es cerrado. Entonces si $C$ es cerrado en $Z$, $\inv{C}$ se puede escribir de la siguiente forma:
+
+\[ \inv{C}  = \inv{\left(f|_A\right)} ( C) ∪ \inv{\left(f|_B\right)} (C)  \]
+
+Ahora, $\inv{\left(f|_A\right)} ( C)$ es cerrado en $A$ por ser $\restr{f}{A}$ cerrado en $Y$. Ocurre lo mismo para $B$, así que $\inv{f}(C)$ es unión finita de cerrados y entonces $\inv{f}{C}$ es cerrado en $Y$, y entonces $f$ es continua.
+\end{proof}
+
+Es fácil ver que esta demostración vale igualmente si $A,B$ son abiertos, simplemente cambiando ``abierto'' por ``cerrado'' en enunciado y demostración.
+
+Vamos ahora a ver varias notaciones.
+
+\begin{defn} Sea $X$ un espacio topológico. Entonces
+\begin{enumerate}
+	\item Dado $x∈X$, definimos el \concept[Camino\IS constante]{camino\IS constante} $δ_x$ como 
+	\begin{align*}
+	\appl{δ_x}{[0,1]&}{X} \\
+	s&\longmapsto δ_x(s) \equiv x
+	\end{align*}
+	\item Dada $f∈C(X, x_0, x_f)$ se define el \concept[Camino\IS inverso]{camino\IS inverso} \[ f^-(s) = f(1-s) \], que también está en $f∈C(X, x_0, x_f)$.
+	\item Dadas $f∈C(X, x_0, x_1),\, g∈C(X, x_1, x_2)$, definimos el \concept[Camino\IS producto]{camino producto} (o concatenación de caminos) como
+
+	\[ f\ast g (s) = \begin{cases} 
+		f(2s) & 0 ≤ s ≤ \frac{1}{2} \\
+		g(2s - 1) & \frac{1}{2} ≤ s ≤ 1
+	\end{cases} \]
+
+	Es fácil ver que $f \ast g ∈ C(X, x_0, x_2)$ por el lema anterior que hemos visto.
+\end{enumerate}
+\end{defn}
+
+\begin{prop} Sea $X$ un espacio topológico. Entonces 
+\begin{enumerate}
+	\item $f_0 \dfm f_1, g_0 \dfm g_1 \implies f_0 \ast g_0 \dfm f_1 \ast g_1$.
+	\item El camino constante es la ``identidad'', por así decirlo, de la operación $\ast$: \[f∈C(X, x_0, x_1) \implies δ_{x_0} \ast f \dfm f, f \ast δ_{x_1} \dfm f \] 
+	\item La concatenación de un camino con su inverso es el camino constante en el punto de inicio: \[ f\ast f^- \dfm δ_{x_0},\quad f^- \ast f \dfm δ_{x_1} \] para $f∈C(X, x_0, x_1)$.
+	\item La operación producto es asociativa: \[ (f\ast g) \ast h \dfm f \ast (g\ast h) \]
+\end{enumerate}
+\end{prop}
+
+Suponemos que siempre que consideramos $f\ast g$ se entiende que $f(1) = g(0)$, porque si no no tendría sentido.
+
+\begin{proof}
+\begin{enumerate}
+	\item Tenemos que $f_0 \dfm f_1$ y $g_0 \dfm g_1$ con las transformaciones $F$ y $G$ respectivamente. Queremos comprobar que existe una transformación $H$ para $f_0 \ast g_0 \dfm f_1 \ast g_1$. Podemos definirla de la siguiente forma:
+
+	\[ H(t,s) = \begin{cases} F(t, 2s) & 0 ≤ s ≤ \frac{1}{2} \\ G(t, 2s-1) & \frac{1}{2} ≤ s ≤ 1 \end{cases} \]
+
+	que es continua por el lema \ref{lemContRestr}. En este caso, 
+
+	\[ H(0,s) = \left\{\begin{matrix} F(0,2s) = f_0(2s) & 0 ≤ s ≤ \frac{1}{2} \\
+	G(0, 2s-1) = g_0(2s -1) & \frac{1}{2} ≤ s ≤ 1 \end{matrix}\right\} ≝ f_0 \ast y_0(s) \] e igualmente $H(1, s) = f_1 \ast g_1 (s)$.
+
+	Dicho de otra forma, $H(t,s) = f_t \ast g_t (s)$.
+
+	\item Queremos ver que $δ_{x_0} \ast f \dfm f$. Entonces podemos definir la aplicación muy fácilmente de forma visual. Formalmente es un poco peñazo:
+
+	\[ F(t,s) = \begin{cases} 
+	x_0 & s ≤ \frac{1}{2}(1-t) \\
+	f\left(\frac{s-a_t}{1-a_t}\right) & \frac{1}{2}(1-t) = a_t ≤ s ≤ 1 \end{cases}\]
+
+	\item Visualmente también es sencillo. Lo que hacemos es ``ir y volver'', y al ir aumentando la $t$ de la transformación vamos cada vez más cerca del punto de inicio. La transformación sería
+
+	\[ F(t, s) = \begin{cases} 
+		f((1-t) s ) &  \\
+		f^-(ts) & \end{cases} \]
+\end{enumerate}
+\end{proof}
 
 \appendix
 \chapter{Ejercicios}
