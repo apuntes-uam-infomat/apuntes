@@ -1701,7 +1701,18 @@ la convertimos en otra
 \item X $\rightarrow$ $\beta$X|λ
 \end{itemize}
 
-\item \textbf{Eliminar símbolos no terminales del principio de la parte derecha de las reglas}
+\newpage
+\item \textbf{Eliminar símbolos no terminales del principio de la parte derecha de las reglas.}
+
+Para ello, dada una regla
+\begin{itemize}
+\item \[A \rightarrow abX\]
+\end{itemize}
+pasamos a dos reglas:
+\begin{itemize}
+\item \[A \rightarrow aBX\]
+\item \[B \rightarrow b\]
+\end{itemize}
 
 Vamos a clasificar las reglas en tres tipos:
 \begin{enumerate}
@@ -1716,8 +1727,28 @@ El algoritmo a seguir sería:
 \item Eliminamos las reglas de Tipo 3, empezando con aquellas cuyo símbolo de la parte derecha mayor precedencia
 \item Eliminamos las reglas de Tipo 2, empezando con aquellas cuyo símbolo de la parte izquierda tenga menor precedencia.
 \end{enumerate}
+\item \textbf{Eliminar símbolos terminales de más.}
+\item \textbf{Eliminar reglas λ}
+\item \textbf{Eliminar indeterminismo}
+
+Dadas reglas de la forma
+\begin{enumerate}
+\item $A \rightarrow aZ$
+\item $A \rightarrow aB$
+\end{enumerate}
+sacamos factor común y llegamos a
+\begin{enumerate}
+\item $A \rightarrow aW$
+\item $W \rightarrow B$
+\item $W \rightarrow Z$
 \end{enumerate}
 
+Tras este paso vemos si aparecen reglas recursivas. En caso afirmativo, las eliminamos nates de seguir.
+\item \textbf{Volvemos al primer paso y repetimos}
+
+\obs Si la gramática no es LL(1) este algoritmo no converge
+\end{enumerate}
+\newpage
 Veamos un ejemplo de cómo aplicar este algoritmo
 \begin{example}
 Tomamos la gramática:
@@ -1737,13 +1768,57 @@ Primero eliminamos las reglas recursivas por la izquierda y nos quedamos en:
 \item $F \rightarrow i$ (tipo 1)
 \end{itemize}
 donde hemos indicado el tipo de cada regla, preparándonos así para el paso siguiente.
+
 Ahora tenemos que eliminar los símbolos no terminales del principio de la parte derecha de las reglas. Para ello aplicamos las siguientes transformaciones
 \begin{itemize}
 \item $T \rightarrow TY \ \implies T \rightarrow iY$
 \item $E \rightarrow TX \ \implies E \rightarrow iYX$
 \end{itemize}
 en el orden exacto en que se han indicado.
+
+El resultado por el momento es:
+\begin{itemize}
+\item $E \rightarrow iYX$
+\item $X \rightarrow +TX$
+\item $X \rightarrow λ$
+\item $T \rightarrow iY$
+\item $Y \rightarrow *FY|λ$
+\item $F \rightarrow i$
+\end{itemize}
+
+Pero a esta gramática aún le falta algo para ser de Greibach, tenemos que eliminar las transiciones vacías, obteniendo:
+\begin{itemize}
+\item $E \rightarrow iYX$
+\item $E \rightarrow iY$
+\item $E \rightarrow iX$
+\item $E \rightarrow i$
+\item $X \rightarrow +TX$
+\item $X \rightarrow +T$
+\item $T \rightarrow iY$
+\item $T \rightarrow i$
+\item $Y \rightarrow *FY$
+\item $Y \rightarrow *F$
+\item $F \rightarrow i$
+\end{itemize}
+El método seguido se basa en la duplicación de aquellas reglas que contengan $Y$ ó $X$ (los no terminales que ocasionaban transiciones λ) añadiéndoles una opción sin esas variables, que es lo que obtendríamos si empleásemos la derivación λ
 \end{example}
+
+El último paso llevado a cabo en el ejemplo (eliminación de reglas λ) no es siempre necesario.
+
+Recordemos que queríamos saber si una gramática era de forma normal de Greibach con el fin de reconocer si era LL(1). Desde el último estado que hemos alcanzado en la gramática, para convertirla en una gramática LL(1) deberíamos eliminar los no terminales que aparecen repetidos en numerosas reglas.
+
+Sin embargo, desde el paso anterior tendríamos directamente que la gramaica es LL(1).
+
+La pregunta que surge ahora está clara:
+
+\subsection{¿Cuándo nos interesa eliminar las transiciones λ?}
+En general, nos interesará eliminar las transiciones λ siempre que al hacerlo no estemos generando una gramática no LL(1). Es decir, queremos eliminar estas transiciones sin dar lugar a gramáticas no deterministas.
+
+En general,
+\[\text{ primera}(X) \cap \text{ siguiente}(X) = \emptyset \implies \ λ\text{ no molesta para LL(1)}\]
+
+En el ejemplo anterior ninguna de las reglas λ nos molestaban de modo que podíamos prescindir del último paso para garantizar que la gramática es LL(1)
+
 
 \appendix
 \chapter{Ejercicios}
