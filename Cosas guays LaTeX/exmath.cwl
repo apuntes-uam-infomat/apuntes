@@ -183,6 +183,7 @@
 \bolac#m
 \tops#m
 \topu#m
+\quot{arg0}{arg1}#m
 \algb{arg0}#m
 \algbA#m
 \algbM#m
