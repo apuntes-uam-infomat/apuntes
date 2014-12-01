@@ -2149,7 +2149,7 @@ Se deja como ejercicio para el lector la comprobación de que obtenemos el mismo
 \[\text{Dado } A \in \algbM \text{ definimos } \int_A f = \int f \ind_A\]
 
 \begin{example}
-Supongamos que $\Omega$ es un espacio de probabilidad de finito, es decir: $(\Ometa, \algbP(\Omega), P)$
+Supongamos que $\Omega$ es un espacio de probabilidad de finito, es decir: $(\Omega, \algbP(\Omega), P)$
 
 Entonces, por definición de la esperanza:
 \[E[X] = \int X dP\]
@@ -2190,13 +2190,99 @@ Hace falta ver que es numerablemente aditiva.
 Para ello tomamos una sucesión numerable disjunta de conjuntos $A=\bigcup A_i$.
 Entonces
 \[\upsilon(A) = \int \Phi \ind_A = \int \sum a_i \ind_{E_i \cap A} = \sum a_i µ(E_i \cap A) = \]
-\[= \sum_{i=1}^n a_i \sum_{j=1}^{\infty}\ind_{E_i \cap A_j} = \sum_{j=1}^\infty}\sum_{i=1}^n a_i \ind_{E_i \cap A_j} = \sum_{j=1}^{\infty} \int \Phi \ind_{A_j} = \sum_{j=1}^{\infty} \upsilon(A_j)\]
+\[= \sum_{i=1}^n a_i \sum_{j=1}^{\infty}\int_{E_i \cap A_j} = \sum_{j=1}^{\infty}\int_{i=1}^n a_i \ind_{E_i \cap A_j} = \sum_{j=1}^{\infty} \int \Phi \ind_{A_j} = \sum_{j=1}^{\infty} \upsilon(A_j)\]
 \end{proof}
 
+\begin{defn}[Integral positiva]
+Dada $f \in L^+$ definimos:
+\[\int f = \sup\{\int \Phi \tq \Phi \text{ es simple }, 0 \leq \Phi \leq f\}\]
+\end{defn}
 
+Vamos ahora con un teorema importante.
+\begin{theorem}[Teorema de la integral monótona]
+Sea una sucesión $f_n$ tal que:
+\[\forall n f_n \in L^+, \ f_n < f_{n+1}, \ f(x)=\sum_n f_n(x)=\lim_n f_n(x)\]
+Entonces
+\[\int f = \lim \int f\]
+\end{theorem}
+\begin{proof}
+Como tantas otras veces vamos a demostrar las dos desigualdades.
+\begin{itemize}
+\item \[\int f \leq \lim \int f\]
+Esta desigualdad es sencilla de probar puesto que
+\[\forall n, f_n (x) \leq f(x) \implies \int f_n(x) \leq \int f(x) \implies \lim\int f_n \leq \int f \]
 
+\item \[\int f \geq \lim \int f\]
+Para llevar a cabo esta demostración vamos a probar que
+\[\forall α \in (0,1), \ \forall f \text{ simple con } 0 \leq \Phi\leq f \text{ se cumple } \lim_n \int f_n \geq α\int \Phi\]
+ya que si tenemos esta desigualdad para cualquier $\Phi$ y para cualquier α<1, entonces también será cierto para α=1.
 
+Fijamos α,$\Phi$. Sea $E_n=\{x \in X \tq f_n(x) \geq α\Phi(x)\}$
 
+Puesto que las $f_n(x)$ constituyen una sucesión creciente, la sucesión de los $E_n$ también lo es (si un $x$ aparece un un $E_n$ aparecerá en todos los demás puesto que $f_m(x) > f_n(x) \ \forall m>n$) y $X=\bigcup E_n$.
+
+Por tanto, se cumple que:
+\[\int f_n \geq \int_{E_n} f_n \geq α \int_{E_n} \Phi = α \upsilon_p(E_n)\]
+y tomando el límite llegamos a:
+\[\lim \int f_n \geq α \lim_n \upsilon_p(E_n) = α \upsilon_{\Phi}(X) = α \int \Phi\]
+
+Con todo esto hemos llegado a:
+\[\forall α \in (0,1) \ \lim \int f_n \geq α \int f \implies \lim_n \int f_n \geq \int f\]
+que es lo que queríamos demostrar
+\end{itemize}
+\end{proof}
+
+\begin{prop}
+La integral sobre $L^+$ es lineal y monótona. La comprobación de este hecho se basa en la consideración de la ya estudiada linealidad y monotonía de las funciones simples.
+\end{prop}
+
+\begin{prop}
+Esta proposición bien podría considerarse un corolario de la proposición anterior.
+\[\forall n \ f_n \in L^+   \ \int \sum_{m=1}^{\infty}f_n = \sum_{n=1}^{\infty}\int f_n\]
+\end{prop}
+\begin{proof}
+
+Sabemos que:
+\[\forall N \  \int \sum_{m=1}^{N}f_n = \sum_{n=1}^{N}\int f_n \]
+por tanto
+\[\lim_n \int \sum_{n=1}^{N}f_n = \int \sum_{n=1}^{\infty} f_n = \sum_{n=1}^{\infty}\int f_n\]
+\end{proof}
+
+Vamos a ver ahora una serie de resultados que muestran que para esta integral que estamos definiendo los conjuntos de medida 0 resultan irrelevantes.
+
+\begin{prop}
+\[\text{Dada }f \in L^+, \ \int f=0 \iff f=0 \text{ para casi todo punto}\]
+\end{prop}
+\begin{proof}
+Trivial para funciones simples.
+
+Si la función no es simple y f=0 para casi todo punto, entonces $\forall \Phi$ simple 0$\leq \Phi \leq f, \Phi=0 \text{ para casi todo punto} \int f = \sup\{\int \Phi 0 \leq \Phi \leq f\}$.
+
+Si no se cumple que f=0 para casi todo punto, es decir $µ\{f\neq 0\}>0$, entonces
+\[\exists n \tq µ\{x \tq f(x) > \frac{1}{n}\}>0\]
+
+Tomamos $\Phi(x)=\frac{1}{n}\ind_{\{f > \frac{1}{n}\}}$, que cumple las condiciones pedidas y nos da
+\[\int f \geq \int \Phi = \frac{1}{n}µ\{f>\frac{1}{n} > 0\}\]
+\end{proof}
+
+\begin{prop}
+\[\forall n f_n \in L^+ \ \text{ si } f_n \rightarrow f \in L^+ \text{ para casi todo punto, entonces } \lim \int f_n = \int f\]
+\end{prop}
+\begin{proof}
+Sea $E = \{x \in X \tq f_n(x) \rightarrow f(x)\}, \ µ^(E^c)=0$
+
+Tomamos ahora $G_n = f_n \ind_{E} \rightarrow g=f\ind_E$
+
+Por el teorema de convergencia monótona tenemos que $\lim \int g_n = \int g$ y por la propiedad X (una anterior) tenemos $\int g_n = \int f_n \ind_E = \int f_n$
+%TODO cambiar todas las flechas por flechas inclinadas hacia arriba (continuidad creciente)
+\end{proof}
+
+\obs El que la convergencia sea monótona es importante. Veamos un ejemplo de por qué
+\begin{example}
+Tomemos $\appl{f_n}{\real}{[0, \infty]}$ y sea $f_n(x) = \ind_{[n,n+1]}(x)$, entonces
+\[\lim_n f_n(x) = 0 \text{ pero } \int f_n=1\]
+con lo que contradecimos el resultado de la proposición anterior.
+\end{example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
