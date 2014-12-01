@@ -1819,6 +1819,66 @@ En general,
 
 En el ejemplo anterior ninguna de las reglas λ nos molestaban de modo que podíamos prescindir del último paso para garantizar que la gramática es LL(1)
 
+\subsection{Analisis LL(1) usando la tabla}
+El algoritmo a seguir es el siguiente
+\begin{enumerate}
+\item Inicializamos la pila con S\$
+\item Inicializamos la entrada al primer elemento de la cadena
+\item Comparamos la pila con la entrada
+\begin{enumerate}
+\item pila=entrada=\$ \textbf{FIN}
+\item pila contiene x$\in T$
+\begin{enumerate}
+\item x = entrada $\implies$ \textbf{desplazamos entrada y pop}
+\item x $\neq$ entrada $\implies$ \textbf{ERROR}
+\end{enumerate}
+\item pila contiene $x \in N \implies$ \textbf{saco x de la pila y meto $\beta$}.
+\end{enumerate}
+\end{enumerate}
+
+Veamos un pequeño ejemplo de cómo aplicar este algoritmo.
+\begin{example}
+Consideremos la gramática:
+\begin{itemize}
+\item $S \rightarrow E \$$
+\item $E \rightarrow TE'$
+\item $E'\rightarrow +TE'$
+\item $E'\rightarrow λ$
+\item $T \rightarrow FT'$
+\item $T' \rightarrow *FT'$
+\item $T' \rightarrow λ$
+\item $F \rightarrow i$
+\item $F \rightarrow (E)$
+\end{itemize}
+Y vamos a analizar con ella la entrada
+\[i+i*i\$\]
+
+La tabla queda:
+%TODO copiar tabla
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c |}
+\hline
+Simbolo & + & * & i & ( & ) & \$ \\
+\hline
+E &  &  & E $\rightarrow$TE' & $E\rightarrow TE'$ & & \\
+\hline
+E' & $E'\rightarrow +TE'$ & & & & $E'\rightarrow λ$ & $E'\rightarrow λ$\\
+\hline
+T & &  & $T \rightarrow FT'$ & $T \rightarrow FT'$ & & \\
+\hline
+T' & $T' \rightarrow λ$ & $T' \rightarrow λ$ & & & $T' \rightarrow λ$ & $T'\rightarrow λ$  \\
+\hline
+F & & & $F\rightarrow i$ & $F\rightarrow (E)$ & &\\
+\hline
+\end{tabular}
+\end{center}
+
+y el análisis resulta:
+\textcolor{red}{\textbf{Caca, esto esta mal}}
+\begin{center}
+Completar
+\end{center}
+\end{example}
 
 \appendix
 \chapter{Ejercicios}
