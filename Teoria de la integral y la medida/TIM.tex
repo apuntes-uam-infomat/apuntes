@@ -2195,6 +2195,7 @@ Entonces
 \[= \sum_{i=1}^n a_i \sum_{j=1}^{\infty}\int_{E_i \cap A_j} = \sum_{j=1}^{\infty}\int_{i=1}^n a_i \ind_{E_i \cap A_j} = \sum_{j=1}^{\infty} \int \Phi \ind_{A_j} = \sum_{j=1}^{\infty} \upsilon(A_j)\]
 \end{proof}
 
+\section{Extensión de la integral a funciones positivas medibles}
 \begin{defn}[Integral positiva]
 Dada $f \in L^+$ definimos:
 \[\int f = \sup\lbrace\int \Phi \tq \Phi \text{ es simple }, 0 \leq \Phi \leq f\rbrace\]
@@ -2286,6 +2287,117 @@ Tomemos $\appl{f_n}{\real}{[0, \infty]}$ y sea $f_n(x) = \ind_{[n,n+1]}(x)$, ent
 \[\lim_n f_n(x) = 0 \text{ pero } \int f_n=1\]
 con lo que contradecimos el resultado de la proposición anterior.
 \end{example}
+
+
+\begin{lemma}[Lema de Fatou]
+\[\forall n f_n \in L^+ \implies \int \liminf f_n \leq \liminf \int f_n\]
+\end{lemma}
+\begin{proof}
+Consideramos el ínfimo de la cola de la sucesión que es menor que cualquier función de esa cola. Es decir:
+\[\forall j \geq n \ \inf_{k\geq n} \{f_k\}\leq f_j \]
+Obviamente la desigualdad se da en cada punto de $f_j$ y por tanto, podemos integrar a ambos lados obteniendo:
+\[\forall j \geq n \ \int \inf_{k\geq n}f_k \leq \int f_j \implies \int \inf_{k\geq n}f_k \leq \inf_{k\geq n} \int f_k\]
+
+Tomando límites a ambos lados llegamos a:
+\[\lim_n \int \inf_{k\geq n}f_k \leq \lim_n\inf_{k\geq n} \int f_k\]
+
+Y por el teorema de la convergencia monótona tenemos que:
+\[\lim_n \int \inf_{k\geq n}f_k = \int \lim_n \inf_{k\geq n}f_k \leq \liminf \int f_k\]
+\end{proof}
+
+\section{Extensión de la integral a $\appl{f}{X}{\overline{R}}$ medible}
+Para esta sección vamos a definir:
+\[\int f = \int f⁺ - \int f^-\]
+siempre que al menos una de las dos últimas integrales sea finita.
+
+\begin{example}
+Consideremos la función $\appl{f}{\real}{\real}$ con $f(x)=\frac{1}{x}$.
+
+En este caso la integral de $f$ no está definida ya que
+\[f^+=f\ind_{[0,\infty)} \text{ y } f^-=f\ind_{[-\infty,0]} \implies \int f^+=\int f\ind_{[0,\infty)} = \infty \text{ y } \int f^-=\int f\ind_{[-\infty,0]} = \infty\]
+\end{example}
+
+\begin{defn}[Integrable Lebesgue]
+Diremos que $f$ es integrable Lebesgue si $\int f^+ < \infty \text{ y } \int f^- < \infty$ es decir:
+\[f \text{ es integrable } \iff \int |f| < \infty\]
+\end{defn}
+
+\begin{prop}
+El conjutno de las funciones integrables forma un espacio vectorial y la integral es funcional lineal en ese espacio.
+\end{prop}
+\begin{proof}
+%TODO completar esto
+Debemos ver que:
+\[\forall α , \beta \int \real \ |αf + \beta g| \leq |α||f| + |\beta||g|\]
+
+Consideramos $h=f+g$, por lo que $h^+ + h^- = f^+-f^-+g^+-g^-$ e integrando a ambos lados obtenemos
+\[\int h^+ + \int h^- = \int f^+-\int f^-+\int g^+-\int g^-\]
+\[\int h = \int f + \int g\]
+\end{proof}
+
+
+\section{Extensión de la integral a funciones $\appl{f}{X}{\cplex}$}
+Básicamente dividiremos estas funciones en parte real y parte imaginaria.
+\[\int f = \int Re(f) + i \int Im(f)\]
+
+\obs $\int |f| < \infty \iff \int |Re(f)| < \infty \text{ y } \int |Im(f)| < \infty$
+
+Como era de esperar, $f$ es integrable si $\int |f| < \infty$
+
+\begin{prop}
+El conjunto de funciones $\appl{f}{X}{\cplex}$ que son integrables es un espacio vectorial y la integral es un funcional lineal
+\end{prop}
+
+\begin{prop}
+\[|\int f | \leq \int |f|\]
+\end{prop}
+\begin{proof}
+%TODO completar en casa
+La demostración es sencilla descomponiendo las funciones reales en f⁺ y f⁻  y las complejas en módulo argumento.
+
+Se deja por tanto como ejercicio para el lector.
+\end{proof}
+
+
+\begin{prop}
+Sean $\appl{f,g}{X}{\cplex}$ integrables, entonces las siguientes afirmaciones son equivalentes:
+\begin{enumerate}
+\item $\forall E \in \algbM \int_E f = \int_E g$
+\item $\int |f-g| = 0$
+\item $f=g$ en casi todo punto
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{itemize}
+\item $ 1 \implies 2$
+\[\int |f-g| = \int (f-g)^+ + \int (f-g)^- = \int_{\{f \geq g\}} (f-g) + \int_{\{g \geq f\}} (g-f) = 0\]
+
+\item $2 \implies 3$
+Como ya vimos anteriormente $|f-g|=0$ para casi todo punto $\implies$ $f=g$ en casi todo punto
+
+\item $3 \implies 1$
+Para casi todo punto:
+\[f=g  \implies \forall E \in \algbM, \ f\ind_E =g\ind_E\implies (f\ind_E)^{+/-} = (g\ind_E)^{+/-}\]
+Por tanto
+\[f\ind_E - g\ind_E = (f\ind_E)^+ - (f\ind_E)^- - (g\ind_E)^+ + (g\ind_E)^- \implies \]
+\[\implies \int (f\ind_E)^{+/-} - (g\ind_E)^{+/-} = 0\]
+\end{itemize}
+\end{proof}
+
+Con este resultado hemos probado que la integral de una función no depende de los valores que tome la función en un conjunto de puntos de medida 0.
+
+Sobre el conjunto de funciones integrables (en $\overline{\real}$ ó $\cplex$) se define una relación de equivalencia por medio de la igualdad para casi todo punto.
+
+El espacio cociente se denomina $L^1(µ).$
+
+
+En $L^1(µ)$ se define la distancia
+\[d(f,g) = \int |f-g|\]
+que, por lo que hemos estudiado en la última propiedad, no depende de los representantes que tomemos de la clase de equivalencia, ya que dos representantes sólo difieren en un conjunto de medida 0.
+
+\obs $d(f,g)=0$ entonces para dos representantes cualesquiera de las clases de equivalencia $f$ y $g$ $f=g$ para casi todo punto.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
