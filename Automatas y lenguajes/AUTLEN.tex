@@ -1874,12 +1874,163 @@ F & & & $F\rightarrow i$ & $F\rightarrow (E)$ & &\\
 \end{center}
 
 y el análisis resulta:
-\textcolor{red}{\textbf{Caca, esto esta mal}}
 \begin{center}
-Completar
+\begin{tabular}{| c | c | c | c |}
+\hline
+0 & i+i*i\$ & S\$ & derivar E->TE' \\
+\hline
+1 & i+i*i\$ &  TE'\$ & derivar T -> FT' \\
+\hline
+2 & i+i*i\$ &  FT'E'\$ & derivar F->i \\
+\hline
+3 & i+i*i\$ &  iT'E'\$ & desplazar entrada \\
+\hline
+4 & +i*i\$ &  T'E'\$ & derivar T' -> λ \\
+\hline
+5 & +i*i\$ &  E'\$ & derivar E' -> TE' \\
+\hline
+6 & +i*i\$ &  +TE'\$ & desplazar \\
+\hline
+7 & i*i\$ &  TE'\$ & dderivar T -> FT' \\
+\hline
+8 & i*i\$ &  FT'E'\$ & derivar F -> i \\
+\hline
+9 & i*i\$ &  iT'E'\$ & desplazar \\
+\hline
+10 & *i\$ &  T'E'\$ & T' -> *FT' \\
+\hline
+11 & *i\$ &  *FT'E'\$ & desplazar \\
+\hline
+12 & i\$ &  FT'E'\$ & F -> i \\
+\hline
+13 & i\$ &  iT'E'\$ & desplazar \\
+\hline
+14 & \$ &  T'E'\$ & T' -> λ \\
+\hline
+15 & \$ &  E'\$ & E' -> λ \\
+\hline
+16 & \$ &  \$ & OK \\
+\hline
+\end{tabular}
 \end{center}
 \end{example}
 
+\begin{example}
+Consideremos la gramática:
+\begin{itemize}
+\item $P \rightarrow iEtPP' \$$
+\item $P \rightarrow a$
+\item $P'\rightarrow EP$
+\item $P'\rightarrow λ$
+\item $E \rightarrow b$
+\end{itemize}
+Vamos a construir ahora la tabla de análisis asociado.
+
+Para ello tenemos que ver cuál es el siguiente de cada elemento no terminal y dejar claro en la tabla que sólo aplicamos la reducción delante del siguiente
+
+La tabla de análisis asociada sería:
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c |}
+\hline
+Simbolo & a & t & e & b & i & \$ \\
+\hline
+P &  $P \rightarrow a$&  & &  &  $P \rightarrow iEtPP'$ & \\
+\hline
+P' & & & $P' \rightarrow  EP$   $ P' \rightarrow λ$ & & &  $ P' \rightarrow λ$ \\
+\hline
+E & &  &  & $E \rightarrow b$ & & \\
+\hline
+\end{tabular}
+\end{center}
+
+Como podemos observar, esta gramática no es LL(1)
+\end{example}
+
+Vamos a hacer incapié en la diferencia entre gramática LL(1) y lenguaje LL(1)
+\begin{defn}[Gramática LL(1)]
+
+Gramática cuya tabla de análisis LL(1) no presenta conflictos
+\end{defn}
+
+\begin{defn}[Lenguaje LL(1)]
+
+Lenguaje para el cual existe una gramática LL(1) que lo genera
+\end{defn}
+
+\begin{example}
+La gramática
+\begin{itemize}
+\item $ S \rightarrow aSb$
+\item $ S\rightarrow ab$
+\end{itemize}
+no es una gramática LL(1), cosa que podemos comprobar construyendo su tabla de análisis LL(1). Sin embargo, su lenguaje asociado si que es LL(1) ya que podemos transformarla en
+\begin{itemize}
+\item $ B \rightarrow b$
+\item $ S \rightarrow aW$
+\item $ W \rightarrow aWb$
+\item $ W \rightarrow b$
+\end{itemize}
+que si es LL(1) (de nuevo lo comprobamos construyendo su tabla de análisis LL(1)).
+\end{example}
+
+
+\subsection{Análisis LL(2) usando la tabla}
+La principal diferencia del análisis LL(2) respecto al LL(1) radica en que ahora vamos a tomar \textbf{dos símbolos de adelanto}
+
+Veámoslo para el caso particular de la gramática
+\begin{itemize}
+\item S $\rightarrow$ aSb
+\item S $\rightarrow$ ab
+\end{itemize}
+
+En este caso sería tremendamente sencilla la tabla de símbolos:
+\begin{center}
+\begin{tabular}{| c | c | c |}
+\hline
+Simbolo & aa & ab \\
+\hline
+S &  S $\rightarrow$ ab &  S $\rightarrow$ aSb \\
+\hline
+\end{tabular}
+\end{center}
+
+
+Pero aún quedan casos en los que no podemos resolver los conflictos ni usando LL(2).
+
+Por ejemplo, en la gramática
+\begin{itemize}
+\item FUNCION -> TIPO ID (ARGS);
+\item FUNCION -> TIPO ID (ARGS) \{CUERPO\}
+\item ARGS -> λ
+\item ARGS -> ARG ARGS
+\item TIPO -> int | float
+\item ARG -> ID
+\item ID -> $(a+...+z)(a+...+z)^*$
+\end{itemize}
+
+A la hora de trabajar con la regla \textbf{FUNCION -> TIPO ID (ARGS)} no sabemos cuántos argumentos vamos a encontrar.
+
+La solución para este problema pasa por usar expresiones regulares, lo que nos lleva al análisis LL(*)
+
+\subsection{Análisis LL(*)}
+Consiste en emplear expresiones regulares en lugar de símbolos de adelanto.
+
+Continuando con el ejemplo anterior, para resolver el problema con LL(*) consideramos la expresión regular:
+\[r=(int+float).(a-z)^+."(".[(a-z)^+]*.")"\]
+y la tabla quedaría (para la regla que causaba el problema)
+\begin{center}
+\begin{tabular}{| c | c | c |}
+\hline
+Símbolo & r.";" & r."ε" \\
+\hline
+FUNCION & FUNCION -> TIPO ID (ARGS); &  FUNCION -> TIPO ID (ARGS) \{CUERPO\} \\
+\hline
+\end{tabular}
+\end{center}
+En este caso no hay problemas pues es bastante sencilla la tabla mostrada. No obstante, en un caso más general sería necesario cuidar que no se solapen las expresiones regulares empleadas en el análisis.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 \chapter{Ejercicios}
 \input{tex/Ejercicios.tex}
