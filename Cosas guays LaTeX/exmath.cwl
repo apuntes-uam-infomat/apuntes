@@ -186,6 +186,8 @@
 \quot{arg0}{arg1}#m
 \dfm#m
 \restr{arg0}{arg1}#m
+\crc#m
+\torus#m
 \algb{arg0}#m
 \algbA#m
 \algbM#m
