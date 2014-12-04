@@ -1063,7 +1063,9 @@ La 4ª tarea secundaria, que tenía el analizador morfológico, es la que realiz
 
 \section{Introducción}
 
-Las tablas de análisis permiten analizar una sentencia, con el fin de saber si se trata de una sentencia válida para una gramática dada o no.
+Para llevar a cabo el análisis sintáctico de una entrada se emplean tablas de análisis. Estas permiten analizar una sentencia, con el fin de saber si se trata de una sentencia válida para una gramática dada o no.
+
+Existen dos tipos de análisis: \textbf{ascendente} y \textbf{descendente}
 
 Veamos un ejemplo:
 \begin{example}
@@ -1140,21 +1142,27 @@ Tras este ejemplo podemos definir formalmente el algoritmo de análisis ascenden
 \begin{defn}[Análisis ascendente]
 Este algoritmo consiste de dos pasos:
 \begin{verbatim}
-Mientras queden elementos en la entrada:
-  desplazamos
-  mientras podemos reducir:
-      reducimos
+     Mientras queden elementos en la entrada:
+       desplazamos
+       mientras podemos reducir:
+           reducimos
 
-Si en la pila sólo está el axioma:
-    OK.
-En caso contrario:
-    ERROR.
+     Si en la pila sólo está el axioma:
+         OK.
+     En caso contrario:
+         ERROR.
 \end{verbatim}
 \end{defn}
 
 Una vez visto el análisis ascendente el siguiente paso es estudiar el análisis descendente.
 
-En este caso, empezamos en el axioma y aplicamos derivaciones intentando llegar a la sentencia que queremos analizar.
+\begin{defn}[Análisis descendente]
+Algoritmo para determinar si una entrada es válida o no para una gramática dada mediante derivaciones (partiendo del axioma)
+
+Es decir, tomamos el axioma y aplicamos derivaciones sucesivas intentando llegar a la sentencia que queremos analizar.
+
+Si logramos generar la sentencia que estamos analizando, esta será válida. (En caso contrario no)
+\end{defn}
 
 Vamos a trabajar con gramáticas sencillas en las que sólo haya una derivación posible en cada paso. En caso de no ser así deberíamos avanzar todo lo posible para después hacer backtracking, comprobando que no dejamos caminos sin explorar.
 
@@ -1209,7 +1217,7 @@ A lo largo de esta sección profundizaremos sobre el análisis ascendente y el a
 
 \section{Tablas de análisis ascendente}
 
-Vamos a estudiar ahora 4 tablas de análisis y autómatas que se utilizan para realizar el análisis ascendente.
+Vamos a estudiar ahora diferentes tablas de análisis (y autómatas asociados) que se utilizan para realizar el análisis ascendente.
 
 \subsection{Tablas LR(0)}
 
@@ -1218,7 +1226,7 @@ Tabla empleada para el procesamiento de entrada desde la izquierda (\textbf{L}ef
 
 \end{defn}
 
-Veamos un ejemplo de como funciona esto
+Veamos un ejemplo de como funciona esta tabla de análisis
 \begin{example}
 Consideremos la gramática G=(T, N, E, P):
 \begin{itemize}
@@ -1261,7 +1269,7 @@ Para construir el autómata seguimos los siguientes pasos:
 \item Si se llega a un estado en el que el '.' queda a la derecha de la regla de derivación (sin ningún símbolo inmediatamente después), este estado será un \textbf{estado final}. Esto implica que nada más llegar a este estado se \textbf{reducirá} la regla (introduciendo en la entrada la pare izquierda de la regla )y volveremos al estado inicial $S_0$.
 \end{itemize}
 
-A partir de este autómata se puede crear una tabla, denominada \textbf{tabla de análisis} que resume el funcionamiento del autómata:
+A partir de este autómata se puede crear una tabla, denominada \textbf{tabla de análisis LR(0)} que resume el funcionamiento del autómata:
 
 \begin{center}
 \includegraphics[scale=0.3]{img/tablaanallr0.jpg}
@@ -1333,15 +1341,10 @@ Veamos un ejemplo del análisis de una expresión que termina en error:
 \end{center}
 \end{example}
 
-
-\begin{example}
-Aquí va un ejercicio que hicimos en clase y copiaré en otro momento
-\end{example}
-
-\subsection{Conflictos, y herramientas para solucionarlos}
+\subsubsection{Conflictos, y herramientas para solucionarlos}
 Vamos a definir nuevos conceptos que pondremos en práctica en esta sección.
 
-Las tablas LR(0) no son suficientes para representar todo tipo de gramáticas, podemos encontrarnos dos tipos de conflictos:
+Las tablas LR(0) no son suficientemente potentes para representar todo tipo de gramáticas. Podemos encontrarnos dos tipos de conflictos:
 
 \begin{itemize}
 \item Conflicto desplazamiento/reducción: Se producen cuando te encuentras en un estado final y además de la reducción, existe la posibilidad de desplazar.
@@ -1354,7 +1357,7 @@ Para solucionar estos conflictos definimos primero(x) y siguiente(x):
 El primero de A es el conjunto de terminales que pueden aparecer al principio de una cadena derivada de A.
 \end{defn}
 
-Veamos cómo calcular el primero de A. Para ello observamos que existen tres diferentes casos. Llamando α al primer elemento que se obtiene al derivar una regla:
+Veamos cómo calcular el primero de A. Para ello observamos que existen tres diferentes casos para una regla de la forma $A \rightarrow α$:
 \begin{enumerate}
 \item $α \in T$ (Si α es un símbolo terminal):  primero(A)=α
 \item $α \in N$ (Si α es un símbolo no terminal): primero(A)=primero(α)
@@ -1440,10 +1443,10 @@ siguiente(T')=siguiente(T) = $\{ +, ), \$ \}$
 \end{example}
 
 
-\subsection{SLR(1)}
+\subsection{Tablas SLR(1)}
 
 Las tablas de análisis SLR(1) surgen para solucionar los conflictos desplazamiento/reducción. Lo vemos con un ejemplo:
-
+\newpage
 \begin{example}
 Definimos la siguiente gramática extendida para aplicarle la tabla de análisis LR(0):
 
@@ -1463,21 +1466,25 @@ Genera el siguiente autómata:
 
 En el cual podemos observar que en el estado final $S_7$ tenemos dos posibles acciones si entra un ';', la de reducir (por ser estado final y encontrarse el '.' a la derecha de la regla) o la de desplazar al estado $S_{10}$
 
-Por tanto nos quedaría la siguiente tabla de análisis:
+Por tanto nos quedaría la siguiente tabla de análisis LR(0):
 
 \begin{center}
 \includegraphics[scale=0.3]{img/tablaanalisislr0conflicto.jpg}
 \end{center}
-
+\end{example}
 Concluimos que no es por tanto un autómata LR(0) ya que tenemos conflictos que debemos solucionar. Para ello usaremos SLR(1).
 
 \begin{defn}[Tabla SLR(1)]
-Tabla que mejora la tabla de análisis LR(0). Modifica las transiciones de los estados finales del autómata. En el caso de LR(0) realizaban una reducción siempre, mientras que en SLR(1) se específica cuándo hay que realizar una reducción, cuándo un desplazamiento, y cuándo vas  a un estado de error.
+Tabla que mejora la tabla de análisis LR(0) modificando las transiciones de los estados finales del autómata.
+
+En el caso de LR(0) realizaban una reducción siempre, mientras que en SLR(1) se específica cuándo hay que realizar una reducción, cuándo un desplazamiento, y cuándo vamos a un estado de error.
 \end{defn}
 
 Por tanto el autómata quedará igual a simple vista (sólo que ahora habra más transiciones a estados de error aunque estas no aparezcan dibujadas). Los cambios los mostraremos en la tabla de análisis.
 
-Para ello vamos a usar el concepto de \textbf{Siguiente(x)}. Vamos a calcular los elementos siguientes de los no terminales B, D y E.
+La idea principal del análisis SLR(1) es que sólo aplicaremos las reducciones de reglas de la froma $X \rightarrow $ algo, delante del \textbf{Siguiente(X)}.
+
+Vamos a calcular los elementos siguientes de los no terminales B, D y E.
 
 \begin{itemize}
 \item siguiente(B) $\rightarrow$ {\$}, por tanto las reducciones de B sólo se producirán delante del símbolo \$.
@@ -1492,7 +1499,7 @@ Se eliminan así los conflictos, quedando la tabla de análisis de la siguiente 
 \end{center}
 
 Como podemos observar, en el estado S7, se reduce siguiendo la regla (4) (ver las reglas de la gramática definidas al principio del ejemplo), pero sólo si el siguiente elemento de la entrada es una f, ya que siguiente(E)={f}.
-
+\newpage
 Conclusión: Para realizar una tabla de análisis SLR(1) basta con:
 \begin{enumerate}
 \item Hacer la tabla de análisis LR(0).
@@ -1503,7 +1510,7 @@ Conclusión: Para realizar una tabla de análisis SLR(1) basta con:
 \end{example}
 
 
-\subsection{LR(1)}
+\subsection{Tablas LR(1)}
 Las tablas LR(1) surgen para corregir los conflictos desplazamiento/reducción que no es capaz de solventar el análisis SLR(1).
 
 Veamos dos ejemplos en los que el análisis SLR(1) falla:
@@ -1525,6 +1532,7 @@ Genera el siguiente autómata:
 
 En el cual podemos observar que en el estado final $S_6$ podríamos desplazar o reducir para los símbolos '+' y '*'. Ya que siguiente(E)=$\{+,*\$\}$.
 
+\newpage
 Por tanto nos quedaría la siguiente tabla de análisis:
 
 \begin{center}
@@ -1549,10 +1557,10 @@ Genera el siguiente autómata:
 \end{center}
 
 En el cual vuelve a ocurrir algo parecido a lo del ejemplo anterior. En este caso tenemos que:
-
-siguiente(S)=$\{\$\}$
-siguiente(A)=$\{b,\$\}$
-
+\begin{itemize}
+\item siguiente(S)=$\{\$\}$
+\item siguiente(A)=$\{b,\$\}$
+\end{itemize}
 Por tanto nos quedaría la siguiente tabla de análisis:
 
 \begin{center}
@@ -1565,7 +1573,13 @@ Mediante el análisis SLR(1) no añadíamos ningún estado más al autómata, ú
 \begin{enumerate}
 \item Ahora la gramática extendida no va a tener una regla que sea $S' \rightarrow S\$$ sino que esta regla será $S' \rightarrow S\{\$\}$.
 \item Vamos a formar cada estado como en LR(0), poniendo un '.' delante del símbolo que estamos evaluando y \textbf{cerrando} ese símbolo como ya explicamos anteriormente.
-\item A cada regla que aparezca en cada estado del autómata se deberá añadir entre corchetes lo que llamaremos el \textbf{símbolo de adelanto}, este símbolo es el siguiente(X) si tenemos $X \rightarrow ABC...$, es decir, el siguiente del símbolo no terminal situado a la izquierda de la regla. IMPORTANTE: Se calculará el siguiente(X) mirando las reglas de derivación que hay en el estado en el que nos encontremos PERO sólo aquellas que han propiciado que aparezca esa regla de derivación en ese estado. Es decir, si tienes $X \rightarrow .A$, entonces esa regla propicia la aparición de las reglas de derivación de A (ya que tenemos que cerrar A), por tanto para calcular posteriormente el siguiente(A), miraremos solo $X \rightarrow .A$.
+\item A cada regla que aparezca en cada estado del autómata se deberá añadir entre corchetes lo que llamaremos el \textbf{símbolo de adelanto}.
+
+Este símbolo es el siguiente(X) si tenemos $X \rightarrow ABC...$, es decir, el siguiente del símbolo no terminal situado a la izquierda de la regla.
+
+\obs Se calculará el siguiente(X) mirando las reglas de derivación que hay en el estado en el que nos encontremos (PERO sólo aquellas que han propiciado que aparezca esa regla de derivación en ese estado).
+
+Es decir, si tienes $X \rightarrow .A$, entonces esa regla propicia la aparición de las reglas de derivación de A (ya que tenemos que cerrar A), por tanto para calcular posteriormente el siguiente(A), miraremos solo $X \rightarrow .A$.
 \end{enumerate}
 
 Como resultado, tendremos un mayor número de estados ya que si el símbolo de adelanto cambia, habrá que definir un nuevo estado.
@@ -1592,7 +1606,7 @@ $\rightarrow aAb \{\$\}$ derivamos...
 $\rightarrow a(aAb\{b\})b \{\$\}$
 
 La segunda vez que derivamos A en aAb, el esperable siguiente elemento de A sería la b.
-
+\newpage
 Nos quedaría la siguiente tabla de análisis:
 
 \begin{center}
@@ -1600,16 +1614,21 @@ Nos quedaría la siguiente tabla de análisis:
 \end{center}
 \end{example}
 
-\subsection{LALR(1)}
+\subsection{Tablas LALR(1)}
 
-to be continued... en resumen es igual que LR(1) solo que junta estados pudiendo aparecer conflictos reduccion/reduccion que en el caso de lr(1) no había. Y para que sirve? Pues solo para disminuir el tamaño de la tabla de análisis y que sea más rapido el mismo..., si no aparecen conflictos reduccion/reduccion merecerá la pena y si no..., pues no.
+El análisis LALR(1) supone una mejora en la complejidad del algoritmo LR(1).
 
-\section{Análisis ascendente}
+Debemos tener en cuenta que buena parte de la complejidad del algoritmo recae en el coste de procesar la entrada siguiendo un autómata y que, cuando menor sea el mismo menor será el coste-
+
+La principal diferencia que aporta el análisis LALR(1) consiste en la agrupación de estados finales que sólo difieran en los símbolos de adelanto.
+
+\section{Análisis descendente}
 Vamos a estudiar cómo se desarrollan los algoritmos de análisis descendente.
 
 Ya los mencionamos anteriormente pero, para ver cómo funcionan, vamos a realizar algunos ejemplos por fuerza bruta, para captar la idea del asunto.
 
-\newpage
+En el último ejemplo de la sección anterior, los estados S5 y S11 podrían combinarse en uno solo.
+
 \begin{example}
 Empezaremos por una gramática sencillita:
 \begin{itemize}
@@ -1618,6 +1637,7 @@ Empezaremos por una gramática sencillita:
 \end{itemize}
 y trataremos de ver si la cadena $aabb$ se deriva de esta gramática.
 
+\newpage
 Para empezar a estudiar el ejemplo, debemos tener en cuenta dos máximas del análisis descendente:
 
 \textbf{La cadena se lee desde la izquierda}
@@ -1646,10 +1666,10 @@ Llegamos a S->aSb->aabb y vemos que coincide con la cadena buscada.
 \end{verbatim}
 \end{example}
 
-Al explicar el algoritmo empleado hemos hecho alusión a la compatibilidad
+Al explicar el algoritmo empleado hemos hecho alusión a la compatibilidad. Definámosla formalmente.
 
 \begin{defn}[Compatibilidad]
-Para comprobar si la cadena que tenemos ahora mismo es \textbf{compatible} con la cadena que estamos buscando simplemente vemos si los primeros símbolos terminales (hasta el primer no terminal) coinciden
+Para comprobar si la cadena que tenemos ahora mismo es \textbf{compatible} con la cadena que estamos buscando simplemente vemos si los primeros símbolos terminales (hasta el primer no terminal) coinciden.
 \end{defn}
 
 Tal y como lo hemos explicado ,el algoritmo de análisis descendente presenta dos problemas graves:
@@ -1676,14 +1696,18 @@ Además, dos reglas con la misma parte izquierda deben un terminal distinto al i
 Estas gramática son muy interesantes ya que presentan un claro determinismo, que nos evita de hacer backtracking con lo que hacen la búsqueda muy eficiente.
 
 
-Vamos a estudiar dos métodos para el análisis de gramáticas de este tipo:
+Veremos dos métodos para el análisis de gramáticas de este tipo pero antes debemos definir un nuevo concepto muy importante de cara al análisis descendente: \textbf{Forma normal de Greigbach}
+
 \subsection{Forma normal de Greigbach}
 
 \begin{defn}[Forma normal de Greigbach]
 Decimos que una gramática está en forma normal de Greigbach si todas las reglas son de la forma:
-\[A \rightarrow a\beta \ a \in T, \ \beta \in N^*\]
+\[A \rightarrow a\beta \text{ donde } a \in T, \ \beta \in N^*\]
 \end{defn}
-Todas las gramáticas pueden expresarse en forma normal de Greigbach. Una vez que una gramática está expresada de esta forma, comprobamos si es, además, LL(1) y si es así ya lo tenemos.
+
+\obs Todas las gramáticas pueden expresarse en forma normal de Greigbach.
+
+Una vez que una gramática está expresada de esta forma, comprobamos si es, además, LL(1) y si es así ya lo tenemos.
 
 Vamos a ver cómo tratar una gramática que no esté expresada en forma normal de Greigbach. En estos casos debemos solucionar, antes de nada, los dos problemas que nos impiden que la gramática esté en esta forma normal
 
@@ -1704,15 +1728,6 @@ la convertimos en otra
 \newpage
 \item \textbf{Eliminar símbolos no terminales del principio de la parte derecha de las reglas.}
 
-Para ello, dada una regla
-\begin{itemize}
-\item \[A \rightarrow abX\]
-\end{itemize}
-pasamos a dos reglas:
-\begin{itemize}
-\item \[A \rightarrow aBX\]
-\item \[B \rightarrow b\]
-\end{itemize}
 
 Vamos a clasificar las reglas en tres tipos:
 \begin{enumerate}
@@ -1723,11 +1738,19 @@ Vamos a clasificar las reglas en tres tipos:
 
 El algoritmo a seguir sería:
 \begin{enumerate}
-\item Dejamos las reglas de Tipo 1 como están.
-\item Eliminamos las reglas de Tipo 3, empezando con aquellas cuyo símbolo de la parte derecha mayor precedencia
-\item Eliminamos las reglas de Tipo 2, empezando con aquellas cuyo símbolo de la parte izquierda tenga menor precedencia.
+\item Dejamos las reglas de Tipo a) como están.
+\item Eliminamos las reglas de Tipo c), empezando con aquellas cuyo símbolo de la parte derecha mayor precedencia
+\item Eliminamos las reglas de Tipo b), empezando con aquellas cuyo símbolo de la parte izquierda tenga menor precedencia.
 \end{enumerate}
 \item \textbf{Eliminar símbolos terminales de más.}
+
+Para ello, dada una regla
+\[A \rightarrow abX\]
+
+pasamos a dos reglas:
+\[A \rightarrow aBX\]
+\[B \rightarrow b\]
+
 \item \textbf{Eliminar reglas λ}
 \item \textbf{Eliminar indeterminismo}
 
