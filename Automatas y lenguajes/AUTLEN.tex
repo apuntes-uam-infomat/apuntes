@@ -1256,7 +1256,11 @@ Para realizar el análisis por este método vamos a construir un autómata finit
 \includegraphics[scale=0.45]{img/automatalr0.jpg}
 \end{center}
 
-La forma de interpretar este autómata tiene alguna peculiaridad. Cuando llegamos a un estado final, lo que hacemos es \textbf{reducir} y volver al estado $S_0$.
+Si aplicamos el algoritmo de análisis LR(0) a lo bruto, tras cada reducción todo lo que hay en la pila (una vez aplicado el correspondiente cambio fruto de la reducción) pasa al inicio de la cadena de entrada y saltamos al estado $S_0$ para continuar con el análisis.
+
+No obstante, esta práctica implica deshacer lo andado muchas veces y alarga mucho el desarrollo del algoritmo. Para evitar esto, en la pila guardamos, además de la última entrada leída, el estado en que nos encontramos y tras una reducción nos desplazamos al estado indicado en la pila justo antes de la reducción y añadimos la nueva cadena (fruto de la reducción) al inicio de la cadena de entrada.
+
+A continuación explicamos cómo se realiza el análisis a lo bruto.
 
 Si el análisis de una cadena llega al estado de aceptación ($S_{acc}$) en este autómata, se termina el análisis concluyendo que la cadena es sintácticamente correcta.
 
@@ -1288,7 +1292,7 @@ A la hora de analizar una entrada realizamos los siguientes 5 tipos de acciones:
 \item Aceptar: Se acepta el símbolo e entrada si llegamos al estado de aceptación $S_{acc}$.
 \end{itemize}
 
-La siguiente tabla recoge el resultado detallado del análisis de la entrada:
+La siguiente tabla recoge el resultado detallado del análisis de la entrada (por comodidad mostramos en análisis mejorado, guardando en la pila el estado en que nos encontramos):
 \[i+i+i\$\]
 \begin{tabular}{| c | c | c | c | c | c |}
 \hline
@@ -1574,9 +1578,8 @@ Mediante el análisis SLR(1) no añadíamos ningún estado más al autómata, ú
 
 Este símbolo es el siguiente(X) si tenemos $X \rightarrow ABC...$, es decir, el siguiente del símbolo no terminal situado a la izquierda de la regla.
 
-\obs Se calculará el siguiente(X) mirando las reglas de derivación que hay en el estado en el que nos encontremos (PERO sólo aquellas que han propiciado que aparezca esa regla de derivación en ese estado).
+\obs Al realizar un desplazamiento se mantiene el símbolo de adelanto de cada regla sobre la que desplazamos y se recalcula para las reglas añadidas para componer el cierre .
 
-Es decir, si tienes $X \rightarrow .A$, entonces esa regla propicia la aparición de las reglas de derivación de A (ya que tenemos que cerrar A), por tanto para calcular posteriormente el siguiente(A), miraremos solo $X \rightarrow .A$.
 \end{enumerate}
 
 Como resultado, tendremos un mayor número de estados ya que si el símbolo de adelanto cambia, habrá que definir un nuevo estado.
@@ -1587,23 +1590,10 @@ Usando la gramática del ejercicio anterior, generamos el siguiente autómata us
 \begin{center}
 \includegraphics[scale=0.65]{img/automatalr1.jpg}
 \end{center}
+\obs En este ejemplo hay una errata. En los estados $S_0$, $S_3$ y $S_7$ la regla $A::== .Ab \{\$\}$ debería ser $A::== .Ab \{b\}$, puesto que Siguiente(A) =$\{b\}$ y la regla $A::== .x \{\$\}$ debería ser $A::== .x \{b\}$
 
 Como podemos observar, en este autómata se eliminan los conflictos que teníamos antes. Nos fijamos en la clave de esto.
 
-En el estado $S_3$, en LR(0) si venía una 'a', volvíamos al mismo estado, pero en este caso la cosa cambia. Si estamos en $S_3$ , el símbolo de adelanto de $A \rightarrow a.Ab$ es un \$ ya que venimos del estado $S_0$ y siguiente(A)=\$. Pero si viene una 'a', pasaríamos al estado $S_9$ y el símbolo de adelanto de esa misma regla sería una 'b', ya que venimos del estado $S_3$ y después de la A hay una b.
-
-Si aún no ha quedado claro, ya que la explicación es algo liosa, propongo que observen este diagrama:
-
-$S' \rightarrow S \{\$\}$  derivamos...
-
-$\rightarrow A \{\$\}$ derivamos...
-
-$\rightarrow aAb \{\$\}$ derivamos...
-
-$\rightarrow a(aAb\{b\})b \{\$\}$
-
-La segunda vez que derivamos A en aAb, el esperable siguiente elemento de A sería la b.
-\newpage
 Nos quedaría la siguiente tabla de análisis:
 
 \begin{center}
@@ -1740,7 +1730,7 @@ Vamos a clasificar las reglas en tres tipos:
 El algoritmo a seguir sería:
 \begin{enumerate}
 \item Dejamos las reglas de Tipo a) como están.
-\item Eliminamos las reglas de Tipo c), empezando con aquellas cuyo símbolo de la parte derecha mayor precedencia
+\item Eliminamos las reglas de Tipo c), empezando con aquellas cuyo símbolo de la parte derecha tiene mayor precedencia
 \item Eliminamos las reglas de Tipo b), empezando con aquellas cuyo símbolo de la parte izquierda tenga menor precedencia.
 \end{enumerate}
 \item \textbf{Eliminar símbolos terminales de más.}
@@ -1786,8 +1776,8 @@ Tomamos la gramática:
 Primero eliminamos las reglas recursivas por la izquierda y nos quedamos en:
 \begin{itemize}
 \item $E \rightarrow TX$ (tipo 2)
-\item $X \rightarrow +TX$ (tipo 1)
-\item $T \rightarrow Y$ (tipo 2)
+\item $X \rightarrow +TX|λ$ (tipo 1)
+\item $T \rightarrow FY$ (tipo 2)
 \item $Y \rightarrow *FY|λ$ (tipo 1)
 \item $F \rightarrow i$ (tipo 1)
 \end{itemize}
@@ -1795,8 +1785,8 @@ donde hemos indicado el tipo de cada regla, preparándonos así para el paso sig
 
 Ahora tenemos que eliminar los símbolos no terminales del principio de la parte derecha de las reglas. Para ello aplicamos las siguientes transformaciones
 \begin{itemize}
-\item $T \rightarrow TY \ \implies T \rightarrow iY$
-\item $E \rightarrow TX \ \implies E \rightarrow iYX$
+\item $T \rightarrow FY \ \implies T \rightarrow iY$
+\item $E \rightarrow TX \ \implies E \rightarrow FYX \implies F \rightarrow iYX$
 \end{itemize}
 en el orden exacto en que se han indicado.
 
@@ -1806,7 +1796,8 @@ El resultado por el momento es:
 \item $X \rightarrow +TX$
 \item $X \rightarrow λ$
 \item $T \rightarrow iY$
-\item $Y \rightarrow *FY|λ$
+\item $Y \rightarrow *FY$
+\item $Y \rightarrow λ$
 \item $F \rightarrow i$
 \end{itemize}
 
@@ -1839,7 +1830,7 @@ La pregunta que surge ahora está clara:
 En general, nos interesará eliminar las transiciones λ siempre que al hacerlo no estemos generando una gramática no LL(1). Es decir, queremos eliminar estas transiciones sin dar lugar a gramáticas no deterministas.
 
 En general,
-\[\text{ primera}(X) \cap \text{ siguiente}(X) = \emptyset \implies \ λ\text{ no molesta para LL(1)}\]
+\[\text{ primero}(X) \cap \text{ siguiente}(X) = \emptyset \implies \ X \rightarrow λ\text{ no molesta para LL(1)}\]
 
 En el ejemplo anterior ninguna de las reglas λ nos molestaban de modo que podíamos prescindir del último paso para garantizar que la gramática es LL(1)
 
@@ -1901,37 +1892,37 @@ y el análisis resulta:
 \begin{center}
 \begin{tabular}{| c | c | c | c |}
 \hline
-0 & i+i*i\$ & S\$ & derivar E->TE' \\
+0 & i+i*i\$ & S\$ & derivar E$\rightarrow$TE' \\
 \hline
-1 & i+i*i\$ &  TE'\$ & derivar T -> FT' \\
+1 & i+i*i\$ &  TE'\$ & derivar T $\rightarrow$ FT' \\
 \hline
-2 & i+i*i\$ &  FT'E'\$ & derivar F->i \\
+2 & i+i*i\$ &  FT'E'\$ & derivar F$\rightarrow$i \\
 \hline
 3 & i+i*i\$ &  iT'E'\$ & desplazar entrada \\
 \hline
-4 & +i*i\$ &  T'E'\$ & derivar T' -> λ \\
+4 & +i*i\$ &  T'E'\$ & derivar T' $\rightarrow$ λ \\
 \hline
-5 & +i*i\$ &  E'\$ & derivar E' -> TE' \\
+5 & +i*i\$ &  E'\$ & derivar E' $\rightarrow$ TE' \\
 \hline
 6 & +i*i\$ &  +TE'\$ & desplazar \\
 \hline
-7 & i*i\$ &  TE'\$ & dderivar T -> FT' \\
+7 & i*i\$ &  TE'\$ & dderivar T $\rightarrow$ FT' \\
 \hline
-8 & i*i\$ &  FT'E'\$ & derivar F -> i \\
+8 & i*i\$ &  FT'E'\$ & derivar F $\rightarrow$ i \\
 \hline
 9 & i*i\$ &  iT'E'\$ & desplazar \\
 \hline
-10 & *i\$ &  T'E'\$ & T' -> *FT' \\
+10 & *i\$ &  T'E'\$ & T' $\rightarrow$ *FT' \\
 \hline
 11 & *i\$ &  *FT'E'\$ & desplazar \\
 \hline
-12 & i\$ &  FT'E'\$ & F -> i \\
+12 & i\$ &  FT'E'\$ & F $\rightarrow$ i \\
 \hline
 13 & i\$ &  iT'E'\$ & desplazar \\
 \hline
-14 & \$ &  T'E'\$ & T' -> λ \\
+14 & \$ &  T'E'\$ & T' $\rightarrow$ λ \\
 \hline
-15 & \$ &  E'\$ & E' -> λ \\
+15 & \$ &  E'\$ & E' $\rightarrow$ λ \\
 \hline
 16 & \$ &  \$ & OK \\
 \hline
