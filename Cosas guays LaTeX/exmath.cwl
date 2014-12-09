@@ -189,6 +189,7 @@
 \bbs#m
 \crc#m
 \torus#m
+\disc#m
 \algb{arg0}#m
 \algbA#m
 \algbM#m
