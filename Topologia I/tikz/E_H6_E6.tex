@@ -1,0 +1,53 @@
+\begin{tikzpicture}
+
+
+\pgfmathsetmacro{\innerradius}{2.5}
+\pgfmathsetmacro{\outerradius}{4}
+\pgfmathsetmacro{\toruswidth}{(\outerradius - \innerradius)/2}
+\pgfmathsetmacro{\toruscenter}{\innerradius + \toruswidth}
+\pgfmathsetmacro{\axislen}{\outerradius + 1}
+\pgfmathsetmacro{\axisylen}{\toruswidth+1}
+
+\draw[->, very thin, gray] (-\axislen,0,0) -- (\axislen,0,0) node[right] {$X$};
+\draw[->, very thin, gray] (0,-\axisylen,0) -- (0,\axisylen,0) node[above] {$Y$};
+\draw[->, very thin, gray] (0,0,-\axislen) -- (0,0,\axislen) node[left] {$Z$};
+
+\foreach \side in {1,-1}
+{
+	\draw[thick, orange, fill=orange, fill opacity=0.2] (\side*\toruscenter,0) circle[radius=\toruswidth];
+	\foreach \a in {0, 30, ..., 360}
+	{
+		\node[nodepoint, blue, fill=blue, inner sep=0.5pt] (PI) at ({\side*\toruscenter + \toruswidth*cos(\a)/2}, {\toruswidth*sin(\a)/2}) {};
+		\node[nodepoint, blue, fill=blue, inner sep=0.5pt] (P) at ({\side*\toruscenter + \toruswidth*cos(\a)}, {\toruswidth*sin(\a)}) {};
+		\draw[really dense directed, blue] (P) -- (\side*\toruscenter, 0);
+	}
+}
+
+\begin{scope}[canvas is zy plane at x=0]
+\foreach \side in {1,-1}
+{
+	\draw[thick, orange, fill=orange, fill opacity=0.2] (\side*\toruscenter,0) circle[radius=\toruswidth];
+	\foreach \a in {0, 30, ..., 360}
+	{
+		\node[nodepoint, blue, fill=blue, inner sep=0.5pt] (PI) at ({\side*\toruscenter + \toruswidth*cos(\a)/2}, {\toruswidth*sin(\a)/2}) {};
+		\node[nodepoint, blue, fill=blue, inner sep=0.5pt] (P) at ({\side*\toruscenter + \toruswidth*cos(\a)}, {\toruswidth*sin(\a)}) {};
+		\draw[really dense directed, blue] (P) -- (\side*\toruscenter, 0);
+	}
+}
+\end{scope}
+
+\begin{scope}[canvas is xz plane at y=0]
+\draw[blue, thick] (0,0) circle[radius=\toruscenter];
+\draw[orange] (0,0) circle[radius=\innerradius];
+\draw[orange] (0,0) circle[radius=\outerradius];
+\end{scope}
+
+\foreach \a in {-90,-87,...,90}
+{
+	\begin{scope}[canvas is zx plane at y={\toruswidth*sin(\a)}]
+	\draw[orange, dotted] (0,0) circle[radius={\toruscenter+\toruswidth*cos(\a)}];
+	\draw[orange, dotted] (0,0) circle[radius={\toruscenter-\toruswidth*cos(\a)}];
+	\end{scope}
+}
+
+\end{tikzpicture}
