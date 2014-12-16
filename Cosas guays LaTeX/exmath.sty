@@ -210,10 +210,8 @@
 
 % Teoremas
 \newcounter{thm}[section]
-\newcounter{ejr}[subsection]
 %\numberwithin{equation}{section}
 \renewcommand{\thethm}{\thesection.\arabic{thm}} % IGN
-\renewcommand{\theejr}{\arabic{ejr}} % IGN
 
 \newtheorem{lemma}[thm]{Lema}
 \newtheorem{itheorem}[thm]{Teorema}
@@ -228,8 +226,6 @@
 
 \newenvironment{op}[1]{\indent \\ \noindent\textsc{#1}\\\[}{\]}
 
-\newcounter{apr}[ejr]
-\renewcommand{\theapr}{\alph{apr}} % IGN
 
 \renewcommand{\(}[1][]{\begin{equation}\ifthenelse{\equal{#1}{}}{}{\label{#1}}} % 1O: etiqueta; |
 \renewcommand{\)}{\end{equation}}
@@ -239,28 +235,37 @@
   linewidth=2pt, innerleftmargin=0pt, rightmargin=0pt,%
   innerrightmargin=10pt, skipabove=0pt, skipbelow=0pt]}{\end{mdframed}}
 
+\newenvironmentx{example}[1][1=] % 1O: titulo;
+{\paragraph{Ejemplo: #1} \itshape}
+{}
+
+%%%%% Entornos y código para problemas
+
+\newcounter{ejr}[section]
+\newcounter{apr}[ejr]
+
+\renewcommand{\theejr}{\arabic{section}.\arabic{ejr}} % IGN
+\renewcommand{\theapr}{\alph{apr}} % IGN
+
 \newcommand{\iPartSpaceSkip}{} %IGN
 \newcommandx{\ppart}[1][1=\theapr]{\par \indent \stepcounter{apr}\textbf{#1)} } % 1O: apartado; | IGN
 \newcommandx{\spart}[1][1=\theapr]{ % 1O: apartado; | IGN
 	\iPartSpaceSkip
 	\renewcommand{\iPartSpaceSkip}{\vspace{10pt}}
-	\indent \stepcounter{apr}\textsc{Apartado #1)} \par
+	\indent \refstepcounter{apr}\textsc{Apartado #1)} \par
 	}
 \newcommand{\solution}{\end{framed}\setcounter{apr}{0} } %IGN
 \newenvironmentx{problem}[1][1=] % 1O: N. ejercicio;
 {
 	\vspace{1 pt}
-	\stepcounter{ejr}
+	\refstepcounter{ejr}
 	\renewcommand{\iPartSpaceSkip}{}
 	\begin{framed}
-	\textbf{Ejercicio \ifthenelse{\equal{#1}{}}{\theejr}{#1}}:
+	\textbf{Ejercicio \ifthenelse{\equal{#1}{}}{\theejr}{\arabic{section}.#1}}:
 	\setcounter{apr}{0}
 }{\vspace{10 pt}}
 
-\newenvironmentx{example}[1][1=] % 1O: titulo;
-{\paragraph{Ejemplo: #1} \itshape}
-{}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\listtheoremname}{Teoremas} %IGN
 \newlistof[section]{ithm}{ithmc}{\listtheoremname}

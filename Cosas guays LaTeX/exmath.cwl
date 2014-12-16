@@ -114,15 +114,17 @@
 \vv#m
 \ve#m
 \thethm#m
-\theejr#m
 \begin{remark}#
 \IS#m
 \begin{op}{arg0}#
-\theapr#m
 \(#m
 \([etiqueta]#m
 \)#m
 \begin{rightbar}#
+\begin{example}#
+\begin{example}[titulo]#
+\theejr#m
+\theapr#m
 \iPartSpaceSkip#m
 \ppart#m
 \ppart[apartado]#m
@@ -131,8 +133,6 @@
 \solution#m
 \begin{problem}#
 \begin{problem}[N. ejercicio]#
-\begin{example}#
-\begin{example}[titulo]#
 \listtheoremname#m
 \ithm{arg0}#m
 \begin{defn}#
