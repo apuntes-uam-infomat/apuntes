@@ -1,4 +1,46 @@
-\begin{tikzpicture}
+\begin{tikzpicture}[rotate = 90, scale=1.2]
 
+\pgfmathsetmacro{\uiminoraxis}{3}
+\pgfmathsetmacro{\uimajoraxis}{4}
+\pgfmathsetmacro{\uilabelfactor}{1.2}
+\pgfmathsetmacro{\uiinclination}{45}
+
+
+\begin{scope}
+\clip[rotate around={\uiinclination:(-\uimajoraxis,0)}] (0,0) ellipse ({\uimajoraxis} and {\uiminoraxis});
+\fill[pattern=north east lines, pattern color=orange!80!white] (0,0) ellipse ({\uimajoraxis} and {\uiminoraxis});
+\end{scope}
+
+\foreach[count=\i] \a in {\uiinclination, 0, -\uiinclination}
+{
+	\begin{scope}[rotate around={\a:(-\uimajoraxis,0)}, scale=1]
+		\draw[name path global=open\i] (0,0) ellipse ({\uimajoraxis} and {\uiminoraxis});
+		\path[name path global=axis\i] ({-\uimajoraxis},0) -- ({\uimajoraxis}, 0);
+		\node at ({\uimajoraxis*\uilabelfactor}, 0) {$U_\i$};
+	\end{scope}
+}
+
+\node[nodepoint, label={left:$x_0$}] (X) at (-\uimajoraxis / 2,0) {};
+
+\draw[rotate around={\uiinclination:({-\uimajoraxis},0)}, (-), red] ({-\uimajoraxis / 2}, {1}) to[bend left] node[midway, above, sloped, yshift=4] {$A_j$} (1,1);
+
+\path[name path=outercircle] ({-\uimajoraxis},{1.44*\uimajoraxis}) arc[start angle = {\uiinclination*2}, end angle = {-\uiinclination * 2}, radius={1.44*\uimajoraxis}];
+
+\path[name path=joiner1, name intersections={of=open1 and open2}] (intersection-1)  -- (intersection-2);
+\path[name path=joiner2, name intersections={of=open2 and open3}] (intersection-1)  -- (intersection-2);
+
+\path[name intersections={of=axis1 and outercircle}] (intersection-1) node [nodepoint, label={left:{$\alpha(t_j)$}}] (AJ0) {};
+\path[name intersections={of=axis2 and outercircle}] (intersection-1) node (AJ1) {};
+\path[name intersections={of=axis3 and outercircle}] (intersection-1) node [nodepoint, label={below:{$\alpha(t_{j+3})$}}] (AJ2) {};
+
+\path[name intersections={of=joiner1 and outercircle}] (intersection-1) node[nodepoint, label={right:{$\alpha(t_{j+1})$}}] (J1) {};
+\path[name intersections={of=joiner2 and outercircle}] (intersection-1) node[nodepoint, label={below:{$\alpha(t_{j+2})$}}] (J2) {};
+
+\draw[dense directed, blue, thick] (AJ0) to[bend left] node[midway, above] {$A_j$} (J1);
+\draw[dense directed, blue, thick] (J1) to[bend left] node[midway, above] {$A_{j+1}$} (J2);
+\draw[dense directed, blue, thick] (J2) to[bend left] node[midway, above right] {$A_{j+2}$} (AJ2);
+
+\draw[green!70!black, thick, dense directed] (X) to[bend left] node[midway, left] {$\beta_j$} (J1);
+\draw[green!70!black, thick, dense directed] (J2) to[bend right] node[midway, right] {$\beta_{j_1}^-$} (X);
 
 \end{tikzpicture}
