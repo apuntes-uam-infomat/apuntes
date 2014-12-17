@@ -28,6 +28,7 @@
 \RequirePackage{subcaption} % Subfiguras
 \RequirePackage{etoolbox}
 \RequirePackage{tablefootnote}
+\RequirePackage{xstring}
 
 \let\mder\md
 
@@ -241,6 +242,14 @@
 
 %%%%% Entornos y código para problemas
 
+\newcommand*{\IsInteger}[3]{% %IGN
+    \IfStrEq{#1}{ }{%
+        #3% is a blank string
+    }{%
+        \IfInteger{#1}{#2}{#3}%
+    }%
+}%
+
 \newcounter{ejr}[section]
 \newcounter{apr}[ejr]
 
@@ -255,13 +264,23 @@
 	\indent \refstepcounter{apr}\textsc{Apartado #1)} \par
 	}
 \newcommand{\solution}{\end{framed}\setcounter{apr}{0} } %IGN
+\newcommand{\ejrheader}{\theejr}
 \newenvironmentx{problem}[1][1=] % 1O: N. ejercicio;
 {
 	\vspace{1 pt}
+	\renewcommand{\ejrheader}{\theejr}
+	\ifthenelse{\equal{#1}{}}{}{
+		\IsInteger{#1}{
+			\setcounter{ejr}{#1}
+			\addtocounter{ejr}{-1}
+		}{
+			\renewcommand{\ejrheader}{\arabic{section}.{#1}}
+		}
+	}
 	\refstepcounter{ejr}
 	\renewcommand{\iPartSpaceSkip}{}
 	\begin{framed}
-	\textbf{Ejercicio \ifthenelse{\equal{#1}{}}{\theejr}{\arabic{section}.#1}}:
+	\textbf{Ejercicio \ejrheader}:
 	\setcounter{apr}{0}
 }{\vspace{10 pt}}
 

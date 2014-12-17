@@ -123,6 +123,7 @@
 \begin{rightbar}#
 \begin{example}#
 \begin{example}[titulo]#
+\IsInteger{arg0}{arg1}{arg2}#m
 \theejr#m
 \theapr#m
 \iPartSpaceSkip#m
@@ -131,6 +132,7 @@
 \spart#m
 \spart[apartado]#m
 \solution#m
+\ejrheader#m
 \begin{problem}#
 \begin{problem}[N. ejercicio]#
 \listtheoremname#m
