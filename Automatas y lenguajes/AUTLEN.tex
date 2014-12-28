@@ -1,4 +1,4 @@
-\documentclass{apuntes}
+  \documentclass{apuntes}
 
 % Paquetes adicionales
 
@@ -2043,6 +2043,72 @@ FUNCION & FUNCION -> TIPO ID (ARGS); &  FUNCION -> TIPO ID (ARGS) \{CUERPO\} \\
 \end{tabular}
 \end{center}
 En este caso no hay problemas pues es bastante sencilla la tabla mostrada. No obstante, en un caso más general sería necesario cuidar que no se solapen las expresiones regulares empleadas en el análisis.
+
+
+\section{Últimos detalles: lemas, equivalencias y reducción de automátas...}
+
+\subsection{Minimizar autómatas finitos}
+En esta sección vamos a tratar de reducir los estados de un autómata finito. Para ello seguimos dos pasos:
+
+\begin{enumerate}
+\item Eliminar estados inaccesibles. 
+
+Se realizará mediante una búsqueda en anchura dentro del árbol, se parará la expansión de las ramas del árbol según se vayan encontrando estados repetidos. 
+
+Aquellos estados que no aparezcan en el árbol podrán ser eliminados del autómata directamente ya que nunca podremos llegar a ellos.
+
+\item Unir estados equivalentes. Para ello primero debemos encontrarlos, definimos la siguiente relación de equivalencia entre estados:
+
+Sean P, Q estados del autómata, F el conjunto de estados finales y $\xi$ el alfabeto del autómata.
+
+\begin{itemize}
+\item p $EQ_0$ q  $\Longleftrightarrow$ o bien p $\in$ F y q $\in$ F o p $\notin$ F y q $\notin$ F. (es decir, dos estados son equivalentes a nivel 0 si los dos pertenecen al conjunto de los estados finales o los dos pertenecen al conjunto de los estados NO finales)
+
+\item p $EQ_1$ $\Longleftrightarrow$ p $EQ_1$ q y $\forall$ a $\in \xi$ se cumple que $\delta(p,a)$ $EQ_0$ $\delta(q,a)$
+
+.\\
+.\\
+.
+\item p $EQ_n$ $\Longleftrightarrow$ p $EQ_{n-1}$ q y $\forall$ a $\in \xi$ se cumple que $\delta(p,a)$ $EQ_{n-1}$ $\delta(q,a)$
+\item paramos cuando lleguemos a un paso en los que tengamos las mismas clases de equivalencia con los mismos elementos que en el paso anterior.
+
+\end{itemize}
+\end{enumerate}
+
+\begin{example}
+Vamos a reducir el siguiente autómata:
+
+\begin{center}
+\includegraphics[scale=0.4]{img/tablaanalisislr1.jpg}
+\end{center}
+
+\begin{enumerate}
+\item Vemos que no tiene ningún estado inaccesible.
+\item Vamos a ir viendo los estados equivalentes
+\begin{itemize}
+\item $EQ_0$: $C_1={A,B}$ (estados finales) y $C_2={C}$ (estados NO finales).
+\item Ahora se revisan los grupos equivalentes del paso anterior y se comprueba si son equivalentes en un nivel más.
+
+Con el estado C ya no debemos hacer nada, ya que este es equivalente consigo mismo.
+
+Si desde A se sale con un 0 llegamos a B, que pertenece al grupo $C_1$ de la equivalencia anterior. Si se sale con un 1 llegamos a C que pertenece al grupo $C_2$.
+
+Si desde B se sale con un 0 llegamos a B, que pertenece al grupo $C_1$ de la equivalencia anterior. Si se sale con un 1 llegamos a C que pertenece al grupo $C_2$.
+
+Por tanto llegamos a los mismos estados tanto desde A como desde B. Y es por eso que A y B son también $EQ_1$ entre ellos. 
+
+Como hemos llegado a dos pasos consecutivos en el que nuestros grupos de equivalencia han coincidido ( $C_1={A,B}$ y $C_2={C}$), paramos el algoritmo y concluímos: A y B son equivalentes entre si.
+\end{itemize}
+\end{enumerate}
+
+Transformamos el autómata y nos queda:
+
+\begin{center}
+\includegraphics[scale=0.4]{img/tablaanalisislr1.jpg}
+\end{center}
+
+\end{example}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
