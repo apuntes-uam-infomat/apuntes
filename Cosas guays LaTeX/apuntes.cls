@@ -4,9 +4,16 @@
 \RequirePackage{pdfpages}
 \RequirePackage{datetime}
 
+\def\printbuilddate{\footnotetext{\tiny Documento compilado el \today\ a las \currenttime}}
+\def\enableindexbuilddate{\renewcommand{\compdate}{\tiny{\today\, \currenttime}}}
+
 \LoadClass[titlepage]{custombase}
 \DeclareOption{nochap}{\def\thesection{\arabic{section}}
 \numberwithin{equation}{subsection}}
+\DeclareOption{nobuilddate}{%
+	\def\printbuilddate{}%
+	\def\enableindexbuilddate{}%
+}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
 \ProcessOptions\relax
 
@@ -16,8 +23,8 @@
 \fancyhf{}
 \PrerenderUnicode{ÁáÉéÍíÓóÚúÑñ} % Para que salgan las tildes y demás mierdas en el título.
 \fancypagestyle{plain}{%
-	\lhead{\small \itshape \thetitle\, -\, \thedate\, -\, UAM} 
-	\rhead{\small \theauthor} 
+	\lhead{\small \itshape \thetitle\, -\, \thedate\, -\, UAM}
+	\rhead{\small \theauthor}
 	\cfoot{\thepage\ de \pageref{LastPage}}
 	\rfoot{\compdate}
 }
@@ -25,8 +32,8 @@
 \setlength{\parskip}{2mm}
 \setlength{\headheight}{15pt}
 
-\apptocmd{\printindex}{\renewcommand{\compdate}{\tiny{\today\, \currenttime}}}{}{}
-\apptocmd{\maketitle}{\footnotetext{\tiny Documento compilado el \today\ a las \currenttime}}{}{}
+\apptocmd{\printindex}{\enableindexbuilddate}{}{}
+\apptocmd{\maketitle}{\printbuilddate}{}{}
 
 \newcommand{\placeholder}[1]{\begin{framed}\textit{\textbf{A rellenar:} #1}\end{framed}}
 

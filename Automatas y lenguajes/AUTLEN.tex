@@ -1,4 +1,4 @@
-\documentclass{apuntes}
+  \documentclass{apuntes}
 
 % Paquetes adicionales
 
@@ -2044,6 +2044,275 @@ FUNCION & FUNCION -> TIPO ID (ARGS); &  FUNCION -> TIPO ID (ARGS) \{CUERPO\} \\
 \end{center}
 En este caso no hay problemas pues es bastante sencilla la tabla mostrada. No obstante, en un caso más general sería necesario cuidar que no se solapen las expresiones regulares empleadas en el análisis.
 
+\newpage
+\chapter{Últimos detalles: lemas, equivalencias y reducción de automátas...}
+
+\section{Minimizar autómatas finitos}
+En esta sección vamos a tratar de reducir los estados de un autómata finito. Para ello seguimos dos pasos:
+
+\begin{enumerate}
+\item Eliminar estados inaccesibles. 
+
+Se realizará mediante una búsqueda en anchura dentro del árbol, se parará la expansión de las ramas del árbol según se vayan encontrando estados repetidos. 
+
+Aquellos estados que no aparezcan en el árbol podrán ser eliminados del autómata directamente ya que nunca podremos llegar a ellos.
+
+\item Unir estados equivalentes. Para ello primero debemos encontrarlos, definimos la siguiente relación de equivalencia entre estados:
+
+Sean P, Q estados del autómata, F el conjunto de estados finales y $\xi$ el alfabeto del autómata.
+
+\begin{itemize}
+\item p $EQ_0$ q  $\Longleftrightarrow$ o bien p $\in$ F y q $\in$ F o p $\notin$ F y q $\notin$ F. (es decir, dos estados son equivalentes a nivel 0 si los dos pertenecen al conjunto de los estados finales o los dos pertenecen al conjunto de los estados NO finales)
+
+\item p $EQ_1$ $\Longleftrightarrow$ p $EQ_1$ q y $\forall$ a $\in \xi$ se cumple que $\delta(p,a)$ $EQ_0$ $\delta(q,a)$
+
+.\\
+.\\
+.
+\item p $EQ_n$ $\Longleftrightarrow$ p $EQ_{n-1}$ q y $\forall$ a $\in \xi$ se cumple que $\delta(p,a)$ $EQ_{n-1}$ $\delta(q,a)$
+\item paramos cuando lleguemos a un paso en los que tengamos las mismas clases de equivalencia con los mismos elementos que en el paso anterior.
+
+\end{itemize}
+\end{enumerate}
+
+\begin{example}
+Vamos a reducir el siguiente autómata:
+
+\begin{center}
+\includegraphics[scale=0.4]{automataFinal1.png}
+\end{center}
+
+\begin{enumerate}
+\item Vemos que no tiene ningún estado inaccesible.
+\item Vamos a ir viendo los estados equivalentes
+\begin{itemize}
+\item $EQ_0$: $C_1=\{A,B\}$ (estados finales) y $C_2=\{C\}$ (estados NO finales).
+\item Ahora se revisan los grupos equivalentes del paso anterior y se comprueba si son equivalentes en un nivel más.
+
+Con el estado C ya no debemos hacer nada, ya que este es equivalente consigo mismo.
+
+Si desde A se sale con un 0 llegamos a B, que pertenece al grupo $C_1$ de la equivalencia anterior. Si se sale con un 1 llegamos a C que pertenece al grupo $C_2$.
+
+Si desde B se sale con un 0 llegamos a B, que pertenece al grupo $C_1$ de la equivalencia anterior. Si se sale con un 1 llegamos a C que pertenece al grupo $C_2$.
+
+Por tanto llegamos a estados pertenecientes al mismo grupo de equivalencia tanto desde A como desde B. Y es por eso que A y B son también $EQ_1$ entre ellos. 
+
+Como hemos llegado a dos pasos consecutivos en el que nuestros grupos de equivalencia han coincidido ( $C_1=\{A,B\}$ y $C_2=\{C\}$), paramos el algoritmo y concluimos: A y B son equivalentes entre si.
+\end{itemize}
+\end{enumerate}
+
+Transformamos el autómata y nos queda:
+
+\begin{center}
+\includegraphics[scale=0.4]{automataFinal2.png}
+\end{center}
+
+\end{example}
+
+\begin{example}
+Dado el siguiente autómata:
+\begin{center}
+\includegraphics[scale=0.4]{automataFinal3.png}
+\end{center}
+
+\begin{enumerate}
+\item Realizamos el árbol de búsqueda en anchura y obtenemos lo siguiente:
+
+\begin{forest}
+for tree={
+  draw,
+  minimum height=1cm,
+  anchor=north,
+  align=center,
+  child anchor=north
+},
+[{A}, align=center, name=SS
+  [B,
+  	[G
+  	  [E
+  	  	[H]
+  	  ]
+  	]
+  	[C]
+  ]
+  [F]
+]
+\end{forest}
+
+Podemos deducir de ello que el nodo D es inaccesible, y por tanto lo eliminamos del autómata.
+
+\item Vamos a ir viendo los estados equivalentes
+\begin{itemize}
+\item $EQ_0$: $C_1=\{C\}$ (estados finales) y $C_2=\{A,B,E,F,G,H\}$ (estados NO finales).
+\item Ahora se revisan los grupos equivalentes del paso anterior y se comprueba si son equivalentes en un nivel más.
+
+Con el estado C ya no debemos hacer nada, ya que este es equivalente consigo mismo.
+
+Si desde A se sale con un 0 llegamos a B, que pertenece al grupo $C_2$ de la equivalencia anterior. Si se sale con un 1 llegamos a F que pertenece al grupo $C_2$ también.
+
+Si desde B se sale con un 0 llegamos a G, que pertenece al grupo $C_2$ de la equivalencia anterior. Si se sale con un 1 llegamos a C que pertenece al grupo $C_1$.
+
+Por tanto llegamos a estados pertenecientes a distintos grupos  de equivalencia. Y concluimos que A y B no son equivalentes. 
+
+Repetimos el mismo procedimiento con todas las parejas de nodos. Marcamos con X si NO son equivalentes y con V si SI son equivalentes.
+
+\begin{verbatim}
+A-B -> X    B-E -> X    E-F -> X    F-G -> X    G-H -> X
+A-E -> V    B-F -> X    E-G -> V    F-H -> X
+A-F -> X    B-G -> X    E-H -> H
+A-G -> V    B-H -> V
+A-H -> X
+\end{verbatim}
+
+Por tanto las nuevas equivalencias quedarían: 
+$EQ_1$: $C_1=\{C\}$, $C_2=\{A,E,G\}$, $C_3=\{B,H\}$, $C_4=\{F\}$ 
+
+\item Continuamos con la siguiente equivalencia. Los grupos $C_1$ y $C_4$ ya están terminados. Miramos los grupos $C_2$ y $C_3$. 
+
+Empezamos con $C_2$. Si desde A se sale con un 0 llegamos a B, que pertenece al grupo $C_3$ de la equivalencia anterior. Si se sale con un 1 llegamos a F que pertenece al grupo $C_4$.
+
+Si desde E se sale con un 0 llegamos a H, que pertenece al grupo $C_3$ de la equivalencia anterior. Si se sale con un 1 llegamos a F que pertenece al grupo $C_4$.
+
+Por tanto A y E son equivalentes. Repetimos el mismo proceso con el resto de parejas y obtenemos:
+\begin{verbatim}
+A-E -> V
+G-E -> X  
+A-G -> X 
+\end{verbatim}
+Por tanto del grupo de equivalencia $C_2$ obtenemos 2. $C_2=\{A,E\}$ y $C_5=\{G\}$
+
+Ahora miramos el grupo $C_3$, y se observa que B y H siguen siendo equivalentes.
+
+Nos queda: $EQ_2$: $C_1=\{C\}$, $C_2=\{A,E\}$, $C_3=\{B,H\}$, $C_4=\{F\}$, $C_5=\{G\}$
+Como los grupos de equivalencia han cambiado, tenemos que avanzar un nivel más.
+
+\item Solo tenemos que mirar los conjuntos $C_2$ y $C_3$. Observamos que no se forman nuevos grupos de equivalencia, y tenemos:
+ 
+$EQ_3$: $C_1=\{C\}$, $C_2=\{A,E\}$, $C_3=\{B,H\}$, $C_4=\{F\}$, $C_5=\{G\}$
+ 
+Por tanto llegamos a la conclusión parada y construimos el autómata resultante:
+ 
+\begin{center}
+\includegraphics[scale=0.4]{automataFinal4.png}
+\end{center}
+\end{itemize}
+\end{enumerate}
+
+\end{example}
+
+\section{Equivalencia AFN - AFD}
+
+Vamos a ver que un autómata finito no determinista se puede transformar en un autómata finito determinista equivalente.
+
+Sea $\vee^*(q)$ el conjunto formado por los estados accesibles dado un estado 'q' con transiciones $\lambda$.
+
+Sea $C_0$ = $\{q_o\} \cup \vee^*(q)$ el conjunto de transiciones posibles desde $C_0$.
+
+Vamos a transformar el siguiente AFN en un AFD:
+\begin{example}
+\begin{center}
+\includegraphics[scale=0.4]{automataFinal5.png}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.1]{img/arbolBusqueda.jpg}
+\end{center}
+
+y nos queda:
+\begin{center}
+\includegraphics[scale=0.4]{automataFinal6.png}
+\end{center}
+\end{example}
+NOTA: Si tuviéramos un autómata que empezará en un estado A y pudiese pasar a otro B a través de una transición $\lambda$, el estado inicial quedaría $C_0=\{A,B\}$.
+
+\section{Propiedades del cierre (regulares)}
+Sean $L_1$ y $L_2$ lenguajes regulares.
+\begin{itemize}
+\item $L_1 \cup L_2$, $L_1.L_2$ y $L_1 \cap L_2$ son regulares
+\item $L_1^c = \xi^* - L$ es regular
+\item $L_1 - L_2 = L_1 \cap L_2^c$ es regular.
+\end{itemize}
+
+
+\section{Lemas del Bombeo}
+
+\subsection{Lema del bombeo (Lenguajes regulares)}
+Sea L un lenguaje regular, infinito: $\exists m\geq 0$ tal que cualquier $w\in L$ puede descomponerse como $w=xyz$ con $|xy|\leq m$ y $|y|\geq 1$ de tal modo que $xy^iz \in L$ $\forall i=0,1,2,...$.
+
+\begin{example}
+Sea el lenguaje $L=\{a^nb^n, n\geq 0\}$ queremos ver si es un lenguaje regular. Vamos a intentar demostrar que no es regular.
+\begin{enumerate}
+
+\item Elegimos un número 'm' cualquiera.
+\item Elegimos una palabra $w\in L$ con $|w| \geq m$. Cogemos $w=a^mb^m$ que tiene $|w|= 2m \geq m$
+\item Manipulamos la palabra y vemos como separarla.
+
+Tenemos: $\underbrace{a,a,...,a}_m \underbrace{b,b,...,b}_m$
+
+Como $|xy| \leq m$ podemos escoger un $xy$ que sean todo a's, de manera que $xy^iz$ tendría mas a's que b's y por tanto no pertenecería a L.
+
+
+Hemos encontrado una palabra w que no cumple las condiciones que debería cumplir toda palabra si el lenguaje fuese regular. Concluimos que el lenguaje no es regular.
+\end{enumerate}
+\end{example}
+
+El truco esta en coger una palabra que no cumpla la implicación, con la cual si tenemos un $A \Rightarrow B$ y B no se cumple, se deduce que A tampoco. $\neg A \Rightarrow \neq B $
+
+Veamos otro ejemplo:
+
+\begin{example}
+Sea el lenguaje $L=\{ww^c,  w\in \{a,b\}^*\}$ queremos ver si es un lenguaje regular. Vamos a intentar demostrar que no es regular.
+\begin{enumerate}
+
+\item Elegimos un número 'm' cualquiera.
+\item Elegimos una palabra $w\in L$ con $|w| \geq m$. Cogemos $w=a^mb^ma^mb^m$ que tiene $|w|= 4m \geq m$
+\item Manipulamos la palabra y vemos como separarla.
+
+Tenemos: $\underbrace{a,a,...,a}_m \underbrace{b,b,...,b}_{m} \underbrace{b,b,...,b}_m \underbrace{a,a,...,a}_m$
+
+Como $|xy| \leq m$ podemos escoger un $xy$ que sean todo a's de la parte izquierda, de manera que $xy^iz$ no sería simétrica.
+
+Hemos encontrado una palabra w que no cumple las condiciones que debería cumplir toda palabra si el lenguaje fuese regular. Concluimos que el lenguaje no es regular.
+\end{enumerate}
+\end{example}
+
+
+\subsection{Lema del bombeo (Lenguajes independientes del contexto)}
+Sea L un lenguaje independiente del contexto, infinito y que no contiene a $\lambda$, entonces: $\exists m\geq 0$ tal que cualquier $w\in L$ con $|w| \geq m$ puede descomponerse como $w=uxyzv$ con $|xyz|\leq m$ y $|xy|\geq 1$ de modo que $ux^iyz^iv \in L$ $\forall i=0,1,2,...$.
+
+\begin{example}
+Sea el lenguaje $L=\{a^nb^nc^n, n\geq 0\}$ queremos ver si es un lenguaje independiente del contexto.
+\begin{enumerate}
+
+\item Elegimos un número 'm' cualquiera.
+\item Elegimos una palabra $w\in L$ con $|w| \geq m$. Cogemos $w=a^mb^mc^m$ que tiene $|w|= 3m \geq m$
+\item Manipulamos la palabra y vemos como separarla.
+
+Tenemos: $\underbrace{a,a,...,a}_m \underbrace{b,b,...,b}_m \underbrace{c,c,...,c}_m$
+
+Como $|xyz| \leq m$ tenemos que en $xyz$ o bien no hay a's o bien no hay c's, y por tanto $ux^0yz^0v \notin L$. 
+
+Hemos encontrado una palabra w que no cumple las condiciones que debería cumplir toda palabra si el lenguaje fuese independiente del contexto. Concluimos que el lenguaje no es independiente del contexto.
+\end{enumerate}
+\end{example}
+
+Veamos otro ejemplo:
+
+\begin{example}
+Sea el lenguaje $L=\{ww, w\in \{a,b\}^*\}$ queremos ver si es un lenguaje independiente del contexto.
+\begin{enumerate}
+
+\item Elegimos un número 'm' cualquiera.
+\item Elegimos una palabra $w\in L$ con $|w| \geq m$. Cogemos $w=a^{m-1}ba^{m-1}b$ que tiene $|w|= 2m \geq m$
+\item Manipulamos la palabra y vemos como separarla.
+
+Tenemos: $\underbrace{a,a,...,a}_{m-1} b  \underbrace{a,a,...,a}_{m-1} b$
+
+Vemos que si escogemos $xyz = a,a,...,b,a,a,...,a$, con esta división la palabra $ux^0yz^0v \in L$, y por tanto no nos vale como contraejemplo.
+
+Se deja como ejercicio para e lector comprobar que la elección correcta es coger un $w=a^{m}b^ma^{m}b^m$. Con esta palabra conseguiremos demostrar que el lenguaje no es independiente del contexto.
+\end{enumerate}
+\end{example}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 \chapter{Ejercicios}

@@ -11,14 +11,23 @@ mkdir "$name"
 cd "$name"
 
 extra_folders="img pdf tex tikzgen"
+extra_tex_files_suffixes="Ejs"
+extra_tex_files_input=""
 
-for folder in $extra_folders; do 
+for folder in $extra_folders; do
 	mkdir $folder
 	touch $folder/.keep
 	echo "Created directory $name/$folder with .keep file."
 done
 
 touch "$abbr.tex"
+
+for suffix in $extra_tex_files_suffixes; do
+	texfile="tex/${abbr}_${suffix}.tex"
+	printf -v extra_tex_files_input "$extra_tex_files_input\n\chapter{---}\n\\input{$texfile}"
+	echo "% -*- root: ../${abbr}.tex -*-" > $texfile
+	echo "Created extra file $texfile"
+done
 
 current_year=$(date +%y)
 
@@ -46,7 +55,11 @@ cat << EOF > "$abbr.tex"
 
 \tableofcontents
 \newpage
+% Contenido.
 
+%% Apéndices (ejercicios, exámenes)
+\appendix
+$extra_tex_files_input
 \printindex
 \end{document}
 EOF
