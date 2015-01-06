@@ -1578,7 +1578,17 @@ Mediante el análisis SLR(1) no añadíamos ningún estado más al autómata, ú
 
 Este símbolo es el siguiente(X) si tenemos $X \rightarrow ABC...$, es decir, el siguiente del símbolo no terminal situado a la izquierda de la regla.
 
-\textbf{Esto es algo más complicado de lo que parece. Completar}
+\textbf{Esto es algo más complicado de lo que parece.}
+
+El procedimiento a aplicar, consiste en partir únicamente de la regla que está generando el autómata (En el estado inicial esta regla será la derivación del axioma y en otros estados la regla que acabamos de derivar).
+
+Para esta regla ya conocemos el símbolo de adelanto: si es un estado intermedio conserva el símbolo de adelanto del estado anterior y si es el estado inicial su símbolo de adelanto es $\$$.
+
+Una vez tenemos la regla inicial, calculamos su cierre en pequeños pasos. Es decir, primero añadimos las reglas que se derivan del no terminal situado inmediatamente después del punto (hasta aquí un paso), luego aplicamos calculamos el cierre de cada una de estas nuevas reglas (por cada regla un paso).
+
+¿Por qué realizamos esta distinción entre pasos que antes no hacíamos? Por que ahora será necesario realizar un pequeño trabajo entre estos pasos.
+
+En cada paso tomamos únicamente la regla que estamos cerrando y las reglas que acabamos de añadir y, restringiéndonos a ese subconjunto de reglas, calculamos los símbolos de adelanto de las mismas.
 
 \end{enumerate}
 
@@ -1635,6 +1645,7 @@ Para empezar a estudiar el ejemplo, debemos tener en cuenta dos máximas del an�
 
 \textbf{Realizaremos siempre derivaciones Left most}
 
+\newpage
 Vamos a realizar el ejercicio por \textit{fuerza bruta}.
 \begin{verbatim}
 Para empezar derivamos el axioma con la primera regla (en realidad daría igual
@@ -2051,9 +2062,9 @@ En este caso no hay problemas pues es bastante sencilla la tabla mostrada. No ob
 En esta sección vamos a tratar de reducir los estados de un autómata finito. Para ello seguimos dos pasos:
 
 \begin{enumerate}
-\item Eliminar estados inaccesibles. 
+\item Eliminar estados inaccesibles.
 
-Se realizará mediante una búsqueda en anchura dentro del árbol, se parará la expansión de las ramas del árbol según se vayan encontrando estados repetidos. 
+Se realizará mediante una búsqueda en anchura dentro del árbol, se parará la expansión de las ramas del árbol según se vayan encontrando estados repetidos.
 
 Aquellos estados que no aparezcan en el árbol podrán ser eliminados del autómata directamente ya que nunca podremos llegar a ellos.
 
@@ -2095,7 +2106,7 @@ Si desde A se sale con un 0 llegamos a B, que pertenece al grupo $C_1$ de la equ
 
 Si desde B se sale con un 0 llegamos a B, que pertenece al grupo $C_1$ de la equivalencia anterior. Si se sale con un 1 llegamos a C que pertenece al grupo $C_2$.
 
-Por tanto llegamos a estados pertenecientes al mismo grupo de equivalencia tanto desde A como desde B. Y es por eso que A y B son también $EQ_1$ entre ellos. 
+Por tanto llegamos a estados pertenecientes al mismo grupo de equivalencia tanto desde A como desde B. Y es por eso que A y B son también $EQ_1$ entre ellos.
 
 Como hemos llegado a dos pasos consecutivos en el que nuestros grupos de equivalencia han coincidido ( $C_1=\{A,B\}$ y $C_2=\{C\}$), paramos el algoritmo y concluimos: A y B son equivalentes entre si.
 \end{itemize}
@@ -2152,7 +2163,7 @@ Si desde A se sale con un 0 llegamos a B, que pertenece al grupo $C_2$ de la equ
 
 Si desde B se sale con un 0 llegamos a G, que pertenece al grupo $C_2$ de la equivalencia anterior. Si se sale con un 1 llegamos a C que pertenece al grupo $C_1$.
 
-Por tanto llegamos a estados pertenecientes a distintos grupos  de equivalencia. Y concluimos que A y B no son equivalentes. 
+Por tanto llegamos a estados pertenecientes a distintos grupos  de equivalencia. Y concluimos que A y B no son equivalentes.
 
 Repetimos el mismo procedimiento con todas las parejas de nodos. Marcamos con X si NO son equivalentes y con V si SI son equivalentes.
 
@@ -2164,10 +2175,10 @@ A-G -> V    B-H -> V
 A-H -> X
 \end{verbatim}
 
-Por tanto las nuevas equivalencias quedarían: 
-$EQ_1$: $C_1=\{C\}$, $C_2=\{A,E,G\}$, $C_3=\{B,H\}$, $C_4=\{F\}$ 
+Por tanto las nuevas equivalencias quedarían:
+$EQ_1$: $C_1=\{C\}$, $C_2=\{A,E,G\}$, $C_3=\{B,H\}$, $C_4=\{F\}$
 
-\item Continuamos con la siguiente equivalencia. Los grupos $C_1$ y $C_4$ ya están terminados. Miramos los grupos $C_2$ y $C_3$. 
+\item Continuamos con la siguiente equivalencia. Los grupos $C_1$ y $C_4$ ya están terminados. Miramos los grupos $C_2$ y $C_3$.
 
 Empezamos con $C_2$. Si desde A se sale con un 0 llegamos a B, que pertenece al grupo $C_3$ de la equivalencia anterior. Si se sale con un 1 llegamos a F que pertenece al grupo $C_4$.
 
@@ -2176,8 +2187,8 @@ Si desde E se sale con un 0 llegamos a H, que pertenece al grupo $C_3$ de la equ
 Por tanto A y E son equivalentes. Repetimos el mismo proceso con el resto de parejas y obtenemos:
 \begin{verbatim}
 A-E -> V
-G-E -> X  
-A-G -> X 
+G-E -> X
+A-G -> X
 \end{verbatim}
 Por tanto del grupo de equivalencia $C_2$ obtenemos 2. $C_2=\{A,E\}$ y $C_5=\{G\}$
 
@@ -2187,11 +2198,11 @@ Nos queda: $EQ_2$: $C_1=\{C\}$, $C_2=\{A,E\}$, $C_3=\{B,H\}$, $C_4=\{F\}$, $C_5=
 Como los grupos de equivalencia han cambiado, tenemos que avanzar un nivel más.
 
 \item Solo tenemos que mirar los conjuntos $C_2$ y $C_3$. Observamos que no se forman nuevos grupos de equivalencia, y tenemos:
- 
+
 $EQ_3$: $C_1=\{C\}$, $C_2=\{A,E\}$, $C_3=\{B,H\}$, $C_4=\{F\}$, $C_5=\{G\}$
- 
+
 Por tanto llegamos a la conclusión parada y construimos el autómata resultante:
- 
+
 \begin{center}
 \includegraphics[scale=0.4]{automataFinal4.png}
 \end{center}
@@ -2290,7 +2301,7 @@ Sea el lenguaje $L=\{a^nb^nc^n, n\geq 0\}$ queremos ver si es un lenguaje indepe
 
 Tenemos: $\underbrace{a,a,...,a}_m \underbrace{b,b,...,b}_m \underbrace{c,c,...,c}_m$
 
-Como $|xyz| \leq m$ tenemos que en $xyz$ o bien no hay a's o bien no hay c's, y por tanto $ux^0yz^0v \notin L$. 
+Como $|xyz| \leq m$ tenemos que en $xyz$ o bien no hay a's o bien no hay c's, y por tanto $ux^0yz^0v \notin L$.
 
 Hemos encontrado una palabra w que no cumple las condiciones que debería cumplir toda palabra si el lenguaje fuese independiente del contexto. Concluimos que el lenguaje no es independiente del contexto.
 \end{enumerate}
