@@ -2288,6 +2288,30 @@ Hemos encontrado una palabra w que no cumple las condiciones que debería cumpli
 \end{example}
 
 
+\begin{example}
+	Demostrar que el lenguaje $L = \left\{ \left( ab \right)^n a^k | n > k, k ≥ 0 \right\}$ no es regular.
+
+	\begin{enumerate}
+		\item Elegimos una `m' cualquiera
+		\item Elegimos una palabra de la forma $w = \left( ab \right)^{m+1} a^m$, que tiene $\abs{w} = 2(m+1) + m ≥ m$
+		\item Tenemos: $\underbrace{abab \ldots ab}_{2m} ab \underbrace{aa \ldots a}_{m}$
+
+		Ahora descomponemos $w = xyz$, con $\abs{xy} ≤ m$ y $\abs{y} ≥ 1$.
+
+		De este modo $xy$ está forzado a aparecer en la parte de las $ab$:
+
+		\[\overbrace{\overbrace{\underbrace{abab \ldots ab}_{xy}}^{m} \ldots ab}^{2m} ab \overbrace{aa \ldots a}^{m}\]
+
+		Y por tanto $y$ sólo puede ser igual a las siguientes cadenas:
+		\begin{enumerate}
+			\item $a \ldots a$, para esta situación cogemos $i = 0$ y nuestra cadena ó bien empieza por b (en caso de que $\abs{x} = 0$), ó bien tendrá 2 $b$ seguidas. Por tanto $xy^0z ∉ L$.
+			\item $a \ldots b$, para esta situación cogemos $i = 0$ y ya no se cumplirá la condición $n > k$ del lenguaje. Por tanto $xy^0z ∉ L$.
+			\item $b \ldots a$, hacemos lo mismo que en el caso anterior.
+			\item $b \ldots b$, otra vez tomamos $i = 0$ y nuestra cadena pasaría a tener 2 $a$ seguidas en las primeras $m$ letras. Y por tanto $xy^0z ∉ L$.
+		\end{enumerate}
+	\end{enumerate}
+\end{example}
+
 \subsection{Lema del bombeo (Lenguajes independientes del contexto)}
 Sea L un lenguaje independiente del contexto, infinito y que no contiene a $\lambda$, entonces: $\exists m\geq 0$ tal que cualquier $w\in L$ con $|w| \geq m$ puede descomponerse como $w=uxyzv$ con $|xyz|\leq m$ y $|xy|\geq 1$ de modo que $ux^iyz^iv \in L$ $\forall i=0,1,2,...$.
 
@@ -2324,6 +2348,46 @@ Vemos que si escogemos $xyz = a,a,...,b,a,a,...,a$, con esta división la palabr
 Se deja como ejercicio para e lector comprobar que la elección correcta es coger un $w=a^{m}b^ma^{m}b^m$. Con esta palabra conseguiremos demostrar que el lenguaje no es independiente del contexto.
 \end{enumerate}
 \end{example}
+
+\section{Propiedades del cierre (independientes del contexto)}
+Sean $L_1$ y $L_2$ lenguajes independientes del contexto, y $L_R$ un lenguaje regular.
+\begin{itemize}
+	\item $L_1 \cup L_2$ es I.C. (Podemos construir la gramática $G \rightarrow G_1 | G_2$).
+	\item $L_1.L_2$ es I.C. (Podemos construir la gramática $G \rightarrow G_1 G_2$).
+	\item $L_1^*$ es I.C. (Podemos construir la gramática $G \rightarrow G_1 G | λ$).
+	\item $L_1 \cap L_2$ no tiene por qué ser I.C. Veamos el siguiente contraejemplo:
+	\begin{example}
+		Tomemos el lenguaje $L_1 = \left\{ a^n b^n c^m | n,m ≥ 1 \right\}$ generado por la gramática:
+		\begin{itemize}
+			\item $S \rightarrow AB$
+			\item $A \rightarrow aAb | ab$
+			\item $B \rightarrow cB | c$
+		\end{itemize}
+		Que podemos ver que es I.C.
+
+		Ahora tomemos el lenguaje $L_2 = \left\{ a^n b^m c^m | n,m ≥ 1 \right\}$ generado por la gramática:
+		\begin{itemize}
+			\item $S \rightarrow AB$
+			\item $A \rightarrow aA | a$
+			\item $B \rightarrow bBc | bc$
+		\end{itemize}
+		Que también podemos ver que es I.C.
+
+		En este caso tendremos que $L_1 \cap L_2 = \left\{ a^n b^n c^n | n ≥ 1 \right\}$. Y ya habíamos demostrado anteriormente que este lenguaje no es I.C.
+	\end{example}
+
+	\item $L_1 \cap L_R$ es I.C.
+	\item $\overline{L_1}$ no tiene por qué ser I.C. Veamos por qué:
+		\begin{proof}
+			Supongamos que $L_1$ y $L_2$ son lenguajes I.C., y que fuera cierto que se cumple la propiedad.
+
+			En ese caso tendríamos que $\overline{\overline{L_1} \cup \overline{L_2}}$ sería I.C., y por tanto:
+			\[\overline{\overline{L_1} \cup \overline{L_2}} = \overline{\overline{L_1 \cap L_2}} = L_1 \cap L_2\]
+
+			Pero sin embargo acabamos de ver que $L_1 \cap L_2$ no tiene por qué ser I.C.
+		\end{proof}
+	\item $L_1 - L_2$ no es necesariamente I.C.
+\end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 \chapter{Ejercicios}
