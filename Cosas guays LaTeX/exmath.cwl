@@ -113,6 +113,7 @@
 \vn#m
 \vv#m
 \ve#m
+\vr#m
 \thethm#m
 \begin{remark}#
 \IS#m
