@@ -143,8 +143,7 @@
 \begin{theorem}#
 \begin{theorem}[titulo]#
 \begin{theorem}[titulo][indice]#
-\concept{arg1}#m
-\concept[None]{arg1}#m
+\concept{arg0}{arg1}#m
 \printtheorems#m
 \begin{proof}#
 \begin{expla}#
@@ -156,7 +155,7 @@
 \geom#m
 \easyimgw{ruta}{caption}{label}{width}#m
 \easyimg{ruta}{caption}{label}#m
-\gen{arg0}#m
+\gen{genlist}#m
 \ord#m
 \gr#m
 \kbb#m
@@ -173,6 +172,9 @@
 \cb[\alpha]#m
 \ctr#m
 \ctr[\alpha]#m
+\wein#m
+\lfi#m
+\vV#m
 \dst#m
 \bola#m
 \sdst#m
