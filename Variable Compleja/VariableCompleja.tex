@@ -1,8 +1,58 @@
 \documentclass{apuntes}
 
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+
 \title{Variable Compleja}
 \author{Pedro Valero Mejía}
 \date{14/15 C2}
+
+\usetikzlibrary{arrows,calc,shapes}
+\usetikzlibrary{calc,fadings,decorations.pathreplacing}
+
+\newcommand\pgfmathsinandcos[3]{%
+  \pgfmathsetmacro#1{sin(#3)}%
+  \pgfmathsetmacro#2{cos(#3)}%
+}
+\newcommand\LongitudePlane[3][current plane]{%
+  \pgfmathsinandcos\sinEl\cosEl{#2} % elevation
+  \pgfmathsinandcos\sint\cost{#3} % azimuth
+  \tikzset{#1/.estyle={cm={\cost,\sint*\sinEl,0,\cosEl,(0,0)}}}
+}
+\newcommand\LatitudePlane[3][current plane]{%
+  \pgfmathsinandcos\sinEl\cosEl{#2} % elevation
+  \pgfmathsinandcos\sint\cost{#3} % latitude
+  \pgfmathsetmacro\yshift{\cosEl*\sint}
+  \tikzset{#1/.estyle={cm={\cost,0,0,\cost*\sinEl,(0,\yshift)}}} %
+}
+\newcommand\DrawLongitudeCircle[2][1]{
+  \LongitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+   % angle of "visibility"
+  \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  \draw[current plane] (\angVis:1) arc (\angVis:\angVis+180:1);
+  \draw[current plane,dashed] (\angVis-180:1) arc (\angVis-180:\angVis:1);
+}
+\newcommand\DrawLatitudeCircle[2][1]{
+  \LatitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+  \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
+  % angle of "visibility"
+  \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
+  \draw[current plane] (\angVis:1) arc (\angVis:-\angVis-180:1);
+  \draw[current plane,dashed] (180-\angVis:1) arc (180-\angVis:\angVis:1);
+}
+
+%% document-wide tikz options and styles
+
+\tikzset{%
+  >=latex, % option for nice arrows
+  inner sep=0pt,%
+  outer sep=2pt,%
+  mark coordinate/.style={inner sep=0pt,outer sep=0pt,minimum size=3pt,
+    fill=black,circle}%
+}
 
 %Libro con problemas resueltos:
 %  Pestana, D., Rodriguez, J.M. Marcellan, F., curso práctico de variable compljea y teoría de transformadas. Editorial Síntesis 1999
@@ -19,7 +69,7 @@
 \newpage
 % Contenido.
 \chapter{Introducción}
-Se trata de una de las ramas más bonitas del análisis. Se estudiaran las funciones analíticas que son generalización de los polinomios en z.
+Se trata de una de las ramas más bonitas del análisis. Puesto que nos reduciremos a trabajar con un conjunto de funciones selecto al que le exigimos más propiedades, obtendremos resultados más rígidos que en el análisis habitual en $\real$. Se estudiaran las funciones analíticas que son generalización de los polinomios en z.
 
 \begin{defn}[Función analítica\IS]
 Una funcíón $\appl{f}{\Omega \subset \cplex}{\cplex}$ es análítica en $z_0\in\Omega$ si y sólo si:
@@ -28,12 +78,14 @@ Una funcíón $\appl{f}{\Omega \subset \cplex}{\cplex}$ es análítica en $z_0\i
 
 Hasta ahora siempre hemos estudiado el concepto de derivadas en un punto siendo ese punto un punto de los reales pero, ¿qué ocurre si ese punto está en los complejos?. Bien, para eso tenemos una nueva definición
 
-\begin{defn}[Función holomorfas]
+\begin{defn}[Función holomorfa]
 Una función es holomorfa en $z_0$ si:
 \[\exists f'(x_0)=\lim_{h \to 0}\frac{f(z_0+h)-f(z_0)}{h}, \ h \in \cplex\]
 \end{defn}
 
-Estas dos definiciones son equivalentes, como ya veremos más adelante. Además aquí tenemos que si una función tiene una derivada, entonces tiene todas las derivadas. Estas funciones, en general, tienen muchas propiedades similares a las de los polinomios.
+Estas dos definiciones son equivalentes, como veremos más adelante.
+
+Trabajando con este tipo de funciones, tenemos que si una función tiene una derivada, entonces tiene todas las derivadas. Estas funciones, en general, tienen muchas propiedades similares a las de los polinomios.
 
 Algunas \textbf{propiedades} son:
 \begin{itemize}
@@ -172,7 +224,7 @@ Es la parte del número complejo que aparece multiplicada por $i$ en la forma
 
 \begin{defn}[Conjugado]
 Dado un número complejo $z=a+bi$ su conjugado es el que se obtiene cambiando de signo la parte imaginaria:
-\[\overline{z}=a-bi\]
+\[\bar{z}=a-bi\]
 
 Evidentemente, si tomamos un número complejo sin parte imaginaria (un número real) tendremos que el número y su conjugado coinciden.
 \end{defn}
@@ -200,7 +252,7 @@ Una vez vistas estas definiciones, veamos una serie de propiedades que resultar�
 Prácticamente cualquier otra relación entre las partes de los números complejos puede deducirse a partir de estas propiedades.
 
 \section{Representación polar}
-Si consideramos los números complejos como vectores en $\real^{2}$ siendo el eje $0X$ la parte real y el eje $0Y$ la parte imaginaria.
+Podemos considerar los números complejos como vectores en $\real^{2}$ siendo el eje $0X$ la parte real y el eje $0Y$ la parte imaginaria.
 
 Una vez aquí, podemos definir una nueva notación para los números complejos: la \textbf{representación polar}
 
@@ -214,7 +266,7 @@ Una vez definida esta notación, tenemos otra serie de propiedades de gran utili
 \item $\arg{\frac{z}{w}} = \arg{z}-\arg{w}$
 \end{enumerate}
 
-Si $α_0 \in \arg{z} \implies \arg{z}=\{α_0+2πk \ k \in \nat\}$
+Un mismo único número complejo tiene infinitos argumentos válidos con la siguiente relación: Si $α_0 \in \arg{z} \implies \arg{z}=\{α_0+2πk \ k \in \nat\}$
 
 En un intervalo en $\real$ de tipo $(a,a+2π]$ sólo puede haber un argumento de $z$.
 
@@ -230,7 +282,9 @@ Por tanto, podríamos escribir este número como:
 Esta nueva representación de los números complejos resulta muy útil pues se comporta bien respecto a la multiplicación. Es decir, con esta representación, podemos multiplicar dos complejos basándonos en las operaciones con las ecuaciones trigonométricas habituales.
 
 \section{Desigualdad triangular}
-El proceso de sumar el número complejo $z_1 = x_1 + iy_1$ al número complejo $z_2 = x_2 + iy_2$ tiene una interpretación simple en términos vectoriales. El vector que representa la suma de los números complejos $z_1$ y $z_2$ se obtiene sumando vectorialmente los vectores de $z_1$ y $z_2$ ; es decir, empleando la regla del paralelogramo. La desigualdad triangular se puede obtener a partir de este esquema
+El proceso de sumar el número complejo $z_1 = x_1 + iy_1$ al número complejo $z_2 = x_2 + iy_2$ tiene una interpretación simple en términos vectoriales.
+
+El vector que representa la suma de los números complejos $z_1$ y $z_2$ se obtiene sumando vectorialmente los vectores de $z_1$ y $z_2$ ; es decir, empleando la regla del paralelogramo. La desigualdad triangular se puede obtener a partir de este esquema
 geométrico. La longitud de un lado cualquiera de un triángulo es menor o igual que la suma de las longitudes de los otros lados. La longitud correspondiente a $z_1 + z_2$ es $|z_1 + z_2 |$, que debe ser menor o igual que la suma de las longitudes, $|z_1 | + |z_2 |$.
 
 \begin{prop}[Desigualdad Triangular]
@@ -238,7 +292,25 @@ Si $z_1$ y $z_2$ son números complejos, entonces
 \[|z_1+z_2|\leq |z_1|+|z_2|\]
 \end{prop}
 \begin{proof}
-Completar
+\begin{align*}
+|z_1+z_2|^2 & = (z_1+z_2)\overline{(z_1+z_2)} \\
+& = (z_1+z_2)(\bar{z_1}+\bar{z_2}) \\
+& = z_1\bar{z_1}+z_1\bar{z_2}+z_2\bar{z_1}+z_2\bar{z_2} \\
+& = |z_1|^2+z_1\bar{z_2}+z_2\bar{z_1}+|z_2|^2 \\
+& = |z_1|^2+z_1\bar{z_2}+\overline{\bar{z_2}z_1}+|z_2|^2
+\end{align*}
+
+pero
+
+\[z_1\bar{z_2}+\overline{\bar{z_2}z_1} = 2 Re(z_1\bar{z_2}) \leq 2|z_1\bar{z_2}| = 2 |z_1||\bar{z_2}| = |z_1||z_2|\]
+
+luego
+
+\[|z_1+z_2|^2 \leq |z_1|^2+2|z_1||z_2|+|z_2|^2 = (|z_1|+|z_2|)^2\]
+
+de donde se deduce que
+\[|z_1+z_2| \leq |z_1|+|z_2|\]
+con lo cual queda establecida la desigualdad triangular
 \end{proof}
 
 \section{Raices y potencias}
@@ -266,6 +338,17 @@ Así, tendríamos que :
 \[z=|z|e^{iα} \text{ con } z^n=|z|^ne^{ikα} \text{ y } \sqrt[n]{z}=\sqrt[n]{|z|}e^{\frac{α+2kπ}{n}}\]
 
 \section{Topología del plano complejo}
+\textit{La profesora pareció ignorar esta parte para saltar directamente al plano complejo extendido. Así que estas líneas vienen por cortesía de Wikipedia}
+
+En matemáticas, el plano complejo es una forma de visualizar y ordenar el conjunto de los números complejos. Puede entenderse como un plano cartesiano modificado, en el que la parte real está representada en el eje de abscisas y la parte imaginaria en el eje de ordenadas. El eje de abscisas también recibe el nombre de eje real y el eje de ordenadas el nombre de eje imaginario.
+
+El plano complejo a veces recibe el nombre de plano de Argand a causa de su uso en diagramas de Argand. Su creación se atribuye a Jean-Robert Argand, aunque fue inicialmente descrito por el encuestador y matemático Noruego-danés Caspar Wessel.
+
+El concepto de plano complejo permite interpretar geométricamente los números complejos. La suma de números complejos se puede relacionar con la suma con vectores, y la multiplicación de números complejos puede expresarse simplemente usando coordenadas polares, donde la magnitud del producto es el producto de las magnitudes de los términos, y el ángulo contado desde el eje real del producto es la suma de los ángulos de los términos.
+
+Los diagramas de Argand se usan frecuentemente para mostrar las posiciones de los polos y los ceros de una función en el plano complejo.
+
+El análisis complejo, la teoría de las funciones complejas, es una de las áreas más ricas de la matemática, que encuentra aplicación en muchas otras áreas de la matemática así como en física, electrónica y muchos otros campos
 
 \section{Esfera de Riemann}
 \begin{defn}[Plano complejo extendido]
@@ -279,7 +362,7 @@ La idea es sencilla. Consideramos el plano complejo y construimos una esfera a l
 
 El dibujo de la proyección es:
 
-%\input{tikz/ProyeccionEstereografica.tex}
+\input{tikz/ProyeccionEstereografica.tex}
 
 Así, todos los puntos del plano están asociados de manera única a un punto de la esfera y viceversa. El único punto sin imagen sería el polo norte al cual le asociamos el infinito.
 
