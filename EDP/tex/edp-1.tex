@@ -1,0 +1,537 @@
+\section{Introducción}
+\subsection{El principio del máximo}
+
+Esta sección comienza con el estudio del principio del máximo en ecuaciones diferenciales.
+\begin{mathresult}{Principio del máximo en ecuaciones diferenciales.}
+Dada la inecuación 
+\begin{equation}
+\label{eq:principio-del-maximo}
+-u''+g(x)u'+h(x)u(x) < 0 \ \ \forall x \in (0,1) 
+\end{equation}
+Si $h(x) \ge 0$ en el intervalo $(0,1)$, la solución de \eqref{eq:principio-del-maximo} no puede tener un máximo (local o global) no negativo en dicho intervalo.
+\end{mathresult}
+\begin{proof}
+Sea $u$ la solución de \eqref{eq:principio-del-maximo}. Supongamos que $u$ tiene un máximo no negativo, es decir, $\exists c\in (0,1)$ que satisface $u(c) \ge u(x) \ \forall x \in (0,1)$ con $u(c)\ge 0$.
+Si esto es así, la solución de la inecuación cumple $u'(c)=0$ y $u''(c) \le 0$. De aquí se obtiene:
+$$\underbrace{-u''(c)}_{\ge 0}+\underbrace{g(c)u'(c)}_{=0}+\underbrace{h(c)u(c)}_{\ge 0} \ge 0$$
+El tercer término es no negativo dado que, por hipótesis, $h(x) \ge 0$ en todo el intervalo y $u(c)$ es no negativo.
+Esto nos lleva a una contradiccion con \eqref{eq:principio-del-maximo}, por tanto, $\nexists c \in (0,1)$ que satisfaga $u(c) \ge u(x) \ \forall x \in (0,1)$ con $u(c)\ge 0$.
+\end{proof}
+\see El resultado es cierto para cualquier intervalo abierto acotado, no sólo para $(0,1)$.
+
+A partir del resultado anterior, se va a dar la prueba del siguiente teorema:
+
+\begin{theorem}\label{theorem1}
+Sea $u\in C^2(0,1)$ que satisface
+\begin{equation}\label{eq:principio-del-maximo2}
+-u''(x)+g(x)u'(x)+h(x)u(x) \le 0
+\end{equation}
+con $g, h$ acotadas y $h(x) \ge 0$ en cualquier subintervalo de $(0,1)$.
+
+Entonces, si $\exists a\in (0,1)$ tal que $u(a) \ge u(x) \ \forall x\in(0,1)$ y $u(a) \ge 0$ (i.e. u alcanza un máximo no negativo en $a$), se tiene que $u = cte$ en $(0,1)$.
+\end{theorem}
+\begin{proof}
+Sea $u$ la solución de \eqref{eq:principio-del-maximo2}. Supongamos que $u$ es una función no constante. Sabemos que $\exists b \in (0,1)$ tal que $u(b) < u(a)$ dado que $a$ es un máximo (local o global) de $u$ y $u$ es no constante. Supongamos $0< a < b < 1$.\footnote{Para el caso contrario la demostración es similar.}
+
+Construimos la función
+$$\varphi(x) = e^{\alpha(x-a)}-1$$
+
+\begin{figure}[h]
+\centering
+
+\begin{tikzpicture}
+	\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+	\draw[->] (0,-1) -- (0,3) node[above] {$y$};
+	\draw[-]  (1, 0.1) -- (1, -0.1) node[below] {$a$};
+	\draw[-]  (0.5, 0.1) -- (0.5, -0.1) node[below] {$\frac{a}{2}$};
+	\draw[] (-0.2,0) node[below] {$0$};
+	\draw[-]  (2, 0.1) -- (2, -0.1) node[below] {$1$};
+	\draw[scale=1,domain=-1:2.3,smooth,variable=\x,blue] 
+		plot ({\x},{exp(\x-1)-1})
+		node[right] {$\varphi(x)$};
+\end{tikzpicture}
+
+\label{fig:phi-x}
+\caption{Función $\varphi$}
+\end{figure}
+
+Si aplicamos \eqref{eq:principio-del-maximo2} a $\varphi$ obtenemos 
+
+\begin{align*}
+-\varphi''(x)+g(x)\varphi'(x)+h(x)\varphi(x) & \le 0 \numberthis \label{eq:phi-estricta}\\
+e^{\alpha(x-a)}\left(-\alpha^2+\alpha g(x)\right) + h(x)\underbrace{(e^\alpha(x-a)-1)}_{\varphi} & \le 0\\
+e^{\alpha(x-a)}\left(-\alpha^2+\alpha g(x)+\underbrace{h(x)}_{\ge 0}\underbrace{(1-e^{-\alpha(x-a)})}_{\le 1}\right) & \le 0\\
+e^{\alpha(x-a)}\left(-\alpha^2 + \alpha g(x) + h(x)\right) & \le 0
+\end{align*}
+
+Dado que $g,h$ son acotadas, se puede tomar un valor de $\alpha$ suficientemente grande de forma que $-\alpha^2 + \alpha g(x) + h(x)  < 0$. Es decir, que $\varphi$ cumpla \eqref{eq:phi-estricta} para la desigualdad estricta. Tomamos $\alpha$ tal que la desigualdad estricta para $\varphi$ se cumpla $\forall x \in [\frac{a}{2}, b] \subset (0,1)$
+
+Definimos ahora $$w(x) = u(x) + \varepsilon \varphi(x)$$
+con $\varepsilon > 0$
+
+Aplicando \eqref{eq:principio-del-maximo2} a $w$ obtenemos
+\begin{align*}
+-w'' + g(x)w'+h(x)w = & -u''+g(x)u'+h(x)u\\
+& + \varepsilon\left(-\varphi''+g(x)\varphi'+h(x)\varphi\right)\\
+\le &\ 0 + \varepsilon\left(-\varphi''+g(x)\varphi'+h(x)\varphi\right)\\
+< &\ 0	\numberthis \label{eq:desigualdad-w}
+\end{align*}
+que se cumple $\forall x \in [\frac{a}{2}, b]$ si tomamos un valor de $\alpha$ adecuado. 
+Dado que
+\begin{equation*}
+\left\{
+\begin{array}{l}
+w(b) = u(b) + \varepsilon\varphi(b)\\
+w(a) = u(a)
+\end{array}
+\right.
+\end{equation*}
+ si tomamos $\varepsilon < \frac{u(a)-u(b)}{\varphi(b)}$ tenemos que 
+ \begin{equation}\label{eq:wb-menor-wa}
+ w(b) < w(a)
+ \end{equation}
+Además, como 
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+w(a) = u(a) & \\
+\varphi(x) < 0 & \forall x < a \\
+\end{array}
+\right.
+\end{equation*}
+tenemos que $w(x) = u(x) + \varepsilon\varphi(x) < u(x) < u(a) = w(a)$, 
+es decir, 
+\begin{equation}\label{eq:wx-menor-wa}
+w(x) < w(a)
+\end{equation}
+en todo el intervalo $[\frac{a}{2}, a)$.
+
+\noindent\textbf{Conclusión:}
+\begin{itemize}
+\item Utilizando \eqref{eq:desigualdad-w} y las hipótesis del teorema, obtenemos, para $w$, las hipótesis del \textbf{Principio del máximo \eqref{eq:principio-del-maximo}}.
+\item Vemos que $w$ tiene un máximo no negativo en el intervalo $[a, b)$, puesto que
+\begin{itemize}
+\item a la izquierda de $a$ tenemos \eqref{eq:wx-menor-wa}
+\item a la derecha de $a$ tenemos \eqref{eq:wb-menor-wa}
+\end{itemize}
+Como $u$ es continua, tal y como está definida, $w$ también es continua. Se tiene entonces que $\exists c \in [a, b) \subset (\frac{a}{2}, b)$ tal que $w(c) = max\ w(x)$ en dicho intervalo.
+\end{itemize}
+
+Tenemos por tanto una contradicción, habiendo partido de las hipótesis del teorema y de la suposición de que $u$ es no constante.
+\end{proof}
+
+\corol
+Sean $g,h$ acotadas y $u\in C[0,1] \cap C^2(0,1)$ una función no constante que satisface \eqref{eq:principio-del-maximo2}. 
+
+Sea $M = max_{x \in [0,1]}\ u(x)$. Sea $m = max\{u(0), u(1)\}$. Se tiene que:
+\begin{itemize}
+\item Si $M \ge 0 \implies u(x) < M\ \forall x\in(0,1)$
+\item $u(x) < max\{0,m\}\ \forall x\in(0,1)$.
+\end{itemize}
+
+\begin{proof}
+Dado que $[0,1]$ es un compacto y $u\in C[0,1]$, se tiene que $u$ alcanza un máximo $M$ en dicho intervalo.
+
+\begin{itemize}
+\item Caso $M<0$.
+
+Como $M$ es un máximo de $u$, se cumple que $u(x) \le M < 0\ \forall x\in[0,1]$. Por tanto $u(x) < max\{0, m\}$.
+
+\item Caso $M\ge 0$. 
+
+Como $M$ es un máximo de $u$, se tiene que $m \le M$.
+
+En las hipótesis del corolario tenemos que $u$ es no constante. Dado que $M$ es un máximo no negativo, no puede alcanzarse en el interior de $[0,1]$, porque si fuese así, por el teorema, $u$ sería constante. Tenemos por tanto que $m \nless M$, por lo que $m = M$.
+
+Es decir, $u(x) < M = m = max\{0, m\}\ \forall x\in (0,1)$.
+\end{itemize}
+\end{proof}
+
+Si suponemos, por ejemplo, que el máximo se alcanza en $x=0$. La solución de la ecuación, en un entorno de $0$, podría ser como se muestra en la figura \ref{fig:sol-entorno-cero}. Vamos a ver que condiciones son necesarias para que el caso de la figura \ref{fig:sol-entorno-cero-a}, en el que la tangente a la función es horizontal en el $0$, sea imposible.
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}{.5\textwidth}
+	\centering
+  	\begin{tikzpicture}
+		\draw[->] (-1,0) -- (3,0) node[right] {$x$};
+		\draw[->] (0,-1) -- (0,3) node[above] {$y$};
+		\draw[] (-0.2,0) node[below] {$0$};
+		\draw[-, blue, dashed, scale=2] (0,1) -- (0.7,1);
+		\draw[scale=2,domain=0:0.7,smooth,variable=\x,blue] 
+			plot ({\x},{-(\x*\x)+1})
+			node[right] {$u(x)$};
+	\end{tikzpicture}
+	\caption{}
+	\label{fig:sol-entorno-cero-a}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+	\centering
+  	\begin{tikzpicture}
+		\draw[->] (-1,0) -- (3,0) node[right] {$x$};
+		\draw[->] (0,-1) -- (0,3) node[above] {$y$};
+		\draw[] (-0.2,0) node[below] {$0$};
+		\draw[scale=2,domain=0:0.7,dashed,variable=\x,blue] 
+			plot ({\x},{-0.4*\x+1});
+		\draw[scale=2,domain=0:0.6,smooth,variable=\x,blue] 
+			plot ({\x},{-(\x*\x)-0.4*\x+1})
+			node[right] {$u(x)$};
+	\end{tikzpicture}
+	\caption{}
+	\label{fig:sol-entorno-cero-b}
+\end{subfigure}%
+
+\caption{Función $u$ en un entorno de $0$}
+\label{fig:sol-entorno-cero}
+\end{figure}
+
+\newpage
+\begin{theorem}\label{theorem2}
+Sea $u\in C^2(0,1)$ no constante que satisface \eqref{eq:principio-del-maximo2} y 
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+u(0) \ge u(x) & \forall x \in (0,1)\\
+u(0) \ge 0
+\end{array}
+\right.
+\end{equation*}
+es decir, $u$ alcanza un máximo no negativo en $0$.
+Sea $h(x) \ge 0$.
+Si $g(x) + xh(x)$ está acotada superiormente en un entorno de $0$, entonces
+$$\lim_{x\to0^+}u'(x) < 0$$
+\end{theorem}
+
+\begin{proof}
+Dado que $u$ es no constante $\exists a\in (0,1)$ tal que $u(a) < u(0)$.
+Consideremos $\varphi(x) = e^{\alpha x}-1$. 
+
+\begin{figure}[h]
+\centering
+
+\begin{tikzpicture}
+	\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+	\draw[->] (0,-1) -- (0,3) node[above] {$y$};
+	\draw[-]  (1, 0.1) -- (1, -0.1) node[below] {$a$};
+	\draw[] (-0.2,0) node[below] {$0$};
+	\draw[-]  (2, 0.1) -- (2, -0.1) node[below] {$1$};
+	\draw[scale=1,domain=-1:1.3,smooth,variable=\x,blue] 
+		plot ({\x},{exp(\x)-1})
+		node[right] {$\varphi(x)$};
+\end{tikzpicture}
+
+\label{fig:phi2-x}
+\caption{Función $\varphi$}
+\end{figure}
+
+Tenemos que
+\begin{align*}
+-\varphi''(x)+g(x)\varphi'(x)+h\varphi & = \\
+e^{\alpha x}\left\{-\alpha^2 +\alpha g(x)+\underbrace{h(x)}_{\ge 0}\left(\underbrace{1-e^{-\alpha x}}_{\text{concava }(\le ax)}\right)\right\} & \le\\
+e^{\alpha x}\left\{-\alpha^2+\alpha g(x) + \alpha xh(x)\right\} & = \\
+\alpha e^{\alpha x}\{-\alpha + \left(\underbrace{g(x) +xh(x)}_{\text{acotado superiormente}}\right)\} & < 0
+\end{align*}
+es decir
+$$-\varphi''(x)+g(x)\varphi(x)+h\varphi < 0$$
+para un valor de $\alpha$ adecuado. Definimos ahora
+$$w(x) = u(x) +\varepsilon \varphi(x)$$
+Tenemos que
+\begin{align*}
+-w'' + g(x)w'+h(x)w = & -u''+g(x)u'+h(x)u\\
+& + \varepsilon\left(-\varphi''+g(x)\varphi'+h(x)\varphi\right)\\
+\le &\ 0 + \varepsilon\left(-\varphi''+g(x)\varphi'+h(x)\varphi\right)\\
+< &\ 0
+\end{align*}
+Dado que $w(a) = u(a) + \varepsilon\varphi(a)$, si tomamos $\varepsilon < \frac{u(0)-u(a)}{\varphi(a)}$, se cumple que $w(a) < u(0) = w(0)$.
+Tenemos por tanto que $w(a) \le w(x)\ \forall x \in [0, a]$. Obtenemos, $$\lim_{x\to0^+}w'(x) \le 0$$
+Para ver la desigualdad estricta, basta con derivar $w$:
+$$w'(x) = u'(x) +\varepsilon\varphi'(x)$$
+Sabemos que $\varphi'(x) = \alpha e^{\alpha x}$, por tanto $\varphi'(0) = \alpha$.
+Con esta información, tenemos
+$$\lim_{x\to0^+} w(x) = \lim_{x\to0^+} u(x) +\varepsilon \alpha \le 0$$
+Es decir, $$\lim_{x\to0^+} u(x) \le -\varepsilon \alpha < 0$$
+\end{proof}
+
+Vamos a ver la necesidad de que $g(x)$ y $g(x) + xh(x)$ sean acotadas para el teorema \ref{theorem1} y \ref{theorem2}, respectivamente. Veámoslo con un contraejemplo. Supongamos que
+\begin{equation*}
+g(x) = 
+\left\{
+\begin{array}{l l}
+3/x & x\neq 0\\
+0 & x = 0
+\end{array}
+\right.
+\end{equation*}
+
+
+\begin{figure}[ht]
+\centering
+\label{fig:g-de-x}
+\begin{tikzpicture}
+	\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+	\draw[->] (0,-3) -- (0,3) node[above] {$y$};
+	\draw [fill, blue] (0,0) circle [radius=.05];
+	\draw[scale=1,domain=-3:-1,smooth,variable=\x,blue] 
+		plot ({\x},{3/(\x)});
+	\draw[scale=1,domain=1:3,smooth,variable=\x,blue] 
+		plot ({\x},{3/(\x)})
+		node[right] {$g(x)$};
+\end{tikzpicture}
+\caption{Función $g$}
+\end{figure}
+
+Sea $u(x) = 1-x^4$ y $h(x) = 0$. Vemos que $u$ cumple
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+-u''(x) + g(x)u'(x) = 0 & \forall x\in(-1,1)\\
+u(0)=1 > u(x) & \forall x\in(-1,1)\\
+\end{array}
+\right.
+\end{equation*}
+
+Sin embargo, si observamos la figura \ref{fig:sol-contraejemplo-pm} vemos que no se cumplen ninguno de los dos teoremas anteriores.
+\begin{itemize}
+\item En el caso en el que consideremos la función en el intervalo $(-1,1)$, vemos que $u$ presenta un máximo no negativo en $(0,1)$. (Ver figura \ref{fig:sol-contraejemplo-pm1}). No se cumple el teorema \ref{theorem1} por no estar $g(x)$ acotada.
+\item En el caso en el que consideremos la función en el intervalo $(0,1)$, vemos que $\lim_{x\to0^+}u(x) = 0$ (Ver figura \ref{fig:sol-contraejemplo-pm2}). No se cumple el teorema \ref{theorem2} por no estar $g(x)+xh(x)$ acotada.
+\end{itemize}
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}{.5\textwidth}
+	\centering
+  	\begin{tikzpicture}
+		\draw[->] (-2,0) -- (2,0) node[right] {$x$};
+		\draw[->] (0,-1) -- (0,1.5) node[above] {$y$};
+		\draw[-] (-1,0.1) -- (-1,-0.1) node[below] {$-1$};
+		\draw[-] (1,0.1) -- (1,-0.1) node[below] {$1$};
+		\draw[scale=1,domain=-1:1,smooth,variable=\x,blue] 
+			plot ({\x},{sqrt(1-\x*\x)})
+			node[above right] {$u(x)$};
+	\end{tikzpicture}
+	\caption{}
+	\label{fig:sol-contraejemplo-pm1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+	\centering
+  	\begin{tikzpicture}
+		\draw[->] (-1,0) -- (2,0) node[right] {$x$};
+		\draw[->] (0,-1) -- (0,1.5) node[above] {$y$};
+		\draw[-, dashed, blue] (0,1) -- (1.5,1);
+		\draw[] (-0.2,0) node[below] {$0$};
+		\draw[-] (1,0.1) -- (1,-0.1) node[below] {$1$};
+		\draw[scale=1,domain=0:1,smooth,variable=\x,blue] 
+			plot ({\x},{sqrt(1-\x*\x)})
+			node[above right] {$u(x)$};
+	\end{tikzpicture}
+	\caption{}
+	\label{fig:sol-contraejemplo-pm2}
+\end{subfigure}%
+
+\caption{Función $u$}
+\label{fig:sol-contraejemplo-pm}
+\end{figure}
+
+\newpage
+\subsection{El principio del máximo N-dimensional}
+\begin{mathresult}{Principio del máximo N-dimensional}
+Dada la inecuación
+\begin{equation}\label{eq:principio-del-maximo-Ndim}
+-\Delta u(x) + \sum_{i=1}^N g_i(x)\frac{du(x)}{dx_i}+h(x)u(x) < 0 \ \ \forall x\in\Omega
+\end{equation}
+
+Sea $u\in C^2(\Omega)$ la solución de \eqref{eq:principio-del-maximo-Ndim}.
+Si $h(x) \ge 0$, $u$ no puede alcanzar un máximo no negativo en $\Omega$.
+\end{mathresult}
+\see $\Delta u(x)$ es el laplaciano de $u(x)$ y se define como sigue:
+$$\Delta u(x) = \sum_{i=1}^N\frac{d^2u(x)}{d^2x_i}$$
+
+$\nabla u(x)$ es el gradiente de $u(x)$ y se define como sigue:
+$$\nabla u(x) = \left(\frac{du(x)}{dx_1}, \hdots, \frac{du(x)}{dx_n}\right)^T$$
+\begin{proof}
+Sea $x_0\in \Omega$ y $u$ la solución de \eqref{eq:principio-del-maximo-Ndim}. Supongamos que $u$ alzanca un máximo no negativo en $x_0$, es decir, $u(x_0) \ge 0$ y $u(x_0) > u(x)\ \forall x \in \Omega$.
+
+Definimos 
+\begin{equation*}
+\begin{array}{l r l l}
+f: & (-\varepsilon, \varepsilon) \subset\mathbb{R} & \longrightarrow  & \mathbb{R}\\
+& t & \longrightarrow & f(t) = u(x_0+t\xi)\\
+\end{array}
+\end{equation*}
+con $\xi\in\mathbb{R}^n$.
+Se puede observar que $f(0)$ es un máximo para $f$, por tanto
+\begin{equation}
+\left\{
+\begin{array}{l}
+f'(0) = 0\\
+f''(0) \le 0\\
+\end{array}
+\right.
+\end{equation}
+
+Vamos a analizarlo por partes:
+\begin{itemize}
+\item $f'(0) = \nabla u(x_0)\xi$. Tenemos entonces que $\nabla u(x_0) = \vec{0}$
+\item $f''(0) = \sum_{i,j=1}^N \xi_i\xi_j\frac{d^2u(x_0)}{dx_idx_j} = \xi^T\nabla^2u(x_0)\xi$. De donde se obtiene que $\nabla^2u(x_0) \le 0$. Es decir, $\nabla^2u(x_0)$ es semidefinida negativa.
+\end{itemize}
+
+Si tomamos $\xi_i = (0,\hdots, \underbrace{1}_{\text{posición i}}, \hdots, 0)^T$, obtenemos
+$$\xi_i^T\nabla^2u(x_0)\xi_j = \Delta u(x_0)$$
+Se tiene entonces que $\Delta u(x_0) \leq 0$.
+Vamos a analizar ahora la inecuación en $x_0$:
+\begin{equation}\label{eq:ineq-Ndimensional}
+\underbrace{-\Delta u(x_0)}_{\ge 0} + \sum_{i=1}^N g_i(x_0)\underbrace{\frac{du(x_0)}{dx_i}}_{=0}+\underbrace{h(x_0)}_{\ge 0}u(x_0) \ge 0
+\end{equation}
+
+\noindent\textbf{Conclusión:}
+Partiendo de las hipótesis del teorema, y suponiendo que $u(x_0)$ es un máximo no negativo, llegamos a \eqref{eq:ineq-Ndimensional}, que supone una contradicción con \eqref{eq:principio-del-maximo-Ndim}.
+\end{proof}
+
+\subsection{Principio débil del máximo}
+\begin{theorem}\label{theorem3}
+Dada la inecuación
+\begin{equation}\label{eq:theorem3}
+-\Delta u(x) + \sum_{i=1}^N g_i(x)\frac{du(x)}{dx_i}+h(x)u(x) \le 0 \ \ \forall x\in\Omega
+\end{equation}
+Sea $\Omega$ un \textbf{dominio} en $\mathbb{R}^n$.
+Sea $u\in C(\bar{\Omega})\cap C^2(\Omega)$ la solución de \eqref{eq:theorem3}.
+Sean $g_1,\hdots, g_N,h$ funciones acotadas.
+Entonces:
+\begin{itemize}
+\item Si $h=0$ en $\Omega \implies \max_{\bar{\Omega}} u(x)$ se alcanza en $\delta\Omega$. 
+\item Si $h>0$ en $\Omega \implies sup_{\Omega} u(x) \le max\left\{0, max_{\delta\Omega} u(x)\right\}$. Es decir, $u$ no puede tener un máximo no negativo en $\Omega$.
+\end{itemize}
+\end{theorem}
+\see
+\begin{itemize}
+\item Un \textbf{dominio} es un abierto conexo.
+\item $\delta\Omega$ se refiere a la frontera de $\Omega$ 
+\item $\bar{\Omega}$ al cierre (o adherencia) de $\Omega$.
+\end{itemize}
+
+\newpage
+\begin{proof}
+\textbf{Caso $h = 0$}
+
+Como $\Omega$ es un dominio, es acotado, (ver figura \ref{fig:omega}). Por tanto podemos suponer que está en una franja (una variable, por ejemplo $x_1$, se restringe). $\Omega \subset \{x\in \mathbb{R}^N: 0 < x_1 < d\}$.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=2]
+\path [pattern=north west lines, pattern color=yellow] (0, -1.2) -- (0, 1.7) -- (2.5, 1.7) -- (2.5, -1.2);
+\draw[->] (-1,0) -- (3,0) node[right] {$x_1$};
+\draw[] (0,0) node[below left] {$0$};
+\draw[] (2.5,0) node[below right] {$d$};
+\draw [thick, fill=lemonchiffon] 
+	(0.4,0) to [out=87,in=160] 
+	(1.4,1) to [out=340,in=30]
+	(2.25,.15) to [out=220,in=70]
+	(1.4,0) to [out=273, in=273]
+	(0.4,0);
+\draw [->, dashed] (0, -1.2) -- (0, 1.7);
+\draw [->, dashed] (2.5, -1.2) -- (2.5, 1.7);
+\draw [] (1.3,1) node[below=3mm] {$\Omega$};
+
+\end{tikzpicture}
+\caption{Dominio $\Omega$}
+\label{fig:omega}
+\end{figure}
+Consideramos la función $\varphi(x) = e^{\alpha x_1}$.
+Si tomamos un valor de $\alpha$ suficientemente grande, tenemos:
+\begin{equation}\label{eq:prueba1-ndim}
+-\Delta\varphi + \sum_{i=1}^Ng_i(x)\frac{d\varphi}{dx_i} = \alpha e^{\alpha x_1}\left(-\alpha + \underbrace{g_1(x)}_{\text{acotada}}\right) < 0
+\end{equation}
+Definimos ahora $w(x) = u(x) + \varepsilon\varphi(x)$, que cumple
+\begin{align*}
+-\Delta w + \sum_{i=1}^{N}g_i(x)\frac{dw}{dx_i} & \le\\
+0 + \varepsilon\left(-\Delta\varphi + \sum_{i=1}^{N}g_i(x)\frac{d\varphi}{dx_i}\right) & \underbrace{<}_{\text{\eqref{eq:prueba1-ndim}}} 0
+\end{align*}
+A partir de la definición de $w$, dado que $\varepsilon, \varphi > 0$, se tiene que:
+
+\begin{equation*}
+\begin{array}{l l l l}
+u(x) & < & u(x) + \varepsilon\varphi(x) & \\
+u(x) & < & w(x) & \forall x \in \Omega\\
+\end{array}
+\end{equation*}
+Como $w$ cumple las hipótesis del \textbf{Principio del máximo N-dimensional}
+
+\begin{equation*}
+\begin{array}{l l l}
+w(x)_\Omega & < & \max_{\delta\Omega} w(x) \\
+w(x)_\Omega & < &  w(c) = u(c) + \epsilon\varphi(c)
+\end{array}
+\end{equation*}
+para algún $c\in\delta\Omega$. Más precisamente
+
+\begin{equation*}
+\begin{array}{l l l}
+w(x)_\Omega & < & \max_{\delta\Omega}u(x) + \varepsilon e^{\alpha d}
+\end{array}
+\end{equation*}
+Si $\varepsilon\to0$
+$$u(x)_\Omega < \max_{\delta\Omega}u(x)$$
+es decir, el máximo de la función se alcanza en la frontera de $\Omega$.
+
+\noindent\textbf{Caso $h \ge 0$}
+
+Sea $\Omega_+ = \{x\in \Omega: u(x) > 0\} \equiv$ abierto (ver figura \ref{fig:omega-mas}).
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=2]
+\draw [->, thick] (0.4, 1.1) -- (1.1, 0.5);
+\path [fill=lemonchiffon] 
+	(1.4,1) to [out=340,in=30]
+	(2.25,.15) to [out=220,in=70]
+	(1.4,0) to [out=190, in=130]
+	(1.4,1);
+\draw [thick] 
+	(0.4,0) to [out=87,in=160] 
+	(1.4,1) to [out=340,in=30]
+	(2.25,.15) to [out=220,in=70]
+	(1.4,0) to [out=273, in=273]
+	(0.4,0);
+\draw [dashed, thick]
+	(1.4, 0) to [out=190, in=130]
+	(1.4, 1) node[above] {$\delta\Omega\cap\Omega = \{x\in R^n: u(x) = 0\}$};
+\draw [] (1.6,0.5) node[below] {$\Omega_+$};
+
+
+\end{tikzpicture}
+\caption{Dominio $\Omega$}
+\label{fig:omega-mas}
+\end{figure}
+
+\noindent Sea $u$ la solución de 
+\begin{equation*}
+\begin{array}{l l}
+-\Delta u + \sum_{i=0}^Ng_i(x)\frac{du}{dx_i} + h(x)u(x)\le0 & \text{en } \Omega_+
+\end{array}
+\end{equation*}
+por la definición de $\Omega_+$ y por ser $h(x) \ge 0$, se tiene $h(x)u(x) \ge 0$, por tanto, 
+
+\begin{equation*}
+\begin{array}{l l}
+-\Delta u + \sum_{i=0}^Ng_i(x)\frac{du}{dx_i} \le -h(x)u(x) \le 0 & \text{en } \Omega_+\\
+-\Delta u + \sum_{i=0}^Ng_i(x)\frac{du}{dx_i} \le 0 & \text{en } \Omega_+\\
+\end{array}
+\end{equation*}
+En $\Omega_+$ se cumplen las hipótesis del primer apartado del teorema ($u$ cumple la inecuación cuando $h=0$), el cual ya se ha probado. Se tiene
+$$\max_{\bar{\Omega}_+}u = \max_{\delta\Omega_+}u$$
+y a partir de aquí
+$$\max_{\delta\Omega_+}u \le \max_{\delta\Omega}u $$
+En la parte de la frontera de $\Omega_+$ que está en $\Omega$ (la que aparece con línea discontinua en la figura \ref{fig:omega-mas}), $u$ es nula, resultando
+
+\begin{equation*}
+\left.
+\begin{array}{l l}
+\text{Si } x\in\bar{\Omega}_+ & 0\le u(x)\le \max_{\delta\Omega}\\
+\text{Si } x\in\Omega\setminus\bar{\Omega}_+ & u(x) < 0
+\end{array}
+\right\}
+u(x) \le \max\left\{0, \max_{\delta\Omega} u\right\}
+\end{equation*}
+
+\end{proof}
+
