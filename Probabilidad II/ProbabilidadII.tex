@@ -2,6 +2,10 @@
 
 \usepackage{hyperref}
 
+\usepackage{tikztools}
+\usepackage{fastbuild}
+\usepackage{tikz-3dplot}
+
 \usepackage{tikz}
 \usepackage{graphicx}
 \usepackage{latexsym, amsfonts, amsmath, amssymb, amscd, epsfig,amsthm}
@@ -14,6 +18,7 @@
 \renewcommand*{\arraystretch}{1.5}
 
 \title{Probabilidad II}
+\precompileTikz
 
 \begin{document}
 
@@ -199,18 +204,96 @@ Entonces:
 \]
 \end{enumerate}
 
-\section{Dependencia}
+\section{Conceptos de Probabilidad I}
 Incorporamos al modelo nueva información relevante que condiciona los nuevos valores asignados.
 
+\begin{defn}[Probabilidad condicionada]
 Supongamos un conjunto $\Omega$ y dos conjuntos A y B pertenecientes a la $\salgb$ $\algb{M}$ de $\Omega$. Suponemos también que $P(B)>0$, y definimos una nueva función de probabilidad:
 
 \[ P_B(A) = P(A | B) = \frac{P(A \cap B)}{P(B)}\]
 
 $P_B$ es una probabilidad en B. $P_B(A)$ es la probabilidad de A condicionada a B. Dicho de otra forma, es la probabilidad de A sabiendo que se ha dado el suceso B.
+\end{defn}
 
 \begin{center}
 \includegraphics[scale=0.75]{img/Dvenn1.png}
 \end{center}
+
+\begin{defn}[Regla del producto]
+Sean $\{A_1, A_2,...,A_n\}$ eventos con $P(A_i)>0$ entonces
+
+\[
+P(\bigcap_{i=1}^{\infty}A_i) = P(A_1)P(A_2|A_1)P(A_3|A_1\cap A_2)...P(A_n|A_1\cap A_2\cap ... \cap A_{n-1})
+\]
+(Suponiendo que $P(A_n|A_1\cap A_2\cap ... \cap A_{n-1})>0$)
+\begin{proof}
+\[
+P(A_1)P(A_2|A_1)P(A_3|A_1\cap A_2)...P(A_n|A_1\cap A_2\cap ... \cap A_{n-1})=
+\]
+\[
+=P(A_1)\frac{P(A_2\cap A_1)}{P(A_1)}\frac{P(A_3\cap A_2\cap A_1)}{P(A_2\cap A_1)}...\frac{P(\bigcap_{i=1}^{n-1}A_i)}{P(\bigcap_{i=1}^{n-2}A_i)}\frac{P(\bigcap_{i=1}^{n}A_i)}{P(\bigcap_{i=1}^{n-1}A_i)} = P(\bigcap_{i=1}^{n}A_i)
+\]
+\end{proof}
+\end{defn}
+\begin{example}
+Caja con 10 bolas blancas y 10 bolas negras. Se extrae 1 bola y sin devolverla a la caja se extra otra segunda. ¿Cuál es la probabiidad de que las dos sean blancas?
+
+P(2 blancas)=$\frac{10}{20}\frac{9}{19}$
+\end{example}
+
+\begin{defn}[Regla de la probabilidad total]
+Sea  $\{A_1, A_2,...,A_n\}$ una partición de $\Omega$ con $P(A_i)>0 \forall i=1,2,...,n$. Entonces, $\forall B \subset \Omega$ medible (perteneciente a $\algb{M}$):
+\[
+P(B)=\sum_{i=1}^{n}P(B\cap A_i)=\sum_{i=1}^{n}P(B|A_i)P(A_i)
+\]
+(Se obtiene de despejar de la formula de la probabilidad condicionada: $P(A|B)=\frac{P(A \cap B)}{P(B)}$)
+\end{defn}
+
+\begin{figure}[h]
+\centering
+\includegraphics[page=1,scale=0.745]{img/Dvenn2.png}
+\caption{Ejemplo de partición con n=16}
+\end{figure}
+
+\begin{defn}[Teorema de Bayes]
+Modeliza la noción de "causa-efecto", donde $A_1, A_2,...,A_n$ son posibles causas del efecto B:
+\[
+P(A_i|B)= \frac{P(A_i\cap B)}{P(B)}= \frac{P(B|A_i)P(A_i)}{\sum_{k=1}^{n}P(B|A_k)P(A_k)}
+\]
+
+(Combina la regla de la probabilidad condicionada con la regla de la probabilidad total)
+\end{defn}
+
+\begin{defn}[Independencia]
+\[
+A,B \text{ son independientes} \Leftrightarrow P(A \cap B)=P(A)P(B)
+\]
+
+\obs Si un suceso A es independiente de otro suceso B (de modo que B no proporciona información útil sobre A) entonces $P(A|B)=P(A)$.
+\obs (Absurda esta observación) Los sucesos $A_1, A_2,...,A_n$ son independientes si para toda subcolección finita $A_{i_1},A_{i_2},...,A_{i_n}$ (con $i_k \neq i_j \forall i,j$, es decir, que no si tienes una colección \{A,B\}, no andes cogiendo una subcolección con conjuntos repetidos en plan \{A,A\}) se tiene que:
+\[
+P(\bigcap_{k=1}^{n}A_{i_k})=\prod_{k=1}^{n}P(A_{i_k})
+\]
+\obs Los conjuntos $A_1, A_2,...,A_n$ son independientes 2 a 2 si $\forall$ par \{i,j\} con $i \neq j$, tenemos que $A_i$ y $A_j$ son independientes.
+
+\begin{example}
+Supongamos que A es independiente de A. Entonces tenemos que: $P(A\cap A)=P(A)=p(A)P(A) \Leftrightarrow P(A)=0$ ó $P(A)=1$
+\end{example}
+\end{defn}
+
+
+
+
+%\begin{figure}[h]
+%\centering
+%\includegraphics[page=1,scale=0.745]{img/Dvenn2.png}
+%\caption{Ejemplo de partición con n=16}
+%\end{figure}
+
+%\centerline{\includegraphics[page=1,scale=0.745]{img/Dvenn2.png}} % scale obtenido empíricamente para que quepa en la página
+
+%\easyimg{img/Dvenn2.png}{El histograma es una aproximación de la función de densidad real en base a la muestra que hemos obtenido.}{lblDensidad}
+
 %\easyimg{img/DensidadAHistograma.png}{El histograma es una aproximación de la función de densidad real en base a la muestra que hemos obtenido.}{lblDensidad}
 
 %\centerline{\includegraphics[page=1,scale=0.745]{pdf/_Solucion_T1P1.pdf}} % scale obtenido empíricamente para que quepa en la página
