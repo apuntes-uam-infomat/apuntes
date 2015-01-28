@@ -204,6 +204,14 @@ Entonces:
 \]
 \end{enumerate}
 
+
+\begin{defn}[Espacio de medida]
+ Es la tripla $(\Omega, \algb{M}, P)$. siendo $\Omega$ un conjunto, $\algb{M}$ una $\salgb$ y $\mu$ una función de medida.
+\end{defn}
+
+La diferencia con espacio de probabilidad, es que aquí definimos $\mu$ como una función: $\mu: X \rightarrow [0,\infty)$  (o incluyendo el $\infty$). En lugar de P que era una función: $P: X \rightarrow [0,1]$. Ambas trabajan con conjuntos pertencientes a $\algb{M}$, es decir, medibles.
+
+
 \section{Conceptos de Probabilidad I}
 Incorporamos al modelo nueva información relevante que condiciona los nuevos valores asignados.
 
@@ -270,16 +278,96 @@ A,B \text{ son independientes} \Leftrightarrow P(A \cap B)=P(A)P(B)
 \]
 
 \obs Si un suceso A es independiente de otro suceso B (de modo que B no proporciona información útil sobre A) entonces $P(A|B)=P(A)$.
-\obs (Absurda esta observación) Los sucesos $A_1, A_2,...,A_n$ son independientes si para toda subcolección finita $A_{i_1},A_{i_2},...,A_{i_n}$ (con $i_k \neq i_j \forall i,j$, es decir, que no si tienes una colección \{A,B\}, no andes cogiendo una subcolección con conjuntos repetidos en plan \{A,A\}) se tiene que:
+\obs Dada una sucesión finita $\{A_i\}_{i=1}^{n}$ o infinita $\{A_i\}_{i=1}^\infty$ de eventos, decimos que estos son independientes si toda subsucesión $A_{i_1}, A_{i_2},..., A_{i_n}$ con $(2 \leq n < \infty)$ finita, saisface:
 \[
-P(\bigcap_{k=1}^{n}A_{i_k})=\prod_{k=1}^{n}P(A_{i_k})
+P(\bigcap_{i=1}^nA_{i_j})=\prod_{i=1}^{n}(P(A_{i_j}))
 \]
+
 \obs Los conjuntos $A_1, A_2,...,A_n$ son independientes 2 a 2 si $\forall$ par \{i,j\} con $i \neq j$, tenemos que $A_i$ y $A_j$ son independientes.
 
 \begin{example}
-Supongamos que A es independiente de A. Entonces tenemos que: $P(A\cap A)=P(A)=p(A)P(A) \Leftrightarrow P(A)=0$ ó $P(A)=1$
+Supongamos que A es independiente de A. Entonces tenemos que: $P(A\cap A)=P(A)=P(A)P(A) \Leftrightarrow P(A)=0$ ó $P(A)=1$
 \end{example}
 \end{defn}
+
+\begin{defn}[Norma y convergencia]
+Sea $(X, \algb{M}, \mu)$ un espacio de medida. Para $0<p<\infty$, definimos $L^p=L^p(X,\algb{M},\mu)=\{f:X\rightarrow \mathbb{R}$ ó $\mathbb{C} | \int_X \abs{f}^p d\mu < \infty\}$
+
+\begin{itemize}
+\item Si $p \geq 1$, entonces $\norm{f}_p = (\int_X {\abs{f}^p d\mu)}^{\frac{1}{p}}$ es una norma.
+\item Y decimos que una función converge en $L_p$:
+
+\[
+f_n \stackrel{L_p (n\rightarrow \infty)}{\rightarrow} g \Leftrightarrow \norm{f_n -g}_p  \rightarrow 0 \Leftrightarrow \int{\abs{f_n -g}^p} \rightarrow 0
+\]
+\end{itemize}
+
+\begin{example}
+Sean A,B,C $\subset [0,1]$ con los borelianos (la $\salgb$ generada por los abiertos) y la medida de Lebesgue $\lambda$. Observamos que este espacio de medida coincide con un espacio de probabilidad con función de probabilidad uniforme P.
+
+Es decir, tenemos 3 conjuntos que son uniones numerablos o complementarios de intervalos en $[0,1]$. Estos conjuntos no son independientes. Vamos a definir una nueva probabilidad de manera que tengamos independencia con conjuntos semejantes a estos:
+
+\~{A} $= A\times[0,1]^2 \subset [0,1]^3$
+
+\~{B} $= [0,1]\times B \times[0,1]$
+
+\~{C} $= C \times[0,1]^2$
+
+Por tanto \~{A}, \~{B} y \~{C} son independientes y \~{A} $\cap$ \~{B} = $\{x \in [0,1]^3, x=(x_1, x_2, x_3) | x_1 \in A, x_2 \in B, x_3 \in [0,1]\}$.
+
+Y podemos definir \~{P}(\~{A}$\cap$ \~{B})=$P(A)P(B)P([0,1])$ (por definición de medida producto)
+
+Siendo \~{P} en $[0,1]^3$ la probabilidad producto.
+
+Además \~{P}(\~{A}$\cap$\~{C}) = \~{P}(\~{A})\~{P}(\~{C})=$P(A)P(C)$ etcetera etcetera...
+
+Unos dibujitos aclaratorios, para hacerlo más fácil consideramos que estamos en $[0,1]^2$ y:
+
+$A1 = A\times[0,1]$
+
+$B1 = [0,1]\times B$
+
+\begin{figure}[h]
+\centering
+\includegraphics[page=1,scale=0.545]{img/Dvenn3.png}
+\caption{A = [0,1/2], B=[0,1/2]}
+\end{figure}
+
+\end{example}
+
+\begin{defn}[Independencia de conjuntos respecto a otro conjunto] Sea $P(C)>0 \Rightarrow$ A y B son condicionalmente independientes con respecto a C si: 
+\[
+P(A\cap B|C)=P(A|C)P(B|C)
+\]
+
+\textcolor{red}{Esto me lo invento un poco yo:} Es decir, A y B son independientes entre ellos tomando como $\Omega$ el conjunto C.
+
+Entonces si $P(B\cap C)>0$, se cumple que $P(A|B\cap C)=P(A|C)$
+\end{defn}
+
+\begin{defn} [Variable aleatoria]
+Dado ($\Omega_1$,$\algb{M}$) y ($\Omega_2$,$\algb{B}$):
+\[
+X \text{es una variable aleatoria} \Leftrightarrow \forall B \in \algb{B}, X^{-1}(B) \in \algb{M}
+\]
+
+En este curso usaremos como $\Omega_2$ conjuntos como $\mathbb{R}$ o $\mathbb{R} \cup \{\pm \infty\}$ o $\mathbb{C}$. Si $\Omega_2 = \mathbb{R}^d$, decimos que la función medible $X: \Omega_1 \rightarrow \mathbb{R}^d$ es un vector medible.
+\end{defn}
+
+\begin{defn}[ley de X]
+Dado el espacio de probabilidad ($\Omega, \algb{M}, P$) y la variable aleatoria $X: \Omega \rightarrow \mathbb{R}$, la ley de X es la probabilidad en $\mathbb{R}$ definida mediante:
+\[
+P_x(B)=P(X^{-1}(B)) \text{ } \forall B \in Borel(\mathbb{R})
+\]
+
+Notación: $P(X^{-1}(B)) = P(\{w \in \Omega : X(w) \in B\})=P(X \in B)$
+\end{defn}
+
+\end{defn}
+
+
+
+
 
 
 
