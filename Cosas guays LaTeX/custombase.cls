@@ -13,7 +13,7 @@
 
 \RequirePackage[includemp, left=3cm,right=1cm,top=3cm,bottom=2cm, marginparwidth=1.6cm, marginparsep=0.7cm]{geometry} % Márgenes
 \RequirePackage{imakeidx} % Creación de índices
-\RequirePackage{titling} % No tengo claro para qué es esto
+\RequirePackage{titling} % Para poder referenciar \thetitle, \thedate, etc.
 \RequirePackage{fancyhdr} % Cabeceras de página
 \RequirePackage{lastpage} % Módulo para añadir una referencia a la última página
 \RequirePackage[spanish,es-noquoting,es-noshorthands]{babel} % Cadenas de LaTeX traducidas al español
