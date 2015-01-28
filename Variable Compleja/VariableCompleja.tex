@@ -725,7 +725,90 @@ Además,
 
 \end{proof}
 \section{La función logaritmo}
+
 \section{Series de potencias}
+Sea $\{z_n=x_n+iy_n\}$ una sucesión en $\cplex$,
+\[\lim_{n \to \infty}z_n=z \iff \forall ε > 0 \exists N \tq |z_n-z| < \leq ε \ \forall n \geq N\]
+
+Además, como
+\[|x_n-x|<|z_n-z|<|x_n-x|+|y_n-y|\]
+la sucesión $z_n$ convergerá sii lo hacen las sucesiones $x_n$ e $y_n$.
+
+Siempre que exista ese número complejo, $z$, diremos que la sucesión \concept{converge}. Si no existe este límite, diremos que la sucesión \concept{diverge}. En particular, si $\lim_{n \to \infty}|z_n|=\infty$ diremos que \concept{diverge a $\infty$}.
+
+Esta divergencia a infinito tiene sentido cuando trabajamos con el plano complejo extendido (recordemos que era el plano complejo al que habíamos añadido el infinito). Para que la \textbf{divergencia a infinito} tenga auténtico sentido debemos observar la sucesión en la esfera de Riemann donde veríamos que esta ``va hacia el polo norte''
+
+\begin{defn}[Serie]
+En matemáticas, una \textbf{serie} es la generalización de la noción de suma a los términos de una sucesión infinita. Informalmente, es el resultado de sumar los términos: $a_1 + a_2 +a_3 + a_4 + a_5 + a_6 \dots $ lo cual suele escribirse en forma más compacta como $\sum_{1\le n} a_n$.
+
+El estudio de las series consiste en la evaluación de la suma de un número finito n de términos sucesivos, y mediante un pasaje al límite, identificar el comportamiento de la serie a medida que n crece indefinidamente.
+\end{defn}
+
+Una serie $\sum z_n$ converge a $w$ si y sólo si $\lim_{n \to \infty}\sum_{k=1}^n z_k = w$. En este caso escribimos
+\[\sum_{k=1}^{\infty}z_k = w\]
+
+Veamos algunas propiedades acerca de las series
+\begin{itemize}
+\item Si $\sum z_n$ converge, entonces
+\[\lim_{n \to \infty} z_n = 0\]
+
+Esto es sencillo de entender puesto que si una suma infinita converge a un número necesitamos que los sumandos convergan a 0. De lo contrario siempre estaríamos sumando algo no despreciable y la suma infinita tendería a infinito.
+
+\item Sea $s_n=\sum_{k=1}^{n} z_n$,
+\[\{s_n\} \text{ es de Caucchy } \iff \forall δ > \ \exists N \tq \text{ si } n,n \geq N \implies |s_n-s_m| < ε\]
+
+\item Si $\sum | z_n| $ converge entonces $\sum z_n$ también converge.
+
+\begin{proof}
+Sean $s_n = \sum_{k=1}^n z_k$ y $s_n'=\sum_{k=1}^n |z_k|$ vamos a probar que $s_n$ converge. Para ver que converge vamos a probar que es de Cauchy.
+
+\[|s_m - s_n| = |\sum_{k=m+1}^m z_k| \leq \sum_{k=n+1} ^m | z_k| = |s_m'-s_n'| < ε\]
+
+Puesto que sabemos que $s_n'$ es de Cauchy queda claro que la sucesión $s_n$ también lo es, pues la distancia entre dos elementos de esta segunda sucesión es siempre menor que la diferencia entre dos elementos de la primera sucesión, que es de Cauchy.
+
+\end{proof}
+
+\begin{defn}[Convergencia absoluta]
+Si la serie $\sum |z_n|$ converge diremos que $\sum z_n$ converge absolutamente.
+\end{defn}
+\end{itemize}
+
+\begin{defn}[Convergencia puntual]
+Sea $\{\appl{f_n}{\Omega\subset \cplex}{\cplex}\}$ una sucesión de funciones, decimos que $\{f_n\}$ converge puntualmente a $\appl{f}{\Omega\subset\cplex}{\cplex}$ sii converge punto a punto. Es decir
+\[f_n(z) \rightarrow f(z) \iff \lim_{n\to\infty}f_n(z)=f(z) \forall z \in \Omega \iff\]
+\[\iff \forall ε > 0 \forall z \in \Omega \exists N=N(ε,z) \tq \forall n \geq N |f(z_n)-f(z)| < ε \]
+\end{defn}
+
+\begin{defn}[Convergencia uniforme]
+Sea $\{\appl{f_n}{\Omega\subset \cplex}{\cplex}\}$ una sucesión de funciones, decimos que $\{f_n\}$ converge uniformemente a $\appl{f}{\Omega\subset\cplex}{\cplex}$ si ``tenemos convergencia puntual con un único N(z) para todo z''. Es decir
+\[f_n \rightarrow f \iff \forall ε >0 \ \exists N=N(ε) \tq \forall n \geq N \ |f_n(z)-f(z)| < ε \forall z \in \Omega\]
+\end{defn}
+
+\begin{prop}[Criterio de M de Weierstrass]
+Sea $\appl{f_n}{\Omega}{\cplex}$ funciones tales que $|f_n(z)| \leq M_n$ para todo $z \in \Omega$, si $\sum M_n$ converge, entonces $\sum f_n$ conerge \textbf{abolsuta} y \textbf{uniformemente}.
+\end{prop}
+
+\begin{proof}
+Primero debemos determinar quién es ese límite antes de poder llevar a cabo la demostración.
+
+Sea $g_n(z)=\sum_{k=1}^{n}f_k(z)$ podemos ver que es una sucesión de Cauchy, pues
+\[|g_m(z)-g_n(z) | = \left|\sum_{k=n+1}^m f_k(z)\right| \leq \sum_{k=n+1}^m | f_k(z)| \leq \sum_{k=n+1}^m M_k = |s_m-s_n| < ε\]
+
+La última desigualdad la obtenemos del hecho de que $M_n$ es convergente y por tanto es de Cauchy.
+
+Por tanto, tenemos que la sucesión $g_n$ también es de Cauchy por lo que converge. Así, podemos definir límite como $g(z)=\lim_{n\to \infty}g_n(z)$, pero si nos fijamos, tenemos que
+\[g(z)=\lim_{n\to \infty}g_n(z) = \lim_{n\to \infty}\sum_{k=1}^n f_k(z) = \sum_{k=1}^{\infty} f_k(z)\]
+por lo que, efectivamente, hemos probado que la suma de las $f_n$ converge.
+
+Ahora nos queda probar que la convergencia es uniforme pues, con los pasos realizados hasta ahora, sólo podemos garantizar la convergencia puntual.
+
+Vamos a ello
+\[|g_n(z)-g(z)| = \lim_{k \to \infty}|g_n(z)-g_{n+k}(z)|\]
+Dado ε > 0 $\exists N$ t.q. para $n \geq N$, $|g_n(z)-g_{n+k}(z)| < ε \ \forall z \in \Omega$.
+
+Así, queda probada la convergencia uniforme.
+\end{proof}
+
 \section{Principio de los ceros aislados}
 
 
