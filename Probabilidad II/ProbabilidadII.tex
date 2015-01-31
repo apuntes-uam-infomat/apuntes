@@ -60,6 +60,8 @@ Tutorías: L-X-J de 14:30 a 15:30 y también a otras horas mediante cita previa.
 \item Sobre funciones indicatrices:\\
 $\ind_A(w)=1$ si $w \in A$\\
 $\ind_A(w)=0$ si $w \in A^c$
+
+\item $f_+ = max(f,0)$ y $f_- = max(-f,0)$. Y por tanto, $f=f_+ -f_-$ y $\abs{f}=f_+ +f_-$
 \end{itemize}
 
 \chapter{Espacios de probabilidad}
@@ -301,6 +303,7 @@ Sea $(X, \algb{M}, \mu)$ un espacio de medida. Para $0<p<\infty$, definimos $L^p
 f_n \stackrel{L_p (n\rightarrow \infty)}{\rightarrow} g \Leftrightarrow \norm{f_n -g}_p  \rightarrow 0 \Leftrightarrow \int{\abs{f_n -g}^p} \rightarrow 0
 \]
 \end{itemize}
+\end{defn}
 
 \begin{example}
 Sean A,B,C $\subset [0,1]$ con los borelianos (la $\salgb$ generada por los abiertos) y la medida de Lebesgue $\lambda$. Observamos que este espacio de medida coincide con un espacio de probabilidad con función de probabilidad uniforme P.
@@ -354,17 +357,82 @@ X \text{es una variable aleatoria} \Leftrightarrow \forall B \in \algb{B}, X^{-1
 En este curso usaremos como $\Omega_2$ conjuntos como $\mathbb{R}$ o $\mathbb{R} \cup \{\pm \infty\}$ o $\mathbb{C}$. Si $\Omega_2 = \mathbb{R}^d$, decimos que la función medible $X: \Omega_1 \rightarrow \mathbb{R}^d$ es un vector medible.
 \end{defn}
 
+\obs Una variable aleatoria es una función medible.
+
 \begin{defn}[ley de X]
 Dado el espacio de probabilidad ($\Omega, \algb{M}, P$) y la variable aleatoria $X: \Omega \rightarrow \mathbb{R}$, la ley de X es la probabilidad en $\mathbb{R}$ definida mediante:
 \[
 P_x(B)=P(X^{-1}(B)) \text{ } \forall B \in Borel(\mathbb{R})
 \]
 
-Notación: $P(X^{-1}(B)) = P(\{w \in \Omega : X(w) \in B\})=P(X \in B)$
-\end{defn}
+Notación: $P_x(B) = P(X^{-1}(B)) = P(\{w \in \Omega : X(w) \in B\})=P(X \in B)$
+
+Notación: $Borel(\mathbb{R})$ es el conjunto de intervalos en $\mathbb{R}$, (los borelianos de toda la vida).
+
 
 \end{defn}
 
+
+\begin{example}
+Supongamos un dado de 6 caras. Tomamos dos situaciones:
+\begin{enumerate}
+\item  $\Omega = \{1,2,3,4,5,6\}$ y $\algb{M}=\mathbb{P}(\Omega)$.
+
+Entonces la función X se define:
+
+$X: \Omega \rightarrow \mathbb{R}$
+
+Todas las funciones X son medibles ya que tenemos $(\Omega,\algb{M})$ y $(\mathbb{R}, Borel(\mathbb{R}))$, y entonces $\forall A \in Borel(\mathbb{R})$ tenemos que $X^{-1}(Borel(\mathbb{R})) \in \algb{M}$
+
+Una vez definidos cuales son los medibles en los conjuntos de salida $(\Omega,\algb{M})$ y de llegada $(\mathbb{R}, Borel(\mathbb{R}))$. Podemos definir la siguiente variable aleatoria X.
+
+$X(w) = 1$ si $w=3$ 
+
+$X(w) = 0$ si $w\neq3$
+
+Siendo $w \in \Omega$, esta variable aleatoria es equivalente a $X(w) = \ind_{\{3\}}$.
+
+De esta manera podemos ver que: $X^{-1}(\{1\}) = \{3\}$, $X^{-1}(\{0\}) = \{1,2,4,5,6\}$, $X^{-1}((1/2,\infty)) = \{3\}$, y $X^{-1}((-2,\infty)) = \Omega$ entre otros ejemplos.
+
+
+\item $\Omega = \{1,2,3,4,5,6\}$ y $\algb{B} = \{\Omega, \emptyset, \{1,3,5\}, \{2,4,6\} \}$
+
+Entonces la función X se define:
+
+$X: \Omega \rightarrow \mathbb{R}$
+
+Pero en este caso, las funciones medibles ($\algb{B}-medibles$) son aquellas que son constantes en $\{1,3,5\}$ y en $\{2,4,6\}$. Ya que por ejemplo si tengo una función del tipo: $X(\{1\})=1$, $X(\{2\})=2$, $X(\{3\})=3$, $X(\{4\})=4$, $X(\{5\})=5$, $X(\{6\})=6$. Y calculo $X^{-1}((1/2, 3/2))=\{1\}$, que no pertenece a $\algb{B}$ y no es medible, por tanto X no sería medible y no sería una variable aleatoria.
+\end{enumerate}
+
+\obs Dada una función $X:(\Omega, \algb{M}) \rightarrow (\mathbb{R}, Borel(\mathbb{R}))$, para comprobar que es una función medible, y por tanto que es una variable aleatoria (es decir, que $\forall B \in Borel(\mathbb{R}) \rightarrow X^{-1}(B) \in \algb{M}$), basta comprobarlo para cualquier clase que genere a los borelianos (a $Borel(\mathbb{R})$).
+
+Puesto que $Borel(\mathbb{R})=\{(r,\infty): r\in \mathbb{Q}\}$, para ver que X es una variable aleatoria basta comprobar que $\forall r \in \mathbb{Q}, X^{-1}((r, \infty)) \in \algb{M}$.
+
+\end{example}
+
+\begin{defn}[Esperanza o media]
+Sea un espacio de probabilidad $\{\Omega, \algb{M},P\}$, la media o esperanza de una variable aleatoria X es:
+\[
+E(X)=E_p(X)=\int_{\Omega}X(w)dP(w)
+\]
+
+%\obs $P(a \leq w \leq b)= \int_{b}^{a} f(x)dx$, por tanto: $dP(a \leq w \leq b) = f(b)-f(a).
+\end{defn}
+
+
+\begin{defn}[Varianza]
+Sea un espacio de probabilidad $\{\Omega, \algb{M},P\}$, la varianza de una una variable aleatoria X es:
+\[
+var(X)=E[(X-E(X))^2] = E(X^2)-E(X)^2
+\]
+
+\obs Si $X(w)=c \forall w$, entonces $E(X)=c$
+\obs E(E(X))=E(X)
+\end{defn}
+
+\begin{defn}[Formula del cambio de variable]
+
+\end{defn}
 
 
 
