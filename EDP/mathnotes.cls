@@ -13,6 +13,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage{graphicx}
+\usepackage{appendix}
 
 % % Color
 \usepackage{xcolor}
