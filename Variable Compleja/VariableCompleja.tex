@@ -810,6 +810,110 @@ Así, queda probada la convergencia uniforme.
 %TODO completar por que el final de la demostración no dice nada
 \end{proof}
 
+\begin{defn}[Serie centrada]
+Una series de potencias \textbf{centrada en $z_0 \in \cplex$} es una serie de la forma
+\[\sum_{n=0}^{\infty} a_n(z-z_0)^n\]
+\end{defn}
+
+\begin{example}
+Dada la serie geométrica $\sum_{n=0}^{\infty}z_n^n$ podemos ver que
+\[(1-z)(1+z+z^2+...z^n)=1-z^{n+1}\]
+para $z \neq 1$ de donde podemos deducir que
+\[1+z+z^2+...+z^n = \frac{1-z^{n+1}}{1-z}\]
+(en los ejercicios podemos encontran una demostración por inducción de esta fórmula)
+
+Vamos a analizar ahora el resultado obtenido viendo el límite de estas series.
+\begin{itemize}
+\item \textbf{Si |z| < 1}
+\[\lim_{n \to \infty} z^n = 0\]
+\[\sum z^n  \lim_{n \to \infty}\sum_{i=0}^{\infty} \frac{1}{1-z}\]
+\item \textbf{Si |z| > 1}
+\[\lim_{n \to \infty} z^n = \infty\]
+La serie diverge, luego su suma será infinita.
+\end{itemize}
+\end{example}
+
+\begin{prop}
+Consideremos la serie de potencias
+\[\sum_{n=0}^{\infty} a_n (z-z_0)^n\]
+y supongamos que $\exists ε \in \cplex$ tal que
+\[|a_n||ε|^n \leq M \ \forall n\]
+con $M$ constante.
+
+Entonces, para todo $e \tq 0 < \rho < |ε|$ la serie converge absoluta y uniformemente en $\{z \tq |z-z_0| < \rho\}$
+\end{prop}
+\begin{proof}
+Si $|z-z_0 | \leq \rho < |ε|$ tenemos que
+\[|a_n(z-z_n)^n| = |a_n||z-z_0|^n=|a_n||ε|^n\frac{|z-z_0|^n}{|ε|^n}\leq M \left( \frac{\rho}{|ε|}\right)^n\]
+Como $\sum \left( \frac{\rho}{|ε|}\right)$ converge obtenemos el resultado buscado por el criterio M de Weierstrass
+\end{proof}
+
+Básicamente ese ε nos va a dar el tamaño de la bola centrada en $z_0$ que no permite garantizar la convergencia y, obviamente, estamos interesados en localizar el mayor ε. Tenemos dos posibilidades:
+\begin{enumerate}
+\item \[\forall α > 0 \sup_n|a_n|α^n < \infty\]
+En este caso tenemos convergencia en el discto $|z-z_0|<α \ \forall α$.
+
+Se trata de un caso \textbf{ideal} en el que la serie converge en todo $\cplex$
+
+\item \[\exists α > 0 \tq \sup_n|a_n|α^n = \infty\]
+En este caso nos gustaría encontrar el mayor α posible sin que el supremo indicado se haga infinito.
+
+\obs $\phi(α)=\sum_n|a_n|α^n$ es una función creciente. Por tanto, dada una sucesión $α_1<α_2,...$ sabemos que si $\phi(α_2) < \infty \implies \phi(α_1) < \infty$ y que si $\phi(α_2)=\infty \implies \phi(α_3) = \infty$.
+
+Por tanto, queremos buscar justo el punto en que esta función pasa de ser finita a ser infinita.
+
+\begin{defn}[Radio de convergencia]
+El \textbf{radio de convergencia de la serie} se define como
+\[R=\inf \{α > 0\tq \sup_n|a_n|α^n = \infty\}\]
+de forma totalmente equivalente podemos definir este radio de la siguiente forma
+\[R=\sup \{α > 0\tq \inf_n|a_n|α^n < \infty\}\]
+\end{defn}
+
+Evidentemente, por la propia definición del radio de convergencia, la serie converge en el interior de la bola $|z-z_0|<R$ y diverge fuera de la misma.
+
+La frontera ($|z-z_0|=R$) es un caso extremo que habría que analizar detenidamente en cada caso particular.
+\end{enumerate}
+
+Hasta ahora hemos dejado claro la importancia de este radio de convergencia y la teoría acerca de cómo calcularlo, pero no es viable calcular un ínfimo sobre todos los posibles complejos que cumplen una cierta condición.
+
+Necesitamos una fórmula para calcular este radio y el siguiente teorema nos la da:
+
+\begin{theorem}
+Sea $R$ el radio de convergencia de la serie de potencias $\sum_{n=0}^{\infty} a_n (z-z_0)^n$ se tiene que
+\begin{enumerate}
+\item \[R = \frac{1}{\limsup_{n \to \infty} |a_n|^{1/n}}\]
+\item
+\[\text{ Si } a_n \neq 0 \forall n \text{ y }\exists \lim_{n \to \infty} \left|\frac{a_n}{a_{n+1}}\right| \text{ (pudiendo ser infinito) } \implies R = \lim_{n \to \infty}\frac{|a_n|}{|a_{n+1}|}\]
+\item
+La serie converge uniformemente en $\{z \tq |z-z_0| < r\}$ con $r \leq R$ y converge absolutamente en $\{z \tq |z-z_0|<R\}$
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+
+\begin{enumerate}
+\item Lo primero que debemos haceer es comprobar que esta fórmula para $R$ coincide con la definición del mismo dada anteriormente.
+
+Supongamos que $0<R<\infty$ (calculando $R$ según su definición). Entonces
+\[\limsup_{n \to \infty} |a_n|^{1/n} \leq \frac{1}{R}\]
+
+Supongamos ahora que existe un $0<r<R$ tal que $\sup_n |a_n|<\infty$. En este caso existiría un $M>0$ t.q. $|a_n|r^n < M \ \forall n$.
+
+Así, tendríamos que $|a_n|^{1/n} < \frac{M^{1/n}}{r}$ y en el infinito veríamos que
+\[\lim_{n \to \infty} |a_n|^{1/n} \leq \frac{1}{r} \ \forall 0<r < R \implies \limsup_{n \to \infty}|a_n|^{1/n} \leq \frac{1}{R}\]
+
+Si conseguimos probar ahora la desigualdad contraria habremos logrado demostrar la igualdad, es decir, habremos demostrado que la fórmula dada para el cálculo de $R$ encaja con la definición del mismo.
+
+Vamos a probar esta desigualdad por reducción al absurdo.
+\[\limsup_{n \to \infty}|a_n|^{1/n} < \frac{1}{R} \implies \exists N > 0 \tq \forall n \geq N \ \sup_{k \geq N} |a_n|^{1/n} < \frac{1}{r} < \frac{1}{R} \implies\]
+\[\implies \forall k \geq N \ |a_k|^{1/k} < \frac{1}{r} \implies |a_n| r^n < M \forall n \implies \sup_{n\to\infty}|a_n|r^n< \infty\]
+pero teníamos que $R > r$ lo que nos lleva a contradicción.
+\item
+
+\item La demostración es idéntica a una realizada anteriormente y se deja como ejercicio para el lector.
+
+\end{enumerate}
+
+\end{proof}
 \section{Principio de los ceros aislados}
 
 
