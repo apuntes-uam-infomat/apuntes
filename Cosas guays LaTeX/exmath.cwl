@@ -205,3 +205,4 @@
 \salgb#m
 \sfin#m
 \gal#m
+\tens#m
