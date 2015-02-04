@@ -62,6 +62,12 @@ $\ind_A(w)=1$ si $w \in A$\\
 $\ind_A(w)=0$ si $w \in A^c$
 
 \item $f_+ = max(f,0)$ y $f_- = max(-f,0)$. Y por tanto, $f=f_+ -f_-$ y $\abs{f}=f_+ +f_-$
+
+\item Tma Fundamental del calculo: Dada una función f(x) continua en el intervalo [a,b] y sea F(x) cualquier función primitiva de f, es decir $F '(x) = f(x)$. Entonces:
+
+\[
+\int_a^b f(x)dx = F(b)-F(a)
+\]
 \end{itemize}
 
 \chapter{Espacios de probabilidad}
@@ -356,8 +362,21 @@ X \text{es una variable aleatoria} \Leftrightarrow \forall B \in \algb{B}, X^{-1
 
 En este curso usaremos como $\Omega_2$ conjuntos como $\mathbb{R}$ o $\mathbb{R} \cup \{\pm \infty\}$ o $\mathbb{C}$. Si $\Omega_2 = \mathbb{R}^d$, decimos que la función medible $X: \Omega_1 \rightarrow \mathbb{R}^d$ es un vector medible.
 \end{defn}
-
 \obs Una variable aleatoria es una función medible.
+
+\begin{defn}[Variable aleatoria discreta]
+Una variable aleatoria X es discreta $\Leftrightarrow$ $P_X$ es discreta. Es decir, si toma valores en un conjunto numerable. Se caracteriza por tener una función de masa o de probabilidad, y una función de distribución.
+
+Otras definiciones:
+
+Recordemos que X es una función. $X: \Omega \rightarrow \mathbb{R}$. X es discreta si existe un conjunto numerable $x_1, x_2,...,x_n \in \mathbb{R}$ (siendo $x_i=X(w_i)$) tal que $P(\bigcup_{i=1}^{\infty}x_i=1)$.
+
+$P_X$ es discreta si $P_X(\mathbb{R})=\sum_{i=1}^{\infty}P(X=x_i)$ (es decir, se puede expresar como un sumatorio numerable).
+\end{defn}
+
+\begin{defn}[Variable aleatoria continua]
+Una variable aleatoria es continua si toma valores en un conjunto no numerable. Tiene asociada una función de densidad o de probabilidad, y una función de distribución.
+\end{defn}
 
 \begin{defn}[ley de X]
 Dado el espacio de probabilidad ($\Omega, \algb{M}, P$) y la variable aleatoria $X: \Omega \rightarrow \mathbb{R}$, la ley de X es la probabilidad en $\mathbb{R}$ definida mediante:
@@ -416,6 +435,39 @@ Sea un espacio de probabilidad $\{\Omega, \algb{M},P\}$, la media o esperanza de
 E(X)=E_p(X)=\int_{\Omega}X(w)dP(w)
 \]
 
+Si la variable aleatoria es continua:
+
+\[
+E(X)=E_p(X)=\int_{\Omega}X(w)dP(w) = \int_{-\infty}^{\infty}x\cdot dP_X(x)= \int_{-\infty}^{\infty}x\cdot dF_X(x) = \int_{-\infty}^{\infty}x\cdot f_P(x) dx
+\]
+
+Donde $F_X(t)=P(X \leq t)$ es la función de distribución de X y $f(t)=F'_X(t)$ la de densidad.
+
+Si es discreta:
+
+\[
+E(X)=\sum_{n=1}^{\infty}X(w_n)P(w_n)
+\]
+
+
+\obs \textbf{Breve explicación del concepto de integrar respecto a una medida}(Desde aquí hasta la definición de varianza hay una explicación, posiblemente obvia para muchos lectores,  de lo que es derivar con respecto a una medida, además esta escrita con mis palabras con lo que puede que os liéis, si es así, os recomiendo borrarla de la cabeza, aunque también puede servir) Derivar con respecto a P(w), es derivar con respecto a una medida, que tal y como hemos visto en TIM es equivalente a derivar la función de distribución de dicha medida e integrar con respecto a x. O lo que es lo mismo, multiplicar por la función de densidad. 
+
+El concepto es natural en este caso, si se piensa que la integral es una suma infinita, y si derivas con respecto a una medida lo que quieres es obtener la medida de cada $w \in \Omega$. En este caso se suele hacer un cambio de variable, e integrar en $\mathbb{R}$ en lugar de en $\Omega$, por tanto ahora integras las x=X(w), y pones la función de densidad, que asigna a cada valor X(w) su probabilidad (sabemos que al hacer la integral estamos considerando que la variable aleatoria es continua, y no discreta, y que por tanto la probabilidad de un evento es igual a la probabilidad de un punto, que es 0 ya que el area bajo un punto es 0), que es lo equivalente a la función de probabilidad, de manera que queda:
+
+\[
+E(X)=E_p(X)=\int_{\Omega}X(w)dP(w) = \int_{\mathbb{R}}x\cdot dP_X(x)= \int_{\mathbb{R}}x\cdot dF(x) = \int_{\mathbb{R}}x\cdot f(x) dx
+\]
+
+Siendo $f(x)$ la función de densidad asociada a esa probabilidad (a esa función de distribución P), que aplicando el Tma. Fundamental del Calculo (ver capitulo 1):
+
+\[
+F(x) = \int_{-\infty}^{x}f(x)dx  \rightarrow \frac{dF(x)}{dx}= f(x) \rightarrow dF(x) = f(x)dx
+\]
+
+Por tanto, dada una integral con respecto a una medida $\mu$, primero obtenemos la función de distribución asociada a $\mu$ y posteriormente derivamos esa función de distribución obteniendo la función de densidad y la integral con respecto a x, que s´i sabemos resolver.
+
+Cuando la variable aleatoria es discreta la esperanza se calculará como una suma finita por la medida (probabilidad) de cada evento $w \in \Omega$.
+
 %\obs $P(a \leq w \leq b)= \int_{b}^{a} f(x)dx$, por tanto: $dP(a \leq w \leq b) = f(b)-f(a).
 \end{defn}
 
@@ -426,14 +478,144 @@ Sea un espacio de probabilidad $\{\Omega, \algb{M},P\}$, la varianza de una una 
 var(X)=E[(X-E(X))^2] = E(X^2)-E(X)^2
 \]
 
-\obs Si $X(w)=c \forall w$, entonces $E(X)=c$
+\obs Si $X(w)=c$  $\forall w$, entonces $E(X)=c$
 \obs E(E(X))=E(X)
 \end{defn}
 
 \begin{defn}[Formula del cambio de variable]
+Sea $X: \Omega \rightarrow \mathbb{R}$ una variable aleatoria, y sea $g:\mathbb{R} \rightarrow \mathbb{R}$ una función de Borel. Entonces:
 
+\[
+\mathbb{E}(g(X))=\int_{\Omega}g(X(w))dP(w)=\int_{\mathbb{R}}g(x)dP_X(x)
+\]
+
+Recordatorio: $P_X(A)=P(X\in A)=P(X^{-1}(A))$
 \end{defn}
 
+Antes de demostrar esta fórmula vamos a recordar algunos conceptos de TIM que usaremos:
+
+\begin{defn}[Integrar respecto a una medida una función indicatriz]
+La integral con respecto a una medida de una función indicatriz evaluada sobre un subconjunto $E \in \Omega$ medible (perteneciente a la $\salgb$) es la medida de dicho subconjunto E:
+
+\[\int_{\Omega} \ind_{E}d\mu = \mu(E)\]
+\end{defn}
+
+\begin{defn}[Función simple]
+Combinación lineal finita de funciones indicatrices.
+
+\[
+s(x) = \sum_{i=1}^{n}(c_i \cdot \ind_{B_i}(x))
+\]
+\end{defn}
+
+\begin{defn}[Integrar respecto a una medida una función simple]
+Sea $(\Omega,\algb{M},\mu)$ un espacio de medida:
+
+\[\int_{\Omega} s\mu = \sum_{i=1}^{n}(c_i \int \ind_{B_i} d\mu) = \sum_{i=1}^{n}(c_i \mu(B_i))\]
+\end{defn}
+
+\begin{defn}[Función $L^+$]
+$f \in L^+ \Leftrightarrow f:X\rightarrow [0, \infty]$
+\end{defn}
+
+\begin{defn}[Teorema de aproximación de funciones simples]
+Si $f:X \rightarrow [0, \infty]$ es una función medible, entonces existe una sucesión crecientes de funciones simples $s_n$, $0 \leq s_1 \leq s_2 \leq ... \leq f$ tal que $\forall x  \in X, s(x) \rightarrow f(x)$. Además la convergencia es uniforme sobre conjuntos en los que |f| es acotada.
+\end{defn}
+
+\begin{defn}[Teorema de la convergencia monótona: TCM]
+Si $f_n$ es una sucesión creciente de funciones $L^+$ y $f(x)=sup_n\{f_n(x)\}=lim_nf_n(x)$ entonces:
+\[
+\int f = \lim_n \int f_n
+\]
+\end{defn}
+
+\begin{proof}
+\textbf{De la fórmula del cambio de variable} Esta demostración puede servir para aclarar algunos conceptos de TIM, lo hacemos despacio:
+
+\begin{enumerate}
+\item Primero vamos a ver que es cierto para funciones $g=\ind_{B}$, con $B \in Borel(\mathbb{R})$. De manera que por ser una función indicatriz se cumple que: $\ind_{B}(X(w))=1 \Leftrightarrow X(w) \in B$. 
+
+En este caso tendríamos (Usamos la definición de integrar respecto a una medida una función indicatriz):
+\[
+\mathbb{E}(g(X(w))) = \mathbb{E}(g(X)) = \mathbb{E}(\ind_{B}(X))=\int_{\Omega}\ind_{B}(X(w))dP(w) =
+\]
+\[
+= P(X(w)\in B) = P(X^{-1}(B))=P_X(B)=\int_{\Omega}\ind_{B}(x)dP_X(x)
+\] 
+
+Breve explicación: 
+\begin{itemize}
+\item Poner o no la 'w' al poner X(w) no es más que notación, se sobreentiende que esa w siempre esta ahí, ya que X es una variable aleatoria, y por tanto una función que depende de w.
+\item Estamos integrando sobre un espacio $\Omega$, sin embargo la indicatriz esta evaluada sobre un espacio de Borel que no tiene por que pertenecer a $\Omega$. Por eso, el resultado de la integral no es P(B) que es lo que sería aplicando la definición anterior (si ocurriera que $B\in \Omega$). En este caso, el resultado sera la medida P de todos los $w \in \Omega$ que provocan que $X(w) \in B$.
+\item La última igualdad sale por definición de integrar respecto a una medida una función indicatriz.
+\end{itemize}
+\item Si $g \geq 0$ (es decir, $g \in L^+$), entonces, por el teorema de la aproximación de funciones simples, existe una sucesión $s_n\nearrow g$ (converge a g en todo punto y la sucesión es monótona creciente). Así podemos escribir:
+
+\[
+\int g dP = \int \lim_{n \rightarrow \infty}s_n dP \stackrel{TCM}{=} \lim_{n \rightarrow \infty}\int s_n dP
+\]
+
+Y dicha integral la sabemos resolver aplicando la definición de integral sobre funciones simples que hemos visto anteriormente y aplicando el punto 1 de esta demostración.
+\item Y el último caso sería una funcion $g:\mathbb{R} \rightarrow \mathbb{R}$, en cuyo caso escribimos $g=g_+-g_-$ (ver capitulo 1.3). Y nos queda $\int gdP = \int g_+dP -\int g_-dP$(por la linealidad de la integral).
+
+Por tanto hemos expresado g como resta de dos funciones $g_+$ y $g_-$, ambas pertenecientes a $L^+$. Entonces podemos hallar $\int g$ aplicando el punto 2 de esta demostración. Debemos tener en cuenta que $\int g$ existirá si: $\int g_+dP < \infty$ ó $\int g_-dP < \infty$
+
+\end{enumerate}
+\end{proof}
+
+
+\begin{example}
+\begin{itemize}
+\item $\mathbb{E}(X)$ no esá bien definida si $\int_{\mathbb{R}}X_+ dP_X=\infty$ y $\int_{\mathbb{R}}X_- dP_X=\infty$.
+
+\item $\mathbb{E}(X^2)$ siempre esta bien definida ya que $(X^2)_-=0$.
+\item Si $X \geq 0$, $\mathbb{E}(X)$ está bien definida.
+\item Sea una variable aleatoria de Bernoulli de parámetro p. Entonces $P(X=1)=p$ y $P(X=0)=1-p$. Llamamos función de masa a $P(X=i)$.
+
+$\mathbb{E}(X)$ está bien definida porque X(w) es siempre $\geq 0$. 
+
+\[
+\mathbb{E}(X)=0\cdot P(X=0)+1\cdot P(X=1)=0\cdot(1-p)+1\cdot p=p
+\]
+\[
+\mathbb{E}(X^2)=0^2\cdot P(X=0)+1^2\cdot P(X=1)=0^2\cdot(1-p)+1^2\cdot p=p
+\]
+\[
+\mathbb{V}(X)=\mathbb{E}(X^2)-\mathbb{E}(X)^2=p-p^2=p(1-p)
+\]
+\item Sea $S_n=X_1+X_2+...+X_n$, con $X_i=Bernoulli(p)$, entonces $S_n ~ Binomial=B(n,p)$.
+\[
+\mathbb{E}(S_n)=\mathbb{E}(\sum_{i=1}^{n}X_i)\stackrel{linealidad integral}{=}\sum_{i=1}^{n}(\mathbb{E}(X_i))=np
+\]
+\end{itemize}
+\end{example}
+
+
+
+
+\begin{defn}[medida absolutamente continua con respecto a otra $\mu << \nu$]
+$\mu << \nu$ si $\mu(A)=0 \Rightarrow \nu(A)=0$
+
+\begin{example}
+Sea $f \geq 0$ medible y sea $\mu(A)=0$, entonces $\int_Afd\mu=0$ (se ve fácil con la fórmula del cambio de variable). Si defino $\nu(B)=\int_B fd\nu$, entonces tenemos que $\mu << \nu$.
+\end{example}
+\end{defn}
+
+\begin{defn}[medida con signo]
+Sea $f:\mathbb{R}\rightarrow \mathbb{R}$, entonces $\nu(B)=\int_B fd\nu$ es una medida con signo (y además $\mu << \nu$). Es una medida con signo ya que al ser una medida que depende de una función que va de $[-\infty, \infty]$, puede adquirir valores negativos.
+\end{defn}
+
+\begin{defn}
+X es una variable aleatoria continua $\Leftrightarrow$ $P_x$ es absolutamente continua con respecto a la medida de Lebesgue ($\lambda$) (se escribe $P_X << \lambda$)
+\end{defn}
+
+\begin{theorem}[Teorema de Radon-Nikodyn]
+Sea $\nu << \mu$ una medida con signo ($\mu \geq 0$, $\mu$ y $\nu$ son $\sfin$, y $\nu_+(X) < \infty$ ó $\nu_-(X) < \infty$). Entonces existe una funcion f medible tal que $f:X \rightarrow \mathbb{R}$ que cumple que $\forall B$ medible $\subset X$ se cumple $\nu(B)=\int_Bfd\mu$. Escribimos $f=\frac{d\nu}{d\mu}$, la derivada de Radon-Nikodyn. 
+\end{theorem}
+
+\begin{defn}[Medida\IS $\sfin$]\label{defSigmaFinita}
+Dado un espacio de medida $(X, \algb{M}, µ)$, decimos que una medida es $\sfin$ si el conjunto $X$ puede expresarse como una unión de elementos de la $\salgb$ de medida finita. Es decir, si \[X=\bigcup_{n=1}^{\infty}E_n, \ E_n \in \algb{M} \text{ y }µ(E_n)< \infty\]
+\end{defn}
 
 
 
