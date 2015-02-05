@@ -44,3 +44,7 @@ Recomendada instalación a través de MacPorts. En la página [están todos los 
 ### Ubuntu
 
 Hay que instalar el paquete base y también los extras ya que se usan varios paquetes presentes ahí: _texlive-latex-base_, _texlive-latex-extra_, _texlive-latex-recommended_. También es interesante instalarse la documentación de cada de uno de esos paquetes.
+
+# Licencia
+
+Estos apuntes se comparten bajo la licencia [Creative Commons - No Commercial - Share Alike](http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode): se pueden usar libremente siempre y cuando se de crédito a los autores originales, no se usen con propósitos comerciales y los trabajos derivados se compartan bajo esta misma licencia.
