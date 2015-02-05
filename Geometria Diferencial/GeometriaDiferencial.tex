@@ -369,7 +369,7 @@ También podemos definir el producto de tensores.
 
 \begin{multline*} Φ_1 \otimes Φ_2 (x_1^*,\dotsc, x_{a+c}^*, x_1, \dotsc, x_{b+d}) = \\ Φ_1(x_1^*,\dotsc, x_a^*, x_1, \dotsc, x_b) ·_\kbb Φ_2(x_{a+1}^*,\dotsc, x_{a+c}^*, x_{b+1}, \dotsc, x_{b+d}) \end{multline*}
 
-En este caso, tenemos que $Φ_1 \otimes Φ_2 ∈ \tens_{a+c}^{b+d}(E)$.
+En este caso, tenemos que $Φ_1 \otimes Φ_2 ∈ \tens_{a+c}^{b+d}(E)$. \label{defProdTensorial}
 \end{defn}
 
 Este producto tiene propiedades deseables, como el hecho de que sea distributivo ($Φ_1 \otimes (Φ_2 + Φ_3) = Φ_1 \otimes Φ_2 + Φ_1 \otimes Φ_3$) al ser $\kbb$ un cuerpo con el producto distributivo respecto a la suma.
@@ -386,9 +386,9 @@ Es un proyecto complicado, así que vamos a dividir la tarea de escribir una bas
 
 Partimos de algo simple: tenemos $E$ un espacio vectorial sobre $\kbb$ de dimensión finita $n$, con una base $\base = \set{e_i}_{i∈I} \equiv \set{e_1, \dotsc, e_n}$. Sea $Φ ∈ \tens_0^b(E)$ un tensor covariante $(0,b)$, es decir, una aplicación multilineal que lleva $b$ vectores de $E$ a un valor en $\kbb$.
 
-Queremos saber entonces cómo caracterizar la imagen de $b$ vectores $\vx_1, \dotsc, \vx_b$ por $Φ$. Más concretamente, querríamos poder escribir \[ Φ(\vx_1, \dotsc, \vx_b) = \sum λ_m ρ_m \] donde $ρ_m$ serían los elementos de la base y $λ_m$ las coordenadas.
+Queremos saber entonces cómo caracterizar $Φ$ como combinación lineal de elementos de la base. Más concretamente, querríamos poder escribir \[ Φ = \sum λ_m ρ_m \] donde $ρ_m$ serían los elementos de la base y $λ_m$ las coordenadas.
 
-Sabemos que cada $\vx_j$ se puede expresar como combinación lineal de elementos de la base de $E$, es decir, \[ \vx_j = \sum_{i = 1}^n x_i^j e_i\] donde $x_i^j$ es la coordenada $i$ del vector $j$.
+Para llegar a esa notación, vamos a empezar estudiando la imagen $Φ(\vx,1, \dotsc, \vx_b)$.Sabemos que cada $\vx_j$ se puede expresar como combinación lineal de elementos de la base de $E$, es decir, \[ \vx_j = \sum_{i = 1}^n x_i^j e_i\] donde $x_i^j$ es la coordenada $i$ del vector $j$.
 
 Entonces, podemos escribir \[ Φ(\vx_1, \dotsc, \vx_b) = Φ\left(\sum_{i = 1}^n x_i^1 e_i, \dotsc, \sum_{i = 1}^n x_i^b e_i\right)\]
 
@@ -398,7 +398,45 @@ Por ser $Φ$ multilineal, podemos ver que esos sumatorios y productos por escala
 
 Parece claro entonces que a partir de aquí nos van a quedar $b$ sumatorios que van desde $1$ hasta $n$. Es decir, \[ Φ(\vx_1, \dotsc, \vx_b) = \sum_{{j_1}=1}^n \dotsb \sum_{{j_b}=1}^n x_{j_1}^1 · \dotsb x_{j_b}^b Φ(e_{j_1}, \dotsc, e_{j_b})\]
 
-Así, los elementos de la base serían las imágenes $Φ(e_{j_1}, \dotsc, e_{j_b})$ (hay $n^b$) y las coordenadas los productos $x_{j_1}^1 · \dotsb x_{j_b}^b $. En resumidas cuentas: un engendro terrible.
+Vemos que, independientemente de los vectores $\vx_i$ que cojamos, hay una parte que se queda constante, que sólo depende de cómo es $Φ$: los escalares $Φ(e_{j_1}, \dotsc, e_{j_b}) ∈ \kbb$. Podríamos pensar entonces que eso son las coordenadas de $Φ$ en $\tens_0^b(E)$. La cuestión es, ¿quiénes son los elementos de la base?
+
+Los elementos de la base deberían ser elementos que nos den $x_{j_1}^1 \cdot \dotsb x_{j_b}^b$ cuando sean aplicados a $\vx_1, \dotsc, \vx_b$. Por así decirlo, necesitamos ``selectores de coordenadas'', que cuando apliquemos a los vectores nos den un producto de determinadas coordenadas.
+
+Haciendo un ejercicio de intuición matemática, podemos pensar en los elementos del espacio dual $E^*$. Consideramos la base $\base^* = \set{e_1^*, \dotsc, e_2^*}$ del espacio dual, donde $e_i^*(e_j) = δ_{ij}$. Visto de otro modo, $e_i$ es una aplicación lineal tal que $e_i^*(\vv) = v_i$, es decir, que nos da la coordenada $i$-ésima del vector que le pasemos como argumento\footnote{Algo más formalmente: si $\vv = \sum_{j=1}^n v_j e_j$, entonces $e_i^*(\vv) = \sum_{j=1}^n v_j e_i^*(e_j) = v_i e_i^*(e_i) = v_i$.}.
+
+Parece que los elementos de la base del dual son lo que necesitamos, lo que actuará de ``selector de coordenadas''. ¿Cómo los componemos para poder aplicarlo a $b$ vectores? Usando lo que vimos antes del producto tensorial (\ref{defProdTensorial}). El truco es que podemos considerar un elemento del dual como un tensor $(0,1)$, y entonces el producto tensorial de $b$ tensores es un tensor $(0,b)$.
+
+Es decir, que los elementos de la base del espacio de tensores $\tens_0^b(E)$ serían los elementos \begin{gather*}
+ρ_{j_1,\dotsc,j_b} = e_{j_1}^* \otimes \dotsb \otimes e_{j_b}^* \\
+\appl{ρ_{j_1,\dotsc,j_b}}{\underbrace{E×\dotsb×E}_{b}}{ℝ}
+\end{gather*} donde $ρ_{j_1,\dotsc,j_b}$ es un tensor $(0,b)$ que coge la coordenada $j_1$ del vector $1$, la $j_2$ del vector $2$, etc\footnote{Por ejemplo, si tomamos $b=2$, tendríamos que $ρ_{1,2}((1,2), (3,4)) = 1 · 4$.}, es decir, con
+\[
+ρ_{j_1,\dotsc,j_b} (\vx_1, \dotsc, \vx_b) = \left(e_{j_1}^* \otimes \dotsb \otimes e_{j_b}^*\right)(\vx_1, \dotsc, \vx_b) = x_{j_1}^1 \dotsb x_{j_b}^b
+\]
+donde $x_{j_b}^k$ es la coordenada $j_b$ del vector $k$, con $j_b = 1, \dotsc, n$ y $k = 1, \dotsc, b$.
+
+Así, nos quedaría que podemos expresar un tensor $Φ$ como \[ Φ = \sum_{j_1=1}^n \dotsb \sum_{j_b = 1}^n \underbrace{Φ(e_{j_1}, \dotsc, e_{j_b})}_{\text{Coordenada}} · \underbrace{e_{j_1}^* \otimes \dotsb \otimes e_{j_b}^*}_{\text{Elemento de la base}} \] de tal forma que la imagen de $\vx_1, \dotsc, \vx_b$ por $Φ$ se puede calcular como
+\begin{align*}
+Φ(\vx_1, \dotsc, \vx_b) &= \sum_{j_1=1}^n \dotsb \sum_{j_b = 1}^n Φ(e_{j_1}, \dotsc, e_{j_b}) · \left(e_{j_1}^* \otimes \dotsb \otimes e_{j_b}^*(\vx_1, \dotsc, \vx_b)\right) = \\
+&= \sum_{j_1=1}^n \dotsb \sum_{j_b = 1}^n Φ(e_{j_1}, \dotsc, e_{j_b}) · x_{j_1}^1 \dotsb x_{j_b}^b
+\end{align*}
+donde, de nuevo, $x_{j_b}^k$ es la coordenada $j_b$ del vector $k$.
+
+\paragraph{Ejemplo: base de un tensor $(0,2)$} Un tensor $Φ∈\tens_0^2(ℝ^2)$ se podrá descomponer de la siguiente forma: \[ Φ = λ_{1,1} · e_1^* \otimes e_1^* + λ_{1,2} · e_1^* \otimes e_2^* + λ_{2,1} · e_2^* \otimes e_1^* + λ_{2,2} · e_2^* \otimes e_2^*\] donde $λ_{j_1, j_2} ∈ ℝ$ y $e_1, e_2$ son una base de $ℝ^2$, que en este caso tomaremos como la canónica $e_1 = (1,0),\;e_2=(0,1)$. Así, los tensores $e_{j_1} \otimes e_{j_2}$ serán matrices cuadradas $2 × 2$. Por ejemplo, \[ e_1 \otimes e_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1\end{pmatrix}\]
+
+Entonces, los tensores $Φ∈\tens_0^2(ℝ^2)$ no son más que matrices $2 × 2$, que se pueden expresar como combinación lineal de cuatro matrices base, cada una obtenida con los productos tensoriales de los elementos de la base de $ℝ^2$.
+
+\paragraph{El determinante como tensor $(0,b)$} Un ejemplo más concreto: antes decíamos que el determinante es un tensor, así que vamos a ir a ello. Sea $Φ_b$ la operación que nos da el determinante de una matrix $b × b$, es decir, \[ \appl{Φ_b}{M_{b×b}}{ℝ} \]. ¿Cómo lo expresamos como un tensor?
+
+Lo primero es pasar del espacio de matrices al espacio en el que se definen los tensores. Podemos ver que una matrix $b × b$ no es más que un conjunto de $b$ vectores de dimensión $b$, es decir, que \[ M_{b×b} = \underbrace{E × \dotsb × E}_{b \text{ veces}}\] donde $E$ es el espacio vectorial que estemos trabajando. Tomemos por comodidad y por seguir con el ejemplo de antes $b = 2$ y $E = ℝ^2$, por lo que vamos a buscar el determinante de matrices de dimensión $2$.
+
+Sea \[ A = \begin{pmatrix} a & c \\ b & d \end{pmatrix} = \begin{pmatrix} \vx_1 & \vx_2 \end{pmatrix} \] con $\vx_1 = \begin{pmatrix}a \\ b\end{pmatrix}$ y $\vx_2 = \begin{pmatrix}c \\ d\end{pmatrix}$. Entonces $Φ_2(A) = ad - cb$. Mirándolo desde el punto de vista de ``selección de coordenadas'' que comentábamos antes, seleccionamos la coordenada 1 del primer vector y la 2 del segundo multiplicando por 1; y luego seleccionamos la coordenada 2 del primer vector y la 1 del segundo multiplicando por -1.
+
+Expresando esto con los elementos de la base, tendremos que \[  Φ_2 = 0 · e_1^* \otimes e_1^* + 1 · e_1^* \otimes e_2^* - 1 · e_2^* \otimes e_1^* + 0 · e_2^* \otimes e_2^*  \]
+
+Bajo esta notación, el determinante de una matriz $A$ sería \begin{align*}
+Φ_2(A) &= 0 · \left(e_1^* \otimes e_1^* (\vx_1, \vx_2) \right)+ 1 · \left(e_1^* \otimes e_2^* (\vx_1, \vx_2) \right) - 1  · \left(e_2^* \otimes e_1^* (\vx_1, \vx_2) \right) + 0 · \left(e_2^* \otimes e_2^* (\vx_1, \vx_2) \right) = \\
+&= 0 · x_1^1 x_2^1 + 1 · x_1^1 x_2^2  - 1 · x_1^2 x_2^1 + 0 · x_2^2 x_2^2\end{align*}
 
 \chapter{Variedades diferenciables}
 
