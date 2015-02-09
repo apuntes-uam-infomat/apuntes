@@ -1,5 +1,3 @@
-
-
 # Apuntes Ingeniería Informática - Matemáticas
 
 ### Compilación
