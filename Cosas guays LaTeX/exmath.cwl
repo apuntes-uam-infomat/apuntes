@@ -136,6 +136,8 @@
 \ejrheader#m
 \begin{problem}#
 \begin{problem}[N. ejercicio]#
+\begin{problemS}#
+\begin{problemS}[N. ejercicio]#
 \listtheoremname#m
 \ithm{arg0}#m
 \begin{defn}#
