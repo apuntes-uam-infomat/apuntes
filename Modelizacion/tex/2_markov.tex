@@ -202,30 +202,144 @@ Iterando nos queda:
 $$(\prod_n) = (\prod_0) \cdot P^n$$
 
 Ahora vemos cómo aplicar esto a las páginas web.
-DIBUJO DEL GRAFO DE SIEMPRE
+\begin{example}
+	DIBUJO DEL GRAFO DE SIEMPRE
+	
+	S= páginas web (vértices)\\
+	$P_{ij}$ = probabilidad de , estando en la página i, llegar a la página j en el instante siguiente.
+	$$Prob(X_1 = (2)| X_0 = (1)) = 1$$
+	$$P =\left(\begin{matrix}
+	0 & 1 & 0\\
+	1/2 & 0 & 1/2\\
+	1 & 0 & 0
+	\end{matrix}\right)$$
+\end{example}
 
-S= páginas web (vértices)\\
-$P_{ij}$ = probabilidad de , estando en la página i, llegar a la página j en el instante siguiente.
-$$Prob(X_1 = (2)| X_0 = (1)) = 1$$
-$$P =\left(\begin{matrix}
-  0 & 1 & 0\\
-  1/2 & 0 & 1/2\\
-  1 & 0 & 0
-\end{matrix}\right)$$
 
 
-Otro ejemplo:
-DIBUJO DE OTRO TRUÑO DE ESOS QUE PONE EN LA PIZARRA
+\begin{example}[Otro]
+	DIBUJO DE OTRO TRUÑO DE ESOS QUE PONE EN LA PIZARRA
+	
+	$$P = \left( \begin{matrix}
+	0 & 1 & 0 & 0\\
+	0 & 0 & 1 & 0\\
+	1 & 0 & 0 & 0\\
+	1 & 0 & 0 & 0\\
+	\end{matrix}\right)$$
+	Este ejemplo habiamos visto que no funcionaba bien porque no convergia a nada, oscilaba.
+\end{example}
 
-$$P = \left( \begin{matrix}
-0 & 1 & 0 & 0\\
-0 & 0 & 1 & 0\\
-1 & 0 & 0 & 0\\
-1 & 0 & 0 & 0\\
-\end{matrix}\right)$$
-Este ejemplo habiamos visto que no funcionaba bien porque no convergia a nada, oscilaba.
 
 
 Teniendo en cuenta que en la realidad la P sería una matriz de $3\cdot 10^{13} \times 3\cdot 10^{13}$ la forma más fácil de calcular $P^n$ es con la forma canónica de Jordan.
+
+Volviendo al primer ejemplo:
+\begin{example}[1er caso]
+$$P =\left(\begin{matrix}
+0 & 1 & 0\\
+1/2 & 0 & 1/2\\
+1 & 0 & 0
+\end{matrix}\right)$$
+Hacemos Jordan:
+$$P = C^{-1} \left(\begin{matrix}
+	1&&\\
+	&z&\\
+	&&\overline{z}
+	\end{matrix}\right) C$$
+Haciendo los cálculos nos queda $z = \frac{1}{\sqrt{2}}\cdot e^{\frac{3\pi i}{4}}$
+
+Por lo tanto:
+$$P^n =  C^{-1} \left(\begin{matrix}
+1&&\\
+&z^n&\\
+&&\overline{z}^n
+\end{matrix}\right) C \stackrel{n\rightarrow \infty}{\rightarrow}  C^{-1} \left(\begin{matrix}
+1&&\\
+&0&\\
+&&0
+\end{matrix}\right) C = \left(\begin{matrix}
+2/5&2/5&1/5\\
+2/5&2/5&1/5\\
+2/5&2/5&1/5
+\end{matrix}\right) = L$$
+Esto implica que:
+$$\lim_{n\rightarrow\infty}(\prod_n) = \lim_{n\rightarrow\infty}(\prod_0)\cdot P^n = (\prod_0)\cdot L =( \begin{matrix}
+2/5&2/5&2/5
+\end{matrix})$$
+Que es independiente de $\prod_0$
+\end{example}
+
+Vamos a comprobar si esto también pasa para el segundo ejemplo.
+\begin{example}[2o caso]
+	DIBUJO TRUÑO
+	
+	$$P = \left( \begin{matrix}
+	0 & 1 & 0 & 0\\
+	0 & 0 & 1 & 0\\
+	1 & 0 & 0 & 0\\
+	1 & 0 & 0 & 0\\
+	\end{matrix}\right)= C^{-1} \left(\begin{matrix}
+	1&&&&\\
+	&w&&&\\
+	&&\overline{w}&\\
+	&&&0
+	\end{matrix}
+	\right)$$
+	$w = e^{\frac{2\pi i}{3}}$ , si seguimos calculando las potencias de $w$ y de $\overline{w}$ vemos que van oscilando entre los valores $w , \overline{w} , 1$, por lo que vemos que en este caso $P^n$ no tiene límite.
+	$$\exists(\prod_0) : \nexists \lim (\prod_0)\cdot P^n$$
+	Sin embargo con $(\prod_0) = (\begin{matrix}
+	1/3&1/3&1/3&0
+	\end{matrix}) $ se comprueba $(\prod_0) = (\prod_0)\cdot P$
+	
+	
+	Con lo que para ese $(\prod_0)$ si tenemos límite.Ya veremos más adelante cómo se llaman este tipo de distribuciones.
+\end{example}
+
+Lo que hemos comprobado con estos dos ejemplos es que si conocemos la forma canónica de Jordan podemos saber si tenemos convergencia o no.
+
+\paragraph{Resumen de lo visto hasta ahora}
+\begin{itemize}
+	\item Cadenas de Markov $\begin{cases}
+	(\prod_0) = \{P(X_0 = i)\}_{i \in S} \rightarrow \text{\textbf{distribución inicial}}\\
+	P = \text{Matriz de transición}
+	\end{cases}$
+	\item Distribución de probabilidad en el instante 0 = $(\prod_0)P^n$
+	\item $P^n$ se calcula con la forma canónica de Jordan
+	\item En general nos queremos que exista la \textbf{distribución límite} : $\lim_{n\rightarrow\infty} (\prod_0) P^n$
+\end{itemize}
+
+\obs Si existe $(\prod) = \lim (\prod_0) P^n$ entonces $(\prod) = (\prod) P$
+\begin{proof}
+	$(\prod) = \lim(\prod_0) P^{n+1} = (\lim (\prod_0)P^n)P = (\prod) P$
+\end{proof}
+
+\begin{defn}[Distribuciones estacionarias]
+	Se dice que $(\prod)$ es una distribución de probabilidad estacionaria si:
+	$$(\prod)\cdot P = (\prod)$$	
+\end{defn}
+
+\obs Con estas distribuciones podemos calcular el límite y estudiar la convergencia sin utilizar la forma canónica de Jordan.
+
+
+Recordando las preguntas que nos hicimos con las propiedades de los paseos aleatorios vemos que , experimentalmente, las cadenas de Markov muy interconectadas responden afirmativamente a estas preguntas.
+
+Vamos a ver dos versiones de lo que se entiende por \textbf{conexión} de una cadena de Markov
+\begin{itemize}
+	\item \begin{defn}[Irreducible]
+		Se dice que una cadena de Markov es \textbf{irreducible} si se puede ir de un estado a otro en un número finito de pasos. Es decir
+		$$\forall i,j \in S\text{    }\exists k : P(X_k = j| X_0 = i) \neq 0$$
+		Otra forma de definirlo es con la matriz de transición:
+		$$\forall i,j \in S \text{    }\exists k: (P^k)_{ij} \neq 0$$
+	\end{defn}
+	\item \begin{defn}[Regular]
+		Se dice que una cadena de Markov es \textbf{regular} si existe un número de pasos tal que dándolos se puede pasar de un estado a cualquier otro. Es decir:
+		$$ \exists k : P(X_k = j| X_0 = i) \neq 0  \forall i,j \in S $$
+		Otra forma de definirlo es con la matriz de transición:
+		$$\exists k : \text{ todos los elementos de} P^k \text{ son positivos.}$$
+	\end{defn}
+\end{itemize}
+
+
+
 
 
