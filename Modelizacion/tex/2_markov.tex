@@ -1,18 +1,18 @@
 \chapter{Cadenas de Markov}
 
 \section{Un modelo para redes}
-En este capítulo vamos a ver cómo Google a las páginas que muestra.
+En este capítulo vamos a ver cómo ordena Google las páginas que resultan de la búsqueda para mostrarlas por orden de prioridad.
 
-Supongamos que tenemos una red de páginas web conectadas por enlaces.\\
-Google afirma cubrir unas $3\cdot 10^3$ páginas web.
-Vamos a ver las páginas como vértices de un grafo y los enlaces como aristas dirigidas(especificando un sentido).
+Supongamos que tenemos una red de páginas web conectadas por enlaces (Google afirma cubrir unas $3\cdot 10^3$ páginas web). Vamos a ver las páginas como vértices de un grafo y los enlaces como aristas dirigidas(especificando un sentido).
 
-Matemáticamente esto es in grafo dirigido:
-DIBUJO GRAFO
+Matemáticamente esto es un grafo dirigido:
+\begin{center}
+\includegraphics{tex/ejemplo_dibujo.png}
+\end{center}
 ¿Cómo ordenar por relevancia los vértices?¿En qué orden aparecerán las páginas?
 
 
-\textbf{Idea(Markov):} Suponer un paseo aleatorio por los vértices (los internautas navegan al azar siguiendo los enlaces) y una mayor acumulación en ciertos vértices indica que son más importantes.
+Para poder determinar que páginas son más importantes vamos a suponer un paseo aleatorio por los vértices (los internautas navegan al azar siguiendo los enlaces) de forma que una mayor acumulación en ciertos vértices indicará que son más importantes.
 
 
 Aviso: No funciona literalmente, hay que hacer modificaciones.
@@ -28,16 +28,16 @@ Como había 360 al principio parece que:
 	\item Probabilidad de estar en 3 es $\frac{72}{360} = \frac{1}{5}$
 \end{itemize}
 	Según esto 1 y 2 son igual de importantes y 3 es la mitad de importante.
-	
-	La distribución que pensamos que da el límite es estacionaria(no cambia con el tiempo).
-	
+
+	La distribución que pensamos que da el límite es estacionaria (no cambia con el tiempo).
+
 	DIBUJO.
 
 % Empieza clase del 4 de Febrero
 
 Recordamos que en la red anterior cuando el tiempo tiende a infinito parece que la distribución de personas se estabiliza.
 
-Parece además que sea cual sea la distribución inicial llegamos a proporciones similares. En este caso llegamos a la distribución límite $(\frac{2}{5},\frac{2}{5},\frac{1}{5})$, que es una distribución estacionaria (no varía con el tiempo).
+Parece además que sea cual sea la distribución inicial llegamos a proporciones similares. En este caso llegamos a la distribución límite $\left(\frac{2}{5},\frac{2}{5},\frac{1}{5}\right)$, que es una distribución estacionaria (no varía con el tiempo).
 
 (DIBUJO DE EVOLUCIÓN POR PASOS TENIENDO EN CUENTA PROBABILIDADES)
 
@@ -58,7 +58,7 @@ Debemos obsevar las siguientes preguntas:
 \subsection{Si existe una distribución estacionaria ¿es única?}
 \label{P2}
 
-(BIBUJO CON DOS GRAFOS IGUALES AL ANTERIOR CONECTADAS CON UN NODO INTERMEDIO QUE SOLO TIENE LINKS HACIA FUERA DE MANERA QUE QUEDAN INCOMUNICADAS)
+(DIBUJO CON DOS GRAFOS IGUALES AL ANTERIOR CONECTADAS CON UN NODO INTERMEDIO QUE SOLO TIENE LINKS HACIA FUERA DE MANERA QUE QUEDAN INCOMUNICADAS)
 % nodo 4 es internet oscura
 
 Como desde un lado de la red no se puede acceder al otro podemos decir que estas dos distribuciones son estacionarias:
@@ -100,7 +100,7 @@ $(0, 0, 0, 0, \frac{1}{5}, \frac{2}{5}, \frac{2}{5})$ es estacionaria.
 
 Basta usar como distribución inicial las distribuciones estacionarias que vimos para la segunda pregunta \ref{P2}.
 
-\begin{obs} 
+\begin{obs}
 
 Para el grafo de \ref{P2} se puede probar que $\exists$ límite:
 
@@ -118,7 +118,7 @@ son infinitos contraejemplos como los necesarios para la segunda pregunta \ref{P
 \section{Cadenas de Markov}
 
 \begin{defn}[Cadena de markov]
-	Es una sucesión de variables aleatorias $\{X_n\}_{n=0}^{\infty}$ que toman valores en un conjunto numetarble S (\textbf{conjunto de estados}) tal que 
+	Es una sucesión de variables aleatorias $\{X_n\}_{n=0}^{\infty}$ que toman valores en un conjunto numetarble S (\textbf{conjunto de estados}) tal que
 	$$Prob(X_{n+1} = V | X_n = U) = Prob(X_{n+1} = V | X_n =U , X_{n-1} = U_{n-1} , ... , X_0 = U_0)$$
 	para cualesquiera $n \geq 0$ $U,V,U_0,.... ,U_{n-1} \in S$
 \end{defn}
@@ -133,7 +133,7 @@ Decir que no depende de n es decir que según pasa el tiempo, las reglas no camb
 
 \begin{example}
 	$X_n =$ suma de puntuaciones el día $n$ al tirar un dado cada día.
-	
+
 	El conjunto de todos los estados serían todas las puntuaciones posibles . (S = naturales)
 \end{example}
 
@@ -174,7 +174,7 @@ Los $P_{ij}$ forman la \textbf{matriz de transición}.
 	\begin{enumerate}
 		\item $\sum_{j \in S} P_{ij} = \sum_{j\in S} Prob(X_1 = j | X_0 = i) = Prob (X_1 \in S | X_0 = i) = 1$
 		\item Utilizando la ley de la probabilidad total
-	
+
 		$$Prob(X_1 = j) = \sum_{i \in S} Prob (X_0 = i) \cdot Prob(X_1 = j| X_0 = i)$$
 	\end{enumerate}
 \end{proof}
@@ -192,7 +192,7 @@ De las dos propiedades deducimos que:
 \begin{itemize}
 	\item \textbf{(prop.1)} La matriz de transición $P_{ij} i,j \in S$ tiene elementos $0 \leq P_{ij} \leq 1$ y la suma de los elementos de cada fila es 1.
 	\item Escribiendo ($\prod_0$) = ${Prob (X_0 =i)}_{i \in S}$ como vector fila, y ($\prod_n$) = ${Prob (X_n =i)}_{i \in S}$
-	
+
 	Entonces por \textbf{(prop.2)} : ($\prod_0$) $ = (\prod_n)\cdot P$ (P = matriz de transición)
 \end{itemize}
 
