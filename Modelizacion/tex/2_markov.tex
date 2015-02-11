@@ -340,6 +340,123 @@ Vamos a ver dos versiones de lo que se entiende por \textbf{conexión} de una ca
 \end{itemize}
 
 
+Experimentos: mucha "interconexión" $\rightarrow$ $\exists \lim (\Pi_0)P^n$ y no depende de $(\Pi_0)$.
+
+En principio sabemos resolver cada problema, en caso finito, con la forma canónica pero esto no es muy práctico.
+
+\begin{theorem}{Teorema 1}
+	\label{Markov_tma1}
+	Una cadena de Markov finita siempre tiene al menos una distribución estacionaria.
+\end{theorem}
+
+\begin{theorem}{Teorema 2}
+	\label{Markov_tma2}
+	Una cadena de Markov finita regular $\exists \lim (\Pi_0) P^n$ y el resultado no depende de $(\Pi_0)$ y es la única distribución estacionaria.
+\end{theorem}
+
+\begin{theorem}{Teorema 3}
+	\label{Markov_tma3}
+	Para cualquier cadena de Markov finita, el límite $\lim \frac{(\Pi_0)+(\Pi_1)+…+(\Pi_n)}{n+1} $ (con $(\Pi_n) = (\Pi_0)P^n$) existe y converge a una distribución estacionaria. 
+\end{theorem}
+
+
+\begin{example}
+
+\begin{figure}[hbtp]
+	\centering
+	\inputtikz{markov/triangulos_separados}
+\end{figure} 
+
+Tenía muchas distribuciones estacionarias: $\exists \lim(\Pi_0)P^n$ pero depende de $(\Pi_0)$.
+
+No es irreducible $\Rightarrow^{\text{(lo veremos)}}$ se pierde la unicidad de la distribución estacionaria.
+
+\end{example}
+
+\begin{example}
+
+\begin{figure}[h!btp]
+	\centering
+	\inputtikz{markov/triangulo_con_entrada}
+\end{figure} 
+
+No es regular, por ello hay dependencia en $(\Pi_0)$, no es regular, no existe $\lim(\Pi_0) P^n$ en general. Pero $\exists \lim$ del tercer teorema \ref{Markov_tma3} y en $(\frac{1}{2},\frac{1}{3},\frac{1}{3},0)$.
+
+\end{example}
+
+
+\subsection{Page Rank Algorithm}
+
+\begin{figure}[hbtp]
+	\centering
+	\inputtikz{markov/red_pagerank}
+\end{figure} 
+
+
+$$\text{Modelo: } P_y = \left\{
+	\begin{array}{ll}
+		0  & \mbox{si} \text{no hay enlace de i a j} \\
+		\frac{1}{\text{nº de enlaces salientes}} & \mbox{si} \text{hay enlace de i a j}
+	\end{array}
+\right.
+$$
+
+P es una matriz $N \times N$ $N = 3 \, 10^{13}$.
+
+\textbf{Idea} Si estuviéramos en las hipótesis del Tma 2 \ref{Markov_tma2} entonces  $(\Pi_0) P^{\text{nº grande}}$ aproximaría la distribución de probabilidades de estar en cada página (navegando por los enlaces al azar) (en la práctica $50 \leq \text{nº grande} \leq 100$).
+
+
+Esencialmente lo que se hace para estar las hipótesis del Tma 2 \ref{Markov_tma2} es cambiar ceros por números pequeños. 
+$\Rightarrow P$ se vuelve una matriz con elementos $> 0$.
+$\Rightarrow$ se cumple la definición de regular con $k=1$.
+
+Concretamente se cambia la $P$ original por:
+
+$$P_{\epsilon} = (1-\epsilon) P + \epsilon E \;\;\;\; E = \text{matriz con todos sus elementos } \frac{1}{n}$$
+
+\begin{example}
+
+\begin{figure}[hbtp]
+	\centering
+	\inputtikz{markov/grafo_2-ciclo}
+\end{figure}
+
+	$$P = \left( \begin{array}{ccc}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+0 & 1 & 0 \end{array} \right)$$
+
+$0 \rightarrow \epsilon$ no es posible porque no sumarían 1 las filas.
 
 
 
+$$P_{\delta} = \left( \begin{array}{ccc}
+\delta & \;\; 1-2\delta \;\; & \delta \\
+\delta & \;\; \delta \;\;& 1 - 2 \delta\\
+\delta & \;\; 1 - 2 \delta \;\; & \delta \end{array} \right)$$
+
+$0 \rightarrow \delta$ y ajusto los elementos no nulos para que sumen 1.
+
+
+$\delta = \frac{\epsilon}{3}$ (solo notación) $\Rightarrow$ esta última matriz es:
+
+
+$$= (1-\epsilon)\left( \begin{array}{ccc}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+0 & 1 & 0 \end{array} \right) + \epsilon \left( \begin{array}{ccc}
+1/3 & 1/3 & 1/3 \\
+1/3 & 1/3 & 1/3 \\
+1/3 & 1/3 & 1/3 \end{array} \right)$$
+
+
+Es facil comprobar (ej) que $P_{\epsilon}$ tiene filas con suma 1. Además, si $\epsilon$ pequeño, $P_{\epsilon} ≈ P$.
+
+Lo que hacen los $\epsilon$ es representar la posibilidad de que alguien salte a una página aleatoria.
+
+\begin{figure}[hbtp]
+	\centering
+	\inputtikz{markov/grafo_2-ciclo_completo}
+\end{figure}
+
+\end{example}
