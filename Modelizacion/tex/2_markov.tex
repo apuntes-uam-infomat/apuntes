@@ -477,4 +477,89 @@ Lo que hacen los $\epsilon$ es representar la posibilidad de que alguien salte a
 	\inputtikz{markov/grafo_2-ciclo_completo}
 \end{figure}
 
+
+En este mismo ejemplo vamos a ver qué pasa con la convergencia:
+
+Intuitivamente los nodos 2 y 3 deberían tener probabilidad $\frac{1}{2}$ y el nodo 1, probabilidad 0.
+
+Si partimos de $(\prod_0)= (x,y,z)$ , sin hacer ningún cambio en $P \implies$
+$$(\prod_1) = (\prod_0)P = (0,x+z,y)\rightarrow (\prod_2) = (0,y,x+z) \rightarrow ..... \rightarrow \text{oscila}$$
+
+¿Qué pasa si lo miramos con $P_{\epsilon}$?
+
+$$\lim\limits_{\epsilon \rightarrow 0} (\prod_0)P_{\epsilon} = \lim\limits_{\epsilon \rightarrow 0}(\frac{\epsilon}{3}, \frac{1- 2\epsilon/3}{2-\epsilon}, \frac{1-\epsilon +  \epsilon^2/3}{2- \epsilon})$$
+
+Para $\epsilon \rightarrow 0$ tendremos algo cercano a la intuición $(0, \frac{1}{2}, \frac{1}{2})$
 \end{example}
+
+
+Hasta aquí la parte teórica pero \textbf{¿realmente se puede hacer algo similar con $N = 3\cdot 10^{13}$?}
+
+En vez de $\lim(\prod_0)P_{\epsilon}^n$ , se calcula $(\prod_0)P_{\epsilon}^{n.grande} $ con $(50 \leq n.grande\leq 100)$
+
+Y ahora vamos a ver el coste que tiene la operación $(\prod_0)P_{\epsilon} = (1-\epsilon)(\prod_0)P + \epsilon(\prod_0)E$ :
+
+Vemos que $\epsilon(\prod_0)E$ no requiere ninguna operación. Si lo vemos en el ejemplo de N = 3:
+
+$$(x , y , z)\cdot \left( \begin{array}{ccc}
+1/3 & 1/3 & 1/3 \\
+1/3 & 1/3 & 1/3 \\
+1/3 & 1/3 & 1/3 \end{array} \right) = (1/3 , 1/3 , 1/3)$$
+
+\obs $\frac{x}{3} + \frac{y}{3} + \frac{z}{3} = \frac{1}{3}(x + y + z)$ y $(x +y +z)=1$ porque son las probabilidades de pasar a $x$ , a $y$ o a $z$.
+
+En general , $\epsilon(\prod_0)E = (1/N , 1/N, ....,1/N)$
+
+¿y la parte de $(1-\epsilon)(\prod_0)P$?
+
+Es sencilla porque $P$ está llena de ceros.
+\begin{itemize}
+	\item Si cada página tiene k enlaces, P tiene sólo $k\cdot N$ elementos no nulos
+	\item Cada iteración $(\prod_n) =(\prod_{n-1}))$ lleva del orden de $k\cdot N$ operaciones, y esto es factible incluso en nuestro ordenador.
+\end{itemize}
+
+
+\textbf{¿Cuánto de pequeño debería ser $\epsilon$?}
+
+Matemáticamente debería tomarse $\epsilon\rightarrow 0$ pero en la práctica, cogiendo un $\epsilon$ muy pequeño , la convergencia es muy lenta.
+
+Google dice que usa $\epsilon = 0.15$.
+
+\textbf{Curiosidad} : Una prueba de que Google no sólo utiliza este algoritmo para dar prioridad a sus páginas es lo siguiente:
+
+Algunas empresas hacen link farming (interconectarse aún sin tener nada que ver) ya que de esta forma, según el algoritmo, deberían subir de prioridad.
+
+\begin{center}
+
+	\inputtikz{markov/link_farming}
+
+\end{center}
+
+Pero google puede detectarlo y eliminarlo, por lo que utiliza otras herramientas.
+
+
+
+\textbf{Propuesta de ejercicios:}
+
+\textbf{1)}
+
+
+	Simular con un programa(en el lenguaje que queramos, mejor C o C++) una red grande (p.ej $N= 10^6$) "aleatoria" , de modo que cada página tenga 10 enlaces , y ver cuánto se tarda en hallar $(\prod_0) P_{\epsilon}^{100}$
+	Chamizo tardó 70 segundos.
+
+
+
+\textbf{2)}
+
+
+	Crear un generador de textos aleatorios en un idioma.
+	
+	Lenguaje de programación recomendado: Phyton
+	
+	¿Cómo hacerlo?
+	\begin{enumerate}
+		\item coger un texto largo en el idioma que queramos
+		\item Estados = pares de de palabras consecutivas
+		\item Unir estados de forma aleatoria.
+	\end{enumerate}
+	P.ejemplo: [a manos] $\rightarrow$ [manos llenas] $\rightarrow$ [llenas de] / [llenas con] ....
