@@ -13,7 +13,7 @@ Se dice que $u$ es \textbf{armónica} $\iff u\in C^2(\Omega)$ y $\Delta u = 0$ e
 \subsection{Propiedad del valor de la media}
 \begin{mathresult}{Propiedad de la media de las funciones armónicas}
 Sea $u$ una función armónica y $B(x,R)$ una bola de centro $x$ y radio $R$. Si $\overline{B(y,R)}\in \Omega$, se tiene que 
-$$u(x) = \frac{1}{\omega_nR^{n-1}}\int_{\delta B_R} u(x)dS = \frac{n}{\omega_n R^n} \int_{B_R}u(x)dV$$
+$$u(x) = \frac{1}{|\delta B_R(x)|}\int_{\delta B_R} u(x)dS = \frac{1}{|B_R(x)|} \int_{B_R}u(x)dV$$
 donde $\omega_n$ es el área de la bola unidad de dimensión $n$. Es decir, estos tres valores son iguales:
 \begin{itemize}
 \item El valor de la función en el centro de la bola
@@ -21,63 +21,71 @@ donde $\omega_n$ es el área de la bola unidad de dimensión $n$. Es decir, esto
 \item El valor medio en el interior de la bola.
 \end{itemize}
 
-Para funciones \textbf{subarmónicas}, se tiene que el valor en el centro de la bola es \textbf{menor} que el promedio de la función.
+Para funciones \textbf{subarmónicas}, se tiene que el valor en el centro de la bola es \textbf{menor o igual} que el promedio de la función.
 
-Para funciones \textbf{superarmónicas}, se tiene que el valor en el centro de la bola es \textbf{mayor} que el promedio de la función.
+Para funciones \textbf{superarmónicas}, se tiene que el valor en el centro de la bola es \textbf{mayor o igual} que el promedio de la función.
 \end{mathresult}
-\begin{proof}
-Vamos a realizar la prueba para funciones \textbf{subarmónicas}. En principio, sabemos que 
-$$\Delta u = div(\nabla u) = \nabla\cdot\nabla u = \nabla^2 u = \sum_{i=1}^n \frac{d^2u}{d^2x_i}$$
-Vamos a definir $0<\rho<R$. Dado que $u$ es subarmónica ($\Delta u \ge 0$) tenemos que 
-$$0 \le \int_{B_\rho}\Delta u(x) dV$$.
 
-Utilizando el teorema de la divergencia de Gauss se tiene que 
-$$\int_{B_\rho} div(\nabla u)dV = \int_{\delta B_\rho}<\nabla u(\xi), \nu>dS_\xi$$
-o lo que es lo mismo
-$$\int_{B_\rho}\Delta u(x) dV = \int_{\delta B_\rho}\frac{du}{d\nu}(\xi)dS_\xi$$
-donde $\nu$ es la normal exterior a $B$.
-Aplicamos el siguiente cambio de variables de $\xi$ a $w$
+\begin{proof}
+\indent Sea $u$ una función subarmónica e $y\in\Omega$ un punto del dominio $\Omega$ tal que $\exists B_R(y)$, una bola de radio $R$ centrada en $y$ que cumpe que $\overline{B_R(y)}\in\Omega$.
+\vspace{5mm}
+
+En primer lugar vamos a definir $\omega_n$ como el área de la superficie bola unitaria de dimensión $n$. Es decir
+$$\omega_n = \frac{2\pi^{n/2}}{\Gamma(n/2)}$$ De esta manera, el volumen de la misma bola será $\omega_n/n$.
+Realizando un simple cambio de variable, se obtiene que el área de la superficie de la bola de radio $R$ de dimensión $n$ es $\omega_nR^{n-1}$ y su volumen $\frac{R^n\omega_n}{n}$.
+
+En resumen:
 \begin{equation*}
 \left\{
 \begin{array}{l}
-\xi = x+\rho w\\
-w = \frac{\xi-x}{\rho}\\
-||w|| = 1\\
+\text{Área}(\delta B_1) = \omega_n\\
+\text{Vol}(B_1) = \frac{\omega_n}{n}\\
+\text{Área}(\delta B_R) = \omega_nR^{n-1}\\
+\text{Vol}(B_R) = \frac{R^n\omega_n}{n}
 \end{array}
 \right.
 \end{equation*}
-Se llega a que
-$$\int_{\delta B_\rho}\frac{du}{d\nu}(\xi)dS_\xi = \rho^{n-1}\int_{\delta B_1}\frac{du}{d\nu}(x+\rho w)dS_w$$
-donde $B_1 = \{x\in\mathbb{R}^n: ||x|| = x_1^2+\hdots+x_n^2 < 1\}$
 
-\noindent Ahora bién, dado que $$\frac{du}{d\nu}(x+\rho w) = <\nabla u(x+\rho w), \nu>$$ y en $B_1$, $\nu$ es equivalente al vector posición $w$. Se tiene que $$<\nabla u(x+\rho w), \nu> = <\nabla u(x+\rho w), w>$$
-Luego $$\frac{du}{d\nu}(x+\rho w) = \frac{du}{d\rho}(x+\rho w)$$
-Entonces
-$$ \rho^{n-1}\int_{\delta B_1}\frac{du}{d\nu}(x+\rho w)dS_w  =  \rho^{n-1}\frac{d}{d\rho}\int_{\delta B_1}u(x+\rho w)dS_w$$
-Si deshacemos el cambio de variable
-$$\rho^{n-1}\frac{d}{d\rho}\int_{\delta B_1}u(x+\rho w)dS_w = \rho^{n-1}\frac{d}{d\rho}\left(\frac{1}{\rho^{n-1}}\int_{\delta B_\rho}u(\xi)dS_\xi\right)$$
-Dado que $u$ es continua, se tiene que, si $\rho\to0$
-$$\frac{1}{\rho^{n-1}}\int_{\delta B_\rho}u(\xi)dS_\xi\longrightarrow u(x)$$
-Además, al ser este funcional no decreciente
-\begin{equation}\label{eq:mediasubarm}
-\frac{1}{\rho^{n-1}}\int_{\delta B_\rho}u(\xi)dS_\xi \le \frac{1}{R^{n-1}}\int_{\delta B_R}u(\xi)dS_\xi
-\end{equation}
-Por otro lado, el volumen de la bola $n-$dimensional es
-$$Vol(B_1) = \omega_n = \frac{2\pi^{n/2}}{n\Gamma(\frac{n}{2})}$$
-Como $$\int_{B_R}dx = R^n\int_{B_1}dy$$
-se tiene $$Vol(B_R) = R^n\omega_n$$
-El área de la bola $n-$dimensional es
-$$Area(\delta B_1) = n\omega_n$$
-luego
-$$Area(\delta B_R) = n\omega_nR^{n-1}$$
-Dividiendo \eqref{eq:mediasubarm} por $n\omega_n$ se tiene 
-$$\frac{1}{n\omega_n\rho^{n-1}}\int_{\delta B_\rho}u(\xi)dS_\xi \le \frac{1}{n\omega_nR^{n-1}}\int_{\delta B_R}u(\xi)dS_\xi$$
-Luego para toda bola
-$$u(x) \le \frac{1}{n\omega_n\rho^{n-1}}\int_{\delta B_\rho}u(\xi)dS_\xi$$
-Es decir
-$$n\omega_n\rho^{n-1}u(x) \le \int_{\delta B_\rho}u(\xi)dS_\xi$$
-Integrando con respecto a $\rho$ entre $0$ y $R$:
-$$\omega_n\left.\rho^n\right|_0^R u(x) \le \int_0^Rd\rho\int_{\delta B_\rho}u(\xi)dS_\xi = \int_{B_R}u(x)dx$$
+Consideramos
+$$g(\rho) = \frac{1}{|\delta B_\rho|}\int_{\delta B_\rho(y)} u(\xi)dS_\xi = \frac{1}{\omega_n \rho^{n-1}}\int_{\delta B_\rho(y)} u(\xi)dS_\xi$$ para un $\rho \in (0,R)$.
+
+Realizamos ahora un cambio de variable para llevar el resultado a la bola unidad.
+\begin{equation*}
+\left\{
+\begin{array}{l}
+\xi = y+\rho w\\
+w = \frac{\xi-y}{\rho}\\
+|w| = 1
+\end{array}
+\right.
+\end{equation*}
+Se tiene
+$$g(\rho) = \frac{1}{\omega_n \rho^{n-1}}\int_{\delta B_\rho(y)} u(\xi)dS_\xi = \frac{\rho^{n-1}}{\omega_n \rho^{n-1}}\int_{\delta B_1(y)} u(y+\rho w)dS_w$$
+Tomamos ahora 
+$$g'(\rho) = \frac{1}{\omega_n}\int_{\delta B_1(y)} \nabla u(y+\rho w)wdS_w$$
+Definimos $v(y)$ de forma que cumpla:
+\begin{equation*}
+\left\{
+\begin{array}{l}
+v(w) = u(y+\rho w)\\
+\nabla v(w) = \nabla u(y+\rho w)\rho\\
+\Delta v(y) = \rho^2\Delta u(y+\rho w)
+\end{array}
+\right.
+\end{equation*}
+por tanto 
+$$g'(\rho) =  \frac{1}{\omega_n}\int_{\delta B_1(y)} \frac{1}{\rho} \nabla v(w)wdS_w =  \frac{1}{\omega_n \rho}\int_{\delta B_1(y)} <\nabla v(w), w>dS_w$$
+usando el teorema de la divergencia
+$$g'(\rho) =  \frac{1}{\omega_n \rho}\int_{B_1(y)} \Delta v(w)dS_w = 0$$
+Si $g'(\rho) = 0\implies g(\rho) = cte$ en $(0,R)$. Como $u$ es continua, $g(\rho) = u(y)$.
+
+$$u(y) = \frac{1}{|\delta B_\rho(y)|}\int_{\delta B_\rho(y)}u(\xi)dS_\xi$$
+lo que ocurre $\forall \rho \in (0,R)$
+
+Por otro lado, si lo anterior se integra en $(0,R)$
+$$\int_0^R u(y) d\rho = \frac{R^n}{n}u(y) = \frac{1}{\omega_n} \int_0^R d\rho \int_{\delta B_\rho(y)} u (\xi) dS_\xi = \frac{1}{\omega_n}\int_{B_R(y)} u(x) dx$$
+Luego 
+$$u(y) = \frac{n}{\omega_n R^n}\int_{B_R(y)} u(x) dx = \frac{1}{|B_R(y)|} \int_{B_R(y)} u(x) dx$$
 \end{proof}
 
 
@@ -351,3 +359,313 @@ si $r\to 1$.
 Tenemos por tanto que
 $$u(r,\theta)-f(\theta_0) \le \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon$$
 \end{proof}
+
+\subsection{Fórmula de representación}
+Vamos a buscar soluciones radiales para $\Delta u = 0$ en $\mathbb{R}^n$, lo que quiere decir que buscamos $f(r)$ tal que
+$$u(x) = f(r)$$ con $r=||x||$
+
+En primer lugar vamos a hallar el laplaciano en función de $r$.
+
+\begin{equation*}
+\begin{array}{l l l}
+\frac{du(x)}{dx_i} & = & f'(r)\frac{x_i}{r}\\
+\frac{d^2u(x)}{dx_i^2} & = & f''(r)\frac{x_i^2}{r^2}+f'(r)\frac{r^2-x_i\frac{x_i}{r}}{r^2}\\
+& = & f''(r)\frac{x_i^2}{r^2}+f'(r)\frac{r^2-x_i^2}{r^3}\\
+\Delta u(x) & = & \sum_{i=0}^N\frac{d^2u(x)}{dx_i^2} = f''(r)+f'(r)\frac{N-1}{r} = \frac{1}{r^{N-1}}\left(r^{N-1}f'(r)\right)'
+\end{array}
+\end{equation*}
+
+Vamos a calcular soluciones radiales para
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+\Delta u(x) = 0 & \text{en } \mathbb{R}^n\\
+u(x) = f(r)
+\end{array}
+\right.
+\end{equation*}
+Como $\Delta u(x) = \frac{1}{r^{N-1}}\left(r^{N-1}f'(r)\right)'$ y $\Delta u(x) = 0$. Se tiene que $\left(r^{N-1}f'(r)\right)$ es constante
+$$r^{N-1}f'(r) = A$$ de donde se obtiene
+$$f(r) = \frac{A}{N-2}\cdot \frac{1}{r^{N-2}} + B$$ con $A,B$ constantes.
+
+Si $u(x) = 1$, tenemos que la solución es 
+$\Gamma(x) = \frac{1}{r^{N-2}} = \frac{1}{||x||^{N-2}}$ para $N\neq 2$ y $\Gamma(x) = log(r)$ para $N=2$. En cualquier caso se cumple que $\Delta\Gamma(x) = 0$ en $\mathbb{R}^N\setminus\{ 0 \}$
+
+En lo que sigue vamos a tener presente las siguientes equivalencias
+\begin{equation*}
+\begin{array}{l}
+\Delta u = div \nabla u = \nabla^2 u\\
+div(f\cdot F) = f\cdot div(F)+div(f)\cdot F
+\end{array}
+\end{equation*}
+De esta forma, se cumplen las igualdades que siguen:
+\begin{equation*}
+\left\{
+\begin{array}{l}
+div(v\nabla u)=v\Delta u+\nabla v\nabla u\\
+div(u\nabla v)=u\delta v+\nabla u\nabla v\\
+\end{array}
+\right.
+div(v\nabla u-u\nabla v) = v\Delta u-u\Delta v
+\end{equation*}
+Sea $y\in \Omega$ un punto tal que $\exists B_\varepsilon(y)$, una bola $B$ de radio $\varepsilon$ que cumple $\overline{B_\varepsilon(y)}\in\Omega$. Definimos
+$$\Omega_\varepsilon = \Omega\setminus \overline{B_\varepsilon(y)}$$
+Consideramos ahora 
+$$\int_{\Omega_\varepsilon} \left(v\Delta u-u\Delta v\right)dx =\int_{\Omega_\varepsilon} div\left(v\nabla u-u\nabla v\right)dx $$
+Utilizando el teorema de la divergencia
+$$\int_{\Omega_\varepsilon} div\left(v\nabla u-u\nabla v\right)dx =\int_{\delta\Omega_\varepsilon} \left(v\frac{du}{d\nu}-u\frac{dv}{d\nu}\right)d\xi$$
+con $\nu$ la normal exterior a $\delta\Omega_\varepsilon$.
+
+Tomamos $v(x) = \Gamma(x-y)$ que como ya hemos visto cumple que $\Delta v(x) = 0$ en $\mathbb{R}^N\setminus\{y\}$.
+
+Utilizando el resultado anterior y que $\delta \Omega_\varepsilon = \delta\Omega \cup \delta B_\varepsilon(y)$ 
+\begin{align*}
+& \int_{\Omega_\varepsilon} \frac{1}{|x-y|^{N-2}}\Delta u(x)dx =\\
+& \int_{\delta\Omega_\varepsilon} \left(\frac{1}{|\xi-y|^{N-2}}\frac{du(\xi)}{d\nu}-u(\xi)\frac{d}{d\nu}\left(\frac{1}{|\xi-y|^{N-2}}\right)\right)dS_\xi \ + \\
+& \int_{\delta B_\varepsilon(y)} \left(\frac{1}{\varepsilon^{N-2}}\frac{du(\xi)}{d\nu}-u(\xi)\frac{d}{d\nu}\left(\frac{1}{|\xi-y|^{N-2}}\right)\right)dS_\xi\\
+\end{align*}
+
+Vamos a estudiar ambos términos por separado. Sea $M=\max_{\overline{\Omega}}|\nabla u(x)|$, como $u\in C^2(\Omega)\cup C^1(\overline{\Omega})$, si $\varepsilon\to 0$
+\begin{align*}
+& \int_{\delta B_\varepsilon(y)} \left(\frac{1}{\varepsilon^{N-2}}\frac{du(\xi)}{d\nu}-u(\xi)\frac{d}{d\nu}\left(\frac{1}{|\xi-y|^{N-2}}\right)\right)dS_\xi \ \le\\
+& \frac{1}{\varepsilon}M\int_{\delta B_\varepsilon(y)} dS_\varepsilon \ = \frac{1}{\varepsilon^{N-2}}M|\delta B_\varepsilon| \ = M\omega_n\varepsilon\to 0\\
+\end{align*}
+
+En $\delta B_\varepsilon$ tenemos que $\nu = \frac{\xi-y}{\varepsilon}$ por tanto, si $\varepsilon\to0$
+$$\frac{d}{d\nu}\left(\frac{1}{|\xi-y|^{N-2}}\right) = -\left.\frac{d}{dr}\right|_{r=\varepsilon}\frac{1}{r^{N-2}} = (N-2)\varepsilon^{1-N}$$ si tomamos $r=|\xi-y|$. Luego
+\begin{align*}
+& \int_{\delta B_\varepsilon} u(\xi)\frac{d}{d\nu}\left(\frac{1}{|\xi-y|^{N-2}}\right)dS_\xi \ = (N-2)\varepsilon^{1-N}\int_{\delta B_\varepsilon}u(\xi)dS_\xi \ = \\
+& (N-2)\varepsilon^{1-N}\varepsilon^{N-1}\int_{\delta B_1}u(y+\varepsilon w)dS_\xi\to(N-2)|\delta B_1|u(y)
+\end{align*}
+
+Nos queda que 
+\begin{align*}
+|N-2||\delta B_1|u(y) = & -\int_{\Omega}\frac{\Delta u(x)}{|x-y|^{N-2}}dx\\
+& + \int_{\delta\Omega} \frac{1}{|\xi-y|^{N-2}}\cdot\frac{du(\xi)}{d\nu}dS_\xi\\
+& -\int_{\delta\Omega}u(\xi)\frac{d}{d\nu}\left(\frac{1}{|\xi-y|^{N-2}}\right)dS_\xi
+\end{align*}
+
+Esta fórmula de representación implica que
+\begin{equation*}
+\left.
+\begin{array}{l l}
+\Delta u & \text{en } \Omega\\
+u & \text{en } \delta\Omega\\
+\frac{du}{d\nu} & \text{en } \delta\Omega\\
+\end{array}
+\right\} \text{determinan } u \text{ en } \Omega
+\end{equation*}
+Se necesitan conocer tres valores, mientras que en el problema de Dirichlet sólo hemos necesitado los dos primeros. Por ello, vamos a manipular la fórmula para que deje de depender del tercer término. Sea $h(x)$ una función armónica. El teorema de la divergencia dice que
+$$\int_{\Omega}h(x)-\Delta u(x) - u(x)\Delta h(x) = \int_{\delta\Omega}\left(h\frac{du}{d\nu}-u\frac{dh}{d\nu}\right)$$
+Luego 
+$$\int_{\Omega}h(x)-\Delta u(x) - u(x)\Delta h(x) - \int_{\delta\Omega}\left(h\frac{du}{d\nu}-u\frac{dh}{d\nu}\right) = 0$$
+Sumar esta diferencia a la fórmula de representación que ya tenemos es como sumarle 0. Por simplicidad de notación, vamos a denotar $G(x,y) = \frac{1}{|x-y|^{N-2}}+h(x)$. Tras realizar la suma:
+\begin{align*}
+|N-2||\delta B_1|u(y) = & -\int_{\Omega}G(x,y)\Delta u(x)dx\\
+& + \int_{\delta\Omega} G(\xi, y)\frac{du(\xi)}{d\nu}dS_\xi\\
+& -\int_{\delta\Omega}u(\xi)\frac{dG(\xi, y)}{d\nu}dS_\xi
+\end{align*}
+Queremos librarnos del segundo término, por lo que hay que elegir $h$ para que $G$\footnote{$G$ se conoce como la función de Green para el dominio $\Omega$} sea $0$ en la frontera de $\Omega$. Tomamos $h(x) = \frac{1}{|\xi-y|^{N-2}}$ con $\xi\in\delta\Omega$. Se cumple que $\Delta G(x,y) = 0 \ \forall x \in R^N\setminus \{y\}$ y que $G(\xi,y) = 0 \ \forall \xi \in \delta \Omega$. Tenemos un problema de Dirichlet en $\Omega\setminus\{y\}$.
+
+\subsection{Núcleo de Poisson N-dimensional}
+El núcleo de Poisson $N-$dimensional es la función de Green para el dominio $\Omega=B_r(0)$.
+Supongamos que $\Delta u = 0$ en $B_r(0)$, y fijemos $x\in B_r(0)$
+La fórmula de representación queda de esta forma:
+\begin{align*}
+|N-2||\delta B_1|u(x) = & -\int_{\Omega}\overbrace{\frac{\Delta u(x)}{|x-y|^{N-2}}}^{0}dx\\
+& + \int_{\delta\Omega} \frac{1}{|\xi-x|^{N-2}}\cdot\frac{du(\xi)}{d\nu}dS_\xi\numberthis\label{eq:repr-dirichlet-formula}\\
+& -\int_{\delta\Omega}u(\xi)\frac{d}{d\nu}\left(\frac{1}{|\xi-x|^{N-2}}\right)dS_\xi
+\end{align*}
+Vamos a definir $x'$ como el simétrico de $x$ respecto de la bola. Dada esta definición de $x'$, tenemos que cumple:
+\begin{equation*}
+\begin{array}{l}
+|x||x'|=R^2\\
+x'=\frac{R^2}{|x|^2}x
+\end{array}
+\end{equation*}
+Ahora consideramos
+$$v(y) = \frac{1}{|y-x'|^{N-2}}$$ que está definida en $\mathbb{R}^N\setminus\{x\}$ y cumple $\Delta v(y) = 0$ en todo su dominio de definición.
+Se tiene que
+$$\int_\Omega v\underbrace{\Delta u}_0 -u\underbrace{\Delta v}_0 = \int_{\delta B_r} \left(v\frac{du}{d\nu}-u\frac{dv}{d\nu}\right)dS = 0$$
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1.6]
+\draw[] (0,0) circle[radius=1];
+\draw[fill] (0.5,0) circle[radius=0.02] node[below] {$x$};
+\draw[fill] (1.5,0) circle[radius=0.02] node[below] {$x'$};
+\draw[fill] (0.7,0.7) circle[radius=0.02] node[above] {$\xi$};
+\draw[-, purple] (0,0)--(0.5,0);
+\draw[-, red] (0.5,0)--(1.5,0);
+\draw[-, purple] (0,0)--(0.7,0.7);
+\draw[-, purple] (0.5,0)--(0.7,0.7);
+\draw[-, red] (1.5,0)--(0.7,0.7);
+\end{tikzpicture}
+\caption{Dominio $B_r(0)$}
+\label{fig: dominiobr}
+\end{figure}
+
+Los triángulos $0x\xi$ y $0x'\xi$ son semejantes (ver figura \ref{fig: dominiobr}). Se tiene que
+$$\frac{|x|}{R} = \frac{R}{|x'|}$$ Luego $$\frac{|x-\xi|}{|x|} = \frac{|\xi-x'|}{R}$$ es decir, el resto de lados respetan la relación. Todo esto es lo mismo que
+$$\frac{1}{|\xi-x|} = \frac{R}{|x|}\cdot\frac{1}{|\xi-x'|}$$
+Ya hemos visto que
+$$A = \int_{\delta B_r} \left(v\frac{du}{d\nu}-u\frac{dv}{d\nu}\right)dS = 0$$
+De donde también se tiene que
+$$0 = \left(\frac{R}{|x|}\right)A$$
+Luego si a \eqref{eq:repr-dirichlet-formula} le restamos $\left(\frac{R}{|x|}\right)A$ es como si le restáramos $0$.
+Nos queda lo siguiente
+\begin{align*}
+|N-2||\delta B_1|u(x) = \int_{\delta B_r}\left(\overbrace{\frac{1}{|\xi-x|^{N-2}}-\left(\frac{R}{|x|}\right)^{N-2}\frac{1}{|\xi-x'|^{N-2}}}^0\right)\frac{du}{d\nu}dS\\
++ \int_{\delta B_r}u(\xi)\left(\left(\frac{R}{|x|}\right)^{N-2}\frac{d}{d\nu}\left(\frac{1}{|\xi-x'|^{N-2}}\right)-\frac{d}{d\nu}\left(\frac{1}{|\xi-x|^{N-2}}\right)\right)dS
+\end{align*}
+En $\delta B_R(0)$ se tiene que $\nu=\frac{\xi}{R}$. Luego
+$$\frac{d}{d\nu}\left (\frac{1}{|\xi-x'|^{N-2}}\right)=-(N-2)<\frac{\xi}{R}, \frac{\xi-x'}{|\xi-x'|^N}> = \frac{-(N-2)}{R}\cdot\frac{R^2-<\xi,x'>}{|\xi-x'|^N}$$
+Y como $x' = \frac{R^2}{|x|^2}x$
+$$<\xi,x'> = \frac{R^2}{|x|^2}<\xi, x>$$
+Por otro lado
+\begin{align*}
+\left(\frac{R}{|x|}\right)^{N-2}\frac{d}{d\nu}\left(\frac{1}{|\xi-x'|^{N-2}}\right) =& \frac{-N-2}{R}\left(\frac{R}{|x|}^{N-2}\frac{R^2-\frac{R^2}{|x|^2}<\xi,x>}{|\xi-x'|^N}\right)\\
+& = \frac{-N-2}{R}\cdot\frac{|x|^2-<\xi,x>}{|\xi-x'|^N}
+\end{align*}
+Nos queda, finalmente
+\begin{align*}
+(N-2)|\delta B_1|u(x) =  \int_{\delta B_R}u(\xi)&\left\{\frac{-N-2}{R}\cdot\frac{|x|^2-<\xi,x>}{|\xi-x|^N}\right. \\
++ & \left.\frac{-N-2}{R}\cdot\frac{R^2-<\xi,x>}{|\xi-x|^N}\right\}dS\\
+= \frac{N-2}{R}\int_{\delta B_R}u(\xi)\frac{R^2-|x|^2}{|\xi-x|^n}
+\end{align*}
+\subsubsection*{Conclusión}
+Si $\Delta u(x) = 0$ en $B_R(0)$
+$$u(x) = \int_{\delta B_R} u(\xi)P(\xi, x)dS_\xi$$
+donde $P(y,x)$ es el núcleo de Poisson $N-$dimensional, definido como sigue:
+$$P(y,x) = \frac{R^2-|x|^2}{|\delta B_1| R}\cdot\frac{1}{|y-x|^N}$$
+Hemos demostrado el siguiente teorema
+\begin{theorem}
+Sea $\Omega = B_R(0)$ y $f\in C(\delta B_R)$ y $P(y,x)$ el núcleo de Poisson $N-$dimensional, entonces
+$$u(x) = \int_{\delta B_R} f(\xi)P(\xi, x)dS_\xi$$
+es la solución del problema de Dirichlet
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+-\Delta u = 0 & \text{en } B_R(0)\\
+u=f & \text{en } \delta B_R(0)
+\end{array}
+\right.
+\end{equation*}
+\end{theorem}
+
+\subsection{Método de separación de variables}
+Vamos a ver unos ejemplos
+\subsubsection*{Ejemplo 1}
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+-\Delta u = 0 & \text{en } \mathbb{D}\\
+u=f & \text{en } \delta \mathbb{D}
+\end{array}
+\right.
+\end{equation*}
+Dado que $\Delta u$ y $\mathbb{D}$ son invariantes por transformaciones lineales, buscamos una solución de la forma $u(r,\theta)=R(r)T(\theta)$. Como ya hemos visto, la EDP se desacopla en dos EDOs independientes
+$$\frac{r^2R''+rR'}{R} = \frac{-T''}{T} = \lambda$$
+Vamos a estudiar la segunda, cuya soución ha de ser $2\pi-$periódica. Tenemos un problema de contorno de la siguiente forma: 
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+-T''=\lambda T\\
+T(0) = T(2\pi)
+\end{array}
+\right.
+\end{equation*}
+Este problema no tiene solución para cualquier $\lambda$ por las restricciones impuestas sobre la periodicidad.
+Esto es lo que se llama un operador.
+\begin{definition}{Operador diferencial}
+Un operador diferencial es un par $(\mathcal{L}, P(\mathcal{L}))$ donde $\mathcal{L}$ es un funcional de diferenciación y $P(\mathcal{L})$ el dominio de las funciones.
+\end{definition}
+En este caso el operador que tenemos es el siguiente
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+\mathcal{L}(\varphi) = -\varphi''\\
+D(\mathcal{L}) = \{\varphi\in C^2(\mathbb{R}): \phi \text{ es } 2\pi-\text{periódica}\}
+\end{array}
+\right.
+\end{equation*}
+
+\subsubsection*{Ejemplo 2}
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+-\Delta u = 0 & \text{en } Q=(0,\pi)\times(0,1)\\
+u=h & \text{en } \delta Q
+\end{array}
+\right.
+\end{equation*}
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1.5]
+	\draw[->] (-0.5,0) -- (4,0) node[right] {$x$};
+	\draw[->] (0,-0.5) -- (0,2) node[above] {$y$};
+	\draw[-, thick] (0,0)--(0,1);
+	\draw[-, thick] (0,0)--(pi,0);
+	\draw[-, thick] (pi,0)--(pi,1);
+	\draw[-, thick] (0,1)--(pi,1);
+	\draw (0,0.5)  node[left] {$u=0$};
+	\draw (pi/2,0)  node[below]{$f(x)$};
+	\draw (pi,0.5)  node[right]{$u_x=0$};
+	\draw (pi/2,1) node[above] {$g(x)$};
+\end{tikzpicture}
+\caption{Ejemplo 2}
+\label{fig:ej2-sepvar}
+\end{figure}
+Definamos $h$ como en la figura \ref{fig:ej2-sepvar}.
+Buscamos una solución de la forma
+$$u(x,y) = X(x)Y(y)$$
+El problema vuelve a desacoplarse en dos EDOs independientes
+\begin{equation*}
+\left\{
+\begin{array}{l}
+X''=-\lambda X\\
+Y'' = \lambda X
+\end{array}
+\right.
+\end{equation*}
+Nos fijamos en la primera EDO. Tenemos el operador
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+\mathcal{L}(\varphi) = -\varphi''\\
+D(\mathcal{L}) = \{\varphi\in C^2(0,\pi)\cap C^1([0,\pi]): \varphi(0) = \varphi'(\pi) = 0\}
+\end{array}
+\right.
+\end{equation*}
+Tenemos que 
+$$X(x) = Acos(\sqrt{\lambda}x)+Bsin(\sqrt{\lambda}x)$$
+Observando los datos iniciales, vemos que $X(0)=0$, luego $A=0$. Por otro lado
+$$X'(\pi) = 0 = \sqrt{\lambda}Bcos(\sqrt{\lambda}\pi) \implies cos(\sqrt{\lambda}\pi) = 0 \implies \sqrt{\lambda}\pi = (2n+1)\frac{\pi}{2}$$
+Luego $X_n=a_nsin(2n\pi)\frac{\pi x}{2}$
+y por tanto $Y_n = A_ncosh(\sqrt{\lambda_n}y)+B_nsinh(\sqrt{\lambda_n}y)$
+
+\subsubsection*{Ejemplo 3}
+La ecuación del calor unidimensional es la siguiente
+$$u_t-uxx=0$$
+donde $t\in\mathbb{R}$ representa el tiempo y $x\in\mathbb{R}$ la posición.
+Un posible problema sería colocar una barra de un material cualquiera y estudiar la temperatura de la misma conociendo sólo la distribución inicial de temperaturas y su valor en los extremos.
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+u_t-uxx=0 & 0<x<1, t>0\\
+u(x,0)=f(x)& \text{Distribución inicial de temperaturas}\\
+u(0,t)=u(1,t) = 0 & \text{Temperatura constante en la frontera}
+\end{array}
+\right.
+\end{equation*}
+
+\subsubsection*{Ejemplo 4}
+El problema de Neumann es un problema mixto entre un problema de valor inicial y un problema de contorno. Dado que, según las leyes físicas, el flujo de calo es proporcional al gradiente, si se aislan los extremos del problema anterior, se tendría que el flujo de calor es nulo, luego $u_x(0,t)=u_x(1,t) = 0$. El problema quedaría como sigue:
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+u_t-uxx=0 & 0<x<1, t>0\\
+u(x,0)=f(x)& \text{Distribución inicial de temperaturas}\\
+u_x(0,t)=u_x(1,t) = 0 & \text{Extremos aislados}
+\end{array}
+\right.
+\end{equation*}

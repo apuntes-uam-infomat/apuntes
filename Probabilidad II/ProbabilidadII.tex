@@ -357,7 +357,7 @@ Entonces si $P(B\cap C)>0$, se cumple que $P(A|B\cap C)=P(A|C)$
 \begin{defn} [Variable aleatoria]
 Dado ($\Omega_1$,$\algb{M}$) y ($\Omega_2$,$\algb{B}$):
 \[
-X \text{es una variable aleatoria} \Leftrightarrow \forall B \in \algb{B}, X^{-1}(B) \in \algb{M}
+X: \Omega_1 \rightarrow \Omega_2 \text{es una variable aleatoria} \Leftrightarrow \forall B \in \algb{B}, X^{-1}(B) \in \algb{M}
 \]
 
 En este curso usaremos como $\Omega_2$ conjuntos como $\mathbb{R}$ o $\mathbb{R} \cup \{\pm \infty\}$ o $\mathbb{C}$. Si $\Omega_2 = \mathbb{R}^d$, decimos que la función medible $X: \Omega_1 \rightarrow \mathbb{R}^d$ es un vector medible.
@@ -656,6 +656,8 @@ E_{P_B}(X)=\frac{1}{P(B)}\int_{B}X(w)dP(w)=E(X|B)
 Sea $Y: \Omega \rightarrow \mathbb{R}$, entonces $\sigma(Y)$ es la $\salgb$ más pequeña que hace que Y sea medible, es decir: $\{Y^{-1}(B):B \in Borel(\mathbb{R})\}$
 \end{defn}
 
+\obs También podemos escribir $\sigma(Z)$ siendo Z un conjunto de elementos (por ejemplo una parición) de $\Omega$. Y se referirá a la $\salgb$ generada por ese conjunto de elementos.
+
 \begin{example}
 Sea una función $Y:\mathbb{R} \rightarrow \mathbb{R}$ definida mediante $Y=\ind_{[0,\infty]}$, entonces $\sigma(Y)=\{\emptyset, (-\infty, 0), [0, \infty), \Omega \}$.
 
@@ -666,14 +668,23 @@ Y es una función que vale 0 en el intervalo $(-\infty, 0)$ y 1 en el intervalo 
 \end{example}
 
 \begin{defn}
-Dado el espacio de probabilidad $(\Omega, \algb{M}, P)$ y la sub-$\salgb$ $\mathbb{B}\subset\algb{M}$ generada a parir de una partición de $\Omega$, la esperanza condicionada a $\mathbb{E}(X|\algb{B})$ es:
+Dado el espacio de probabilidad $(\Omega, \algb{M}, P)$ y la sub-$\salgb$ $\mathbb{B}\subset\algb{M}$ generada a partir de una partición de $\Omega$ (más adelante veremos que no es necesario que esté generada por una partición, sino que valdrá cualquier  sub-$\salgb$), la esperanza condicionada $\mathbb{E}(X|\algb{B})$ es:
 \begin{enumerate}
-\item $\mathbb{B}-medible$
+\item $\mathbb{B}$-medible
 \item $\forall B \in \mathbb{B}$, $\int_{B}\mathbb{E}(X|\mathbb{B})dP=\int_{B}XdP$
 
 Estas dos propiedades determinan $\mathbb{E}(X|\mathbb{B})$ de modo único.
 \end{enumerate}
 \end{defn}
+
+\obs Cuando definimos $\mathbb{E}(X|\algb{B})$, esto es una función que para cada elemento de la sub-$\salgb$ $\mathbb{B}$ se obtiene un valor dado por la fórmula de la esperanza condicionada vista anteriormente.
+
+\obs También se escribe $\mathbb{E}(X|Y)$ siendo Y una variable aleatoria. Además $\mathbb{E}(X|Y)$ = $\mathbb{E}(X|\sigma(Y))$ (es sólo notación, queremos decir lo mismo de las dos maneras)
+
+\obs Sea $\algb{B}=\sigma(\{A_i\}_{i=1}^{\infty})$, siendo $\{A_i\}_{i=1}^{\infty}$ una partición de $\Omega$ con $P(A_i)>0$. Entonces:
+\[
+\mathbb{E}(X|\algb{B})(w)=\sum_{i=1}^{\infty}\left( \frac{1}{P(A_i)}\int X(w)dP(w)\right)\ind_{A_i(w)}=\sum_{i=1}^{\infty}\mathbb{E}(X|A_i) \ind_{A_i}
+\]
 
 \begin{example}
 Sea X e Y variables aleatorias. Dado $(\Omega, \algb{M}, P)$, siendo $\Omega$ la población de un lugar, y siendo $\algb{M}$ una $\salgb$.
@@ -685,7 +696,126 @@ Y = sexo de esa misma población, tal que $Y(w)=1$ si w es mujer, e $Y(w)=0$ si 
 Definimos la sub-$\salgb$ $\algb{B}=\{\emptyset, \Omega, \{Y=1\}, \{Y=0\}\}$, de manera que $\algb{B} \subset \algb{M}$, y por tanto contiene menos información.
 \end{example}
 
+De esta manera, hemos visto que es posible definir la esperanza condicionada ($\mathbb{E}(X|\algb(B))$) cuando $\algb(B)$ esta generada por una partición de $\Omega$. Sin embargo no toda sub-$\salgb$ va a estar generada por una partición. Por ejemplo $Borel(0,1)$ no esta generado por ninguna partición.
 
+Por tanto vamos a definir la esperanza condicionada de otra forma:
+
+\subsection{Esperanza condicionada como proyección ortogonal en $L^2$}
+Recordemos que:
+
+Sea $(\Omega, \algb{M}, \mu)$ un espacio de medida. Para $0<p<\infty$, definimos $L^p=L^p(\Omega,\algb{M},\mu)=\{f:\Omega\rightarrow \mathbb{R}$ ó $\mathbb{C} | \int_X \abs{f}^p d\mu < \infty\}$
+
+En otras palabras: 
+$$
+\text{si } 0<p<\infty =
+  \left\lbrace
+  \begin{array}{l}
+     f\in L^p(\Omega,\algb{M},\mu) \Leftrightarrow \int \abs{f}^p < \infty \\
+     f\in L^{\infty}(\Omega,\algb{M},\mu) \Leftrightarrow \text{supremo esencial } \abs{f} < \infty) \\
+  \end{array}
+  \right.
+$$
+
+El supremo esencial de una función f es:
+
+$supEsencial(f)=sup\{c\geq0:\mu\{\abs{f}\geq c\}>0\}$
+
+Es decir, el valor mayor de f. Por ejemplo, si $f=\frac{1}{x}$ en el intervalo (0,1), $supEsencial(f)=\infty$.
+
+Vamos a definir $\mathbb{E}(X|\algb{B})$ para $X\in  L^2(\Omega,\algb{M},P)$. Utilizamos $L^2$ ya que es un espacio vectorial normado con norma $\norm{X}_2 = (\int_\Omega {X^2 dP})^{\frac{1}{p}}$, y producto escalar que cumple:
+
+$<X,Y> = \int_{\Omega}XYdP$
+
+$\norm{X}=(<X,X>)^{\frac{1}{2}}$
+
+Resumiendo, queremos definir la esperanza condicionada ($\mathbb{E}(X|\algb{B})$), y para ello hemos definido un espacio vectorial $L^2(\Omega,\algb{M},P)$, que esta formado por vectores (las variables aleaorias), por una operación interna (la suma) y por una externa (el producto escalar):
+\begin{itemize}
+\item Vectores: las variables aleatorias X conformarán los elementos de nuestro espacio vectorial.
+\item Producto escalar: $<X,Y> = \int_{\Omega}XYdP$
+\end{itemize}
+
+De esto se deduce la norma de un vector, que será: $\norm{X}=(<X,X>)^{\frac{1}{2}}$
+
+Ahora vamos a comprobar que podemos extender la definición a $L^1$, ya que $L^2(P) \subset L^1(P)$. Lo demostramos:
+
+\begin{proof}
+Si $f \in L^2(P) \Rightarrow \int f^2 < \infty$.
+
+Escribimos: 
+\[
+\int \abs{f} = \int \abs{f}\ind_{\{\abs{f}\leq 1\}} + \int \abs{f}\ind_{\{\abs{f}> 1\}}
+\]
+
+El primer sumando es menor o igual que 1 ya que estamos integrando una función sobre $\Omega$ y con respecto a P, y P es una medida de probabilidad, que asigna a cada valor un número entre 0 y 1. Por tanto, sabiendo $\int_{\Omega}dP = 1$ (por definición de integral con respecto a una medida y sabiendo que P es una función de probabilidad y que $P(\Omega)=1$), si cogemos los valores de f, que son menores que 1, nos dará un numero menor o igual que 1, que multiplica como mucho a 1:
+\[
+\int_{\Omega} \abs{f}\ind_{\{\abs{f}\leq 1\}}dP \leq 1
+\]
+
+Y el segundo sumando se ve claro que es menor que infinito ya que:
+\[
+ \int_{\Omega} \abs{f}\ind_{\{\abs{f}> 1\}}dP \leq  \int_{\Omega} f^2 dP < \infty
+\]
+
+Por tanto nos queda que:
+\[
+\int \abs{f} < \infty
+\]
+
+Que es precisamente lo que significa que $f\in L^1$
+\end{proof}
+
+\textcolor{red}{Extender el resultado a $L^1$ lo hacemos por que??¿?¿?¿?¿¿}
+
+A partir de ahora nos referiremos con $L^2(\algb{M})$ a $L^2(\Omega,\algb{M},P)$.
+Si a partir de ahora empieza a resultar lioso, lo intento explicar con un dibujillo y tal al final.
+
+Ahora vamos a definir la sub-$\salgb$ $\algb{B} \subset \algb{M}$, la cual va a formar un subespacio vectorial $L^2(\Omega,\algb{B},P) \subset L^2(\Omega,\algb{M},P)$. Este subespacio vectorial es cerrado, es decir, una sucesión de elementos dentro del subespacio converge a un elemento dentro del subespacio:
+\[
+\text{Si} g_n \in L^2(\algb{B}) y \lim_{n \rightarrow \infty} \norm{g_n -f}_2 = 0 \Rightarrow f \in L^2(\algb{B}) 
+\]
+
+Definimos ahora la proyección ortogonal de un elemento de $L^2(\algb{M})$ en otro de $L^2(\algb{B})$.
+\[
+T: L^2(\algb{M}) \rightarrow L^2(\algb{B})
+\]
+Por tanto, si $X\in L^2(\algb{M})$, tenemos que $X-T(X) \perp L^2(\algb{B})$, o lo que es lo mismo, si $Y \in L^2(\algb{B})$, entonces $<X-T(X),Y>=\int(X-T(X))Y = 0$.
+
+Una vez hemos definido bien T como la proyección ortogonal de un elemento (una variable aleatoria X) del espacio de vectorial $L^2(\algb{M})$ al subespacio vectorial $L^2(\algb{B})$, ahora vamos a demostrar que T es la esperanza condicionada de X con respecto de $\algb{B}$.
+
+Para ello debe cumplir las dos propiedades:
+\begin{enumerate}
+\item T(X) es $\algb{B}$-medible. Es obvio ya que $T(X) \in L^2(\algb{B})$
+
+\item $\int_{\algb{B}}X =\int_{\algb{B}}T(X)$  $\forall B \in \algb{B}$
+
+Lo demostramos usando la ortogonalidad: Escogemos un elemento $B \in \algb{B}$, entonces $\ind_{\algb{B}} \in L^2(\algb{B})$. Esto es obvio ya que:
+\[
+\norm{\ind_B}_2=(\int_{\Omega}\ind_B^2)^{\frac{1}{2}}=\sqrt{P(B)}<\infty 
+\]
+
+Y por tanto tenemos que:
+\[
+0=<X-T(X),\ind_B> = \int_{\Omega}(X-T(X))\ind_B dP= \int_B(X-T(X)) dP= \int_B X dP - \int_B T(X) dP \Rightarrow
+\]
+\[
+\Rightarrow \int_B X dP = \int_B T(X) dP
+\]
+\end{enumerate}
+
+Vemos que T(X) cumple las condiciones que debe cumplir una función para ser considerada esperanza condicionada. Por tanto, la proyección ortogonal de $L^2(\algb{M})$ en $L^2(\algb{B})$ es $\mathbb{E}(X|\algb{B})$ $\forall X \in \algb{M}$.
+
+Y lo que es más importante, esto se cumple para toda sub-$\salgb$ de $\algb{M}$ y no solo para aquellas que están generadas a partir de una partición.
+
+Además, $\mathbb{E}(X|\algb{B})$ es lineal en $L^2(\algb{M})$ y se cumple que:
+\[
+\mathbb{E}(aX+Y|\algb{B})=a\cdot\mathbb{E}(X|\algb{B})+\mathbb{E}(Y|\algb{B})
+\]
+
+El dibujito prometido, todo lo que se ve es ele spacio vectorial $L^2(\Omega,\algb{M},P)$. La recta azul es el subespacio vectorial $L^2(\Omega,\algb{B},P)$, que como todo subespacio vectorial debe contener al (0,0). Y la recta roja representa la proyección ortogonal de la variable aleatoria X sobre el subespacio vectorial $L^2(\Omega,\algb{B},P)$. Ahora sólo hay que trabajar con los vectores y el producto escalar que hemos definido.
+\begin{figure}[h]
+\centering
+\includegraphics[page=1,scale=0.745]{img/graf1.png}
+\end{figure}
 
 
 
