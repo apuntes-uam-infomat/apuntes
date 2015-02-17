@@ -359,7 +359,7 @@ Vamos a ver dos versiones de lo que se entiende por \textbf{conexión} de una ca
 Los experimientos muestran que en casos con mucha "interconexión" $\exists \lim (\Pi_0)P^n$ y no depende de $(\Pi_0)$.
 
 En principio sabemos resolver cada problema, en caso finito, con la forma canónica pero esto no es muy práctico.
-
+\subsection{Teoremas}
 \begin{theorem}[Teorema 1]
 	\label{Markov_tma1}
 	Una cadena de Markov finita siempre tiene al menos una distribución estacionaria.
@@ -553,3 +553,98 @@ Pero google puede detectarlo y eliminarlo, por lo que queda claro que utiliza ot
 		\item Unir estados de forma aleatoria.
 	\end{enumerate}
 	P.ejemplo: [a manos] $\rightarrow$ [manos llenas] $\rightarrow$ [llenas de] / [llenas con] ....
+	
+\subsection{Cabos sueltos}
+ Repasando los teoremas \ref{Markov_tma2} \ref{Markov_tma3} vemos que han dejado algunos cabos sueltos.
+\begin{itemize}
+	\item ¿Qué se necesita para la unicidad de la distribución estacionaria?
+	\item ¿qué ocurre con las cadenas de Markov infinitas?
+\end{itemize}
+
+Hay un teorema que responde a estas dos cosas.
+La idea es:
+	En una cadena de Markov finita irreducible $\implies$ existe una única distribución estacionaria.
+	
+	Pero esto no se cumple en las infinitas.
+	\begin{example}[cadena infinita en el que no existe distr.estacionaria]
+		Consideramos los números naturales:
+		\begin{center}
+			
+			\inputtikz{markov/grafoInfIrre}
+			
+		\end{center}
+		$$S = \ent ^+$$
+		Vemos que efectivamente es irreducible.
+		
+		Vamos a comprobar que no existe una distribución estacionaria:
+		
+		Suponemos que tengo una distribución estacionaria para llegar a una contradicción:
+		
+		$$(\prod) = (x_1, x_2, x_3...)$$
+		$$\sum x_i = 1$$
+		
+		Vemos que
+		$$
+		\begin{cases}
+		x_1 = \frac{1}{2} x_2 \implies x_2 = 2x_1\\
+		x_2 = x_1 + \frac{1}{2} x_3 \implies x_3 = 2x_1\\
+		x_3 = \frac{1}{2} x_2 + \frac{1}{2} x_4 \implies x_4 = 2x_1\\
+		.\\
+		.\\
+		.\\
+		\end{cases}$$
+		Esto lleva a una contradicció porque el resultad esperado si existiera la distribución estacionaria sería:
+		$$x_1 + \sum_{n=2}^{\infty} 2 x_1 =1$$
+		Pero esto es imposible.
+	\end{example}
+	
+	
+	
+	De esto de deduce que lo importante para la existencia y unicidad de distribuciones estacionarias no es tanto que se pueda ir de un estado a otro si no que el \textbf{tiempo medio de retorno} sea finito.
+	
+	\begin{defn}[Tiempo medio de retorno]
+		Es el tiempo de retorno al estado i y se define como:
+		$$m_i = E[T_i|X_0 = i]$$
+		
+		Siendo $T_i = inf{n>0 : x_n = i}$ el tiempo mínimo en volver.
+	\end{defn}
+	
+	\obs Para cadenas de Markov finitas irreducibles $m_i < \infty$
+	
+	\begin{theorem}[Teorema 4]
+		\label{Markov_tma4}
+		Para una cadena de Markov irreducible (finita o infinita)
+		$$\exists \text{ distribución estacionaria } \iff m_i <\infty \text{ para algún i}$$
+		Además $m_i<\infty$ implica que la distribución estacionaria es:
+		$$(\prod) = (\frac{1}{m_1}, \frac{1}{m_2},\frac{1}{m_3}, .....)$$
+		y es única.
+	\end{theorem}
+	\obs Si $m_i$ existe para algún estado, existe para todos.
+	
+	\begin{example}
+		Recordemos el ejemplo de :
+			\begin{center}
+				\centering
+				\inputtikz{grafo3nodosTik}
+			\end{center}
+		
+		Tenemos que $(\prod) = (\frac{2}{5}, \frac{2}{5}, \frac{1}{5})$. El teorema nos permite ver que:
+		\begin{itemize}
+			\item $\frac{1}{2/5} = \frac{5}{2}$ es el tiempo medio (n. de clicks) para volver al estado 1 partiendo del estado 1.
+			\item Lo mismo para 2
+			\item $\frac{1}{1/5 = 5}$ es el tiempo medio de retorno para el nodo 3.
+		\end{itemize}
+	\end{example}
+	
+	Ahora vamos a ver que aplicando la \textbf{Ley Fuerte de los Grandes Números} a este tema, se cumple casi seguro que:
+	$$\lim_{n \rightarrow \infty} \frac{N_n (i)}{n} = \frac{1}{m_i}$$
+	
+	Siendo $N_n (i)$ el número de veces que hemos vuelto a i en n Unidades de Tiempo.
+	
+	\obs No se cumple al $100\%$ ya que son variables aleatorias.
+	
+	\begin{example}
+		Con el mismo grafo del ejemplo anterior, si desde 1 hago n licks , con n grande, típicamente ha vuelto a 1 del orden de $\frac{n}{5/2} = \frac{n}{m_1}$
+	\end{example}
+	
+	\textbf{Conclusión :} $N_n (i) \sim \frac{n}{m_i}$
