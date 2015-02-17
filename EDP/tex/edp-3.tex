@@ -645,27 +645,191 @@ y por tanto $Y_n = A_ncosh(\sqrt{\lambda_n}y)+B_nsinh(\sqrt{\lambda_n}y)$
 
 \subsubsection*{Ejemplo 3}
 La ecuación del calor unidimensional es la siguiente
-$$u_t-uxx=0$$
+$$u_t-u_{xx}=0$$
 donde $t\in\mathbb{R}$ representa el tiempo y $x\in\mathbb{R}$ la posición.
 Un posible problema sería colocar una barra de un material cualquiera y estudiar la temperatura de la misma conociendo sólo la distribución inicial de temperaturas y su valor en los extremos.
 \begin{equation*}
 \left\{
 \begin{array}{l l}
-u_t-uxx=0 & 0<x<1, t>0\\
+u_t-u_{xx}=0 & 0<x<1, t>0\\
 u(x,0)=f(x)& \text{Distribución inicial de temperaturas}\\
 u(0,t)=u(1,t) = 0 & \text{Temperatura constante en la frontera}
 \end{array}
 \right.
 \end{equation*}
-
-\subsubsection*{Ejemplo 4}
-El problema de Neumann es un problema mixto entre un problema de valor inicial y un problema de contorno. Dado que, según las leyes físicas, el flujo de calo es proporcional al gradiente, si se aislan los extremos del problema anterior, se tendría que el flujo de calor es nulo, luego $u_x(0,t)=u_x(1,t) = 0$. El problema quedaría como sigue:
+Vamos a buscar soluciones de la forma $u(x,y) = X(x)T(t)$, obteniendo
+$$\frac{X''}{X}=\frac{T'}{T}=-\lambda$$
+Hemos desacoplado la EDP en dos EDOs independientes. Ahora imponemos las condiciones de contorno.
+\begin{align*}
+& 0=u(0,t) = X(0)T(t) & \forall t>0\\
+& 0=u(1,t) = X(1)T(t) & \forall t>0\\
+\end{align*}
+Si no queremos la solución trivial (es decir, $T(t) = 0$), debe ser $X(0)=X(1)=0$.
+Tenemos el problema de contorno
 \begin{equation*}
 \left\{
 \begin{array}{l l}
-u_t-uxx=0 & 0<x<1, t>0\\
+-X''=\lambda X & 0<x<1\\
+X(0)=X(1)=0
+\end{array}
+\right.
+\end{equation*}
+Multiplicamos por $X$ la ecuación e integramos en $(0,1)$, utilizando las condiciones de contorno nos queda que
+\begin{align*}
+\lambda \int_0^1X^2(x)dx & = -\int_0^1X''(x)X(x)dx\\
+	& = \left.-X(x)X'(x)\right|_0^1 + \int_0^1X'(x)^2dx\\
+	& = 0 + \int_0^1X'(x)^2dx
+\end{align*}
+Si el problema tiene solución no trivial y $X(x)$ toma valores reales, entonces $\lambda$ debe ser no negativo, pues tenemos dos términos positivos a ambos lados de la igualdad anterior. En caso de que $X$ tome valores complejos, multiplicamos por $\overline{X}$ y repetimos el proceso.
+\begin{align*}
+\lambda \int_0^1X\overline{X}dx = \lambda \int_0^1 |X|^2 & = -\int_0^1X''(x)X(x)dx\\
+	& = \left.-X(x)X'(x)\right|_0^1 + \int_0^1X'(x)\overline{X'}dx\\
+	& = 0 + \int_0^1|X'(x)|^2dx
+\end{align*}
+Es decir, aunque $X(x)$ tome valores complejos, tenemos que $\lambda$ sigue siendo real y no negativo.
+
+Supongamos ahora que 
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+-X''=\lambda X & 0<x<1\\
+X(0)=X(1)=0
+\end{array}
+\right.
+\text{ y }
+\left\{
+\begin{array}{l l}
+-Y''=\mu Y & 0<x<1\\
+Y(0)=Y(1)=0
+\end{array}
+\right.
+\end{equation*}
+son dos soluciones no triviales para dos autovalores diferentes.
+
+En primer lugar vamos a definir el producto escalar complejo en el espacio vectorial de las funciones como sigue
+$$<f,g> = \int_0^1f(x)\overline{g(x)}dx$$
+que cumple las siguientes propiedades
+\begin{itemize}
+\item $<f,f> = \int_0^1f\overline{f}=\int_0^1|f|^2$
+\item $<\alpha f_1+\beta f_2,g> = \alpha <f_1,g>+\beta<f_2,g>$
+\item $<f, \alpha g_1+\beta g_2> = \overline{\alpha}<f,g_1>+\overline{\beta}<f,g_2>$
+\end{itemize}
+Vamos a ver que ocurre con el producto escalar en nuestro ejemplo. Consideramos
+\begin{align*}
+(\lambda-\overline{\mu})<X,Y> = & \lambda<X,Y>-\overline{\mu}<X,Y> \\
+	& = <\lambda X, Y> - <X, \mu Y> \\
+	& = -<X'',Y>+<X,Y''> \\
+	& = -\int_0^1 X''\overline{Y}+\int_0^1X\overline{Y''}\\
+	& = \left.-X'\overline{Y}\right|_0^1+ \left.-X\overline{Y'}\right|_0^1 + \int_0^1X'\overline{Y'} - \int_0^1X'\overline{Y'}\\
+	& = 0
+\end{align*}
+Es decir, \textbf{autofunciones correspondientes a autovalores distintos son ortogonales}.
+
+Como ya hemos visto, los autovalores del problema han de ser reales. Distingamos dos casos:
+\begin{itemize}
+\item $\lambda = 0$
+
+La solución general de la EDO es $X(x) = ax+b$. Las condiciones de contorno implican que $b=a=0$, que es la solución trivial.
+
+\item $\lambda > 0$
+
+La solución general de la EDO es $X(x) = Acos(\sqrt{\lambda}x + Bsin(\sqrt{\lambda}x))$. Las condiciones de contorno
+\begin{equation*}
+\left\{
+\begin{array}{l}
+0=X(0) = A\\
+0=X(1) = Bsin(\sqrt{\lambda}x)
+\end{array}
+\right|
+\begin{array}{l}
+\text{Luego }\lambda_n = n^2\pi^2\\
+\text{para }n=1,2,3,\hdots
+\end{array}
+\end{equation*}
+Sólo los $\lambda$ que son de la forma $\lambda_n = n^2\pi^2$ dan lugar a $X_n(x)=sin(n\pi x)$.
+Tenemos una sucesión de autovalores y autofunciones que cumplen $<X_n, X_m> = 0$ si $n\neq m$, es decir, una familia ortogonal de funciones satisfaciendo
+$$||x_n||^2=\int_0^1sin^2(n\pi x)dx = \frac{1}{2}$$
+Con todo esto, $T$ satisface:
+$$T_n(t) = e^{-n^2\pi^2t}$$
+\end{itemize}
+
+\subsubsection*{Ejemplo 4}
+El problema de Neumann es un problema mixto entre un problema de valor inicial y un problema de contorno. Dado que, según las leyes físicas, el flujo de calo es proporcional al gradiente, si se aislan los extremos del problema anterior, se tendría que el flujo de calor es nulo, luego $u_x(0,t)=u_x(1,t) = 0$. 
+Esta ley sigue la ecuación
+$$\vec{\Phi} = -k\nabla u$$
+donde $\Phi$ es el flujo de calor, $k$ la conductividad térmica y $\nabla u$ el gradiente de temperatura.
+El problema quedaría como sigue:
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+u_t-u_{xx}=0 & 0<x<1, t>0\\
 u(x,0)=f(x)& \text{Distribución inicial de temperaturas}\\
 u_x(0,t)=u_x(1,t) = 0 & \text{Extremos aislados}
 \end{array}
 \right.
 \end{equation*}
+Luego tenemos
+\begin{equation*}
+\left\{
+\begin{array}{l l}
+-X''=\lambda X & 0<x<1\\
+X'(0)=X'(1)=0
+\end{array}
+\right.
+\end{equation*}
+Consideramos dos soluciones para dos autovalores distintos
+\begin{align*}
+(\lambda-\overline{\mu})X\overline{Y} & = \lambda X\overline{Y}-\overline{\mu}X\overline{Y}\\
+& = -X''\overline{Y}+X\overline{Y''}\\
+& =-(X'\overline{Y}-X\overline{Y'})'
+\end{align*}
+Integrando por partes
+\begin{align*}
+(\lambda - \overline{\mu})\int_0^1X\overline{Y} & = \left.(-X'\overline{Y}+X\overline{Y'})\right|_0^1 \\
+& =  \left.\begin{vmatrix}X & \overline{Y}\\X' & \overline{Y'}\end{vmatrix}\right|_0^1\\ & = 0
+\end{align*}
+Las condiciones iniciales dicen $X', Y' = 0$. Luego \textbf{las autofunciones correspondientes a autovalores distintos son ortogonales}.
+
+Si $X=Y$ se tiene que
+$(\lambda - \overline{\lambda})\int_0^1|X|^2 = 0$
+por tanto, si no se quiere obtener la solución trivial, se necesita $\lambda\in\mathbb{R}$.
+
+\noindent Igual que antes
+\begin{align*}
+\lambda \int_0^1X\overline{X}dx = \lambda \int_0^1 |X|^2 & = -\int_0^1X''(x)X(x)dx\\
+	& = \left.-X(x)X'(x)\right|_0^1 + \int_0^1X'(x)\overline{X'}dx\\
+	& = 0 + \int_0^1|X'(x)|^2dx
+\end{align*}
+Luego $\lambda \ge 0$. Distinguimos así dos casos:
+
+\begin{itemize}
+\item $\lambda = 0$
+
+La solución general de la EDO es $X(x) = ax+b$. Las condiciones de contorno hacen que $a=0$
+
+\item $\lambda > 0$
+
+La solución general de la EDo es $X(x) = Acos(\sqrt{\lambda}x)+Bsin(\sqrt{\lambda}x)$. 
+Las condiciones generales
+\begin{align*}
+& X'(0) = 0 \implies B = 0\\
+& X'(1) = -\sqrt{\lambda}Asin(\sqrt{\lambda})=0\implies \sqrt{\lambda}=n\pi
+\end{align*}
+Lo que implica que $X_n=cos(n\pi x)$.
+Igual que antes, $T$ satisface $e^{-n^2\pi^2t}$
+\end{itemize}
+
+\subsubsection*{Ejemplo 5}
+La ecuación de Schrödinguer es
+$$u_t-iu_{xx}=0$$
+Pongamos el problema que sigue
+\begin{equation*}
+\begin{array}{l l}
+u_t-iu_{xx}=0 & 0<x<1, t>0\\
+u_x(0,t)=u_x(1,t) = 0 & 
+\end{array}
+\end{equation*}
+Usando el método de separación de variables tenemos
+$$\frac{X''}{X}=\frac{T'}{iT}=-\lambda$$
+La solución para la $X$ es la misma que para el problema anterior, mientras que $T$ satisface ahora
+$$T_n(t) = e^{-in^2\pi^2t}$$
