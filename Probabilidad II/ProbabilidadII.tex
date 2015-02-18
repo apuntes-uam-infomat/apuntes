@@ -670,8 +670,8 @@ Y es una función que vale 0 en el intervalo $(-\infty, 0)$ y 1 en el intervalo 
 \begin{defn}
 Dado el espacio de probabilidad $(\Omega, \algb{M}, P)$ y la sub-$\salgb$ $\mathbb{B}\subset\algb{M}$ generada a partir de una partición de $\Omega$ (más adelante veremos que no es necesario que esté generada por una partición, sino que valdrá cualquier  sub-$\salgb$), la esperanza condicionada $\mathbb{E}(X|\algb{B})$ es:
 \begin{enumerate}
-\item $\mathbb{B}$-medible
-\item $\forall B \in \mathbb{B}$, $\int_{B}\mathbb{E}(X|\mathbb{B})dP=\int_{B}XdP$
+\item $\algb{B}$-medible
+\item $\forall B \in \algb{B}$, $\int_{B}\mathbb{E}(X|\algb{B})dP=\int_{B}XdP$
 
 Estas dos propiedades determinan $\mathbb{E}(X|\mathbb{B})$ de modo único.
 \end{enumerate}
@@ -764,7 +764,7 @@ Por tanto nos queda que:
 Que es precisamente lo que significa que $f\in L^1$
 \end{proof}
 
-\textcolor{red}{Extender el resultado a $L^1$ lo hacemos por que??¿?¿?¿?¿¿}
+%\textcolor{red}{Extender el resultado a $L^1$ lo hacemos por que??¿?¿?¿?¿¿, por que así nos basta con funciones $L^1$.}
 
 A partir de ahora nos referiremos con $L^2(\algb{M})$ a $L^2(\Omega,\algb{M},P)$.
 Si a partir de ahora empieza a resultar lioso, lo intento explicar con un dibujillo y tal al final.
@@ -786,7 +786,7 @@ Para ello debe cumplir las dos propiedades:
 \begin{enumerate}
 \item T(X) es $\algb{B}$-medible. Es obvio ya que $T(X) \in L^2(\algb{B})$
 
-\item $\int_{\algb{B}}X =\int_{\algb{B}}T(X)$  $\forall B \in \algb{B}$
+\item $\int_B X =\int_B T(X)$  $\forall B \in \algb{B}$
 
 Lo demostramos usando la ortogonalidad: Escogemos un elemento $B \in \algb{B}$, entonces $\ind_{\algb{B}} \in L^2(\algb{B})$. Esto es obvio ya que:
 \[
@@ -817,7 +817,57 @@ El dibujito prometido, todo lo que se ve es ele spacio vectorial $L^2(\Omega,\al
 \includegraphics[page=1,scale=0.745]{img/graf1.png}
 \end{figure}
 
+\subsection{Esperanza condicionada usando el Teorema de Radon-Nikodyn}
+Teorema de Radon-Nikodyn (caso especial): Sea $(\Omega, \algb{M})$ un espacio medible. Sea P una probabilidad en $\algb{M}$, y sea $\nu$ una medida con signo finita. Entonces, si $\nu<<P$, existe una función medible en $\frac{d\nu}{dP} \in L^1(\Omega, \algb{M}, P)$ tal que $\forall A \in \algb{M}$, $\nu(A)=\int \frac{
+d\nu}{dP} dP$.
 
+Así pues vamos a usar este teorema para probar la existencia de la esperanza condicionada ($\mathbb{E}(X|\algb{B})$) para $X \in L^1(\Omega, \algb{M}, P)$ aplicado a $L^1(\Omega, \algb{B}, P)$. Definimos $\nu$ en $\algb{B} \subset \algb{M}$ como $\nu(B)=\int_B XdP$
+
+Recordemos que si $P(B)=0$, entonces $\nu(B)=0$. Que, en ese caso, esto ocurre si y solo si $\nu << P|_{\algb{B}}$. Por el teorema de Radon-Nikodyn existe $\frac{d\nu}{dP} \in L^1(\Omega, \algb{B}, P)$ tal que $\nu(B)=\int_B \frac{d\nu}{dP} dP$ para todo $B \in \algb{B}$. Luego $\mathbb{E}(X|\algb{B})=\frac{d\nu}{dP}$ es la derivada de Radon-Nikodyn y cumple:
+\begin{enumerate}
+\item es $\algb{B}$-medible.
+
+\item $\int_B X dP =\nu(B) = \int_B \frac{d\nu}{dP} dP$  $\forall B \in \algb{B}$
+\end{enumerate}
+
+
+\subsection{Propiedades}
+\begin{enumerate}
+\item Linealidad: Si $\alpha$ es una constante $\in \mathbb{R}$ y $X,Y:\Omega \rightarrow \mathbb{R}$ con $X,Y \in L^1(\algb{M})$, entonces $\mathbb{E}(\alpha X + Y|\algb{B})=\alpha\mathbb{E}(X|\algb{B})+\mathbb{E}(Y|\algb{B})$
+
+\begin{proof}
+Ambos lados son $\algb{B}$-medibles (por definición de esperanza condicionada). Para demostrarlo vamos a utilizar la linealidad de la integral y la definición de esperanza condicionada, entonces:
+\[
+\int_B \mathbb{E}(\alpha X + Y|\algb{B})dP= \int_B(\alpha X+Y)dP=\alpha\int_B XdP + \int_B YdP= 
+\]
+\[
+=\alpha\int_B \mathbb{E}(X|\algb{B})dP + \int_B \mathbb{E}(Y|\algb{B})dP = \int_B \left(\alpha\mathbb{E}(X|\algb{B}) + \mathbb{E}(Y|\algb{B})\right)dP
+\] 
+\end{proof}
+\item Positividad: Si $X \geq 0 \Rightarrow \mathbb{E}(X|\algb{B})\geq 0$. Equivalentemente si  $X \geq Y \Rightarrow \mathbb{E}(X|\algb{B})\geq \mathbb{E}(Y|\algb{B})$
+\begin{proof}
+Partimos de una variable aleatoria X que es positiva.
+
+Sea $B=\{\mathbb{E}(X|\algb{B}) < 0\} \in \algb{B}$ \textcolor{red}{?¿?¿¿ serán los w que cumplen eso no?}
+
+Entonces:
+\[
+0 \geq  \int_B \mathbb{E}(X|\algb{B})dP = \int_B XdP \geq 0
+\]
+
+Y además tenemos que como $\mathbb{E}(X|\algb{B})<0$ en B, entonces $\int_B \mathbb{E}(X|\algb{B})dP=0$, lo que quiere decir que $P(B)=0$.
+\end{proof}
+\item $\abs{\mathbb{E}(X|\algb{B})} \leq \mathbb{E}(\abs{X}|\algb{B})$
+
+\begin{proof}
+Sabemos que podemos descomponer $X=X_+ - X_-$ y $\abs{X}=X_++X_-$, por tanto, aplicando la propiedad de la linealidad, la de $\abs{a-b} \leq |a|+|b|$ y la positividad de la esperanza nos queda que:
+\[
+\abs{\mathbb{E}(X|\algb{B})}=\abs{\left( \mathbb{E}(X_+|\algb{B}) - \mathbb{E}(X_-|\algb{B}) \right)} \leq \mathbb{E}(X_+|\algb{B})+\mathbb{E}(X_-|\algb{B})= \mathbb{E}(\abs{X}|\algb{B})
+\]
+ 
+\end{proof} 
+
+\end{enumerate}
 
 %\begin{figure}[h]
 %\centering
