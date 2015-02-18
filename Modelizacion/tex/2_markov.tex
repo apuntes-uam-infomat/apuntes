@@ -648,3 +648,91 @@ La idea es:
 	\end{example}
 	
 	\textbf{Conclusión :} $N_n (i) \sim \frac{n}{m_i}$
+
+
+
+
+\section{Una cadena de Markov infinita: Movimiento bronniano}
+
+\begin{center}
+	\inputtikz{markov/movimiento_bronniano}
+\end{center}
+
+Modela, entre otros, el movimiento de párticolas pequeñas (polen) sobre un líquido, que siguen un "camino aleatorio" al ser golpeadas por muchas moléculas.
+
+Nuestro ejemplo concreto: Modelo de partículas que se mueven al azar a derecha o izquierda (paseo aleatorio).
+
+Los estados son $S = \mathbb{Z}$. Y la matríz de transición cumple:
+
+
+$$ P_{i,i-1} = P_{i, i+1} = \frac{1}{2} \;\;\;\;\; P_{i,j} = 0  \text{  (En el resto de casos)} $$
+
+
+Para estudiar el movimiento bronniano nos gustaría que los estados estuvieran "muy pegados" formando un contínuo $\mathbb{R}$. También nos gustaría hacer continuo el tiempo.
+
+
+Calculemos el nº de visitas (retornos) esperados al origen = 0.
+
+Probabilidad de volver en tiempo $ = 2 \equiv P(X_{2} = 0 | X_{0} = 0) = \frac{1}{2^2} 2 $
+
+Probabilidad de volver en tiempo $ = 4 \equiv P(X_{4} = 0 | X_{0} = 0) = \frac{1}{2^4} \binom{4}{2} $
+
+Probabilidad de volver en tiempo $ = 2j \equiv P(X_{2j} = 0 | X_{0} = 0) = \frac{1}{2^{2j}} \binom{2j}{j} $
+
+
+Entonces $ N_{n} (0) = \sum\limits_{2j \leq n} \frac{1}{2^{2j}} \binom{2j}{j} $
+
+$$ \lim_{n \rightarrow \infty} \frac{N_{n}(0)}{n} = 0 $$
+
+Este cálculo requiere usar aproximaciones finas de factorial (Stirling).
+
+Podemos ver entonces que no existe una distribución estacionaria ya que $\frac{1}{m_i} = 0 \Rightarrow m_i = \infty$.
+
+
+
+Teniendo $P(X_{n} = j)$ con la matriz de transición se puede calcular facilmente $P(X_{n+1} = j)$.
+
+$$ P(X_{n+1} = j) = \frac{1}{2} P(X_{n} = j-1) + \frac{1}{2} P(X_{n} = j+1) $$
+
+
+Queremos que los tiempos en vez de ser 0,1,2,3,... dean $0h, 1h, 2h, ...$ con $h$ pequeño y que los estados sean $\epsilon \mathbb{Z} = \{ 0\epsilon, \pm 1\epsilon, \pm 2\epsilon, ... \}$ con $\epsilon$ pequeño. Además queremos que en tiempo acotado $hn (=1)$ nos hayamos movido típicamente un espacio $\epsilon j$ acotado.
+
+En el paseo aleatorio en $\mathbb{Z}$ se prueba que típicamente en n pasos se llega a distancia $c \sqrt{n}$. tiempo $≈ \sqrt{\text{dist}}$, lo que sugiere que $h ≈ \epsilon^2$.
+
+
+Elijamos $h = \frac{1}{2} \epsilon^{2}$ (si en vez de $\frac{1}{2}$ escogieramos otra constante apenas habría cambios):
+
+
+$$ \frac{P(X_{n+1} = j) - P(X_{n} = j)}{h} = \frac{P(X_{n} = j-1) + P(X_{n} = j+1) - 2 P(X_{n} = j)}{\epsilon^2} $$
+
+Queremos que cuando $h \rightarrow 0$ $P(X_{n} = j) = u(x, t) j \in \mathbb{Z} \;\; n \in \mathbb{Z}^{+} \cup \{0\} $ ($ x = j\epsilon, t = nh $).
+
+
+Teniendo en cuenta que $h \rightarrow 0 $y $\epsilon \rightarrow 0$.
+
+$$ \frac{u(x, t h) - u(x,t)}{h} = \frac{u(x-\epsilon, t) + u(x + \epsilon, t) - 2 u (x, t)}{\epsilon^2} $$
+
+
+$$ u_{t} = u_{xx} $$
+
+\begin{op}{Ecuación del calor en R}
+\begin{cases}
+	u_{t} = u_{xx} \;\;\;\; x \in \mathbb{R} t > 0 \\
+	u(x,0) = f(x) \;\;\; \leftarrow \text{distribución inicial}
+\end{cases}
+\end{op}
+
+
+Como las probabilidades de la cadena de Markov siempre suman (integran) 1 esto debe ser verdad para cualquier tiempo.
+
+Es decir:
+
+$$ \int_{\mathbb{R}} f(x)dx = 1 \Rightarrow \int_{\mathbb{R}} u (x,t) dx = 1 \text{ para cualquier t}$$
+
+Si u resuleve la ecuación del calor :
+
+$$ \text{SOL:} u(x,t) = \frac{1}{\sqrt{4\pi t}} \int_{-\infty}^{infty} f(y) e ^{-(x-y)^2 / ut} dy $$
+
+Si $e \neq \frac{1}{2}$, si uno pone otro número, aparece una constante en $u_{t} = e_{2} u_{xx}$. 
+
+
