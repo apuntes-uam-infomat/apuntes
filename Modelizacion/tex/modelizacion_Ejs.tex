@@ -399,7 +399,7 @@ Adicionalmente, para que pase por las circunferencias:
 
 $$ r(1) = 2 \;\;\;\; r(-1) = 2 \;\;\;\; \text{cte} = 0 $$
 
-$$ 2 = E \cosh{\frac{1}{E}} \Rightarrow^{aproximado con el ordenador} E = 1.69 $$ 
+$$ 2 = E \cosh{\frac{1}{E}} \Rightarrow^{\text{aproximado con el ordenador}} E = 1.69 $$ 
 
 
 La constante debe ser nula
@@ -411,4 +411,236 @@ Para lagrangianos unidimensionales L(x, $\dot{x}$), prueba directamente, únicam
 
 \solution
 
+\end{problem}
+
+\section{Hoja 2}
+
+\begin{problem}[1]
+	Una cadena de Markov con tres estados, {1, 2, 3}, tiene probabilidades de transición
+	$p_{ij} = i/10$ para $1 ≤ i ≤ 3$ y $j ∈ {1, 2}$. Calcula $Prob(X1 = X2 = 2|X0 = 1)$.
+	
+	\solution
+	Las probabilidades de transición son por definición:
+	$$P_{ij} = Prob(X_{n+1} = j | X_n = i)$$
+	
+	Por Bayes sabemos que:
+	$$Prob(B\cap C|A) = Prob(B|A) \cdot Prob(C|A\cap B)$$
+	
+	Siendo
+	\begin{itemize}
+		\item 	$Prob(B\cap C|A) = \frac{Prob(B\cap C \cap A)}{Prob (A)}$
+		\item  $ Prob(B|A) = \frac{B\cap A}{Prob(A)}$
+		\item  $Prob(C|A\cap B)= \frac{Prob(C\cap A \cap B)}{Prob(A\cap B)}$
+	\end{itemize}
+	
+	Llamamos $B={X_1 = 2}$ y $C={X_2 = 2}$ de forma que:
+	$$Prob(X1 = X2 = 2|X0 = 1) = Prob(X1 = 2 \cap X2 = 2|X0 = 1) = Prob (X_1=2|X_0=1) \cdot Prob(X_2 =2 |X_0 = 1 \cap X_1 =2)$$
+	
+	Vemos que $Prob (X_1=2|X_0=1)$ es la probabilidad de transición $p_{12}$
+
+	La parte de $Prob(X_2 =2 |X_0 = 1 \cap X_1 =2)$ se puede escribir como $Prob(X_2 =2 | X_1 =2) = p_{22}$ ya que por definición, una cadena de Markov sólo depende del suceso anterior. 
+	
+	Por lo que nos queda que 
+	$$Prob(X1 = X2 = 2|X0 = 1) = p_{12} \cdot p_{22} = \frac{1}{10} \cdot \frac{2}{10} = \frac{1}{50}$$
+\end{problem}
+
+
+
+
+\begin{problem}[2]
+	Considera la cadena de Markov con cuatro estados y con probabilidades de transici´on
+	$p_{12} = p_{24} = p_{43} = p_{32} = 1$. Halla para qué distribuciones iniciales existe una distribución
+	límite.
+	\solution
+	Primero construimos la matriz de transición:
+	
+	$P = \begin{matrix}
+	0&1&0&0\\0&0&0&1\\0&1&0&0\\0&0&1&0\\
+	\end{matrix}$
+	
+	Podríamos utilizar Jordan para calcular el límite, pero en este caso , al haber tantos ceros, es más fácil hacer las operaciones.
+	
+	Cogemos una distribución inicial
+	
+	$(\prod_0)= (x,y,z,t)$
+	
+	que por ser distribución de probabilidad tiene $x+y+z+t=1$
+	
+	¿$\exists \lim (\prod_0) P^n $?
+	
+	Haciendo $(\prod_0) \rightarrow (\prod_0)\cdot P \rightarrow (\prod_2) = (\prod_1) \cdot P = (\prod_0)\cdot P^2 \rightarrow . . . . $
+	
+	Nos queda que
+	$$(x,y,z,t) \rightarrow (0,x+z ,t,y) \rightarrow (0,t,y,x + z)\rightarrow(0,y,x+z,t) \rightarrow . . . $$
+	Vemos que siempre va a oscilar de la manera $(0,a,b,c) \rightarrow (0,b ,c,a)$
+	
+	Por lo tanto la única posibilidad de que converjan es que a,b,c sean iguales. Por lo tanto todas las distribuciones iniciales que estoy buscando tienen que cumplir.
+	
+	$\begin{cases}
+		 x + y + z + t = 1\\
+		 x+z=t=y
+	\end{cases} \implies (\prod_0) = (x,\frac{1}{3} , \frac{1}{3},\frac{1}{3} -x)$ con $0 \leq x \geq \frac{1}{3}$
+	
+	Y la distribución límite sería:
+	$$(\prod_n) = (0, \frac{1}{3}, \frac{1}{3}, \frac{1}{3})$$
+\end{problem}
+
+\begin{problem}[3]
+	Lanzamos una moneda al aire y consideramos la variable aleatoria $X_n$ que da el número
+	de caras en las tiradas n y n − 1. ¿Es ${Xn}^{\infty}_{n=1}$ una cadena de Markov?
+	\solution
+	
+	Para saber si es una cadena de Markov lo que tenemos que ver es si el resultado del caso $n$ depende de $n-1$ , $n-2$ , $n-3$...(caso en el que \textbf{no} sería Markov) o si solo depende de $n$ y $n-1$
+	
+	En otras palabras, si fuera cadena de Markov cumpliría:
+	$$Prob(X_{n+2} = 0| X_{n+1} = 1 \cap X_n = 2) = Prob(X_{n+2} = 0 | X_{n+1} = 1)$$
+	
+	Vamos a ver cada parte por separado
+	\begin{itemize}
+		\item Parte izquierda 
+		\begin{itemize}
+			\item Que $X_n = 2$ significa que en $n$ y en $n-1$ , salió cara
+			\item Que $X_{n+1} = 1$ significa que: o en $n$ salió cara o en $n+1$ salió cara. Como sabemos que en $n$ salió cara tenemos que:
+			$$ X_{n+1} = 1 \cap X_n = 2 \implies ccx(\text{ cara , cara , cruz})$$
+			\item Como $X_{n+2} = 0$ tenemos que:
+			$$Prob(X_{n+2} = 0| X_{n+1} = 1 \cap X_n = 2) = Prob(ccxx| ccx)$$
+		\end{itemize}
+		\item Parte derecha
+		\begin{itemize}
+			\item Que $X_{n+1} = 1$ puede significar $xc$ o $cx$ (sucesos $n$ y $n+1$)
+			\item $X_{n+2} = 0$ significa que tendríamos $cxx$
+			
+			
+			Por lo que la parte derecha es:
+			$$Prob(X_{n+2} = 0 | X_{n+1} = 1) = Prob (cxx| xc \cup cx)$$
+		\end{itemize}
+		
+	\end{itemize}
+	
+	Haciendo las probabilidades nos queda 
+	 $$ \frac{1}{2} = \frac{1}{4}$$
+	 
+	 Entonces no es Markov
+	
+\end{problem}
+
+\begin{problem}[4]
+	Si la matriz $P$ de probabilidades de transición de una cadena de Markov finita es
+	simétrica y con todos sus elementos no nulos, explica por qué $P^n$
+	tiende a una matriz con
+	todos sus elementos iguales.
+	\solution
+	
+	Recordamos que la suma de los elementos de cada fila de $P$ es 1 y por lo tanto, los de $P^n$ también.
+	
+	De esto y de que todos los elementos de $P^n$ son iguales deducimos que:
+	$$\lim P^n = 1/N \left(\begin{matrix}
+	1&.&.&.&.&1\\
+	.&&&&&.\\
+	.&&&&&.\\
+	.&&&&&.\\
+	.&&&&&.\\
+	1&.&.&.&.&1
+	\end{matrix} \right)$$ 
+	
+	
+	
+\end{problem}
+
+\begin{problem}[5]
+	En una cadena de Markov hay tres estados y se sabe $p_{11} = 3_{p_{13}} = 1/2, p_{21} = 3/4 y
+	p_{22} = p_{31} = p_{33} = 0$. Halla el resto de las probabilidades de transición, justifica que hay una distribución límite y hállala.
+	\solution
+	
+	Para calcular $P$ utilizamos que la suma de todos los elementos de cada fila tiene que dar 1.
+	$$P = \left( \begin{matrix}
+	\frac{1}{2}&\boxed{\frac{1}{3}}&\frac{1}{6}\\
+	\frac{3}{4}&0&\boxed{\frac{1}{4}}\\
+	0&\boxed{1}&0
+	\end{matrix}\right)$$
+	Para calcular el límite vamos a ver primero que sea regular porque regular $\implies \exists \lim (\prod_0)\cdot P^n$ y además es la única distribución estacionaria. 
+	
+	Para ver que es regular vemos que cumpla que $P^k$ tenga todos los elementos > 0 para algún $k$
+	
+	$$P^2 = \left( \begin{matrix}
+	1/2&1/3&1/6\\
+	3/8&1/2&1/8\\
+	3/4&0&1/4\\
+	\end{matrix}\right)$$
+	
+	Con esto ya está claro que para $P^4$ todos los elementos son > 0 (y probablemente también para $P^3$) por lo tanto es regular.
+	
+	Ahora vamos a calcular la distribución estacionaria y con eso ya tendríamos el valor del límite.
+	
+	Sabemos que la distribución estacionaria $(\prod)$ va a cumplir que:
+	\begin{itemize}
+		\item $(\prod) = (x,y,z)$
+		\item $x+y+z = 1$
+		\item $(x,y,z) \cdot P = (x,y,z)$
+	\end{itemize}
+	lo que me da es siguiente sistema
+	
+	$$\begin{cases}
+	\frac{x}{2} + \frac{3}{4}y = x\\
+	\frac{x}{3} + z = y\\
+	\frac{x}{6} + \frac{y}{4} = z\\
+	x + y + z = 1
+	\end{cases} \implies \text{Sol : } \lim(\prod_0) \cdot P^n = (\frac{1}{2}, \frac{1}{3}, \frac{1}{6})$$
+	
+	
+\end{problem}
+
+\begin{problem}[6]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[7]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[8]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[1]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[9]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[10]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[11]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[12]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[13]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[14]
+	
+	\solution
+\end{problem}
+
+\begin{problem}[15]
+	
+	\solution
 \end{problem}
