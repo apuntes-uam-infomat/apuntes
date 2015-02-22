@@ -68,6 +68,8 @@ $\ind_A(w)=0$ si $w \in A^c$
 \[
 \int_a^b f(x)dx = F(b)-F(a)
 \]
+\item Función convexa (o cóncava hacia arriba), si cumple que: $f(tx+(1-t)y) \leq tf(x)+(1-t)f(y)$. Una parábola con las ramas hacia arriba es convexa.
+\item Función cóncava: f es cóncava $\Leftrightarrow$ -f es convexa.
 \end{itemize}
 
 \section{Conceptos de TIM}
@@ -700,7 +702,7 @@ Dado el espacio de probabilidad $(\Omega, \algb{M}, P)$ y la sub-$\salgb$ $\math
 \item $\algb{B}$-medible
 \item $\forall B \in \algb{B}$, $\int_{B}\mathbb{E}(X|\algb{B})dP=\int_{B}XdP$
 
-Estas dos propiedades determinan $\mathbb{E}(X|\mathbb{B})$ de modo único.
+Estas dos propiedades determinan $\mathbb{E}(X|\algb{B})$ de modo único.
 \end{enumerate}
 \end{defn}
 
@@ -711,10 +713,10 @@ Estas dos propiedades determinan $\mathbb{E}(X|\mathbb{B})$ de modo único.
 \mathbb{E}(X|\algb{B})(w)=\sum_{i=1}^{\infty}\left( \frac{1}{P(A_i)}\int X(w)dP(w)\right)\ind_{A_i(w)}=\sum_{i=1}^{\infty}\mathbb{E}(X|A_i) \ind_{A_i}
 \]
 
-\obs $\norm{Y}_1 = \mathbb{E}(\abs{Y})$
+\obs $\norm{Y}_p = \mathbb{E}(\abs{Y})$
 \begin{proof}
 \[
-\norm{Y}_1 = \int \abs{Y}dP =\mathbb{E}(\abs{Y})
+\norm{Y}_p = \int \abs{Y}^pdP =\mathbb{E}(\abs{Y}^p)
 \]
 \end{proof}
 
@@ -979,7 +981,90 @@ Una vez demostrado para las X de esa forma es fácil demostrarlo para X de cualq
 
 \end{proof}
 
+\item Propiedad de la torre de $\mathbb{E}(*|\algb{B})$. Sean $\algb{C} \subset \algb{B} \subset \algb{M}$ $\salgb$s, si $X \in L^ 1(\algb{M})$ entonces:
+\begin{itemize}
+\item $\mathbb{E}(\mathbb{E}(X|\algb{C})|\algb{B}) = \mathbb{E}(X|\algb{C})$.
+\begin{proof}
+Por la propiedad 6:
+\[
+\mathbb{E}(\mathbb{E}(X|\algb{C})|\algb{B}) = \mathbb{E}(\mathbb{E}(X|\algb{C}) \cdot \ind_{\Omega}|\algb{B}) = \mathbb{E}(X|\algb{C}) \cdot \mathbb{E}(\ind_{\Omega}|\algb{B}) = \mathbb{E}(X|\algb{C}) \cdot 1 = \mathbb{E}(X|\algb{C})
+\]
+\end{proof}
+\item $\mathbb{E}(\mathbb{E}(X|\algb{B})|\algb{C}) = \mathbb{E}(X|\algb{C})$.
+\begin{proof}
+Ambos lados sin $\algb{C}$-medibles, así que basta ver que $\forall C \in \algb{C}$, se cumple que $\int_C \mathbb{E}(\mathbb{E}(X|\algb{B})|\algb{C}) = \int_C \mathbb{E}(X|\algb{C})$, que es cierto, aplicando la definición de esperanza condicionada (el punto 2: $\forall B \in \algb{B}$, $\int_{B}\mathbb{E}(X|\algb{B})dP=\int_{B}XdP$):
+\[
+\int_C \mathbb{E}(\mathbb{E}(X|\algb{B})|\algb{C}) = \int_C \mathbb{E}(X|\algb{B}) = \int_C X = \int_C \mathbb{E}(X|\algb{C})
+\] 
+
+\textcolor{red}{Entonces $\mathbb{E}(X|\algb{C})$ es $\algb{C}$-medible y $\forall C \in \algb{C}$, $\int_{C}\mathbb{E}(X|\algb{C})dP=\int_{C}XdP$}
+
+\end{proof}
+\end{itemize}
+\item También cumple las versiones condicionales de las desigualdades de Cauchy-Schwarz, Holder y Jensen.
 \end{enumerate}
+
+\begin{defn}[Desigualdad de Jensen]
+Sean:
+\begin{itemize}
+\item $X: \Omega \rightarrow I$ (intervalo) una variable aleatoria en $L^1(\Omega, \algb{M},P)$.
+\item $\phi: I \rightarrow \mathbb{R}$ convexa, tal que $\phi(X) \in L^1(\Omega,\algb{M},P)$.
+\end{itemize}
+Entonces:
+\[
+\phi(\mathbb{E}(X)) \leq \mathbb{E}(\phi(X))
+\]
+
+Observaciones:
+\begin{enumerate}
+\item Fácil de recordar. Escoges $\phi(t)=t^2$ y te queda que: $\phi(\mathbb{E}(X))=(\mathbb{E}(X))^2$ y que  $\mathbb{E}(\phi(X)) = \mathbb{E}(X^2)$. Y sabemos que:
+\[
+Var(X) = \mathbb{E}(X^2) - (\mathbb{E}(X))^2 \geq 0
+\]
+
+Y por tanto: $\mathbb{E}(X^2) \geq (\mathbb{E}(X))^2$
+\item Si $\phi$ es cóncava, entonces $\psi = -\phi$ es convexa.
+\end{enumerate}
+\end{defn}
+
+\begin{defn}[Desigualdad de Jensen (versión condicionada)]
+Sean:
+\begin{itemize}
+\item $X: \Omega \rightarrow I$ (intervalo) una variable aleatoria en $L^1(\Omega, \algb{M},P)$.
+\item $\phi: I \rightarrow \mathbb{R}$ convexa, tal que $\phi(X) \in L^1(\Omega,\algb{M},P)$.
+\end{itemize}
+Entonces:
+\[
+\phi(\mathbb{E}(X|\algb{B})) \leq \mathbb{E}(\phi(X)|\algb{B})
+\]
+\end{defn}
+
+\begin{theorem}
+$\mathbb{E}(*|\algb{B})$ es una contracción en $L^p(\Omega, \algb{M}, P)$ para $\algb{B}\subset\algb{M}$ y $1\leq p\leq\infty$
+\end{theorem}
+\begin{proof}
+Para $1\leq p < \infty$ usamos Jensen condicional con $\phi(t)=\abs{t}^p$. Sea $X \in L^p$, entonces:
+\[
+\norm{\mathbb{E}(X|\algb{B})}_p^p = \mathbb{E}(\abs{\mathbb{E}(X|\algb{B})}^p) \leq  \mathbb{E}(\mathbb{E}(\abs{X}^p|\algb{B})) = \mathbb{E}(\abs{X}^p) = \norm{X}_p^p
+\]
+
+En el primer y tercer paso hemos utilizado que:
+\[
+\norm{Y}_p = \int \abs{Y}^pdP =\mathbb{E}(\abs{Y}^p)
+\]
+
+En el segundo paso hemos usado la desigualdad de Jensen condicionada (con lo que hay dentro de la esperanza) ($\phi(\mathbb{E}(X|\algb{B})) \leq \mathbb{E}(\phi(X)|\algb{B})$), con $\phi(t)=\abs{t}^p$ y $t=\mathbb{E}(X|\algb{B})$, de modo que:
+\[
+\phi(\mathbb{E}(X|\algb{B})) = \abs{\mathbb{E}(X|\algb{B})}^p
+\]
+\[
+\phi(X) = \abs{X}^p 
+\]
+
+\end{proof}
+
+
+
 
 %\begin{figure}[h]
 %\centering
