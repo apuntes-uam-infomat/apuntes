@@ -1088,11 +1088,25 @@ de log, o la convexidad de exp.
 \solution
 
 \begin{expla}
-Una función convexa cumple que: $f(tx+(1-t)y) \leq tf(x)+(1-t)f(y)$.
+Una función convexa cumple que: $f(tx+(1-t)y) \leq tf(x)+(1-t)f(y)$, para todo $x\leq y$. 't' y '1-t' se puede cambiar por cualquier numero finito de coeficientes que sumen 1,(la cosa es que evaluemos la función en un punto intermedio entre x e y).
 Una función f es cóncava $\Leftrightarrow$ -f es convexa.
-
-Aplicar logaritmo con esta definición y sale ssssseguro
 \end{expla}
+Vemos que la igualdad se cumple también con el logaritmo.
+
+\[
+\prod_{i=1}^n x_i^{a_i} \leq \sum_{i=1}^{n}a_i x_i \Leftrightarrow \log\left(\prod_{i=1}^n x_i^{a_i}\right) \leq \log \left(\sum_{i=1}^{n}a_i x_i\right)
+\]
+
+Por tanto, definimos la función convexa: $f(x) = -\log(x)$, entonces, por convexidad tenemos que:
+\[
+-\log \left(\sum_{i=1}^{n}a_i x_i\right) \leq \sum_{i=1}^{n} a_i\left(-\log(x_i)\right) = \sum_{i=1}^{n} -\log\left((x_i)^{a_i}\right) 
+\]
+ 
+Multiplicamos por '-1' a ambos lados y nos queda:
+\[
+\log \left(\sum_{i=1}^{n}a_i x_i\right) \geq \sum_{i=1}^{n} \log\left((x_i)^{a_i}\right) = \log\left(\prod_{i=1}^n x_i^{a_i}\right) 
+\]
+
 
 \end{problem}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1105,8 +1119,14 @@ escribir la  desigualdad aritm\'etico-geom\'etrica para $n=2$, mediante un cambi
 \solution
 
 \begin{expla}
-No lo he comprobado pero creo que es: $t=\sqrt[p]{w}$ y $u=\sqrt[q]{z}$
+Utilizamos $t=\sqrt[p]{w}$ y $u=\sqrt[q]{z}$
 \end{expla}
+Nos queda:
+\[
+tu\leq\frac{t^p}{p}+\frac{u^q}{q} \Leftrightarrow \sqrt[p]{w}\sqrt[q]{z} \leq \frac{\sqrt[p]{w}^p}{p} + \frac{\sqrt[q]{z}^q}{q} \Leftrightarrow w^{\frac{1}{p}} z^{\frac{1}{q}}\leq\frac{w}{p}+\frac{z}{q}
+\]
+
+Que es equivalente a la situación dele ejercicio anterior con: $a_1=\frac{1}{p}$, $a_2=\frac{1}{q}$. 
 
 \end{problem}
 
@@ -1125,8 +1145,47 @@ punto) e integramos.
 \solution
 
 \begin{expla}
+Utilizamos la desigualdad de Young, que hemos demostrado en el ejercicio anterior:
+\[
+tu\leq\frac{t^p}{p}+\frac{u^q}{q}
+\]
 
+Cogemos:
+\[
+t=\frac{\abs{f}}{\norm{f}_p}
+\]
+\[
+u=\frac{\abs{g}}{\norm{g}_q}
+\]
+
+Además usamos que:
+\[
+\norm{f}_p=\left( \int \abs{f}^p  \right)^\frac{1}{p}  \Leftrightarrow  \norm{f}_p^p= \int \abs{f}^p \Leftrightarrow 1 = \frac{\int \abs{f}^p}{\norm{f}_p^p}
+\]
 \end{expla}
+
+Sustituyendo en la Desigualdad de Young:
+\[
+\frac{\abs{f}}{\norm{f}_p} \cdot \frac{\abs{g}}{\norm{g}_q} \leq \frac{1}{p}\left( \frac{\abs{f}}{\norm{f}_p} \right)^p + \frac{1}{q}\left( \frac{\abs{g}}{\norm{g}_q} \right)^q = \frac{1}{p} +  \frac{1}{q} = 1 
+\]
+
+Ahora integramos:
+
+\[
+\int \frac{\abs{f}\abs{g}}{{\norm{f}_p}{\norm{g}_q}} d\mu =
+\frac{\int \abs{fg}d\mu}{{\norm{f}_p}{\norm{g}_q}} = 
+\frac{{\norm{fg}_1}}{{\norm{f}_p}{\norm{g}_q}} \leq 1
+\]
+
+Y nos queda:
+\[
+\norm{fg}_1 \leq \norm{f}_p \norm{g}_q
+\]
+
+Para ver que $fg \in L^1$ es obvio teniendo la desigualdad anterior:
+\[
+\int \abs{fg} = \norm{fg}_1 \leq \norm{f}_p \norm{g}_q < \infty
+\]
 
 \end{problem}
 
@@ -1155,7 +1214,12 @@ Probar tambi\'en los casos (bastante obvios) $p=1$  y  $p = \infty$.
 \begin{expla}
 
 \end{expla}
-
+\[
+\norm{f+g}_p = sup_{\{h\in L^q: \norm{h}_q=1\}}\int (f+g)h =  sup_{\{h\in L^q: \norm{h}_q=1\}}\left(\int fh + \int gh\right) \leq 
+\]
+\[
+\leq sup_{\{h\in L^q: \norm{h}_q=1\}}\int fh +  sup_{\{h\in L^q: \norm{h}_q=1\}} \int gh = \norm{f}_p + \norm{g}_p   
+\]
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1167,8 +1231,24 @@ cuando son iguales en casi todo punto).
 \solution
 
 \begin{expla}
+Para comprobar que es una norma, tenemos que comprobar que cumple las tres propiedades de una norma:
+\begin{enumerate}
+\item Positividad: $\norm{f}\geq 0$ y $\norm{f} = 0 \Leftrightarrow f=0$.
+\item Proporcionalidad: $\norm{\lambda f} = \abs{\lambda}\norm{f}$.
+\item Desigualdad triangular: $\norm{u+v} \leq \norm{u}+\norm{v}$     
+\end{enumerate}
 
+Los elementos $f \in L^p$ cumplen que $\int \abs{f}^p < \infty$. 
 \end{expla}
+\begin{enumerate}
+\item $\norm{f}_p = \left( \int \abs{f}^p\right)^\frac{1}{p}$ que es mayor que 0.
+\item $\norm{\lambda f}_p=\abs{\lambda}\norm{f}_p$, lo demostramos: 
+\[
+\norm{\lambda f}_p =\left( \int \abs{\lambda f}^p \right)^{\frac{1}{p}} = \left( \int \abs{\lambda}^p \abs{f}^p\right)^{\frac{1}{p}} = (\abs{\lambda}^p)^{\frac{1}{p}} \left(\int \abs{f}^p\right)^{\frac{1}{p}} = \abs{\lambda} \norm{f}_p  
+\]
+\item $\norm{f+g}_p \leq \norm{f}_p+\norm{g}_p$.
+Demostrado en el ejercicio anterior.
+\end{enumerate}
 
 \end{problem}
 
@@ -1187,8 +1267,20 @@ est\'an por encima de todas sus rectas soporte.
 \solution
 
 \begin{expla}
-Probar con lo del ejercicio 1...
+
 \end{expla}
+Dado que g es convexa, podemos encontrar una función lineal $f(x)=ax+b$ tal que $f(\mathbb{E}(X)) = g(\mathbb{E}(X))$ y $g(x)\leq f(x)$ para todo $x \in \mathbb{R}$.
+
+Es decir, existe una recta que siempre queda por debajo de g:
+\begin{figure}[h]
+\centering
+\includegraphics[page=1,scale=0.745]{img/jensen.png}
+\end{figure} 
+
+Utilizamos la linealidad y tenemos que:
+\[
+\mathbb{E}(f(X)) \geq \mathbb{E}g(X) = \mathbb{E}(aX+b)=a\mathbb{E}(X)+b=g(\mathbb{E}(X))=f(\mathbb{E}(X))
+\]
 
 \end{problem}
 
