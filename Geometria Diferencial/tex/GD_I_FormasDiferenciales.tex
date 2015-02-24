@@ -533,7 +533,7 @@ De aquí podemos retomar una definición algo antigua en la historia de las mate
 \begin{defn}[{Á}lgebra\IS tensorial] Dado un espacio vectorial $E$, se define el álgebra tensorial $\tens^\bullet E$ como \[ \tens^\bullet E ≝ \bigoplus_{n∈ℕ} \left(\otimes^n E\right) \]
 \end{defn}
 
-\begin{defn}[{Á}lgebra pinchorial]\footnote{No soy capaz de escribir pinchorial sin reírme.} Se define el álgebra pinchorial como el conjunto de todos los tensoriales antisimétricos
+\begin{defn}[{Á}lgebra\IS pinchorial]\footnote{No soy capaz de escribir pinchorial sin reírme.} Se define el álgebra pinchorial como el conjunto de todos los tensoriales antisimétricos
 \end{defn}
 
 No sé qué mierdas ha escrito aquí. Pinchorial. Desisto.Λ
@@ -662,15 +662,15 @@ Tenemos que $\dif y_I \y \dif y_J$ son 1-formas, luego podemos escribir $F^*(\di
 
 La derivada exterior nos lleva de una $p$-forma a una $(p + 1)$-forma, como si derivásemos una vez más. Veamos la definición formal.
 
-\begin{defn}[Derivada\IS exterior] Dada $ω_p = \sum a_I \dif x_I$, entonces se define la derivada exterior como \[ \dif ω_p ≝ \sum \dif a_I \y \dif x_I \] teniendo en cuenta que \[ \dif f ≝ \sum \dpa{f}{x_i} \dif x_i \]
+\begin{defn}[Derivada\IS exterior] Dada $ω_p = \sum a_I \dif x_I$, entonces se define la derivada exterior como \[ \dif ω_p ≝ \sum \dif a_I \y \dif x_I \] teniendo en cuenta que \[ \dif f ≝ \sum \dpa{f}{x_i} \dif x_i \]\label{defDerivadaExterior}
 \end{defn}
 
 Vamos a ver sus propiedades:
 
 \begin{enumerate}
 \item Linealidad: $\dif (ω_1 + ω_2) = \dif ω_1 + \dif ω_2$.
-\item Regla de Leibniz: $\dif (ω_1 \y ω_2) = \dif ω_1 \y ω_2 + (-1)^p ω_1 \y \dif ω_2$, donde $ω_1$ es una $p$-forma.
-\item $\dif \dif ω = 0$.
+\item \concept{Regla\IS de Leibniz}: $\dif (ω_1 \y ω_2) = \dif ω_1 \y ω_2 + (-1)^p ω_1 \y \dif ω_2$, donde $ω_1$ es una $p$-forma.
+\item \concept{Lema\IS de Poincaré}: $\dif (\dif ω) = 0$.
 \item $F^*(\dif ω) = \dif F^*(ω)$.
 \end{enumerate}
 
@@ -683,4 +683,32 @@ Con $\dif(a_I b_J)$ aplicamos la regla de Leibniz de funciones así que $\dif(a_
 Por definición, el primer sumando es lo que queremos: $\sum b_J \dif a_I \y \dif x_I \y \dif x_J = \dif ω_1 \y ω_2$. El segundo casi lo es, salvo porque $\dif x_I$ no está donde debe.Tenemos que ``mover'' $\dif x_I$ a la izquierda, y eso son $p$ cambios. Es decir, que $\dif b_J \y \dif x_I = (-1)^p \dif x_I \y \dif b_J$ así que $\sum a_I \dif b_J \y \dif x_I \y \dif x_J = (-1)^p ω_1 \y \dif ω_2$.h
 \end{proof}
 
+\begin{proof}[Propiedad 3]
+Queremos demostrar que el diferencial de la diferencial es 0. Ya lo teníamos en el caso de las 0-formas, y ahora vamos a verlo en general para $ω = a_I \dif x_I$. En este caso, tenemos que \[\dif ω = \dif a_I \y \dif x_I + a_I \dif(\dif x_I) \]
 
+Sabemos que $\dif (\dif x_I) = 0$\footnote{Es fácil verlo así: $\dif (\dif x_I) = \dif (1 · \dif x_I) = \dif 1 \y \dif x_I = 0$, que es $0$ porque la derivada de una constante ($1$) es $0$.}, así que nos queda $\dif ω = \dif a_I \y \dif x_I$\footnote{Esto no es más que llegar de forma algo más detallada a la derivada exterior que ya hemos definido en \ref{defDerivadaExterior}.}.
+
+Tomamos de nuevo la derivada exterior: \[ \dif(\dif ω) = \dif(\dif a_I \y \dif x_I) = \underbrace{\dif(\dif a_I)}_{0} \y \dif x_I - \dif a_I\y \underbrace{\dif(\dif x_I)}_{0} = 0\] y ya lo tenemos.
+\end{proof}
+
+\begin{proof}[Propiedad 4]
+Vamos a demostrar que $F^*(\dif ω) = \dif F^*(ω)$. Empezaremos primero viendo qué ocurre cuando $ω$ es una 0-forma y por lo tanto sólo tenemos el diferencial de una función. En este caso, \[ \dif ω = \dif f = \sum_j \dpa{f}{y_j}\dif y_j \] y aplicando el pullback
+	\begin{multline*} F^* (\dif ω )
+		= F^*\left(\sum_j \dpa{f}{y_j}\dif y_j \right)
+		= \sum_{i,j} \dpa{f}{y_j} \dpa{y_j}{x_i} \dif x_i = \\
+		\eqreason{Usando la regla de la cadena.} \sum_i \dpa{(f○F)}{x_i}
+		\eqreason{Por definición de $\dif$.}\dif (F○f) = \dif F^*(f)
+	\end{multline*}
+
+Con esto podemos saltar al caso general, cuando $ω = \sum a_I \dif y_I$. Necesitaremos un lemilla que nos dice que \[ \dif\left(F^* (\dif y_I)\right) = \dif(\dif F_{i1} \y \dif F_{i2}\y \dotsb \y \dif F_{ip}) = 0\] y que no vamos a demostrar.
+
+Siguiendo con la demostración, por definición de pullback tenemos que  \[ \dif (F^* ω) = \dif \left(\sum_I F^*(a_I) F^*(\dif y_I)\right) \]. Con la propiedad distributiva, tenemos que eso es igual a \[ \sum_I \left(\dif F^*(a_I) \y F^*(\dif y_I) + F^*(a_I) \dif\left(F^* (\dif y_I)\right)\right)\]. Aquí vemos rápidamente que $\dif \left(F^*(\dif y_I)\right) = \dif \dif F^* y_I = 0$ (acabamos de ver que el pullback y la diferencial se pueden intercambiar con 0-formas). Luego, operando, \[ \dif (F^* ω) = \sum_I \dif F^*(a_I) \y F^*(\dif y_I) = F^*\left(\sum_I \dif a_I \y \dif y_I\right) \eqreason{Por la propia definición del pullback.} F^* (\dif ω) \]
+\end{proof}
+
+Con las propiedades demostradas, vamos a ir a por el primer teorema importante: el de Poincaré.
+
+\begin{theorem}[Teorema\IS de Poincaré]
+Sea $ω$ una p-forma en un abierto $U ⊂ ℝ^n$, con coordenadas $x_1, \dotsc, x_n$ en $U$. Vamos a suponer $\dif ω = 0$ (o, dicho de otra forma, que $ω$ sea cerrada).
+
+Bajo ciertas hipótesis topológicas, existe $x$ una $(p-1)$-forma en $U$ tal que \[ ω = \dif x\]. Esto se denota como que $ω$ es una p-forma\IS exacta.
+\end{theorem}
