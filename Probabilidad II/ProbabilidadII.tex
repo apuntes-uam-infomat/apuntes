@@ -718,7 +718,7 @@ Estas dos propiedades determinan $\mathbb{E}(X|\algb{B})$ de modo único.
 \mathbb{E}(X|\algb{B})(w)=\sum_{i=1}^{\infty}\left( \frac{1}{P(A_i)}\int X(w)dP(w)\right)\ind_{A_i(w)}=\sum_{i=1}^{\infty}\mathbb{E}(X|A_i) \ind_{A_i}
 \]
 
-\obs $\norm{Y}_p = \mathbb{E}(\abs{Y}^p)$
+\obs $\norm{Y}_p^p = \mathbb{E}(\abs{Y}^p)$
 \begin{proof}
 \[
 \norm{Y}_p = \int \abs{Y}^pdP =\mathbb{E}(\abs{Y}^p)
@@ -1066,8 +1066,87 @@ En el segundo paso hemos usado la desigualdad de Jensen condicionada (con lo que
 \phi(X) = \abs{X}^p 
 \]
 
+Con esto concluimos que: $\norm{\mathbb{E}(X|\algb{B})}_p \leq \norm{X}_p$
+
+Para el caso $p=\infty$ hay que probar que $\norm{\mathbb{E}(X|\algb{B})}_{\infty} \leq \norm{X}_{\infty}$. Supongamos que no es cierto:
+
+Sea $B=\{\abs{\mathbb{E}(X|\algb{B})}  \}$ \textcolor{red}{COMPLETAR ESTO}
 \end{proof}
 
+
+\chapter{Martingalas}
+El objetivo es modelizar la evaluación de nuestra fortuna cuando jugamos a un juego justo. Lo llamaremos submartingala si el juego es favorable y supermartingala si es desfavorable.
+
+\begin{defn}[Filtración]
+Una sucesión de $\salgb$s $\algb{M}_0 \subset \algb{M}_1 \subset \algb{M}_2 \subset ... \subset \algb{M}$, es una filtración.
+\end{defn}
+
+\begin{defn}
+Una sucesión de variables aleatorias $\{X_i\}_{i=0}^{\infty}$ se dice adaptada a la filtración $\{\algb{M}_i\}_{i=0}^{\infty}$ si $\forall i = 0,1,...$ se tiene que $X_i$ es $\algb{M}_i$-medible.
+\end{defn}
+
+\begin{defn}[Martingala]
+Dado $X=\{\{X_n\}_{n=0}^{\infty}, \{\algb{M}_n\}_{n=0}^{\infty}\}$, decimos que X es una martingala si cumple:
+\begin{enumerate}
+\item $\forall n$, $X_n \in L^1(\Omega, \algb{M}. P)$.
+\item $\forall n$, $X_n$ es $\algb{M}_n$-medible.
+\item $\forall_n$, $\mathbb{E}(X_{n+1}|\algb{M}_n)=X_n$ c.s.
+En el caso de submartingalas: $\forall_n$, $\mathbb{E}(X_{n+1}|\algb{M}_n)\geq X_n$ c.s.
+En el caso de supermartingalas: $\forall_n$, $\mathbb{E}(X_{n+1}|\algb{M}_n)\leq X_n$ c.s.
+\end{enumerate}
+\end{defn}
+
+\begin{example}
+$Y_n = 1$ si sale cara en el lanzamiento n
+
+$Y_n=-1$ si sale cruz en el lanzamiento n
+
+$P(Y_n=1)=P(Y_n=-1)=\frac{1}{2}$
+
+Definimos $\Omega = \{1,-1\}^{\mathbb{N}\setminus \{0\}}$. Así, un $w \in \Omega$ sería por ejemplo $w=(-1,-1,-1,1,-1)$, donde $Y_3(w)-1$.
+
+Vemos que las $Y_n$ son variables aleatorias independientes. Así, las ganancias hasta la partida n son $S_n=\sum_{i=1}^{n}Y_i$.
+
+Vamos a tomar la $\salgb$ generada por cada $Y_n$, por tanto: $\algb{M}_1 = \sigma(Y_1)=\sigma\left\{\{1\}\times\prod_{i=2}^{\infty}\{-1,1\},\{-1\}\times\prod_{i=2}^{\infty}\{-1,1\} \right\}$
+
+Y denotamos $\sigma(Y_1, Y_2,...,Y_n)=\sigma(\{Y_1\}\times\{Y_2\}\times ... \times\{Y_n\}\times \prod_{j=n+1}^{\infty}\{-1,1\} : Y_n= 1 \text{ o } -1, k=1,...,n )$.
+
+En ese ejemplo (con $w=(-1,-1,-1,1,-1)$) tenemos que $S_3(w)=-3$ y $S_4(w)=-2$.
+
+Vamos ahora a comprobar que $S=\{S_n, \sigma(Y_1, Y_2,...,Y_n)\}$ es una martingala.
+\begin{enumerate}
+\item $S_n \in L^1$. Tenemos que ver que: $\norm{S_n} < \infty$:
+\[
+\norm{S_n}=\mathbb{E}(\abs{S_n})=\mathbb{E}\left(\abs{\sum_{k=1}^{n} Y_k}\right) \leq \mathbb{E}\left(\sum_{k=1}^{n} \abs{Y_k}\right) = n < \infty
+\]
+\item $S_n$ es $\algb{M}_n$-medible porque $S_n$ sólo depende de $Y_1,Y_2,...,Y_n$ y $\forall k=1,...,n$ tenemos que $Y_k$ es $\sigma(Y_1,Y_2,...,Y_n)$-medible. ($S_n$ es una suma de funciones $\algb{M}_n$-medibles).
+\item Usamos la siguiente igualdad (que aún no hemos demostrado): Si U y W son variables aleatorias independientes, entonces $\mathbb{E}(U|W)=\mathbb{E}(U|\sigma(W))=\mathbb{E}(U)$. Tenemos que probar que $\mathbb{E}(S_{n+1}|\algb{M}_n)=S_n$ c.s.
+\begin{proof}
+$\mathbb{E}(S_{n+1}|\algb{M}_n)= \mathbb{E}(S_{n} + Y_{n+1}|\algb{M}_n) =  \mathbb{E}(S_{n}|\algb{M}_n) + \mathbb{E}(Y_{n+1}|\algb{M}_n) = S_n + 0 = S_n$
+
+Hemos usado que $\mathbb{E}(Y_{n+1}|\algb{M}_n)=0$ porque son independientes y $\mathbb{E}(Y_{n+1}|\algb{M}_n)=\mathbb{E}(Y_{n+1})=0$.
+
+Y hemos usado que $\mathbb{E}(S_{n}|\algb{M}_n)=S_n$ que es así por definición de esperanza condicionada a una $\salgb$ y porque $S_n$ es $\algb{M_n}$-medible. Lo explico mejor: 
+
+Teníamos que la esperanza condicionada ($\mathbb{E}(X|\algb{B})$) cumple que es $\algb{B}$-medible y que
+$\forall B \in \algb{B}$, $\int_{B}\mathbb{E}(X|\algb{B})dP=\int_{B}XdP$, y decíamos que como $\mathbb{E}(X|\algb{B})$ es $\algb{B}$-medible, es que era constante al integrarlo sobre cada elemento $B \in \algb{B}$ y se podía sacar fuera de la integral. Pues entonces, si X fuera también $\algb{B}$-medible, lo podríamos sacar fuera de la integral por el mismo razonamiento y nos quedaría:
+
+\[
+\int_{B}\mathbb{E}(X|\algb{B})dP=\int_{B}XdP \Leftrightarrow \mathbb{E}(X|\algb{B}) \int_{B}dP = X \int_{B}dP \Leftrightarrow
+\]
+
+\[
+\Leftrightarrow \mathbb{E}(X|\algb{B}) P(B) = X P(B) \Leftrightarrow \mathbb{E}(X|\algb{B}) = X
+\]
+
+\textcolor{red}{preguntar esto}
+
+Por ejemplo: $S_3(1,1,-1,...)=1$ y $\mathbb{E}(S_4|\algb{M}_3)=S_3$.
+\end{proof}
+
+
+\end{enumerate}
+\end{example}
 
 
 
