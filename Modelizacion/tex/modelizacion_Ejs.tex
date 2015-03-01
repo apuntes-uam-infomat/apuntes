@@ -719,31 +719,122 @@ Tenemos cuatro páginas web: A,B,C y D. Cada una de ellas tiene dos enlaces: A y
 \end{problem}
 
 \begin{problem}[10]
-	Suponemos que variamos el esquema del ejercicio anterior considerando las 4 bolas negras y numeradas. En cada paso elegimos un número al azar y cambiamos de urna la bola correspondiente (sin reemplazarla). Halla la distribución estacionaria.
+Suponemos que variamos el esquema del ejercicio anterior considerando las 4 bolas negras y numeradas. En cada paso elegimos un número al azar y cambiamos de urna la bola correspondiente (sin reemplazarla). Halla la distribución estacionaria.
 	\solution
+	\textcolor{blue}{Hecho por Pedro. No fiarse al 100\%}
+
+	En esta ocasión, el estado $i$ representará la situación en que hay $i$ bolas en la primera caja (el elemento de la matriz $p_{02}$ representará la probabilidad de pasar de no tener ninguna bola a tener 2). Con esta consideración, la matriz de transición queda:
+
+	\[P= \left( \begin{matrix}
+	0&1&0&0&0\\
+	1/4&0&3/4&0&0\\
+	0&1/2&0&1/2&0\\
+	0&0&3/4&0&1/4\\
+	0&0&0&1&0\\
+	\end{matrix}\right)\]
+
+	Para buscar la solución estacionaria sólo tenemos que plantear el sistema de ecuaciones habitual:
+	\[\vx P = \vx\]
+	que, descompuesto en coordenadas, nos queda:
+	\[\begin{cases}
+		 a=b\\
+		 b= a/4+3c/4\\
+		 c= b/2+d/2\\
+		 d= 3c/4+e/4\\
+		 e= d\\
+		 a+b+c+d+e=1
+	\end{cases} \implies \begin{cases}
+		a= b \\
+		3a/4=3c/4 \implies a=c \\
+		c=b/2+d/2\\
+		3d/4=3c/4 \implies d=c \\
+		e= d \\
+		a+b+c+d+e=1
+	\end{cases} \implies a=b=c=d=e=1/5\]
+
+	La distribución estacionaría sería:
+	\[\left( \frac{1}{5},\frac{1}{5},\frac{1}{5},\frac{1}{5},\frac{1}{5}\right)\]
 \end{problem}
 
 \begin{problem}[11]
+ Se lanza una moneda hasta que salga una de las secuencias XCC, CXC, CCX. ¿Por
+cuál de ellas apostarías?
 
+ Trata de formular el problema como una cadena de Markov (no irreducible) con estados $\{$XX, XC, CX, CC, XCC, CXC, CCX $\}$, donde los estados representan
+las dos últimas tiradas o el fin del juego. Calcula el número de tiradas esperado del juego.
 	\solution
+	\textcolor{blue}{Hecho por Pedro. No fiarse al 100\%}
+
+	La primera pregunta es fácil, lo óptimo sería apostar a la que no apuesten \textbf{Solar} ni \textbf{Cazakas}.
+
+	La cadena de Markov de este ejercicio, con los estados indicados en el enunciado, sería:
+	\begin{center}
+	\includegraphics{tex/grafo_H2E11.png}
+	\end{center}
+
+	Tal y como nos adelantaba el enunciado, la cadena obtenida no es irreducible. No podemos ir de cualquier estado a cualquier otro en un número finito de pasos.
+
+	TO BE CONTINUED...
+
+	\textcolor{blue}{Tengo el mismo problema que en el ejercicio 6. No se como formular lo que viene ahora correctamente.}
+
 \end{problem}
 
 \begin{problem}[12]
-
+	Da un ejemplo de una cadena de Markov finita regular tal que $P^6$ temga algún ememento nulo, donde $P$ es la matriz de transición.
 	\solution
+	\textcolor{blue}{Hecho por Pedro. No fiarse al 100\%}
+
+	Basta con escribir un ejemplo tan absurdo como una cadena lineal en la que $p_{ij}=1 \iff i+1=j$ y $P_{ij}=0$ en otro caso.
+
+	Una cadena de este tipo, siempre que sea finita, será regular así que basta con hacerla con más de 6 nodos, de forma que no se pueda llegar del primer estado al último en 6 pasos, lo que provocaría un 0 en la matriz $P^6$.
 \end{problem}
 
 \begin{problem}[13]
+	Consideramos la cadena de Markov finita con estados en $\ent$, consistente en que en $\ent^+$ damos un paso a la derecha con probabilidad 0.4 y a la izquierda con probabilidad 0.6, mientras que en $\ent^-$ estas probabilidades están intercambiadas. Además, desde el 0 se alcanzan el 1 y el -1 con probabilidad 1/2.
+
+	Como el origen ``atrae'' a los otros estados, se puede probar que el tiempo medio de retorno es finito y la teoría asegura que existe una distribución estacionaria. ¿Cuál es? Por la simetría se puede suponer que toma los mismo valores en los negativos que en los positivos
 
 	\solution
+	\textcolor{blue}{Hecho por Pedro. No fiarse al 100\%}
+
+	Aunque la idea sería la de siempre, en este caso el sistema de ecuaciones nos queda con infinitas ecuaciones.
+
+	Vamos a restringirnos a los 2 primeros enteros positivos y negativos y el 0 y supondremos que para los que siguen la distribución será la misma que para los enteros 2 y 3.
+
+	Para representarlo en forma de matriz, consideramos que en los extremenos tenemos tantas posibilidades de quedarnos fijos como posiblidades habría de llegar a esos valores desde estados que quedan excluídos de nuestra simplifiación menos las probabilidades que había de salir de nuestra simplifiación.
+
+	Podemos suponer, sin demasiado riesgo de equivocarnos, que en la distribución estacionaria tendremos los mismos valores en todos los enteros con valor absoluto mayor o igual que 2.
+
+	Por tanto, siendo $a,b,c,d,e$ los valores de los estados $-2,-1,0,1,2$ respectivamente, simulando un movimiento y forzando la estacionalidad de esa solución, tendremos:
+	\[\begin{cases}
+		a = 0.6a+0.4b\\
+		b = 0.6a+0.5c\\
+		c = 0.6b+0.6d\\
+		d = 0.5c+0.6e\\
+		e = 0.4d+0.6e\\
+	\end{cases} \implies \begin{cases}
+		a = b \\
+		0.4 b =0.5c \\
+		c = 0.6b+0.6d\\
+		0.4d = 0.5c \\
+		e = d
+	\end{cases} \implies a=b=c=d \ c = 1.2a\]
+
+	De modo que habría infinitas distribuciones estacionarias, que serían todas aquellas que cumplen esa relación:
+	\[\left(a,a,1.2a,a,a\right)\]
+
 \end{problem}
 
 \begin{problem}[14]
-
+	El número total de partículas se conserva a lo largo del tiempo en el modelo discretizado de movimiento browniano (paseo aleatorio) en una dimensión. Traduce esto en alguna ley de conservación para le ecuación del calor en $\real$ (con dato de decaimiento rápido) y demuéstrala
 	\solution
 \end{problem}
 
 \begin{problem}[15]
-
+	Paseamos por $\ent^2$ partiendo del origen y avanzando de uno en uno en una dirección: N, S, E, O, elegida al azar. Demuestra que el número de retornos al origen en a lo más 2M pasos es en media:
+	\[\sum_{n=1}^M 4^{-2n}\sum_{k+l=n}(2n)!/(k!)^2(l!)^2\]
+	Comprueba que esta serie diverge cuando $M \to \infty$, expresando la suma interior como
+	\[4^{n-1}π^{-2}\int_{-π}^π\int_{-π}^π\left(\sin(x)+\sin(y)\right)^{2n}dxdy\]
 	\solution
 \end{problem}
