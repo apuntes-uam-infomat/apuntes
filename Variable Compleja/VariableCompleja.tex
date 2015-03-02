@@ -1514,9 +1514,9 @@ siendo las dos integrales de la derecha integrales sobre los reales con las que 
 Si $\int_a^bf(t)=0 \implies$ no hay nada que demostrar. Tenemos $0\leq 0$
 
 Sea α$\in$ arg$\left(\int_a^bf(t)dt\right)$, tenemos que
-\[\int_a^bf(t)dt=\left|\int_a^b f(t)dt \right| e^{iα}\]
+\[\int_a^bf(t)dt=\left|\int_a^b f(t)dt \right| e^{iα}\footnote{Todo complejo puede expresarse como su módulo multiplicado por e elevado a i veces el argumento}\]
 multiplicando a ambos lados por $e^{-iα}$ tenemos:
-\[\left| \int_a^bf(t)dt\right| = Re\left[ e^{-iα} \int_a^bf(t)dt\right] = Re\left[  \int_a^be^{-iα} f(t)dt\right] = \int_a^bRe\left[ e^{-iα} f(t)dt\right]\]
+\[\left| \int_a^bf(t)dt\right| =\footnote{A la izquierda tenemos un módulo, que es un número real, por lo que a la derecha deberemos tener otro. Por tanto coincide con su parte real} Re\left[ e^{-iα} \int_a^bf(t)dt\right] = Re\left[  \int_a^be^{-iα} f(t)dt\right] = \int_a^bRe\left[ e^{-iα} f(t)dt\right]\]
 
 El hecho de que la parte real de la integral sea la integral de la parte real (que hemos aplicado en la última igualdad aquí mostrada) se deduce de la definición que hemos dado de \textbf{Integral}
 \end{proof}
@@ -1528,7 +1528,9 @@ Una curva es una función continua $\appl{α}{[a,b]}{\cplex}$.
 
 Si $α(a)=α(b)$ diremos que α es \concept{cerrada}.
 
-si $α(t_1)=α(t_2)$ implica que $t_1=t_2$ para todo $t_1,t_2 \in (a,b)$. En caso de ocurrir esto diremos que α es \concept{simple}.
+Si se da propiedad:
+\[\forall t_1,t_2 \in (a,b) \ α(t_1)=α(t_2) \implies t_1=t_2 \]
+Diremos que α es \concept{simple}.
 
 Una curva \textbf{simple} y \textbf{cerrada} se llama \textbf{curva de Jordan}
 \end{defn}
@@ -1553,8 +1555,10 @@ Si $\appl{α}{[a,b]}{\cplex}$ es un camino y β es monótona de [c,d] a [a,b], t
 Sabemos que
 \[long(α)=\int_a^b | α'(t)| dt\]
 así que vamos a calcular la longitud de la composición:
-\[long(α \circ β) = \int_a^b |(α \circ β)'|ds = \int_a^b |β'(s)α'(β(s))|ds\]
-%TODO ponemos la composición y hacemos cambio de variable y listo
+\[long(α \circ β) = \int_a^b |(α \circ β)'|ds = \int_a^b |β'(s)α'(β(s))|ds=\int_a^b |β'(s)||α'(β(s))|ds\]
+
+Sabiendo ahora que $β(s)=t$, derivamos y obtenemos: $β'(s)ds=dt$ y, al sustituirlo en la ecuación anterior, nos queda:
+\[long(α \circ β) = \int_a^bα(t)dt\]
 \end{example}
 
 Sea $\appl{α}{[a,b]}{\cplex}$ un camino y sea $\appl{f}{α([a,b])}{\cplex}$ una función continua, definimos la \concept{integral de línea}
@@ -1590,7 +1594,85 @@ Todo camino es rectificable
 
 Para α rectificable y $f$ continua en $α([a,b])$ existe la \concept{integral de Riemann-Stieldjes}
 \[\int_a^bf(α(t))dα(t) = \int_αf(z)dz\]
+\newpage
+\textbf{Propiedades de la integral de Riemann}
+Sea $\appl{α}{[a,b]}{\cplex}$ un camino y sean $\appl{f,g}{α([a,b])}{\cplex}$ dos funciones continuas
+\begin{enumerate}
+\item Si $β$ es una función monótona, $C^1$ que manda el intervalo $[c,d]$ en $[a,b]$ con $β(c)=a$ y $β(d)=b$, entonces:
+\[\int_α f(z)dz = \int_{α \circ β} f(z)dz\]
+es decir, \textbf{la integral de línea es independiene de la parametrización}
 
+\obs Si $β(c)=b$ y $β(d)=a$
+\[\int_α f(z)dz = -\int_{α \circ β} f(z)dz\]
+
+\item Para todo $a,b \in \cplex$
+\[\int_α(af+bg)dz = a \int_α fdz + b \int_α gdz\]
+
+\item Si $c \in [a,b]$ y definimos $α_1(t)=α(t) \ \forall  t \in [a,b]$ y $α_2(t)=α(t) \ \forall t \in [c,d]$ tenemos
+\[\int_α f(z)dz = \int_{α_1}f(z)dz + \int_{α_2}f(z)dz \]
+
+\item
+\[\left| \int_α f(z)dz \right| \leq \int_α |f(z)||dz| \leq \sup_{z \in α([a,b])} \left( |f(z)|long(α)\right)\]
+
+\item Si $\{f_n\}$ es una sucesión de funciones continuas en $α([a,b])$ que convergen uniformemente a $f$, entonces
+\[\int_α f_n(z)dz \longrightarrow \int_α f(z)dz\]
+
+\item Si $f$ está definida en un entorno de $α([a,b])$ y allí tiene primitiva, entonces
+\[\int_α f(z)dz = F(α(b))-F(α(a))\]
+en particuluar, si α es cerrada esta vale 0.
+\end{enumerate}
+
+Procedamos a demostrar algunas de estas propiedades:
+\begin{proof}
+\begin{enumerate}
+\item
+\[\int_{α \circ β}f(z)dz = \int_c^df((α \circ β)(s))(α\circ β)'ds = \int_c^df((α \circ β)(s)) α'(β(s))β'(s)ds =\]
+\[= \int_a^b f(α(t))α'(t)=\int_α f(z)dz\]
+
+\item[4]
+Ya vimos que si $\appl{F}{[a,b]}{\cplex}$ continua, teníamos que
+\[\left| \int_a^bF(t)dt\right| \leq \int_a^b|F(t)|dt\]
+Por tanto
+\[\left| \int_α f(z)dz\right| = \left| \int_a^bf(α(t))α'(t)dt\right| l\leq \int_a^b |f(α(t))||α'(t)|dt \leq \sup_{z \in α([a,b])}|f(z)|\int_a^b|α'(t)|dt=\]
+\[=\sup_{z \in α([a,b])}|f(z)long(α)\]
+
+\item[5]
+\[\left| \int_α f_ndz - \int_α f dz\right| = \left| \int_α(f_n(z)-f(z))dz\right| \leq \int_α |f_n(z)-d(z)||dz| \leq\]
+\[\leq \sup_{z \int α([a,b])} |f_n(z)-f(z)|long(α)\]
+
+Puesto que tenemos convergencia uniforme, sabemos que
+\[ \sup_{z \int α([a,b])} |f_n(z)-f(z)| < ε\]
+para un n grande, por lo que
+\[\forall ε \ \exists N \tq \forall n > N \left| \int_α f_ndz - \int_α f dz\right| < ε\]
+
+\item[6]
+\[\int_α f(z)dz = \int_α F'(z)dz = \int_a^bF'(α(t))α'(t)=\int_a^b \frac{d}{dt}(F \circ α)(t)dt \overbrace{=}^{\text{F=G+iH}} \]
+\[= \int_a^b\frac{d}{dt} (G \circ α)(t)dt + i\int_a^b\frac{d}{dt}(H \circ α)(t)dt \overbrace{=}^{T.F.C} \]
+\[ = (G\circ α)(b)-(G \circ α)(b) + i\left( (H\circ α)(b)-(H \circ α)(b)\right) = (F \circ α)(b)-(F \circ α)(a)\]
+\end{enumerate}
+\end{proof}
+
+\newpage
+
+\begin{example}
+Vamos a calcular
+\[\int_{|z|=1}  \frac{1}{z} dz\]
+
+Vamos a calcularlo de dos formas distintas:
+\begin{itemize}
+\item Aplicamos directamente la definición
+
+Primero parametrizamos la curva sobre la que estamos integrando (circunferencia unidad).
+
+Es sencillo ver que $α(t)=\cos t + i \sin t = e^{it}$ y $α'(t)=ie^{it}$
+
+Procedemos ahora a calcular la integral con lo visto anteriormente:
+\[\int_{|z|=1}  \frac{1}{z} dz = \int_0^{2π}\frac{1}{e^{it}}ie^{it}dt = 2πi\]
+
+\item Dividimos la curva en dos trozos y empleamos dos ramas del logaritmo.
+\textbf{Se deja como ejercicio para el lector}
+\end{itemize}
+\end{example}
 
 \section{Teorema de Cauchy}
 \section{Teorema de Liouville}

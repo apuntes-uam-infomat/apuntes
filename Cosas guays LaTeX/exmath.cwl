@@ -212,3 +212,6 @@
 \tc[Id. superior]{arg3}#m
 \tc[Id. superior][Id. inferior]{arg3}#m
 \tc[Id. superior][Id. inferior][máx superior]{arg3}#m
+\dif#m
+\AlignFootnote{arg0}#m
+\eqreason{arg0}#m

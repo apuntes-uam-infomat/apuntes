@@ -67,3 +67,97 @@ Dibujo con caption ($\frac{1}{4} - \frac{2}{\pi^2} \sum_{n impares} \frac{1}{n^2
 	
 \end{prop}
 \obs Hay un algoritmo (FFT) para calcular los $\widehat{f}(m)$
+
+\begin{proof}
+	Definimos la función $\delta : \ent/N\ent \rightarrow \mathbb{C}$ como :
+	$$\delta (n) = \begin{cases}
+	1 \rightarrow n=0\\
+	0 \rightarrow n\neq 0 \\
+	\end{cases}$$
+	Y decimos que también se puede escribir como:
+	$$\delta (n) = \frac{1}{N} \sum_{m_0}^{N-1} e(\frac{nm}{N})$$
+	Donde $e(\frac{nm}{N}) = e^{2\pi inm/N}$
+	
+	Es claro que $\delta(0) = 1$ , pero ¿se cumple que si $n\neq 0 \implies \delta (n) = 0$?
+	
+	Si se cumple, porque si lo pensamos como una progresión geométrica:
+	$\begin{cases}
+	a_1 = e(n0/N)\\
+	a_{m+1} = e(nN/N)\\
+	\text{razón } = \frac{1}{N}
+	\end{cases}$
+	
+	Entonces:
+	$$\delta (n) = \frac{e(nN/N) - e(0n/N)}{1/N - 1} = 0$$
+	
+	Otra forma de pensarlo es como vectores. $\delta(n)$ se puede ver como sumar todas las raíces de la unidad.Sumando todas las fuerzas vemos que se anulan.
+	
+	(dibujo explicativo para N=4)
+	
+	Una vez que tenemos esto, vemos que la $f(n)$ de la proposición se puede escribir como:
+	$$f(n) = \sum_{k\in \ent/N\ent} f(k) \cdot \delta(n-k)$$
+	Sustituyendo:
+	$$f(n) = \frac{1}{N} \sum_{k\in \ent/N\ent} f(k)  \sum_{m \in \ent/N\ent} e(\frac{nm}{N}) \cdot e(- \frac{km}{N})$$
+	
+	Y como por definición:
+	$$\widehat{f}(m) = \sum_{k\in \ent/N\ent} f(k) \cdot e(- \frac{km}{N})$$
+	
+	Pues ya está probada la proposición.
+\end{proof}
+\begin{example}
+	Un ejemplo de esto con N=3
+	
+	DIBUJO
+	
+	Vemos que la función se va repitiendo po lo que cojo solo el tramo de 0 a 2 para estudiarla.
+	$$f(n) = \begin{cases}
+	7 si n= 0\\
+	2 si n = 1 , 2
+	\end{cases}$$
+	
+	Entonces aplicando la proposición nos queda:
+	$$\widehat{f}(0) = f(0)\cdot e(0) + f(1)\cdot e(0) + f(2) \cdot e(0) =  11$$
+	$$\widehat{f}(1) = f(0)\cdot e(0) + f(1)\cdot e(-\frac{1}{3}) + f(2)\cdot e(-\frac{2}{3}) = 7 + 2\cdot(-\frac{1}{2} -i\frac{\sqrt{3}}{2}) + 2\cdot (-\frac{1}{2} + \frac{i\sqrt{3}}{2}) = 5$$
+	$$\widehat{f}(2) = f(0)\cdot e(0) + f(1)\cdot e(- \frac{2}{3} + f(2)\cdot e(-\frac{4}{3}) = 7 + 2\cdot(-\frac{1}{2} -i\frac{\sqrt{3}}{2}) + 2\cdot (-\frac{1}{2} + \frac{i\sqrt{3}}{2}) = 5$$
+	Como 
+	$$f(n) = \frac{1}{N} \sum_{m\in \ent/ N\ent} \widehat{f}(m) \cdot e(\frac{nm}{N})$$
+	Sustituyendo con los resultados de antes nos queda que:
+	$$f(n) = \frac{11}{3}\cdot e(0 \frac{n}{3}) + \frac{5}{3}\cdot e(1 \frac{n}{3}) + \frac{5}{3} \cdot e(2 \frac{n}{3})$$
+	
+	Y efectivamante, si comparamos resultados nos queda :
+	$$n = 0 \rightarrow 7 = \frac{11}{3} + \frac{5}{3} + \frac{5}{3}$$
+	$$n = 1 \rightarrow 2 = \frac{11}{3} + \frac{5}{3} \cdot (- \frac{1}{2} + \frac{i \sqrt{3}}{2}) + \frac{5}{3} \cdot (- \frac{1}{2} -\frac{i \sqrt{3}}{2})$$
+\end{example}
+
+Esta proposición se puede utilizar para \textbf{transformar funciones discretas(con N grande) a funciones continuas}.
+
+DIBUJOS DE LA F DISCRETA Y CONTINUA
+
+Tenemos f(n) discreta, llamamos $F(\frac{n}{N}) = f(n)$ a la función continua que queremos construir.
+
+
+Haciendo el desarrollo de Fourier de f nos queda que:
+$$f(n) = \sum \frac{\widehat{f}(m)}{N} \cdot e(\frac{nm}{N})$$
+
+Llamamos $x = \frac{n}{N}$ y $a_m= \frac{\widehat{f}(m)}{N}$ y nos queda que :
+$$F(x) = \sum_{n\in \ent } a_m \cdot e(mx)$$
+
+Para calcular $F(x)$ necesitamos calcular primero el $a_m$. Para ello hacemos el límite de $\frac{\widehat{f}(m)}{N}$
+
+Entonces tenemos que:
+$$\frac{\widehat{f}(m)}{N} = \frac{1}{N} \sum_{k \in \ent/N\ent} f(k) \cdot e(-m \frac{k}{N}) \rightarrow \begin{cases}
+	m \text{ fijo}\\
+	N \text{ muy grande}\\
+	f(k) = F(\frac{k}{N})\\
+\end{cases}$$
+
+Como $ k = 0 , \ldots , N-1 \implies 0\leq \frac{k}{N} < 1$ podemos tomar el sumatorio como suma de Riemann.
+
+$$\frac{\widehat{f}(m)}{N} = \int_{0}^{1} F(x) \cdot e(-mx) dx$$
+
+Entonces
+$$F(x) = \sum_{m= -\infty}^{\infty} \widehat{F}(n) \cdot e(nx)$$
+Siendo $\widehat{F}(n) = \int_{0}^{1} F(x) \cdot e(-nx) dx$
+
+Y si F es buena ( p.ej $C^2$) entonces todo funciona bien.
+Si no es buena hay casos donde no fuciona.
