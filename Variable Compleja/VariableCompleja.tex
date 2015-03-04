@@ -1723,15 +1723,85 @@ Por tanto, tenemos que
 Sea $z^*$ el punto en $\bigcap_{n=1}^{\infty}R_n$, dado ε > 0 $\exists δ > 0 \tq$
 \[|z-z^*| < δ \implies \left| \frac{f(z)-f(z^*)}{z-z^*}-f'(z^*)\right| < ε\]
 
-Si tomamnos un $n$ suficientemente grande como para que
+Si tomamos un $n$ suficientemente grande como para que
 \[R_n\subset \{z \tq |z-z^*|<δ\}\]
 entonces para todo $z\in R_n$ se cumple que
 \[\left| f(z)-f(z^*)-f'(z^*)(z-z^*)\right| < ε|z-z^*|\]
 
 Podemos ver que
 \[\left| \int_α f(z)dz\right| =\footnote{$\int_α f(z^*) = 0$  por ser curva cerrada } \left| (f(z)-f(z^*)-f'(z^*)(z-z^*)\right| \leq \int_{\partial R_n} | (f(z)-f(z^*)-f'(z^*)(z-z^*)||dz| \leq\]
-\[\leq \int_{\partial R_n}ε|z-z^*||dz|\]
+\[\leq \int_{\partial R_n}ε|z-z^*||dz| \leq ε \int_{\partial R_n}\text{diam}(R_n)|dz|=ε\text{diam}(R_n)\text{long}(\partial R_n) = ε \frac{1}{2^n}\text{diam}(R)\frac{1}{2^n}\text{long}(\partial R) \]
+
+%TODO cambiar eso por una referencia:
+Aplicando esta desigualdad a
+\[4^n\left| \int_{\partial R_n}f(z)dz\right| \geq\left| \int_{\partial R}f(z)dz\right|\]
+llegamos a
+\[\left| \int_{\partial R}f(z)dz\right| \leq 4^n\left| \int_{\partial R_n}f(z)dz\right| \leq 4^nε \frac{1}{2^n}\text{diam}(R)\frac{1}{2^n}\text{long}(\partial R) =ε \text{diam}(R)\text{long}(\partial R)\]
+y vemos que, por ser ε arbitrario,
+\[\int_{\partial R}f(z)dz=0\]
 \end{proof}
+
+\begin{theorem}
+Sea Ω un dominio en $\cplex$, R un rectángulo en Ω y $\{z_i\}$ un conjunto finito de puntos en el interior de R se tenemos que:
+
+Si $f$ es holomorfa en Ω$\setminus \{z_i\}$ y
+\[\lim_{z \to z_i}(z-z_i)f(z)=0 \ \forall i\]
+entonces
+\[\int_{\partial R}f(z)dz=0\]
+\end{theorem}
+\begin{proof}
+Para demostrar que el teorema es cierto basta con demostrarlo con un conjunto formado por un único punto. Una vez que veamos que ese punto no molesta para el cálculo de la integral, podremos extender la idea a un conjunto finito de puntos.
+
+Tenemos el punto $z_0$, contenido en el rectángulo y en el que la función no es holomorfa. Dado ε > 0, vamos a dividir el rectángulo en 9 \textit{rectángulitos} de forma que el rectángulo central sea un cuadrado centrado en $z_0$ y
+\[|(z-z_0)f(z)|<ε \ \forall z \in \partial R_0\]
+siendo $R_0$ el cuadrado central que contiene al punto $z_0$.
+
+Como $\int_{\partial R}f(z)dz =\footnote{Por el teorema de Cacuchy sabemos que en el resto de rectángulos la integral es 0, pues $f$ es holomorfa} \int_{\partial R_0}f(z)dz$
+
+Con lo que acabamos de ver, tenemos:
+\[\left| \int_{\partial R} f(z)dz\right|= \left| \int_{\partial R_0} f(z)dz\right| \leq  \int_{\partial R} |f(z)||dz| \leq \int_{\partial R_0} \frac{ε}{|z-z_0||dz|} \leq\footnote{Siendo $l_0$ el lado del rectángulo $R_0$ vemos que $|z-z_0|\geq \frac{1}{2}l_0$} \frac{2ε}{l_0}4l_0 = 8ε\]
+con lo que hemos vuelto a ver que es menor que cualquier valor, por tanto el valor absoluto de esta integral vale 0.
+\end{proof}
+
+\begin{theorem}
+Si $f(z)$ es holomorfa en $\{z: \ |z-z_0|<r\} \implies$ existe $F$ holomorfa en $\{z: \ |z-z_0|<r\}$ tal que $F'=f$
+\end{theorem}
+\begin{proof}
+Siendo $z=z+iy$ y $z_0=x_0+iy_0$, definimos $α_z$ como el camino formado por dos segmentos perpendiculares que une un punto con el otro.
+
+Definimos
+\[F(z)=\int_{α_z}f(z)dz =\int_{x_0}^xf(t+iy_0)dt+i \int_{y_0}^yf(x_0+it)dt\]
+
+Ahora, si $α_z$ era el camino que unía $z_0$ con $z$, definimos ahora el camino β que consiste en unir $α_z$ con el camino de retorno. Este camino β forma un rectángulo teniendo que $z$ y $z_0$ en vértices opuestos.
+
+Por tratarse de un camino cerrado sabemos que la integral será 0, de modo que
+\[0 = \int_βf(z)dz = \int_{α_z}f(z)dz-\int_{\bar{α_z}}f(z)dz\]
+siendo $\bar{α_z}$ el camino que va de $z_0$ a $z$ siguiendo el camino que establecimos como retorno, pero en sentido contrario.
+
+Por tanto estamos obteniendo que la integral es la misma con independencia del camino seguido para unir $z_0$ con $z$.
+
+Así que podemos definir también
+\[F(z)=\int_{\bar{α_z}}f(z)dz =i\int_{y_0}^yf(x_0+it)dt + \int_{x_0}^xf(t+iy_0)dt\]
+
+Ahora queremos ver que esta $F(z)$ que hemos definido es holomorfa. Para confirmarlo vamos a ver que cumple las ecuaciones de Cauchy-Riemann.
+
+Basándonos en la primera definición de $F(z)$ tenemos:
+\[F_y(z) = i \frac{\partial}{\partial y} \int_{y_0}^yf(x+it)dt \overbrace{=}^{T.F.C.} i f(x+iy)=if(z)\]
+
+para calcular ahora la derivada respecto de $x$ nos basamos en la segunda definición:
+\[F_x(z)=f(x+iy)=f(z)\]
+
+Combinando ambas ecuaciones obtenemos que
+\[F_x(z)=f(z)=-iF_y(z)\]
+que son las ecuaciones de Cauchy-Riemann, por lo que euda claro que $F(z)$ es holomorfa.
+
+Además $F'(z)=F_x(z)=f(z)$
+\end{proof}
+
+\begin{theorem}[Teorema de Cauchy en el disco]
+Si $f$ es holomorfa en $\{z: \ |z-z_0|<r\} \implies \int_α f(z)dz = 0$ para todo camino cerrado α en $\{z: \ |z-z_0|<r\}$
+\end{theorem}
+
 
 \section{Teorema de Liouville}
 \section{Teorema de Morera}
