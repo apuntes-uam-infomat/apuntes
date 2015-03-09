@@ -27,6 +27,10 @@ Puedes descargar los apuntes en PDF, actualizados diariamente, [aquí](https://w
 * [Jorge Martín Pérez](https://github.com/MartinPJorge)
 * [Eduardo Miravalls Sierra](https://github.com/EduardoMiravalls)
 * [Alberto Parramón Castillo](https://github.com/AlbertoParramon)
+* [Cristina Kasner Tourné](https://github.com/ckasner)
+* [Elena Gutiérrez](https://github.com/elenagutiv)
+* [Guillermo Guridi](https://github.com/erpheus)
+* [Alvaro García Gutiérrez](https://github.com/bl4ckwolf)
 
 ### Puñetas de LaTeX
 
