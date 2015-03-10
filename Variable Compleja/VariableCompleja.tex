@@ -1917,6 +1917,96 @@ Tras simplificar en la última integral llegamos a:
 \end{example}
 \obs En definitiva, esta fórmula nos está diciendo que el valor de la función holomorfa en un punto $z$ se calcula como media de los valores de la función en los puntos que lo rodean.
 
+
+\begin{prop}
+Sea $\appl{α}{[a,b]}{\cplex}$ un camino cerrado y $\appl{\Psi}{α([a,b])}{\cplex}$ continua, entonces
+\[f(z)=\frac{1}{2πi}\int_α \frac{\Psi(w)}{w-z}dw \ \forall z \notin α([a,b])\]
+es analítica (y por tanto holomofa) y se cumple que
+\[f^{(n)}(z) = \frac{n!}{2πi}\int_α \frac{\Psi(w)}{(w-z)^{n+1)}}dw \ \forall n \in \nat\]
+\end{prop}
+
+\begin{proof}
+Sea $z_0 \notin α([a,b])$ y sea $r=\text{dist}(z_0, α([a,b]))$, para cada $z$ tal que $|z-z_0|<r$ tenemos
+\[2πif(z)=\int_α \frac{\Psi(w)}{w-z}dw\]
+
+Podemos ver que
+\[\frac{1}{w-z} =\frac{z-z_0}{1-\left( \frac{z-z_0}{w-z_0}\right)}dw\]
+y sabemos que
+\[\frac{1}{1-\frac{z-z_0}{w-z_0}} =\footnote{Ocurre sólo si la razón es menor que 1 en valor absoluto, es decir, $|z-z_0|<|w-z_0|$, que sabemos es cierto} \sum_n \left( \frac{z-z_0}{w-z_0}\right)^n\]
+
+Si aplicamos estas dos ecuaciones en la integral que define $f$ tenemos:
+\[2πif(z)= \int_α \frac{\Psi(w)}{w-z_0}\frac{1}{1-\left( \frac{z-z_0}{w-z_0}\right)}dw\]
+
+Puesto que
+\[g_N(z)=\frac{\Psi(w)}{w-z_0}\sum_{n=0}^N\left(\frac{z-z_0}{w-z_0}\right)^n\]
+converge uniformemente en $|z-z_0| < |w-z_0|$
+
+\[g_N(z) \rightrightarrows g(w)=\frac{\Psi(w)}{w-z_0}\frac{1}{1-\left( \frac{z-z_0}{w-z_0}\right)}\]
+
+Por tanto
+\[\int_α g(w)dw = \lim_{N \to \infty} \int_α f_N(w)dw = \lim_{N \to \infty} \int_α \frac{\Psi(w)}{w-z_0}\sum_{n=0}^N\left(\frac{z-z_0}{w-z_0}\right)^n = \]
+\[= \lim_{N \to \infty}\sum_{n=0}^{\infty} \int_α \frac{\Psi(w)}{(w-z_0)^{n+1}}dw(z-z_0)^n = \sum_{n=0}^{\infty} \left[\int_α \frac{\Psi(w)}{(w-z_0)^{n+1}}\right] (z-z_0)^n\]
+
+Por tanto
+\[f(z)=\sum_{n=0}^{\infty} \left(\frac{1}{2πi}\int_α \frac{\Psi(w)}{(w-z_0)^{n+1}}\right)dw(z-z_0)^n\]
+con lo que ya tenemos el desarrollo de $f$ en serie de potencias de $|z-z_0|$. Por tanto $f$ es analítica.
+
+Además
+\[a_n=\frac{1}{n!}f^{(n)}(z_0) \implies f^{(n)}(z_0) = \frac{n!}{2πi}\int_α \frac{\Psi(w)}{(w-z)^{n+1)}}dw\]
+\end{proof}
+
+
+\begin{theorem}
+Sea $f$ holomorfa en un abierto $Ω \subset \cplex$ entonces:
+\begin{enumerate}
+\item $f$ es analítica en Ω
+
+\item Existen todas las derivadas de $f$ y son holomorfas en Ω
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Sea $z \in Ω$ con $B(z,r)=\{w : \ |w-z| < r\} \subset Ω$.
+
+Por la fórmula integral de Cauchy para $α \in \partial B(z, \frac{r}{2})$ se tiene
+\[f(z)=\frac{1}{2πi}\int_α \frac{f(w)}{w-z} dw\]
+que es anaĺítica por la proposición y además
+\[f^{(n)}(z)=\frac{n!}{2πi} \int_α \frac{f(w)}{(w-z)^{n+1}} dw\]
+siendo todas estas derivadas holomorfas.
+
+Por tanto tenemos que si una función es holomorfa será analítica y, puesto que ya habíamos visto la implicación opuesta, podemos afirmar que
+\[\text{holomorfa} \iff \text{analítica}\]
+\end{proof}
+
+\begin{theorem}[(Singularidad evitable)]
+Sea Ω un abierto en $\cplex$ y $z_0 \in \cplex$. Si $\appl{f}{Ω \setminus \{z_0\}}{\cplex}$ es holomorfa y $\lim_{z \to z_0} f(z) = 0$ entonces $f$ puede extenderse a una función holomorfa en Ω.
+\end{theorem}
+\begin{proof}
+Supongamos $z_0 = 0$ (en caso de no ser así podríamos tomar $g(z)=f(z+z_0)$).
+
+Sea $R$ un ractángulo que contiene al origen en su interior, fijamos un punto $z$ del interior de $R$ y distinto del origen.
+
+Definimos
+\[F(w)=\frac{f(w)-f(z)}{w-z}\]
+holomorfa en $Ω \setminus \{0, z\}$.
+
+Además $(w-z)F(w)=f(w)-f(z)$ converge a 0 cuando nos acercamos a z. Por tanto,
+\[wF(w)=\frac{f(w)-f(z)}{w-z} w\to 0 \text{ cuando w $\to 0$}\]
+puesto que $wF(w) \to 0$ cuando $w \to 0$.
+
+Por el teorema de Cauchy sobre rectángulos tenemos que
+\[0 = \int_{\partial R}F(w)dw  = \int_{\partial R} \frac{f(w)-f(z)}{w-z}  dw =  \int_{\partial R}\frac{f(w)}{w-z} -\int_{\partial R} \frac{1}{w-z}dw \implies\]
+
+\[\implies f(z)=\frac{1}{2πi} \int_{\partial R} \frac{f(w)}{w-z}dw \ \forall z \in R \setminus \{0\}\]
+
+Por tanto, una extensión holomorfa de $f$ es
+\[g(z)=\left\{ \begin{array}{lcc}
+             f(z) &   si  & z \in Ω \setminus \{0\}\\
+             \\ \frac{1}{2πi} \int_{\partial R} \frac{f(w)}{w-z}dw &  si  & z\in R
+             \end{array}
+   \right.\]
+\end{proof}
+
 \section{Teorema de Liouville}
 \section{Teorema de Morera}
 \section{La función primitiva en un dominio simplemente conexo}
