@@ -161,3 +161,85 @@ Siendo $\widehat{F}(n) = \int_{0}^{1} F(x) \cdot e(-nx) dx$
 
 Y si F es buena ( p.ej $C^2$) entonces todo funciona bien.
 Si no es buena hay casos donde no fuciona.
+% % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % PARTE DE GUILLE % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % 
+
+¿Porqué ocurre que la función que da el diente de sierra es? : $\frac{1}{2} - \frac{1}{\pi} \sum_{n=1}^{\infty} \frac{\sin(2\pi nx)}{n}$
+	
+Esta suma se puede probar que converge(pero la demostración no es fácil en absoluto) pero, excepto para $x = \frac{k}{2}$, se puede probar que la convergencia no es absoluta.
+
+\begin{itemize}
+	\item \textbf{Convergencia lenta:} es malo para las aplicaciones porque no podemos despreciar muchos coeficientes de Fourier.
+	
+	Si tengo una función $f: \ent_N \rightarrow \mathbb{C}$
+	$$f(n) = \frac{1}{N}\sum_{m \in \ent_N}\widehat{f}(m)e(\frac{mn}{N})$$
+	
+	Para N grande y coeficientes parecidos $\implies$ es difícil decidir cuáles omitir.
+	
+	Vamos a suponer que tenemos una función 1-periódica $f : \Pi \rightarrow \mathbb{C}$ tal que $f \in C^{\infty}(\mathbb{R})$.
+	
+	Para $n \neq 0$
+	
+	$$\widehat{f}(n) = \int_{0}^{1} f(x) e(-nx) dx$$
+	
+	Llamamos $\begin{cases}
+	u = f(x)\\
+	dv = e(-nx) dx
+	\end{cases}$
+	
+	Entonces:
+	$$\widehat{f}(n) = f(x) \frac{e(-nx)}{-2\pi in}|_{0}^1 + \frac{1}{2\pi i n} \int_{0}^1 f'(x) e(-nx) dx$$
+	
+	Como $f(x) \frac{e(-nx)}{-2\pi in}|_{0}^1 $ es 0,como f es periódica, si seguimos iterando hasta k veces:
+	
+	$$\widehat{f}(n)  \frac{1}{(2\pi i n)^k} \int_{0}^1 f^{(k)}(x) e(-nx) dx$$
+	
+	y como $|f^{(k)}| \leq cte$ en [0,1] $\implies |\widehat{f}(n)| \leq \frac{cte}{|n|^k}$
+	
+	Con menos regularidad: $f^{(k)}$ existe excepto en un número finito de puntos (de [0,1]) y está acotada, daría el mismo resultado.
+	
+	Vamos a ver esto para $k=2$:
+	
+	$$k=2 \implies |\widehat{f}(n)| \leq cte \implies \sum_{n= -\infty}^{e(nx)}$$
+	Converge absolutamente.
+	
+	
+	% %DIBUJO RARUNO % %
+	La extensión 1-periódica de una función, típicamente no es nisiquiera continua. $\implies$ típicamente no se puede tomar $k=2$ $\implies$ malo para las aplicaciones.
+	
+	En estos casos se usa un truco, en lugar de la extensión periódica primero se refleja la función(la señal) por el eje Y.
+	
+	Y después se extiende de forma 2-periódica
+	
+	Como el reflejo y la señal original coinciden en el final de una y el principio de la otra esta extensión si sería continua
+	
+	% Dibujo de la extensi´on%
+	
+	Entonces vamos a ver las ecuaciones de Fourier para las funciones 2-periódicas.
+	
+	$$f(x) = \sum_{n=-\infty}^{\infty} \widehat{f}(n)e(n\frac{x}{2})$$
+	
+	Siendo
+	$$\widehat{f}(n) = \frac{1}{2} \int_{0}^{2} f(x) e(-nx)$$
+	
+	Estos números son reales si f es real.
+	
+	$$\widehat{f}(n) = \frac{1}{2} \int_{-1}^{1} f(x) e(-n\frac{x}{2}) dx = \frac{1}{2} \int_{-1}^{1} f(x)\cos(2\pi n \frac{x}{2})dx \in \mathbb{R}$$
+	
+	Eto es porque $e(-n\frac{x}{2}) = \cos(2\pi n \frac{x}{2}) + i \sin(2\pi n \frac{x}{2})$ y además f es par y $\sin$ es impar.
+	
+	¿Cómo adaptar esto al caso discreto $f: \ent_N \rightarrow \mathbb{C}$?
+	
+	% Dibujo discreto%
+	
+	Haciendo las cuentas se btiene un análisis de Fourirer discreto en el que podemos usar $e((m + \frac{1}{2}) \frac{n}{2N})$ en vez de $e(\frac{mn}{N})$ y tomando partes reales se puede escribir todo en términos $\cos(\frac{\pi n}{N}(m+ \frac{1}{2}))$
+	
+	\begin{prop}
+		Para $f : \{0,1,2....,N-1\} \rightarrow \mathbb{R}$ se cumple
+		$$f(m) = \frac{\widehat{f}^c(0)}{N} + \frac{2}{N} \sum_{n=1}^{N-1} \widehat{f}^c(n) \cos(\frac{n\pi}{N}(m + \frac{1}{2}))$$
+		donde
+		$$\widehat{f}^c(n)= \sum_{m= 0}^{N-1} f(m) \cos(\frac{n\pi}{N}(m+ \frac{1}{2}))$$
+	\end{prop}
+	\obs Y esto es lo que más se utiliza en tratamiento de señales de sonido, imagen....
+\end{itemize}
