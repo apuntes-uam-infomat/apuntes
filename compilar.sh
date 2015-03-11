@@ -47,6 +47,26 @@ tred=$(tput setaf 1)
 tgreen=$(tput setaf 2)
 tyellow=$(tput setaf 3)
 
+for pkg in $(ls "$packages_dir"); do
+	system_path=$(kpsewhich $(basename "$pkg"))
+
+	# ¿Ha fallado kpsewhich? Entonces el paquete no está presente. A instalar.
+	if [ $? -neq 0 ]; then
+		packages_changed=true
+		break
+	fi
+
+	# Si hay diferencias entre el paquete local y el instalado, a reinstalar.
+	if ! diff "$system_path" "$pkg"; then
+		packages_changed=true
+		break
+	fi
+done
+
+if $packages_changed; then
+	packages_install
+fi
+
 if [ -d "$1" ]; then
 	files=$(ls "$1"/*.tex)
 else
