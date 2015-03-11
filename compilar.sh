@@ -14,7 +14,8 @@ updated=""
 
 function packages_install() {
 	cd "$packages_dir"
-	./install
+	sudo ./install
+	cd ..
 }
 
 function prebuild() {
@@ -47,11 +48,12 @@ tred=$(tput setaf 1)
 tgreen=$(tput setaf 2)
 tyellow=$(tput setaf 3)
 
-for pkg in $(ls "$packages_dir"); do
-	system_path=$(kpsewhich $(basename "$pkg"))
+for pkg in $(ls "$packages_dir"/*.{sty,cls}); do
+	pkgname=$(basename "$pkg")
+	system_path=$(kpsewhich $pkgname)
 
 	# ¿Ha fallado kpsewhich? Entonces el paquete no está presente. A instalar.
-	if [ $? -neq 0 ]; then
+	if [[ $? -ne 0 ]]; then
 		packages_changed=true
 		break
 	fi
