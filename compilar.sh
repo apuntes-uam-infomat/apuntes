@@ -1,72 +1,85 @@
 #!/bin/bash
 
-install=true
-logfile="compilar.log"
+packages_dir="Cosas guays LaTeX"
+packages_changed=false
+failed=""
+updated=""
 
-makelatex() {
-	includes="../Cosas guays LaTeX"
-
-	cd "$1"
-	if $install ; then
-		echo "Copiando archivos temporales..."
-		cp $includes/*.sty ./
-		cp $includes/*.cls ./
-	fi	
-	echo "Compilando $1"
-	latexmk -pdf -silent >> $logfile 2>&1 && cp *.pdf ../output || echo -e ">>>>>>>> \e[31mError \e[mprocesando \e[34m$1\e[m <<<<<<<<"
-	if $install ; then
-		echo "Eliminando archivos temporales..."
-		rm *.sty
-		rm *.cls
-	fi
-	cd -
+function packages_install() {
+	cd "$packages_dir"
+	./install
 }
 
-read -p "Instalar paquetes (opcional)? (y/n) " iyn
-case $iyn in 
-	[Yy]* ) echo "Instalando paquetes.."
-		echo "-----------------------------------------"
-		cd "Cosas guays LaTeX"
-		sudo ./install > /dev/null
-		cd ..
-		install=false;;
-	esac
+function prebuild() {
+	mkdir -p tikzgen
+}
 
+function build() {
+	latexmk -pdf -silent -shell-escape "$1" &> /dev/null
+}
 
-read -p "Compilar (y/n)? " yn
-case $yn in
-	[Yy]* ) echo "Compilando..."
-		echo > $logfile
-		mkdir -p output
-		echo "-----------------------------------------"
-		IFS=$'\n'
+cat > /tmp/uptodatecheck.latexmkrc << EOF
+\$pdflatex = \$latex = 'internal die_pdflatex %S';
+sub die_pdflatex {
+    # Stop now, otherwise latexmk will update its knowledge of the
+    # source files and not realize files are out-of-date on the next run.
+    die "I won't do anything, but just note that '\$_[0]' is out of date\n";
+}
+EOF
 
-		for dir in `ls`
-		do
-        	if [[ -d "$dir" && "$dir" != *LaTeX && "$dir" != "output" ]]; then
-                makelatex "$dir"
-        	fi
-		done
-		;;
-	[Nn]* ) echo "Ok";;
-        * ) echo "???";;
-    esac
+IFS=$'\n'
 
-echo "-----------------------------------------"
+dir_num=0
+dir_upd=0
+dir_err=0
 
-read -p "Copiar? (y/n)? " yn
-case $yn in
-	[Yy]* ) if [ $USER="vicdejuan" ]
-			then
-				echo "Eres dejuan y me se tu directorio"
-				cp output/*.pdf /home/vicdejuan/Compartido/Dropbox/Doble\ Grado\ UAM\ \(1\)/TERCEROGILIS/Primer\ Cuatrimestre/Apuntes\ Latex/
-			else
-				echo "Escribe el path donde quieres copiar los pdfs (a partir de home):"
-				read directory
-				cp output/*.pdf ~/$directory/
-			fi
-			echo "Listo."
-			;;
-		* ) echo "Ok";;
-esac
+tbold=$(tput bold)
+tblack=$(tput setaf 0)
+treset=$(tput sgr0)
+tred=$(tput setaf 1)
+tgreen=$(tput setaf 2)
+tyellow=$(tput setaf 3)
 
+if [ -d "$1" ]; then
+	files=$(ls "$1"/*.tex)
+else
+	files=$(ls */*.tex)
+fi
+
+for texfile in $files; do
+	cwd=$(pwd)
+	cd "$(dirname $texfile)"
+	(( dir_num += 1))
+
+	echo "Checking $texfile..."
+	texfile="$(basename $texfile)"
+
+	if [ "$packages_changed" = true ]; then
+		latexmk -C
+	fi
+
+	prebuild
+
+	if ! latexmk -pdf -r "/tmp/uptodatecheck.latexmkrc" "$texfile" &>/dev/null ; then
+		echo "$texfile out of date. Compiling..."
+		if build "$texfile" ; then
+			echo "${tgreen}$texfile compile successful.${treset}"
+			(( dir_upd += 1))
+			updated="$updated $texfile"
+		else
+			(( dir_err += 1))
+			echo "${tred}Compilation failed for $texfile${treset}"
+			failed="$failed $texfile"
+		fi
+	fi
+
+	cd "$cwd"
+	echo
+done
+
+rm /tmp/uptodatecheck.latexmkrc
+
+echo "${tbold}Found $dir_num courses, updated ${treset}${tgreen}$dir_upd${treset}${tbold}, failed ${tred}$dir_err.${treset}"
+[[ -z "$failed" ]] || echo "Compilation failed for $failed "
+[[ -z "$updated" ]] || echo "Updated $updated"
+echo "done: $(date)"
