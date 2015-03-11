@@ -473,8 +473,7 @@ La regularidad influye en la rapidez de convergencia de la serie de Fourier.
 	
 Esta suma se puede probar que converge(pero la demostración no es fácil en absoluto) pero, excepto para $x = \frac{k}{2}$, se puede probar que la convergencia no es absoluta.
 
-\begin{itemize}
-	\item \textbf{Convergencia lenta:} es malo para las aplicaciones porque no podemos despreciar muchos coeficientes de Fourier.
+\subsection{Convergencia lenta:} es malo para las aplicaciones porque no podemos despreciar muchos coeficientes de Fourier.
 	
 	Si tengo una función $f: \ent_N \rightarrow \mathbb{C}$
 	$$f(n) = \frac{1}{N}\sum_{m \in \ent_N}\widehat{f}(m)e(\frac{mn}{N})$$
@@ -557,6 +556,84 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 		donde
 		$$\widehat{f}^c(n)= \sum_{m= 0}^{N-1} f(m) \cos(\frac{n\pi}{N}(m+ \frac{1}{2}))$$
 	\end{prop}
-	\obs Y esto es lo que más se utiliza en tratamiento de señales de sonido, imagen....
-\end{itemize}
+	\begin{obs} Y esto es lo que más se utiliza en tratamiento de señales de sonido, imagen....
+	\end{obs}
+
+	\begin{proof}
+		Lo único que hay que hacer es sustituir la definición de $\hat{f}^c (n)$ y comprobar que se tiene una identidad.
+
+		Vamos a abreviar:
+
+		$$f(n) = \sum\limits^{N-1}_{m=0} f(m) \delta(n - m) \;\;\;\;\; \delta(n) = \begin{cases}
+			0 & \mbox{si } n \neq 0 \\
+			1 & \mbox{si } n = 0
+		\end{cases}$$
+
+		$f = $combinación lineal de $\delta{-m} \Rightarrow $ basta probar la fórmula para las funciones $f(n) = \delta(n- m_0)$.
+
+		Si escribimos la propiedad para $f(n) = \delta(n - m_0)$ y usamos $2 \cos{(\alpha)} \cos{(\beta)} = \cos{(\alpha + \beta)} + \cos{(\alpha - \beta)}$, lo que hay que probar es:
+
+		$$ \delta(m - m_0) \qeq \frac{1}{N} + \frac{1}{N} \sum\limits^{N-1}{n = 1} \left[ \cos{\frac{\pi n}{N} (m_0 + m + 1)} + \cos{\frac{\pi n}{N} (m - m_0)}   \right] $$
+
+		$$ \delta(m - m_0) \qeq \frac{1}{N} + \frac{1}{N} \sum\limits^{N-1}{n = 1} \left[ \text{Re} \left( e \left( \frac{n}{2N} (m_0 + m + 1) \right) \right) + \text{Re} \left( e \left( \frac{\pi n}{2N} (m - m_0) \right) \right)   \right] $$
+
+		Duplicaríamos la $n$ si añadimos los negativos o los $2N-1, 2N-2, 2N-3,...$.
+
+		$$ = \frac{1}{2N} \text{Re} \sum\limits^{2N-1}_{n=0} \left( e \left( \frac{n}{2N} (m_0 + m + 1) \right) + e \left( \frac{\pi n}{2N} (m - m_0) \right) \right) $$
+
+		$$ \sum\limits^{M - L}_{k = 0} e \left( \frac{k}{M} l \right) = \begin{cases}
+			0 & \mbox{si } l \not\equiv 0 \; (M) \\
+			M & \mbox{si } l' \equiv 0 \; (M)
+		\end{cases}$$
+
+		$\Rightarrow$ la expresión de arriba es $\delta(m - m_0).$
+
+		(prueba supuestamente sencilla teniendo en cuenta que $m-m_0$ varía entre 0 y $N-1$)
+
+	\end{proof} 
+
+
+\section{Aplicaciones}
+
+	\subsection{Formato JPEG}
+
+		\begin{center}
+			\inputtikz{fourier/matriz_imagen}
+		\end{center}
+
+		Cada píxel son 3 números (bytes) (RGB) (si tiene transparencia 1 más correspondiente al canal alfa)
+
+		R,G,B $\in$ [0,255] (enteros)
+
+		Como hay combinaciones de R y G que se parecen demasiado para el ojo humano, en la realidad casi siempre se pasa de RGB a Y$\text{C}_{\text{B}}$ $\text{C}_{\text{R}}$ con un ``cambio de base'' = con una transformación lineal.
+
+		\begin{itemize}
+			\item Y = luminancia $\rightarrow$ el ojo es muy sensible a ella
+			\item $\text{C}_{\text{B}}$ Crominancia $\rightarrow$ el ojo es poco sensible a ella.
+			\item $\text{C}_{\text{R}}$ Crominancia $\rightarrow$ el ojo es poco sensible a ella.
+		\end{itemize}
+
+
+		En lo que respecta a $\text{C}_{\text{B}}$ y $\text{C}_{\text{R}}$ de omite píxeles (como considerar una foto escalada).
+
+		Imágenes en tonos de gris $\rightarrow$ cada píxel tiene R=G=B y son igules a Y.Nos restringimos a este caso. El general es igual repetido 3 veces.
+
+		\begin{center}
+			\inputtikz{fourier/imagen_en_bloques}
+		\end{center}
+
+		La imagen $N \times M$ se divide en bloques $8 \times 8$. Cada uno de ellos se puede interpretar como una función:
+
+		$f:\{0,1,...7\} \times \{0,1,...7\} \rightarrow \mathbb{R}$ que asigna al píxel $P_{ij}$ del bloque, su color (R,Y,G,B $\in [0,255]$) (solo un número para nuestro caso de tonos de gris).
+
+
+		\textbf{Idea} Descomponer $f$ por Fourier y suprimir las frecuencias altas excepto si tienen coeficientes (amplitudes) grandes.
+
+
+
+
+
+
+
+
 
