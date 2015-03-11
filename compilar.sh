@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Uso:
+# ./compilar.sh -> Compila todos los apuntes que estén desactualizados.
+# ./compilar.sh [directorio] -> Compila todos los apuntes que estén en el directorio [directorio].
+#	Por ejemplo, ./compilar EDP compilará sólo los apuntes de EDP.
+#
+# Además, el script instalará los paquetes si es necesario.
+
 packages_dir="Cosas guays LaTeX"
 packages_changed=false
 failed=""
