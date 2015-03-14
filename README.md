@@ -6,9 +6,19 @@ Los apuntes necesitan los archivos en la carpeta `Cosas Guays LaTeX` para compil
 
 Además, hay un script en la raíz `compilar.sh` que recorre todos los directorios compilando los PDFs, con capacidad de exportarlos a otras carpetas.
 
-### Sugerencias de comandos (TeXstudio)
+Es recomendable también usar `latexmk` para compilar de forma continua los apuntes mientras se editan. El comando completo sería
+
+```
+latexmk -shell-escape -synctex=1 -pdf -silent -interaction=nonstopmode -pvc <archivo .tex>
+```
+
+Sobre los argumentos: `-shell-escape` permite crear subprocesos de LaTeX para compilar archivos auxilares, `-synctex=1` genera un archivo _synctex.gz_ que permite a ciertos lectores de PDF (Skim en OS X, Okular en Linux) relacionar una posición en el PDF con la parte correspondiente del _tex_, `-silent` reduce la salida del compilador, `-interaction=nonstopmode` evita que el compilador se pare cuando se encuentra un error, y por último `-pvc` habilita la compilación continua cuando se guarda el archivo _tex_.
+
+### Sugerencias de comandos (TeXstudio - LatexCwl en Sublime)
 
 Para facilitar las cosas, hay un script `cwlmaker.py` que genera un archivo `.cwl` a partir de los comandos declarados en un fichero de LaTeX. Este archivo permite a [TeXstudio](http://texstudio.sourceforge.net/) dar sugerencias de los comandos que hemos creado.
+
+El archivo `.cwl` también funciona en Sublime Text si se tienen instalados los plugins Latexing y LaTeX-cwl. El _script_ de instalación de los paquetes extras (`install`) copia automáticamente el `.cwl` al directorio de LaTeX-cwl en OS X / Sublime Text 3. Si usas otro sistema, añade la ruta correspondiente en el _script_.
 
 ### Inclusión de PDFs
 
@@ -27,6 +37,10 @@ Puedes descargar los apuntes en PDF, actualizados diariamente, [aquí](https://w
 * [Jorge Martín Pérez](https://github.com/MartinPJorge)
 * [Eduardo Miravalls Sierra](https://github.com/EduardoMiravalls)
 * [Alberto Parramón Castillo](https://github.com/AlbertoParramon)
+* [Cristina Kasner Tourné](https://github.com/ckasner)
+* [Elena Gutiérrez Viedma](https://github.com/elenagutiv)
+* [Guillermo Guridi Mateos](https://github.com/erpheus)
+* [Alvaro García Gutiérrez](https://github.com/bl4ckwolf)
 
 ### Puñetas de LaTeX
 

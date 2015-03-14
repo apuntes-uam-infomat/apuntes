@@ -1864,12 +1864,287 @@ Si arg$(α(t)-z_0)$ es una rama del argumento de $α(t)-z_0$, entonces
 es una rama del logaritmo de $α(t)-z_0$ y se tiene que
 \[Ind_α(z_0)= \frac{ \log(α(b)-z_0)-\log(α(a)-z_0)}{2πi}\]
 
-\section{Teorema de Liouville}
-\section{Teorema de Morera}
-\section{La función primitiva en un dominio simplemente conexo}
-\section{Fórmula integral de Cauchy}
-\section{Equivalencia entre holomorfía y analiticidad}
+Vamos a buscar ahora esa rama de $\log(α(t)-z_0)$.
 
+Ya sabemos que si $\appl{F}{[a,b]}{\cplex}$ es una rama del logaritmo de $α(t)-z_0$ entonces es continua y cumple:
+\[e^{F(t)} = α(t)-z_0\]
+derivando formalmente\footnote{No sabemos si la función existe y por tanto no sabemos si será diferenciable. Suponemos que si que lo es y ya veremos luego qué pasa.}
+\[e^{F(t)}F'(t) = α'(t) \implies F'(t)=\frac{α'(t)}{α(t)-z_0}\]
+por tanto, en caso de que existiera esta $F(t)$ de la que estamos hablando tendríamos:
+\[F(t)=\int_a^t \frac{α'(t)}{α(t)-z_0}dt +c_1\]
+con $c_1$ una constante tal que $e^{c_1}=α(t)-z_0$ puesto que queremos que se cumpla $e^{F(a)}=α(t)-z_0$
+
+Tenemos que $F(t)$ es continua en [a,b] y diferenciable en los mismos puntos que α siendo su derivada conocida.
+
+Queremos probar que
+\[(α(t)-z_0)e^{-F(t)}=1\]
+
+Para ello definimos $\Psi(t)=(α(t)-z_0)e^{-F(t)}$ y derivando llegamos a
+\[\psi'(t)=α'(t)e^{-F(t)}+(α(t)-z_0)e^{-F(t)}\cdot F'(t)=0\]
+pudiendo hacer esta derivada en aquellos puntos donde exista la derivada de α. Si sustituimos $F'(t)$ por su valor calculado anteriormente vemos que, efectivamente la derivada es 0, por lo que $\Psi(t)$ es constante.
+
+Ahora queremos garantizar que esa constante es 1. Para ello estudiamos el valor de $\Psi(t)$ en un punto:
+\[\Psi(a)=(α(a)-z_0)e^{-F(a)}=(α(a)-z_0)\frac{1}{(α(a)-z_0)}=1\]
+por lo que queda probado que $\Psi(t)$ es constante igual a 1.
+
+$F$ es rama del logaritmo de $α(t)-z_0$ y obtenemos:
+\[Ind_α(z_0) = \frac{F(b)-F(a)}{2πi}=\frac{1}{2πi}\int_a^b \frac{α'(t)}{α(t)-z_0}dt=\frac{1}{2πi}\int_α \frac{dz}{z-z_0}\]
+
+\begin{theorem}[Fórmula integral de Cauchy en el disco]
+Sea $f$ una función holomorfa en $\{z \tq |z-z_0| < r\}$ y sea α un camino cerrado en el disco
+\[Ind_α(z_0)f(z)=\frac{1}{2πi}\int_α \frac{f(w)}{w-z}dw \ \forall z \notin α\]
+
+\end{theorem}
+\begin{proof}
+Sea
+\[F(w)=\frac{f(w)-f(z)}{w-z}, \text{ holomorfa para todo } w \neq z\]
+tenemos que
+\[(w-z)F(w)=f(w)-f(z) \to 0 \text{ cuando } w \to 0\]
+
+Entonces por el teorema de Cauchy en el disco tenemos que
+\[0 = \int_α F(w)dw = \int_α \frac{f(w)-f(z)}{w-z} dw = \int_α \frac{f(w)}{w-z}dw-f(z) \underbrace{\int_α\frac{dw}{w-z}}_{2πi\cdot Ind_α(z)}\]
+y despejando llegamos a la igualdad que queríamos probar.
+\end{proof}
+
+\begin{example}
+Tomemos la función
+\[f(z)=\frac{1}{2πi}\int_{w: \ |w-z|=r}\frac{f(w)}{w-z}=\frac{1}{2πi}\int_0^{2π}\frac{f(z+re^{it})}{re^{it}}re^{it}idt\]
+Para obtener la última integral hemos realizado un cambio de variable siendo $w=z+re^{it}$
+
+Tras simplificar en la última integral llegamos a:
+\[f(z)=\frac{1}{2π}\int_0^{2π}f(z+re^{it})dt\]
+
+\end{example}
+\obs En definitiva, esta fórmula nos está diciendo que el valor de la función holomorfa en un punto $z$ se calcula como media de los valores de la función en los puntos que lo rodean.
+
+
+\begin{prop}
+Sea $\appl{α}{[a,b]}{\cplex}$ un camino cerrado y $\appl{\Psi}{α([a,b])}{\cplex}$ continua, entonces
+\[f(z)=\frac{1}{2πi}\int_α \frac{\Psi(w)}{w-z}dw \ \forall z \notin α([a,b])\]
+es analítica (y por tanto holomofa) y se cumple que
+\[f^{(n)}(z) = \frac{n!}{2πi}\int_α \frac{\Psi(w)}{(w-z)^{n+1)}}dw \ \forall n \in \nat\]
+\end{prop}
+
+\begin{proof}
+Sea $z_0 \notin α([a,b])$ y sea $r=\text{dist}(z_0, α([a,b]))$, para cada $z$ tal que $|z-z_0|<r$ tenemos
+\[2πif(z)=\int_α \frac{\Psi(w)}{w-z}dw\]
+
+Podemos ver que
+\[\frac{1}{w-z} =\frac{z-z_0}{1-\left( \frac{z-z_0}{w-z_0}\right)}dw\]
+y sabemos que
+\[\frac{1}{1-\frac{z-z_0}{w-z_0}} =\footnote{Ocurre sólo si la razón es menor que 1 en valor absoluto, es decir, $|z-z_0|<|w-z_0|$, que sabemos es cierto} \sum_n \left( \frac{z-z_0}{w-z_0}\right)^n\]
+
+Si aplicamos estas dos ecuaciones en la integral que define $f$ tenemos:
+\[2πif(z)= \int_α \frac{\Psi(w)}{w-z_0}\frac{1}{1-\left( \frac{z-z_0}{w-z_0}\right)}dw\]
+
+Puesto que
+\[g_N(z)=\frac{\Psi(w)}{w-z_0}\sum_{n=0}^N\left(\frac{z-z_0}{w-z_0}\right)^n\]
+converge uniformemente en $|z-z_0| < |w-z_0|$
+
+\[g_N(z) \rightrightarrows g(w)=\frac{\Psi(w)}{w-z_0}\frac{1}{1-\left( \frac{z-z_0}{w-z_0}\right)}\]
+
+Por tanto
+\[\int_α g(w)dw = \lim_{N \to \infty} \int_α f_N(w)dw = \lim_{N \to \infty} \int_α \frac{\Psi(w)}{w-z_0}\sum_{n=0}^N\left(\frac{z-z_0}{w-z_0}\right)^n = \]
+\[= \lim_{N \to \infty}\sum_{n=0}^{\infty} \int_α \frac{\Psi(w)}{(w-z_0)^{n+1}}dw(z-z_0)^n = \sum_{n=0}^{\infty} \left[\int_α \frac{\Psi(w)}{(w-z_0)^{n+1}}\right] (z-z_0)^n\]
+
+Por tanto
+\[f(z)=\sum_{n=0}^{\infty} \left(\frac{1}{2πi}\int_α \frac{\Psi(w)}{(w-z_0)^{n+1}}\right)dw(z-z_0)^n\]
+con lo que ya tenemos el desarrollo de $f$ en serie de potencias de $|z-z_0|$. Por tanto $f$ es analítica.
+
+Además
+\[a_n=\frac{1}{n!}f^{(n)}(z_0) \implies f^{(n)}(z_0) = \frac{n!}{2πi}\int_α \frac{\Psi(w)}{(w-z)^{n+1)}}dw\]
+\end{proof}
+
+\subsection{Equivalencia entre holomorfía y analiticidad}
+\begin{theorem}
+Sea $f$ holomorfa en un abierto $Ω \subset \cplex$ entonces:
+\begin{enumerate}
+\item $f$ es analítica en Ω
+
+\item Existen todas las derivadas de $f$ y son holomorfas en Ω
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Sea $z \in Ω$ con $B(z,r)=\{w : \ |w-z| < r\} \subset Ω$.
+
+Por la fórmula integral de Cauchy para $α \in \partial B(z, \frac{r}{2})$ se tiene
+\[f(z)=\frac{1}{2πi}\int_α \frac{f(w)}{w-z} dw\]
+que es anaĺítica por la proposición y además
+\[f^{(n)}(z)=\frac{n!}{2πi} \int_α \frac{f(w)}{(w-z)^{n+1}} dw\]
+siendo todas estas derivadas holomorfas.
+
+Por tanto tenemos que si una función es holomorfa será analítica y, puesto que ya habíamos visto la implicación opuesta, podemos afirmar que
+\[\text{holomorfa} \iff \text{analítica}\]
+\end{proof}
+
+\begin{theorem}[Singularidad evitable]
+Sea Ω un abierto en $\cplex$ y $z_0 \in \cplex$. Si $\appl{f}{Ω \setminus \{z_0\}}{\cplex}$ es holomorfa y $\lim_{z \to z_0} f(z) = 0$ entonces $f$ puede extenderse a una función holomorfa en Ω.
+\end{theorem}
+\begin{proof}
+Supongamos $z_0 = 0$ (en caso de no ser así podríamos tomar $g(z)=f(z+z_0)$).
+
+Sea $R$ un ractángulo que contiene al origen en su interior, fijamos un punto $z$ del interior de $R$ y distinto del origen.
+
+Definimos
+\[F(w)=\frac{f(w)-f(z)}{w-z}\]
+holomorfa en $Ω \setminus \{0, z\}$.
+
+Además $(w-z)F(w)=f(w)-f(z)$ converge a 0 cuando nos acercamos a z. Por tanto,
+\[wF(w)=\frac{f(w)-f(z)}{w-z} w\to 0 \text{ cuando w $\to 0$}\]
+puesto que $wF(w) \to 0$ cuando $w \to 0$.
+
+Por el teorema de Cauchy sobre rectángulos tenemos que
+\[0 = \int_{\partial R}F(w)dw  = \int_{\partial R} \frac{f(w)-f(z)}{w-z}  dw =  \int_{\partial R}\frac{f(w)}{w-z} -\int_{\partial R} \frac{1}{w-z}dw \implies\]
+
+\[\implies f(z)=\frac{1}{2πi} \int_{\partial R} \frac{f(w)}{w-z}dw \ \forall z \in R \setminus \{0\}\]
+
+Por tanto, una extensión holomorfa de $f$ es
+\[g(z)=\left\{ \begin{array}{lcc}
+             f(z) &   si  & z \in Ω \setminus \{0\}\\
+             \\ \frac{1}{2πi} \int_{\partial R} \frac{f(w)}{w-z}dw &  si  & z\in R
+             \end{array}
+   \right.\]
+\end{proof}
+
+\begin{lemma}
+Si $f$ es holomorfa en Ω y $f(z)=f'(z_0)=f''(z_0)=...=f^{(k-1)}(z_0)$, entonces $f(z)=(z-z_0)^kg(z)$ con $g$ holomorfa en Ω.
+\end{lemma}
+\begin{proof}
+Sea
+\[h_1(z)=\frac{f(z)}{z-z_0}\]
+holomorfa en $Ω\setminus \{z_0\}$, tenemos que
+\[\lim_{z \to z_0} (z-z_0)h_1(z)=\lim_{z \to z_0} f(z)=f(z_0)=0\]
+lo que implica que $h_1$ se extiende a una función holomorfa en Ω y, por contunidad, se cumple:
+\[h_1(z_0)=\lim_{z \to z_0} h_1(z)=\lim_{z \to z_0}\frac{f(z)-f(z_0)}{z-z_0}=f'(z_0)\]
+
+Tenemos ya $f(z)=(z-z_0)h_1(z)$ con $h_1$ holomorfa en Ω y $h_1(z_0)=0$
+
+Queremos seguir sacando factores de la forma $(z-z_0)$ para llegar al resultado que queremos demostart de modo que repetimos el procedimiento anterior con esta $h_1$.
+
+Definimos
+\[h_2(z) = \frac{h_1(z)}{z-z_0}\]
+holomorfa en $Ω\setminus \{z_0\}$. pero $(z-z_0)h_2(z)=h_1(z) \rightarrow h_1(z_0)=f'(z_0)$.
+
+Por tanto, puedeo extender $h_2$ a una función holomorfa en Ω y, además,
+\[h_2(z_0) = \lim_{z \to z_0}h_2(z=\lim_{z \to z_0}\frac{h_1(z)-h_1(z_0)}{z-z_0}=h_1'(z_0)=f''(z_0)\]
+y tenemos que
+\[f(z)=(z-z_0)^2h_2(z)\]
+
+Finalmente obtenemos $f(z)=(z-z_0)^k g(z)$
+\end{proof}
+
+Básicamente estamos tomando una función cuyo desarrollo de Taylor tiene $a_i=0$ para los primeros k-1 coeficientes. Lo que queda a partir del $a_k$ es la función $g(z)$.
+
+Técnicamente este resultado es algo más general que eso, pues es un resultado global mientras que el polinomio de Taylor es local.
+
+\section{Teorema de Liouville}
+
+\section{Teorema de Morera}
+
+\begin{theorem}
+Sea $\appl{f}{Ω}{\cplex}$ continua con Ω un abierto, si para todo $z \in Ω$ existe un disco $B(z,r_z)=\{w : |w-z|<r_z\}\subset Ω$ tal que
+\[\int_{\partial R}f(z)dz=0\]
+para todos los rectángulos $R \subset B(z,r_z)$, entonces $f$ es holomorfa Ω
+\end{theorem}
+
+\begin{proof}
+Esta demostración se deja como ejercicio para el lector.
+
+La idea consiste en emplear el Teorema de Cauchy para obtener la función primitiva, que será holomorfa.
+\end{proof}
+
+\section{La función primitiva en un dominio simplemente conexo}
+\subsection{Teoremas de Cauchy para dominios simplemente conexos}
+
+Recordemos que un dominio simplemente conexo es aquel que ``no tiene huecos''. Es decir, toda curva cerrada se puede contraer a un punto.
+
+\begin{defn}[Dominio\IS simplemente conexo]
+Un dominio (abierto y conexo) en $\cplex$ es simplemente conexo si y sólo si su complementario en $\widehat{\cplex}$ es conexo
+\end{defn}
+
+\begin{example}
+El interior de una circunferencia en $\cplex$ es simplemente conexo pues su complementario es el resto del plano junto con el infinito. Puesto que el plano se extiende hasta el infinito, resulta ser conexo.
+
+Sin embargo, si tomamos el exterior de la circunferencia, su complementario es la circunferencia más el infinito que deja de ser conexo, pues no podemos conectar el infinito con la circunferencia sin pasar por el plano.
+\end{example}
+
+\obs Un dominio Ω es simplemente conexo si y sólo si el índice es 0 para todo punto y todo camino cerrado en el dominio.
+
+\begin{theorem}[Teorema de Cauchy\IS]
+S $f$ es holomorfa en Ω, siendo Ω un domino simplemente conexo, entonces $\int_α f(z)dz=0$ para todo camino cerrado α en Ω
+\end{theorem}
+
+\subsection{Fórmula integral de Cauchy}
+Si $f$ es holomorfa en Ω, siendo Ω un dominio simplemente conexo y α un camino cerrado en Ω se cumple que
+\[Ind_α(z)f^{(n)}(z) = \frac{n!}{2πi}\int_α \frac{f(w)}{(w-z)^{n+1}}dw \ \forall z \notin α \text{ con } n= 1,2,3,...\]
+
+\begin{proof}[Teorema de Cauchy para dominios simplemente conexos]
+
+Esta demostración queda como ejercicio para el lector aunque vamos a dar algunas ideas de la misma.
+
+\begin{enumerate}
+\item Ω es simplemente conexo si y sólo si el índice es 0 en todo punto de Ω para cuaqluier camino cerrado.
+
+\item Para cada camino cerrad α, introducimos Ω en una cuadrícula, con los cuadrados tan pequeños como sea necesario, para poder construir una curva cerrada sobre esta cuadrícula que se contenga en Ω y que rodee a α.
+
+El dominio encerrado por este polígono es también simplemente conexo por lo que volvemos a tener que el índice es 0.
+
+\item Si tomamos un punto en el interior de uno de los cuadrados (Q) contenidos en el plígono, por la fórmula integral de Cauchy tendremos
+\[\f(z)=\frac{1}{2πi}\int_{\partial Q}\frac{f(w)}{w-z} dw = \sum_{\text{todos los Q}} \frac{1}{2π i}\int_{\partial Q} \frac{f(w)}{w-z}dw\]
+
+Por tanto
+\[f(z)=\frac{1}{2πi}\int_{\text{polígono}} \frac{f(w)}{w-z}dw \ \forall z \in Ω\]
+
+Vamos ahora a calcular la integral de $f$, que es nuestro objetivo en esta prueba
+
+\[\int_α f(z)dz = \int_α \left( \frac{1}{2πi}\int_{\text{polígono}} \frac{f(w)}{w-z}dw\right)=\int_{\text{polígono}} \left(f(w) \cdot \frac{1}{2πi}\int_α \frac{1}{w-z}dw\right)= \]
+\[=\int_{\text{polígono}} \left(f(w) \cdot Ind_α(w)\footnote{con $w \in$ polígono}dw\right) =\footnote{pues el ńdice es 0} 0\]
+\end{enumerate}
+
+\end{proof}
+
+\begin{theorem}
+Sea Ω un dominio simplemente conexo.
+
+Si $f$ es holomorfa en Ω entonces existe una función primitiva $F$ tal que $F'(z)=f(z)$ para todod $z \in Ω$.
+\end{theorem}
+\begin{proof}
+Sea $z_0 \in Ω$ definimos
+\[F(z)=\int_α f(w)dw \text{ siendo α una curva que va de } z_0 \text{ a } z\]
+Esta definición es independiente del camino escogido, por el Teorema de Cauchy para simplemente conexos.
+
+Tomamos un $r$ pequeño y positivo y consideramos $z'\in B(z,r)$. Así tenemos:
+\[F(z')-F(z)=\int_{α_{z_0z'}} f(w)dw - \int_{α_{z_0z}}f(w)dw =\footnote{Por el Teorema de Cauchy} \int_{α_{zz'}}f(w)dw\]
+
+Para la última curva $α_{zz'}$ podemos tomar cualquier curva que una esos dos puntos por lo que tomaremos la curva más sencilla posible, la recta que une esos puntos. Por lo que nos queda
+\[\int_0^1 f(z(1-z)+tz')(z'-z)=dt\]
+
+Vamos a calcular ahora la derivada de $F$.
+\[\frac{F(z')-F(z)}{z'-z} = \int_0^1 f(z(1-t)+tz')dt \to f(z) \text{ cuando z'} \to z\]
+\end{proof}
+
+\begin{corol}
+Sea Ω un dominio simplemente conexo y sea $\appl{f}{Ω}{\cplex \setminus \{0\}}$ una función holomorfa.
+
+Entonces $f$ tiene un logaritmo holomorfo y una raíz cuadrada holomorfa.
+\end{corol}
+\begin{proof}
+Sea $F$ la primitiva de $\appl{f'(z)}{f(z)}$ en Ω, es decir, $F$ es holomorfa en Ω y cumple $F'=\appl{f'(z)}{f(z)}$, sabemos que esta $F$ existe por el teorema anterior.
+
+Ahora vamos a comrpobar que efectivamente es una rama del logaritmo. Para ello, debemos cercionarnos de que se verifica:
+\[e^F = f \iff fe^{-F}=1\]
+
+Como ya hemos hecho en otras ocasiones, vamos a derivar $fe^{-F}$ y a ver que esta derivada es 0, con lo que podremos concluir que la función es constante. Vamos a ello:
+\[(fe^{-F})'=f'e^{-F}-fe^{-F}\frac{f'}{f} = 0 \implies fe^{-F} = cte \neq 0 \implies fe^{-F} = e^w_0 \implies f=e^{F+w_0} \]
+Por tanto podemos concluir que $F(z)+w_0$ es una rama del logaritmo de $f$.
+
+Vamos ahora a por la raíz.
+
+En este caso es más sencillo puesto que sabemos que la rama de la raíz será $\sqrt{f}=e^{1/2 \log(f)}$ y, como ya conocemos la rama del logaritmo, ya lo tenemos.
+
+
+\end{proof}
 
 \chapter{Cálculo de residuos}
 \section{Singularidades aisladas}
