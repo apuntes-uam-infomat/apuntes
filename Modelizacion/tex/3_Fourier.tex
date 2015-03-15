@@ -3,127 +3,143 @@
 \section{Desarrollo de Fourier}
 \textbf{Idea del análisis de Fourier:} "toda" señal se puede descomponer en "tonos puros" (armónicos) de frecuencia fija (típicamente $\sin(\alpha n x)$ , $\cos(\alpha n x)$  $ n \in \ent$).
 
-Dibujo con caption ($\frac{1}{4} - \frac{2}{\pi^2} \sum_{n impares} \frac{1}{n^2} \cos(2\pi n x)$)
+%Dibujo con caption ($\frac{1}{4} - \frac{2}{\pi^2} \sum_{n impares} \frac{1}{n^2} \cos(2\pi n x)$)
 
 \begin{example}
-	Cogemos $x=0$:
-	$$0 = \frac{1}{4} - \frac{2}{\pi^2} \sum_{\text{n impares}} \frac{1}{n^2}$$ 
-	$$1 + \frac{1}{3^2} + \frac{1}{5^2} + \ldots = \frac{\pi^2}{8}$$
+Sea la función $f(t)=t$, $t\in[0,1)$ que se ha extendido periódicamente con período $T=1$.
+
+\begin{center}
+\includegraphics[width=\linewidth]{img/id_period.png}
+\end{center}
+
+Su desarrollo de fourier (que veremos más adelante cómo se calcula) queda de la forma:
+\[SF(f(t))=\frac{1}{2}-\frac{1}{π}\sum_{n=1}^{\infty}\frac{1}{n}\sin(2πnt)\]
+
+Cuántos más elementos del sumatorio tomemos más precisa será la proximación:
+
+\begin{center}
+\includegraphics[width=\linewidth]{img/id_period_fourier.png}
+\end{center}
+
+	%Cogemos $x=0$:
+	%$$0 = \frac{1}{4} - \frac{2}{\pi^2} \sum_{\text{n impares}} \frac{1}{n^2}$$
+	%$$1 + \frac{1}{3^2} + \frac{1}{5^2} + \ldots = \frac{\pi^2}{8}$$
 \end{example}
 
 \subsection{Aplicaciones}
 \begin{itemize}
 	\item Muchas aplicaciones de ingeniería están basadas en estas ideas. (JPEG,(MP3) MPEG, telecomunicaciones)
-	
-	Hay tonos puros (frecuencias) que se eliminan o modifican porque n tienen mucha influencia o son ruido.
-	
+
+	Hay tonos puros (frecuencias) que se eliminan o modifican porque no tienen mucha influencia o son ruido.
+
 	Menos frecuencia $\rightarrow$ Menos información $\rightarrow$ Compresión (pérdidas)
-	
+
 	En ingeniería una aplicación muy común es utilizar esto como filtro, en el caso del MP3 se eliminan las frecuencias que no oimos.
-	
+
 	\item En matemáticas y física: Hay problemas difíciles para funciones generales y fáciles para "tonos puros" (senos y cosenos).
-	
-		\textbf{Interpretación de Copenhague} : Las partículas tienen funciones de ondas y en los experimentos solo se detectan los tonos puros que componen estas funciones con una probabilidad que depende de su amplitud.
-		
-	Vamos a ver aplicaciones de esto:
-	
-	\textbf{\textit{Pasar de analógico a digital}}
-	
-	Vamos a hacer análisis de Fourier discreto con ondas digitalizadas.
-	
-	\begin{example}
-		Vamos a estudiar la función $\sin\left(\frac{2\pi}{T}\cdot x\right)$
-		
-		Dibujo
-		
-		que es un caso particular de $\sin\left(\frac{2\pi}{T}\cdot k x\right)$ (oscila k veces en [0,T]).
-		
-		Dibujo
-		
-		Si digitalizamos la función, hacemos que x solo tenga valores discretos: $\sin\left(\frac{2\pi}{T}\cdot n\right)$
-		
-		Dibujo
-		
-		LLamamos $f(n)$ a la función discretizada, $n \in \ent$ ; Con N periódica $f(n + N) = f(n)$
-		
-		Matemáticamente pensamos $f(n)$ como :
-		$$f : \ent/N\ent \rightarrow \mathbb{C} $$
-	\end{example} 
-	\obs Hemos puesto que f va a $\mathbb{C}$ porque $e^{ix} = \cos x * i\sin x$ permite escribir senos y cosenos al mismo tiempo.
-	
+
+		\textbf{Interpretación de Copenhague}: Las partículas tienen funciones de ondas y en los experimentos solo se detectan los tonos puros que componen estas funciones con una probabilidad que depende de su amplitud.
+
+	%Vamos a ver aplicaciones de esto:
+
+	%\textbf{\textit{Pasar de analógico a digital}}
+
+	%Vamos a hacer análisis de Fourier discreto con ondas digitalizadas.
+
+%	\begin{example}
+%		Vamos a estudiar la función $\sin\left(\frac{2\pi}{T}\cdot x\right)$
+%
+%		Dibujo
+%
+%		que es un caso particular de $\sin\left(\frac{2\pi}{T}\cdot k x\right)$ (oscila k veces en [0,T]).
+
+%		Dibujo
+
+%		Si digitalizamos la función, hacemos que x solo tenga valores discretos: $\sin\left(\frac{2\pi}{T}\cdot n\right)$
+
+%		Dibujo
+
+%		LLamamos $f(n)$ a la función discretizada, $n \in \ent$ ; Con N periódica $f(n + N) = f(n)$
+
+%		Matemáticamente pensamos $f(n)$ como :
+%		$$f : \ent/N\ent \rightarrow \mathbb{C} $$
+%	\end{example}
+	\obs En general consideramos que el recorrido de $f$ es $\mathbb{C}$ porque $e^{ix} = \cos x + i\sin x$ permite escribir senos y cosenos al mismo tiempo.
+
 	$$\cos x = \frac{e^{ix} + e^{-ix}}{2}$$
 	$$\sin x = \frac{e^{ix} - e^{-ix}}{2i}$$
-	
+
 \end{itemize}
 
-\begin{prop}[Análisis de Fourier en $\ent/N\ent$]
-	
+\begin{theorem}[Análisis de Fourier en $\ent/N\ent$]
+
 	Cualquier $f : \ent/N\ent \rightarrow \mathbb{C}$ se puede escribir como :
 	$$f(n) = \frac{1}{N}\sum_{m\in \ent/N\ent}\widehat{f}(m)\cdot e\left(\frac{nm}{N}\right)$$
 	donde $e(x) = e^{2\pi ix}$
-	
+
 	$\widehat{f}(n)$ es la \textbf{transformada de Fourier discreta}
 	$$\widehat{f}(n) = \sum_{m\in \ent/N\ent}\widehat{f}(m)\cdot e\left(\frac{-nm}{N}\right)$$
-	
-\end{prop}
+
+\end{theorem}
 \obs Hay un algoritmo (FFT) para calcular los $\widehat{f}(m)$
 
 \begin{proof}
 	Definimos la función $\delta : \ent/N\ent \rightarrow \mathbb{C}$ como :
 	$$\delta (n) = \begin{cases}
-	1 \rightarrow n=0\\
-	0 \rightarrow n\neq 0 \\
+	1 \text{ si } n=0\\
+	0 \text{ si } n\neq 0 \\
 	\end{cases}$$
 	Y decimos que también se puede escribir como:
-	$$\delta (n) = \frac{1}{N} \sum_{m_0}^{N-1} e\left(\frac{nm}{N}\right)$$
-	Donde $e(\frac{nm}{N}) = e^{2\pi inm/N}$
-	
-	Es claro que $\delta(0) = 1$ , pero ¿se cumple que si $n\neq 0 \implies \delta (n) = 0$?
-	
-	Si se cumple, porque si lo pensamos como una progresión geométrica:
-	$\begin{cases}
-	a_1 = e(n0/N)\\
-	a_{m+1} = e(nN/N)\\
-	\text{razón } = \frac{1}{N}
-	\end{cases}$
-	
-	Entonces:
-	$$\delta (n) = \frac{e(nN/N) - e(0n/N)}{1/N - 1} = 0$$
-	
-	Otra forma de pensarlo es como vectores. $\delta(n)$ se puede ver como sumar todas las raíces de la unidad.Sumando todas las fuerzas vemos que se anulan.
-	
-	(dibujo explicativo para N=4)
-	
+	$$\delta (n) = \frac{1}{N} \sum_{m = 0}^{N-1} e\left(-\frac{nm}{N}\right)$$
+	Donde
+	\[e\left(\frac{nm}{N}\right) = e^{\frac{2\pi inm}{N}}\]
+
+	Es claro que $\delta(0) = 1$, pero aún tenemos que ver que $n\neq 0 \implies \delta (n) = 0$
+
+	Podemos ver δ como el producto de $\frac{1}{N}$ por la suma de los términos de una progresión geométrica tal que:
+	\[\begin{cases}
+	a_1 = e(n0/N)=e(0)=1\\
+	a_{n+1} = e(-nN/N)=e(n)\\
+	\text{razón } = e^{-\frac{n}{N}}
+	\end{cases}\]
+
+	Basándonos en la fórmula conocida para la suma de los términos de una progresión geométrica tenemos:
+	$$\delta (n) =\frac{e^{n} - e(0)}{e^{n/N} - 1} = 0$$
+
+	Otra forma de pensarlo es como vectores. $\delta(n)$ se puede ver como la suma de todas las raíces de la unidad. Sumando todas las fuerzas vemos que se anulan.
+
+	%(dibujo explicativo para N=4)
+
 	Una vez que tenemos esto, vemos que la $f(n)$ de la proposición se puede escribir como:
 	$$f(n) = \sum_{k\in \ent/N\ent} f(k) \cdot \delta(n-k)$$
 	Sustituyendo:
 	$$f(n) = \frac{1}{N} \sum_{k\in \ent/N\ent} f(k)  \sum_{m \in \ent/N\ent} e\left(\frac{nm}{N}\right) \cdot e\left(- \frac{km}{N}\right)$$
-	
+
 	Y como por definición:
 	$$\widehat{f}(m) = \sum_{k\in \ent/N\ent} f(k) \cdot e\left(- \frac{km}{N}\right)$$
-	
+
 	Pues ya está probada la proposición.
 \end{proof}
 \begin{example}
 	Un ejemplo de esto con N=3
-	
+
 	DIBUJO
-	
+
 	Vemos que la función se va repitiendo po lo que cojo solo el tramo de 0 a 2 para estudiarla.
 	$$f(n) = \begin{cases}
 	7 si n= 0\\
 	2 si n = 1 , 2
 	\end{cases}$$
-	
+
 	Entonces aplicando la proposición nos queda:
 	$$\widehat{f}(0) = f(0)\cdot e(0) + f(1)\cdot e(0) + f(2) \cdot e(0) =  11$$
 	$$\widehat{f}(1) = f(0)\cdot e(0) + f(1)\cdot e\left(-\frac{1}{3}\right) + f(2)\cdot e\left(-\frac{2}{3}\right) = 7 + 2\cdot\left(-\frac{1}{2} -i\frac{\sqrt{3}}{2}\right) + 2\cdot \left(-\frac{1}{2} + \frac{i\sqrt{3}}{2}\right) = 5$$
 	$$\widehat{f}(2) = f(0)\cdot e(0) + f(1)\cdot e\left(- \frac{2}{3}\right) + f(2) \cdot e\left(-\frac{4}{3}\right) = 7 + 2\cdot\left(-\frac{1}{2} -i\frac{\sqrt{3}}{2}\right) + 2\cdot \left(-\frac{1}{2} + \frac{i\sqrt{3}}{2}\right) = 5$$
-	Como 
+	Como
 	$$f(n) = \frac{1}{N} \sum_{m\in \ent/ N\ent} \widehat{f}(m) \cdot e\left(\frac{nm}{N}\right)$$
 	Sustituyendo con los resultados de antes nos queda que:
 	$$f(n) = \frac{11}{3}\cdot e\left(0 \frac{n}{3}\right) + \frac{5}{3}\cdot e\left(1 \frac{n}{3}\right) + \frac{5}{3} \cdot e\left(2 \frac{n}{3}\right)$$
-	
+
 	Y efectivamante, si comparamos resultados nos queda :
 	$$n = 0 \rightarrow 7 = \frac{11}{3} + \frac{5}{3} + \frac{5}{3}$$
 	$$n = 1 \rightarrow 2 = \frac{11}{3} + \frac{5}{3} \cdot \left(- \frac{1}{2} + \frac{i \sqrt{3}}{2}\right) + \frac{5}{3} \cdot \left(- \frac{1}{2} -\frac{i \sqrt{3}}{2}\right)$$
@@ -274,7 +290,7 @@ $$f(x) = e^{-|x|} \;\;\;\;\;\; \hat{f}(\psi) = \int_{-\infty}^{\infty} e^{-|x|} 
 $$ \int_{0}^{\infty} e ^{-(1 + 2 \pi i \psi) x} + \int_{-\infty}^{0} e ^{(1 - 2 \pi i \psi) x} = \frac{1}{1 + 2\pi i \psi} + \frac{1}{1-2 \pi i \psi} = \frac{2}{1 + 4 \pi^2 \psi^2}$$
 
 
-$$e^{-|x|} = \int\limits_{-\infty}^{\infty} \frac{2 e (x \psi)}{1 + 4 \pi^2 \psi^2} d \psi = \int\limits^{\infty}_{-\infty} \frac{2 cos(2 \pi x \psi)}{1 + 4 \pi^2 \psi^2} d\psi $$ 
+$$e^{-|x|} = \int\limits_{-\infty}^{\infty} \frac{2 e (x \psi)}{1 + 4 \pi^2 \psi^2} d \psi = \int\limits^{\infty}_{-\infty} \frac{2 cos(2 \pi x \psi)}{1 + 4 \pi^2 \psi^2} d\psi $$
 
 \end{example}
 
@@ -300,7 +316,7 @@ $<f, g> = \frac{1}{N} \sum_{n \in \mathbb{Z}_n} \conj{f(n)} g(n)$
 
 
 \begin{prop}
-	$f_m(n) = e\left(\frac{nm}{N}) \right) $ Las funciones $\{ f_0, f_1, ..., f_{n-1}\}$ son una base ortonormal 
+	$f_m(n) = e\left(\frac{nm}{N}) \right) $ Las funciones $\{ f_0, f_1, ..., f_{n-1}\}$ son una base ortonormal
 
 \end{prop}
 
@@ -330,13 +346,13 @@ $<f, g> = \frac{1}{N} \sum_{n \in \mathbb{Z}_n} \conj{f(n)} g(n)$
 
 \begin{proof}
 
-	$$< f_n, f_{n'}> = \int\limits^1_0 e(-nx) e(n'x) dx = \int^1_0 ((n' -n)x) dx = 
+	$$< f_n, f_{n'}> = \int\limits^1_0 e(-nx) e(n'x) dx = \int^1_0 ((n' -n)x) dx =
 	\begin{cases}
 		1 \mbox{si} n = n'
 		0 \mbox{si} n\neq n'
 	\end{cases}$$
 
-	En todo esto nos falta decir que los $f_n$ son una base: 
+	En todo esto nos falta decir que los $f_n$ son una base:
 
 	Si los $f_n$ fueran una base (también llamado sistema ortonormal completo) entonces:
 
@@ -361,7 +377,7 @@ $<f, g> = \frac{1}{N} \sum_{n \in \mathbb{Z}_n} \conj{f(n)} g(n)$
 
 	En el caso 2 (ref)
 
-	$\norm{f}^2 = \int^1_0 \abs{f}^2 = \sum_{n \in \mathbb{Z}} \abs{\hat{f}(n)}^2 \rightarrow$ Identidad de par se val  
+	$\norm{f}^2 = \int^1_0 \abs{f}^2 = \sum_{n \in \mathbb{Z}} \abs{\hat{f}(n)}^2 \rightarrow$ Identidad de par se val
 
 
 \end{corol}
@@ -382,7 +398,7 @@ $f(x) = \sum\limits^{\infty}_{n = -\infty} a_n e(nx) \rightarrow \sum\limits^{\i
 
 La mayor parte de las aplicaciones del análisis de Fourier se basan en procesos de este tipo.
 
-Se está asignando un peso a cada una de las frecuencias. Como con los filtros de paso alto, bajo, banda... 
+Se está asignando un peso a cada una de las frecuencias. Como con los filtros de paso alto, bajo, banda...
 
 ¿Que le ocurre a la función tras transformarla de esta manera? ¿Hay alguna relación simple entre f y la señal transformada? (Sin el desarrollo de Fourier)
 
@@ -393,7 +409,7 @@ Sí, a través de convoluciones
 	\begin{itemize}
 		\item $fg :\mathbb{Z}_{N} \rightarrow \mathbb{C} \;\;\; (f * g)(n) = \sum\limits_{m \in \mathbb{Z}_{N}} f(n-m)g(m)$
 		\item $fg :\mathbb{T} \rightarrow \mathbb{C} \;\;\; (f * g)(x) = \int\limits^{1}_{0} f(x-t)g(t)dt$
-		\item $fg :\mathbb{R} \rightarrow \mathbb{C} \;\;\; (f * g)(x) = \int\limits^{\infty}_{-\infty} f(x-t)g(t)dt$ 
+		\item $fg :\mathbb{R} \rightarrow \mathbb{C} \;\;\; (f * g)(x) = \int\limits^{\infty}_{-\infty} f(x-t)g(t)dt$
 	\end{itemize}
 
 \end{defn}
@@ -458,7 +474,7 @@ $$ \sum_{n < N} \rightarrow \text{ error } \leq \sum_{n \geq N} \frac{1}{n^2}  �
 
 
 
-(DIBUJO SIERRA)  
+(DIBUJO SIERRA)
 
 $$ = \frac{1}{2} - \frac{1}{\pi} \sum^{\infty}_{n = 1} \frac{sen(2 \pi n x)}{n}$$
 
@@ -470,86 +486,86 @@ La regularidad influye en la rapidez de convergencia de la serie de Fourier.
 
 
 ¿Porqué ocurre que la función que da el diente de sierra es? : $\frac{1}{2} - \frac{1}{\pi} \sum_{n=1}^{\infty} \frac{\sin(2\pi nx)}{n}$
-	
+
 Esta suma se puede probar que converge(pero la demostración no es fácil en absoluto) pero, excepto para $x = \frac{k}{2}$, se puede probar que la convergencia no es absoluta.
 
 \subsection{Convergencia lenta:} es malo para las aplicaciones porque no podemos despreciar muchos coeficientes de Fourier.
-	
+
 	Si tengo una función $f: \ent_N \rightarrow \mathbb{C}$
 	$$f(n) = \frac{1}{N}\sum_{m \in \ent_N}\widehat{f}(m)e(\frac{mn}{N})$$
-	
+
 	Para N grande y coeficientes parecidos $\implies$ es difícil decidir cuáles omitir.
-	
+
 	Vamos a suponer que tenemos una función 1-periódica $f : \Pi \rightarrow \mathbb{C}$ tal que $f \in C^{\infty}(\mathbb{R})$.
-	
+
 	Para $n \neq 0$
-	
+
 	$$\widehat{f}(n) = \int_{0}^{1} f(x) e(-nx) dx$$
-	
+
 	Llamamos $\begin{cases}
 	u = f(x)\\
 	dv = e(-nx) dx
 	\end{cases}$
-	
+
 	Entonces:
 	$$\widehat{f}(n) = f(x) \frac{e(-nx)}{-2\pi in}|_{0}^1 + \frac{1}{2\pi i n} \int_{0}^1 f'(x) e(-nx) dx$$
-	
+
 	Como $f(x) \frac{e(-nx)}{-2\pi in}|_{0}^1 $ es 0,como f es periódica, si seguimos iterando hasta k veces:
-	
+
 	$$\widehat{f}(n)  \frac{1}{(2\pi i n)^k} \int_{0}^1 f^{(k)}(x) e(-nx) dx$$
-	
+
 	y como $|f^{(k)}| \leq cte$ en [0,1] $\implies |\widehat{f}(n)| \leq \frac{cte}{|n|^k}$
-	
+
 	Con menos regularidad: $f^{(k)}$ existe excepto en un número finito de puntos (de [0,1]) y está acotada, daría el mismo resultado.
-	
+
 	Vamos a ver esto para $k=2$:
-	
+
 	$$k=2 \implies |\widehat{f}(n)| \leq cte \implies \sum_{n= -\infty}^{e(nx)}$$
 	Converge absolutamente.
-	
+
 
 \begin{center}
 	\centering
 	\inputtikz{fourier/audioRepeticionNoContinua}
 \end{center}
-	
+
 	La extensión 1-periódica de una función, típicamente no es nisiquiera continua. $\implies$ típicamente no se puede tomar $k=2$ $\implies$ malo para las aplicaciones.
-	
+
 	En estos casos se usa un truco, en lugar de la extensión periódica primero se refleja la función(la señal) por el eje Y.
-	
+
 	Y después se extiende de forma 2-periódica
-	
+
 	Como el reflejo y la señal original coinciden en el final de una y el principio de la otra esta extensión si sería continua
-	
-	
+
+
 	\begin{center}
 		\centering
 		\inputtikz{fourier/audio_simetria_simple}
 	\end{center}
-	
-	
+
+
 	Entonces vamos a ver las ecuaciones de Fourier para las funciones 2-periódicas.
-	
+
 	$$f(x) = \sum_{n=-\infty}^{\infty} \widehat{f}(n)e(n\frac{x}{2})$$
-	
+
 	Siendo
 	$$\widehat{f}(n) = \frac{1}{2} \int_{0}^{2} f(x) e(-nx)$$
-	
+
 	Estos números son reales si f es real.
-	
+
 	$$\widehat{f}(n) = \frac{1}{2} \int_{-1}^{1} f(x) e(-n\frac{x}{2}) dx = \frac{1}{2} \int_{-1}^{1} f(x)\cos(2\pi n \frac{x}{2})dx \in \mathbb{R}$$
-	
+
 	Eto es porque $e(-n\frac{x}{2}) = \cos(2\pi n \frac{x}{2}) + i \sin(2\pi n \frac{x}{2})$ y además f es par y $\sin$ es impar.
-	
+
 	¿Cómo adaptar esto al caso discreto $f: \ent_N \rightarrow \mathbb{C}$?
-	
+
 	\begin{center}
 		\centering
 		\inputtikz{fourier/extension_2_periodica}
 	\end{center}
-	
+
 	Haciendo las cuentas se btiene un análisis de Fourirer discreto en el que podemos usar $e((m + \frac{1}{2}) \frac{n}{2N})$ en vez de $e(\frac{mn}{N})$ y tomando partes reales se puede escribir todo en términos $\cos(\frac{\pi n}{N}(m+ \frac{1}{2}))$
-	
+
 	\begin{prop}
 		Para $f : \{0,1,2....,N-1\} \rightarrow \mathbb{R}$ se cumple
 		$$f(m) = \frac{\widehat{f}^c(0)}{N} + \frac{2}{N} \sum_{n=1}^{N-1} \widehat{f}^c(n) \cos(\frac{n\pi}{N}(m + \frac{1}{2}))$$
@@ -590,7 +606,7 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 
 		(prueba supuestamente sencilla teniendo en cuenta que $m-m_0$ varía entre 0 y $N-1$)
 
-	\end{proof} 
+	\end{proof}
 
 
 \section{Aplicaciones}
