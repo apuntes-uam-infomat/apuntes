@@ -325,8 +325,8 @@ $<f, g> = \frac{1}{N} \sum_{n \in \mathbb{Z}_n} \conj{f(n)} g(n)$
 	$<f_m, f_{m'}> = \frac{1}{N} \sum^{n-1}_{n = 0} e \left(-\frac{nm}{N} \right) e \left(\frac{nm'}{N} \right) = \frac{1}{N} \sum^{n-1}_{n = 0} e \left( \frac{n (m' - m)}{N} \right) =$
 
 	$$ = \delta (m' - m) = \begin{cases}
-		0 \mbox{si} m' \neq m \\
-		1 \mbox{si} m' = m
+		0 & \mbox{si } m' \neq m \\
+		1 & \mbox{si } m' = m
 	\end{cases}
 	$$
 
@@ -348,8 +348,8 @@ $<f, g> = \frac{1}{N} \sum_{n \in \mathbb{Z}_n} \conj{f(n)} g(n)$
 
 	$$< f_n, f_{n'}> = \int\limits^1_0 e(-nx) e(n'x) dx = \int^1_0 ((n' -n)x) dx =
 	\begin{cases}
-		1 \mbox{si} n = n'
-		0 \mbox{si} n\neq n'
+		1 & \mbox{si } n = n' \\
+		0 & \mbox{si } n\neq n'
 	\end{cases}$$
 
 	En todo esto nos falta decir que los $f_n$ son una base:
@@ -423,14 +423,16 @@ Convolver es como multiplicar por trasladados y promediar usando $g$.
 
 (MAS DIBUJITOS (puntos sueltos)) -> resultado = promedio de "anchura" 3 de la señal.
 
-(IMAGEN DE UNA F DISCONTINUA Y UNA G CONTINUA QUE REGULARIZA)
-
 %\begin{figure}[htbp]
 %	\centering
 %	\subfigure[Función f discontinua]{\inputtikz[width=80mm]{fourier/funcionFConvolucion}}
 %	\subfigure[Función g continua]{\inputtikz[width=80mm]{fourier/funcionGConvolucion}}
 %	\caption{Regularizar funciones}
 %\end{figure}
+
+(IMAGEN DE UNA F DISCONTINUA Y UNA G CONTINUA QUE REGULARIZA)
+
+
 
 ejemplo: filtro gaussiano. Las cosas pierden cambios bruscos. se convoluciona con una campana de gauss.
 
@@ -638,7 +640,7 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 			\inputtikz{fourier/imagen_en_bloques}
 		\end{center}
 
-		La imagen $N \times M$ se divide en bloques $8 \times 8$. Cada uno de ellos se puede interpretar como una función:
+		La imagen $N \times M$ se divide en bloques $8 \times 8$\footnote{Si la imagen no tiene un número de píxeles múltiplo de 8×8, entonces nos \textit{inventamos} píxeles para que cuadre}. Cada uno de ellos se puede interpretar como una función:
 
 		$f:\{0,1,...7\} \times \{0,1,...7\} \rightarrow \mathbb{R}$ que asigna al píxel $P_{ij}$ del bloque, su color (R,Y,G,B $\in [0,255]$) (solo un número para nuestro caso de tonos de gris).
 
@@ -647,9 +649,205 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 
 
 
+		En principio, con 3 de estas funciones $f$ tenemos toda la información de los píxeles del bloque.
+
+		\textbf{Cosa técnica:} Al utilizar $Y C_B C_R$, si cambiamos el tono azul, no se aprecia diferencia. Además, para $C_B C_R$ se suelen despreciar entre la mitad y las $\frac{3}{4}$ partes de los píxeles de la imagen original.
+
+
+		\subsubsection{Aplicación de la DCT (transformada coseno discreta) en cada variable}
+
+			Sabíamos $f: \{ 0,1,...7 \} \rightarrow \mathbb{R}$
+
+			$$ f(m) = \sum\limits^{7}_{n=0} \alpha_n \cos \left(\frac{\pi n}{8} (m + 1/2) \right) \;\;\;\;\; \alpha_n = \text{cierta fórmula} $$
+
+			Si utilizamos esta fórmula en cada variable de F se tiene el desarrollo de Fourier
+
+			$$ F(k,l) = \sum\limits^{7}_{n = 0} \sum\limits^{7}_{m = 0} a_{nm} \cos \left( \frac{\pi n}{8} (k+1/2)  \right) \cos \left( \frac{\pi n}{8} (l+1/2)  \right) $$
+
+
+			En principio los $a_{nm}$ son 64 números que determinan $F$ pero más dificiles de almacenar explícitamente (son reales, no enteros)
+
+			\begin{framed}
+				\vspace{-1.5em}
+				\begin{example}
+
+					Si pensamos que -1 es negro y 1 es blanco, $\Phi_{nm}$ es una imagen 8x8 (en tonos de gris) y que $F$ corresponde también a tonos de gris.
+
+					$F = \sum \sum a_{nm} \Phi_{nm}$ es la descomposición de $F$ como superposición de imágenes básicas.
+
+					(IMAGEN POSTCRIP CHAMIZO)
+
+					$\Phi_{00} = 1 $ La que menos oscila.
+
+					$\Phi_{77} = $ la que más oscila.
+
+
+					\begin{obs} En la práctica los $a_{nm}$ no se calculan con mucha precisión. En GIMP en opciones avanzadas está el DCT method que permite controlar la precisión, pero no se aprecia ninguna diferencia en la imagen aunque si en el tamaño.
+					\end{obs}
+
+				\end{example}
+			\end{framed}
+
+
+		\subsubsection{Cuantificación (cuantización)}
+
+			Queremos conseguir elegir el grado de precisión de conversión de la imagen.
+
+			Si tenemos enteros de 1 byte de dos tipos: A y B. Los A son importantes y los B son la mitad de importantes. Podemos almacenarlos de la forma siguiente:
+			\begin{itemize}
+				\item A $\rightarrow$ tal como están
+				\item B $\rightarrow$ divididos entre dos (redondeando si es necesario)
+			\end{itemize}
+
+			$$ a_{n} \xrightarrow{almacenar} a_n : 8 \text{ bits } \xrightarrow{recuperar} a_n $$
+
+			$$ b_n \xrightarrow{almacenar} \left[ \frac{b_{n} + 1}{2} \right] : 7 \text{bits} \xrightarrow{recuperar} 2 \left[ \frac{b_n+1}{2} \right] \approx b_n \text{con imprecisión de 1} $$
+
+
+			En general:
+
+			$$ b \rightarrow \left[ \frac{b}{n} + \frac{1}{2} \right] \rightarrow n * \text{valor almacenado} = b \text{ con imprecisión comparable a n} $$
+
+			$\left[ \frac{b}{n} + \frac{1}{2} \right]$ es el entero más cercano a $\frac{b}{n}$
+
+			valor almacenado solo toma valores múltiplos de n
+
+			n mayor $\rightarrow$ menos números posibles que almacenar pero menos precisión
+
+
+			Con experimentos se estudia la sensibilidad media del ojo humano a cada $\Phi_{nm}$. Dependiendo de ello se crea una matriz de cuantificación. La usada generalmente para el canal Y es:
+
+
+			$$ C = \left(\begin{matrix}
+			16 & 11 & & & \\
+			12 \\
+			& & & 120 & 101 \\
+			& & & 103 & 99 \\
+			\end{matrix}\right)
+			$$
+
+			Donde $C_{ij} = $ sensibilidad a distinguir $\phi_{ij}$
+			\begin{itemize}
+				\item $C_{ij}$ pequeño $\rightarrow$ más sensibilidad
+				\item $C_{ij}$ grande $\rightarrow$ menos sensibilidad
+			\end{itemize}
+
+			Cada $C_{ij}$ se usa para llevar a cabo una cuantificación de $a_{ij}$.
+
+			Hay otra matriz para $C_B$ y $C_R$
+
+			\begin{framed}
+				En resumen
+
+				$$ F \xrightarrow{DCT} \{ a_{nm} \}^{7}_{n,m = 0} \xrightarrow{cuantificación} \left\{ \left[ \frac{a_{nm}}{C_{nm}} + \frac{1}{2} \right] \right\}^{7}_{n,m = 0} $$
+
+				Donde $\left\{ \left[ \frac{a_{nm}}{C_{nm}} + \frac{1}{2} \right] \right\}^{7}_{n,m = 0}$ es el entero más cercano a $\frac{a_{nm}}{C_{nm}}$
+			\end{framed}
 
 
 
 
 
 
+
+% %  _____________________________________
+% % < Animo con la clase de hoy >
+% %  -------------------------------------
+% %         \   ^__^
+% %          \  (oo)\_______
+% %             (__)\       )\/\
+% %                 ||----w |
+% %                 ||     ||
+% % 
+% %  _____________________________________
+% % < Animo con la clase de hoy >
+% %  -------------------------------------
+% %         \   ^__^
+% %          \  (oo)\_______
+% %             (__)\       )\/\
+% %                 ||----w |
+% %                 ||     ||
+% % 
+% %  _____________________________________
+% % < Animo con la clase de hoy >
+% %  -------------------------------------
+% %         \   ^__^
+% %          \  (oo)\_______
+% %             (__)\       )\/\
+% %                 ||----w |
+% %                 ||     ||
+% % 
+% %  _____________________________________
+% % < Animo con la clase de hoy >
+% %  -------------------------------------
+% %         \   ^__^
+% %          \  (oo)\_______
+% %             (__)\       )\/\
+% %                 ||----w |
+% %                 ||     ||
+% % 
+% %  _____________________________________
+% % < Animo con la clase de hoy >
+% %  -------------------------------------
+% %         \   ^__^
+% %          \  (oo)\_______
+% %             (__)\       )\/\
+% %                 ||----w |
+% %                 ||     ||
+% % 
+
+Entonces vemos que partiendo de F, tenemos información de 64 bytes, y al hacer $\{\lambda_{nm}\}^7_{m.n=0}$ también tenemos 64 bytes.
+
+¿Qué hemos ganado?
+
+Muchos de los $\lambda_{nm}$ son nulos.
+La mayor parte de los bloques $8x8$ no presentan variaciones abruptas. $\implies$ los coeficientes de Fourier decaen rápido.
+
+Entonces los $a_{nm}$ suelen ser pequeños excepto si $0 \leq n$ , $m \leq 1$ o al menos si $0 \leq n$ , $m \leq$ cte pequeña
+
+$\implies$ Los $\lambda_{nm}$ correspondientes son nulos típicamente.
+
+La colección de los $\lambda_{nm}$ corresondientes a todos los bloques está formada mayoritariamente por ceros.
+
+\begin{example}
+	Una imagen con un  $90\%$ de ceros se reconoce bien. Se nota que no es de calidad pero bueno.
+\end{example}
+
+Además, por la cuantificación, típicamente los números pequeños están muy repetidos.
+
+\subsubsection{Compresión}
+Se aplica \textbf{compresión Huffman} (típicamente) a los $\lambda_{nm}$
+
+La compresión normalmente consiste en, en vez de guardar en un fichero todos los ceros que hay, cada vez que vea un cero lo guardo y seguidamente guardo el número de veces que se repite , hasta que aparezca un 1. Se gana mucho ya que normalmente solo uno de cada 100 números es un 1.
+
+La \textbf{compresión de Huffman} no es exactaente esto, lo que hace es analizar el fichero , ver qué simbolos se repiten más y les asigna códigos para comprimirlos, de manera que optimiza la compresión.
+
+Esto se contará mejor en el próximo capítulo.
+
+
+El resultado de todo esto es el fichero \texttt{.jpg}\\\\
+
+
+
+
+	\textbf{¿Cómo descodificar un  fichero \texttt{.jpg}?}
+	
+	Se descomprime el fichero. En la cabecera está toda la información general ( p.ej: la matriz de cuantificación)
+	
+	Multiplica los $\lambda_{nm}$ por los $C_{nm}$
+	
+	$$\lambda_{nm} \rightarrow C_{nm}\cdot \lambda_{nm} \approx a_{nm} \rightarrow F = \sum \sum a_{nm} \cdot \Phi_{nm}$$
+	
+	que reconstruye cada bloque.
+	
+\subsection{Aproximación de funciones}
+
+Buscamos una manera de enseñarle a un ordenador o una calculadora cómo calcular funciones "complicadas"( seno, coseno, exponencial...).
+
+
+Tomamos $ +,-, \cdot \text{ y } \div$ como operaciones básicas. $\implies$ Evaluar polinomios es fácil.
+
+¿Es posible aproximar muy bien funciones complicadas por polinomios con pocas operaciones?
+
+
+Para esto Taylor no sirve ya que sirve muy bien alrededor de un punto, pero cuando nos salimos de ahi no funciona bien. 
