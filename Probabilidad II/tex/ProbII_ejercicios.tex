@@ -2040,25 +2040,15 @@ Ahora vamos a ver razonadamente si $X_n$ converge a Y en $L^1$. Por definición 
 X_n \stackrel{L_1 (n\rightarrow \infty)}{\rightarrow} Y \Leftrightarrow \norm{X_n -Y}_1  \rightarrow 0 \Leftrightarrow \int{\abs{X_n -Y}dP} \rightarrow 0 \Leftrightarrow \int{\abs{\mathbb{E}(Y|\mathcal{A}_n) -Y}dP} \rightarrow 0
 \]
 
-\textcolor{red}{Desde aqui hasta el final del ejercicio trato de demostrar que converge en $L^1$ y tampoco lo consigo}
 
-Pero por la segunda propiedad de la definición de esperanza condicionada ($\forall B \in \algb{B}$, $\int_{B}\mathbb{E}(X|\algb{B})dP=\int_{B}XdP$) tenemos que:
-
+Y tenemos que:
 \[
-\int \mathbb{E}(\abs{Y}|\mathcal{A}_n) dP = \int \abs{Y} dP  \Leftrightarrow \int \mathbb{E}(\abs{Y}|\mathcal{A}_n) - \abs{Y} dP = 0 
+\int \abs{\mathbb{E}(Y|\algb{A}_n) - Y}dP \stackrel{n \rightarrow \infty}{\rightarrow} \int \abs{\mathbb{E}(Y|\algb{A}) - Y}dP = 0
 \]
 
+Esto se cumple porque Y es $\algb{A}$-medible y se cumple que $\mathbb{E}(Y|\algb{A}) = Y$. 
 
 
-Y concluimos:
-\[
-0 = \int \mathbb{E}(\abs{Y}|\mathcal{A}_n) - \abs{Y} dP \geq \int \abs{\mathbb{E}(Y|\mathcal{A}_n)} - \abs{Y} dP \geq \abs{\int \mathbb{E}(Y|\mathcal{A}_n) dP} -
-\]
-
-Y concluimos:
-\[
-0 = \abs{\int \mathbb{E}(Y|\mathcal{A}_n) - Y dP} \leq \int \abs{\mathbb{E}(Y|\mathcal{A}_n) - Y} dP \geq 0
-\]
 
 
 
@@ -2090,44 +2080,37 @@ Aplicamos 1) sobre $X_n$ en el primer paso, 2) en el tercero (combinado con que 
 \]
 \end{expla}
 
-\textcolor{red}{Desde aqui hasta lo proximo en rojo quiero demostrar que $\mathbb{E}(X_i)\mathbb{E}(X_j)=\mathbb{E}(X_i X_j)$, que es lo que uso al final}
 
 Por tanto, dado $X_j$ y $X_k$ con j,k cualesquiera, tenemos que:
 
-$$\mathbb{E}(X_j)=\mathbb{E}(X_k) \Leftrightarrow \mathbb{E}(X_j)\cdot \mathbb{E}(X_k)= \mathbb{E}(X_j)^2 = \left(\int X_j \right)^2$$
+$$\mathbb{E}(X_j)=\mathbb{E}(X_k) \Leftrightarrow \mathbb{E}(X_j)- \mathbb{E}(X_k)=0 \Leftrightarrow \int X_j - \int X_k = 0 \Leftrightarrow \int X_j - X_k =0 \Leftrightarrow \mathbb{E}(X_j - X_k) = 0$$
 
-Y por Jensen (o por definición de varianza) podemos poner un '$\leq$' y tenemos que:
-\[
-\mathbb{E}(X_j)\cdot \mathbb{E}(X_k) = \mathbb{E}(X_j)^2 = \left(\int X_j\right)^2 \leq \int X_j^2 = \mathbb{E}(X_j^2)
-\]
+Para k<j, sabemos que por ser X una martingala $\algb{A}_k \subset \algb{A}_j$ y que $X_k$ es $\algb{A}_k$-medible y por tanto también $\algb{A}_j$-medible. Entonces para $j\neq k$, $Y_k = X_k - X_{k-1}$ es también  $\algb{A}_j$-medible por ser resta de funciones  $\algb{A}_j$-medibles.
 
-% = \mathbb{E}(X_j\cdot X_k) = \int X_j \cdot X_k
+Dicho esto, podemos aplicar que: $\mathbb{E}(Y_j | \algb{A}_j) = Y_j$ y que $\mathbb{E}(Y_k | \algb{A}_j) = Y_k$ (solo cierto si $Y_k$ es $\algb{A}_j$-medible). 
 
-Idénticamente:
-\[
-\mathbb{E}(X_j)\cdot \mathbb{E}(X_k) = \mathbb{E}(X_k)^2 = \left(\int X_k\right)^2 \leq \int X_k^2 = \mathbb{E}(X_k^2)
-\]
+También aplicamos la propiedad 6 de esperanzas condicionadas:
+Si X es $\algb{B}$-medible, entonces $\mathbb{E}(XY|\algb{B}) = X\mathbb{E}(Y|\algb{B})$, suponiendo que $XY,Y \in L^1$.
 
-Sumamos:
-\[
-\mathbb{E}(X_j)^2 + \mathbb{E}(X_k)^2 \leq \int X_j^2 + \int X_k^2
-\]
-
-\textcolor{red}{... y no consigo sacarlo }
-
-% = \mathbb{E}(X_j\cdot X_k) = \int X_j \cdot X_k
-Aplicado a nuestro problema:
-\[
-\int Y_j \cdot Y_k = \int (X_j -X_{j-1})(X_k-X_{k-1}) = \int X_jX_k -X_jX_{k-1}-X_{j-1}X_k + X_{k-1}X_{j-1} = 
-\]
+Nos queda que:
 
 \[
-= \int X_jX_k -\int X_jX_{k-1}- \int X_{j-1}X_k + \int X_{k-1}X_{j-1} = 
+\mathbb{E}(Y_j Y_k) = \mathbb{E}(\mathbb{E}(Y_j|\algb{A}_j) Y_k) = \mathbb{E}(\mathbb{E}(X_j-X_{j-1}|\algb{A}_j) Y_k) = Y_k\mathbb{E}(\mathbb{E}(X_j-X_{j-1}|\algb{A}_j)) = 
+\]
+\[
+= \mathbb{E}(X_k-X_{k-1}|\algb{A}_j) \mathbb{E}(\mathbb{E}(X_j-X_{j-1}|\algb{A}_j)) = 0
 \]
 
-\[ 
-= \int X_j^2 - \int X_j^2 - \int X_k^2 + \int X_k^2 = 0
+Ya que por definición de esperanza condicionada de $\mathbb{E}(X_k-X_{k-1}|\algb{A}_j)$, tenemos que:
+\[
+\int_{\Omega} \mathbb{E}(X_k-X_{k-1}|\algb{A}_j) = \int_{\Omega} X_k-X_{k-1} = \mathbb{E}(X_k-X_{k-1}) = 0
 \]
+
+
+
+
+
+
 
 
 
@@ -2144,8 +2127,28 @@ $\|\sum_1^n u_i\|^2 = \sum_1^n \| u_i\|^2$, donde  $\| w\|^2:= (w,w)$.
 \solution
 
 \begin{expla}
-
+Lo resolvemos por inducción.
 \end{expla}
+
+\begin{itemize}
+\item Paso base: n=2, tenemos que $u \bot v \Rightarrow <u,v>=0$.
+
+\[
+\norm{u+v}^2=<u+v,u+v>=<u,u>+<u,v>+<v,u>+<v,v> = \norm{u}^2 + \norm{v}^2
+\]
+
+\item Paso inductivo: Supongo que $\norm{\sum_{i=1}^n u_i}^2 = \sum_{i=1}^{n} \norm{u_i}^2 $ con $u_i \bot u_j$ para $i\neq j$, por tanto $<u_i,u_j>=0$ para $i \neq j$.
+
+\[
+\norm{\sum_{i=1}^{n+1}}^2 = <\sum_{i=1}^{n+1} u_i, \sum_{i=1}^{n+1} u_i> = <u_{n+1}+\sum_{i=1}^n u_i,u_{n+1}+\sum_{i=1}^n u_i> =
+\]
+\[
+= <u_{n+1},u_{n+1}>+<u_{n+1},\sum_{i=1}^n u_i> + <\sum_{i=1}^n u_i, u_{n+1}>+<\sum_{i=1}^n u_i,\sum_{i=1}^n u_i>=
+\]
+\[
+=\norm{u_{n+1}}^2 + \norm{\sum_{i=1}^{n} u_i} \Rightarrow \|\sum_1^n u_i\|^2 = \sum_1^n \| u_i\|^2
+\]
+\end{itemize}
 
 
 
