@@ -715,7 +715,7 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 			n mayor $\rightarrow$ menos números posibles que almacenar pero menos precisión
 
 
-			Con experimentos se estudia la sensibilidad media del ojo humano a cada $\Phi_{nm}$. Dependiendo de ello se crea una matriz de cuantificación. La usada generalmente es:
+			Con experimentos se estudia la sensibilidad media del ojo humano a cada $\Phi_{nm}$. Dependiendo de ello se crea una matriz de cuantificación. La usada generalmente para el canal Y es:
 
 
 			$$ C = \left(\begin{matrix}
@@ -734,6 +734,7 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 
 			Cada $C_{ij}$ se usa para llevar a cabo una cuantificación de $a_{ij}$.
 
+			Hay otra matriz para $C_B$ y $C_R$
 
 			\begin{framed}
 				En resumen
@@ -794,3 +795,59 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 % %                 ||----w |
 % %                 ||     ||
 % % 
+
+Entonces vemos que partiendo de F, tenemos información de 64 bytes, y al hacer $\{\lambda_{nm}\}^7_{m.n=0}$ también tenemos 64 bytes.
+
+¿Qué hemos ganado?
+
+Muchos de los $\lambda_{nm}$ son nulos.
+La mayor parte de los bloques $8x8$ no presentan variaciones abruptas. $\implies$ los coeficientes de Fourier decaen rápido.
+
+Entonces los $a_{nm}$ suelen ser pequeños excepto si $0 \leq n$ , $m \leq 1$ o al menos si $0 \leq n$ , $m \leq$ cte pequeña
+
+$\implies$ Los $\lambda_{nm}$ correspondientes son nulos típicamente.
+
+La colección de los $\lambda_{nm}$ corresondientes a todos los bloques está formada mayoritariamente por ceros.
+
+\begin{example}
+	Una imagen con un  $90\%$ de ceros se reconoce bien. Se nota que no es de calidad pero bueno.
+\end{example}
+
+Además, por la cuantificación, típicamente los números pequeños están muy repetidos.
+
+\subsubsection{Compresión}
+Se aplica \textbf{compresión Huffman} (típicamente) a los $\lambda_{nm}$
+
+La compresión normalmente consiste en, en vez de guardar en un fichero todos los ceros que hay, cada vez que vea un cero lo guardo y seguidamente guardo el número de veces que se repite , hasta que aparezca un 1. Se gana mucho ya que normalmente solo uno de cada 100 números es un 1.
+
+La \textbf{compresión de Huffman} no es exactaente esto, lo que hace es analizar el fichero , ver qué simbolos se repiten más y les asigna códigos para comprimirlos, de manera que optimiza la compresión.
+
+Esto se contará mejor en el próximo capítulo.
+
+
+El resultado de todo esto es el fichero \texttt{.jpg}\\\\
+
+
+
+
+	\textbf{¿Cómo descodificar un  fichero \texttt{.jpg}?}
+	
+	Se descomprime el fichero. En la cabecera está toda la información general ( p.ej: la matriz de cuantificación)
+	
+	Multiplica los $\lambda_{nm}$ por los $C_{nm}$
+	
+	$$\lambda_{nm} \rightarrow C_{nm}\cdot \lambda_{nm} \approx a_{nm} \rightarrow F = \sum \sum a_{nm} \cdot \Phi_{nm}$$
+	
+	que reconstruye cada bloque.
+	
+\subsection{Aproximación de funciones}
+
+Buscamos una manera de enseñarle a un ordenador o una calculadora cómo calcular funciones "complicadas"( seno, coseno, exponencial...).
+
+
+Tomamos $ +,-, \cdot \text{ y } \div$ como operaciones básicas. $\implies$ Evaluar polinomios es fácil.
+
+¿Es posible aproximar muy bien funciones complicadas por polinomios con pocas operaciones?
+
+
+Para esto Taylor no sirve ya que sirve muy bien alrededor de un punto, pero cuando nos salimos de ahi no funciona bien. 
