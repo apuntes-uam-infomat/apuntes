@@ -59,13 +59,14 @@ for pkg in $(ls "$packages_dir"/*.{sty,cls}); do
 	fi
 
 	# Si hay diferencias entre el paquete local y el instalado, a reinstalar.
-	if ! diff "$system_path" "$pkg"; then
+	if ! diff "$system_path" "$pkg" &> /dev/null ; then
 		packages_changed=true
 		break
 	fi
 done
 
 if $packages_changed; then
+	echo "Instalando paquetes..."
 	packages_install
 fi
 
