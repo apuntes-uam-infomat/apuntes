@@ -745,109 +745,158 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 			\end{framed}
 
 
+			Entonces vemos que partiendo de F, tenemos información de 64 bytes, y al hacer $\{\lambda_{nm}\}^7_{m.n=0}$ también tenemos 64 bytes.
+
+			¿Qué hemos ganado?
+
+			Muchos de los $\lambda_{nm}$ son nulos.
+			La mayor parte de los bloques $8x8$ no presentan variaciones abruptas. $\implies$ los coeficientes de Fourier decaen rápido.
+
+			Entonces los $a_{nm}$ suelen ser pequeños excepto si $0 \leq n$ , $m \leq 1$ o al menos si $0 \leq n$ , $m \leq$ cte pequeña
+
+			$\implies$ Los $\lambda_{nm}$ correspondientes son nulos típicamente.
+
+			La colección de los $\lambda_{nm}$ corresondientes a todos los bloques está formada mayoritariamente por ceros.
+
+			\begin{example}
+				Una imagen con un  $90\%$ de ceros se reconoce bien. Se nota que no es de calidad pero bueno.
+			\end{example}
+
+			Además, por la cuantificación, típicamente los números pequeños están muy repetidos.
+
+		\subsubsection{Compresión}
+			Se aplica \textbf{compresión Huffman} (típicamente) a los $\lambda_{nm}$
+
+			La compresión normalmente consiste en, en vez de guardar en un fichero todos los ceros que hay, cada vez que vea un cero lo guardo y seguidamente guardo el número de veces que se repite , hasta que aparezca un 1. Se gana mucho ya que normalmente solo uno de cada 100 números es un 1.
+
+			La \textbf{compresión de Huffman} no es exactaente esto, lo que hace es analizar el fichero , ver qué simbolos se repiten más y les asigna códigos para comprimirlos, de manera que optimiza la compresión.
+
+			Esto se contará mejor en el próximo capítulo.
 
 
+			El resultado de todo esto es el fichero \texttt{.jpg}\\\\
 
 
-
-% %  _____________________________________
-% % < Animo con la clase de hoy >
-% %  -------------------------------------
-% %         \   ^__^
-% %          \  (oo)\_______
-% %             (__)\       )\/\
-% %                 ||----w |
-% %                 ||     ||
-% % 
-% %  _____________________________________
-% % < Animo con la clase de hoy >
-% %  -------------------------------------
-% %         \   ^__^
-% %          \  (oo)\_______
-% %             (__)\       )\/\
-% %                 ||----w |
-% %                 ||     ||
-% % 
-% %  _____________________________________
-% % < Animo con la clase de hoy >
-% %  -------------------------------------
-% %         \   ^__^
-% %          \  (oo)\_______
-% %             (__)\       )\/\
-% %                 ||----w |
-% %                 ||     ||
-% % 
-% %  _____________________________________
-% % < Animo con la clase de hoy >
-% %  -------------------------------------
-% %         \   ^__^
-% %          \  (oo)\_______
-% %             (__)\       )\/\
-% %                 ||----w |
-% %                 ||     ||
-% % 
-% %  _____________________________________
-% % < Animo con la clase de hoy >
-% %  -------------------------------------
-% %         \   ^__^
-% %          \  (oo)\_______
-% %             (__)\       )\/\
-% %                 ||----w |
-% %                 ||     ||
-% % 
-
-Entonces vemos que partiendo de F, tenemos información de 64 bytes, y al hacer $\{\lambda_{nm}\}^7_{m.n=0}$ también tenemos 64 bytes.
-
-¿Qué hemos ganado?
-
-Muchos de los $\lambda_{nm}$ son nulos.
-La mayor parte de los bloques $8x8$ no presentan variaciones abruptas. $\implies$ los coeficientes de Fourier decaen rápido.
-
-Entonces los $a_{nm}$ suelen ser pequeños excepto si $0 \leq n$ , $m \leq 1$ o al menos si $0 \leq n$ , $m \leq$ cte pequeña
-
-$\implies$ Los $\lambda_{nm}$ correspondientes son nulos típicamente.
-
-La colección de los $\lambda_{nm}$ corresondientes a todos los bloques está formada mayoritariamente por ceros.
-
-\begin{example}
-	Una imagen con un  $90\%$ de ceros se reconoce bien. Se nota que no es de calidad pero bueno.
-\end{example}
-
-Además, por la cuantificación, típicamente los números pequeños están muy repetidos.
-
-\subsubsection{Compresión}
-Se aplica \textbf{compresión Huffman} (típicamente) a los $\lambda_{nm}$
-
-La compresión normalmente consiste en, en vez de guardar en un fichero todos los ceros que hay, cada vez que vea un cero lo guardo y seguidamente guardo el número de veces que se repite , hasta que aparezca un 1. Se gana mucho ya que normalmente solo uno de cada 100 números es un 1.
-
-La \textbf{compresión de Huffman} no es exactaente esto, lo que hace es analizar el fichero , ver qué simbolos se repiten más y les asigna códigos para comprimirlos, de manera que optimiza la compresión.
-
-Esto se contará mejor en el próximo capítulo.
-
-
-El resultado de todo esto es el fichero \texttt{.jpg}\\\\
-
-
-
-
-	\textbf{¿Cómo descodificar un  fichero \texttt{.jpg}?}
+			\textbf{¿Cómo descodificar un  fichero \texttt{.jpg}?}
+			
+			Se descomprime el fichero. En la cabecera está toda la información general ( p.ej: la matriz de cuantificación)
+			
+			Multiplica los $\lambda_{nm}$ por los $C_{nm}$
+			
+			$$\lambda_{nm} \rightarrow C_{nm}\cdot \lambda_{nm} \approx a_{nm} \rightarrow F = \sum \sum a_{nm} \cdot \Phi_{nm}$$
+			
+			que reconstruye cada bloque.
 	
-	Se descomprime el fichero. En la cabecera está toda la información general ( p.ej: la matriz de cuantificación)
-	
-	Multiplica los $\lambda_{nm}$ por los $C_{nm}$
-	
-	$$\lambda_{nm} \rightarrow C_{nm}\cdot \lambda_{nm} \approx a_{nm} \rightarrow F = \sum \sum a_{nm} \cdot \Phi_{nm}$$
-	
-	que reconstruye cada bloque.
-	
-\subsection{Aproximación de funciones}
+	\subsection{Aproximación de funciones}
 
-Buscamos una manera de enseñarle a un ordenador o una calculadora cómo calcular funciones "complicadas"( seno, coseno, exponencial...).
+		Buscamos una manera de enseñarle a un ordenador o una calculadora cómo calcular funciones ``complicadas'' ( seno, coseno, exponencial...).
 
 
-Tomamos $ +,-, \cdot \text{ y } \div$ como operaciones básicas. $\implies$ Evaluar polinomios es fácil.
+		Tomamos $ +,-, \cdot \text{ y } \div$ como operaciones básicas. $\implies$ Evaluar polinomios es fácil.
 
-¿Es posible aproximar muy bien funciones complicadas por polinomios con pocas operaciones?
+		¿Es posible aproximar muy bien funciones complicadas por polinomios con pocas operaciones?
 
 
-Para esto Taylor no sirve ya que sirve muy bien alrededor de un punto, pero cuando nos salimos de ahi no funciona bien. 
+		Para esto Taylor no sirve ya que sirve muy bien alrededor de un punto, pero cuando nos salimos de ahi no funciona bien.
+
+
+
+
+		La situación típica es que sólo necesitemos aproximar una función en un intervalo.
+		$f(x) = \sin x \quad I= [0, \pi/2] \quad x > \pi/2 \rightarrow x - 2\pi k \in [0, 2\pi]$ y después usar $\sin (\pi - x) = \sin (x)$.
+
+		$f(x) = \log x \quad I= [1, 2] \quad x > 2 \rightarrow \log (x) = \log(x / 2^n) + n \log 2$.
+
+		La mayoría de operaciones realizadas por este método (dividir entre 2, elevar 2 a n, ...) son practicamente inmediatas usando la representación binaria del número.
+
+
+
+		Con una transformación lineal podemos suponer que el intervalo es $I = [-1,1]$. Queremos aproximar $f: I = [-1,1] \rightarrow \mathbb{R}$ y para ello, desarrollamos por Fourier (pensándolo teoricamente ya que hay infinitos coeficientes), $g(x) = f(\cos(2 \pi x))$.
+
+		$$f(\cos (2 \pi x)) = g(x) = \sum\limits^{\infty}_{n = -\infty} \hat{f}(n) e(nx) = a_0 + 2 \sum\limits^{\infty}_{n=1} a_n \cos(2 \pi nx)$$
+
+		\begin{obs}
+			$g$ par $\Rightarrow \hat{f}$ reales. Por lo tanto quitamos la parte imaginaria.
+		\end{obs}
+
+		Escribimos el resultado superior tan ``raro'' para poder escribir una formula para todos los coeficientes:
+
+		$$ a_n = \int^{1}_0 g(x) \cos (1 \pi n x) dx $$
+
+		Tomando en el desarrollo $x \rightarrow \frac{1}{2 \pi} \text{arccos} x$ :
+
+		\frame{$f(x) = a_0 + 2 \sum\limits^{\infty}_{n = 1} a_n T_n (x)$} donde 
+
+		\begin{op}{Polinomios de Chebyshev}
+			T_n (x) = \cos (n \text{arccos} x)
+		\end{op}
+
+		\begin{obs}
+			$T_n (x)$ es un polinomio para $n \geq 0$, $x \in [-1,1]$.
+		\end{obs}
+
+		\begin{example}
+			$T_0 (x) = 1$
+
+			$T_1 (x) = \cos (\text{arccos} x) = x$
+
+			$T_2 (x) = \cos (2 \text{arccos} x) = 2 (\cos (\text{arccos} x))^2 - 1 = 2x^2 - 1$
+
+			$T_3 (x) = 4x^3 - 3x$
+		\end{example}
+
+
+		Usando las fórmulas de $\cos ( \alpha \pm \beta)$ se puede deducir que:
+
+		$$T_{n+1} (x) = 2 x T_n (x) - T_{n-1} (x) \quad n \geq 1$$
+
+		Como $T_0$ y $T_1$ son polinomios $\Rightarrow$ Todos los $T_n$ son polinomios.
+
+		\begin{obs} 
+			Por lo tanto si se busca $T_n (x_0)$ basta calcular $T_0 (x_0)$ y $T_1 (x_0)$ y usar esta fórmula recurrente.
+		\end{obs}
+
+		$$
+		\begin{aligned}
+		f \text{ muy regular} & \Rightarrow g(x) = f(\cos (2 \pi x))\text{ es muy regular y es 1-periódica.} \\
+		& \Rightarrow \text{sus coeficientes de Fourier tienden rápido a cero} \\
+		& \Rightarrow a_n \rightarrow 0 \text{ muy rápido} \\
+		& \Rightarrow f(x) \equiv a_0 + 2 \sum\limits^{N}_{n=1} a_n T_n (x) \text{ es buena aproximación.} \\
+		\end{aligned}
+		$$
+
+		\begin{obs}
+			Los coeficientes $a_n$ pueden ser precalculados y almacenados en memoria.
+
+			$$ a_n = \int^{1}_{0} g(x) \cos (2 \pi n x) dx = - \int^{1}_{0} g'(x) \frac{\sin (2 \pi n x)}{2 \pi n} dx $$
+
+			También se puded determinar el N de antemano dependiendo de la precisión exigida.
+		\end{obs}
+
+
+		\begin{example}{¿Cómo aproximar $\sin (x)$?}
+
+			$$f(x) = \sin(\frac{\pi}{2} x) $$
+
+			Aproximando $f$ en $[-1,1]$ deducimos $\sin$ en $\mathbb{R}$. Y por la simetría impar de $f$ se puede ver que $a_{2k} = 0$.
+
+			$$\sin (\frac{\pi}{2} x) \equiv 0.5668...$$
+
+			$x = T_1 (x) - 0.068 ...$
+
+			$4x^3 - 3x = T_3 (x) + 0.0022 ...$
+
+			$16x^5 - 20x^3 + 5x = T_5(x) ... $
+
+			error absoluto máximo $< 7 * 10^{-5}$
+
+			Con 8 coeficientes no nulos ya se obtiene el error necesario para la doble precisión ($ < 10^{-16}$ por el epsilon máquina).
+
+
+		\end{example}
+
+
+
+
+
+
