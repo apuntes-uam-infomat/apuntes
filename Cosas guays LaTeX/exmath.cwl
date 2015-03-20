@@ -217,3 +217,5 @@
 \eqreason{arg0}#m
 \projp#m
 \lie{arg0}#m
+\tgs#m
+\tgsd#m
