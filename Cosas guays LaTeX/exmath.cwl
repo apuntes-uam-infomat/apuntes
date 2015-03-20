@@ -2,6 +2,7 @@
 \do{arg0}#m
 \pbreak#m
 \mop{operacion}#m
+\imgref{referencia}#m
 \dimplies#m
 \nimplies#m
 \Or#m
