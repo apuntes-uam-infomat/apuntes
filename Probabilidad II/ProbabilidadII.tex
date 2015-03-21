@@ -922,7 +922,7 @@ Sabemos que podemos descomponer $X=X_+ - X_-$ y $\abs{X}=X_++X_-$, por tanto, ap
 \end{proof} 
 \item $\mathbb{E}(*|\algb{B})$ es una contracción en $L^1(\Omega, \algb{M},P)$, es decir, $\forall X \in L^1(\algb{M})$ se cumple que $\norm{\mathbb{E}(X|\algb{B})}_1 \leq \norm{X}_1$
 
-\textcolor{red}{Se puede extender a $L^n$?}
+\obs Se demuestra que esto también se cumple para $L^p$ con $p>1$ más adelante.
 
 \begin{proof}
 
@@ -981,7 +981,9 @@ Por tanto:
 = \lim_{n \rightarrow \infty} \mathbb{E}\abs{\mathbb{E}(Y_n|\algb{B})} = \lim_{n \rightarrow \infty} \mathbb{E}(Y_n) \text{ y por el TCD = }  \mathbb{E}(\lim_{n \rightarrow \infty}Y_n)=0
 \]
 \end{proof}
-\item Si X es $\algb{B}$-medible, entonces $\mathbb{E}(XY|\algb{B}) = X\mathbb{E}(Y|\algb{B})$, suponiendo que $XY,Y \in L^1$. \textcolor{red}{¿Por qué la restricción de $L^1$}
+\item Si X es $\algb{B}$-medible, entonces $\mathbb{E}(XY|\algb{B}) = X\mathbb{E}(Y|\algb{B})$, suponiendo que $XY,Y \in L^1$. 
+
+\obs Como esta definido para funciones en $L^1$, también funciona para funciones en $L^p$ para $p>1$, ya que $L^p \subset L^1$.
 \begin{proof}
 Empezamos suponiendo que $X=\ind_B$ con $B \in \algb{B}$. Entonces $\forall C \in \algb{B}$ se cumple que:
 \[
@@ -1133,6 +1135,8 @@ Conjunto de trucos, y cosas que se pueden usar en los problemas:
 \item Sea $0<r\leq s<\infty$, entonces $L^s \subset L^r$, y esto implica que:
 \begin{enumerate}
 \item  $X \in L^s \Rightarrow X \in L^r$
+\item Sea X e Y, si $X \stackrel{L^s}{\rightarrow} Y$, entonces $X \stackrel{L^r}{\rightarrow} Y$
+\item Si algo esta definido para funciones el $L^r$ entonces también esta definido para funciones en $L^s$.
 \end{enumerate}
 
 \item Desigualdad de Young (ver ejercicio 3.2): para $t, u \ge 0$, y $p,q > 1$ tales que $1/p + 1/q =1$, tenemos $tu \le t^p/ p + u^q/ q$
@@ -1278,11 +1282,28 @@ $$
 \mathbb{E}(X_2|\algb{A}_1)(w) = \mathbb{E}(X_1|\algb{A}_1)(w) = X_1(w) \text{ por ser } X_2 \text{ } \algb{A}_n\text{-medible}
 $$
 
-Del mismo modo $\mathbb{E}(X_{n+1}|\algb{A}_n)=X_n$
+Se cumple que $\algb{A}_n = \sigma(X_1, X_2,...,X_n)$ es una $\salgb$ generada por una partición, de modo que: $\algb{A}_n=\sigma((0,\frac{1}{2}),[\frac{1}{2}, 1),(0,\frac{1}{4}),[\frac{1}{4}, 1), (0,\frac{1}{2^n}),[\frac{1}{2^n}, 1)) = \sigma((0,\frac{1}{2^n}), [\frac{1}{2^n}, \frac{2}{2^n}),...,[\frac{2^n -1}{2^n},1))$
 
+Y se puede aplicar la definición de esperanzas condicionadas a $\salgb$ generadas por particiones:
 
+\[
+\mathbb{E}(X_{n+1}|\algb{A}_n)(w)=\sum_{i=1}^{2^n}\left( \frac{1}{P(A_i)}\int X_{n+1}(w)dP(w)\right)\ind_{A_i(w)}
+\]
 
-\textcolor{red}{Y que?}
+Siendo $A_i$ el intervalo $(\frac{i-1}{2^n}, \frac{i}{2^n})$ y $X_{n+1}$ una variable aleatoria que vale $2^{n+1}$ en el intervalo $(0, \frac{1}{2^{n+1}})$ y 0 en el resto, tenemos que:
+
+$$
+\mathbb{E}(X_{n+1}|\algb{A}_n)(w)
+  \left\lbrace
+  \begin{array}{l}
+     \frac{2^{n+1}}{2}=2^n \text{ si } w \in (0,\frac{1}{2^n}) \\
+     0 \text{ si } w \in [\frac{1}{2^n}, 1) \\
+  \end{array}
+  \right. \text{   }
+$$
+
+Por tanto nos queda que: $\mathbb{E}(X_{n+1}|\algb{A}_n)=X_n$, y vemos que se cumple la propiedad 3 de las martingalas.
+
 \end{proof}
 
 Sin embargo X no es una martingala en $L^p$ para $p>1$:
@@ -1343,14 +1364,18 @@ Ya que $X \in L^1$
 
 Ahora vamos a ver el contraejemplo para la observación:
 \begin{proof}
-Sea X la martingala que hemos visto anteriormente, con $X_n=  2^n \ind_{(0, \frac{1}{2^n})}$, hemos visto que X pertenece a $L^1$. Y tenemos que $\lim_{n \rightarrow \infty} X_n = X_{\infty} = 0$ \textcolor{red}{No termino de ver muy bien por qué}.
+Sea X la martingala que hemos visto anteriormente, con $X_n=  2^n \ind_{(0, \frac{1}{2^n})}$, hemos visto que X pertenece a $L^1$. Y tenemos que $\lim_{n \rightarrow \infty} X_n = X_{\infty} = 0$.
+
+Breve nota de por qué ese es el límite: estamos calculando el límite puntual de las funciones $X_n$ y esta claro que si elijo un $\epsilon >0$, para todo x voy a encontrar un $N_{\epsilon x}$ tal que para todo $m \geq N_{\epsilon x}$, se cumple que $X_m(w)$ es 0. Por ejemplo para $x=\frac{1}{4}$, a partir de $X_2$, ya todas las funciones $X_{n>2}$ son 0, es decir $\lim_{n \rightarrow \infty} X(\frac{1}{4})=0$. Por tanto hay convergencia puntual, pero en este caso no la hay uniforme, ya que no para todo $\epsilon$, $X_n(w)<\epsilon$ para todos los w (siempre va a haber un intervalo pequeño en el origen que va a valer bastante, por ejemplo $X_n$ va a valer $2^n$ en el intervalo $(0, \frac{1}{2^n})$. 
 
 Ahora vamos a ver que  $X_n \stackrel{L^1}{\nrightarrow} X_{\infty}$ ya que se tiene que cumplir que $\int_{\Omega} \abs{X_n - X_{\infty}} \rightarrow 0$, y sin embargo:
 \[
-\int_{\Omega} \abs{X_n - X_{\infty}} = \int_{\Omega} \abs{X_n - 0} = \mathbb{E}(\abs{X_n}) = 1
+\lim_{n \rightarrow \infty} \int_{\Omega} \abs{X_n - X_{\infty}} = \lim_{n \rightarrow \infty} \int_{\Omega} \abs{X_n - 0} = \lim_{n \rightarrow \infty} \mathbb{E}(\abs{X_n}) = \lim_{n \rightarrow \infty} 1 = 1
 \]
 
-\textcolor{red}{escribir sto bien}
+Vemos que no podemos aplicar el TCM ni TCD y escribir: $\lim_{n \rightarrow \infty} \mathbb{E}(\abs{X_n}) =  \mathbb{E}(\abs{\lim_{n \rightarrow \infty} X_n}) = 0$, ya que $X_n$ no es una sucesión creciente ni existe una $g \in L^1$ tal que $\abs{X_n} \leq g$, y por tanto no cumple las condiciones de ninguno de los teoremas.
+
+\textcolor{red}{Preguntar si esto está bien razonado.}
 \end{proof}
 
 \begin{theorem}[Teorema de la convergencia de las martingalas de Doob en $L^p$ para p>1]
@@ -1359,9 +1384,10 @@ Sea $X=\{\{X_n\}_{n=1}^{\infty}, \{\algb{A}_n\}_{n=0}^{\infty}\}$ una martingala
 \begin{itemize}
 \item $X_{\infty}=\lim_{n \rightarrow \infty} X_n$ existe casi seguro.
 \item $X_n \stackrel{L^p}{\rightarrow} X_{\infty}$.
-\item si $Y \in L^p$ con $1 \leq p \leq \infty$, entonces: $X_n= \mathbb{E}(Y|\algb{A}_n)$ define una martingala.
-\item $X_{\infty}$ es $\algb{A}$-medible y $X_n=\mathbb{E}(X_{\infty}|\algb{A}_n)$ \textcolor{red}{caso concreto de lo de antes}
+
+\item $X_{\infty}$ es $\algb{A}$-medible y $X_n=\mathbb{E}(X_{\infty}|\algb{A}_n)$ 
 \end{itemize}
+\obs Si $Y \in L^p$ con $1 \leq p \leq \infty$, entonces: $X_n= \mathbb{E}(Y|\algb{A}_n)$ define una martingala. Lo cual es obvio ya que si $Y \in L^p$, la esperanza, que no es mas que una contracción de Y, también pertenecerá a $L^p$. Y \textcolor{red}{completar} 
 
 \end{theorem}
 
@@ -1369,20 +1395,38 @@ Sea $X=\{\{X_n\}_{n=1}^{\infty}, \{\algb{A}_n\}_{n=0}^{\infty}\}$ una martingala
 Sea X una martingala en $L^1$, si $X_n \rightarrow X_{\infty}$ en $L^1$, entonces $\mathbb{E}(X_{\infty}|\algb{A}_n)=X_n$.
 \end{theorem}
 \begin{proof}
-Tenemos dos funciones $\algb{A}_n$-medibles, basta probar que $\forall B \in \algb{A}_n$, se cumple que $\int_B X_n = \int_B \mathbb{E}(X_{\infty}|\algb{A}_n = \int_B X_{\infty})$.
+Tenemos dos funciones $\algb{A}_n$-medibles, basta probar que $\forall B \in \algb{A}_n$, se cumple que $\int_B X_n = \int_B \mathbb{E}(X_{\infty}|\algb{A}_n) = \int_B X_{\infty}$.
 
 \[
-X_n \stackrel{L^1}{\rightarrow} X_{\infty} \Leftrightarrow \lim_{n \rightarrow \infty} \norm{X_{\infty}-X_n}_1=0 \Leftrightarrow \lim_{n \rightarrow \infty} \int_{\Omega}\abs{X_{\infty}-X_n}dP \geq \lim_{n \rightarrow \infty} \int_B \abs{X_{\infty}-X_n}dP\geq
+X_n \stackrel{L^1}{\rightarrow} X_{\infty} \Leftrightarrow \lim_{n \rightarrow \infty} \norm{X_{\infty}-X_n}_1=0 \Leftrightarrow 0= \lim_{n \rightarrow \infty} \int_{\Omega}\abs{X_{\infty}-X_n}dP \geq \lim_{n \rightarrow \infty} \int_B \abs{X_{\infty}-X_n}dP\geq
 \]
+
 \[
 \geq \lim_{n \rightarrow \infty} \abs{\int_B X_{\infty}dP- \int_B X_n dP} \geq 0
 \]
 
-Luego:
+
+Por tanto nos queda que:
 \[
-\lim_{m \rightarrow \infty} \int_B X_{n+m}=\int_B X_{\infty}  \Rightarrow \mathbb{E}(X_{n+m}) = X_n
+\lim_{n \rightarrow \infty} \int_B X_n = \int_B X_{\infty}
 \]
-\textcolor{red}{no entiendo este ultimo paso}
+
+Que es lo mismo que decir que:
+\[
+\lim_{n \rightarrow \infty} \int_B X_n = \lim_{m \rightarrow \infty} \int_B X_{n+m} = \int_B X_{\infty}
+\]
+
+Por otro lado hemos visto que: $\mathbb{E}(X_{n+m}|\algb{B}) = X_n$ (ver ejercicio 6 de la hoja 4). Y esto implica (por definición de esperanza condicionada) que $\forall B \in \algb{B}$:
+\[
+\int_B \mathbb{E}(X_{n+m}|\algb{A}_n)=\int_B X_{n+m} = \int_B X_n 
+\]
+
+Aplicamos límites y  lo anterior tenemos lo que buscábamos:
+\[
+\lim_{m \rightarrow \infty}\int_B X_{n+m} = \lim_{m \rightarrow \infty}\int_B X_{n} \Leftrightarrow \int_B X_{\infty} = \int_B X_n
+\]
+
+
 \end{proof}
 
 \chapter{Teoremas para examen}
