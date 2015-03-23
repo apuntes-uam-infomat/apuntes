@@ -2039,8 +2039,6 @@ Básicamente estamos tomando una función cuyo desarrollo de Taylor tiene $a_i=0
 
 Técnicamente este resultado es algo más general que eso, pues es un resultado global mientras que el polinomio de Taylor es local.
 
-\section{Teorema de Liouville}
-
 \section{Teorema de Morera}
 
 \begin{theorem}
@@ -2147,6 +2145,79 @@ En este caso es más sencillo puesto que sabemos que la rama de la raíz será $
 
 \end{proof}
 
+
+\section{Teorema de Liouville}
+
+\begin{theorem}[Teorema de continuación única]
+Sea Ω un dominio en $\cplex$ y sean $f,g$ dos funciones holomorfas en Ω, si el conjunto de puntos donde ambas funciones coinciden tiene un punto límite (o de acumulación) en Ω, entonces ambas funciones son iguales en todo el dominio.
+
+En particular, si los ceros de $f$ tienen un punto de acumulación en Ω entonces $f=0$
+\end{theorem}
+
+\begin{theorem}[Teorema de Liouville]
+Si $f$ es una función entera acotada entonces $f$ es constante.
+\end{theorem}
+\begin{proof}
+Como $f$ es acotada, $|f(z)|\leq M \ \forall z \in \cplex$ y por la fórmula integral de Cauchy:
+\[f'(z)=\frac{1}{2πi}\int_{\partial B(z,r)} \frac{f(w)}{(w-z)^2}dw \implies |f'(z)|=\frac{1}{2πi}\int_{\partial B(z,r)} \frac{|f(w)|}{|w-z|^2}|dw| \leq \frac{M}{2πr^2} \int_{\partial B(z,r)} |dz| = \]
+\[= \frac{M}{2πr^2}2πr = \frac{M}{r} \to 0 \text{ cuando } r \to \infty\]
+
+Por tanto tenemos que $f'(z)=0 \ \forall z \in \cplex \implies f$ constante.
+\end{proof}
+
+
+\begin{theorem}[Teorema de Loiuville (General)]
+Si $f$ es entera y $|f(z)| < a |z|^m \ \forall |z|>b$ con $a,b,m>0$ y $m \in \nat$ entonces $f$ es un polinomio de grado menor o igual que $m$
+\end{theorem}
+
+\begin{proof}
+Sea
+\[f(z)=\sum_{n=0}^{\infty}a_nz^n\]
+puesto que $f$ es analítica en $\cplex$ por la definición de fórmula integral tenemos:
+\[a_n = \frac{f^{(n)}(0)}{n!}=\frac{1}{2π}\int_{\partial B(0,r)} \frac{f(w)}{w^{n+1}}dw \text{ con } r>b\]
+
+Calculando el valor absoluto a ambos lados de la igualdad tenemos:
+\[|a_n| \leq \frac{1}{2πi}\int_{\partial B(0,r)} \frac{|f(w)|}{|w|^{n+1}}|dw| \leq \frac{1}{2πi} \int_{\partial B(0,r)} \frac{a|w|^n}{|w|^{n+1}}|dw| = \frac{a}{2πir^{n+1-m}}2πri =\frac{a}{r^{n-m}}\]
+que tiende a 0 cuando el radio tiende a infinito.
+
+Por tanto $a_n=0 \ \forall n>m$ por lo que nos queda
+$f(z)=\sum_{n=0}^m a_nz^n$
+\end{proof}
+
+\begin{corol}[Teorema fundamental del álgebra]
+Si $p(z)$ es un polinomio en $z$ de grado mayor o igual que 1 con coeficientes en $\cplex$ entonces tiene al menos una raíz.
+
+Es decir:
+\[\forall p(z) \in \cplex[z] \text{ con } gr(p(z))\geq 1 \  \exists z_0 \in \cplex \ t.q. \ p(z_0)=0\]
+\end{corol}
+
+\begin{proof}
+Si $p(z) \neq 0 \ \forall z \in \cplex$ entonces
+\[f(z) = \frac{1}{p(z)} \text{ es una función entera}\]
+
+Como $|p(z)| \to \infty $ cuando $|z| \to \infty$ tenemos $|f(z)| \to 0$ cuando $|z| \to \infty$. Es decir, $|f(z)|$ está acotada y por el teorema de Louville podemos concluir que $f(z)$ es constante, lo que implica que el polinomio $p(z)$ es constante, con lo que contradecimos la hipótesis inicial.
+
+Queda probado pues que todo polinomio tiene al menos una raíz. Con esto podemos concluir que tendrá tantas raíces como grado tenga, pues podemos dividir entre $(z-z_0)$ con lo que obtendremos otro polinomio sobre el que podremos aplicar el mismo proceso.
+\end{proof}
+
+\newpage
+\begin{prop}[Principio del módulo máximo]
+Sea Ω un dominio y $\appl{f}{Ω}{\cplex}$ una función holomorfa. Si $|f|$ tiene un máximo local en Ω (es decir, $\exists a \in Ω$ y $r > 0 $ t.q. $|f(a)|> |f(z)| \ \forall z \in B(a,r)$), entonces $f$ es constante en Ω
+\end{prop}
+
+\begin{proof}
+\[f(z)=\frac{1}{2π i} \int_{\partial B(a,r)}\frac{f(w)}{w-a}dw = \frac{1}{2πi} \int_0^{2π} \frac{f(a+r'e^{it})}{r'e^{it}}ir'e^{it}dt = \frac{1}{2πi}\int_0^{2π}f(a+r'e^{it}) dt = \]
+
+Aplicando el valor absoluto a ambos lados de la igualdad y convirtiendo el valor absoluto de la integral en la integral del valor absoluto nos queda:
+\[|f(a)| \leq \frac{1}{2πi}\int_0^{2π} |f(a+r'e^{it})|dt \leq\footnote{Por la hipótesis de que a es un máximo de la función} |f(a)|\]
+
+Si la integral está acotada superior e inferiormente por el mismo valor, es que ese es su valor. Por tanto
+\[|f(a)| )= \frac{1}{2π}\int_0^{2π} |f(a+r'e^{it})|dt = \frac{1}{2π} \int_0^{2π}\left[ |f(a)|-|f(a+r'e^{it})|\right] dt = 0\]
+
+de donde podemos deducir que
+\[|f(a)| = |f(a+r'e^{it})| \forall 0 \leq t \leq 2π \ \ 0 \leq r' \leq r\]
+Por tanto $|f|$ es constante en $B(a,r) \implies $ $f$ es constante en esa misma bola y por el teorema de continuación única tenemos que $f$ es constante en Ω.
+\end{proof}
 % %  _____________________________________
 % % < Animo con la clase de hoy >
 % %  -------------------------------------
@@ -2155,7 +2226,7 @@ En este caso es más sencillo puesto que sabemos que la rama de la raíz será $
 % %             (__)\       )\/\
 % %                 ||----w |
 % %                 ||     ||
-% % 
+% %
 
 \chapter{Cálculo de residuos}
 \section{Singularidades aisladas}

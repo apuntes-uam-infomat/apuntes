@@ -2,6 +2,7 @@
 \do{arg0}#m
 \pbreak#m
 \mop{operacion}#m
+\imgref{referencia}#m
 \dimplies#m
 \nimplies#m
 \Or#m
@@ -217,3 +218,5 @@
 \eqreason{arg0}#m
 \projp#m
 \lie{arg0}#m
+\tgs#m
+\tgsd#m

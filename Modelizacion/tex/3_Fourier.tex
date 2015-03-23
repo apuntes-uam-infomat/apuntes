@@ -895,8 +895,97 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 
 		\end{example}
 
+\subsubsection{Tomografía}
+\begin{itemize}
+	\item \textbf{TAC} (Tomografía axial computarizada)
+	\item \textbf{RMN} (resonancia magnética nuclear)
+\end{itemize}
+	
+	Ambas técnicas tienen que ver con el análisis de Fourier
+	
+	\textbf{RMN} Resulta que las partículas subatómicas tienen un momento magnético, se comportan como un imán.
+	
+	Esos imanes pueden estar cambiando de posición, pero no se puede haer a cualquier velocidad.
+	Se ve que con cierta velocidad logras que esto entre en resonancia. \textbf{Esto no lo vamos a ver este curso.}
+	
+	\textbf{TAC} 
+	
+	¿Se puede reconstruir la esctructura de un tejido a través de radiografías?
+	
+	La respuesta es SI, ahora vamos a ver cómo.
+
+	
+	Cuando hacemos una radiografía pasamos rayos x por una muestra vemos que al llegar al otro lado los rayos llegan más atenuados si han pasado por zonas de más densidad.
+	
+	La "radiografía unidimensional" que se obtiene en el detector (donde llegan los rayos), depende de la integral de la densidad de la muestra a lo largo de la linea.
+	
+	En la práctica el emisor y el receptor se van girando y se obtienen los datos correspondientes a todas las radiografías.
+	
+	$$r_{\theta , t} \equiv x \cos\theta + y\sin\theta = t$$
+	
+	% dibujo%
+	
+	siendo $\theta$ el ángulo con el eje OX y $t$
+ la distancia de la recta a O (origen).
 
 
+En definitiva si $\rho$ = densidad de la muestra. Los datos obtenidos por una máquina de TAC son valores de:
 
+$$P_{\theta} (t) = \int_{r_{\theta , t}} \rho$$
 
+Al final si el patrón que obtengo es más claro, habré pasado por una parte de la muestra con menos densidad, y cuando más oscuro, más densidad.
 
+La pregunta matemática es si a través de los valores de $P_{\theta}(t)$ cuando $\theta$ y $t$ varían es posible recuperar $\rho$
+
+La respuesta a esto la dio J.Radón , que demostró que si que era posible. ¿cómo?
+
+Recordemos la fórmula de $r_{\theta,t}$
+
+	$$r_{\theta , t} \equiv x \cos\theta + y\sin\theta + t$$
+	
+	$$P_{\theta} (t) = \int_{r_{\theta , t}} \rho $$
+	
+	Entonces, haciendo una parametrización de la recta nos queda:
+	$$\int \rho = \int \rho (\phi(u)) \cdot |\phi '(u)| du$$
+	\begin{itemize}
+		\item $x = t\cos\theta - u \sin\theta$
+		\item $y = t\sin\theta + u \cos\theta$
+	\end{itemize}
+	
+	$$P_{\theta} (t) = \int_{r_{\theta , t}} \rho = \int_{-\infty}^{\infty} \rho ( t\cos\theta - u\sin\theta , t\sin\theta + u\cos\theta) du$$
+	
+	Porqué no hemos multiplicado por la norma de la derivada? porque da 1.
+	
+	Consideramos la transformada de Fourier de t $\rightarrow P_{\theta}(t)$
+	
+	$$\widehat{P_{\theta}}(\xi) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \rho ( t\cos\theta - u\sin\theta , t\sin\theta + u\cos\theta) du\text{  }e(-t\xi) dt $$
+	
+	Haciendo un cambio de variable en dos variables $(u,t) \rightarrow (x,y)$ e que corresponde a la paramerización anterior.
+	
+	$$\left(\begin{matrix}
+		x\\
+		y
+	\end{matrix} \right) = \left( \begin{matrix}
+	\cos & -\sin\\
+	\sin & \cos
+	\end{matrix}\right)\left(\begin{matrix}
+	t\\
+	u
+	\end{matrix}\right) \longleftrightarrow \left(\begin{matrix}
+	t\\
+	u
+	\end{matrix} \right) = \left( \begin{matrix}
+	\cos & \sin\\
+	-\sin & \cos
+	\end{matrix}\right)\left(\begin{matrix}
+	x\\
+	y
+	\end{matrix}\right)$$
+	
+	$$\widehat{P_{\theta}}(\xi) = \int\int_{\real^2} \rho(x,y) e(-\xi(x\cos + y\sin)) dxdy$$
+	
+	\obs Como sabemos que $\widehat{f}(\xi) = \int_{-\infty}^{\infty} f(x) e(-x\xi)dx$ Para $F : \real^2 \rightarrow \mathbb{C}$ la definición es similar tomando transformadas en cada variable.
+	
+	$$\widehat{F}(\xi , n) = \int \int_{real^2} f(x,y) e (-x\xi -yn) dxdy$$
+	
+	
