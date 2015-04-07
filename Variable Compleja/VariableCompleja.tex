@@ -2341,9 +2341,110 @@ Sea $w_0 \in f(Ω)$  y $z_0 \in Ω$ tal que $f(z_0)=w_0$ entonces, por el teorem
 % %
 
 \chapter{Cálculo de residuos}
+\section{Series de Laurent}
+
+\begin{defn}[Serie\IS de Laurent]
+Una \textbf{serie de Laurent} centrada en $z_0 \in \cplex$ es una serie de la forma
+\[\sum_{n=-\infty}^{\infty}a_n(z-z_0)^n \text{ con } z_0\in \cplex \text{ y } z \in \cplex \setminus \{z_0\}\]
+
+Decimos que una serie de Laurent \textbf{converge} si y sólo si la suma de los positivos y la de los negativos convergen.
+\[\sum_{n=-\infty}^{\infty}a_n(z-z_0)^n \text{ converge } \iff \sum_{n=0}^{\infty}a_n(z-z_0)^n \text{ y } \sum_{m=1}^{\infty}a_{-m}\frac{1}{(z-z_0)^n} \text{ convergen}\]
+
+Si las sumas de las series son $S_1$ y $S_2$ diremos que la suma de la serie de Laurent es $S_1+S_2$
+\end{defn}
+
+\obs Si una de las dos diverge la serie de Laurent diverge.
+
+\begin{theorem}
+Sean
+\[r = \overline{\lim_{m \to \infty}}|a_{-m}|^\frac{1}{m} \text{ y } R = \frac{1}{\overline{\lim_{n \to \infty}}|a_{n}|^\frac{1}{n}}\]
+
+y suponemos que
+\[0 \leq r < R \leq \infty\]
+y sea
+\[A = \{z \in \cplex \tq r < |z-z_0|<R\}\]
+
+La serie de Laurent converge dentro del anillo $A$.
+\end{theorem}
+\begin{proof}
+Es sencillo de ver puesto que para que la primera serie converga necesitamos que $(z-z_0< R$.
+
+Para que converga la segunda serie necesitamos que el factor que multiplica a $a_n$ sea menor que el radio de convergencia, lo que hace que el denominado, $z-z_0$ sea mayor que $r$.
+
+Aplicando simultáneamente ambas condiciones para la convergencia tenemos que la serie converge en el anillo indicado en el enunciado del teorema.
+\end{proof}
+
+Veamos algunas propiedades relacionadas con este resultado:
+\begin{prop}
+\item La serie de LAurent converge absolutamente en $A$ y uniformemente en todo compacto contenido en $A$
+\item La función $f(x)=\sum_{n=-\infty}^{\infty}a_n(z-z_0)^n$ es holomorfa en $A$ siendo
+\[f'(z)=\sum_{n=-\infty}^{\infty}a_n\cdot n \cdot (z-z_0)^{n-1} \ \ \forall z \in A\]
+\end{prop}
+
+\begin{example}
+
+\begin{enumerate}
+\item Tomamos la serie
+\[\sum_{n=\infty}^{\infty}z^n\]
+
+Vamos a buscar el anillo de convergencia visto anteriormente.
+
+Por un lado tenemos
+\[\sum_{n=0}^{\infty}z^n = \frac{1}{1-z} \text{ si } |z| < 1\]
+
+Por otro
+
+\[\sum_{m=1}^{\infty}=\frac{1}{1-1/z} \text{ si } |z|>1\]
+
+Puesto que los radios son iguales nos quedaría un anillo vacío. Es decir, esta serie de Laurent no converge.
+
+\item Tomamos la serie
+
+\[\sum_{n=\infty}^{\infty}\frac{1}{|n|!}z^n = \sum_{n=0}^{\infty}\frac{z^n}{n!} + \sum_{m=1}^{\infty}\frac{1}{m!}\left(\frac{1}{z}\right)^m = e^z +e^{1/z}-1\]
+
+Con estas cuentas ya podemos intuir cuál será el anillo de convergencia pero vamos a calcularlo formalmente.
+
+\[r = \overline{\lim_{m \to \infty}}|a_{-m}|^\frac{1}{m}=0 \text{ y } R = \frac{1}{\overline{\lim_{n \to \infty}}|a_{n}|^\frac{1}{n}}=0 \implies R = \infty\]
+
+Por tanto tenemos que esta serie es holomorfa en $\cplex \setminus \{0\}$
+
+\item Tomemos la serie
+\[\sum_{n=-\infty}^{\infty}a_nz^n \text{ siendo } \left\{ \begin{array}{lcc}
+             2^n &   si  & n \leq 1 \\
+             \\ 0 &  si & n=0 \\
+             \\ 1 &  si  & n \geq 1
+             \end{array}
+   \right.\]
+
+Separando la parte de índices positivos de la de índices negativos tenemos:
+\[\sum_{n=0}^{\infty}a_nz^n + \sum_{m=0}^{\infty}a_{-m}\left(\frac{1}{z}\right)^m\]
+
+Calculando de nuevo los radios tenemos
+\[r = \overline{\lim_{m \to \infty}}|2^m|^\frac{1}{m}=\frac{1}{2} \ \text{ y } R = \frac{1}{\overline{\lim_{n \to \infty}}|1|^\frac{1}{n}}=1 \implies R = 1\]
+
+\end{enumerate}
+\end{example}
+
+
+\begin{theorem}
+Si $f$ es holomofa en $A=\{z \tq r<|z-z_0|< R\}$, un anillo centrado en $z_0$, entonces
+\[f(z)=\sum_{n=-\infty}^{\infty}a_n(z-z_0)^n \ \forall z \in A\]
+con
+\[a_n=\frac{1}{2πi}\int_{|w-z_0|=ρ} \frac{f(w)}{(w-z_0)^{n+1}}dw \text{ con } r < ρ < R\]
+\end{theorem}
+
+\begin{example}
+Sea la función
+\[f(z)=\frac{1}{1-z}\cdot \frac{1}{1-2iz}\]
+vemos que es holomorfa en $\cplex\setminus\{1,1/2i\}$. En concreto, es holomorfa en el disco abierto de radio 1/2.
+
+En esta región podemos escribir
+\[f(z)=\frac{1}{1-z}\cdot \frac{1}{1-2iz} = \frac{1}{1-2i}\left(\frac{1}{1-z}-\frac{2i}{1-2iz} \right)=\frac{1}{1-2i}=\left(\sum_{n=0}^{\infty} z^n - 2i\sum_{n=0}^{\infty}(2iz)^n \right)\]
+\end{example}
+
+
 \section{Singularidades aisladas}
 \section{Teorema de la singularidad evitable de Riemann}
-\section{Series de Laurent}
 \section{Teorema de los residuos}
 \section{Aplicaciones al cálculo de integrales}
 
