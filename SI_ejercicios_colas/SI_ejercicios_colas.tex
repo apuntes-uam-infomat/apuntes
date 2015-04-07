@@ -16,20 +16,25 @@
 \usepackage[font=scriptsize]{subcaption}
 \usepackage{caption}
 \usepackage[yyyymmdd,hhmmss]{datetime}
+\usepackage{color}
 
 \usepackage[colorlinks,urlcolor=blue]{hyperref}
+\usepackage{xifthen}
 
 \newcounter{problem}
 \newcounter{solution}
 \renewcommand{\theenumi}{\alph{enumi}}
 
-\newcommand\Problem{%
+\newcommand\Problem[1][]{%
+  \color{blue}
   \stepcounter{problem}%
-  \textbf{Problema \theproblem.}~%
+  \ifthenelse{\isempty{#1}}{\textbf{Problema \theproblem.}}{\textbf{Problema #1.}}
+
   \setcounter{solution}{0}%
 }
 
 \newcommand\TheSolution{%
+  \color{black}
   \textbf{Solución:}\\%
 }
 
@@ -53,7 +58,7 @@
 
 \maketitle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 1
-\Problem
+\Problem[1]
 Los mensajes llegan a un servidor de descifrado de manera poissoniana con un ritmo medio de llegada de 360 mensajes por minuto. Los tiempos de descifrado son proporcionales a la longitud de los mensajes, los cuales se distribuyen aproximadamente de forma exponencial, con una longitud media de 1500 bytes. La velocidad del servidor de descifrado es de 10Kbyte/s. ¿Cuál es el tiempo medio de espera de respuesta por mensaje? ¿Cuál es el número medio de mensajes en el sistema de descifrado?
 
 \TheSolution
@@ -241,7 +246,6 @@ Deseamos instalar un servidor de envío de mensajes ("busca") a una serie de abo
 
 \begin{center}
   \includegraphics[keepaspectratio=true,width=\linewidth]{ej7.png}
-  \captionof{figure}{Consola de Glassfish}
 \end{center}
 
 
@@ -291,7 +295,6 @@ Una red de una entidad financiera consta de una serie de terminales remotos, en 
 
 \begin{center}
   \includegraphics[keepaspectratio=true,width=\linewidth]{ej8.png}
-  \captionof{figure}{Consola de Glassfish}
 \end{center}
 
 Los mensajes de las oficinas llegan al multiplexor según un proceso de Poisson con una tasa de llegadas total de 3 s -1 (es decir, incluyendo las peticiones de todos los servidores) y su longitud media es de 1 Kbyte. El tiempo de servicio del multiplexor por mensaje (total del proceso y envío del mensaje) se puede considerar distribuido exponencialmente con valor medio 250 ms.
@@ -382,7 +385,6 @@ Un servidor web de aplicaciones se compone de los siguientes elementos
 
 \begin{center}
   \includegraphics[keepaspectratio=true,width=\linewidth]{ej10.png}
-  \captionof{figure}{Consola de Glassfish}
 \end{center}
 
 La llegada de solicitudes al sistema se puede considerar como un proceso de Poisson, con una tasa de llegadas de 6 peticiones por segundo. Existe un número muy grande de clientes, de modo que el número de peticiones pendientes de servicio no afecta al ritmo de llegada de nuevas peticiones.
@@ -522,9 +524,123 @@ Para dar servicio de consultas a base de datos en una red se dispone de dos orde
 \item Calcular el tiempo medio de estancia en el sistema total compuesto por los servidores A y B.
 \end{itemize}
 
+\newpage
 \TheSolution
+\begin{itemize}
+\item
+El sevidor $A$ un sistema M/M/1/K con $K=6$, 5 clientes en cola + 1 siendo procesado. Para calcular el tiempo medio de estancia en el sistema emplearemos las fórmulas del formulario para hallar $L$, el número medio de clientes en el sistema. Una vez hayamos calculado este valor aplicaremos el teorema de Little para conocer W. Vamos a ello.
+
+\[λ_A = 9, \ μ_A=\frac{1}{T_{S_A}}=10 \implies ρ=\frac{λ}{μ}=0.9\]
+
+\[L_A = \frac{λ/μ}{1-λ/μ}\frac{1-(K+1)(λ/μ)^K+K(λ/μ)^{K+1}}{1-(λ/μ)^{K+1}}=\frac{λ/μ}{1-λ/μ}\frac{1-(7)(λ/μ)^6+6(λ/μ)^{7}}{1-(λ/μ)^{7}}=2.5\]
+
+\[W_A = \frac{L}{λ} = 0.28s\]
+
+\item
+
+Tenemos que estudiar ahora el subsistema compuesto por el servidor $B$. Para conocer la tasa de llegadas al servidor $B$ debemos conocer previamente la probabilidad de que se llene el servidor $A$.
+
+\[p_6=p_0\left( \frac{λ}{μ}\right)^6=\frac{1-λ/μ}{1-(λ/μ)^{7}}\left( \frac{λ}{μ}\right)^6=0.1\]
+
+Puesto que sólo llegan peticiones al servidor $B$ cuando se satura el $A$ tenemos
+\[λ_B = p_6λ_A=0.91 \ \ μ_B=\frac{1}{T{S_b}}=2 \implies ρ=0.46\]
+
+Este segundo servidor se trata de un sistema M/M/1 de modo que calculamos mediante la fórmula $L$ a partir de ρ y con el teorema de Little obtenemos $W_B$
+
+\[L_B=\frac{ρ}{1-ρ}=0.85 \implies W_B = \frac{L_B}{λ_B}=0.94\]
+
+Una vez conocido este valor, podemos calcular el tiempo medio de estancia en el sistema como:
+\[W = (1-p_6)W_A+p_6W_B=0.346s \]
+
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 13
+\Problem
+
+Un sistema de registro de incidencias se compone de una red de 5 terminales que realizan la entrada de datos manual, y un servidor, que recibe solicitudes tipo RPC para validar los datos introducidos en el cliente y almacenarlos en una base de datos. El tiempo que dicho servidor emplea para realizar las operaciones mencionadas se puede considerar distribuido exponencialmente con un valor esperado de 15 s. Cuando un cliente genera una petición, queda inactivo a la espera de recibir la respuesta del servidor. Una vez recibida dicha respuesta, el tiempo que tarda en generar una nueva petición es aleatorio y también se encuentra distribuido exponencialmente, con un valor medio de 1 minuto. Proponer un modelo de colas válido para este problema, y calcular la ocupación media del servidor y el tiempo medio de estancia en el sistema de las peticiones que son procesadas.
+
+\TheSolution
+
+\textcolor{red}{Por hacer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 14
+
+\Problem
+Basándose en los conceptos de teoría de colas expuestos en las clases de teoría, hallar la distribución de probabilidad del número de unidades en el sistema para un modelo de colas en el cual:
+\begin{itemize}
+\item La llegada de clientes al sistema sigue un proceso de Poisson con tasa de llegadas λ.
+\item El tiempo de servicio está distribuido exponencialmente con media 1/μ.
+\item Existen c servidores para atender las peticiones.
+\item El número total de unidades en el sistema está limitado a un máximo de K, siendo K>c.
+\item El número de clientes se puede considerar infinito.
+\item A partir de dicha distribución, calcular el número medio de unidades en el sistema, el factor de servicio, la tasa efectiva de llegadas al sistema, el tiempo medio de estancia en el sistema, el tiempo medio de estancia en cola y el número medio de unidades en cola de espera.
+\end{itemize}
+\TheSolution
+
+Estamos ante un modelo M/M/c por lo que tenemos un factor de utilización de
+\[ρ=\frac{λ}{cμ}\]
+
+Puesto que el numero de unidades en el sistema está limitado a $K$ ya sabemos que la probabilidad de haber $n$ clientes en el sistmea siendo $n>K$ es 0.
+
+La probabilidad de que haya $n<K$ clientes en el sistema sería
+\[p_n=ρ^n(1-ρ)\]
+
+TO BE CONTINUED...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 15
+\Problem
+Un servidor de transacciones recibe peticiones de acuerdo a un proceso de Poisson con una tasa de llegadas α. La estructura del servidor se muestra en la siguiente figura:
+
+\begin{center}
+  \includegraphics[keepaspectratio=true,width=\linewidth]{ej15.png}
+\end{center}
+
+Las transacciones emplean un tiempo de proceso distribuido exponencialmente con media $1/μ_1$. Tras este tiempo, la ejecución del programa se completa con una probabilidad 1-q, o requiere acceder a un servidor de base de datos y continuar su proceso. Suponer que la recuperación de la información de la base de datos requiere un tiempo distribuido exponencialmente con media $1/μ_2$.
+\begin{enumerate}
+\item Justificar adecuadamente los modelos de colas que se deben emplear para modelizar el sistema.
+\item Calcular el tiempo medio de estancia en el sistema de las peticiones de los clientes.
+\end{enumerate}
+\TheSolution
+
+\begin{enumerate}
+\item Se trata de una red de colas donde cada cola sigue un modelo M/M/1
+
+\item
+
+Primero tenemos que calcular las tasas de llegadas:
+\[λ_1 = α+qλ \implies λ = \frac{α}{1-q}\]
+\[λ_2 = q λ_1\]
+
+Ahora podemos calcular el factor de utilización de cada uno de los subsistemas:
+\[ρ_1 = \frac{λ_1}{μ_1} = \frac{α}{μ_1(1-q)}\]
+\[ρ_2 = \frac{λ_2}{μ_2} = \frac{q\cdot α}{μ_2(1-q)}\]
+
+A partir de estos valores calculamos $L_1$ y $L_2$ y por último calculamos el tiempo medio de estancia en el sistema como:
+\[W = \frac{\sum L_i}{\sum α_i}=\frac{L_1+L_2}{α}\]
+
+Puesto que no tenemos datos numéricos no terminamos de realizar las cuentas, pues no aportarán información nueva.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 16
+
+\Problem
+El tiempo que emplea un determinado servidor de control de accesos de una red en procesar una solicitud de autenticación de un usuario se puede considerar como una variable aleatoria con distribución exponencial de valor esperado 235 ms. Debido a su construcción, tiene una cola de espera limitada, de modo que rechaza cualquier nueva solicitud que reciba cuando ya se encuentra procesando una y hay otras dos en espera. Si se supone que el número de clientes del servidor es muy grande, y que las peticiones que realizan siguen un ritmo de Poisson con una tasa de 5 peticiones por segundo, calcular la probabilidad de que se rechace una solicitud, la ocupación media del servidor y el tiempo medio de estancia en el sistema de las peticiones que son procesadas
+
+\TheSolution
+
+Estamos ante un modelo M/M/1/K siendo $K=3$. Tenemos la tasa de llegadas $λ=5$ y la tasa de servicio $μ=1/T_s=4.25$.
+
+La probabilidad de que se rechace una solicitud es la probabilidad de que haya tres o más clientes en el sistema:
+\[\mathbb{P}(\text{rechazo}) = 1- p_1-p_2 = 1-p_0\frac{λ}{μ}-p_0\left( \frac{λ}{μ}\right)^2 = 1-\frac{1-λ/μ}{1-(λ/μ)^{4}}\frac{λ}{μ}-\frac{1-λ/μ}{1-(λ/μ)^{4}}\left( \frac{λ}{μ}\right)^2 = 0.5\]
+
+La ocupación media del servidor se calcula con la fórmula:
+\[L=\frac{λ/μ}{1-λ/μ}\frac{1-4(λ/μ)^3+3(λ/μ)^4}{1-(λ/μ)^4}=1.69\]
+
+Para el tiempo medio de estnacia en el servidor aplicamos el teorema de Little con lo que obtenemos
+\[W = \frac{L}{λ}=0.56s\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 17
+
 \Problem En una instalación se tiene un problema con el tiempo de respuesta de un servidor de RPCs. El ordenador en el que reside dicho servicio tiene 2 CPUs dedicadas exclusivamente a procesar las peticiones, de modo que cualquiera de ellas puede atender cualquier petición en cualquier estado, y un sistema de disco único. El tráfico de llegada al servidor se puede suponer de Poisson, con un valor medio de R peticiones por segundo.
 
 El proceso que se efectúa en el servidor necesita realizar un número variable de accesos a disco. Se ha estimado que cada petición emplea un tiempo de proceso en alguna de las CPUs que se encuentra distribuido exponencialmente con un valor medio T1. Transcurrido este periodo, la petición necesita acceder a disco con una probabilidad p, o finaliza en caso contrario.
@@ -596,29 +712,253 @@ Habría que disminuir este tiempo mediante una sustitución del disco por uno m�
 
 \end{enumerate}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 14
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 18
 \Problem
-Basándose en los conceptos de teoría de colas expuestos en las clases de teoría, hallar la distribución de probabilidad del número de unidades en el sistema para un modelo de colas en el cual:
+Se ha detectado que el cuello de botella en una aplicación se produce al leer del disco. Para solucionarlo, se plantean dos alternativas:
 \begin{itemize}
-\item La llegada de clientes al sistema sigue un proceso de Poisson con tasa de llegadas λ.
-\item El tiempo de servicio está distribuido exponencialmente con media 1/μ.
-\item Existen c servidores para atender las peticiones.
-\item El número total de unidades en el sistema está limitado a un máximo de K, siendo K>c.
-\item El número de clientes se puede considerar infinito.
-\item A partir de dicha distribución, calcular el número medio de unidades en el sistema, el factor de servicio, la tasa efectiva de llegadas al sistema, el tiempo medio de estancia en el sistema, el tiempo medio de estancia en cola y el número medio de unidades en cola de espera.
+\item Comprar un disco con tiempo de acceso menor, pero más caro. En este caso, se encolan las peticiones cuando el disco se encuentre ocupado.
+\item Poner dos discos en espejo (mirroring) que tendrán un tiempo de acceso mayor que el anterior, pero más baratos. En este caso, se accede indistintamente a cualquiera de los dos discos cuando se produce una petición, dependiendo de cuál esté libre, encolándose todas las peticiones en una cola común.
 \end{itemize}
+(Datos numéricos: tiempo medio de acceso disco rápido: 10 ms; tiempo medio de acceso de cada disco lento: 15 ms. En ambos casos se supone distribución exponencial).
+
+Suponiendo que la aplicación es la única que realiza los accesos a disco, que las peticiones de lectura se producen según un proceso de Poisson, y que las colas se pueden suponer infinitas:
+\begin{enumerate}
+\item Calcular para ambos casos el número medio de peticiones por segundo que se podrán satisfacer para obtener un tiempo medio de lectura igual a 100 ms.
+\item Calcule la tasa de peticiones para la que ambos casos dan el mismo rendimiento, y el tiempo medio de lectura para este caso.
+\end{enumerate}
+
 \TheSolution
 
+\textcolor{red}{Por hacer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 19
+\Problem
+Un servidor de validación de firmas que se encuentra en una determinada red procesa mensajes de modo iterativo. Los mensajes de solicitud que recibe tienen un tamaño medio de 100 bytes, y se puede suponer que su llegada al servidor sigue un proceso de Poisson. El tiempo de proceso de cada mensaje es aleatorio, sabiéndose que su valor medio es 10 ms. y que su distribución de probabilidades se puede considerar exponencial.
+
+La monitorización de la red únicamente nos permite conocer el tamaño medio de la ocupación que tiene en memoria la cola donde se almacenan los mensajes pendientes de procesar, que es de 325 bytes.
+\begin{enumerate}
+\item Calcular el tiempo medio total que transcurre desde que llega un mensaje de petición al servidor y este termina de procesarlo.
+\item En los acuerdos de nivel de servicio de este servidor se establece que ``El tiempo que debe transcurrir desde que llegue un mensaje de petición al servidor y este termine de procesarlo debe ser inferior a 80 ms en el 90\% de las peticiones''. Explicar razonadamente si se cumple o no este punto del acuerdo de nivel de servicio. En caso negativo, sugerir cualitativamente soluciones que permitirían resolver el problema.
+\end{enumerate}
+
+\TheSolution
+
+\textcolor{red}{Por hacer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 20
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 21
+\Problem[21] Un determinado bufete de abogados tiene, entre otras actividades, un servicio de generación de informes legales sobre los asuntos que sus clientes le plantean. Para ayudar al personal del bufete en la gestión de dicho servicio se dispone de un sistema de gestión de flujo de trabajo.
+
+El flujo de trabajo que siguen las peticiones recibidas es el siguiente:
+\begin{enumerate}
+\item[1] Un primer empleado, que denominaremos E1, verifica que las peticiones son correctas, recopila información asociada a ellas y las clasifica para su posterior proceso en dos grupos distintos: civil o penal. Se reciben en promedio un 25 \% de peticiones de tipo penal y un 75 \% de tipo civil. Este proceso de revisión, acopio de información y clasificación se realiza en un tiempo medio de 1 día. Cada grupo de peticiones es enviado, a través del sistema de gestión de flujo de trabajo, a un grupo de empleados distintos.
+
+\item[2] Las peticiones de tipo civil son recibidas por el empleado C1, que es el encargado de elaborar el informe. Este empleado tarda un tiempo medio de 4 días en realizar un informe. Tras la realización del informe, el empleado C2 revisa el trabajo del primero, determinando si el informe es correcto, y puede seguir su curso, o si necesita un trabajo posterior, en cuyo caso lo devuelve anotado a la bandeja de entrada de C1 para que realice las correcciones oportunas. C2 emplea un tiempo medio de 2 días en realizar esta revisión, y se sabe que, en promedio, la mitad de los informes que recibe C2 necesitan volver a C1 para ser modificados.
+
+\item[3] Las peticiones de tipo penal siguen un proceso idéntico a las de tipo civil, pero las realizan los empleados P1 y P2. P1 emplea en el primer proceso un tiempo medio de 10 días por petición, mientras que P2 emplea solamente 4 días. El porcentaje promedio de documentos que son devueltos a P1 es de un 25 \%.
+
+\item[4] Tras ser aceptado un informe de cualquiera de los dos grupos, pasa al departamento de acabado final, donde el empleado E2 realiza su impresión en calidad, encuadernado y envío al cliente que lo solicitó. En este proceso se emplean 0.25 días.
+\end{enumerate}
+
+En la empresa se recibe un promedio de una petición cada D días laborables.
+El sistema de flujo de trabajo realiza el encolamiento de las solicitudes y los informes elaborados en su paso a través del proceso establecido.
+
+Para realizar los cálculos que se piden a continuación, suponer que todos los tiempos indicados son variables aleatorias distribuidas exponencialmente.
+\begin{enumerate}
+\item Dibujar el esquema del sistema de control de flujo de trabajo establecido, visto como una red de colas, en la que cada empleado es el servidor que procesa las peticiones recibidas. Calcular las tasas de servicio de cada uno de los servidores, y las tasas de peticiones que recibe cada uno de ellos, indicando las suposiciones que haya sido necesario realizar para poder obtener dichos valores.
+\item Calcular el tiempo medio que tarda el bufete en realizar un informe desde que es recibida la solicitud del cliente.
+\end{enumerate}
+
+\TheSolution
+\begin{enumerate}
+\item
+
+
+A la hora de realizar el esquema del sistema suponemos que las colas son infinitas puesto que un empleado puede tener una pila de trabajo pendiente tan grande como sea necesaria.
+
+La tasa de servicio se calcula igual para todos los servidores, mediante la fórmula:
+\[μ = \frac{1}{T_s}\]
+
+La siguiente tabla recoge los resultados:
+
+
+\begin{center}
+\begin{tabular}{| c |  c |}
+\hline
+  \textbf{Servidor/Empleado}  & \textbf{Tasa de servicio (μ) [$s^{-1}$]}\\
+\hline
+ \textit{E1}& 0.000011574\\
+ \textit{C1}& 0.000002894\\
+ \textit{C2}& 0.000005787\\
+ \textit{P1}& 0.000001157\\
+ \textit{P2}& 0.000002894\\
+ \textit{E2}& 0.000046296\\
+\hline
+\end{tabular}
+\end{center}
+
+La tasa de llegadas de cada servidor es:
+
+\begin{center}
+\begin{tabular}{| c |  c |}
+\hline
+  \textbf{Servidor/Empleado}  & \textbf{Tasa de llegadas (λ) [$s^{-1}$]}\\
+\hline
+ \textit{E1}& $1/D$\\
+ \textit{C1}& $3/(2D)$\\
+ \textit{C2}& $λ_{C_1} = 3/(2D)$\\
+ \textit{P1}& $1/(3D)$\\
+ \textit{P2}& $λ_{P_1} = 1/(3D)$\\
+ \textit{E2}& $0.5 \cdot λ_{C_1}+0.75 \cdot λ_{P_1} = 1/D$\\
+\hline
+\end{tabular}
+\end{center}
+
+Para los servidores $C_1$ y $P_1$ hemos calculado la tasa de llegadas como sigue
+\[λ_{C_1}=\frac{0.75}{D}+λ_{C_1}\cdot 0.5 \implies λ_{C_1} = \frac{0.75}{D \cdot 0.5} = \frac{3}{2\cdot D}\]
+\[λ_{P_1}=\frac{0.25}{D}+λ_{P_1}\cdot 0.25 \implies λ_{P_1} = \frac{0.25}{D \cdot 0.75} = \frac{1}{D \cdot 3}\]
+
+\item
+
+Vamos a considerar los subsistemas de procesamiendo de peticiones civiles y penales de manera independiente, puesto que tienen retroalimentación, y calculamos su tiempo medio de servicio.
+
+Con los datos que ya tenemos calculados, podemos conocer el factor de utilización y el número medio de clientes de cada uno de los servidores. A partir de este número, aplicamos el teorema de Little para obtener el tiempo medio de estancia en cada uno de estos servidores. Finalmente, para calcular el tiempo total sólo debemos sumar los tiempos ponderados.
+
+La siguiente tabla recoge los valores calculados según acabamos de indicar:
+
+\begin{adjustwidth}{-2cm}{-2cm}
+\begin{center}
+\begin{tabular}{| c | c | c | c |}
+\hline
+  \textbf{S/E}  & \textbf{ρ = λ/μ = λT} & \textbf{L  = ρ/(1-ρ) [clientes]} & \textbf{W  = L/λ  [s/cliente]}\\
+\hline
+ \textit{E1}& $1/D$ & $1/(D-1)$ & $D/(D-1)$ \\
+ \textit{C1}& $6/D$ & $6/(D-6)$ & $4D/(D-6)$ \\
+ \textit{C2}& $3/D$ & $3/(D-3)$ & $2D/(D-3)$ \\
+ \textit{P1}& $10/(3D)$ & $10/(3D-10)$ & $30D/(3D-10)$ \\
+ \textit{P2}& $4/(3D)$ & $4/(3D-4)$ & $12D/(3D-4)$ \\
+ \textit{E2}& $1/(4D)$ & $1/(4D-1)$ & $D/(4D-1)$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{adjustwidth}
+
+Finalmente procedemos a calcular el tiempo medio de estancia en el sistema, que será el tiempo medio que tarde el bufete en realizar un informe:
+%\[W = W_{E_1}+0.25(W_{P_1}+W_{P_2})+0.75(W_{C_1}+W_{C_2})+W_{E_2}\]
+\[W = \frac{\sum L_i}{\sum α_i}=\frac{\sum L_i}{1/D}\]
+\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Problem 15
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 22
+\Problem[22]
+Se realizan medidas sobre el tiempo que emplea en procesar peticiones un servidor de aplicaciones, descubriendo que su distribución de probabilidades se puede aproximar por una función de Pareto de parámetros tm=5 ms y k=3. Partiendo de estos datos:
+
+\begin{enumerate}
+\item Si el servidor recibe un tráfico de Poisson con un valor medio de 100 peticiones/s, calcule el valor medio del tiempo de respuesta del servidor a las peticiones del usuario.
+
+\item Si la salida del servidor de aplicaciones se recibe a la entrada de un servidor de registro de tráfico que tiene un tiempo de servicio distribuido exponencialmente, y que es capaz de procesar un promedio de 10000 peticiones/s, comentar qué modelo de sistema de colas sería adecuado para representar el comportamiento de este servidor. Escribir el modelo elegido en notación de Kendall.
+
+\end{enumerate}
+
+\textbf{Nota: } La función de densidad de una distribución de Pareto viene dada por la fórmula:
+\[f(t)=k\frac{t_m ^k}{t^{k+1}} \text{ para } t > t_m\]
+
+\TheSolution
+
+\begin{enumerate}
+\item Primero tenemos que calcular el tiempo medio de servicio. Para ello calculamos la esperanza de la distribución que nos dan:
+
+\[T_s = \int 3t \frac{125}{t^4} = 1.8 ms\]
+
+A partir de aquí podemos calcular la tasa de servicio
+\[μ=\frac{1}{T_s}=559 s^{-1}\]
+
+Calculamos ahora el factor de utilización y con él el número medio de clientes en el sistema, pues estamos ante un sistema M/M/1
+\[ρ=\frac{λ}{μ}=0.18 \implies L= \frac{ρ}{1-ρ}=0.22\]
+
+Con esto podemos calcular el tiempo medio de respuesta apoyándonos en el teorema de Little:
+\[W = \frac{L}{λ} = 2.195\cdot 10^{-3}\]
+
+\item
+
+Deberíamos utilizar una red de colas con dos servidores M/M/1
+
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 23
+\Problem[23]
+Un sistema de proceso de transacciones emplea un monitor de proceso de tipo híbrido. Mantiene una cola de llegada de solicitudes que son atendidas en cualquiera de los dos procesos que mantiene permanentemente activos para este fin. Las solicitudes de ejecución de transacciones llegan al sistema siguiendo un proceso de Poisson, con una tasa de llegadas de 50 peticiones / s. El tiempo de ejecución de una transacción es independiente del resto de los procesos que se encuentre ejecutando el sistema. Dicho tiempo se puede considerar distribuido exponencialmente, con un valor medio de 0.02 s.
+\begin{enumerate}
+\item Calcular el tiempo medio de estancia en el sistema de cada petición, justificando adecuadamente el modelo de cálculo elegido.
+\item Un análisis más detallado del sistema nos permite medir la varianza del tiempo de ejecución de la transacción, que resulta ser de 0.00036. Justificar razonadamente la validez o no del modelo elegido en el caso anterior, proponiendo, en caso de que no sea válido, modelos alternativos de cálculo.
+\end{enumerate}
+
+\TheSolution
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 24
+\Problem[24]
+Un sistema de proceso de transacciones emplea un monitor de proceso de tipo simple, necesitando un proceso por cada transacción en ejecución. Por motivos de rendimiento del sistema, el máximo número de procesos que se le permite ejecutar simultáneamente es de 5. Las solicitudes de ejecución de transacciones llegan al sistema siguiendo un proceso de Poisson, con una tasa de llegadas de 100 peticiones / s. El tiempo de ejecución de una transacción es independiente del resto de los procesos que se encuentre ejecutando el sistema. Dicho tiempo se puede considerar distribuido exponencialmente, con un valor medio de 0.01 s.
+\begin{enumerate}
+\item Calcular la probabilidad de que se rechace una solicitud de transacción por no haber un proceso libre para ejecutarla, justificando adecuadamente el modelo de cálculo elegido.
+\item Calcular el tiempo medio de estancia en el sistema de una petición.
+\end{enumerate}
+\TheSolution
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 25
+\Problem[25]
+Un sistema distribuido construido bajo el modelo J2EE consta de dos capas: la capa de servicio Web, compuesta por un servidor, y la capa de servidores de aplicaciones, que consta de dos elementos que procesan en paralelo. El reparto de peticiones desde el servidor web a los servidores de aplicaciones se realiza de manera aleatoria y no es necesario guardar datos de los usuarios entre una petición y la siguiente.
+
+El servidor web tiene cola de peticiones finita. Admite un máximo de 6 peticiones, que se procesan en secuencia.
+En los servidores de aplicaciones se puede considerar que no hay límite para el número de peticiones que admiten.
+Se reciben las peticiones siguiendo un proceso de Poisson a un ritmo promedio de 200 peticiones por segundo. Los tiempos de servicio de los servidores de ambas capas se puede considerar que siguen una distribución exponencial, con valor medio de 3 ms en el caso del servidor web y 9 ms en cualquiera de los servidores de aplicaciones.
+
+\begin{enumerate}
+\item Dibujar el esquema del sistema propuesto, e identificar las tasas de entrada efectivas en cada una de las capas. (No las calcule en este apartado, sólo exprese las fórmulas básicas que las relacionan con la tasa de entradas total).
+\item Calcular la fracción de peticiones que se rechazan del sistema.
+\item Calcular el tiempo medio de respuesta para las peticiones que no son rechazadas del sistema.
+\item Identificar las soluciones más eficaces para mejorar el tiempo medio de respuesta calculado anteriormente.
+\end{enumerate}
+\TheSolution
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 26
+\Problem[26]
+Una empresa dispone de un monitor de proceso de transacciones que controla el acceso a una base de datos. El monitor recibe solicitudes con una frecuencia media de dos veces por segundo según una distribución de Poisson. Si el monitor está atendiendo alguna petición, las solicitudes que lleguen esperan en una cola cuya capacidad máxima es de ocho solicitudes. Si la cola está llena, la solicitud es rechazada y debe ser enviada de nuevo por el ordenador cliente.
+Desde que el monitor acepta una transacción hasta que la da por terminada, transcurre un tiempo distribuido exponencialmente cuya esperanza matemática es de 500 milisegundos.
+\begin{enumerate}
+\item¿Qué modelo, según la notación de Kendall, será aplicable a este sistema?
+\item Calcular el tiempo medio de estancia en el sistema de las peticiones de autenticación de los clientes.
+\item ¿Qué pasaría si se ampliase la cola del monitor para darle una capacidad ilimitada?
+\end{enumerate}
+
+\TheSolution
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 27
+\Problem[27]
+El proceso de generación de un ticket en el Ticket Granting Server de una determinada implementación de Kerberos requiere la ejecución en serie de dos procesos independientes:
+Proceso A: valida el ticket de la solicitud recibida. Su tiempo de ejecución está distribuido exponencialmente, con valor medio de 98 ms. En promedio, se sabe que considera no válidos un 10\% de los tickets recibidos, de modo que no pasan al proceso B más que un 90\% del total.
+Proceso B: genera un nuevo ticket para el servidor solicitado. Tiene un tiempo de ejecución distribuido exponencialmente, con valor medio de 80 ms.
+Ambos procesos son independientes y con colas de espera suficientemente grandes, de modo que no se producen pérdidas de peticiones. Ambos ejecutan las peticiones de manera iterativa.
+
+El servidor recibe peticiones de generación de tickets de acuerdo a un proceso de Poisson, con tasa media de llegadas de 10 peticiones / s.
+
+\begin{enumerate}
+\item Determinar el modelo de colas adecuado para cada uno de los sistemas, y calcular la expresión genérica del tiempo medio de estancia en el sistema, a partir de la función de distribución de probabilidad del modelo nacimiento-muerte.
+\item Calcular el tiempo medio de estancia en el conjunto del sistema de las peticiones aceptadas por el primer servidor.
+\item Detectar cuál es el cuello de botella de este sistema, y ajustar el valor medio del tiempo de servicio en él para eliminarlo, de modo que el tiempo de estancia en el sistema total se reparta por igual entre ambos procesos.
+\end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 28
+
+\Problem[28]
 Una empresa decide poner en alta disponibilidad su servidor de autenticación de usuarios de la manera más económica que sea posible. Para ello, duplica el servidor, y para lograr el balanceo de carga entre ambos servidores realiza un sencillo programa. Dicho programa se instala en un tercer servidor, cuya dirección IP será a la que accedan a los usuarios. El programa de balanceo no admite encolamiento de las peticiones que recibe de los clientes, de modo que si se encuentra procesando una de ellas, rechaza todas las peticiones adicionales que le lleguen.
 \begin{enumerate}
 \item Si el tiempo de proceso del balanceo se encuentra distribuido exponencialmente con un valor medio de 2 ms., y el servidor recibe peticiones siguiendo un tráfico de Poisson con un valor medio de 250 peticiones / s., calcular la probabilidad de que una petición que reciba sea rechazada.
 \item Cada uno de los servidores de autenticación tiene un tiempo de servicio con una distribución uniforme entre 5 y 10 ms., y su cola de espera de peticiones no está limitada. Calcular el tiempo medio de estancia en el conjunto del sistema balanceador-servidor de autenticación de las peticiones no rechazadas.
 \end{enumerate}
 \TheSolution
+
+
 \end{document}
