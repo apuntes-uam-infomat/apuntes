@@ -1,0 +1,163 @@
+\chapter{Codificación y compresión}
+
+
+\section{Entropía}
+
+	\textit{``Una teoría matemática de la comunicación''} (Claude E. Shannon, 1948)
+
+	\begin{defn}
+		$S = \{ S_1, ... , S_n \}$  espacio de probabilidad, $p_i \equiv$ posibilidad de escoger $S_i$.
+
+	\end{defn}
+
+	Más adelante si serán ``caracteres'' que componran mensajes o ficheros.
+
+	\begin{defn}
+		Shanon definió una función $ H(p_1, ..., p_n)$ que mide la cantidad de ``información contenida'' en S. Que se puede interpretar también como la ``incertidumbre'' al extraer una muestra aleatoria de $S$.
+	\end{defn}
+
+	\begin{example}
+		$p_1 = 1$ y $p_i = 0$ si $i \neq 1 \rightarrow $ no hay incertidumbre ya que sabemos el resultado.
+
+		$p_i = \frac{1}{n} \rightarrow $ hay mucha incertidumbre (es máxima).
+	\end{example}
+
+
+	Shannon explicó las siguientes propiedades de H:
+	\begin{itemize}
+		\item $H$ es contínua
+		\item $H$ es creciente: $H(\frac{1}{n},...,\frac{1}{n}) (\text{n veces}) \rightarrow$ más cosas, más incertidumbre $\Rightarrow$ más información.
+		\item $H(\frac{1}{n},...,\frac{1}{n}) (\text{n veces})$ =  $H(\frac{b_1}{n},...,\frac{b_k}{n}) (\text{k veces})$ + $\sum^{k}_{i = 1} \frac{b_k}{n} H(\frac{1}{b_i},...,\frac{1}{b_i}) (b_i \text{ veces})$ para cualquier $b_i \in \mathbb{Z}^+, \sum^{k}_{i = 1} b_i = n$.
+	\end{itemize}
+
+	\begin{prop}
+		Si divides un conjuntos en trozos, la incertidumbre no varía
+	\end{prop}
+
+	$\rightarrow$ La información de n objetos no varía s los dividimos en cajas de tamaño $b_i$.
+
+	Probó que la única función con esta propiedad es:
+
+	$$H(p1, ..., p_n) = \text{Cte} \sum^{n}_{i=1} p_i \log(p_i) \quad \text{Cte} < 0 $$
+
+	Eligió $\text{Cte} = -\frac{1}{\log 2}$ pensando en comunicaciones digiales para que le saliese $\log_2 ( \quad) $.
+
+	\begin{defn}{entropía}[entropia]
+		$$H(p_1, ..., p_n) = -\sum^{n}_{i = 1} p_i \log_2 p_i $$
+
+		Se define $0 \log_2 0 = 0$ porque $\lim_{x \rightarrow 0} x \log x = \lim_{x \rightarrow 0^+} \frac{\log(x)}{1/x} = \lim_{x \rightarrow 0} \frac{1/x}{-1 / x^2} = \lim_{x \rightarrow 0} \frac{-x^2}{x} = 0$
+	\end{defn}
+
+	\begin{example}
+
+		$S$ = \{ bytes \}  $p_1 = \frac{1}{2^8}, ..., p_{256} = \frac{1}{2^8}$
+
+		$$  H = - \sum_{1}^{256} \frac{1}{256} \log_2 (\frac{1}{256}) = - \sum_{1}^{256} \frac{1}{256} (-8) = \sum_{1}^{256} \frac{1}{32} = 2^8 2^{-5} = 2^3 = 8 (\text{ nº de bits}) $$
+
+	\end{example}
+
+	\begin{obs}
+		Podemos medir la entropía en bits
+	\end{obs}
+
+
+
+	\begin{defn}[código]
+		Definimos un código (binário únicamente descifrable) como una función $C: S \rightarrow \{ $ cadena de bits $ \} $ (ceros y unos) que es inyectiva cuando actúa sobre cadenas de elementos de $S$ como:
+
+		$$ S_{i_1} S_{i_2} ... S_{i_N} \rightarrow C(S_{i_1}) C(S_{i_2}) ... C(S_{i_n}) $$
+
+	\end{defn}
+
+	Tenemos dos necesidades prácticas:
+
+	\begin{itemize}
+		\item Crear códigos que añaden redundancia para poder corregir errores cuando se transmiten por un canal poco fiable (CD, DVD, telecomunicaciones).
+
+		\item Crear códigos que no tengan ninguna información redundante para poder comprimir.
+	\end{itemize}
+
+	\begin{defn}[Longitud media]
+		La longitud media de las cadenas de bits $C(S_i)$ es:
+
+		$$ l(C) = \sum_i l(C(S_i))$$
+
+		Siendo $l(C(S_i))$ la longitud de $C(S_i)$ o su número de bits.
+	\end{defn}
+
+	Si los elementos de S forman ``palabras'' (cadenas) $S_{i_1} S_{i_2} ... S_{i_N}$ apareciendo como variables aleatorias \textbf{independientes} entonces la longitud media de la codificación de una cadena de $N$ elementos de $S$ es:
+
+	$$l_{N}(C) = \sum_{i_1,...,i_N = 1}^{n} P_{i_1} P_{i_2} ... P_{i_N} l(C(S_{i_1} S_{i_2} ... S_{i_N}))$$
+
+	Siendo $l(C(S_{i_1} S_{i_2} ... S_{i_N}))$ la longitud en bits al codificar de la cadena.
+
+
+	\begin{theorem}{Source coding theorem\footnote{También conocido como primer teorema de Shannon} }[Source coding theorem]
+		Sea $l^*$ el mínimo de $l(C)$ entre todos los posibles códigos (con $S$ y sus probabilidades fijados), entonces:
+
+		$$ H \leq l^* \leq H + 1 $$
+
+		donde $H$ es la entropía de $S$.
+
+	\end{theorem}
+
+
+	\begin{corol}
+		\label{corolario minima longitud}
+		Sea $l^{*}_N$ el mínimo de $l_N(C)$ entre todos los posibles códigos, entonces:
+
+		$$ H \leq \frac{l^*}{N} < H + \frac{1}{N} \text{ , en particular  } \lim_{N \rightarrow \infty} \frac{l^*_N}{N} = H$$
+
+		En breve, este resultado asegura que el mejor código permite, en media, codificar (comprimir) un fichero de $N$ caracteres en $NH$ bits.
+
+	\end{corol}
+
+
+	\textbf{Recordatorio} $C$ está en principio definido en $S$ pero la definición se extiende a cadenas de símbolos concatenando resultados. Exigimos que $C$ sea inyectiva actuando sobre cadenas.
+
+	\begin{example}
+
+		$S = \{A,B,C\} \quad C(A) = 0 \quad C(B) = 1 \quad C(C) = 10$
+
+		C no es un código válido ya que $C(BA) = C(C) = 10$.
+
+		$\widetilde{C}(A) = 01 \quad \widetilde{C}(B) = 001 \quad \widetilde{C}(C) = 0001 \Rightarrow \widetilde{C}(AC) = 010001 $ si es un código válido.
+
+	\end{example}
+
+
+	\begin{example}
+
+
+		$S = \{A,B\} \quad p_1 = p_2 = \frac{1}{2} \quad H = -\frac{1}{2} \log_2 \frac{1}{2} - \frac{1}{2} \log_2 \frac{1}{2} = 1$
+
+		$N = 10^6$: el fichero en ASCII ocupa $10^6$ bytes.
+
+		Del corolario \ref{corolario minima longitud} obtenemos que el mejor código sólo permitiría llegar a $l^*_N$ hasta $NH$ bits $= 10^6 1$ bits $\simeq 125000$ bytes.
+
+		Chamizo hizo unas pruebas en su ordenador en las que con archivos aleatorios los resultados fueron los siguientes:
+
+		\begin{table}[h]
+			\begin{tabular}{r|c}
+			gzip & 159068 bits
+			\end{tabular}
+		\end{table}
+
+
+	\end{example}
+
+
+	\begin{example}
+
+		$S = \{0,1\} \quad p_1 = p_2 = \frac{1}{2}$
+
+		$$ 1 = H \leq \frac{l^*_N}{N} \Rightarrow l^*_N \geq N \Rightarrow \text{no hay compresión} $$
+
+	\end{example}
+
+
+	\textbf{Pregunta} ¿Cuanto se puede comprimir un fichero con $N$ bits con el 75\% de ceros y 25\% de 1s? 
+
+	$ S= \{0,1\} p_1 = 3/4, p_2 = 1/4, \quad H = 0.811 \rightarrow  l^*_N \simeq 0.8111 N $
+
+
