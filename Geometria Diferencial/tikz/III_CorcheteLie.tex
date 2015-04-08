@@ -1,0 +1,32 @@
+\begin{tikzpicture}[>=to]
+\draw[->] (-0.4, 0) -- (8,0);
+\draw[->] (0,-0.4) -- (0,8);
+
+\foreach \x in {0,1,...,4}
+{
+	\pgfmathsetmacro{\lsns}{\x / 8}
+	\draw[dotted, blue, name path global/.expanded=field-1-\x] (1,{1 + 0.8 * \x}) to[bend right, looseness = \lsns] (7, {1.6 + 1.6 * \x});
+}
+
+
+\foreach \x in {0,1,...,4}
+{
+	\pgfmathsetmacro{\lsns}{\x / 8}
+	\draw[dotted, red, name path global/.expanded=field-2-\x] ({1 + 0.8 * \x}, 1) to[bend right, looseness = \lsns] ({1.6 + 1.6 * \x}, 7);
+}
+\node[name intersections={of=field-2-0 and field-1-3}] (I1) at (intersection-1) {};
+\node[name intersections={of=field-1-0 and field-2-3}] (I2) at (intersection-1) {};
+\node[name intersections={of=field-1-3 and field-2-3}] (I3) at (intersection-1) {};
+
+\draw[->, red, thick] (1, 1) -- node[midway, left] {$D$} (I1.center);
+\draw[->, blue, thick] (1, 1) -- node[midway, below] {$D'$} (I2.center);
+\pgfmathsetmacro{\lsns}{3 / 8}
+\path (I1) to[bend right, looseness = 0.25] node (M1) [pos = 0.6, yshift = 2] {} (I3);
+\path (I2) to[bend right, looseness = 0.25] node (M2) [pos = 0.7, xshift = -2] {} (I3);
+
+\draw[->, red, thick] (I2.center) to[bend right, looseness = 0.18] node[midway, right] {$D$} (M2.center);
+\draw[->, blue, thick] (I1.center) to[bend right, looseness = 0.23] node[midway, above] {$D'$} (M1.center);
+
+\draw[->, green!70!black, very thick] (M1.center) -- node[midway, above, sloped] {$[D, D']$} (M2.center);
+
+\end{tikzpicture}
