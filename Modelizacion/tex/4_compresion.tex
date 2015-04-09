@@ -105,14 +105,41 @@
 
 	\begin{corol}
 		\label{corolario minima longitud}
-		Sea $l^{*}_N$ el mínimo de $l_N(C)$ entre todos los posibles códigos, entonces:
+		Sea $l^{*}_N$ el mínimo de $l_N(C)$ para códigos definidos sobre N-cadenas es decir S es, para calcular el $l^{*}_N$ , el conjunto $\widetilde{S} = \{ S_{i1}  S_{i2}  .... S_{iN}\}^n_{i_1...i_N = 1}$  :
 
 		$$ H \leq \frac{l^*}{N} < H + \frac{1}{N} \text{ , en particular  } \lim_{N \rightarrow \infty} \frac{l^*_N}{N} = H$$
 
 		En breve, este resultado asegura que el mejor código permite, en media, codificar (comprimir) un fichero de $N$ caracteres en $NH$ bits.
 
 	\end{corol}
-
+\begin{proof}
+	(suponiendo el teorema)
+		Aplicamos el teorema cambiando $S = \{ S_1,S_2...S_n \}$ por $\widetilde{S} = \{S_{i1}, S_{i2} .... S_{iN} \} =$ 
+		{N-cadenas de elementos de S} con prob $\rightarrow p_{i1}.... p_{iN}$
+		
+	$$H _{\text{para } \widehat{S}} \leq l^{*}_N < H _{\text{para } \widehat{S}} +1 $$
+	
+	Basta probar $H _{\text{para } \widehat{S}} = NH$
+		
+	$$H _{\text{para } \widehat{S}} = - \sum_{i_1...i_N} p_{i1}....p_{iN} \log_2 (p_{i1}...p_{iN})$$
+		
+	Vemos que $\log_2 (p_{i1}...p_{iN}) = \log_2 p_{i1} + .... + \log_2 p_{iN}$
+	
+	¿Cuál sería el coeficiente de $\log_2 p_1$ al desarrollar la suma?
+	$$coef = - \sum_{k = 1}^{N}\sum_{i_1...i_N = 1} p_{i1} ... p_{iN} = - p_1 \cdot \sum_{k=1}^{N} \sum_{j_1 ... j_{N-1} = 1}^{n} p_{j1} ... p_{jN-1}$$
+	
+	Como $\sum_{j_1 ... j_{N-1} = 1}^{n} p_{j1} ... p_{jN-1} = 1$
+	
+	$$ coef = - p_1 \cdot N \cdot 1 = - p_1 \cdot N \cdot ( p_1 + ... + p_n)^{N-1} = -N\cdot p_1$$
+	
+	Entonces, en general
+	
+	$$\begin{cases}
+	\text{coef de } \log p_1 \rightarrow -Np_1\\
+	\text{coef de } \log p_j \rightarrow -Np_j\\
+	\end{cases}  \implies H _{\text{para } \widehat{S}} = -N \sum_{j=1}^{n} p_j \log p_j = N\cdot H$$
+	
+\end{proof}
 
 	\textbf{Recordatorio} $C$ está en principio definido en $S$ pero la definición se extiende a cadenas de símbolos concatenando resultados. Exigimos que $C$ sea inyectiva actuando sobre cadenas.
 
@@ -156,12 +183,77 @@
 
 	\end{example}
 
-
-	\textbf{Pregunta} ¿Cuanto se puede comprimir un fichero con $N$ bits con el 75\% de ceros y 25\% de 1s? 
-
+\begin{example}
+ ¿Cuanto se puede comprimir un fichero con $N$ bits con el 75\% de ceros y 25\% de 1s? 
+	
 	$ S= \{0,1\} p_1 = 3/4, p_2 = 1/4, \quad H = 0.811 \rightarrow  l^*_N \simeq 0.8111 N $
+	
+	Digamos que un fichero tiene tamaño M = 1000 bits y su mejor codif = R.
+	
+	Si codificamos bit a bit N = 1 (corolario, teorema)
+	
+	$$0.811 < \frac{l^{*}_1}{1} < 1.811$$
+	
+	Como $R = M \cdot l^{*}_1 \implies 811 \leq R < 1811$
+	
+	Si codificamos de 10 en 10 bits N=10 (corolario), entonces
+	$$0.811 < \frac{l^{*}_1}{10} < 0.911$$
+	
+	Como $R = \frac{M}{10} \cdot l^{*}_1 \implies 811 \leq R < 911$
+	
+	\textbf{Por lo tanto tomando bloques de bits grandes ( lo cual en la práctica tiene límites) la "tasa de compresión" se acerca cuanto queramos a H} 
+\end{example}
+	
 
 \section{Codificación de Huffman}
+
+Es un algoritmo fácilmente programable para diseñar un código que verifique $H \leq l(C) < H +1$
+
+De hecho $l(C) = L^{*}$
+
+Se basa en la contrucción de un árbol binario a partir de $S_0 = S$ hasta llegar a $S_{n-1}$ que sólo tiene un elemento.
+
+Las reglas para e árbol son:
+\begin{enumerate}
+	\item Se toman los dos elementos de $S_i$ con menos probabilidad y se ponen en el árbol como hijos de un padre al que se le asugna la suma de probabilidades.
+	\item $S_{i+1} = S_i - $ {los hijos de antes} $\cup$ {padre}
+\end{enumerate}
+\begin{example}
+	$$S =\{ a, b , c, d, e , f \}$$
+	
+	Siendo $a = \frac{1}{2}$ , $b, c,d = \frac{1}{8}$ y $e, f = \frac{1}{16}$
+	
+	Vemos que el padre de e y f ($\widehat{ef}$) tiene probabilidad $\frac{1}{8}$
+	
+	Nos queda
+	$$S_1 = \{a,b,c,d,\widehat{ef}\}$$
+	
+	
+	Ahora vemos el padre de d con $\widehat{ef}$, nos queda:
+	$$S_2\{ a, b,c,\widehat{df}\}$$
+	
+	De forma que $\widehat{df}$ tiene probabilidad $\frac{1}{4}$
+	
+	Siguiendo estos pasos llegamos a:
+	$$S_4 = \{ a , \widehat{bf}\}$$
+	
+	con las probabilidades de a y $\widehat{bf} = \frac{1}{2}$ y la raiz tendría probabilidad 1.
+	
+	Una vez que ya tenemos el árbol, partiendo de la raíz hasta las hojas codificamos con $0$ ir a la izquierda y con $1$ ir a la derecha.
+	
+	$$\begin{cases}
+	a \rightarrow 0 \\
+	b \rightarrow 100 \\
+	c \rightarrow 101 \\
+	d \rightarrow 110 \\
+	e \rightarrow 1110 \\
+	f \rightarrow 1111 \\
+	\end{cases} \implies \begin{cases}
+	l(C) = \frac{17}{8}\\
+	H = \frac{17}{8}
+	\end{cases}$$ 
+\end{example}
+
 \section{Codificación aritmética}
 \section{Compresión LZ77, DEFLATE y LZW}
 \section{El algoritmo ID3 de aprendizaje automático}
