@@ -923,10 +923,17 @@ Esta suma se puede probar que converge(pero la demostración no es fácil en abs
 
 	$$r_{\theta , t} \equiv x \cos\theta + y\sin\theta = t$$
 
-	% dibujo%
+	\begin{center}
+		\centering
+		\inputtikz{fourier/tac}
+	\end{center}
 
-	siendo $\theta$ el ángulo con el eje OX y $t$
- la distancia de la recta a O (origen).
+	siendo $\theta$ el ángulo con el eje OX y $t$ la distancia de la recta a O (origen).
+
+	 \begin{center}
+		\centering
+		\inputtikz{fourier/tac_datos}
+	\end{center}
 
 
 En definitiva si $\rho$ = densidad de la muestra. Los datos obtenidos por una máquina de TAC son valores de:
@@ -986,35 +993,92 @@ Recordemos la fórmula de $r_{\theta,t}$
 
 	\obs Como sabemos que $\widehat{f}(\xi) = \int_{-\infty}^{\infty} f(x) e(-x\xi)dx$ Para $F : \real^2 \rightarrow \mathbb{C}$ la definición es similar tomando transformadas en cada variable.
 
-	$$\widehat{F}(\xi , n) = \int \int_{real^2} f(x,y) e (-x\xi -yn) dxdy$$
+	$$\widehat{F}(\xi , n) = \int \int_{\real^2} f(x,y) e (-x\xi -yn) dxdy$$
 
-%%% Día de clase de la huelga
+	Para intentar no mezclar las variables vamos a usar $r$ en la siguiente fórmula en vez de $\xi$:
 
-Vamos a repasar un concepto de la convolución en imágenes. Vamos a verlo primero en 1 variable para entenderlo mejor.
+	$$\hat{P_{\theta}} (r) = \hat{\rho} (r \cos \theta, r \sin \theta)$$
 
-Si tenemos una $f(x)$ de la que tomamos unos valores (discretizamos) tenemos una sucesión $\{f(n)\}$. Definimos una función: $g(n) = f(n-1) - 2 f(n) + f(n+1)$
+	$$ \text{Esto implica que } \rho (x,y) = \int_{\real^2} \hat{\rho}(\xi, n) e(x \xi + yn) d\xi dn $$
 
-Este filtro  puede parecer absurdo, ya que en una función continua, los valores van a ser muy parecidos, pero la utilidad de este filtro es encontrar discontinuidades, porque los valores son más distantes. ¿Pero y esto no se ve a simple vista? Pues cuando tenemos una imagen, esta es la manera de encontrar los bordes rápidamente (no sólo los bordes de la imagen entera, sino bordes de elementos de la imagen).
-Podríamos hacer el filtro más complicado, en plan $g(n) = f(n-2)+ 2f(n-1) - 5 f(n) + f(n+1) + f(n+1)$, es decir, utilizamos la lista $\[1,2,-5,1,1\]$ que nos da el filtro aplicado. (En el caso anterior tendríamos $\[1,-2,1\]$).
+	Cambiando a polares con $\xi = r \cos \theta$ y $n = r \sin \theta$:
 
-Pero lo útil de esto es en imágenes, como ya hemos dicho, en donde el filtro se representa como una lista en 2 dimensiones, es decir, como una matriz.
+	$$ \rho (x,y) = \int^{2\pi}_{0} \int^{\infty}_{0} r \hat{P}_{\theta} (r) e (x r \cos \theta + y r \sen \theta) dr d\theta $$
 
-Para entender mejor cómo funciona esto, podemos pensar qué ocurriría con un filtro representado con \[ \begin{pmatrix} 1&1&1\\1&1&1\\1&1&1 \end{pmatrix} \]
-
-Lo que pasaría es que se desenfoca. Cada píxel toma información de sus adyacentes, lo que provoca desenfoque. Para probarlo, en GIMP  podemos aplicar un filtro de convolución y ver cómo ocurre. No solo con GIMP podemos hacer esto (de una manera "transparente" en el sentido de no entender nada), sino que podríamos hacer un código de Matlab para probarlo. Chamizo ha colgado en la Web unos programas para hacer filtros de convolución.
-
-¿Qué pasaría en una matriz que fuera nula entera, menos en una línea que fueran todo unos?  Esto crea un \emph{filtro de movimiento}, ya que sólo se "desenfoca" horizontalmente.
+	Este sistema se ha tardado mucho en aplicar porque puede funcionar bien en objetos cuya densidad decae suavemente, pero el cuerpo humano no es así, y aunque el cálculo no sea muy complicado, hace falta ordenadores para relizarlo.
 
 
-Otro filtro interesante es:
 
-\[ \begin{pmatrix}
-	0 & 0 & 1 & 1 & 0 & 0\\
-	0 & 0 & 1 & 1 & 0 & 0\\
-	1 & 1 & -4 & -4  & 1 & 1\\
-	1 & 1 & -4 & -4  & 1 & 1\\
-	0 & 0 & 1 & 1 & 0 & 0\\
-	0 & 0 & 1 & 1 & 0 & 0
-	\end{pmatrix}\]
+%% Cllase práctica
 
-¿Esto que hace? Pues este es el secreto del filtro "Dibujo hecho a lápiz". Aplicando este filtro e invirtiendo, una foto se convierte en un dibujo. Si alguien se anima a completarlo con unas fotos que lo enseñen pues se verá mejor.
+
+\subsection{Experimentos con imágenes y su transformación de Fourier}
+
+	\subsubsection{Máscaras sobre los coeficientes de Fourier}
+
+		Una vez tenemos los bloques de 8x8, aplicamos máscaras a los coeficientes que se vana a guardar. Esta máscara es una matriz en la que un 1 indica que se debe guardar ese índice, y un 0 indica que no se debe guardar.
+
+		Como cabe esperar, con una matriz llena de unos no hay ninguna diferencia entre la imagen transformada y la imagen original, sin importar que imagen utilicemos para calcularlo.
+
+		Si probamos, por ejemplo, con una matriz llena de ceros excepto un uno en una esquina (la superior izquierda en el ejemplo) lo que ocurre es que para cada bloque de 8 por 8 solo tenemos un coeficiente. Dejando este lo que pasa es que cada bloque de 8x8 tendrá solo un color.
+
+		Seguimos probando, esta vez con una matriz con solo unos excepto por la última fila y la última columna, que tienen 0. Esto descarta 64 - 49 coeficientes. La imagen final no presenta cambios a simple vista, pero podemos observar, sobre todo en dibujos, que en zonas de cambio abrupto hay pequeñas muestras de oscilaciones.
+
+
+		Podemos seguir quitando las últimas columnas y filas, y con una más todavía seguimos distinguiendo la imagen bastante bien solo que la pérdida de calidad es visible al hacer zoom y comprobar el resultado.
+
+		¿Pero que pasa si quitamos el primer coeficiente? Este es el que indica el promedio de color en ese bloque de la imagen. Si creamos una máscara que descarte solo este coeficiente podremos observar como el promedio no se tiene en cuenta en la imagen transformada. A efectos prácticos, las zonas en las que los colores sean mayoritariamente constantes se verán negras (color 0) ya que el único coeficiente usado sería el promedio (pero lo descartamos) .;ientras que seremos capaces de observar las partes que varían en la imagen van a tener colores distintos del negro, y las vamos a poder ver. Si invertimos la imagen, para que las zonas uniformes se vean blancas la imagen quedará como un dibujo ya que solo se van a ser oscuras las zonas de cambio (en general, los bordes).
+
+	\subsubsection{Comparación entre Fourier y Taylor}
+
+		Con un simple programa de matlab podemos comparar la diferencia entre la aproximación de Taylor a la función $\tan(x \pi/4)$ y la de Fourier. Entre 0 y 1 la aproximación de Fourier y la función real sonindistinguiibles. Calculando el error vemos que es del orden de $10^{-3}$. En cambio, Taylor muestra una gran aproximación en el punto 0, pero se puede apreciar que se empieza a separar notablemente de la función según se acerca a 1 o -1.
+
+		Si probamos con una función más plana vemos como Taylor aproxima mejor que Fourier en el punto pero se separa enseguida, mientras que la de Fourier se mantiene cerca de la función.
+
+	\subsubsection{Más máscaras: Filtros de dibujo}
+
+		Si extendemos ahora el concepto de máscara anterior podemos poner pesos a cada coeficiente si multipliamos cada uno de ellos por su correspondiente peso en la matriz. Y entonces empezamos a buscar matrices que nos consigan un efecto de detección de bordes.
+
+		Vamos a repasar un concepto de la convolución en imágenes. Vamos a verlo primero en 1 variable para entenderlo mejor.
+
+		Si tenemos una $f(x)$ de la que tomamos unos valores (discretizamos) tenemos una sucesión $\{f(n)\}$. Definimos una función: $g(n) = f(n-1) - 2 f(n) + f(n+1)$
+
+		Este filtro  puede parecer absurdo, ya que en una función continua, los valores van a ser muy parecidos, pero la utilidad de este filtro es encontrar discontinuidades, porque los valores son más distantes. ¿Pero y esto no se ve a simple vista? Pues cuando tenemos una imagen, esta es la manera de encontrar los bordes rápidamente (no sólo los bordes de la imagen entera, sino bordes de elementos de la imagen).
+		Podríamos hacer el filtro más complicado, en plan $g(n) = f(n-2)+ 2f(n-1) - 5 f(n) + f(n+1) + f(n+1)$, es decir, utilizamos la lista $[1,2,-5,1,1]$ que nos da el filtro aplicado. (En el caso anterior tendríamos $[1,-2,1]$).
+
+		Pero lo útil de esto es en imágenes, como ya hemos dicho, en donde el filtro se representa como una lista en 2 dimensiones, es decir, como una matriz.
+
+		Para entender mejor cómo funciona esto, podemos pensar qué ocurriría con un filtro representado con \[ \begin{pmatrix} 1&1&1\\1&1&1\\1&1&1 \end{pmatrix} \]
+
+		Lo que pasaría es que se desenfoca. Cada píxel toma información de sus adyacentes, lo que provoca desenfoque. Para probarlo, en GIMP  podemos aplicar un filtro de convolución y ver cómo ocurre. No solo con GIMP podemos hacer esto (de una manera "transparente" en el sentido de no entender nada), sino que podríamos hacer un código de Matlab para probarlo. Chamizo ha colgado en la Web unos programas para hacer filtros de convolución.
+
+		¿Qué pasaría en una matriz que fuera nula entera, menos en una línea que fueran todo unos?  Esto crea un \emph{filtro de movimiento}, ya que sólo se "desenfoca" horizontalmente.
+
+
+		Otro filtro interesante es:
+
+		\[ \begin{pmatrix}
+			0 & 0 & 1 & 1 & 0 & 0\\
+			0 & 0 & 1 & 1 & 0 & 0\\
+			1 & 1 & -4 & -4  & 1 & 1\\
+			1 & 1 & -4 & -4  & 1 & 1\\
+			0 & 0 & 1 & 1 & 0 & 0\\
+			0 & 0 & 1 & 1 & 0 & 0
+			\end{pmatrix}\]
+
+		¿Esto que hace? Pues este es el secreto del filtro "Dibujo hecho a lápiz". Aplicando este filtro e invirtiendo, una foto se convierte en un dibujo. Si alguien se anima a completarlo con unas fotos que lo enseñen pues se verá mejor.
+
+
+	\subsubsection{Transformada de Radón}
+
+		Cuando realizamos la transformada de radón con suficientes muetras (por ejemplo, 180 muestras para media circunferencia) observamos nu resultado muy bueno, con unos bordes más suevizados si eso.
+
+		En cambio, podemos ver que este método es muy sensible a la discretización ya que si tomamos solo 18 muestras a lo largo de media circunferencia, tras aplicar la transformación de Radón y su inversa podemos comprobar como aparecen unas trazas extrañas y ruido por la iamgen, aunque todavía se pueden apreciar las zonas de distinta densidad.
+
+
+
+
+
+
+
+
