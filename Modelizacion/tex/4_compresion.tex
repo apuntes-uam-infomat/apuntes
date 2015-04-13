@@ -93,7 +93,7 @@
 
 \section{Los teoremas source coding y noisy channel coding de Shannon}
 
-	\begin{theorem}{Source coding theorem\footnote{También conocido como primer teorema de Shannon} }[Source coding theorem]
+	\begin{theorem}{Source coding theorem\footnote{También conocido como primer teorema de Shannon} }[Source coding theorem] \label{SourceCoding}
 		Sea $l^*$ el mínimo de $l(C)$ entre todos los posibles códigos (con $S$ y sus probabilidades fijados), entonces:
 
 		$$ H \leq l^* \leq H + 1 $$
@@ -253,6 +253,118 @@ Las reglas para e árbol son:
 	H = \frac{17}{8}
 	\end{cases}$$ 
 \end{example}
+
+\begin{example}
+	$$S = \{ a , b , c , d\}$$
+	Con probabilidades
+	$\begin{cases}
+	a = 0.35\\b = 0.25\\ c= 0.24\\ d = 0.16
+	\end{cases}$
+	
+	 Me fijo en los dos que tengan probabilidades más pequeñas y los junto como hermanos de forma que el padre de c y d ($\widehat{cd}$) tiene probabilidad 0.4.
+	 
+	 Luego junto las dos siguientes probabilidaes más pequeñas de forma que nos queda $\widehat{ab}$ con probabilidad 0.6
+	 
+	 El padre de todos ($\widehat{abcd}$) tiene probabilidad 1.
+	 
+	 La codificación quedaría:
+	 $$\begin{cases}
+	 a \rightarrow 00\\ b \rightarrow 01 \\c \rightarrow 10 \\ c \rightarrow 11
+	 \end{cases}$$
+	 con longitud media $l(C) = 2$ y $H = 1.9472$
+	 
+	  
+	
+	
+\end{example}
+
+\begin{example}
+	Vamos a hacer una pequeña variación sobre el ejemplo anterior.
+	Tomamos ahora $\begin{cases}
+	a = 0.45 \\ b = 0.25\\c = 0.24 \\ d = 0.06
+	\end{cases}$
+	
+	Empezamos igual uniendo c y d. Nos queda $\widehat{cd}$ con probabilidad 0.30.
+	
+	Ahora unimos $\widehat{cd}$ con b. Entonces probabilidad de $ \widehat{bcd}$ es 0.55. Y finalmente unimos el nodo a.
+	
+	La codificación quedaría: $\begin{cases}
+	a \rightarrow 0 \\ b \rightarrow 10 \\ c \rightarrow 110\\ d \rightarrow 111
+	\end{cases}$
+	
+	La longitud media(lo que mide típicamente una cadena de bits) se calcularía:
+	$$l(C) = 0.45 \cdot 1 + 0.25 \cdot 2 + 0.24 \cdot 3 + 0.06 \cdot 3 = 1.91$$
+	
+	Y la entropía $H = 1.7560$
+\end{example}
+Viendo esto se nos plantean algunas preguntas:
+
+¿cómo demuestro que esto siempre da lugar a un código?
+
+¿cómo demuestro que el resultado es óptimo?
+
+\subsection{La codificación de Huffman da lugar a un código válido}
+
+La codificación de Huffman verdadderamente da lugar a un código válido ( descodificable de manera única , C es inyectiva actuando sobre cadenas)
+
+Vamos a verlo con el ejemplo anterior:
+\begin{example}
+	 $$\begin{cases}
+	 a \rightarrow 0 \\ b \rightarrow 10 \\ c \rightarrow 110\\ d \rightarrow 111
+	 \end{cases}$$
+	 De esta forma : $ abacd \rightarrow 010011010$
+	 
+	 Vemos que no hay ambigüedad. Esto es debido a una propiedad que veremos ahora.
+\end{example}
+
+\begin{defn}[Código prefijo]
+	
+	
+	Una función $C : S \rightarrow \{ \text{cadena de bits}\}$ tal que si $b_1 b_2 .... b_N \in Im C$ entonces $b_1 b_2 .... b_k \notin Im C$ para $k < N$ se dice que es un \textbf{código prefijo}
+	
+	Un ejemplo de código prefijo es el \textbf{UTF-8}
+\end{defn}
+
+
+\paragraph{¿Porqué un código prefijo es un código?}
+
+$$C (S_{i1} S_{i2} .... S_{ik}) = C(S_{j1} S_{j2} .... S_{jk}) \implies C(S_{i1}) = C(S_{j1})$$
+o bien se viola la propiedad de prefijo $\implies S_{i1} = S_{j1}$ , iterando $S_{i2} = S_{j2}$ , etc...
+
+Con esto acabamos de ver porqué los codigos prefijos son códigos. Vamos ahora a ver \textbf{porqué los códigos de Huffman son códigos}.
+
+Los códigos prefijos generan y provienen de árboles binarios ( no necesariamente completos. Un padre puede tener un solo hijo)
+
+Esta correspondencia es como en Huffman : interpretando 
+$$0 \rightarrow \text{rama a la izquierda}$$
+$$1 \rightarrow \text{rama a la derecha}$$
+
+Vamos a ver cómo quedaría el árbol si tenemos la siguiente codificación : $\begin{cases}
+a \rightarrow 01\\ b \rightarrow 001\\ c \rightarrow 0001\\ d \rightarrow 0000\\
+\end{cases}$
+
+DIBUJO ÁRBOL
+
+Con esta correspondencia tenemos que la codificación de Huffman es un código prefijo (porque proviene de un árbol)
+
+La conclusión que podemos sacar de esto es que la codificación de Huffman es "óptima" en cuanto a la longitud media.
+
+\begin{theorem}
+	El mínimo de $l(C)$ sobre todos los códigos prefijo se alcanza con la codificación de Huffman
+\end{theorem}
+\obs Hay un resultado que dice que dado un código cualquiera siempre hay un código prefijo con el mismo valor $l(C)$.
+
+Sabiendo esto , el teorema $\implies l^{*}= l(Huffman)$
+
+
+
+Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{SourceCoding}. Para la demostración vamos a utilizar el siguiente teorema:
+
+\begin{theorem}[Desigualdad de Kraft]
+	Dado un código prefijo $C : S = \{S_1, ..., S_n\} \rightarrow $ {cadenas de bits} , sea $l_i = l (C(S_i))$ entonces
+	$$\sum_{i=1}^{n} 2 ^{-li} \leq 1$$
+	Además , dados $l_i \in \ent^{+}$ cualesquiera que cumplan la desigualdad, existe un código prefijo tal que $l_i = l(C(S_i))$ con $1\leq i \leq n$
+\end{theorem}
 
 \section{Codificación aritmética}
 \section{Compresión LZ77, DEFLATE y LZW}
