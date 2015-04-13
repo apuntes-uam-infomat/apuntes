@@ -17,6 +17,7 @@ Ahora lo que vamos a querer va a ser integrar en variedades. La cuestión es que
 \item $\mop{sop} ρ_i ⊂ U_i$.\footnote{El soporte de $ρ_i$ es la clausura del conjunto de puntos en los que $ρ_i$ no es nula. Ver definición \ref{defSoporte}.}
 \item $\sum_i ρ_i (x) = 1\quad ∀x∈X$.
 \end{itemize}
+\label{defParticionUnidad}
 \end{defn}
 
 Para que esta definición tenga sentido, tiene que ocurrir que en todo punto sólo haya una cantidad finita de $ρ_i$ que no tengan valor nulo. Por facilitarnos las cosas, supondremos que $X$ es variedad compacta y que por lo tanto el cubrimiento $\set{U_i}_{i=1}^N$ es finito.
@@ -63,3 +64,70 @@ Tomamos, para $x∈X$, funciones $\appl{f_x}{\bola_3(0)}{X}$ tales que \[ f_x(\b
 
 Definimos entonces las funciones \[ θ_i ≝ \appl{φ○\inv{f_i}}{V_i}{ℝ} \], que serían las ``mesetas'' en los abiertos $U_1$. En ese caso, ya tenemos las $φ_i$ dadas por \[ φ_i ≝ \frac{θ_i}{\sum_{j=1}^N θ_j}\]
 \end{proof}
+
+\section{Integración}
+
+Para integrar, lo que haremos será integrar $n$-formas $ω$ en variedades $X$ $n$-dimensionales. Lo primero que queremos hacer es definir una expresión como $\int_X ω$. Lo más fácil es ir caso a caso.
+
+Supondremos en esta sección $X$ compacta para tener soportes compactos y $ω$ como $n$-formas dadas por \[ ω = a_1(x_1, \dotsc, x_n) \dfl{x_1}{x_n} \]
+
+El caso más fácil es cuando el soporte (ver definición en \ref{defSoporte}) está en una única carta, esto es, $\mop{sop}ω ⊂ U_i$. Entonces no hay ambigüedad para definir la integral. Tendremos una parametrización $\appl{f_i}{D ⊂ X ⊂ ℝ^n}{U_i}$ de la carta, luego definiremos la integral como \( \int_X ω ≝ \int_U f_i^* ω = \int_{ℝ^n} a_1(x_1, \dotsc, x_n) \dfl{x_1}{x_n} \label{eqIntegralCartas}\)
+
+El caso interesante es cuando está en dos cartas o más. Aquí hay que dar una definición que no dependa\footnote{Y así ha dejado la frase.}
+
+Aquí, tenemos que el soporte $K = \mop{sop} ω$ está en dos cartas, esto es, $k ⊂ U_i ∩ U_j$. Tenemos las dos parametrizaciones correspondientes $f_i, f_j$. Según lo que hemos escrito en el caso anterior, querríamos decir que \[ \int_X ω ≝ \int_{ℝ^n} f_i^* ω \qeq \int_{ℝ^n} f_j^* ω \]
+
+La cuestión es que tenemos que demostrar que esas dos integrales son iguales. Para ello, vemos que las dos formas $f_i^* ω, f_j^* ω$ están relacionadas por el difeomorfismo de cambio de variable: \[ \left(\inv{f_j} ○ f_i\right)^* \left(f_j^* ω\right) = f_i^* ω\], cosa que ya está vista\footnote{¿Dónde? Vaya usted a saber.}. Sabemos además que $\inv{f_j} ○ f_i$ es un difeomorfismo.
+
+Queremos aplicar ahora la fórmula de cambio de variable que nos dice que, dada ciertas condiciones sobre $\appl{F}{V⊂ℝ^n}{U⊂ℝ^n}$, tenemos que \[ \int_V F^* ω = \int_U ω\], una fórmula que incluye el jacobiano que conocemos de cursos de cálculo. Pero hay un problema ahí: el jacobiano saca el valor absoluto del determinante. Es decir, que en realidad la fórmula es \begin{multline} \int_{ℝ^n} a_1(y_1(x_1, \dotsc, x_n), \dotsc) \abs{\det F^*} \dfl{y_1}{y_n} = \\ = \int_{ℝ^n} a_1(y_1, \dotsc, y_n) \dfl{y_1}{y_n} \label{eqJacobianoIntegral} \end{multline}
+
+Luego, para que \eqref{eqIntegralCartas} se cumpla, no puede cambiar el signo del jacobiano. Si tenemos múltiples cartas en un entorno, los jacobianos tienen que tener todos el mismo signo. Así, llegamos a la definición de orientable:
+
+\begin{defn}[Orientable] Se dice que una variedad es orientable si y sólo existe un atlas tal que el jacobiano entre todas sus cartas tiene el mismo signo. Por convención, tomaremos signo positivo.
+\end{defn}
+
+Necesitaremos entonces que la variedad sea orientable para poder definir bien la integral en \eqref{eqIntegralCartas}, ya que en ese caso el determinante en \eqref{eqJacobianoIntegral} se puede quitar sin problemas. Por concretar notación, dos definiciones.
+
+\begin{defn}[Orientación] Una orientación es un atlas orientable.
+\end{defn}
+
+\begin{defn}[Orientación\IS compatible] Diremos que dos orientaciones o atlas orientables son compatibles si el jacobiano del cambio entre cualquier carta de cada atlas tiene signo positivo.
+\end{defn}
+
+Ahora que ya sabemos cómo integrar en cualquier abierto esté contenido en una o varias cartas, sólo nos falta combinar todo ello para integrar en una variedad entera, usando las particiones de la unidad de la sección anterior.
+
+\begin{defn}[Integración\IS de $n$-formas] Dada $X$ una variedad $n$-dimensional compacta y orientable y $ω$ una $n$-forma en $X$, se define la integral de $ω$ en $X$ como \[ \int_X ω ≝ \sum_i  \int_{U_i} ρ_i ω\] donde $\set{(U_i ρ_i)}$ es una partición de la unidad (ver \ref{defParticionUnidad}).
+\end{defn}
+
+Nos falta ver, eso sí, que la integral no depende de la elección de la partición de la unidad. Suponemos que existen dos particiones $\set{(U_i, ρ_i)}, \set{(V_j, τ_j)}$. Entonces \[ \int_X ω ≝ \sum_i  \int ρ_i ω = \sum_i \int_X ρ_i \underbrace{\left(\sum_j τ_j\right)}_{ = 1} ω = \sum_j \left(\int_X τ_j \underbrace{\left(\sum_i ρ_i\right)}_{ = 1} ω \right) = \sum_j \int_X τ_j ω \]
+
+Una cosa que hay que notar es que uno no va a calcular muchas integrales con esta definición. El uso de todo esto es teórico, no vamos a hacer muchos ejercicios de esto porque es un lío y no hay quién lo calcule.
+
+Conceptualmente, eso sí, es importante, de forma similar a la integración por partes. El teorema de Stokes es la generalización más importante de la regla de Barrow\footnote{Creo que se refiere al teorema fundamental del cálculo pero no lo estoy mirando.}, que se usa mucho en cálculo; y de la misma forma usaremos el análogo partiendo de Stokes en Geometría y análisis de variedades.
+
+\subsection{Orientación}
+
+\hfill \textit{Aviso a navegantes: esta sección es una puta mierda.}
+
+Vamos a revisar algunos comentarios sobre la orientabilidad. ¿Qué es orientar $ℝ^n$? ¿Cómo orientamos un espacio vectorial? Si tomamos $E = ℝ^n = \gen{e_1, \dotsc, e_n}$, entonces habíamos visto que $Λ^n E$ era un espacio vectorial de dimensión $1$, isomorfo no canónicamente a $ℝ^n$ y con base $Λ^n E = \gen{e_1 \y \dotsb \y e_n}$.
+
+Entonces, orientar el plano es una forma de distinguir entre dos sentidos de giro de nosequé dos vectores. Lo más importante que permite es poder decir qué significa la rotación de un cierto ángulo. Las rotaciones son isometrías del producto escalar. Si digo que hago la rotación de ángulo $π/2$, ¿giro para arriba o para abajo? Elegir la orientación es decir, por ejemplo, que la orientación es la dada por el vector $e_1 \y e_2$\footnote{No sé qué cojones es eso en $ℝ^2$} y eso es girar para arriba.
+
+En $ℝ^3$ el giro está dado por un plano, entonces la orientación la da el vector $e_1 \y e_2 \y e_3$ y tenemos el eje de giro $e_3$ y entonces está yoqueséqué bien definido.
+
+En variedades, es lo mismo. Es decir, dar en cada punto un sentido de giro alrededor del punto de manera continua.
+
+Me he perdido y ha acabado hablando de macacos.
+
+Formalmente, esto no es más que una orientación en cada plano tangente. En cada punto, consideramos una forma bilineal de dos vectores alternada, y eso es elegir una orientación y esa orientación cada plano tiene una base $∂_{x_1}, ∂_{x_2}$ y esto nosequé $ω_2$ una 2-forma en $X$ definida globalmente que nunca se anula porque entonces tendríamos sentido de giro nulo. Y esto es dar en cada punto una orientación del espacio tangente es elegir uno\footnote{sic} de los dos semirrectas que algo.
+
+Otra definición posible de orientación es la siguiente:
+
+\begin{defn}[Orientable] $X$ es orientable si y sólo si existe una $n$-forma $ω_n$ en $X$ tal que $ω_n(x) ≠ 0\;∀x∈X$.
+\end{defn}
+
+A la $n$-forma $ω_n$ se le llama la \concept[Forma\IS de volumen]{forma de volumen}, así que definiremos el \concept[Volumen]{volumen de una variedad}\footnote{Por supuesto, si tenemos una superficie será el área.} como \[ \mop{Vol(X)} ≝ \int_X ω_n\]
+
+El volumen depende de la elección de la forma de volumen. La cuestión es que si asociamos a cada punto una métrica Riemanniana (un producto escalar, ver apuntes de GCS) tenemos un volumen riemanniano.
+
+¿Qué ocurre cuando tenemos dos formas de volumen en un punto? Son dos $n$-formas que no se anulan nunca, luego se pueden dividir. Las diferenciales se cancelarán y quedará una función definida en la variedad. Y si las dos formas son de la misma orientación, la función es siempre positiva. Luego dos formas de volumen $ω_n, ω_n'$ difieren simplemente en la multiplicación por una función positiva. Esto lo que quiere decir es que en cada punto simplemente cambiamos la escala de medida en ese punto. La métrica nos permitirá escoger una base intrínseca ortonormal que nos da un cubo unidad, que es la forma de volumen intrínseca en una variedad riemanniana. Si no es una variedad riemannian a asdnasd no tenemos un volumen intrínseco y tenemos que cambiar de escala entre una y otra cosa y no sé qué más.
