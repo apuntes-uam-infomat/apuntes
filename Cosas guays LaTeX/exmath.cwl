@@ -64,6 +64,7 @@
 \argmax#m
 \eq#m
 \rango#m
+\eqexpl{arg0}#m
 \x#m
 \appl{f}{dominio}{imagen}#m
 \uexists#m
