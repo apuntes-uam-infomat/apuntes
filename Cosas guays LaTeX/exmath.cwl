@@ -221,3 +221,4 @@
 \lie{arg0}#m
 \tgs#m
 \tgsd#m
+\cind#m
