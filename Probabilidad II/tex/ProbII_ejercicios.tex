@@ -2435,6 +2435,8 @@ $\|f\|_\infty$ denota el supremo esencial de $|f|$.
 \begin{problem}[1]Decidir razonadamente si la independencia de los sucesos $A$ y $B$ es equivalente a la independencia de $A$ y $B^c$.
 
 \solution
+SOLUCIÓN 1:
+
 Si A y B son independientes entonces $P(A \cap B) = P(A)P(B)$.
 
 Por tanto queremos ver que $P(A \cap B^c) = P(A)P(B^c)$:
@@ -2448,6 +2450,23 @@ P(A \setminus (A \cap B))= P(A)-P(A\cap B) = P(A)-P(A)P(B)=P(A)(1-P(B))=P(A)P(B^
 \]
 
 Por tanto A y $B^c$ también son independientes.
+
+SOLUCIÓN ALTERNATIVA:
+\[
+P(A)=P(A|B)P(B)+P(A|B^c)P(B^c)
+\]
+
+Sabiendo que $P(A|B)=P(A)$, entonces:
+\[
+P(A) = P(A)P(B)+P(A|B^c)P(B^c)  \Leftrightarrow  P(A)-P(A)P(B)=P(A|B^c)P(B^c) \Leftrightarrow P(A)(1-P(B))=P(A|B^c)P(B^c)
+\]
+
+Pero $1-P(B)=P(B^c)$. Y nos queda:
+\[
+P(A)P(B^c)=P(A|B^c)P(B^c)  \Leftrightarrow P(A)=P(A|B^c)
+\]
+
+y queda demostrado que A y $B^c$ son independientes.
 \end{problem}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2565,6 +2584,31 @@ Para todo $\epsilon > 0$. Si $X_n \leq x$ debemos tener que $X \leq x \epsilon$ 
 P(X_n \leq x) \leq P(X \leq x + \epsilon)+P(\abs{X-X_n}\geq \epsilon)
 \]
 
+Sustituyendo en esta acuación x por $x-\epsilon$, tenemos también que:
+\[
+P(X \leq x - \epsilon) \leq P(X_n \leq x) + P(\abs{X-X_n} \geq \epsilon)
+\]
+
+y, combinando y reordenando estas dos desigualdades, se llega al punto clave:
+\[
+P(X \leq x - \epsilon)-P(\abs{X-X_n}\geq \epsilon) \leq P(X_n \leq x) \leq P(X \leq x - \epsilon)+P(\abs{X-X_n}\geq \epsilon)
+\]
+
+Si a continuación hacemos $n \rightarrow \infty$, dado que $X_n \rightarrow X$ en probabilidad, sabemos que:
+\[
+\lim_{n \rightarrow \infty} P(\abs{X-X_n}\geq \epsilon)=0
+\]
+
+lo cual quiere decir que $\lim_{n \rightarrow \infty} P(X_n \leq x)$ está comprendido entre $P(X \leq x - \epsilon)$ y $P(X \leq x + \epsilon)$.
+
+Admitiendo que $\epsilon \rightarrow 0$, por continuidad de la probabilidad,
+\[
+\lim_{\epsilon \rightarrow 0} P (X \leq x + \epsilon) = P(X \leq x) \text{ y } \lim_{\epsilon \rightarrow 0} P (X \leq x - \epsilon) = P(X < x)
+\]
+ 
+lo cual implica también que $\lim_{n \rightarrow \infty} P(X_n \leq x)$ está comprendido entre $P(X<x)$ y $P(X \leq x)$.
+
+Pero como $P(X=x)=0$, tenemos que $P(X<x)=P(X \leq x)$ y por lo tanto  $\lim_{n \rightarrow \infty} P(X_n \leq x) = P(X \leq x)$, como se quería demostrar.
 
 \end{problem}
 
@@ -2809,22 +2853,21 @@ Sabemos que $\forall \epsilon > 0, \exists N: \forall n \geq N$, se tiene que:
 \abs{X_n -X} < \epsilon
 \]
 
+Es decir $\lim_{n \rightarrow \infty} \abs{X_n-X}=0$.
+
 Y por los ejercicios anteriores, esto implica que:
 \[
-P(\liminf_n\{ |X_n - X| > \epsilon\}) = 0
+P(\lim_n\{ |X_n - X| > \epsilon\})= 0
 \]
 
-Llamamos $G=|X_n - X|$. Sea $f_G$ la función de densidad de G. $\lim_n G$ una variable aleatoria cuya función de densidad será $\lim_n f_G$:
-
+Desarrollamos:
 \[
-P(\liminf_n\{ |X_n - X| > \epsilon\}) = \int_{\epsilon}^{\infty} \liminf_n f_G(x) dx
+0 \leq \lim_n P(\{ |X_n - X| > \epsilon\})=\lim_{n \rightarrow \infty} \int  \ind_{\{\abs{X_n-X}>\epsilon\}} dP \stackrel{TCD}{=} \int \lim_{n \rightarrow \infty}  \ind_{\{\abs{X_n-X}>\epsilon\}} dP =
 \]
-
-Como G es una variable aleatoria positiva, la función de densidad es positiva y podemos aplicar el lema de Fatou:
-
 \[
-\int_{\epsilon}^{\infty} \liminf_n f_G(x) dx \leq \liminf_n \int_{\epsilon}^{\infty} f_G(x) dx
+= P(\lim_n\{ |X_n - X| > \epsilon\})= 0
 \]
+
 
 \end{problem}
 
