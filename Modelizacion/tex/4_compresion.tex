@@ -358,13 +358,79 @@ Sabiendo esto , el teorema $\implies l^{*}= l(Huffman)$
 
 
 
-Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{SourceCoding}. Para la demostración vamos a utilizar el siguiente teorema:
-
 \begin{theorem}[Desigualdad de Kraft]
 	Dado un código prefijo $C : S = \{S_1, ..., S_n\} \rightarrow $ {cadenas de bits} , sea $l_i = l (C(S_i))$ entonces
 	$$\sum_{i=1}^{n} 2 ^{-li} \leq 1$$
 	Además , dados $l_i \in \ent^{+}$ cualesquiera que cumplan la desigualdad, existe un código prefijo tal que $l_i = l(C(S_i))$ con $1\leq i \leq n$
 \end{theorem}
+\begin{proof}
+	Empezaos demostrando $l_i = l (C(S_i)) \implies
+	\sum_{i=1}^{n} 2 ^{-li} \leq 1$
+	
+	Suponemos que $l_1 \leq l_2 ... \leq l_r < l_{r+1} = l_{r+2} = ... = L_n$
+	
+	Consideramos $B =${cadenas de $l_n$ bits} de forma que 
+	$$2^{l_n} = |B| = |B \cap Im C| + |B - B \cap IM C| = n-r + \sum_{i=1}^{r} 2^{l_n - l_i} = \sum_{i=1}^{n} 2^{l_n - l_i}$$
+	$B \cap Im C$ no contiene ninguna de las $2^{l_n - l_i}$ cadenas de bits que comienzan por $C(S_i)$
+	%Es decir, cuenta todas las cadenas que empiezan %por $C(S_i)$ , que son $2^{l_n - l_i}$ cadenas, %y ve que es imposible que todas ellas sean un %código y dice que 
+	
+	El recíproco se basa en el algoritmo ilustrado con el siguiente ejemplo:
+	$$l_1 = 1 , l_2=2, l_3=3$$
+	$$2^{-1} + 2^{-2} + 2 ^{-3} \leq 1$$
+	Queremos un código prefijo con estas longitudes.
+	Tomamos la longitud mayor $l_3 = 3$ y dibujamos el árbol binario completo de altura esa logitud.
+	DIBUJO ARBOL
+	
+	El algoritmo se basa en podar este árbol de la siguiente forma:
+	\begin{enumerate}
+		\item En $l_1 = 1$ borramos los descendientes de un vértice que estén en altura/profundidad 1.
+		
+		\item Luego hago lo mismo con $l_2$, con lo cual borramos los descendientes que estén en altura/profundidad 2.
+		
+		\item Una vez hecho esto, si sobran algunas hojas que no corresponden a las longitudes, también las borramos (en nuestro caso nos quedan dos con longitud 3, y solo quiero 1, por lo tanto borro el otro)
+		
+		\item Las codificaciones que nos quedarían serían $\begin{cases}
+		1\\00\\010
+		\end{cases}$
+	\end{enumerate}
+	Necesitamos alguna condición para que el algoritmo se pueda llevar a cabo, para que o se nos acaben los vértices.
+	
+	Mirando el ejemplo lo que hemos ido hav¡ciendo es:
+	
+	Al árbol con 8 hojas le he quitado 4, luego 2 y abajo quedan $8-4-2 = 2$ por lo tanto puedo escoger el $l_3$ de altura 1.
+	
+	En general, con la notación anterior $l_1 \leq l_2 \leq .... \leq l_{r} < l_{r+1} = .. = l_n$ el algoritmo parte de un árbol con $2^{l_n}$ hojas. De ellas borramos primero $2^{l_n - l_1}$ y en sucesivos pasos $2^{l_n - l_2} , .... , 2^{l_n - l_r}$ y me deben sobrar al menos $n-r$ de las hojas iniciales.
+	
+	Entonces necesitamos que $2^{l_n} - \sum_{i=1}^{r} 2^{l_n - l_i} \geq n-r$ para que el algoritmo funcione.
+	
+	Entonces $2^{l_n} \geq \sum_{i=1}^{n} 2^{l_n - l_i}$
+\end{proof}
+
+\obs Se puede probar (desig de McMillan) que para cualquier código se cumple $\sum_{i=1}^{n} 2^{-l_i} \leq 1$ aunque no sea prefijo.
+
+Entonces dado un código , este satisface la desigualdad de Kraft y por el recíproco de Kraft sabemos que eiste un código prefijo con las mismas logitudes.
+
+$\implies$ Cualquier teorema que hable de las longitudes y sea verdad para códigos prefijo, lo es para todos.
+
+
+Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{SourceCoding}. Para la demostración vamos a utilizar la desigualdad de Kraft:
+
+\begin{proof}
+	\textbf{Demostración del Source coding theorem}
+	Tenemos
+	$$f(x_1 , x_2 , ...., x_n) = -\sum_{i=1}^{n} p_i \log x_i$$
+	restringimos esta función de forma que
+	$$\sum_{i=1}^{n} x_i = 1 \text{   con   } 0 \leq x_i \leq 1$$
+	Entonces f alcanza un mínimo cuando $x_i = p_i$
+	
+		Tomamos $x_i = \frac{2^{-l_i}}{\sum_{j=1}^{n} 2^{-l_j}}$ , siendo $l_i$ como en la desigualdad de Kraft.
+			
+			Entonces
+			$$H= f(p_1,...,p_n) \leq f (\frac{2^{-l_1}}{\sum ...} .... , \frac{2^{-l_n}}{\sum ...})$$
+			Y esto, por la desigualdad de Kraft
+			$$\leq f(2^{-l_1} , .... , 2^{-l_n}) = l(C)$$
+
+	\end{proof}
 
 \section{Codificación aritmética}
 \section{Compresión LZ77, DEFLATE y LZW}

@@ -2182,7 +2182,7 @@ Calcule las siguientes integrales trigonométricas usando la integración sobre 
 \[\int_0^{2π}\frac{1}{2+\cos(t)}dt\]
 
 \ppart
-\[\int_0^{2}\frac{\cos(2t)}{5-4\sin(t)}dt\]
+\[\int_0^{2π}\frac{\cos(2t)}{5-4\sin(t)}dt\]
 \solution
 
 \spart
@@ -2195,6 +2195,21 @@ Este tipo de integrales se resuelven fácilmente mediante el cambio de variables
 Así la integral nos queda:
 \[\int_0^{2π}\frac{1}{2+\cos(t)}dt = \int_{|z|=1}\frac{1}{2+\frac{z+1/z}{2}}\frac{1}{iz}dz = \frac{2}{i}\int_{|z|=1}\frac{dz}{z^2+4z+1}\]
 
+Las dos raíces del denominador son $-2\pm 2\sqrt{3}$ y ambas se salen del círculo de radio 1 de modo que estamos integrando una función holomorfa sobre una curva cerrada y por el Teorema de Cauchy tenemos que esta integral es 0.
+\spart
+
+Aplicamos el mismo procedimiento del ejercicio anterior para resolver la integral:
+\[\int_0^{2π}\frac{\cos(2t)}{5-4\sin(t)}dt = \int_{|z|=1} \frac{\frac{z^2+1/z^2+2}{4}-\frac{z^2+1/z^2-2}{-4}}{5-4\frac{z-1/z}{2i}}\frac{1}{iz}dz = \int_{|z|=1}\frac{\frac{z^2+1/z^2}{2}}{5iz-2z^2+2} dz=\]
+\[=\frac{1}{2}\int_{|z|=1}\frac{z^4+1}{-2z^4+5iz^3+2z^2} dz= \frac{1}{2}\int_{|z|=1}-\frac{1}{2}+\frac{10iz^3+4z^2+1}{-2z^4+5iz^3+2z^2}dz\]
+Podemos factorizar el denominador como:
+\[-2z^4+5iz^3+2z^2 = z^2\left(z+\frac{-5+3i}{4}\right)\left(z+\frac{-5-3i}{4}\right)\implies\]
+\[\implies \frac{10iz^3+4z^2+1}{-2z^4+5iz^3+2z^2}=\frac{A}{z^2}+\frac{B}{z+\frac{-5+3i}{4}}+\frac{C}{z+\frac{-5-3i}{4}}\]
+
+La integral sobre los dos segundos sumanos será 0 por el Teorema de Cauchy así como sobre la constante $-1/2$, de modo que nos basta con conocer el valor de $A$ que vemos es
+\[A= \frac{1}{2.125}\]
+
+Es decir, tenemos que nuestra integral inicial es igual a:
+\[\int_0^{2π}\frac{\cos(2t)}{5-4\sin(t)}dt =  2.125\int_{|z|=1}\frac{dz}{z^2} = 2πi \cdot 2.125 \cdot f^{(n)}(0) = 0 \text{ puesto que } f(z)=1\]
 \end{problem}
 
 \begin{problem}[12]
@@ -2234,37 +2249,87 @@ Calcule la integral
 \[\lim_{n \to \infty}\sqrt{n}\int_0^{2π}(\cos(t))^{2n}dt?\]
 
 \textbf{Sugerencia:} Calcule la integral de línea
-\[\int_{|z|=1}\left( z  \frac{1}{z}\right)^{2n}\frac{dz}{z}\]
+\[\int_{|z|=1}\left( z + \frac{1}{z}\right)^{2n}\frac{dz}{z}\]
 usando el desarrollo binomial.
+
 \solution
+
+\yo
+
+Vamos a utilizar nuevamente el truco que aprendimos en el problema \textbf{11}:
+
+\[\int_0^{2π}(\cos(t))^{2n}dt=\int_{|z|=1}\left(\frac{z+1/z}{2}\right)^{2n} \frac{1}{zi}dz = \frac{1}{2^{2n}i}\int_{|z|=1}\left(z+\frac{1}{z}\right)^{2n}\frac{1}{z}dz=\]
+\[=\frac{1}{i2^{2n}}\int_{|z|=1}\sum_{j=0}^{2n}{2n \choose j }z^{2n-2j-1}dz=\footnote{Los sumanos con exponente positivo dan como resultado 0 aplicando el Teorema de Cauchy}\frac{1}{i2^{2n}} \int_{|z|=1} \sum_{j=n+1}^{2n}{2n \choose j }z^{2n-2j-1}dz =\]
+\[\frac{1}{i2^{2n}} \int_{|z|=1} \sum_{j=0}^{2n}{2n \choose j+n+1 }\frac{1}{z^{2j+1}}dz=\frac{1}{i2^{2n}} \sum_{j=0}^{2n}{2n \choose j+n+1 } \int_{|z|=1}\frac{1}{z^{2j+1}}dz=\]
+\[=\frac{1}{i2^{2n}}2πi =\frac{π}{2^{2n-1}} \]
+%\[=\frac{1}{i2^{2n}} \sum_{j=n+1}^{2n}{2n \choose j } \int_0^{2π}\frac{-\sin(t)+i\cos(t)}{(\cos(t)+i\sin(t))^{2j+1}}dt=\frac{1}{i2^{2n}} \sum_{j=n+1}^{2n}{2n \choose j }\frac{1}{-2j} (\cos(t)+i\sin(t))^{-2j}\]
+
+Al calcular el límite tenemos 0
 \end{problem}
 
 \begin{problem}[14]
-Sea Ω un dominio en $\cplex$ y sea $f$ una función holomorfa en Ω tal que para un cierto $M>0$ se tiene que $|f(z)|\geq M$ para todo $z \in Ω$. Pruebe que
+Sea Ω un dominio en $\cplex$ y sea $f$ una función holomorfa en Ω tal que para un cierto $M>0$ se tiene que $|f(z)|\leq M$ para todo $z \in Ω$. Pruebe que
 \[|f'(z) | \leq \frac{M}{\text{distancia}(z, \partial Ω)}\]
 donde $\partial Ω$ denota la frontera de Ω.
 
 \textbf{Sugerencia:} Sea $r$< distancia($z,\partial Ω$). Use la fŕomula integral de Cauchy en $\mathbb{D}(z,r)$
+
 \solution
+\yo
+
+Por la fórmula integral de Cauchy sabemos que
+\[|f'(z)| = \left| \frac{1}{2πi}\int_{\partial \mathbb{D}(z,r)}\frac{f(w)}{w-z}dw \right|\leq  \left| \frac{1}{2πi}\right| \left|\int_{\partial \mathbb{D}(z,r)}\frac{M}{w-z}dw\right|\leq\left|\int_{\partial \mathbb{D}(z,r)}\frac{M}{w-z}dw\right|=\]
+\[=M \left|\int_{\partial \mathbb{D}(z,r)}\frac{dw}{w-z}\right|\]
+
+Ni idea de como seguir...
+
+
 \end{problem}
 
 \begin{problem}[15]
-Demuestre que si $f$ es holomorfa en un abierto que contiene al disco unidad cerrado $\bar{\mathbb{D}}$, y si $|f(z)|=0$ cuando $|z|=1$, entonces $f(z)=0$ para todod $z \in \bar{\mathbb{D}}$.
+Demuestre que si $f$ es holomorfa en un abierto que contiene al disco unidad cerrado $\overline{\mathbb{D}}$, y si $|f(z)|=0$ cuando $|z|=1$, entonces $f(z)=0$ para todo $z \in \overline{\mathbb{D}}$.
 
 \textbf{Ayuda:} Fórmula integral de Cauchy
+
 \solution
+
+
+
+
+
 \end{problem}
 
 \begin{problem}[16]
-Sea $f$ una función holomorfa en $\{z \in \cplex \tq |z| < R_0\}$. Demuestre las sigientes fŕomulas
+Sea $f$ una función holomorfa en $\{z \in \cplex \tq |z| < R_0\}$. Demuestre las sigientes fórmulas
 
 \ppart
 Si γ es la circunferencia de radio $R<R_0$ y $|w|<R$ entonces
 \[f(w)=\frac{1}{2πi}\int_γ \frac{R^2-|w|^2}{(z-w)(R^2-z\bar{w})}f(z)dz\]
 \ppart
 Si $0 \leq r < R < R_0$ entonces
-\[f(re^{it}=\frac{1}{2π}\int_0^{2π}\frac{R^2-r^2}{R^2-2Rr\cos(α-t)+r^2}f(Re^{iα})dα\]
+\[f(re^{it})=\frac{1}{2π}\int_0^{2π}\frac{R^2-r^2}{R^2-2Rr\cos(α-t)+r^2}f(Re^{iα})dα\]
+
 \solution
+
+\yo
+
+\spart
+\[\frac{1}{2πi}\int_γ \frac{R^2-|w|^2}{(z-w)(R^2-z\bar{w})}f(z)dz = \frac{1}{2πi}\int_γ \frac{A}{z-w}dz+\frac{1}{2πi}\int_γ \frac{B}{R^2-z\bar{w}}dz\]
+
+Y operando tenemos que
+\begin{align}
+(R^2-|w|^2) f(w) &= A (R^2-|w|^2) \implies A = f(w)\\
+(R^2-|w|^2) f(R^2/\bar{w}) &= B(R^2/\bar{w}-w) \implies B=\bar{w} f(R^2/\bar{w})
+\end{align}
+
+Por el Teorema de Cauchy en el disco tenemos que la primera integral vale $f(w)$. Si conseguimos demostrar que la segunda es 0 ya estará resuelto. Para conseguirlo basta con probar que es holomorfa en el dominio que estamos trabajando.
+
+Tenemos que la función
+\[\frac{\bar{w} f(R^2/\bar{w}}{R^2-z\bar{w}}\]
+es holomorfa en todo punto salvo en $z= R^2/\bar{w} = w R^2/|w|^2 \implies |z|=R^2/|w| \geq R\footnote{|w|<R según el enunciado}$ por tanto este punto no entra dentro del dominio que estamos trabajando. Es decir, la segunda integral es la integral de una función holomorfa sobre una curva cerrada y, por el teorema de Cauchy, sabemos que vale 0.
+
+\spart
+
 \end{problem}
 
 \section{Hoja 5}
@@ -2284,7 +2349,24 @@ Está claro que la $f$ buscada no puede ser la identidad por que no cumple la se
 \begin{problem}[2]
 Halle razonadamente todas las funciones holomorfas en el disco $\mathbb{D}=\{z : |z-1|<1\}$ y que allí satisfacen la condición
 \[f \left( \frac{n}{n+1}\right) = 1-\frac{1}{2n^2+2n+1}\]
+
 \solution
+\yo
+
+\[x=\frac{n}{n+1} \implies nx+x=n\implies n = \frac{x}{1-x}\]
+
+Aplicando este cambio de variable a la función mostrada tenemos:
+\[f\left(\frac{n}{n+1}\right) = 1-\frac{1}{2n^2+2n+1}= f(x)=1-\frac{(1-x)^2}{2x^2+2x-2x^2+x^2-2x+1}\]
+\[f(x)=\frac{2x}{x^2+1}\]
+
+Es sencillo ver que al evaluar esta función en $\frac{n}{n+1}$ obtenemos la función inicial. Esta función es holomorfa en el disco, pues es holomorfa en todo el plano complejo.
+
+Aplicando ahora una idea similar a la del apartado anterior, vemos que si hubiera otra función $g(x)$ tal que
+\[g\left( \frac{n}{n+1}\right) = 1-\frac{1}{2n^2+2n+1}\]
+tendríamos que las dos funciones en un conjunto de puntos del intervalo $(0,1)$ que tienden al 1 y, por el principio de los ceros aislados, tenemos que $g=f$.
+
+Es decir, sólo hay una función que cumpla la condición pedida y es la $f(x)$ calculada previamente.
+
 \end{problem}
 
 \begin{problem}[3]
@@ -2295,6 +2377,18 @@ entonces $f$ es idénticamente cero en $\mathbb{D}$
 \textbf{Sugerencia:} Como $f(0)=0$, entonces $f(z)=z^kg(z)$ con $g(z)$ holomorfa en $\mathbb{D}$ y $g(0)\neq 0$. Compruebe que esto es imposible.
 
 \solution
+\yo
+
+Tomando límites a ambos lados obtenemos, tal como se indica en la sugerencia, $f(0)=0$.
+\[\lim_{n \to \infty} f\left(\frac{1}{n}\right) = 0=f(0)\]
+
+Atendiendo a la sugerencia del enunciado tenemos
+\[\left|f\left( \frac{1}{n}\right) \right| = \left| \left(\frac{1}{n}\right)^kg\left( \frac{1}{n}\right)\right|\leq \frac{1}{2^n} \implies \left| g\left( \frac{1}{n}\right) \leq \frac{n^k}{2^n}\right| \to 0 \implies g(0)=0\]
+
+Pero decíamos que $f(z)=k^zg(z)$ con $g$ una función holomorfa que no se anula en el 0.
+
+\obs La idea es que si $f$ tiene un cero de multiplicidad $k$ podemos factorizarla escribiendo $f(z)=z^kg(z)$ de modo que es imposible que se anule $g(z)$ en el 0, ya que en caso de hacerlo la multiplicidad del cero serái $k+1$. Como hemos forzado a que $g(0)=0$ llegamos a una contradicción, que implica que no existirá la $f$ con las condiciones pedidas.
+
 \end{problem}
 
 \begin{problem}[4]
@@ -2306,7 +2400,7 @@ Halle todas las funciones enteras tales que
 
 \solution
 \spart
-\[f(z)=f(z^2) \iff \sum_{n=0}^{\infty}z_nz^{2} = \sum_{n=0}^{\infty}a_nz^{2n}\]
+\[f(z)=f(z^2) \iff \sum_{n=0}^{\infty}b_nz^{n} = \sum_{n=0}^{\infty}a_nz^{2n}\]
 Así nos queda que los coeficientes de la serie deben cumplir:
 \[f(x)= \left\{ \begin{array}{lcc}
              0 &   si  & \text{ n impar} \\
@@ -2314,22 +2408,41 @@ Así nos queda que los coeficientes de la serie deben cumplir:
              \end{array}
    \right.\]
 
+\spart
+\yo
+
+\[f(2z)=2f(z) \iff \sum_{n=0}^{\infty} b_n2^nz^n = \sum_{n=0}^{\infty}a_n2z^n\]
+
+Igualando los coeficientes de las series obtenemos que esto sólo puede ocurrir cuando la función $f(z)=z+cte$
+
 \end{problem}
 
 \begin{problem}[5]
 Halle todas las funciones holomorfas en el disco unidad $\mathbb{D}$ que satisfacen
 \[f(z^2)=f(z)+z\]
 Compruebe que no exsiste ninguna función entera que cumpla esta condición
+
 \solution
+
+\yo
+
+Una función válida sería $g(x)=g(|\sqrt{x}|)+|\sqrt{x}|$ y, aplicando el princpio de los ceros aislados vemos que no existen más funciones que la aquí indicada.
+
+Para probar que no existe ninguna función entera que cumpla esta propiedad, basta con ver que esta función no es holomorfa en $\cplex$, lo cual es obvio pues sabemos que la raíz cuadrada no es una función entera.
+
 \end{problem}
 
 \begin{problem}[6]
-Śea α un número irracional y $q=e^{2πiα}$. Demuéstrese que las únicas soluciones holomorfas de la ecuación funcional $f(z)=f(qz)$ en la coronoa $Ω = \{\frac{1}{2}<|z|<\frac{3}{2}\}$ son las funciones constantes
+Śea α un número irracional y $q=e^{2πiα}$. Demuéstrese que las únicas soluciones holomorfas de la ecuación funcional $f(z)=f(qz)$ en la corona $Ω = \{\frac{1}{2}<|z|<\frac{3}{2}\}$ son las funciones constantes.
+
 \solution
+
+
+
 \end{problem}
 
 \begin{problem}[7]
-Desmuestre que si $f$ es holomorfa en el disco unidad y $|f(z)|\leq 1-|z|$ allí, entonces $f=0$. ¿ Puede una función holomorfa satisface $|f(z)| \geq 1/(1-|z|)$ para |z| < 1?
+Desmuestre que si $f$ es holomorfa en el disco unidad y $|f(z)|\leq 1-|z|$ allí, entonces $f=0$. ¿Puede una función holomorfa satisface $|f(z)| \geq 1/(1-|z|)$ para |z| < 1?
 \solution
 \end{problem}
 
