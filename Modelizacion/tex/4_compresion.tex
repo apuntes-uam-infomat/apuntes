@@ -165,11 +165,19 @@
 
 		Chamizo hizo unas pruebas en su ordenador en las que con archivos aleatorios los resultados fueron los siguientes:
 
+
 		\begin{table}[h]
+			\centering
 			\begin{tabular}{r|c}
-			gzip & 159068 bits
+			algoritmo & tamaño fichero comprimido \\ \hline
+			gzip & 159068 bits \\
+			bzip & 160213 bits \\
+			rar & 161495 bits \\
+			zip & 159210 bits
 			\end{tabular}
+			\caption{Todos son aproximadamente un 30\% peores que el óptimo.}
 		\end{table}
+		
 
 
 	\end{example}
@@ -423,14 +431,101 @@ Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{So
 	$$\sum_{i=1}^{n} x_i = 1 \text{   con   } 0 \leq x_i \leq 1$$
 	Entonces f alcanza un mínimo cuando $x_i = p_i$
 	
-		Tomamos $x_i = \frac{2^{-l_i}}{\sum_{j=1}^{n} 2^{-l_j}}$ , siendo $l_i$ como en la desigualdad de Kraft.
-			
-			Entonces
-			$$H= f(p_1,...,p_n) \leq f (\frac{2^{-l_1}}{\sum ...} .... , \frac{2^{-l_n}}{\sum ...})$$
-			Y esto, por la desigualdad de Kraft
-			$$\leq f(2^{-l_1} , .... , 2^{-l_n}) = l(C)$$
+	Tomamos $x_i = \frac{2^{-l_i}}{\sum_{j=1}^{n} 2^{-l_j}}$ , siendo $l_i$ como en la desigualdad de Kraft.
+		
+		Entonces
+		$$H= f(p_1,...,p_n) \leq f (\frac{2^{-l_1}}{\sum ...} .... , \frac{2^{-l_n}}{\sum ...})$$
+		Y esto, por la desigualdad de Kraft
+		$$\leq f(2^{-l_1} , .... , 2^{-l_n}) = l(C)$$
 
-	\end{proof}
+	Esto lo cumple todo $l(C)$ por lo que buscaremos uno que además cumpla $l(C) < H+1$.
+
+	Escojamos $l_i \in \mathbb{Z}^+ : -\log_2 p_i \leq l_i < 1 - \log_2 p_i$ :
+
+	$$\sum^{n}_{i = 1} 2^{l_i} \leq \sum^{n}_{i = 1} 2^{\log_2 p_i} = \sum^{n}_{i = 1} p_i = 1 $$
+
+	$$\Rightarrow^{Kraft} \exists \text{ código prefijo con } l_i = l(C(S_i))$$
+
+	$$l(C) = \sum^{n}_{i = 1} p_i l_i < \sum^{n}_{i = 1} p_i - \sum^{n}_{i = 1} p_i \log_{2} p_i = 1 + H$$
+
+\end{proof}
+
+\section{Métodos de diccionario}
+	En español los caracteres tienen una entropía aproximada de $4.09$. Lo que significa que dado un texto de $M$ caracteres:
+
+	$4.09 = H \leq l^{*} (C) \quad \text{ carácter } \rightarrow  1 \text{ byte} = 8 \text{ bits}$
+
+	Cabe esperar que la mejor compresión posible sea $4.09M$ bits $= \frac{4.09}{8}$ bytes $\simeq$ la mitad de los bytes del principio.
+
+	En cambio si comprobamos empíricamente con varios compresores comprobamos que superan el máximo:
+
+	$M = 1869610$
+
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{r|c}
+		algoritmo & tamaño fichero comprimido \\ \hline
+		gzip & 730122 bytes \\
+		bzip & 534165 bytes \\
+		rar & 609319 bytes \\
+		zip & 730264 bytes
+		\end{tabular}
+	\end{table}
+
+	Supongamos un tipo de ficheros en que cada byte tiene un 99\% de posibilidades de ser igual al siguiente y un 1\% de cambiar aleatoriamente\footnote{Como una imagen rastrerizada de un dibujo. Los cambios de color son raros porque hay grandes bloques iguales, como el fondo.}.
+
+	En un fichero grande de este tipo cada carácter aparecerá con probabilidad $\simeq \frac{1}{256} \Rightarrow H = \sum\limits^{256}_{i = 1} - \frac{1}{256} log_{2} \frac{1}{256} = 8$.
+
+	$\Rightarrow_{\text{source coding theorem}}$ No hay compresión posible, cada byte requiere 8bits.
+
+	Sin embargo hay un método muy fácil para comprimir RLE (run-length encoding):
+
+	Sustituir los datos por grupos de dos bytes. En cada grupo está el número de repeticiones de un caracter y el caracter:
+
+	50A200B = AA... 50 veces ...ABB... 200 veces ...B
+
+
+	200A100A200B = AA... 300 veces ...AB... 200 veces ...B
+
+	Con este método típicamente (por las probabilidades mencionadas anteriormente) pararemos de 100 bytes a 2 bytes.
+
+	En el teorema $S$ está fijado $S$ = \{ posibles bytes \} con $S$ = \{ posibles cadenas de 100 bytes \} el teorema sí aseguraría que hay compresión.
+
+	\begin{obs} Aplicar el corolario con N = 100 no refleja la situación de este tpo de ficheros porque allí se suponía la independencia.
+
+	Según el modelo del corolario: Prob (A... 100 veces ...A) = $(1/256)^{100}$
+
+	Y en nuestro problema: (A... 100 veces ...A) = $(1 - 0.01)^{100} \simeq{1/e}$
+
+	\end{obs}
+
+	En principio Huffman con $S =$ \{ cadenas de 100 bytes que aparecen en el fichero \} sería ventajoso. Pero este $S$ se basa en un conocimiento previo.
+
+	Huffman no se suele aplicar en compresores ``universales'' principalmente:
+
+	\begin{itemize}
+		\item Requeriría un estudio estadístico previo del fichero (para decidir $S$ y $p_i$) que es costosa.
+
+		\item Hay que almacenar el árbol para comunicarlo al compresor y podría ser grande.
+
+	\end{itemize}
+
+	Los algoritmos que se usan parten de un trabajo de J.Zip, A.Lempel de 1997 y dan lugar a tres variantes principales: LZ77, LZ78 y LZW.
+
+	En la práctica los 3 se usan con diferentes trucos y variantes, pero están todos en uso. A parte de en compresores, se usan en diferentes formatos de imágen.
+
+	\subsection{Algunos algoritmos de compresión de imagen}
+
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{r|c}
+			algoritmo & funcionamiento \\ \hline
+			bmp & sin compresión o RLE \\
+			png & LZ777 y Huffman (con filtrados previos) \\
+			gif & Fija una paleta de 256 colores (o más pequeñas) y LZW \\
+			\end{tabular}
+		\end{table}
+
 
 \section{Codificación aritmética}
 \section{Compresión LZ77, DEFLATE y LZW}
