@@ -216,6 +216,7 @@ La igualdad $f(x) = \int\limits^{\infty}_{-\infty} $... es cierta para $f$ que d
 
 %% Hasta aquí no hay quien cojones lea nada
 \newpage
+\begin{mdframed}
 \textbf{RESUMEN:}
 
 \begin{itemize}
@@ -239,7 +240,7 @@ $$ f(x) = \int\limits^{\infty}_{-\infty} \hat{f}(\psi) e(x \psi) d\psi $$
 $$ \hat{f}(\psi) = \int^{\infty}_{-\infty} f(x) e(-\psi x)dx$$
 
 \end{itemize}
-
+\end{mdframed}
 \obs En los dos últimos casos serán necesarias ciertas condiciones de regularidad sobre la función $f$
 
 \begin{example}
@@ -621,18 +622,18 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 
 		R,G,B $\in$ [0,255] (enteros)
 
-		Como hay combinaciones de R y G que se parecen demasiado para el ojo humano, en la realidad casi siempre se pasa de RGB a Y$\text{C}_{\text{B}}$ $\text{C}_{\text{R}}$ con un ``cambio de base'' = con una transformación lineal.
+		Como hay combinaciones de R y G que se parecen demasiado para el ojo humano, en la realidad casi siempre se pasa de RGB a Y$\text{C}_{\text{B}}$ $\text{C}_{\text{R}}$ con un ``cambio de base'', es decir, con una transformación lineal.
 
 		\begin{itemize}
-			\item Y = luminancia $\rightarrow$ el ojo es muy sensible a ella
-			\item $\text{C}_{\text{B}}$ Crominancia $\rightarrow$ el ojo es poco sensible a ella.
-			\item $\text{C}_{\text{R}}$ Crominancia $\rightarrow$ el ojo es poco sensible a ella.
+			\item Y representa la luminancia $\rightarrow$ el ojo es muy sensible a ella
+			\item $\text{C}_{\text{B}}$ representa la crominancia $\rightarrow$ el ojo es poco sensible a ella.
+			\item $\text{C}_{\text{R}}$ representa la crominancia $\rightarrow$ el ojo es poco sensible a ella.
 		\end{itemize}
 
 
-		En lo que respecta a $\text{C}_{\text{B}}$ y $\text{C}_{\text{R}}$ de omite píxeles (como considerar una foto escalada).
+		%En lo que respecta a $\text{C}_{\text{B}}$ y $\text{C}_{\text{R}}$ de omite píxeles (como considerar una foto escalada).
 
-		Imágenes en tonos de gris $\rightarrow$ cada píxel tiene R=G=B y son igules a Y.Nos restringimos a este caso. El general es igual repetido 3 veces.
+		En las imágenes en tonos grises (comúnmente maldenominadas ``en blanco y negro'') cada píxel tiene su valores R,G, y B iguales y éstos a su vez son iguales a Y (luminancia). En las cuentas que siguen vamos a restringirnos a este caso. En los otros casos lo único que se hace es repetir estas cuentas 3 veces (R,G y B)
 
 		\begin{center}
 			\inputtikz{fourier/imagen_en_bloques}
@@ -640,7 +641,8 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 
 		La imagen $N \times M$ se divide en bloques $8 \times 8$\footnote{Si la imagen no tiene un número de píxeles múltiplo de 8×8, entonces nos \textit{inventamos} píxeles para que cuadre}. Cada uno de ellos se puede interpretar como una función:
 
-		$f:\{0,1,...7\} \times \{0,1,...7\} \rightarrow \mathbb{R}$ que asigna al píxel $P_{ij}$ del bloque, su color (R,Y,G,B $\in [0,255]$) (solo un número para nuestro caso de tonos de gris).
+		\[\appl{f}{\{0,1,...7\} \times \{0,1,...7\} }{\mathbb{R}}\]
+		que asigna al píxel $P_{ij}$ del bloque, su color (R=G=B=Y $\in [0,255]$) (solo un número para nuestro caso de tonos de gris).
 
 
 		\textbf{Idea} Descomponer $f$ por Fourier y suprimir las frecuencias altas excepto si tienen coeficientes (amplitudes) grandes.
@@ -649,14 +651,17 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 
 		En principio, con 3 de estas funciones $f$ tenemos toda la información de los píxeles del bloque.
 
-		\textbf{Cosa técnica:} Al utilizar $Y C_B C_R$, si cambiamos el tono azul, no se aprecia diferencia. Además, para $C_B C_R$ se suelen despreciar entre la mitad y las $\frac{3}{4}$ partes de los píxeles de la imagen original.
+		\textbf{Detalle técnico:} Al utilizar $Y C_B C_R$, si cambiamos el tono azul, no se aprecia diferencia. Además, para $C_B C_R$ se suelen despreciar entre la mitad y las $\frac{3}{4}$ partes de los píxeles de la imagen original.
 
 
 		\subsubsection{Aplicación de la DCT (transformada coseno discreta) en cada variable}
 
-			Sabíamos $f: \{ 0,1,...7 \} \rightarrow \mathbb{R}$
+			Dada la función
+			\[f: \{ 0,1,...7 \} \rightarrow \mathbb{R}\]
 
-			$$ f(m) = \sum\limits^{7}_{n=0} \alpha_n \cos \left(\frac{\pi n}{8} (m + 1/2) \right) \;\;\;\;\; \alpha_n = \text{cierta fórmula} $$
+			su transformada de Fourier es
+
+			$$ f(m) = \sum\limits^{7}_{n=0} \alpha_n \cos \left(\frac{\pi n}{8} (m + 1/2) \right) \text{ con } \alpha_n = \text{cierta fórmula} $$
 
 			Si utilizamos esta fórmula en cada variable de F se tiene el desarrollo de Fourier
 
@@ -673,7 +678,9 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 
 					$F = \sum \sum a_{nm} \Phi_{nm}$ es la descomposición de $F$ como superposición de imágenes básicas.
 
-					(IMAGEN POSTCRIP CHAMIZO)
+					\begin{center}
+						\includegraphics[width=\linewidth]{img/imagen_chamizo_grises.png}
+					\end{center}
 
 					$\Phi_{00} = 1 $ La que menos oscila.
 
@@ -708,12 +715,10 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 
 			$\left[ \frac{b}{n} + \frac{1}{2} \right]$ es el entero más cercano a $\frac{b}{n}$
 
-			valor almacenado solo toma valores múltiplos de n
-
-			n mayor $\rightarrow$ menos números posibles que almacenar pero menos precisión
+			Puesto que el valor almacenado solo toma valores múltiplos de n, con un n mayor tendremos menos números posibles que almacenar pero más precisión.
 
 
-			Con experimentos se estudia la sensibilidad media del ojo humano a cada $\Phi_{nm}$. Dependiendo de ello se crea una matriz de cuantificación. La usada generalmente para el canal Y es:
+			Con experimentos se estudia la sensibilidad media del ojo humano a cada $\Phi_{nm}$. Dependiendo de ello se crea una matriz de cuantificación. La usada generalmente para el canal Y es la matriz 8x8:
 
 
 			$$ C = \left(\begin{matrix}
@@ -732,10 +737,10 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 
 			Cada $C_{ij}$ se usa para llevar a cabo una cuantificación de $a_{ij}$.
 
-			Hay otra matriz para $C_B$ y $C_R$
+			Como es obvio, existen otras dos matrices para $C_B$ y $C_R$
 
 			\begin{framed}
-				En resumen
+				\textbf{RESUMEN}
 
 				$$ F \xrightarrow{DCT} \{ a_{nm} \}^{7}_{n,m = 0} \xrightarrow{cuantificación} \left\{ \left[ \frac{a_{nm}}{C_{nm}} + \frac{1}{2} \right] \right\}^{7}_{n,m = 0} $$
 
@@ -747,14 +752,12 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 
 			¿Qué hemos ganado?
 
-			Muchos de los $\lambda_{nm}$ son nulos.
-			La mayor parte de los bloques $8x8$ no presentan variaciones abruptas. $\implies$ los coeficientes de Fourier decaen rápido.
+			La ventaja reside en que muchos de los $\lambda_{nm}$ son nulos.
+			La mayor parte de los bloques $8\times 8$ no presentan variaciones abruptas. Por tanto los coeficientes de Fourier decaen rápido.
 
-			Entonces los $a_{nm}$ suelen ser pequeños excepto si $0 \leq n$ , $m \leq 1$ o al menos si $0 \leq n$ , $m \leq$ cte pequeña
+			Así los $a_{nm}$ suelen ser pequeños excepto si $0 \leq n$ , $m \leq 1$ o al menos si $0 \leq n$ , $m \leq$ constante pequeña. Por tanto los $\lambda_{nm}$ correspondientes son nulos típicamente.
 
-			$\implies$ Los $\lambda_{nm}$ correspondientes son nulos típicamente.
-
-			La colección de los $\lambda_{nm}$ corresondientes a todos los bloques está formada mayoritariamente por ceros.
+			En definitiva, la colección de los $\lambda_{nm}$ corresondientes a todos los bloques está formada mayoritariamente por ceros.
 
 			\begin{example}
 				Una imagen con un  $90\%$ de ceros se reconoce bien. Se nota que no es de calidad pero bueno.
@@ -765,22 +768,23 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 		\subsubsection{Compresión}
 			Se aplica \textbf{compresión Huffman} (típicamente) a los $\lambda_{nm}$
 
-			La compresión normalmente consiste en, en vez de guardar en un fichero todos los ceros que hay, cada vez que vea un cero lo guardo y seguidamente guardo el número de veces que se repite , hasta que aparezca un 1. Se gana mucho ya que normalmente solo uno de cada 100 números es un 1.
+			La compresión normalmente consiste en que en lugar de guardar en un fichero todos los ceros que hay, cada vez que vea un cero lo guardo y seguidamente guardo el número de veces que se repite, hasta que aparezca un 1. Se gana mucho ya que normalmente solo uno de cada 100 números es un 1.
 
-			La \textbf{compresión de Huffman} no es exactaente esto, lo que hace es analizar el fichero , ver qué simbolos se repiten más y les asigna códigos para comprimirlos, de manera que optimiza la compresión.
+			\obs La \textbf{compresión de Huffman} no es exactaente esto, lo que hace es analizar el fichero, ver qué simbolos se repiten más y les asigna códigos para comprimirlos, de manera que optimiza la compresión.
 
-			Esto se contará mejor en el próximo capítulo.
-
-
-			El resultado de todo esto es el fichero \texttt{.jpg}\\\\
+			Esto se contará con más detenimineto en el próximo capítulo.
 
 
-			\textbf{¿Cómo descodificar un  fichero \texttt{.jpg}?}
+			El resultado de esta compresión es el fichero \texttt{.jpg}\\\\
 
-			Se descomprime el fichero. En la cabecera está toda la información general ( p.ej: la matriz de cuantificación)
 
-			Multiplica los $\lambda_{nm}$ por los $C_{nm}$
+			Una vez visto el procedimiento de compresión de la información de la imagen, la duda que nos surge es: \textbf{¿Cómo descodificar un  fichero \texttt{.jpg}?}
 
+			En primer lugar se descomprime el fichero. Una vez hecho esto, en la cabecera se encuentra toda la información general como, por ejemplo,  la matriz de cuantificación.
+
+			Una vez tenemos esta matriz, se multiplican los $\lambda_{nm}$ por los $C_{nm}$ obteniendo los $a_{nm}$ a partir de los cuales podemos construir la transformada de Fourier.
+
+			En resumen los pasos a seguir son:
 			$$\lambda_{nm} \rightarrow C_{nm}\cdot \lambda_{nm} \approx a_{nm} \rightarrow F = \sum \sum a_{nm} \cdot \Phi_{nm}$$
 
 			que reconstruye cada bloque.
@@ -790,26 +794,24 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 		Buscamos una manera de enseñarle a un ordenador o una calculadora cómo calcular funciones ``complicadas'' ( seno, coseno, exponencial...).
 
 
-		Tomamos $ +,-, \cdot \text{ y } \div$ como operaciones básicas. $\implies$ Evaluar polinomios es fácil.
+		Tomamos $ +,-, \cdot \text{ y } \div$ como operaciones básicas y, por tanto, evaluar polinomios es una tarea sencilla.
 
-		¿Es posible aproximar muy bien funciones complicadas por polinomios con pocas operaciones?
-
-
-		Para esto Taylor no sirve ya que sirve muy bien alrededor de un punto, pero cuando nos salimos de ahi no funciona bien.
+		¿Es posible aproximar muy bien funciones complicadas por polinomios con pocas operaciones? La respuesta, evidentemente, es si.
 
 
+		Para esto Taylor no sirve ya Taylor funciona muy bien alrededor de un punto, pero no cuando nos alejamos y nosotros queremos una forma de hacer esto en regiones amplias.
 
 
-		La situación típica es que sólo necesitemos aproximar una función en un intervalo.
-		$f(x) = \sin x \quad I= [0, \pi/2] \quad x > \pi/2 \rightarrow x - 2\pi k \in [0, 2\pi]$ y después usar $\sin (\pi - x) = \sin (x)$.
+		La situación típica es que sólo necesitemos aproximar una función en un intervalo. Por ejemplo, dada la función $f(x) = \sin x $, nos basta con aproximarla en un intervalo $I= [0, \pi/2]$ ya que para $x > \pi/2$ tenemos que $x - 2\pi k \in [0, 2\pi]$ y, combinándolo con $\sin (\pi - x) = \sin (x)$ podemos conocer el valor de $\sin(x)$ sin dificultad.
 
+		De la misma forma podemos evaluar el logaritmo en cualquier punto a partir de su estudio en un intervalo dado basándonos en:
 		$f(x) = \log x \quad I= [1, 2] \quad x > 2 \rightarrow \log (x) = \log(x / 2^n) + n \log 2$.
 
 		La mayoría de operaciones realizadas por este método (dividir entre 2, elevar 2 a n, ...) son practicamente inmediatas usando la representación binaria del número.
 
 
-
-		Con una transformación lineal podemos suponer que el intervalo es $I = [-1,1]$. Queremos aproximar $f: I = [-1,1] \rightarrow \mathbb{R}$ y para ello, desarrollamos por Fourier (pensándolo teoricamente ya que hay infinitos coeficientes), $g(x) = f(\cos(2 \pi x))$.
+		Con una transformación lineal podemos suponer que el intervalo es $I = [-1,1]$. Queremos aproximar $\appl{f}{I = [-1,1]}{\mathbb{R}}$ y para ello, desarrollamos por Fourier (pensándolo teoricamente ya que hay infinitos coeficientes)
+		\[g(x) = f(\cos(2 \pi x))\]
 
 		$$f(\cos (2 \pi x)) = g(x) = \sum\limits^{\infty}_{n = -\infty} \hat{f}(n) e(nx) = a_0 + 2 \sum\limits^{\infty}_{n=1} a_n \cos(2 \pi nx)$$
 
@@ -821,14 +823,11 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 
 		$$ a_n = \int^{1}_0 g(x) \cos (1 \pi n x) dx $$
 
-		Tomando en el desarrollo $x \rightarrow \frac{1}{2 \pi} \text{arccos} x$ :
+		Tomando en el desarrollo $x \to \frac{1}{2 \pi} \text{arccos} x$ :
 
-		\frame{$f(x) = a_0 + 2 \sum\limits^{\infty}_{n = 1} a_n T_n (x)$} donde
+		\frame{$f(x) = a_0 + 2 \sum\limits^{\infty}_{n = 1} a_n T_n (x)$}
 
-		\begin{op}{Polinomios de Chebyshev}
-			T_n (x) = \cos (n \text{arccos} x)
-		\end{op}
-
+		donde $T_n (x) = \cos (n \text{arccos} x)$ son conocidos como \concept{polinomios de Chebyshev}
 		\begin{obs}
 			$T_n (x)$ es un polinomio para $n \geq 0$, $x \in [-1,1]$.
 		\end{obs}
@@ -851,69 +850,52 @@ El problema de la convergencia lenta resulta crítico para las aplicaciones porq
 		Como $T_0$ y $T_1$ son polinomios $\Rightarrow$ Todos los $T_n$ son polinomios.
 
 		\begin{obs}
-			Por lo tanto si se busca $T_n (x_0)$ basta calcular $T_0 (x_0)$ y $T_1 (x_0)$ y usar esta fórmula recurrente.
+			Por lo tanto si se busca $T_n (x_0)$ basta calcular $T_0 (x_0)$ y $T_1 (x_0)$ y usar esta fórmula recurrente (esto es lo que hacen las calculadoras).
 		\end{obs}
 
-		$$
 		\begin{aligned}
 		f \text{ muy regular} & \Rightarrow g(x) = f(\cos (2 \pi x))\text{ es muy regular y es 1-periódica.} \\
 		& \Rightarrow \text{sus coeficientes de Fourier tienden rápido a cero} \\
 		& \Rightarrow a_n \rightarrow 0 \text{ muy rápido} \\
 		& \Rightarrow f(x) \equiv a_0 + 2 \sum\limits^{N}_{n=1} a_n T_n (x) \text{ es buena aproximación.} \\
 		\end{aligned}
-		$$
+
 
 		\begin{obs}
 			Los coeficientes $a_n$ pueden ser precalculados y almacenados en memoria.
 
 			$$ a_n = \int^{1}_{0} g(x) \cos (2 \pi n x) dx = - \int^{1}_{0} g'(x) \frac{\sin (2 \pi n x)}{2 \pi n} dx $$
 
-			También se puded determinar el N de antemano dependiendo de la precisión exigida.
+			También se puede determinar el N de antemano dependiendo de la precisión exigida.
 		\end{obs}
 
 
-		\begin{example}{¿Cómo aproximar $\sin (x)$?}
+		\begin{example}{Veamos cómo aproximar la función $\sin(x)$}
+			Para ello vamos a apoyarnos en la función $f$:
+			$$f(x) = \sin\left(\frac{\pi}{2} x\right) $$
 
-			$$f(x) = \sin(\frac{\pi}{2} x) $$
+			Aproximando $f$ en $[-1,1]$ podemos deducir $\sin$ en $\mathbb{R}$. Además, por la simetría impar de $f$, se puede ver que $a_{2k} = 0$. Si tomamos tres coeficientes de Fourier no nulos, precalculados con 8 decimales, obtenemos:
 
-			Aproximando $f$ en $[-1,1]$ deducimos $\sin$ en $\mathbb{R}$. Y por la simetría impar de $f$ se puede ver que $a_{2k} = 0$.
+			$$\sin \left(\frac{\pi}{2} x\right) \equiv 0.56682409T_1(x)-0.06903589T_(x)+0.00224536T_5(x)$$
+			donde $T_1(x)=x , \; \; T_3 (x) = 4x^3 - 3x, \text{ y } T_5(x)= 16x^5 - 20x^3 + 5x$. Se puede comprobar que el error absoluto máximo en esta aproximación es menor que $ 7 * 10^{-5}$
 
-			$$\sin (\frac{\pi}{2} x) \equiv 0.5668...$$
-
-			$x = T_1 (x) - 0.068 ...$
-
-			$4x^3 - 3x = T_3 (x) + 0.0022 ...$
-
-			$16x^5 - 20x^3 + 5x = T_5(x) ... $
-
-			error absoluto máximo $< 7 * 10^{-5}$
-
-			Con 8 coeficientes no nulos ya se obtiene el error necesario para la doble precisión ($ < 10^{-16}$ por el epsilon máquina).
+			Con 8 coeficientes no nulos ya se obtiene el error necesario para la doble precisión ($ < 10^{-16}$, el epsilon máquina).
 
 
 		\end{example}
 
 \subsubsection{Tomografía}
+
+Veamos ahora dos técnicas relacionadas con el análisis de Fourier
 \begin{itemize}
-	\item \textbf{TAC} (Tomografía axial computarizada)
-	\item \textbf{RMN} (resonancia magnética nuclear)
-\end{itemize}
+\item \textbf{TAC} (Tomografía Axial Computarizada)
 
-	Ambas técnicas tienen que ver con el análisis de Fourier
-
-	\textbf{RMN} Resulta que las partículas subatómicas tienen un momento magnético, se comportan como un imán.
-
-	Esos imanes pueden estar cambiando de posición, pero no se puede haer a cualquier velocidad.
-	Se ve que con cierta velocidad logras que esto entre en resonancia. \textbf{Esto no lo vamos a ver este curso.}
-
-	\textbf{TAC}
-
-	¿Se puede reconstruir la esctructura de un tejido a través de radiografías?
+¿Se puede reconstruir la esctructura de un tejido a través de radiografías?
 
 	La respuesta es SI, ahora vamos a ver cómo.
 
 
-	Cuando hacemos una radiografía pasamos rayos x por una muestra vemos que al llegar al otro lado los rayos llegan más atenuados si han pasado por zonas de más densidad.
+	Cuando hacemos una radiografía pasamos rayos x por una muestra y vemos que, al llegar al otro lado, los rayos llegan más atenuados si han pasado por zonas de más densidad.
 
 	La "radiografía unidimensional" que se obtiene en el detector (donde llegan los rayos), depende de la integral de la densidad de la muestra a lo largo de la linea.
 
@@ -938,11 +920,11 @@ En definitiva si $\rho$ = densidad de la muestra. Los datos obtenidos por una m�
 
 $$P_{\theta} (t) = \int_{r_{\theta , t}} \rho$$
 
-Al final si el patrón que obtengo es más claro, habré pasado por una parte de la muestra con menos densidad, y cuando más oscuro, más densidad.
+Al final si el patrón que obtenemos es más claro, habremos pasado por una parte de la muestra con menos densidad y viceversa.
 
 La pregunta matemática es si a través de los valores de $P_{\theta}(t)$ cuando $\theta$ y $t$ varían es posible recuperar $\rho$
 
-La respuesta a esto la dio J.Radón , que demostró que si que era posible. ¿cómo?
+La respuesta a esta pregunta la dio J.Radón, que demostró que si que era posible. Veamos cómo.
 
 Recordemos la fórmula de $r_{\theta,t}$
 
@@ -959,13 +941,13 @@ Recordemos la fórmula de $r_{\theta,t}$
 
 	$$P_{\theta} (t) = \int_{r_{\theta , t}} \rho = \int_{-\infty}^{\infty} \rho ( t\cos\theta - u\sin\theta , t\sin\theta + u\cos\theta) du$$
 
-	Porqué no hemos multiplicado por la norma de la derivada? porque da 1.
+	Siendo el determinante del Jacobiano del cambio de variables igual a 1.
 
 	Consideramos la transformada de Fourier de t $\rightarrow P_{\theta}(t)$
 
 	$$\widehat{P_{\theta}}(\xi) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \rho ( t\cos\theta - u\sin\theta , t\sin\theta + u\cos\theta) du\text{  }e(-t\xi) dt $$
 
-	Haciendo un cambio de variable en dos variables $(u,t) \rightarrow (x,y)$ e que corresponde a la paramerización anterior.
+	Haciendo un cambio de variable en dos variables $(u,t) \rightarrow (x,y)$, que corresponde a la paramerización anterior.
 
 	$$\left(\begin{matrix}
 		x\\
@@ -1004,6 +986,15 @@ Recordemos la fórmula de $r_{\theta,t}$
 	$$ \rho (x,y) = \int^{2\pi}_{0} \int^{\infty}_{0} r \hat{P}_{\theta} (r) e (x r \cos \theta + y r \sen \theta) dr d\theta $$
 
 	Este sistema se ha tardado mucho en aplicar porque puede funcionar bien en objetos cuya densidad decae suavemente, pero el cuerpo humano no es así, y aunque el cálculo no sea muy complicado, hace falta ordenadores para relizarlo.
+	\item \textbf{RMN} (Resonancia Magnética Nuclear)
+
+	\textbf{RMN} Resulta que las partículas subatómicas tienen un momento magnético, se comportan como un imán.
+
+	Esos imanes pueden estar cambiando de posición, pero lo pueden hacer a cualquier velocidad. Se ve que con cierta velocidad logras que esto entre en resonancia. \textbf{Esto no lo vamos a ver este curso.}
+\end{itemize}
+
+
+
 
 
 
@@ -1014,22 +1005,22 @@ Recordemos la fórmula de $r_{\theta,t}$
 
 	\subsubsection{Máscaras sobre los coeficientes de Fourier}
 
-		Una vez tenemos los bloques de 8x8, aplicamos máscaras a los coeficientes que se vana a guardar. Esta máscara es una matriz en la que un 1 indica que se debe guardar ese índice, y un 0 indica que no se debe guardar.
+		Una vez tenemos los bloques de 8x8, aplicamos máscaras a los coeficientes que se van a guardar. Esta máscara es una matriz en la que un 1 indica que se debe guardar ese índice, y un 0 indica que no se debe guardar.
 
 		Como cabe esperar, con una matriz llena de unos no hay ninguna diferencia entre la imagen transformada y la imagen original, sin importar que imagen utilicemos para calcularlo.
 
-		Si probamos, por ejemplo, con una matriz llena de ceros excepto un uno en una esquina (la superior izquierda en el ejemplo) lo que ocurre es que para cada bloque de 8 por 8 solo tenemos un coeficiente. Dejando este lo que pasa es que cada bloque de 8x8 tendrá solo un color.
+		Si probamos, por ejemplo, con una matriz llena de ceros excepto un uno en una esquina (la superior izquierda en el ejemplo) lo que ocurre es que para cada bloque de 8 por 8 solo tenemos un coeficiente. Dejando este bloque de 8x8 de un solo color.
 
 		Seguimos probando, esta vez con una matriz con solo unos excepto por la última fila y la última columna, que tienen 0. Esto descarta 64 - 49 coeficientes. La imagen final no presenta cambios a simple vista, pero podemos observar, sobre todo en dibujos, que en zonas de cambio abrupto hay pequeñas muestras de oscilaciones.
 
 
 		Podemos seguir quitando las últimas columnas y filas, y con una más todavía seguimos distinguiendo la imagen bastante bien solo que la pérdida de calidad es visible al hacer zoom y comprobar el resultado.
 
-		¿Pero que pasa si quitamos el primer coeficiente? Este es el que indica el promedio de color en ese bloque de la imagen. Si creamos una máscara que descarte solo este coeficiente podremos observar como el promedio no se tiene en cuenta en la imagen transformada. A efectos prácticos, las zonas en las que los colores sean mayoritariamente constantes se verán negras (color 0) ya que el único coeficiente usado sería el promedio (pero lo descartamos) .;ientras que seremos capaces de observar las partes que varían en la imagen van a tener colores distintos del negro, y las vamos a poder ver. Si invertimos la imagen, para que las zonas uniformes se vean blancas la imagen quedará como un dibujo ya que solo se van a ser oscuras las zonas de cambio (en general, los bordes).
+		¿Pero que pasa si quitamos el primer coeficiente? Este es el que indica el promedio de color en ese bloque de la imagen. Si creamos una máscara que descarte solo este coeficiente podremos observar cómo el promedio no se tiene en cuenta en la imagen transformada. A efectos prácticos, las zonas en las que los colores sean mayoritariamente constantes se verán negras (color 0) ya que el único coeficiente usado sería el promedio (pero lo descartamos). A su vez podemos observar las partes que varían en la imagen van a tener colores distintos del negro, y las vamos a poder ver. Si invertimos la imagen, para que las zonas uniformes se vean blancas la imagen quedará como un dibujo ya que solo se van a ser oscuras las zonas de cambio (en general, los bordes).
 
 	\subsubsection{Comparación entre Fourier y Taylor}
 
-		Con un simple programa de matlab podemos comparar la diferencia entre la aproximación de Taylor a la función $\tan(x \pi/4)$ y la de Fourier. Entre 0 y 1 la aproximación de Fourier y la función real sonindistinguiibles. Calculando el error vemos que es del orden de $10^{-3}$. En cambio, Taylor muestra una gran aproximación en el punto 0, pero se puede apreciar que se empieza a separar notablemente de la función según se acerca a 1 o -1.
+		Con un simple programa de matlab podemos comparar la diferencia entre la aproximación de Taylor a la función $\tan(x \pi/4)$ y la de Fourier. Entre 0 y 1 la aproximación de Fourier y la función real son indistinguiibles. Calculando el error vemos que es del orden de $10^{-3}$. En cambio, Taylor muestra una gran aproximación en el punto 0, pero se puede apreciar que se empieza a separar notablemente de la función según se acerca a 1 o -1.
 
 		Si probamos con una función más plana vemos como Taylor aproxima mejor que Fourier en el punto pero se separa enseguida, mientras que la de Fourier se mantiene cerca de la función.
 
@@ -1042,7 +1033,7 @@ Recordemos la fórmula de $r_{\theta,t}$
 		Si tenemos una $f(x)$ de la que tomamos unos valores (discretizamos) tenemos una sucesión $\{f(n)\}$. Definimos una función: $g(n) = f(n-1) - 2 f(n) + f(n+1)$
 
 		Este filtro  puede parecer absurdo, ya que en una función continua, los valores van a ser muy parecidos, pero la utilidad de este filtro es encontrar discontinuidades, porque los valores son más distantes. ¿Pero y esto no se ve a simple vista? Pues cuando tenemos una imagen, esta es la manera de encontrar los bordes rápidamente (no sólo los bordes de la imagen entera, sino bordes de elementos de la imagen).
-		Podríamos hacer el filtro más complicado, en plan $g(n) = f(n-2)+ 2f(n-1) - 5 f(n) + f(n+1) + f(n+1)$, es decir, utilizamos la lista $[1,2,-5,1,1]$ que nos da el filtro aplicado. (En el caso anterior tendríamos $[1,-2,1]$).
+		Podríamos hacer el filtro más complicado, como $g(n) = f(n-2)+ 2f(n-1) - 5 f(n) + f(n+1) + f(n+1)$, es decir, utilizamos la lista $[1,2,-5,1,1]$ que nos da el filtro aplicado. (En el caso anterior tendríamos $[1,-2,1]$).
 
 		Pero lo útil de esto es en imágenes, como ya hemos dicho, en donde el filtro se representa como una lista en 2 dimensiones, es decir, como una matriz.
 
