@@ -1031,40 +1031,104 @@ las dos últimas tiradas o el fin del juego. Calcula el número de tiradas esper
 \end{problem}
 
 \section{Hoja 3}
+\begin{problem}[1]
+Consideramos la función $\appl{f}{\ent_4}{\cplex}$ definida por $10=10$, $f(\pm 1) = -2 \mp 2i$ y $f(2)=-2$. Calcula su desarrollo de Fourier discreto.
+
+\solution
+\yoP
+
+Recordemos que el desarrollo discreto de Fourier se hacía siguiendo la fórmula:
+\[f(n)=\frac{1}{N}\sum_m \hat{f}(m)\cdot e \left(\frac{nm}{N} \right) \text{ con } \hat{f}(n)=\sum_m f(m) \cdot e\left(\frac{-nm}{N}\right)\]
+
+En nuestro caso tenemos $N=4$ con $m=0, \pm 1$ y $ 2$. Empezamos calculando los coeficientes de Fourier:
+
+\[\left\{
+\begin{array}{rcl}
+\hat{f}(0) & =  & e(0) \cdot \left( f(0)+f(1)+f(-1)+f(2) \right)\\
+\hat{f}(1) & =  & f(0) \cdot e(0)+f(1) \cdot e \left(-\frac{1}{4}\right) + f(-1)\cdot e \left(\frac{1}{4}\right)+f(2) \cdot e \left(-\frac{1}{2}\right)\\
+\hat{f}(-1) & =  &  f(0) \cdot e(0)+f(1) \cdot e \left(\frac{1}{4}\right) + f(-1)\cdot e \left(-\frac{1}{4}\right)+f(2) \cdot e \left(\frac{1}{2}\right)\\
+\hat{f}(2) & =  &  f(0) \cdot e(0)+f(1) \cdot e \left(\frac{1}{2}\right) + f(-1)\cdot e \left(-\frac{1}{2}\right)+f(2) \cdot e \left(1\right)
+\end{array} \right. \implies \]
+
+\[\implies \left\{
+\begin{array}{rcl}
+\hat{f}(0) & =  & \left( 10+(-2-2i)+(-2+2i)-2 \right)\\
+\hat{f}(1) & =  & 10 +(-2-2i) \cdot (-i) + (-2+2i)\cdot i-2 \cdot (-1)\\
+\hat{f}(-1) & =  &  10 +(-2-2i) \cdot i + (-2+2i)\cdot (-i)-2 \cdot (-1)\\
+\hat{f}(2) & =  &  10 +(-2-2i) \cdot (-1) + (-2+2i)\cdot (-1)-2 \cdot (1)
+\end{array} \right. \implies
+\]
+\[\implies \left\{
+\begin{array}{rcl}
+\hat{f}(0) & = 4 \\
+\hat{f}(1) & = 8 \\
+\hat{f}(-1) & = 16 \\
+\hat{f}(2) & = 12
+\end{array} \right. \]
+
+Una vez tenemos estos coeficientes calculamos el desarrollo discreto de Fourier:
+\[f(n) = \frac{1}{4}\left( 4 + 8 \cdot e \left(\frac{n}{4}\right)+16\cdot e \left(-\frac{n}{4}\right)+12\cdot e \left(\frac{n}{2}\right)\right)\]
+\end{problem}
 
 \begin{problem}[2]
-
+	Prueba que la convolución de dos funciones es una operación conmutativa.
 	\solution
 
-	\textbf{solución esquemática}
+	Vamos a realizar la prueba considerando funciones $\appl{f,g}{\real}{\cplex}$. En el caso de funciones discretas o 1-periódicas la prueba sería similar.
 
+	Para ver que se trata de una operación conmutativa debemos comprobar que:
 	$$f * g = g * f$$
 
-	$f: \real \rightarrow \mathbb{C} $
+	La definición de convolución nos permite escribir:
+	\[(f * g) (x) = \int_{-\infty}^{\infty} f(x - t) g(t) dt \]
 
-	$$ (f * g) (x) = \int_{-\infty}^{\infty} f(x - t) g(t) dt = \int^{\infty}_{-\infty} f(u) g(x - u) du = (g * f)(x) $$
+	Pero mediante el cambio de variables lineal $u = x - t$, tenemos:
+	\[\int_{-\infty}^{\infty} f(x - t) g(t) dt =\int^{\infty}_{-\infty} f(u) g(x - u) du \]
 
-	Usando $u = x - t$.
+	Y aplicando nuevamente la definición de convolución llegamos a
+	\[\int^{\infty}_{-\infty} f(u) g(x - u) du = (g * f)(x) \]
+
+	Con lo que queda probado
+	\[(f * g) (x)  = (g * f) (x) \]
+
 
 \end{problem}
 
 \begin{problem}[3]
-	$f(x) = (-1)^{[2x]} \;\;\; x \in [0,1] $ y $f$ es 1-periódica.
 
-	Hallar los coeficioentes de Fourier y escribir la serie de Fourier con senos
-
+	Consideramos las funciones 1-periódicas reales que en [0,1] coinciden, respectivamente con $\min(x,1-x)$ y con $(-1)^{[2x]}$ donde $[\cdot ]$ indica la parte entera. Calcula sus coeficientes de Fourier. Expresar la primera serie de Fourier en términos de cosenos y la segunda en términos de senos.
 	\solution
 
-	\begin{figure}
-		\inputtikz{fourier/onda_cuadrada}
-		\caption{f(x): función de onda cuadrada}
-	\end{figure}
+	\yoP
 
-	$$ \hat{f}(n) = \int^{1}_{0} f(x) e(-nx)dx = \int^{1/2}_{0} e(-nx)dx - \int^{1}_{1/2} e(-nx) dx = \frac{-1}{2 \pi i n} e(-nx) \left. \right|^{1/2}_{0} + \frac{1}{2 \pi i n} e(-nx) \left. \right|^{1}_{1/2} $$
+	La primera función parte del origen y asciende como $y=x$ hasta llegar a $x=y=0.5$ y posteriormente desciende de forma lineal hasta llegar a $x=1, y=0$.
+
+
+	Vamos a calcular su desarrollo de Fourier, puesto que en esta ocasión tenemos $\appl{f}{\mathbb{T}}{\cplex}$ la fórmula que debemos aplicar es:
+
+	\[f(x)=\sum_{n=-\infty}^{\infty} \hat{f}(n)e(nx) \text{ donde } \hat{f}(n)=\int_0^1 f(x)e(-nx)\]
+
+	Calculamos pues los coeficientes de fourier, que quedan de la forma:
+	\[\hat{f}(n)=\int_0^{1/2} x e^{-2πnxi}dx+\int_{1/2}^1 \left(\frac{1}{2}-x\right)e^{-2πnxi}dx= \]
+	\[=\left. -\frac{e^{-2πinx}(2πinx+1)}{(2πin)^2}\right|_0^{1/2} + \left. \left(- \frac{e^{-2πinx}}{4πin}+\frac{e^{-2πinx}(2πinx+1)}{(2πin)^2}\right) \right|_{1/2}^1 = \]
+	\[=...=\frac{-e^{-πin}(πin+1)-1}{4π^2n^2}-\frac{e^{-2πin}-e^{-πin}}{4πin}+\frac{e^{-2πin}(2πin+1)-e^{πin}(πin+1)}{4π^2n^2}=\]
+	\[=\frac{-e^{-πin}(πin+1)-1-e^{-2πin}(πin)+e^{-πin}(πin)+e^{-2πin}(2πin+1)-e^{πin}(πin+1)}{4π^2n^2}=\]
+	\[=\frac{-e^{πin}(πin)-2e^{-πin}+e^{-2πin}-1}{4π^2n^2}=\frac{(-1)^{n+1}(πin)+2(-1)^{n+1}}{4π^2n^2}\]
+
+	\textcolor{blue}{Como no estoy nada seguro de estas cuentas no voy a seguir avanzando. Lo que habría que hacer a continuación es escribir el desarrollo de fourier sustituyendo $\hat{f}$ por la última fracción calculada y basarnos en las ecuaciones de Euler para pasar de complejos a funciones que sólo contengan cosenos.}
+
+	La segunda función oscila entre $-1$ y $1$ y podemos verla claramente representada en la siguiente gráfica.
+	\begin{center}
+		\inputtikz{fourier/onda_cuadrada}
+	\end{center}
+
+	Calculamos ahora los coeficientes de Fourier, con lo que tenemos:
+
+	$$ \hat{f}(n) = \int^{1}_{0} f(x) e(-nx)dx = \int^{1/2}_{0} e(-nx)dx - \int^{1}_{1/2} e(-nx) dx =  \left.\frac{-1}{2 \pi i n} e(-nx) \right|^{1/2}_{0} +\left. \frac{1}{2 \pi i n} e(-nx)  \right|^{1}_{1/2} $$
 
 	$$ = \frac{-1}{2 \pi i n}\left( e\left( -\frac{n}{2} \right) -1 \right) + \frac{1}{2 \pi i n}\left(1 - e\left( -\frac{n}{2} \right) \right)$$
 
-	Como $e(-1/2) = e^{2 \pi i (-1/2)} = -1$ :
+	Como $e(-1/2) = e^{2 \pi i (-1/2)} = -1$ nos queda:
 
 	$$ \hat{f}(n) = \frac{1}{\pi i n} (1 - e(-n/2)) = \begin{cases}
 	0 & \mbox{ si } n\text{ par} \\
@@ -1074,57 +1138,65 @@ las dos últimas tiradas o el fin del juego. Calcula el número de tiradas esper
 
 	$$ f(x) = \frac{2}{\pi i} \sum\limits^{\infty}_{n = -\infty \text{ y } 2 \nmid n} \frac{e(nx)}{n} $$
 
-	Teniendo en cuenta que $e(nx) = \cos(2 	pi n x) + i \sin(2 \pi n x)$ y $\frac{e(nx)}{n} + \frac{e(-nx)}{-n} = 2i \frac{\sin(2\pi n x)}{n}$.
+	Teniendo en cuenta que
+	\[e(nx) = \cos(2 	\pi n x) + i \sin(2 \pi n x)\text{ y }\frac{e(nx)}{n} + \frac{e(-nx)}{-n} = 2i \frac{\sin(2\pi n x)}{n}\]
 
-	$$ = \frac{2}{\pi i} \sum\limits^{\infty}_{n = -\infty \text{ y } 2 \nmid n}  \frac{\sin (2 \pi n x)}{n} = \frac{4}{\pi} \sum^{\infty}_{k=0} \frac{\sin(2 \pi (2 k + 1) x)}{2k + 1} $$
+	Nos queda:
+
+	$$ f(x)= \frac{2}{\pi i} \sum\limits^{\infty}_{n = -\infty \text{ y } 2 \nmid n}  \frac{\sin (2 \pi n x)}{n} = \frac{4}{\pi} \sum^{\infty}_{k=0} \frac{\sin(2 \pi (2 k + 1) x)}{2k + 1} $$
 
 \end{problem}
 
 \begin{problem}[4]
+	Calcula la transformada de Fourier de la función característica $f$ de un intervalo [-a/2,a/2]$\subset \real$. Estudia qué ocurre con $a^{-1}f$ y $a^{-1}\hat{f}$ cuando $a \to 0$. Teniendo esto en cuenta, ¿cómo parece que habría que definir $\int_{-\infty}^{\infty}e(\xi x)d\xi $? Esta fórmula se emplea con mucha frecuencia en Física sin más explicaciones.
 
-	$f = \chi_{[-a/2, a/2]} \quad a^{-1} f, a^{-1} \hat{f} \convs[][a][0] ?$
+	\solution
+	Es sencillo ver que
+	\[\lim_{a \rightarrow 0} a^{-1} f(x) = \lim_{a \rightarrow 0} a^{-1} \chi_{[-a/2,a/2]} (x) = 0\ \forall x\neq 0\]
 
-	\solution 
+	puesto que si $x \neq 0$, en algún momento tendremos $|a/2| < |x|$ de modo que la $x$ estará fuera del conjunto sobre el que $f$ es función característica y por tanto tendremos $ \lim_{a \rightarrow 0} a^{-1} \cdot 0 = 0$
 
-	$\lim_{a \rightarrow 0} a^{-1} f(x) = \lim_{a \rightarrow 0} a^{-1} \chi_{[-a/2,a/2]} (x) = 0 $ para cualquier $x \neq 0$
+	Por otro lado
+	\[x = 0 \implies \lim_{a \rightarrow 0} a^{-1} f(x) = \lim_{a \rightarrow 0} a^{-1} = \infty \]
+	puesto que todos los intervalos $[-a/2,a/2]$ contienen el 0 de modo que $f(x)=1$ siempre.
 
-	Y para $x = 0$ : $\lim_{a \rightarrow 0} a^{-1} f(x) = \lim_{a \rightarrow 0} a^{-1} = \infty $
-
+	Podemos ver también que:
 	$$\int^{\infty}_{-\infty} a^{-1} f(x) = 1 $$
 
-	En cierto modo $a^{-1} \convs[][a][0]$ delta de Dirac.
+	Por lo que, en cierto modo, $a^{-1} \convs[][a][0]$ delta de Dirac.
 
-	$$\lim_{a \rightarrow 0} a^{-1} \hat{f}(\xi) = \lim_{a \rightarrow 0} a^{-1} \int^{\infty}_{-\infty} f(x) e(-x \xi) dx $$
+	Vamos a estudiar ahora el comportamiento de $a^{-1}\hat{f}$:
 
-	$$\int^{a/2}_{-a/2} e(-x\pi) dx = 2 \frac{\sin (2 \pi \xi a/2))}{2 \pi \xi} $$
-
-	$$ = \lim_{a \rightarrow 0} \frac{\sin( \pi \xi a)}{\pi \xi a} = 1 $$
+	$$\lim_{a \rightarrow 0} a^{-1} \hat{f}(\xi) = \lim_{a \rightarrow 0} a^{-1} \int^{\infty}_{-\infty} f(x) e(-x \xi) dx = \lim_{a \rightarrow 0} a^{-1} \int^{a/2}_{-a/2} e(-x\pi) dx = \lim_{a \rightarrow 0} a^{-1} \cdot 2 \cdot \frac{\sin (2 \pi \xi a/2)}{2 \pi \xi} =1 $$
 
 	Esto sugiere que $\hat{\delta} = 1$
 
-	Fórmula de inversión $\Rightarrow \delta (x) = \int\limits^{\infty}_{-\infty} 1 e(x \xi) d \xi$
+	Aplicando ahora la fórmula de inversión  tenemos
+	\[\delta (x) = \int\limits^{\infty}_{-\infty} 1 \cdot e(x \xi) d \xi\]
 
-	No converge, es $0 \; \forall $ punto salvo en 1, que es $\infty$.
+	con lo que parece que hemos alcanzado una definición posible para la integral pedida.
+
+	\obs Como podemos observar, la integral no converge. Vale $0$ en todo punto salvo en 1, que es $\infty$.
 
 \end{problem}
 \section{Hoja 4}
 \begin{problem}[1]
 	contenidos...
 	\solution
-	
+
 	Vemos la entropía de S:
 	$$H_S = -p \log_2 p - q \log_2q$$
-	
+
 	Y la entropía de $S_2$
 	$$H_{S_2} = -p^2\log_2 p^2 - 2pq\log_2(pq - q^2\log_2 q^2) = -2p^2\log_2 p - 2pq\log_2p - 2pq\log_2q - 2q^2\log_2q$$
-	
+
 	Entnces
 	$$H_{S_2}= (-2p^2-2qp)\log_2p + (-2q^2 - 2qp)\log_2q$$
-	
-	y como 
+
+	y como
 	$$-2p^2-2qp= -2p(p+q) = -2p$$
 	$$-2q^2 - 2qp = -2q$$
-	
+
 	Es fácil ver que $$H_{S_2} = 2H_S$$
 \end{problem}
  \begin{problem}[2]
@@ -1132,25 +1204,25 @@ las dos últimas tiradas o el fin del juego. Calcula el número de tiradas esper
  	\solution
  	En una moneda , p es la probabilidad de sacar cara.
  	$$p = 0.3$$
- 	
- 	En un dado la probabilidad de cada número es 
+
+ 	En un dado la probabilidad de cada número es
  	$$p_i = \frac{1}{6}$$
- 	
- 	Vamos a calclar la entropía de 
+
+ 	Vamos a calclar la entropía de
  	\begin{enumerate}
  		\item Tirar una vez el dado
  		\item Tirar 3 veces la moneda
  	\end{enumerate}
- 	
+
  	\begin{enumerate}
  		\item $$H_1 = - \frac{1}{6} \log_2 \frac{1}{6} .... - \frac{1}{6} \log_2 \frac{1}{6} = - \log_2 \frac{1}{6} = \log_2 6 = 2.5849$$
- 		
+
  		\item Se podría calcular $H_2$ hallando las probabilidades de cada una de las 8 probabilidades. Pero vamos a hacerlo de forma más corta:
- 		
+
  		$$H_2 = 3H_{\text{tirando una vez la moneda}}$$
- 		
+
  		Esto se puede hacer porque los sucesos son independientes.
- 		
+
  		$$H_2 = 3\cdot(-0.3 \log_2 0.3 - 0.7 \log_2 0.7) = 2.6438$$
  	\end{enumerate}
  \end{problem}
@@ -1159,23 +1231,23 @@ las dos últimas tiradas o el fin del juego. Calcula el número de tiradas esper
 	\solution
 	$$H \leq - \sum p_i \log_2 q_i$$
 	Con $q_i > 0$ cumpliendo $\sum q_i \leq 1$
-	
+
 	Vamos a hacerlo usando los multiplicadores de Lagrange.
-	
+
 	Llamamos a $f(x_1 , ... x_n) = - \sum p_i \log_2 x_i$
-	
+
 	Hay que probar que el mínimo de f restringido a $\sum x_i \leq 1 , x_i > 0$ es H.
-	
+
 	$\log_2 x_i$ es decreciente en $x_i$
-	
+
 	Si el minimo se alcanzara con $\sum x_i = \alpha < 1$ , multiplicando cada $x_i$ por $\frac{1}{\alpha}$ , se tendría un valor menor (contradicción)
-	
+
 	Podemos suponer $\sum x_i = 1$
 	$$F(x_1 , .... x_n) = f(x_1, ...., x_n) - \lambda \sum_{i_1}^{n} x_i$$
 	Sustituyendo:
 	$$-\frac{1}{log_2}(\frac{p_1}{x_1}, .... , \frac{p_n}{x_n}) = \lambda (1,...,1) \implies \frac{p_1}{x_1} = ... = \frac{p_n}{x_n}$$
-	
-	Finalmente nos queda que 
+
+	Finalmente nos queda que
 	$$f(p_1, ... ,p_n)$$
 \end{problem}
 
@@ -1183,7 +1255,7 @@ las dos últimas tiradas o el fin del juego. Calcula el número de tiradas esper
 	contenidos...
 	\solution
 	Tenemos una binomial $B (4, 0.5)$
-	
+
 	S = {0,1,2,3,4}
 	$\begin{cases}
 	0 \rightarrow {4 \choose 0} (0.5)^4 = p_1 \\
@@ -1192,23 +1264,23 @@ las dos últimas tiradas o el fin del juego. Calcula el número de tiradas esper
 	3 \rightarrow {4 \choose 3} (0.5)^4 = p_4 \\
 	4 \rightarrow {4 \choose 4} (0.5)^4 = p_5 \\
 	\end{cases}$
-	
+
 	Calculamos la entropía:
 	$$H = -p_1 \log_2 p_1 -p_2 \log_2 p_2 - ....  -p_5 \log_2 p_5 = 2.0306 $$
-	
+
 	¿Cómo definir la entropía para distribuciones continuas de probabilidad?
 	$$f(x) = \frac{1}{\sqrt{2\pi}} e^{\frac{x^2}{2}}$$
-	
+
 	Podríamos coger
 	$$H = -\int_{-\infty}^{\infty} f(x) \log_2 f(x) dx$$
-	
+
 	Y en este caso podría ser $H<0$
-	
+
 	Aplicando esto a la parte 2 de este ejercicio:
-	
+
 	$$H = \frac{1}{(\log 2) \cdot \sqrt{2\pi}} \int_{-\infty}^{\infty} e^{\frac{x^2}{2}} (\log \sqrt{2\pi} + \frac{x^2}{2}) dx$$
-	
-	Para solucionar esto usamos que 
+
+	Para solucionar esto usamos que
 	$$\int e^{-x^2} = \sqrt{\pi}$$
 	$$\int e^{-\alpha \cdot x^2} = \sqrt{\frac{\pi}{\alpha}}$$
 	$$- \alpha\int x^2\cdot  e^{-\alpha \cdot x^2} dx = -\frac{1}{2}\frac{\sqrt{\pi}}{\alpha^{\frac{3}{2}}}$$
