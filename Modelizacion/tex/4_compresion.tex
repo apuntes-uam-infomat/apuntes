@@ -509,6 +509,10 @@ Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{So
 		\item Hay que almacenar el árbol para comunicarlo al compresor y podría ser grande.
 
 	\end{itemize}
+La idea ahora es buscar métodos "universales" creando diccionarios de forma dinámica que contengan referencias a las palabras.
+
+Estos diccionarios son virtuales; no se almacenan separadamente al fichero, de hecho equivalen a él, y sólo aparecen explícitamente al ejecutar los algotirmos de compresión y descompresión.
+
 
 	Los algoritmos que se usan parten de un trabajo de J.Zip, A.Lempel de 1997 y dan lugar a tres variantes principales: LZ77, LZ78 y LZW.
 
@@ -525,6 +529,98 @@ Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{So
 			gif & Fija una paleta de 256 colores (o más pequeñas) y LZW \\
 			\end{tabular}
 		\end{table}
+
+
+	\subsection{El algoritmo LZ78}
+	
+	Para simplificar , en los ejemplos pensamos en cadenas de caracteres que terminan con un símbolo de "fin de fichero" que escribiremos como \#.
+	
+	Lo primero que se hace es dividir la cadena que se quiere comprimir en frases.
+	
+	Cada frase consiste en añadir un caracter a una frase ya existente, sin repetirlas.
+	
+	Inicialmente sólo tenemos la frase vacía.
+	
+	Vemos el ejemplo de la palabra \textbf{\textit{rellena}}. Tenemos un problema y es que, después de añadir la primera \textbf{\textit{l}}, no puedo añadir la seguna, porque no puedo añadir frases repetidas. Por lo tanto añado \textbf{\textit{le}} como frase.
+	
+	Estas frases en una lista numerada, comenzando por $0 \rightarrow \emptyset$ , y siguendo el orden, son el "diccionario".
+	
+	\begin{example}
+		Vamos a ver como sería la lista resultante de: \textbf{"rellena la encuesta"}. Tenemos que recordar que al final tenemos el fin de documento , \#.
+		
+		
+		$\begin{cases}
+			0 \rightarrow \emptyset\\
+			1\rightarrow r\\
+			2 \rightarrow e\\
+			3\rightarrow l\\
+			4 \rightarrow le\\
+			.\\
+			.\\
+			.\\
+			10 \rightarrow nc\\
+			11\rightarrow u\\
+			12 \rightarrow es\\
+			13 \rightarrow t\\
+			14 \rightarrow a\#
+		\end{cases}$
+		
+	\end{example}
+	
+	\begin{example}
+		Hacemos lo mismo con la frase \textbf{"salsa salada"}
+		
+		
+		$\begin{cases}
+		0 \rightarrow \emptyset\\
+		1\rightarrow s\\
+		2 \rightarrow a\\
+		3\rightarrow l\\
+		4 \rightarrow sa\\
+		5 \rightarrow \text{ (el espacio)}\\
+		6\rightarrow sal\\
+		7 \rightarrow ad\\
+		8 \rightarrow a\#
+		\end{cases}$
+		
+	\end{example}
+
+
+
+Para codificar se sustituye cada frase por un par formado por un número y un carácter.
+
+frase $\rightarrow$ (n. de frase en el diccionario sin el último carácter, último carácter de la frase)
+
+\begin{example}
+	Vamos a ver la codificación de \textbf{salsa salada}.
+	
+	$\begin{cases}
+	s \rightarrow (0,s)\\
+	a \rightarrow (0,a)\\
+	l \rightarrow (0,l)\\
+	sa \rightarrow (1,a)\\
+	\text{ (espacio)} \rightarrow (0,espacio)\\
+	sal \rightarrow (4,l)\\
+	ad \rightarrow (2,d)\\
+	a\# \rightarrow (2, \#)
+	\end{cases}$
+	
+	En este ejemplo, si suponemos que los elementos ocupan 1 byte cada uno:
+	$$\text{cadena original} \rightarrow 126 bytes$$
+	$$\text{codificación} \rightarrow 8\cdot 2 =16 bytes$$
+\end{example}
+
+Un ejemplo un poco más realista es el que hizo Chamizo con el texto de \textit{La Regenta}.
+
+El texto es de 1869610 caracteres , el diccionario le salió de 281192 (número de frases). Entonces:
+
+$2^{19} > 281192 \implies$ Necesitamos 19 bits para los números, o bits para carateres
+
+$\rightarrow$  cada frase ocupa 27 bits al codificar
+
+$\implies$ La codificación completa ocupa 949023 bytes $\implies$ \textbf{Hay compresión}
+
+Para \textbf{descomprimir} vamos recuperando la lista del diccionario, partiendo de $0 \rightarrow \emptyset$, según leemos la codificación.
 
 
 \section{Codificación aritmética}
