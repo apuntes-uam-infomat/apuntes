@@ -1190,19 +1190,55 @@ Para trata de forma discreta ondas muy oscilatorias hay que tomar muestras muy g
 \begin{problem}[6]
 Si en una imagen en formato JPEG hacemos cero todos los coeficientes de Fourier excepto los $a_{00}$ que corresponden a la función $\phi_{00}$, ¿qué ocurrirá?
 \solution
+
+\yoP
+
+La imagen se verá totalmente pixelada, pues para cada bloque de $8\times 8$ estaremos tomando el color que tenía el pixel $(0,0)$ del bloque.
+
 \end{problem}
 
 \begin{problem}[7]
 Halla los coeficientes antes de cuantificar una imagen JPEG que consta sólo de los píxeles de la primera columna en blanco (valor=255) y el resto negros (valor=0), tratando de expresarlos de manera lo más simple posible
 \solution
 
+\yoP
+
+Podemos estudiar el desarrollo de Fourier de la función que nos da el color para cada uno de los tres colores básicos RGB que, en este ejemplo, serán los tres iguales.
+
+Los resultados experimentales vistos en clase muestran que el resultado será una función real, es decir, que sólo dependerá de cosenos.
+
+Aplicamos pues la transformada coseno discreta:
+\[F=\sum_{n=0}^7\sum_{m=0}^7 a_{nm}\phi_{nm} \text{ con } \phi_{nm}(l,k)=\cos\left(\frac{πn}{16}(2k+1) \right) \cos\left( \frac{πm}{16}(2l+1)\right)\]
+
+Despejando podemos ver que los coeficientes se calculan según la siguiente fórmula, que aparece en los apuntes del profesor:
+\[a_{nm}=\frac{α_nα_m}{64}\sum_{k=0}^7\sum_{l=0}^7F(k,l) \phi_{nm}(l,k) \text{ donde } α_n=2,1 \text{ si } n\neq0 | n = 0 \text{ respectivamente}\]
+
+Todos los bloques que no estén en la frontera izquierda de la imagen tendrán todos sus coeficientes nulos puesto que al calcular $a_{nm}$ tendremos $F=0$.
+
+Por tanto, el caso interesante lo constituyen los cuadrados fronterizos. Puesto que $F(k,l)=0 \forall l\neq 0$ podemos escribir:
+\[a_{nm} = \frac{α_nα_m}{64}\sum_{k=0}^7F(k,0)\phi_{nm}(0,k)=\frac{α_nα_m}{64}\sum_{k=0}^7F(k,0)\cos\left(\frac{πn}{16}(2k+1) \right) \cos\left( \frac{πm}{16}\right)\]
+
+Sabemos que todos los píxeles de la frontera tienen el mismo color, 255, de modo que $F(k,l)=255$ por lo que podemos simplicar la fórmula y escribir:
+\[a_{nm}=\frac{α_nα_m}{64}\cdot 255 \cdot \sum_{k=0}^7\cos\left(\frac{πn}{16}(2k+1) \right) \cos\left( \frac{πm}{16}\right)\]
+
+\textcolor{blue}{Yo ya lo veo bastante simple}
+
 \end{problem}
 
 \begin{problem}[8]
-Una imagen JPEG que consta de una l línea horizontal negra gruesa de lado a lado
+Una imagen JPEG que consta de una línea horizontal negra gruesa de lado a lado
 en un fondo blanco no es invariante por traslaciones; es decir, el tamaño del fichero depende de la altura a la que está la línea. Explica este fenómeno. ¿Para qué grosores y posiciones habrá mayor compresión?
 
 \solution
+
+\yoP
+
+Si nos fijamos en el ejercicio anterior, vimos que todos los cuadrados que no tocaran la línea tendrían todos sus coeficientes iguales. En el ejercicio anterior eran 0 y en este caso 255 (suponemos fondo blanco).
+
+En cualquier caso, esta extensa repetición de caracteres facilita la compresión del fichero.
+
+Por tanto la mayor compresión se alcanzará cuando la línea se situe en uno de los extremos de la imagen (superior o inferior) ya que será cuando menos cuadrados $8\times 8$ interesequen con ella.
+
 \end{problem}
 
 \begin{problem}[9]
@@ -1210,11 +1246,45 @@ Demuestra que los polinomios de Chebyshev $T_n(x)=\cos(n \arccos x)$ son realmen
 \[T_{n+1}(x)=2xT_n(x)-T_{n-1}(x) \text{ para } n \geq 1\]
 \solution
 
+\yoP
+
+Para empezar vamos a comprobar que se satisface la ecuación recursiva.
+
+\[T_{n+1}(x)=\cos((n+1)\arccos x) = \cos(n\arccos x)\cos(\arccos x)-\sin(n \arccos x)\sin(\arccos x) =\]
+\[=T_n(x)x-\sin(n \arccos x)\sqrt{1-x^2}\]
+
+Por otro lado tenemos:
+\[T_{n-1}(x)=\cos((n-1)\arccos x) = \cos(n\arccos x)\cos(\arccos x)+\sin(n \arccos x)\sin(\arccos x) =\]
+\[T_n(x)x+\sin(n \arccos x)\sqrt{1-x^2} \implies \sin(n \arccos x)\sqrt{1-x^2} =T_{n-1}(x)-T_n(x)x\]
+
+Y sustituyendo este resultado en la ecuación anterior obtenemos el resultado buscado.
+
+Una vez hemos probado que la ecuación recursiva es cierta nos basta con fijarnos en que $T_1(x)=\cos(\arccos(x))=x$. Sabiendo además que $T_0(x)=1$ queda perfectamente claro que la ecuación recursiva nos lleva a obtener polinomios.
+
 \end{problem}
 
 \begin{problem}[10]
-Prueba que para funciones impares los coeficientes con índice para en el desarrollo de Chebyshev-Fourier son nulos. Busca un análogo para funciones pares.
+Prueba que para funciones impares los coeficientes con índice par en el desarrollo de Chebyshev-Fourier son nulos. Busca un análogo para funciones pares.
 \solution
+
+\yoP
+
+Recordemos que una función impar es cualquier función que satisface
+\[f(-x)=-f(x)\]
+
+El desarrollo de Chebyshev-Fourier de una función $f(x)$ dada es de la forma:
+\[f(x)=a_0+2\sum_{n=1}^{\infty}a_nT_n(x) = a_0+2\sum_{n=1}^{\infty}a_n\cos(n \arccos x)\]
+Por otro lado, el desarrollo de Chebyshev-Fourier de $f(-x)$ tenemos:
+\[f(-x)=a_0+2\sum_{n=1}^{\infty}a_n\cos(n \arccos (-x))=a_0+2\sum_{n=1}^{\infty}a_n\cos(n (π - \arccos x))=\]
+\[=a_0+2\sum_{n=1}^{\infty}a_n\left( \cos(nπ)\cos(n\arccos x) + \sin(nπ)\sqrt{1-x^2}\right) =a_0+2\sum_{n=1}^{\infty}a_n \cos(nπ)\cos(n\arccos x)=\]
+\[=a_0+2\sum_{n=1}^{\infty}a_n(-1)^n\cos(n\arccos x)\]
+
+Sabiendo que $f$ es una función impar, igualamos los dos desarrollos obtenidos invirtiendo el signo en el segundo. Así nos quedan dos desarrollos exactamente idénticos en los términos impares pero con signos opuestos en todos los pares. La única opción para que se mantenga la igualdad es que estos términos de índice par sean nulos.
+
+Por otro lado las funciones pares son aquellas que cumplen
+\[f(x)=f(-x)\]
+
+En este caso, igualar los desarrollos anteriormente calculados (de $f(x)$ y $f(-x)$) nos quedarían dos series idénticas en los términos pares y con signos opuestos en los impares. La única forma de que ambas series sean idénticas es que esos términos impares sean nulos.
 
 \end{problem}
 
