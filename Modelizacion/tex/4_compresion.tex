@@ -622,8 +622,92 @@ $\implies$ La codificación completa ocupa 949023 bytes $\implies$ \textbf{Hay c
 
 Para \textbf{descomprimir} vamos recuperando la lista del diccionario, partiendo de $0 \rightarrow \emptyset$, según leemos la codificación.
 
+\begin{example}
+Vamos a descodificar la siguiente cadena:
 
-\section{Codificación aritmética}
-\section{Compresión LZ77, DEFLATE y LZW}
+(0,e) (0,r) (2,e) (0, \textit{espacio}) (0,t) (3,s) (0,\#)
+
+Siempre empezamos por $0 \rightarrow \emptyset$
+$\begin{cases}
+ (0,e) \implies 1 \rightarrow e\\
+  (0,r) \implies 2 \rightarrow r\\ 
+  (2,e) \implies 3 \rightarrow re\\
+   (0, \textit{espacio}) \implies 4 \rightarrow \textit{espacio}\\
+   (0,t) \implies 5 \rightarrow t\\
+    (3,s) \implies 6 \rightarrow res\\
+     (0,\#) \implies 1 \rightarrow e
+\end{cases}$
+
+Frase final: \textbf{erre tres}
+\end{example}
+
+\subsection{¿Cuánto comprime LZ78?}
+
+Depende del número de frases asociadas a la cadena/fichero inicial.
+
+Por ejemplo en la cadena \textbf{\textit{rellenala ya}} tenemos 10 frases.
+
+Las posiciones relativas a 10 frases ocupan 4 bits.
+
+Un carácter en ASCII ocupa 8 bits
+
+Entonces la codificación necesitará 10 pares. Un par está compuesto por la posición y un carácter. En nuestro caso la longitud en bits será $10 \cdot (4 +8)$
+
+En general la longitud en bits al codificar una cadena \textbf{s} con \textbf{LZ78} es
+$$l_{LZ} (s) = F \cdot ( \lceil\log_2 F\rceil  + b)$$
+Siendo b el número de bits de un carácter.
+
+
+¿Qué ocurre al aplicar el algoritmo a $s = s_{i1}.... s_{iN}$ donde $s_{ij} \in S = {s_1...s_n}$ ?
+
+A cada $s_i$ le corresponde un $p_i$ 
+\begin{theorem}
+	Consideremos la longitud media
+	$$l^{*}_{LZ}(N) = \sum_{i_1,...,i_N} p_{i1}...p_{iN} l_{LZ}(s_{i1}....s_{iN})$$
+	
+	Entonces
+	$$\lim_{N\rightarrow \infty} \frac{l^{*}_{LZ}(N)}{N} = H$$
+	
+	Con H entropía de s
+\end{theorem}
+
+\obs Asintóticamente , LZ78 es tan bueno como el algoritmo óptimo en el corolario del \textit{source coding theorem}
+
+\subsection{Algoritmo LZW}
+
+Es una variante de LZ78que comienza predefiniendo un dccionario con todos los posibles caracteres (que pueden aparecer en la cadena).
+
+La división de frases es un poco diferente a LZ78
+\begin{enumerate}
+	\item Los caracteres individuales no forman frases porque ya están en el diccionario.
+	\item Cada caracter del final de una frase se incluye en el inicio de la siguiente.
+\end{enumerate}
+
+\begin{example}
+	Tenemos la siguiente cadena: 
+	$$01110100001\#$$
+	Vamos a ver como será la división en frases.Primero vemos que en el diccionario ya tenemos
+	$$\begin{cases}
+	0 \rightarrow 0\\
+	1 \rightarrow 1
+	\end{cases}$$
+	
+	Construimos el resto de frases de forma que el diccionario queda:
+		$$\begin{cases}
+		0 \rightarrow 0\\
+		1 \rightarrow 1\\
+		2 \rightarrow 01\\
+		3 \rightarrow 11\\
+		4 \rightarrow 110\\
+		5 \rightarrow 010\\
+		6 \rightarrow 00\\
+		7 \rightarrow 000\\
+		8 \rightarrow 01\#\\
+		\end{cases}$$
+	
+	\textbf{Codificación:} posición de cada frase al suprimir el último caracter.
+	$$0,1,3,2,0,6,2$$
+\end{example}
+
 \section{El algoritmo ID3 de aprendizaje automático}
 
