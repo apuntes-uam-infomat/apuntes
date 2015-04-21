@@ -2589,10 +2589,6 @@ siendo α cualquier camino cerrado en Ω que no contenga singularidades.
 \end{theorem}
 
 
-
-\section{Aplicaciones al cálculo de integrales}
-
-
 \chapter{Algunos teoremas fundamentales de la variable compleja}
 \section{Principio del argumento}
 \begin{theorem}[Principio\IS del argumento]
@@ -2676,7 +2672,7 @@ Aplicando el teorema de Rouché tenemos que:
 \end{example}
 
 \begin{example}
-\textbf{¿Cuánts raíces de $p(z)=z^4-6z+3$ están en 1<|z|<2?}
+\textbf{¿Cuántas raíces de $p(z)=z^4-6z+3$ están en 1<|z|<2?}
 
 Escribimos
 \[|p(z)-z^4| = |-6z+3|\leq 6|z|+3 \overbrace{=}^{|z|=2} 15 < 16 \overbrace{=}^{|z|=2}|z|^4 \]
@@ -2688,6 +2684,88 @@ Por otro lado
 y aplicando nuevamente el teorema de Roché vemos que
 \[\text{nº de ceros de p(z) en |z|<1= nº de ceros de -6z en |z|<1}\]
 \end{example}
+
+\begin{example}
+\textbf{Demostrar que $z=λ-e^{-z}$ con λ>1 tiene una única raíz y además esta es real}
+
+Sea $f(z)=z-λ+e^{-z}$
+\[f(z)=0 \iff z-λ+e^{-z} = 0 \iff \bar{z}-λ+e^{-\bar{z}}=0 \iff f(\bar{z})=0\]
+
+Es decir, hemos visto que en caso de haber una raíz compleja entonces su conjugado también sería raíz y por tanto tendríamos dos raíces. Si ahora demostramos que la raíz es única tendremos directamente que esta no puede ser compleja.
+
+Ahora vamos a intentar aplicar el Teorema de Rouché. Para ello debemos acotar primero en los puntos con parte real positiva y luego aquellos con parte real nula.
+
+\[|f(z)-(z-λ)|=|e^{-z}|=e^{-Re(z)} \leq 1\]
+
+Sea $R>λ$ vamos a estudiar los puntos $z$ tales que $|z|=R$, Re(z)$\geq 0$.
+
+\[|z-λ|\geq |z|-λ = R - λ > 1 \implies |f(z)-(z-λ)| < |z-λ| \text{ para |z|=R>λ+1}\]
+
+Si ahora tenemos Re(z)=0 y |Im(z)|$\leq R$ tenemos la desigualdad:
+\[|z-λ| = \sqrt{|z|^2+λ^2}\geq λ > 1 \text{ (por hipótesis)} \geq |f(z)-(z-λ)|\]
+
+Es decir, ya tenemos que
+\[|f(z)-(z-λ)|<|z-λ|<|z|+|λ|\]
+por lo que podemos aplicar el teorema de Rouché que nos dice que:
+\[\text{ nº ceros de  f - nº polos de f = nº ceros de (z-λ) - nº polos de (z-λ)}\]
+y puesto que ambas funciones no encierran ningún polo tenemos que su número de ceros es igual. Como sabemos que $z-λ$ tiene un único cero, concluimos que nuestra función $f(z)$ también tiene un único cero.
+\end{example}
+
+\section{Aplicaciones al cálculo de integrales}
+Veamos las técnicas a usar para resolver cierto tipo de integrales:
+\begin{enumerate}
+\item[a)] \textbf{Integrales de la forma}
+\[\int_0^{2π}F(\cos \theta, \sin \theta) d \theta\]
+
+Si $z=e^{i\theta}$ entonces
+\[\left\{ \begin{aligned}z=\cos(\theta)+i\sin(\theta)\\
+\frac{1}{z}=\cos(\theta)-i\sin(\theta) \end{aligned} \right. \implies \left\{\begin{aligned} \cos(\theta)=\frac{z+1/z}{2}\\ \sin(\theta)=\frac{z-1/z}{2i} \end{aligned} \right.\]
+
+Con esto podemos hacer un cambio de variables en la integral dada obteniendo:
+\[\int_0^{2π}F(\cos \theta, \sin \theta) d \theta = \int_{|z|=1} F\left( \frac{z+1/z}{2}, \frac{z-1/z}{2i}  \right)\frac{1}{iz}dz = 2πi\sum_{\text{ z singularidad}} Res(f;z)\]
+La última igualdad, evidentemente, se deriva del toerema de los residuos
+
+\begin{example}
+Tomemos como ejemplo la integral:
+\[\int_0^{2π} \frac{\sin^2 \theta}{2+\cos \theta}d\theta = ... = \int_{|z|=1}\frac{(z^2-1)^2i}{2z^2(z^2+4z+1)}dz\]
+
+Aplicamos ahora el teorema de residuos. Para ello miramos primero dónde presenta singularidades esta función. En este caso, las singularidades de la función son los puntos $z_0=0$, $z_1=-2+\sqrt{3}$ y $z_2=-2-\sqrt{3}$.
+
+Puesto que ninguna está en la curva $|z|=1$ vamos por buen camino, ya que el teorema de los Residuos exige que así sea. Aplicando el teorema y obtenemos:
+\[\int_{|z|=1}\frac{(z^2-1)^2i}{2z^2(z^2+4z+1)}dz = 2πi\left(Res(f,0)+Res(f,-2+\sqrt{3})\right)\]
+
+Calculamos ahora los residuos.
+
+\[z_0=0 \to \lim_{z \to 0} f(z) = \infty \to \lim_{z \to 0} zf(z) = \infty \to \lim_{z \to 0} z^2f(z)=\frac{1}{2}\]
+Por tanto sabemos que $z_0$ es un polo de orden 2, información necesaria para calcular su residuo.
+\[Res(f,z_0)=\left.(z^2f(z))'\right|_{z=z_0} = ... = -2i\]
+
+Por otro lado podemos ver que $z_1$ es un polo de orden 1 pues
+\[\lim_{z \to z_1} (z-z_1)f(z) \neq \infty\]
+Y su residuo resulta ser
+\[Res(f,z_1)=\left. \left(zf(z)\right)'\right|_{z=z_1} = ... = \sqrt{3}i\]
+\end{example}
+
+\item[b)] \textbf{Integrales impropias}
+
+Se trata de integrales de la forma:
+\[\int_{-\infty}^{\infty} f(x)dx = \lim_{N \to \infty}\int_{-N}^{\infty}f(x)dx + \lim_{M \to \infty} \int_{-\infty}^{M} f(x)dx\]
+
+Hasta ahora hacíamos el cálculo de estas integrales sin preocuparnos de las velocidades a las que $N$ y $M$ tienen a infinito. Ahora ``si que nos vamos a preocupar'' pues vamos a considerar estas integrales cuando $N$ y $M$ convergen a infinito a la misma velocidad. Al resultado lo llamaremos \concept{Valor principal de Cauchy} y escribimos:
+\[V.P. \ \int_{-\infty}^{\infty} f(x)dx = \lim_{N \to \infty}\int_{-N}^N f(x)dx\]
+
+Dentro de estas integrales debemos distinguir diferentes tipos:
+\begin{enumerate}
+\item[(1)] Sea $f$ holomorfa en Ω$\supset \bar{H}=\{z \tq Im(z)>0\}$ salvo en un número finito de singularidades no reales.
+
+Si $|z|^2f(z)$ está acotado para $|z|$ grande con $Im(z)\geq 0$
+\[\implies \int_{-\infty}^{\infty}f(x)dx = 2πi \sum_{\text{ w singularidad de f}}Res(f,w)\]
+y para α > 0
+\[\int_{-\infty}^{\infty} f(x)e^{iαx}dx = 2πi \sum_{\text{w singularidad de f}}Res(f(z)e^{iαz},w)\]
+y esta nos permite calcular
+\[\int_{-\infty}^{\infty} f(x)\cos(x)dx \text{ y } \int_{-\infty}^{\infty}f(x)\sin(x)\]
+\end{enumerate}
+\end{enumerate}
 
 \section{Teorema de la aplicación abierta}
 \section{Principio del módulo máximo}
