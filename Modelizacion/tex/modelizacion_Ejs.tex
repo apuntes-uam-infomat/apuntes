@@ -1035,7 +1035,6 @@ las dos últimas tiradas o el fin del juego. Calcula el número de tiradas esper
 Consideramos la función $\appl{f}{\ent_4}{\cplex}$ definida por $10=10$, $f(\pm 1) = -2 \mp 2i$ y $f(2)=-2$. Calcula su desarrollo de Fourier discreto.
 
 \solution
-\yoP
 
 Recordemos que el desarrollo discreto de Fourier se hacía siguiendo la fórmula:
 \[f(n)=\frac{1}{N}\sum_m \hat{f}(m)\cdot e \left(\frac{nm}{N} \right) \text{ con } \hat{f}(n)=\sum_m f(m) \cdot e\left(\frac{-nm}{N}\right)\]
@@ -1099,7 +1098,7 @@ Una vez tenemos estos coeficientes calculamos el desarrollo discreto de Fourier:
 	Consideramos las funciones 1-periódicas reales que en [0,1] coinciden, respectivamente con $\min(x,1-x)$ y con $(-1)^{[2x]}$ donde $[\cdot ]$ indica la parte entera. Calcula sus coeficientes de Fourier. Expresar la primera serie de Fourier en términos de cosenos y la segunda en términos de senos.
 	\solution
 
-	\yoP
+%	\yoP
 
 	La primera función parte del origen y asciende como $y=x$ hasta llegar a $x=y=0.5$ y posteriormente desciende de forma lineal hasta llegar a $x=1, y=0$.
 
@@ -1143,7 +1142,7 @@ Una vez tenemos estos coeficientes calculamos el desarrollo discreto de Fourier:
 
 	Nos queda:
 
-	$$ f(x)= \frac{2}{\pi i} \sum\limits^{\infty}_{n = -\infty \text{ y } 2 \nmid n}  \frac{\sin (2 \pi n x)}{n} = \frac{4}{\pi} \sum^{\infty}_{k=0} \frac{\sin(2 \pi (2 k + 1) x)}{2k + 1} $$
+	$$ f(x)= \frac{2}{\pi i} \sum\limits^{\infty}_{n = 1\text{ y } 2 \nmid n}  2i\frac{\sin (2 \pi n x)}{n} = \frac{4}{\pi} \sum^{\infty}_{k=0} \frac{\sin(2 \pi (2 k + 1) x)}{2k + 1} $$
 
 \end{problem}
 
@@ -1190,19 +1189,55 @@ Para trata de forma discreta ondas muy oscilatorias hay que tomar muestras muy g
 \begin{problem}[6]
 Si en una imagen en formato JPEG hacemos cero todos los coeficientes de Fourier excepto los $a_{00}$ que corresponden a la función $\phi_{00}$, ¿qué ocurrirá?
 \solution
+
+%\yoP
+
+La imagen se verá totalmente pixelada, pues para cada bloque de $8\times 8$ estaremos tomando el color que tenía el pixel $(0,0)$ del bloque.
+
 \end{problem}
 
 \begin{problem}[7]
 Halla los coeficientes antes de cuantificar una imagen JPEG que consta sólo de los píxeles de la primera columna en blanco (valor=255) y el resto negros (valor=0), tratando de expresarlos de manera lo más simple posible
 \solution
 
+%\yoP
+
+Podemos estudiar el desarrollo de Fourier de la función que nos da el color para cada uno de los tres colores básicos RGB que, en este ejemplo, serán los tres iguales.
+
+Los resultados experimentales vistos en clase muestran que el resultado será una función real, es decir, que sólo dependerá de cosenos.
+
+Aplicamos pues la transformada coseno discreta:
+\[F=\sum_{n=0}^7\sum_{m=0}^7 a_{nm}\phi_{nm} \text{ con } \phi_{nm}(l,k)=\cos\left(\frac{πn}{16}(2k+1) \right) \cos\left( \frac{πm}{16}(2l+1)\right)\]
+
+Despejando podemos ver que los coeficientes se calculan según la siguiente fórmula, que aparece en los apuntes del profesor:
+\[a_{nm}=\frac{α_nα_m}{64}\sum_{k=0}^7\sum_{l=0}^7F(k,l) \phi_{nm}(l,k) \text{ donde } α_n=2,1 \text{ si } n\neq0 | n = 0 \text{ respectivamente}\]
+
+Todos los bloques que no estén en la frontera izquierda de la imagen tendrán todos sus coeficientes nulos puesto que al calcular $a_{nm}$ tendremos $F=0$.
+
+Por tanto, el caso interesante lo constituyen los cuadrados fronterizos. Puesto que $F(k,l)=0 \forall l\neq 0$ podemos escribir:
+\[a_{nm} = \frac{α_nα_m}{64}\sum_{k=0}^7F(k,0)\phi_{nm}(0,k)=\frac{α_nα_m}{64}\sum_{k=0}^7F(k,0)\cos\left(\frac{πn}{16}(2k+1) \right) \cos\left( \frac{πm}{16}\right)\]
+
+Sabemos que todos los píxeles de la frontera tienen el mismo color, 255, de modo que $F(k,l)=255$ por lo que podemos simplicar la fórmula y escribir:
+\[a_{nm}=\frac{α_nα_m}{64}\cdot 255 \cdot \sum_{k=0}^7\cos\left(\frac{πn}{16}(2k+1) \right) \cos\left( \frac{πm}{16}\right)\]
+
+\textcolor{blue}{Yo ya lo veo bastante simple}
+
 \end{problem}
 
 \begin{problem}[8]
-Una imagen JPEG que consta de una l línea horizontal negra gruesa de lado a lado
+Una imagen JPEG que consta de una línea horizontal negra gruesa de lado a lado
 en un fondo blanco no es invariante por traslaciones; es decir, el tamaño del fichero depende de la altura a la que está la línea. Explica este fenómeno. ¿Para qué grosores y posiciones habrá mayor compresión?
 
 \solution
+
+%\yoP
+
+Si nos fijamos en el ejercicio anterior, vimos que todos los cuadrados que no tocaran la línea tendrían todos sus coeficientes iguales. En el ejercicio anterior eran 0 y en este caso 255 (suponemos fondo blanco).
+
+En cualquier caso, esta extensa repetición de caracteres facilita la compresión del fichero.
+
+Por tanto la mayor compresión se alcanzará cuando la línea se situe en uno de los extremos de la imagen (superior o inferior) ya que será cuando menos cuadrados $8\times 8$ interesequen con ella.
+
 \end{problem}
 
 \begin{problem}[9]
@@ -1210,23 +1245,98 @@ Demuestra que los polinomios de Chebyshev $T_n(x)=\cos(n \arccos x)$ son realmen
 \[T_{n+1}(x)=2xT_n(x)-T_{n-1}(x) \text{ para } n \geq 1\]
 \solution
 
+%\yoP
+
+Para empezar vamos a comprobar que se satisface la ecuación recursiva.
+
+\[T_{n+1}(x)=\cos((n+1)\arccos x) = \cos(n\arccos x)\cos(\arccos x)-\sin(n \arccos x)\sin(\arccos x) =\]
+\[=T_n(x)x-\sin(n \arccos x)\sqrt{1-x^2}\]
+
+Por otro lado tenemos:
+\[T_{n-1}(x)=\cos((n-1)\arccos x) = \cos(n\arccos x)\cos(\arccos x)+\sin(n \arccos x)\sin(\arccos x) =\]
+\[T_n(x)x+\sin(n \arccos x)\sqrt{1-x^2} \implies \sin(n \arccos x)\sqrt{1-x^2} =T_{n-1}(x)-T_n(x)x\]
+
+Y sustituyendo este resultado en la ecuación anterior obtenemos el resultado buscado.
+
+Una vez hemos probado que la ecuación recursiva es cierta nos basta con fijarnos en que $T_1(x)=\cos(\arccos(x))=x$. Sabiendo además que $T_0(x)=1$ queda perfectamente claro que la ecuación recursiva nos lleva a obtener polinomios.
+
 \end{problem}
 
 \begin{problem}[10]
-Prueba que para funciones impares los coeficientes con índice para en el desarrollo de Chebyshev-Fourier son nulos. Busca un análogo para funciones pares.
+Prueba que para funciones impares los coeficientes con índice par en el desarrollo de Chebyshev-Fourier son nulos. Busca un análogo para funciones pares.
 \solution
+
+%\yoP
+
+Recordemos que una función impar es cualquier función que satisface
+\[f(-x)=-f(x)\]
+
+El desarrollo de Chebyshev-Fourier de una función $f(x)$ dada es de la forma:
+\[f(x)=a_0+2\sum_{n=1}^{\infty}a_nT_n(x) = a_0+2\sum_{n=1}^{\infty}a_n\cos(n \arccos x)\]
+Por otro lado, el desarrollo de Chebyshev-Fourier de $f(-x)$ tenemos:
+\[f(-x)=a_0+2\sum_{n=1}^{\infty}a_n\cos(n \arccos (-x))=a_0+2\sum_{n=1}^{\infty}a_n\cos(n (π - \arccos x))=\]
+\[=a_0+2\sum_{n=1}^{\infty}a_n\left( \cos(nπ)\cos(n\arccos x) + \sin(nπ)\sqrt{1-x^2}\right) =a_0+2\sum_{n=1}^{\infty}a_n \cos(nπ)\cos(n\arccos x)=\]
+\[=a_0+2\sum_{n=1}^{\infty}a_n(-1)^n\cos(n\arccos x)\]
+
+Sabiendo que $f$ es una función impar, igualamos los dos desarrollos obtenidos invirtiendo el signo en el segundo. Así nos quedan dos desarrollos exactamente idénticos en los términos impares pero con signos opuestos en todos los pares. La única opción para que se mantenga la igualdad es que estos términos de índice par sean nulos.
+
+Por otro lado las funciones pares son aquellas que cumplen
+\[f(x)=f(-x)\]
+
+En este caso, igualar los desarrollos anteriormente calculados (de $f(x)$ y $f(-x)$) nos quedarían dos series idénticas en los términos pares y con signos opuestos en los impares. La única forma de que ambas series sean idénticas es que esos términos impares sean nulos.
 
 \end{problem}
 
 \begin{problem}[11]
-Explica cómo calcularía la función tangente para cualquier valor real si tu calculadora sólo te permitiera evaluarla en $[-π/4,π/4]$. Consiera el desarrollo de Chebyshev-Fourier de $f(x)=\tan(πx/4)$ truncando hasta los dos primeros coeficientes no nulos. Con ayuda de un ordenador, aproxima estos dos coeficientes con 6 cifras decimales y comprueba la precisión al proximar $\tan (3/4)$. compara el resultado obtenido al emplear dos términos no nulos de la siere de Taylor de $f$
+Explica cómo calcularía la función tangente para cualquier valor real si tu calculadora sólo te permitiera evaluarla en $[-π/4,π/4]$. Consiera el desarrollo de Chebyshev-Fourier de $f(x)=\tan(πx/4)$ truncando hasta los dos primeros coeficientes no nulos. Con ayuda de un ordenador, aproxima estos dos coeficientes con 6 cifras decimales y comprueba la precisión al proximar $\tan (3/4)$. Compara el resultado obtenido al emplear dos términos no nulos de la siere de Taylor de $f$
 \solution
+%\yoP
+
+Para empezar sabemos que la función tangente es una función 1-periódica con la siguiente gráfica:
+
+\begin{center}
+	\includegraphics{img/grafica_tangente.png}
+\end{center}
+
+Podemos observar que el período no se da en $[-π/4,π/4]$ sino en $[-π/2,π/2]$. Por tanto tendríamos que calcular el desarrollo de Fourier de la función tangente, sabiendo que se trata de una función 1-periódica.
+
+Para ello emplearíamos la fórmula:
+\[f(x)=\sum_{n=-\infty}^{\infty}\hat{f}(n)e(nx)\text{ donde } \hat{f}(n)=\int_0^1 f(x)e(-nx)dx\]
+
+Si tomamos la función $f(x)=\tan(πx/4)$ tendremos una función conocida en el intervalo $[0,1]$, que es lo que necesitamos para calcular el desarrollo de Fourier. En este caso, la tangente resulta ser una función impar, de modo que $\tan (x) = -\tan(-x)$.
+
+Empecemos calculando los coeficientes de Fourier, que serán de la forma:
+\[\hat{f}(n)=\int_0^1 \tan(πx/4)e(-nx)dx=\int_0^1 \tan(πx/4)(\cos(-nx)+i\sin(-nx))dx\]
+
+
+\textcolor{blue}{No se bien cómo seguir}
 
 \end{problem}
 
 \begin{problem}[12]
-Sabiendo que $\in_{-\infty}^{\infty}e^{-x^2}dx = \sqrt{π}$ calcula la transformada de Fourier de $f(x)=e^{-αx^2}$, α>0, utilizando un cambio de variable $x \to μx+\upsilon , \upsilon \in \cplex$. Justifica que este cambio complejo es lícito
+Sabiendo que $\int_{-\infty}^{\infty}e^{-x^2}dx = \sqrt{π}$ calcula la transformada de Fourier de $f(x)=e^{-αx^2}$, α>0, utilizando un cambio de variable $x \to μx+\upsilon , \upsilon \in \cplex$. Justifica que este cambio complejo es lícito
 \solution
+
+\yoP
+
+Para calcular esta transformada de Fourier nos apoyaremos en la fórmula:
+\[f(x)=\int_{-\infty}^{\infty}\hat{f}(ε)e^{-εx}dε \text{ siendo } \hat{f}(ε)=\int_{-\infty}^{\infty}f(x)e^{-εx}dx\]
+
+Calculamos primero los coeficientes de la serie:
+\[\hat{f}(ε)=\int_{-\infty}^{\infty}f(x)e(εx)dx = \int_{-\infty}^{\infty}e^{-αx^2}e(-εx)dx = \int_{-\infty}^{\infty}e^{-αx^2-iεx}dx\]
+
+Atendiendo a la indicación del enunciado, hacemos el cambio de variable $x=μt+\upsilon$, con lo que deberemos cambiar $dx=μdt$ obteniendo:
+\[ \int_{-\infty}^{\infty}e^{-αx^2-iεx}dx =  \int_{-\infty}^{\infty}e^{-α(μt+\upsilon)^2-iε(μt+\upsilon)}dx = \int_{-\infty}^{\infty}e^{-αμ^2t^2-α\upsilon^2-2αμ\upsilon t-iεμt-iε\upsilon}dx\]
+
+El cambio de variable que hicimos tenía dos constantes que no hemos especificado y cuyo valor no altera los pasos seguidos hasta llegar a este punto. Si escogemos bien $\upsilon$ podemos eliminar el termino $t$ del exponente.
+
+Para ello necesitamos
+\[-2αμ\upsilon =iεμ \implies \upsilon=\frac{iε}{-2α}\]
+
+Además, dada la información que nos proporciona el enunciado, nos interesa que el coeficiente del término $t^2$ sea 1. Para ello basta con tomar $μ=\sqrt{α}$.
+
+Por tanto ya tenemos completamente identificado el cambio de variable que vamos a realizar. Con él, obtenemos:
+\[\int_{-\infty}^{\infty}e^{-αμ^2t^2-α\upsilon^2-2αμ\upsilon t-iεμt-iε\upsilon)}dx = \int_{-\infty}^{\infty}e^{-t^2-α\upsilon^2-iε\upsilon}dx = \sqrt{π}\cdot e^{ε^2/(4α)-ε^2/(2α)}\]
 
 \end{problem}
 
@@ -1237,7 +1347,7 @@ El filtro de convolución \textit{sharpen} para imágenes se representa a veces 
 \end{problem}
 
 \begin{problem}[14]
-Explica por qué si se sabe que la densidad es una función radial, entonces basta una proyección para reconstruirla por tomografía. Demuestra que en este caso una fórmula para hacerlo es 7
+Explica por qué si se sabe que la densidad es una función radial, entonces basta una proyección para reconstruirla por tomografía. Demuestra que en este caso una fórmula para hacerlo es
 \[ρ(x,y)=\int_{\infty}^{\infty} \int_0^π |r|\hat{P}_0(r)e(r\cos(\theta) \sqrt{x^2+y^2})d\theta dr\]
 \solution
 
@@ -1258,6 +1368,7 @@ Un modelo natural para la temperatura en el interior de la Tierra a profundidad 
 \[u(x,t)=\sum c_n(x)e(nt)\]
 Deduce $c_n(x)=a_ne^{-x(1\pm i)\sqrt{π|n|}}$ de la ecuación del calor $u_t=u_{xx}$, suponiendo $u(+\infty, t)< \infty$, con $a_n$ los coeficientes de Fourier de la temperatura en la superficie y $\pm$ el signo de $n$.
 \solution
+
 
 \end{problem}
 

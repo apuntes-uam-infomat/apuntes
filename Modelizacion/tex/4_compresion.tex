@@ -5,65 +5,66 @@
 
 	\textit{``Una teoría matemática de la comunicación''} (Claude E. Shannon, 1948)
 
-	\begin{defn}
-		$S = \{ S_1, ... , S_n \}$  espacio de probabilidad, $p_i \equiv$ posibilidad de escoger $S_i$.
+	Partimos de un conjunto finito $S = \{ S_1, ... , S_n \}$ que además es un espacio de probabilidad, siendo $p_i \equiv$ la posibilidad de escoger $s_i$.
+	La idea general es que los elementos de $S$ sean cualesquiera fuentes de información (la notación $S$ proviende de \textit{source}).
 
-	\end{defn}
+	Más adelante consideraremos $S$ como un conjunto ``caracteres'' que compondran mayores unidades de información como mensajes o ficheros.
 
-	Más adelante si serán ``caracteres'' que componran mensajes o ficheros.
-
-	\begin{defn}
+	\begin{defn}[Entropía]
 		Shanon definió una función $ H(p_1, ..., p_n)$ que mide la cantidad de ``información contenida'' en S. Que se puede interpretar también como la ``incertidumbre'' al extraer una muestra aleatoria de $S$.
 	\end{defn}
 
-	\begin{example}
-		$p_1 = 1$ y $p_i = 0$ si $i \neq 1 \rightarrow $ no hay incertidumbre ya que sabemos el resultado.
+	El siguiente ejemplo nos da una idea más intuitiva de este concepto de \textbf{Entropía}
 
-		$p_i = \frac{1}{n} \rightarrow $ hay mucha incertidumbre (es máxima).
+	\begin{example}
+		Sea un conjunto $S$ formado por dos elementos y sean las probabilidades $p_1 = 1$ y $p_i = 0$ si $i \neq $, entonces no hay incertidumbre ya que sabemos el resultado. Es decir, tomando un elemento al azar del conjunto $S$ sabemos a ciencia cierta que será $s_1$.
+
+		Sin embargo, si para el mismo conjunto $S$ tenemos las probabilidades $p_i = \frac{1}{n}$ tendremos mucha incertidumbre (es máxima). Es decir, tomando un elemento al azar del conjunto $S$ no podremos intuir que elemento será.
 	\end{example}
 
 
-	Shannon explicó las siguientes propiedades de H:
+	Shannon, al estudiar el concepto de la entropía, forzó una serie de propiedades que debería cumplir la función $H$ que buscaba:
 	\begin{itemize}
-		\item $H$ es contínua
-		\item $H$ es creciente: $H(\frac{1}{n},...,\frac{1}{n}) (\text{n veces}) \rightarrow$ más cosas, más incertidumbre $\Rightarrow$ más información.
-		\item $H(\frac{1}{n},...,\frac{1}{n}) (\text{n veces})$ =  $H(\frac{b_1}{n},...,\frac{b_k}{n}) (\text{k veces})$ + $\sum^{k}_{i = 1} \frac{b_k}{n} H(\frac{1}{b_i},...,\frac{1}{b_i}) (b_i \text{ veces})$ para cualquier $b_i \in \mathbb{Z}^+, \sum^{k}_{i = 1} b_i = n$.
+		\item $H$ deberá ser contínua. Si realizo pequeños variaciones en la distribución de las probabilidades, es lógico esperar pequeñas variaciones en la entropía del conjunto.
+
+		\item $H$ ha de ser creciente en $n$: Es decir, si dada una función
+		\[H\left(\frac{1}{n},..(\text{n veces})..,\frac{1}{n}\right)  \]
+		 aumentamos el valor de la $n$ la entropía debería ser mayor, pues tendremos aún más cosas lo que nos dará una mayor incertidumbre.
+		\item La cantidad de información no puee variar si subdividimos $S$ en subconjuntos más pequeños de tamaño $b_i$, es decir:
+		\[H\left(\frac{1}{n},..(\text{n veces})..,\frac{1}{n}\right) =  H\left(\frac{b_1}{n},..(\text{k veces})..,\frac{b_k}{n}\right) + \sum^{k}_{i = 1} \frac{b_k}{n} H\left(\frac{1}{b_i},..(b_i \text{ veces})..,\frac{1}{b_i}\right) \] para cualquier $b_i \in \mathbb{Z}^+, \sum^{k}_{i = 1} b_i = n$.
 	\end{itemize}
 
-	\begin{prop}
-		Si divides un conjuntos en trozos, la incertidumbre no varía
-	\end{prop}
 
-	$\rightarrow$ La información de n objetos no varía s los dividimos en cajas de tamaño $b_i$.
+	Así mismo, Shannon probó que las únicas funciones con estas propiedades son aquellas de la forma:
 
-	Probó que la única función con esta propiedad es:
+	$$H(p1, ..., p_n) = \text{Cte} \sum^{n}_{i=1} p_i \log(p_i) \quad \text{ con } \text{Cte} < 0 $$
 
-	$$H(p1, ..., p_n) = \text{Cte} \sum^{n}_{i=1} p_i \log(p_i) \quad \text{Cte} < 0 $$
+	Eligió $\text{Cte} = -\frac{1}{\log 2}$ pensando en comunicaciones digiales.
 
-	Eligió $\text{Cte} = -\frac{1}{\log 2}$ pensando en comunicaciones digiales para que le saliese $\log_2 ( \quad) $.
-
-	\begin{defn}{entropía}[entropia]
+	\begin{defn}[Entropia]
+		Se define la entropía a partir de la fórmula:
 		$$H(p_1, ..., p_n) = -\sum^{n}_{i = 1} p_i \log_2 p_i $$
 
-		Se define $0 \log_2 0 = 0$ porque $\lim_{x \rightarrow 0} x \log x = \lim_{x \rightarrow 0^+} \frac{\log(x)}{1/x} = \lim_{x \rightarrow 0} \frac{1/x}{-1 / x^2} = \lim_{x \rightarrow 0} \frac{-x^2}{x} = 0$
+		Se define $0 \log_2 0 = 0$ puesto que $\lim_{x \rightarrow 0} x \log x = \lim_{x \rightarrow 0^+} \frac{\log(x)}{1/x} = \lim_{x \rightarrow 0} \frac{1/x}{-1 / x^2} = \lim_{x \rightarrow 0} \frac{-x^2}{x} = 0$
 	\end{defn}
+
+	Veamos un pequeño ejemplo sobre cómo calcular esta entropía
 
 	\begin{example}
 
-		$S$ = \{ bytes \}  $p_1 = \frac{1}{2^8}, ..., p_{256} = \frac{1}{2^8}$
+		Sea $S$ = \{ bytes \} el conjunto de todos los posibles bytes y supongamos una distribución equiprobable entre estos bytes, es decir:
+		\[p_1 = \frac{1}{2^8}, ..., p_{256} = \frac{1}{2^8}\]
 
-		$$  H = - \sum_{1}^{256} \frac{1}{256} \log_2 (\frac{1}{256}) = - \sum_{1}^{256} \frac{1}{256} (-8) = \sum_{1}^{256} \frac{1}{32} = 2^8 2^{-5} = 2^3 = 8 (\text{ nº de bits}) $$
+		La entropía se calcularía como:
+		$$  H = - \sum_{1}^{256} \frac{1}{256} \log_2 (\frac{1}{256}) = - \sum_{1}^{256} \frac{1}{256} (-8) = \sum_{1}^{256} \frac{1}{32} = 2^8 2^{-5} = 2^3 = 8 bits$$
 
 	\end{example}
 
-	\begin{obs}
-		Podemos medir la entropía en bits
-	\end{obs}
-
+\newpage
 \section{Códigos prefijo}
 
-	\begin{defn}[código]
-		Definimos un código (binário únicamente descifrable) como una función $C: S \rightarrow \{ $ cadena de bits $ \} $ (ceros y unos) que es inyectiva cuando actúa sobre cadenas de elementos de $S$ como:
+	\begin{defn}[Código]
+		Definimos un código (binário únicamente descifrable) como una función $C: S \rightarrow \{ $ cadena de bits $ \} $ (generalmente ceros y unos) que es inyectiva cuando actúa sobre cadenas de elementos de $S$ como:
 
 		$$ S_{i_1} S_{i_2} ... S_{i_N} \rightarrow C(S_{i_1}) C(S_{i_2}) ... C(S_{i_n}) $$
 
@@ -71,29 +72,36 @@
 
 	Tenemos dos necesidades prácticas:
 
-	\begin{itemize}
+	\begin{enumerate}
 		\item Crear códigos que añaden redundancia para poder corregir errores cuando se transmiten por un canal poco fiable (CD, DVD, telecomunicaciones).
 
 		\item Crear códigos que no tengan ninguna información redundante para poder comprimir.
-	\end{itemize}
+	\end{enumerate}
+
+	En este curso vamos a centrarnos en la segunda necesidad. Para ello definimos el concepto de longitud media.
 
 	\begin{defn}[Longitud media]
-		La longitud media de las cadenas de bits $C(S_i)$ es:
+		Se define la longitud media de las cadenas de bits $C(s_i)$ como:
 
-		$$ l(C) = \sum_i l(C(S_i))$$
+		$$ l(C) = \sum_i l(C(s_i))$$
 
-		Siendo $l(C(S_i))$ la longitud de $C(S_i)$ o su número de bits.
+		Siendo $l(C(s_i))$ la longitud de $C(s_i)$ o su número de bits.
 	\end{defn}
 
-	Si los elementos de S forman ``palabras'' (cadenas) $S_{i_1} S_{i_2} ... S_{i_N}$ apareciendo como variables aleatorias \textbf{independientes} entonces la longitud media de la codificación de una cadena de $N$ elementos de $S$ es:
+	Si los elementos de S forman ``palabras'' (cadenas) $s_{i_1} s_{i_2} ... s_{i_N}$ apareciendo como variables aleatorias \textbf{independientes} entonces la longitud media de la codificación de una cadena de $N$ elementos de $S$ es:
 
-	$$l_{N}(C) = \sum_{i_1,...,i_N = 1}^{n} P_{i_1} P_{i_2} ... P_{i_N} l(C(S_{i_1} S_{i_2} ... S_{i_N}))$$
+	$$l_{N}(C) = \sum_{i_1,...,i_N = 1}^{n} p_{i_1} p_{i_2} ... p_{i_N} l(C(s_{i_1} s_{i_2} ... s_{i_N}))$$
 
-	Siendo $l(C(S_{i_1} S_{i_2} ... S_{i_N}))$ la longitud en bits al codificar de la cadena.
+	Siendo $l(C(s_{i_1} s_{i_2} ... s_{i_N}))$ la longitud en bits al codificar de la cadena.
 
-\section{Los teoremas source coding y noisy channel coding de Shannon}
+	No obstante esta última suposición no es realista pues en la mayoría de los idiomas, la probabilidad de encontrar una letra depende en gran medida de la letra anterior. Por ejemplo, en castellano, después de una consonante es muy esperable encontrar una vocal.
 
-	\begin{theorem}{Source coding theorem\footnote{También conocido como primer teorema de Shannon} }[Source coding theorem] \label{SourceCoding}
+\section{Source Coding Theorem, Noiseless Coding Theorem o Primer Teorema de Shannon}
+
+	Con estos tres nombres, entre los que el último es el menos habitual, nos referimos a un mismo teorema, que se muestra a continuación.
+
+	\begin{theorem}[Source Coding Theorem]
+	\label{SourceCoding}
 		Sea $l^*$ el mínimo de $l(C)$ entre todos los posibles códigos (con $S$ y sus probabilidades fijados), entonces:
 
 		$$ H \leq l^* \leq H + 1 $$
@@ -102,43 +110,50 @@
 
 	\end{theorem}
 
+	Por supuesto, comprimir o codificar carácter a caracter podría ser absurdo si acumulan poca información, por ejemplo si son bits. Con un truco sencillo se pasa al caso general de cadenas. El truco se recoge en el siguiente corolario.
 
 	\begin{corol}
 		\label{corolario minima longitud}
-		Sea $l^{*}_N$ el mínimo de $l_N(C)$ para códigos definidos sobre N-cadenas es decir S es, para calcular el $l^{*}_N$ , el conjunto $\widetilde{S} = \{ S_{i1}  S_{i2}  .... S_{iN}\}^n_{i_1...i_N = 1}$  :
+		Sea $l^{*}_N$ el mínimo de $l_N(C)$ para códigos definidos sobre N-cadenas de $S$ ($S_N$) se cumple:
+		%es, para calcular el $l^{*}_N$ , el conjunto $\widetilde{S} = \{ S_{i1}  S_{i2}  .... S_{iN}\}^n_{i_1...i_N = 1}$  :
 
 		$$ H \leq \frac{l^*}{N} < H + \frac{1}{N} \text{ , en particular  } \lim_{N \rightarrow \infty} \frac{l^*_N}{N} = H$$
 
-		En breve, este resultado asegura que el mejor código permite, en media, codificar (comprimir) un fichero de $N$ caracteres en $NH$ bits.
+		Este resultado asegura que el mejor código permite, en media, codificar (comprimir) un fichero de $N$ caracteres en $NH$ bits.
 
 	\end{corol}
+
+	La demostración del Teorema es bastante compleja y queda fuera de los contenidos de este curso. No obstante si que podemos llevar a cabo la demostración del corolario suponiendo la veracidad del Teorema.
+
 \begin{proof}
-	(suponiendo el teorema)
-		Aplicamos el teorema cambiando $S = \{ S_1,S_2...S_n \}$ por $\widetilde{S} = \{S_{i1}, S_{i2} .... S_{iN} \} =$ 
-		{N-cadenas de elementos de S} con prob $\rightarrow p_{i1}.... p_{iN}$
-		
+	Aplicamos el teorema cambiando $S = \{ S_1,S_2...S_n \}$ por $\widetilde{S} = \{S_{i1}, S_{i2} .... S_{iN} \} =$ {N-cadenas de elementos de S} con probabilidades asociadas $p_{i1}.... p_{iN}$ con lo que obtenemos.
+
 	$$H _{\text{para } \widehat{S}} \leq l^{*}_N < H _{\text{para } \widehat{S}} +1 $$
-	
-	Basta probar $H _{\text{para } \widehat{S}} = NH$
-		
+
+	Si conseguimos $H _{\text{para } \widehat{S}} = NH$ obtendremos directamente las desigualdades del corolario que queremos probar. Vamos a ello.
+
 	$$H _{\text{para } \widehat{S}} = - \sum_{i_1...i_N} p_{i1}....p_{iN} \log_2 (p_{i1}...p_{iN})$$
-		
+
 	Vemos que $\log_2 (p_{i1}...p_{iN}) = \log_2 p_{i1} + .... + \log_2 p_{iN}$
-	
-	¿Cuál sería el coeficiente de $\log_2 p_1$ al desarrollar la suma?
-	$$coef = - \sum_{k = 1}^{N}\sum_{i_1...i_N = 1} p_{i1} ... p_{iN} = - p_1 \cdot \sum_{k=1}^{N} \sum_{j_1 ... j_{N-1} = 1}^{n} p_{j1} ... p_{jN-1}$$
-	
-	Como $\sum_{j_1 ... j_{N-1} = 1}^{n} p_{j1} ... p_{jN-1} = 1$
-	
-	$$ coef = - p_1 \cdot N \cdot 1 = - p_1 \cdot N \cdot ( p_1 + ... + p_n)^{N-1} = -N\cdot p_1$$
-	
+
+	El coeficiente de $\log_2 p_1$ una vez desarrollada la suma será:
+	$$- \sum_{k = 1}^{N}\sum_{i_1...i_N = 1} p_{i1} ... p_{iN} = - p_1 \cdot \sum_{k=1}^{N} \sum_{j_1 ... j_{N-1} = 1}^{n} p_{j1} ... p_{jN-1}$$
+
+	Como $\sum_{j_1 ... j_{N-1} = 1}^{n} p_{j1} ... p_{jN-1} = 1$ tendremos
+
+	$$- p_1 \cdot N \cdot 1 = - p_1 \cdot N \cdot ( p_1 + ... + p_n)^{N-1} = -N\cdot p_1$$
+
 	Entonces, en general
-	
+
 	$$\begin{cases}
 	\text{coef de } \log p_1 \rightarrow -Np_1\\
 	\text{coef de } \log p_j \rightarrow -Np_j\\
 	\end{cases}  \implies H _{\text{para } \widehat{S}} = -N \sum_{j=1}^{n} p_j \log p_j = N\cdot H$$
-	
+
+	Por tanto tenemos:
+	\[H _{\text{para } \widehat{S}} \leq l^{*}_N < H _{\text{para } \widehat{S}} +1  \implies HN \leq l^{*}_N < H N +1\implies H \leq \frac{l^*}{N} <H+\frac{1}{N} \]
+
+
 \end{proof}
 
 	\textbf{Recordatorio} $C$ está en principio definido en $S$ pero la definición se extiende a cadenas de símbolos concatenando resultados. Exigimos que $C$ sea inyectiva actuando sobre cadenas.
@@ -157,7 +172,7 @@
 	\begin{example}
 
 
-		$S = \{A,B\} \quad p_1 = p_2 = \frac{1}{2} \quad H = -\frac{1}{2} \log_2 \frac{1}{2} - \frac{1}{2} \log_2 \frac{1}{2} = 1$
+		%$S = \{A,B\} \quad p_1 = p_2 = \frac{1}{2} \quad H = -\frac{1}{2} \log_2 \frac{1}{2} - \frac{1}{2} \log_2 \frac{1}{2} = 1$
 
 		$N = 10^6$: el fichero en ASCII ocupa $10^6$ bytes.
 
@@ -177,7 +192,7 @@
 			\end{tabular}
 			\caption{Todos son aproximadamente un 30\% peores que el óptimo.}
 		\end{table}
-		
+
 
 
 	\end{example}
@@ -192,63 +207,66 @@
 	\end{example}
 
 \begin{example}
- ¿Cuanto se puede comprimir un fichero con $N$ bits con el 75\% de ceros y 25\% de 1s? 
-	
-	$ S= \{0,1\} p_1 = 3/4, p_2 = 1/4, \quad H = 0.811 \rightarrow  l^*_N \simeq 0.8111 N $
-	
-	Digamos que un fichero tiene tamaño M = 1000 bits y su mejor codif = R.
-	
-	Si codificamos bit a bit N = 1 (corolario, teorema)
-	
+ ¿Cuanto se puede comprimir un fichero con $N$ bits con el 75\% de ceros y 25\% de 1s?
+
+ 	En este caso tendríamos el conjunto $S= \{0,1\}$ con las probabilidades asocaidas $ p_1 = 3/4, p_2 = 1/4$
+ 	Podemos calcular su entropía a partir de las fórmulas vistas anteriormente con lo que obtenemos
+ 	\[H = 0.811 \rightarrow  l^*_N \simeq 0.8111 N \]
+
+	Digamos que un fichero tiene tamaño M = 1000 bits y su mejor codificación tiene un tamaño de R bits..
+
+	Si codificamos bit a bit tendremos N = 1 al aplicar el corolario\footnote{Como es lógico, en el caso N=1 podemos aplicar tanto el corolario como el teorema} visto antes nos queda:
+
 	$$0.811 < \frac{l^{*}_1}{1} < 1.811$$
-	
+
 	Como $R = M \cdot l^{*}_1 \implies 811 \leq R < 1811$
-	
-	Si codificamos de 10 en 10 bits N=10 (corolario), entonces
+
+	Si codificamos de 10 en 10 bits N=10 y aplicamos nuevamente el corolario, entonces
 	$$0.811 < \frac{l^{*}_1}{10} < 0.911$$
-	
+
 	Como $R = \frac{M}{10} \cdot l^{*}_1 \implies 811 \leq R < 911$
-	
-	\textbf{Por lo tanto tomando bloques de bits grandes ( lo cual en la práctica tiene límites) la "tasa de compresión" se acerca cuanto queramos a H} 
+
+	\textbf{Por lo tanto tomando bloques de bits grandes (lo cual en la práctica tiene límites) la "tasa de compresión" se acerca cuanto queramos a H}
 \end{example}
-	
+
 
 \section{Codificación de Huffman}
 
-Es un algoritmo fácilmente programable para diseñar un código que verifique $H \leq l(C) < H +1$
+La prueba del \textit{source coding theorem} es constructiva, es decir, en principio permitiría diseñar un código para el que $l^*_N$ satisfaga la desigualdad que anuncia el mismo. Huffman, siendo un estudiante de doctorado, creó un algoritmo fácilmente programable para diseñar un código que verifique $H \leq l(C) < H +1$. De hecho $l(C) = L^{*}$
 
-De hecho $l(C) = L^{*}$
+Se basa en la contrucción de un árbol binario partiendo del conjunto $S_0 = S$ y evolucionando hasta llegar al conjunto $S_{n-1}$ que sólo tiene un elemento.
 
-Se basa en la contrucción de un árbol binario a partir de $S_0 = S$ hasta llegar a $S_{n-1}$ que sólo tiene un elemento.
-
-Las reglas para e árbol son:
+Las reglas para la construcción del árbol son:
 \begin{enumerate}
 	\item Se toman los dos elementos de $S_i$ con menos probabilidad y se ponen en el árbol como hijos de un padre al que se le asugna la suma de probabilidades.
-	\item $S_{i+1} = S_i - $ {los hijos de antes} $\cup$ {padre}
+	\item Recursivamente definimos el conjunto:
+	\[S_{i+1} = \left(S_i \setminus \{\text{los hijos de antes}\} \right)\cup \{\text{padre}\}\]
 \end{enumerate}
+\newpage
+Veamos un ejemplo de la construcción de este árbol
 \begin{example}
 	$$S =\{ a, b , c, d, e , f \}$$
-	
+
 	Siendo $a = \frac{1}{2}$ , $b, c,d = \frac{1}{8}$ y $e, f = \frac{1}{16}$
-	
+
 	Vemos que el padre de e y f ($\widehat{ef}$) tiene probabilidad $\frac{1}{8}$
-	
+
 	Nos queda
 	$$S_1 = \{a,b,c,d,\widehat{ef}\}$$
-	
-	
+
+
 	Ahora vemos el padre de d con $\widehat{ef}$, nos queda:
 	$$S_2\{ a, b,c,\widehat{df}\}$$
-	
+
 	De forma que $\widehat{df}$ tiene probabilidad $\frac{1}{4}$
-	
+
 	Siguiendo estos pasos llegamos a:
 	$$S_4 = \{ a , \widehat{bf}\}$$
-	
+
 	con las probabilidades de a y $\widehat{bf} = \frac{1}{2}$ y la raiz tendría probabilidad 1.
-	
+
 	Una vez que ya tenemos el árbol, partiendo de la raíz hasta las hojas codificamos con $0$ ir a la izquierda y con $1$ ir a la derecha.
-	
+
 	$$\begin{cases}
 	a \rightarrow 0 \\
 	b \rightarrow 100 \\
@@ -259,205 +277,216 @@ Las reglas para e árbol son:
 	\end{cases} \implies \begin{cases}
 	l(C) = \frac{17}{8}\\
 	H = \frac{17}{8}
-	\end{cases}$$ 
+	\end{cases}$$
 \end{example}
 
 \begin{example}
-	$$S = \{ a , b , c , d\}$$
-	Con probabilidades
-	$\begin{cases}
+	\[\text{Tenemos el conjunto } S = \{ a , b , c , d\} \text{ con probabilidades }
+	\begin{cases}
 	a = 0.35\\b = 0.25\\ c= 0.24\\ d = 0.16
-	\end{cases}$
-	
-	 Me fijo en los dos que tengan probabilidades más pequeñas y los junto como hermanos de forma que el padre de c y d ($\widehat{cd}$) tiene probabilidad 0.4.
-	 
-	 Luego junto las dos siguientes probabilidaes más pequeñas de forma que nos queda $\widehat{ab}$ con probabilidad 0.6
-	 
-	 El padre de todos ($\widehat{abcd}$) tiene probabilidad 1.
-	 
-	 La codificación quedaría:
+	\end{cases}\]
+
+	Tomamos los dos que tengan probabilidades más pequeñas y los juntamos como hermanos de forma que el padre de c y d ($\widehat{cd}$) tiene probabilidad 0.4.
+
+	Luego agrupamos los dos siguientes elementos con probabilidaes más pequeñas de forma que nos queda $\widehat{ab}$ con probabilidad 0.6
+
+	El padre de todos ($\widehat{abcd}$) tiene probabilidad 1.
+
+	La codificación quedaría:
 	 $$\begin{cases}
-	 a \rightarrow 00\\ b \rightarrow 01 \\c \rightarrow 10 \\ c \rightarrow 11
+	 a \rightarrow 00\\ b \rightarrow 01 \\c \rightarrow 10 \\ d \rightarrow 11
 	 \end{cases}$$
 	 con longitud media $l(C) = 2$ y $H = 1.9472$
-	 
-	  
-	
-	
 \end{example}
+
 
 \begin{example}
 	Vamos a hacer una pequeña variación sobre el ejemplo anterior.
-	Tomamos ahora $\begin{cases}
+	\[\text{Tomamos ahora }\begin{cases}
 	a = 0.45 \\ b = 0.25\\c = 0.24 \\ d = 0.06
-	\end{cases}$
-	
-	Empezamos igual uniendo c y d. Nos queda $\widehat{cd}$ con probabilidad 0.30.
-	
+	\end{cases}\]
+
+	Empezamos igual uniendo, c y d. Nos queda $\widehat{cd}$ con probabilidad 0.30.
+
 	Ahora unimos $\widehat{cd}$ con b. Entonces probabilidad de $ \widehat{bcd}$ es 0.55. Y finalmente unimos el nodo a.
-	
+
 	La codificación quedaría: $\begin{cases}
 	a \rightarrow 0 \\ b \rightarrow 10 \\ c \rightarrow 110\\ d \rightarrow 111
 	\end{cases}$
-	
-	La longitud media(lo que mide típicamente una cadena de bits) se calcularía:
+
+	La longitud media (lo que mide típicamente una cadena de bits) se calcularía:
 	$$l(C) = 0.45 \cdot 1 + 0.25 \cdot 2 + 0.24 \cdot 3 + 0.06 \cdot 3 = 1.91$$
-	
+
 	Y la entropía $H = 1.7560$
 \end{example}
-Viendo esto se nos plantean algunas preguntas:
 
-¿cómo demuestro que esto siempre da lugar a un código?
-
-¿cómo demuestro que el resultado es óptimo?
+Llegados a este punto nos quedan dos cosas que demostrar:
+\begin{enumerate}
+\item Demostrar que este algoritmo nos lleva siempre a la obtención de un código válido
+\item Demostrar que el código obtenido es óptimo.
+\end{enumerate}
 
 \subsection{La codificación de Huffman da lugar a un código válido}
 
-La codificación de Huffman verdadderamente da lugar a un código válido ( descodificable de manera única , C es inyectiva actuando sobre cadenas)
+La codificación de Huffman verdaderamente da lugar a un código válido (descodificable de manera única, C es inyectiva actuando sobre cadenas)
 
 Vamos a verlo con el ejemplo anterior:
 \begin{example}
+	Recordemos que teníamos la siguiente codificación
 	 $$\begin{cases}
 	 a \rightarrow 0 \\ b \rightarrow 10 \\ c \rightarrow 110\\ d \rightarrow 111
 	 \end{cases}$$
-	 De esta forma : $ abacd \rightarrow 010011010$
-	 
-	 Vemos que no hay ambigüedad. Esto es debido a una propiedad que veremos ahora.
+	 De esta forma podemos cifrar la cadena $ abacd \rightarrow 010011010$ y podemos comprobar que no hay ambigüedad a la hora de llevar a cabo el proceso inverso.
 \end{example}
 
+Esto se debe básicamente a que se trata de un código prefijo:
+
 \begin{defn}[Código prefijo]
-	
-	
-	Una función $C : S \rightarrow \{ \text{cadena de bits}\}$ tal que si $b_1 b_2 .... b_N \in Im C$ entonces $b_1 b_2 .... b_k \notin Im C$ para $k < N$ se dice que es un \textbf{código prefijo}
-	
-	Un ejemplo de código prefijo es el \textbf{UTF-8}
+	Sea una función $C : S \rightarrow \{ \text{cadena de bits}\}$ tal que si $b_1 b_2 .... b_N \in Im C$ entonces $b_1 b_2 .... b_k \notin Im C$ para $k < N$ se dice que es un \textbf{código prefijo}
+
+	Es decir, dada una cadena de bits perteneciente a la imagen del código, si quitamos su último bit la cadena resultante no pertenece a la imagen del mismo. Un ejemplo de código prefijo es el \textbf{UTF-8}
 \end{defn}
 
 
-\paragraph{¿Porqué un código prefijo es un código?}
-
+Podemos comprobar de manera sencilla que, basándonos en la definición anterior, \textbf{un código prefijo siempre será un código}
+\begin{proof}
 $$C (S_{i1} S_{i2} .... S_{ik}) = C(S_{j1} S_{j2} .... S_{jk}) \implies C(S_{i1}) = C(S_{j1})$$
-o bien se viola la propiedad de prefijo $\implies S_{i1} = S_{j1}$ , iterando $S_{i2} = S_{j2}$ , etc...
+ya que de lo contrario se violaría la propiedad de prefijo, por tanto $S_{i1} = S_{j1}$, e iterando vamos obteniendo $S_{i2} = S_{j2}$ ...
+
+Es decir, queda claro que se trata de una función inyectiva.
+\end{proof}
 
 Con esto acabamos de ver porqué los codigos prefijos son códigos. Vamos ahora a ver \textbf{porqué los códigos de Huffman son códigos}.
 
-Los códigos prefijos generan y provienen de árboles binarios ( no necesariamente completos. Un padre puede tener un solo hijo)
-
-Esta correspondencia es como en Huffman : interpretando 
+Los códigos prefijos generan y provienen de árboles binarios (no necesariamente completos. Un padre puede tener un solo hijo). En concreto, la codificación Huffman procede de un árbol binario en el que interpretamos como las ramas como 0s o 1s según:
 $$0 \rightarrow \text{rama a la izquierda}$$
 $$1 \rightarrow \text{rama a la derecha}$$
 
-Vamos a ver cómo quedaría el árbol si tenemos la siguiente codificación : $\begin{cases}
+\begin{example}
+Dada la siguiente codificación:
+\[\begin{cases}
 a \rightarrow 01\\ b \rightarrow 001\\ c \rightarrow 0001\\ d \rightarrow 0000\\
-\end{cases}$
+\end{cases}\]
 
-DIBUJO ÁRBOL
+El árbol que nos queda es:
 
+\begin{center}
+	\Tree[ [ [ d c ] b ] a ]
+\end{center}
+\end{example}
 Con esta correspondencia tenemos que la codificación de Huffman es un código prefijo (porque proviene de un árbol)
 
-La conclusión que podemos sacar de esto es que la codificación de Huffman es "óptima" en cuanto a la longitud media.
+\subsection{La codificación de Huffman es óptima}
+Vamos a ver que esta codificación es óptima entre el subconjunto de códigos prefijo. Como mencionaremos más adelante, en realidad siempre un código se puede transformar en código prefijo sin cambiar las longitudes. Por tanto \textbf{la codificación Huffman también minimiza entre todos los códigos.}
 
 \begin{theorem}
 	El mínimo de $l(C)$ sobre todos los códigos prefijo se alcanza con la codificación de Huffman
 \end{theorem}
-\obs Hay un resultado que dice que dado un código cualquiera siempre hay un código prefijo con el mismo valor $l(C)$.
-
-Sabiendo esto , el teorema $\implies l^{*}= l(Huffman)$
-
-
 
 \begin{theorem}[Desigualdad de Kraft]
-	Dado un código prefijo $C : S = \{S_1, ..., S_n\} \rightarrow $ {cadenas de bits} , sea $l_i = l (C(S_i))$ entonces
+	Dado un código prefijo
+	\[C : S = \{S_1, ..., S_n\} \rightarrow  \{\text{cadenas de bits\}} \]
+	y sea $l_i = l (C(S_i))$ entonces
 	$$\sum_{i=1}^{n} 2 ^{-li} \leq 1$$
 	Además , dados $l_i \in \ent^{+}$ cualesquiera que cumplan la desigualdad, existe un código prefijo tal que $l_i = l(C(S_i))$ con $1\leq i \leq n$
 \end{theorem}
 \begin{proof}
-	Empezaos demostrando $l_i = l (C(S_i)) \implies
-	\sum_{i=1}^{n} 2 ^{-li} \leq 1$
-	
-	Suponemos que $l_1 \leq l_2 ... \leq l_r < l_{r+1} = l_{r+2} = ... = L_n$
-	
-	Consideramos $B =${cadenas de $l_n$ bits} de forma que 
-	$$2^{l_n} = |B| = |B \cap Im C| + |B - B \cap IM C| = n-r + \sum_{i=1}^{r} 2^{l_n - l_i} = \sum_{i=1}^{n} 2^{l_n - l_i}$$
-	$B \cap Im C$ no contiene ninguna de las $2^{l_n - l_i}$ cadenas de bits que comienzan por $C(S_i)$
-	%Es decir, cuenta todas las cadenas que empiezan %por $C(S_i)$ , que son $2^{l_n - l_i}$ cadenas, %y ve que es imposible que todas ellas sean un %código y dice que 
-	
-	El recíproco se basa en el algoritmo ilustrado con el siguiente ejemplo:
+	Vamos a llevar a cabo la demostración del problema probando las dos direcciones de la doble implicación marcada por el mismo:
+	\begin{itemize}
+
+	\item
+	\[l_i = l (C(S_i)) \implies	\sum_{i=1}^{n} 2 ^{-li} \leq 1\]
+
+	Digamos que $l_1 \leq l_2 ... \leq l_r < l_{r+1} = l_{r+2} = ... = l_n$ y consideramos $B =$\{cadenas de $l_n$ bits\} de forma que
+	$$2^{l_n} = |B| = |B \cap Im C| + |B \setminus B \cap Im C| = n-r + \sum_{i=1}^{r} 2^{l_n - l_i} = \sum_{i=1}^{n} 2^{l_n - l_i}$$
+
+	La ecuación anterior procede del hecho de que $B \cap Im C$ no contiene ninguna de las $2^{l_n - l_i}$ cadenas de bits que comienzan por $C(S_i)$
+	%Es decir, cuenta todas las cadenas que empiezan %por $C(S_i)$ , que son $2^{l_n - l_i}$ cadenas, %y ve que es imposible que todas ellas sean un %código y dice que
+
+	\item
+	\[\sum_{i=1}^{n} 2 ^{-li} \leq 1 \implies l_i = l (C(S_i)) \]
+	Esta parte de la demostración se basa en el algoritmo ilustrado con el siguiente ejemplo:
 	$$l_1 = 1 , l_2=2, l_3=3$$
 	$$2^{-1} + 2^{-2} + 2 ^{-3} \leq 1$$
 	Queremos un código prefijo con estas longitudes.
 	Tomamos la longitud mayor $l_3 = 3$ y dibujamos el árbol binario completo de altura esa logitud.
-	DIBUJO ARBOL
-	
+
+
+	\begin{center}
+		\Tree[ [.0 [.00 ] [.01 010 ] ] [.1 ] ]
+	\end{center}
+
+
 	El algoritmo se basa en podar este árbol de la siguiente forma:
 	\begin{enumerate}
 		\item En $l_1 = 1$ borramos los descendientes de un vértice que estén en altura/profundidad 1.
-		
+
 		\item Luego hago lo mismo con $l_2$, con lo cual borramos los descendientes que estén en altura/profundidad 2.
-		
-		\item Una vez hecho esto, si sobran algunas hojas que no corresponden a las longitudes, también las borramos (en nuestro caso nos quedan dos con longitud 3, y solo quiero 1, por lo tanto borro el otro)
-		
+
+		\item Una vez hecho esto, si sobran algunas hojas que no corresponden a las longitudes, también las borramos (en nuestro caso nos quedan dos con longitud 3, y solo queremos 1, por lo tanto borramos la otra)
+
 		\item Las codificaciones que nos quedarían serían $\begin{cases}
 		1\\00\\010
 		\end{cases}$
 	\end{enumerate}
-	Necesitamos alguna condición para que el algoritmo se pueda llevar a cabo, para que o se nos acaben los vértices.
-	
-	Mirando el ejemplo lo que hemos ido hav¡ciendo es:
-	
-	Al árbol con 8 hojas le he quitado 4, luego 2 y abajo quedan $8-4-2 = 2$ por lo tanto puedo escoger el $l_3$ de altura 1.
-	
-	En general, con la notación anterior $l_1 \leq l_2 \leq .... \leq l_{r} < l_{r+1} = .. = l_n$ el algoritmo parte de un árbol con $2^{l_n}$ hojas. De ellas borramos primero $2^{l_n - l_1}$ y en sucesivos pasos $2^{l_n - l_2} , .... , 2^{l_n - l_r}$ y me deben sobrar al menos $n-r$ de las hojas iniciales.
-	
-	Entonces necesitamos que $2^{l_n} - \sum_{i=1}^{r} 2^{l_n - l_i} \geq n-r$ para que el algoritmo funcione.
-	
-	Entonces $2^{l_n} \geq \sum_{i=1}^{n} 2^{l_n - l_i}$
+	Necesitamos alguna condición para garantizar que el algoritmo se pueda llevar a cabo sin que se nos acaben los vértices.
+
+	Analizando con cuidado el ejemplo podemos observar que lo que hemos ido haciendo es comenzar con un árbol de 8 hojas al que le hemos quitado 4 y luego hemos quitado 2 para al final quedarnos con $8-4-2 = 2$ hojas con lo que podíamos escoger el $l_3$ que quiséramos de altura 1.
+
+	En general, con la notación anterior $l_1 \leq l_2 \leq .... \leq l_{r} < l_{r+1} = .. = l_n$ el algoritmo parte de un árbol con $2^{l_n}$ hojas. De ellas borramos primero $2^{l_n - l_1}$ y en sucesivos pasos $2^{l_n - l_2} , .... , 2^{l_n - l_r}$ y deben sobrarnos, al menos, $n-r$ de las hojas iniciales.
+
+	Entonces necesitamos que $2^{l_n} - \sum_{i=1}^{r} 2^{l_n - l_i} \geq n-r$ para que el algoritmo funcione. Por tanto es necesario que
+
+	\[2^{l_n} \geq \sum_{i=1}^{n} 2^{l_n - l_i} \iff 1 \geq  \sum_{i=1}^{n} 2^{- l_i} \]
+
+\end{itemize}
 \end{proof}
 
-\obs Se puede probar (desig de McMillan) que para cualquier código se cumple $\sum_{i=1}^{n} 2^{-l_i} \leq 1$ aunque no sea prefijo.
+\obs La generalización de MCMillan afirma que para cualquier código se cumple $\sum_{i=1}^{n} 2^{-l_i} \leq 1$ aunque no sea prefijo.
 
-Entonces dado un código , este satisface la desigualdad de Kraft y por el recíproco de Kraft sabemos que eiste un código prefijo con las mismas logitudes.
-
-$\implies$ Cualquier teorema que hable de las longitudes y sea verdad para códigos prefijo, lo es para todos.
-
+Por tanto, cualquier código dado satisface la desigualdad de Kraft y por el recíproco de Kraft sabemos que existe un código prefijo con las mismas logitudes.
+Así, cualquier teorema que hable de las longitudes y sea cierto para códigos prefijo, lo será para todos.
 
 Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{SourceCoding}. Para la demostración vamos a utilizar la desigualdad de Kraft:
 
 \begin{proof}
 	\textbf{Demostración del Source coding theorem}
-	Tenemos
+
+	Sea la función
 	$$f(x_1 , x_2 , ...., x_n) = -\sum_{i=1}^{n} p_i \log x_i$$
-	restringimos esta función de forma que
+	si la restringimos al \textit{simplex}
 	$$\sum_{i=1}^{n} x_i = 1 \text{   con   } 0 \leq x_i \leq 1$$
-	Entonces f alcanza un mínimo cuando $x_i = p_i$
-	
-	Tomamos $x_i = \frac{2^{-l_i}}{\sum_{j=1}^{n} 2^{-l_j}}$ , siendo $l_i$ como en la desigualdad de Kraft.
-		
-		Entonces
-		$$H= f(p_1,...,p_n) \leq f (\frac{2^{-l_1}}{\sum ...} .... , \frac{2^{-l_n}}{\sum ...})$$
-		Y esto, por la desigualdad de Kraft
-		$$\leq f(2^{-l_1} , .... , 2^{-l_n}) = l(C)$$
+	entonces f alcanza un mínimo cuando $x_i = p_i$
 
-	Esto lo cumple todo $l(C)$ por lo que buscaremos uno que además cumpla $l(C) < H+1$.
+	Con la notación de la desigualdad de Kraft tomemos
+	\[x_i = \frac{2^{-l_i}}{\sum_{j=1}^{n} 2^{-l_j}}\]
 
-	Escojamos $l_i \in \mathbb{Z}^+ : -\log_2 p_i \leq l_i < 1 - \log_2 p_i$ :
+	Entonces
+	$$H= f(p_1,...,p_n) \leq f(x_1,x_2,...,x_n) \leq f \left(\frac{2^{-l_1}}{\sum_{j=1}^{n} 2^{-l_j}} .... , \frac{2^{-l_n}}{\sum_{j=1}^{n} 2^{-l_j}}\right)$$
+	y, por la desigualdad de Kraft, llegamos a que:
+	$$f \left(\frac{2^{-l_1}}{\sum_{j=1}^{n} 2^{-l_j}} .... , \frac{2^{-l_n}}{\sum_{j=1}^{n} 2^{-l_j}}\right)\leq f(2^{-l_1} , .... , 2^{-l_n}) = l(C)$$
+
+	Con esto ya tenemos la cota inferior para la longitud media. Vamos ahora a obtener la cota superior. Para ello tomamos $l_i \in \mathbb{Z}^+ : -\log_2 p_i \leq l_i < 1 - \log_2 p_i$. Así tenemos que
 
 	$$\sum^{n}_{i = 1} 2^{l_i} \leq \sum^{n}_{i = 1} 2^{\log_2 p_i} = \sum^{n}_{i = 1} p_i = 1 $$
 
-	$$\Rightarrow^{Kraft} \exists \text{ código prefijo con } l_i = l(C(S_i))$$
+	El teorema de la desigualdad de Kraft nos garantiza que $\exists \text{ código prefijo con } l_i = l(C(S_i))$
 
 	$$l(C) = \sum^{n}_{i = 1} p_i l_i < \sum^{n}_{i = 1} p_i - \sum^{n}_{i = 1} p_i \log_{2} p_i = 1 + H$$
+
+	Con lo que ya tenemos la acotación de la longitud media que buscábamos:
+	\[H \leq l(C) \leq H+1\]
 
 \end{proof}
 
 \section{Métodos de diccionario}
-	En español los caracteres tienen una entropía aproximada de $4.09$. Lo que significa que dado un texto de $M$ caracteres:
+	En español los caracteres tienen una entropía aproximada de $4.09$. Lo que significa que dado un texto de $M$ caracteres, puesto que:
 
-	$4.09 = H \leq l^{*} (C) \quad \text{ carácter } \rightarrow  1 \text{ byte} = 8 \text{ bits}$
+	\[4.09 = H \leq l^{*} (C) \quad \text{ carácter } \rightarrow  1 \text{ byte} = 8 \text{ bits}\]
 
-	Cabe esperar que la mejor compresión posible sea $4.09M$ bits $= \frac{4.09}{8}$ bytes $\simeq$ la mitad de los bytes del principio.
+	cabe esperar que la mejor compresión posible sea $4.09M$ bits $= \frac{4.09}{8}$ bytes $\simeq$ la mitad de los bytes que teníamos en el texto original.
 
-	En cambio si comprobamos empíricamente con varios compresores comprobamos que superan el máximo:
+	En cambio si comprobamos empíricamente con varios compresores comprobamos que superan la compresión óptima:
 
 	$M = 1869610$
 
@@ -474,24 +503,26 @@ Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{So
 
 	Supongamos un tipo de ficheros en que cada byte tiene un 99\% de posibilidades de ser igual al siguiente y un 1\% de cambiar aleatoriamente\footnote{Como una imagen rastrerizada de un dibujo. Los cambios de color son raros porque hay grandes bloques iguales, como el fondo.}.
 
-	En un fichero grande de este tipo cada carácter aparecerá con probabilidad $\simeq \frac{1}{256} \Rightarrow H = \sum\limits^{256}_{i = 1} - \frac{1}{256} log_{2} \frac{1}{256} = 8$.
+	En un fichero grande de este tipo cada carácter aparecerá con probabilidad $\simeq \frac{1}{256}$ lo que nos da una entropía:
+	\[H = \sum\limits^{256}_{i = 1} - \frac{1}{256} log_{2} \frac{1}{256} = 8\]
 
-	$\Rightarrow_{\text{source coding theorem}}$ No hay compresión posible, cada byte requiere 8bits.
+	que, por el \textit{Source Coding Theorem} indica que no hay compresión posible, cada byte requiere 8 bits.
 
-	Sin embargo hay un método muy fácil para comprimir RLE (run-length encoding):
+	Sin embargo hay un método muy fácil para comprimir este tipo de ficheros: RLE (run-length encoding). Este método consiste en sustituir los datos por grupos de dos bytes. En cada grupo está el número de repeticiones de un caracter y el caracter.
 
-	Sustituir los datos por grupos de dos bytes. En cada grupo está el número de repeticiones de un caracter y el caracter:
+	\begin{example}
+	Veamos un pequeño ejemplo de este algoritmo
 
 	50A200B = AA... 50 veces ...ABB... 200 veces ...B
 
-
 	200A100A200B = AA... 300 veces ...AB... 200 veces ...B
+	\end{example}
 
-	Con este método típicamente (por las probabilidades mencionadas anteriormente) pararemos de 100 bytes a 2 bytes.
+	Con este método típicamente (por las probabilidades mencionadas anteriormente) pasaremos de 100 bytes a 2 bytes.
 
-	En el teorema $S$ está fijado $S$ = \{ posibles bytes \} con $S$ = \{ posibles cadenas de 100 bytes \} el teorema sí aseguraría que hay compresión.
+	En el teorema $S$ está fijado $S$ = \{ posibles bytes \}. Si en su lugar empleásemos $S$ = \{ posibles cadenas de 100 bytes \} el teorema sí aseguraría que hay compresión.
 
-	\begin{obs} Aplicar el corolario con N = 100 no refleja la situación de este tpo de ficheros porque allí se suponía la independencia.
+	\begin{obs} Aplicar el corolario con N = 100 no refleja la situación de este tpo de ficheros porque allí se suponía la independencia entre los elementos de $S$.
 
 	Según el modelo del corolario: Prob (A... 100 veces ...A) = $(1/256)^{100}$
 
@@ -499,23 +530,25 @@ Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{So
 
 	\end{obs}
 
-	En principio Huffman con $S =$ \{ cadenas de 100 bytes que aparecen en el fichero \} sería ventajoso. Pero este $S$ se basa en un conocimiento previo.
-
-	Huffman no se suele aplicar en compresores ``universales'' principalmente:
+	En principio Huffman con $S =$ \{ cadenas de 100 bytes que aparecen en el fichero \} sería ventajoso. Pero este $S$ se basa en un conocimiento previo acerca de las estadísticas de aparición de las cadenas en el fichero. Es por esto que el algoritmo de Huffman no se suele aplicar en compresores ``universales''. En general los principales problemas de este algoritmo son:
 
 	\begin{itemize}
-		\item Requeriría un estudio estadístico previo del fichero (para decidir $S$ y $p_i$) que es costosa.
+		\item Requiere un estudio estadístico previo del fichero (para decidir $S$ y $p_i$) que es costosa.
 
 		\item Hay que almacenar el árbol para comunicarlo al compresor y podría ser grande.
 
 	\end{itemize}
+La idea ahora es buscar métodos "universales" creando diccionarios de forma dinámica que contengan referencias a las palabras.
+
+Estos diccionarios son virtuales; no se almacenan separadamente al fichero, de hecho equivalen a él, y sólo aparecen explícitamente al ejecutar los algotirmos de compresión y descompresión.
+
 
 	Los algoritmos que se usan parten de un trabajo de J.Zip, A.Lempel de 1997 y dan lugar a tres variantes principales: LZ77, LZ78 y LZW.
 
 	En la práctica los 3 se usan con diferentes trucos y variantes, pero están todos en uso. A parte de en compresores, se usan en diferentes formatos de imágen.
-
+	\newpage
 	\subsection{Algunos algoritmos de compresión de imagen}
-
+	\begin{center}
 		\begin{table}[h]
 			\centering
 			\begin{tabular}{r|c}
@@ -525,9 +558,175 @@ Una vez que hemos visto esto podemos probar el teorema del Source Coding \ref{So
 			gif & Fija una paleta de 256 colores (o más pequeñas) y LZW \\
 			\end{tabular}
 		\end{table}
+	\end{center}
+
+	\subsection{El algoritmo LZ78}
+
+	Para simplificar, en los ejemplos pensamos en cadenas de caracteres que terminan con un símbolo de "fin de fichero" que escribiremos como \# \footnote{Esta simplificación no es algo que nos inventemos. En la práctica se considera un carácter de final de fichero para determinar el fin de cada cadena.}. El algoritmo se basa en los siguientes principios:
+
+	\begin{enumerate}
+	\item Dividimos la cadena que se quiere comprimir en frases.
+
+	\item Cada frase consiste en añadir un caracter a una frase ya existente, sin repetirlas.
+
+	\item Inicialmente sólo tenemos la frase vacía.
+	\end{enumerate}
+
+	Vemos el ejemplo de la palabra \textbf{\textit{rellena}}. En este caso tenemos un problema y es que, después de añadir la primera \textbf{\textit{l}}, no puedo añadir la seguna, porque no puedo añadir frases repetidas. Por lo tanto añado \textbf{\textit{le}} como frase.
+
+	Estas frases en una lista numerada, comenzando por $0 \rightarrow \emptyset$ , y siguendo el orden, son el "diccionario".
+
+	\begin{example}
+		Vamos a ver como sería la lista resultante de: \textbf{"rellena la encuesta"}. Tenemos que recordar que al final tenemos el fin de documento , \#.
 
 
-\section{Codificación aritmética}
-\section{Compresión LZ77, DEFLATE y LZW}
+		$\begin{cases}
+			0 \rightarrow \emptyset\\
+			1\rightarrow r\\
+			2 \rightarrow e\\
+			3\rightarrow l\\
+			4 \rightarrow le\\
+			.\\
+			.\\
+			.\\
+			10 \rightarrow nc\\
+			11\rightarrow u\\
+			12 \rightarrow es\\
+			13 \rightarrow t\\
+			14 \rightarrow a\#
+		\end{cases}$
+
+	\end{example}
+
+	\begin{example}
+		Hacemos lo mismo con la frase \textbf{"salsa salada"}
+
+
+		$\begin{cases}
+		0 \rightarrow \emptyset\\
+		1\rightarrow s\\
+		2 \rightarrow a\\
+		3\rightarrow l\\
+		4 \rightarrow sa\\
+		5 \rightarrow \text{ (el espacio)}\\
+		6\rightarrow sal\\
+		7 \rightarrow ad\\
+		8 \rightarrow a\#
+		\end{cases}$
+
+	\end{example}
+
+
+Para codificar se sustituye cada frase por un par formado por un número y un carácter según la relación:
+
+frase $\rightarrow$ (n. de frase en el diccionario sin el último carácter, último carácter de la frase)
+
+\begin{example}
+	Vamos a ver la codificación de \textbf{salsa salada}.
+
+	$\begin{cases}
+	s \rightarrow (0,s)\\
+	a \rightarrow (0,a)\\
+	l \rightarrow (0,l)\\
+	sa \rightarrow (1,a)\\
+	\text{ (espacio)} \rightarrow (0,espacio)\\
+	sal \rightarrow (4,l)\\
+	ad \rightarrow (2,d)\\
+	a\# \rightarrow (2, \#)
+	\end{cases}$
+
+	En este ejemplo, si suponemos que los elementos ocupan 1 byte cada uno:
+	$$\text{cadena original} \rightarrow 126 \text{ bytes}$$
+	$$\text{codificación} \rightarrow 8\cdot 2 =16 \text{ bytes}$$
+\end{example}
+
+Un ejemplo un poco más realista es el que hizo Chamizo con el texto de \textit{La Regenta}.
+
+El texto consta de 1869610 caracteres, el diccionario le salió de 281192 frases. Entonces:
+
+$2^{19} > 281192 > 2^{18}\implies$ Necesitamos 19 bits para los números y 1 byte = 8 bits para el caracter. Así, cada frase ocupa 27 bits al codificar. La codificación completa ocupa 949023 bytes por lo que, efectivamente, \textbf{Hay compresión}
+
+Para \textbf{descomprimir} vamos recuperando la lista del diccionario, partiendo de $0 \rightarrow \emptyset$, según leemos la codificación.
+
+\begin{example}
+Vamos a descodificar la siguiente cadena:
+
+(0,e) (0,r) (2,e) (0, \textit{espacio}) (0,t) (3,s) (0,\#)
+
+Siempre empezamos por $0 \rightarrow \emptyset$
+$\begin{cases}
+ (0,e) \implies 1 \rightarrow e\\
+  (0,r) \implies 2 \rightarrow r\\
+  (2,e) \implies 3 \rightarrow re\\
+   (0, \textit{espacio}) \implies 4 \rightarrow \textit{espacio}\\
+   (0,t) \implies 5 \rightarrow t\\
+    (3,s) \implies 6 \rightarrow res\\
+     (0,\#) \implies 1 \rightarrow e
+\end{cases}$
+
+Frase final: \textbf{erre tres}
+\end{example}
+
+\subsubsection{Nivel de compresión del algoritmo LZ78}
+
+El nivel de compresión epende del número de frases asociadas a la cadena/fichero inicial.
+
+Por ejemplo en la cadena \textbf{\textit{rellenala ya}} tenemos 10 frases. Las posiciones relativas a 10 frases ocupan 4 bits. Puesto que un carácter en ASCII ocupa 8 bits cada par está compuesto por la posición y un carácter. Puesto que la codificación requerirá 10 frases, la longitud en bits será $10 \cdot (4 +8)$
+
+En general la longitud en bits al codificar una cadena \textbf{s} con \textbf{LZ78} es
+$$l_{LZ} (s) = F \cdot ( \lceil\log_2 F\rceil  + b)$$
+Siendo b el número de bits de un carácter.
+
+
+¿Qué ocurre al aplicar el algoritmo a $s = s_{i1}.... s_{iN}$ donde $s_{ij} \in S = {s_1...s_n}$ ?
+
+\begin{theorem}
+	Consideremos la longitud media
+	$$l^{*}_{LZ}(N) = \sum_{i_1,...,i_N} p_{i1}...p_{iN} l_{LZ}(s_{i1}....s_{iN})$$
+
+	Entonces
+	$$\lim_{N\rightarrow \infty} \frac{l^{*}_{LZ}(N)}{N} = H$$
+
+	Con H entropía de s
+\end{theorem}
+
+\obs Asintóticamente LZ78 es tan bueno como el algoritmo óptimo en el corolario del \textit{source coding theorem}
+
+\subsection{Algoritmo LZW}
+
+Es una variante de LZ78 que comienza predefiniendo un diccionario con todos los posibles caracteres (que pueden aparecer en la cadena).
+
+La división de frases, un poco diferente a la de LZ78, se basa en los siguientes principios
+\begin{enumerate}
+	\item Los caracteres individuales no forman frases porque ya están en el diccionario.
+	\item Cada caracter del final de una frase se incluye en el inicio de la siguiente.
+\end{enumerate}
+
+\begin{example}
+	Tenemos la siguiente cadena:
+	$$01110100001\#$$
+	Vamos a ver como será la división en frases.Primero vemos que en el diccionario ya tenemos
+	$$\begin{cases}
+	0 \rightarrow 0\\
+	1 \rightarrow 1
+	\end{cases}$$
+
+	Construimos el resto de frases de forma que el diccionario queda:
+		$$\begin{cases}
+		0 \rightarrow 0\\
+		1 \rightarrow 1\\
+		2 \rightarrow 01\\
+		3 \rightarrow 11\\
+		4 \rightarrow 110\\
+		5 \rightarrow 010\\
+		6 \rightarrow 00\\
+		7 \rightarrow 000\\
+		8 \rightarrow 01\#\\
+		\end{cases}$$
+
+	\textbf{Codificación:} posición de cada frase al suprimir el último caracter.
+	$$0,1,3,2,0,6,2$$
+\end{example}
+
 \section{El algoritmo ID3 de aprendizaje automático}
 
