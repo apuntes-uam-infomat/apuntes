@@ -700,6 +700,9 @@ La división de frases, un poco diferente a la de LZ78, se basa en los siguiente
 	\item Cada caracter del final de una frase se incluye en el inicio de la siguiente.
 \end{enumerate}
 
+\textbf{Codificación}: referencias de las frases sin el último carácter.
+
+
 \begin{example}
 	Tenemos la siguiente cadena:
 	$$01110100001\#$$
@@ -726,5 +729,75 @@ La división de frases, un poco diferente a la de LZ78, se basa en los siguiente
 	$$0,1,3,2,0,6,2$$
 \end{example}
 
+\textbf{Descodificación}: En cada paso añadimos al diccionario la última descodificación más el primer carácter de la que está en curso.
+
+Aunque, como veremos, hay una excepción.
+
+\begin{example}
+	Supongamos el diccionario inicial:
+	
+	$$\begin{cases}
+	0 \rightarrow \text{ espacio}\\
+	1 \rightarrow e\\
+	2 \rightarrow q\\
+	3 \rightarrow r\\
+	4 \rightarrow u
+	\end{cases}$$
+	
+	Y nos dan las siguiente cadena a descodificar:
+	$$1,3,3,1,0,2,4,8,5,7$$
+	
+	Empezamos a descodificar:
+	
+	El $1 \rightarrow e$ , lo siguiente es $3 \rightarrow r$ pero si vemos la definición que hemos dado de cómo se descodifica, ahora tenemos que añadir al diccionario la última descodificación más el primer carácter de la que está en curso. por lo tanto también tenemos que añadir al diccionario $5\rightarrow er$
+	
+	Vamos a seguir descodificando. Nos vuelve a tocar $3 \rightarrow r$ y además añadimos al diccionario $6 \rightarrow rr$
+	
+	El siguiente es $1 \rightarrow e$ y añadimos al diccionario $7 \rightarrow re$
+	
+	Pasamos al $0 \rightarrow \text{espacio}$ y añadimos al diccionario $8 \rightarrow \text{espacio}$
+	
+	Luego leemos $2 \rightarrow q$ y añadimos $9 \rightarrow \text{espacio } q$
+	
+	Y asi seguimos hasta terminar la cadena.
+	
+	Para la descodificación , basta leer las frases descodificadas con cada número.
+	
+	Finalmente nos queda la frase \textbf{erre que erre}
+\end{example}
+
+Antes hemos dicho que este método a veces no funciona, vamos a ver un ejemplo en el que no nos valga este algoritmo:
+
+\begin{example}
+	En el ejemplo de ayer...
+	
+	011....01\#
+	
+	Esto cuando lo codificamos queda
+	$$0,1,3,2,0,6,2$$
+	
+	Si intentamos descodificarlo vemos que $0 \rightarrow 0$ , $1 \rightarrow 1$ y añadimos $2 \rightarrow 01$ y llegamos al 3... Pero el 3 no está en el diccionario.
+	
+	¿Cómo seguimos? Pues vamos a creernos que $3 \rightarrow 11$
+	
+	Y sigo descodificando.
+	
+	Leo $2 \rightarrow 01$ y añado al diccionario $4 \rightarrow 110$.
+	
+	Lo siguiente es $0 \rightarrow 0$ y añado $5 \rightarrow 010$
+	
+	Y toca leer un 6, pero aún no tenemos el 6 en e diccionario.
+	
+	Vamos a creernos que $6 \rightarrow 00$
+	
+	Y continuo hasta el final.
+\end{example}
+
+\textbf{¿Cómo hemos sacado la codificación del 3 y del 6 en el ejemplo anterior?}
+
+Siempre que no podamos crear una entrada de diccionario (acabamos de crear la entrada $k-1$ y nos toca descodificar la $k$) entonces escribimos : 
+$$k \rightarrow \text{última descodificación + primer carácter de esa descodificación}$$
+
+Es decir, en el caso del 6, justo antes habíamos descodificado el 0, miramos el diccioario y vemos que $0\rightarrow 0$, por lo tanto la última descodificación es 0. Como la descodificación de 0 tiene sólo un carácter , el primer carácter de la descodificación vuelve a ser 0.
 \section{El algoritmo ID3 de aprendizaje automático}
 
