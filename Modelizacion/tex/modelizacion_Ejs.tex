@@ -1506,11 +1506,54 @@ Explica por qué si $\appl{f}{\ent_{2^k}}{\cplex}$ entonces $f_p(n)=f(2n)$ y $f_
 \begin{problem}[5]
 Consideramos el número de caras al tirar dos monedas. Encuentra el número medio de bits mínimo para almacenar los resultados de este experimento repetido cien veces y diseña un código que lo alcance.
 \solution
+
+En este caso tenemos S = \{0,1,2\} con $p_1 = \frac{1}{4}$ , $p_2 = \frac{1}{2}$ ,$p_3 = \frac{1}{4}$
+
+	Calculamos la entropía, que nos da una cota inferior.
+
+	$$H = - \frac{1}{4} \log_2 \frac{1}{4} - \frac{1}{2}\log_2 \frac{1}{2}  - \frac{1}{4} \log_2 \frac{1}{4} = \frac{3}{2}$$
+
+	La entropía nos indica que $\frac{3}{2}$ bits es la "cantidad de información" de cada experimento.
+
+	Para calcular el número medio de bits para 100 experimentos tenemos la siguiente cota, extraída del corolario del teorema de Huffman:
+
+	$$\frac{3}{2} \leq \frac{l^{*}(C)}{100} < \frac{3}{2} + \frac{1}{100}$$
+
+	En concreto tenemos que el número mínimo sería $100 \cdot \frac{3}{2} = 150$ bits.
+
+	Ahora vamos a buscar un código que alcance este mínimo. El código óptimo asignará únicamente un bit al elemento con probabilidad $1/2$ y dos bits a los otros\footnote{Es evidente que menos bits es imposible}.
+
+	Tomamos
+	\[0 \to 0, \ 1\to 10, \ 2\to 11\]
+	que se trata de un código perfectamente describrable e inyectivo.
+
+	Por tanto sólo nos queda confirmar que este código es óptimo. Para ello estudiamos su longitud media:
+	\[l(C)=1\frac{1}{2}+2\frac{1}{2}+2\frac{1}{2} = \frac{3}{2}\]
+	que coincide exactamente con la entropía, que era la cota inferior para la longitud media.
+
+	Para almacenar 100 veces este experimento necesitaremos un número medio de bits de 150 bits.
+
 \end{problem}
 
 \begin{problem}[6]
 En la informática normalmente un caracter se codifica con un byte a través del código ASCII, usándose aproximadamente 40 posibilidades cuando se desprecian las mayúsculas, acentos y algunos símbolos poco comunes. En español, las vocales constituyen estadísticamente el 45.07\% de los caracteres de un texto. Usando sólo este dato, ¿hasta cuánto se debería poder comprimir un fichero de un mega de texto en minúsculas sin acentos?
 \solution
+
+Puesto que consideramos un alfabeto compuesto por sólo 40 elementos tenemos:
+$$S \{ s_1, s_2 , ...., s_{40}\}$$
+
+Si las vocales estan en $s_1....s_5$ entonces
+$$p_1+....+p_5 = 0.4507$$
+$$p_6 +....+ p_{40} = 1 - 0.4507$$
+
+La mayor entropía (menos compresión) correspondería al caso equidistribuido.
+$$p_1= p_2=...=p_5$$
+$$p_6=....=p_{40}$$
+
+En estas condiciones tendríamos
+\[H= -0.4507\log\left(\frac{0.457}{5}\right)-(1-0.4507)\log\left( \frac{1-0.4507}{35}\right) = 4.85 \text{bits}\]
+
+Aunque sea el ``caso peor'' no podemos suponer nada mejor, pues no se aporta más información en el enunciado. Por tanto, en base a esta entropía tenemos que un código de 1024 bytes podría reducirse hasta 4.85 Megabits = 0.6MBytes.
 \end{problem}
 
 \begin{problem}[7]
@@ -1518,6 +1561,15 @@ Mejora el resultado del problema anterior sabiendo que la estadísica de las pro
 \[a \to 0.1253, \ e \to 0.1368, \ i \to 0.0625, \ o \to 0.0868, \ u \to 0.0393\]
 \solution
 
+\yoP
+
+Para ver si el resultado mejora basta con recalcular la entropía, sabiendo que el segundo sumando calculado anteriormente no varía.
+
+Así, tenemos:
+\[H= -0.1253\log(1.253)-0.1368\log(0.1368)-0.0625\log(0.0625)-0.0868\log(0.0868)-\]
+\[-0.0393\log(0.0393)-(1-0.4507)\log\left( \frac{1-0.4507}{35}\right)=4.54 \text{bits}\]
+
+Podemos ver que el resultado mejora levemente pero no se observa un cambio sustancial.
 
 \end{problem}
 
@@ -1634,7 +1686,7 @@ En este caso la longitud media sería:
 
 \begin{problem}[14]
 Escribe la lista de pares que corresponden a la codificación de la frase \textit{tres tristes tigres} en LZ78. Obtén también la codificación con $LZW$ de esta frase suprimiendo los espacios y empleando un diccionario inicial de seis letras:
-\[0 \to e, \ 1 \to g, \ 2 \to i, \ 3 \to x, \ 4 \to s, \ 5 \to t\]
+\[0 \to e, \ 1 \to g, \ 2 \to i, \ 3 \to r, \ 4 \to s, \ 5 \to t\]
 \solution
 
 \yoP
@@ -1656,23 +1708,89 @@ El diccionario nos queda:
 Y la frase queda codificada como:
 \[(0,t),(0,r),(0,e),(0,s),(0,\_),(1, r),(0,i),(4,t),(3,\_),(1,i),(0,g),(2,e),(4,\#)\]
 
+
 \item \textbf{LZW}
+
+El diccionario nos queda
+
+\begin{adjustwidth}{-2cm}{-2cm}
+\begin{tabular}{ | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | }
+   \hline
+   Elemento & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17  \\
+   \hline
+   Símbolo & e & g & i & r & s & t & tr & re & es & st & tri & is & ste & est & ti & ig & gr & res\\
+   \hline
+ \end{tabular}
+\end{adjustwidth}
+Y la frase queda codificada como:
+\[5,3,0,4,6,2,9,2,1,7\]
 \end{itemize}
 \end{problem}
 
 \begin{problem}[15]
-¿Qué dice $(0,m),(0,i),(0,_),(1,a)_,(4,_),(1,e),(3,a),(4,.)$ codificado en $LZ78$?
+¿Qué dice
+\[(0,m),(0,i),(0,\_),(1,a),(4,\_),(1,e),(3,a),(4,.)\]
+codificado en $LZ78$?
 \solution
+
+\yoP
+
+Según vamos descrifrando construimos un diccionario dinámico que nos permite llevar a cabo este proceso de descrifrado.
+
+El diccionario nos queda
+
+\begin{center}
+\begin{tabular}{ | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+   \hline
+   Elemento & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13\\
+   \hline
+   Símbolo & m & i & \_ & ma & ma\_ & me & \_a & ma.\\
+   \hline
+ \end{tabular}
+\end{center}
+
+Y la cadena es
+\begin{verbatim}
+mi mama me ama
+\end{verbatim}
+que se obtiene simplemente con leer el diccionario de principio a final.
 \end{problem}
 
 \begin{problem}[16]
 Supongamos el algoritmo $LZW$ funcionando bit a bit con el diccionario inicial formado por $0$ y $1$. Calcula cuántos elementos tendría al final el diccionario cuando se comprime un fichero formado por 8000 bits, todos ellos iguales a 0.
 \solution
+
+\yoP
+
+\textcolor{blue}{La idea es correcta pero me he hecho algo de jaleo con los números. Cuando me pare a hacerlo con calma lo corregiré}
+
+Al construir el diccionario seguiríamos los siguientes pasos
+\begin{enumerate}
+\item Empezamos leyendo 00, que se guarda en el diccionario en la posición 2.
+\item Leemos 000, que se guarda en el diccionario en la posición 3
+\item Leemos 0000, que se guarda en el dicccionario en la posición 4...
+\end{enumerate}
+
+En el primer paso hemos procesado los dos primeros bits de la cadena, en el segundo 4, en el tercero 8, y así sucesivamente. Por tanto tendremos que añadir elementos al diccionario hasta la iteración $n$ en la que ya habremos procesado $2^n$ elementos.
+
+Si queremos haber procesado todo el diccionario necesitamos $2^n>8000 \implies n =14$. Es decir, nos quedará un diccionario con 15 elementos, cada uno de los cuales será una sucesión de ceros. Concretamente, en la posición $i$ tendremos una cadena de $i$ ceros, salvo en las dos primeras, donde tendremos un 0 y un 1 respectivamente.
 \end{problem}
 
 \begin{problem}[17]
-Consideremos la cadena de bits $c_k$ obtenida al concatenar todas las de longitud 1, todas las de longitud 2 y así hasta de longitud $k$, todas ellas ordenadas. Por ejemplo, para $k=3$ sería $c_3=0100011011000001010011100101110111$. Intuitivamente éste es el pero caso para la compresión $LZ78$. Calcula la longitud de $c_k$ en bits y el número de pares de que constaría su codificación.
+Consideremos la cadena de bits $c_k$ obtenida al concatenar todas las de longitud 1, todas las de longitud 2 y así hasta de longitud $k$, todas ellas ordenadas. Por ejemplo, para $k=3$ sería $c_3=0100011011000001010011100101110111$. Intuitivamente éste es el peor caso para la compresión $LZ78$. Calcula la longitud de $c_k$ en bits y el número de pares de que constaría su codificación.
 \solution
+
+\yoP
+
+Cuando vayamos dividiendo la cadena original en frases obtendremos que las frases son las mismas con las que se describe la cadena, es decir, tendremos las frases posibles de longitud 1, todas las posibles de longitud 2, las de longitud 3, etc.
+
+Tendremos un total de $\sum_{n=1}^k 2^n$ frases, lo que implicará que necesitaremos k+1 bits para codificar el código dentro del par $(\text{ código }, \text{ letra })$ empleado en la codificación con este algoritmo. Además necesitaremos un byte para codificar esa letra final.
+
+Por tanto necesitaremos un total de:
+\[\left(\sum_{n=1}^k 2^n\right)\cdot (k+9) \text{ bits} = (2^{k+1}-1)\cdot (k+9) \text{ bits}\]
+
+con una codificación que constará de $2^{k+1} -1 $ pares, cada uno de los cuales con $k+9$ bits.
+
 \end{problem}
 
 \begin{problem}[18]
@@ -1680,10 +1798,24 @@ Para elegir al azar un número de 1 a 2n podemos decidir primero aleatoriamente 
 \[H \left( \frac{1}{2n},... \text{ 2n veces } ... \frac{1}{2n}\right)=H=\left(\frac{1}{2},\frac{1}{2}\right)+H \left(\frac{1}{n} .. \text{ n veces }.. \frac{1}{n} \right)\]
 Utiliza un argumento similar para justificar la tercera propiedad exigida por Shannon.
 \solution
+
+\yoP
+
+La tercera propiedad exigida por Shannon és:
+\[H\left(\frac{1}{n},..(\text{n veces})..,\frac{1}{n}\right) =  H\left(\frac{b_1}{n},..(\text{k veces})..,\frac{b_k}{n}\right) + \sum^{k}_{i = 1} \frac{b_k}{n} H\left(\frac{1}{b_i},..(b_i \text{ veces})..,\frac{1}{b_i}\right) \]
+
+y se deduce de la idea: ``La cantidad de información no puee variar si subdividimos $S$ en subconjuntos más pequeños de tamaño $b_i$''.
 \end{problem}
 
 \begin{problem}[19]
-Un código óptimo (en cuanto a la longitud media) sobre un conjunto de $n$ elementos equiprobables, cuando $n$ no es una potencia de dos, necesariamente da codificaciones de longitud $[\log_n (n)]$ para algunos elementos y de longitud $[\log_n (n)]+1$ para otros. PRueba que los codificados con longitud mayor son exactamente $2\left( n -2^{[\log_2 n]}\right)$
+Un código óptimo (en cuanto a la longitud media) sobre un conjunto de $n$ elementos equiprobables, cuando $n$ no es una potencia de dos, necesariamente da codificaciones de longitud $[\log_n (n)]$ para algunos elementos y de longitud $[\log_n (n)]+1$ para otros. Prueba que los codificados con longitud mayor son exactamente $2\left( n -2^{[\log_2 n]}\right)$
 \solution
 
+\yoP
+
+%Si uno empieza a construir el árbol según el algoritmo de Huffman se vuelve bastante intuitivo este resultado que se pide demostrar.
+
+%Como no queremos escribir tanto, vamos a darle otro enfoque. Si tenemos el código óptimo, se empleará el mínimo número de bits para codificar cada número. Si tenemos más de $2^k$ elementos, necesitaremos al menos $k+1$ bits para codificarlos todos. Puesto que debemos tener un código prefijo podemos representar $2^{k-1}-1$ elementos con $k$ bits y para el resto deberemos emplear un bit más.
+
+%En total tendremos $2^{k-1}-1 = $
 \end{problem}
