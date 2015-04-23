@@ -1576,21 +1576,19 @@ Podemos ver que el resultado mejora levemente pero no se observa un cambio susta
 \begin{problem}[8]
 Escribe un ejemplo de un código definido en $S=\{s_1,s_2,s_3,s_4\}$ que no tenga la propiedad de prefijo
 \solution
-\yoP
 
 Debemos buscar una asociación de cada uno de los símbolos de $S$ a una cadena binario que sea inyectiva y permita descifrar el código tal que $C(s_i)+(1|0)=C(s_j)$ para algún $i$ y algún $j$.
 
 A ojo de buen cubero podemos escribir el código:
 \[s_1\to 01, \ s_2 \to 011, \ s_3 \to 0111, \ s_4 \to 01111\]
 
-Podemos comprobar a simple vista que es descrifrable y evidenetemente no es prefijo
+Podemos comprobar a simple vista que es descrifrable y evidentemente no es prefijo
 
 \end{problem}
 
 \begin{problem}[9]
 Dibuja el árbol que corresponde a un código con IM(C)=$\{11,000,001,101\}$
 \solution
-\yoP
 
 \begin{center}
 	\Tree[ [.0 [.00 [.000 ] [.001 ] ] ] [.1 [.10 [.101 ] ] [.11 ] ] ]
@@ -1604,14 +1602,13 @@ Supongamos cierto tipo de ficheros en que los bytes representan números entre 1
 Halla su codificación de Huffman y el tamaño medio en bytes que alcanzará un fichero de $10^5$ bytes tras la codificación. Compara el resultado con la cota inferior de la entropía.
 \solution
 
-\yoP
 
 Para hallar la codificación de Huffman constuiríamos el árbol partiendo de las hojas, que son los números que se pueden representar, y convirtiendo en hermanos a dos nodos que tengan la menor probabilidad en cada iteración. Así la codificación queda:
-\[1 \to 0, \ 2 \to 10, \ 3 \to 110, \ 4 \to 1110\]
+\[1 \to 0, \ 2 \to 10, \ 3 \to 110, \ 4 \to 111\]
 
 La longitud media del código es:
-\[l(C)=0.35\cdot 1+0.34\cdot 2+0.3\cdot 3+4\cdot 0.01 = 1,97 \text{ bits}\]
-de modo que, de cada byte pasamos a 1.97 bits. Por tanto, un fichero de $10^5$ bytes pasará a $2.4\cdot 10^4$ bytes.
+\[l(C)=0.35\cdot 1+0.34\cdot 2+0.3\cdot 3+3\cdot 0.01 = 1,96 \text{ bits}\]
+de modo que, de cada byte pasamos a 1.96 bits. Por tanto, un fichero de $10^5$ bytes pasará a $24500$ bytes.
 
 Calculamos ahora la entropía de esta codificación:
 \[H=-0.35\cdot \log (0.35)-0.34\cdot \log (0.34)-0.3\cdot \log (0.3)-0.01\cdot \log (0.01) = 1.64 \text{ bits}\]
@@ -1626,7 +1623,6 @@ y, efectivamente, se cumple la igualdad. No obstante, puesto que el algoritmo de
 \solution
 
 \yoP
-
 Si seguimos el algoritmo de Huffman, en cada iteración tenemos que unir bajo un mismo padre a los dos elementos con menor probabilidad y, en caso de empate, escoger dos al azar.
 
 Este algoritmo, si todos los elementos tienen igual probabilidad, nos dará lugar a un árbol perfectamente balanceado y completo de profundidad $k$.
@@ -1640,8 +1636,6 @@ La codificación de los elementos sería de la forma $0, \ 01, \ 001, \ 0001, ..
 Da un ejemplo de un código sobre un conjutno de cuatro elementos tal que las longitudes de las codificaciones sean $l_1=1$, $l_2=2$, $l_3=l_4=3$. ¿Es posible añadir un quinto elemento al conjunto sin modificar la codificación de los otros?
 \solution
 
-\yoP
-
 El algoritmo a seguir consiste en partir de un arbol binario completo e ir podando ramas para que queden códigos con las longitudes indicadas.
 
 Pariendo del árbol de profundidad 4, para forzar que haya un elemento cuya codficación tenga longitud 1 debemos podar a profundidad 1. Tras esto podamos a longitud 2 y dos veces a longitud 3, con lo que nos queda el árbol:
@@ -1650,7 +1644,11 @@ Pariendo del árbol de profundidad 4, para forzar que haya un elemento cuya codf
 	\Tree[ [.0 [.00 [.000 ] [.001 ] ] [.01 ] ] [.1 ] ]
 \end{center}
 
-Si quisiéramos añadir un nuevo elemento deberíamos podar nuevamente el árbol. En caso de hacerlo estamos perdiendo otras codificaciones de modo que no podemos.
+Si quisiéramos añadir un nuevo elemento deberíamos podar nuevamente el árbol. En caso de hacerlo estamos perdiendo otras codificaciones de modo que no podemos. La forma matemática de probar que es imposible añadir un nuevo elemento es observando la desigualdad de kraft que dice que, para poder existir un código con determinadas longituds es necesario que la suma de las inversas de estas longitudes sea menor que uno.
+
+En este caso tenemos
+\[2^{-1}+2^{-2}+2^{-3}+2^{-3}+2^{?} \leq 1 \implies 1 + 2^{-?}\leq 1\]
+con lo que vemos que no hay posibilidad de añadir ningún nuevo elemento sin cambiar la codificación de los ya existentes.
 
 \end{problem}
 
@@ -1733,16 +1731,14 @@ Y la frase queda codificada como:
 codificado en $LZ78$?
 \solution
 
-\yoP
-
 Según vamos descrifrando construimos un diccionario dinámico que nos permite llevar a cabo este proceso de descrifrado.
 
 El diccionario nos queda
 
 \begin{center}
-\begin{tabular}{ | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+\begin{tabular}{ | c | c | c | c | c | c | c | c | c |}
    \hline
-   Elemento & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13\\
+   Elemento & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
    \hline
    Símbolo & m & i & \_ & ma & ma\_ & me & \_a & ma.\\
    \hline
