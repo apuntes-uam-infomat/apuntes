@@ -1183,14 +1183,23 @@ Una vez tenemos estos coeficientes calculamos el desarrollo discreto de Fourier:
 Para trata de forma discreta ondas muy oscilatorias hay que tomar muestras muy grandes para limitar ambigüedades graves. Sea una señal $f(x)=Ae(vx)+Be(-vx)$ con $v \in \real^+$. Supongamos que al extraer $N$ muestras se obtiene $f(j/N)=0$ para $0 \leq j < N$, es decir, lo mismo que se obtendría muestreando la función nula. ¿Cuáles son los posibles valores de $v$?. Explica por qué esto sugiere que el número de muestras debe ser al menos el doble de la frecuencia de una señal (la generalización de esto es el \textit{Teorema de Nyquist})
 \solution
 
+Tenemos una señal de la forma
+\[f(x)=Ae(vx)+Be(-vx)\]
 
+Puesto que tenemos que $f(j/N)=0$ para todo $j$, nos queda:
+\[Ae\left(\frac{vj}{N}\right)+Be\left(-\frac{vj}{N}\right)=0 \implies e\left(2\frac{vj}{N}\right)=-\frac{B}{A}\]
+y, como en particular esto es cierto para $j=0$ tenemos que $B=-A$.
+
+Puesto que $B$ y $A$ son constantes, tenemos que para calcular valor de $j$, $e\left(2\frac{vj}{N}\right)$ debe valer siempre lo mismo. La única forma de que esto ocurra necesitamos que
+\[\frac{2v}{N}\in \ent\]
+ya que así, al descomponer la función $e$ como combinación de senos y cosenos, tendremos coseno y seno de múltiplos enteros de $2π$, que nos garantiza la constancia en su valor.
+
+Por tanto, nos queda la igualdad $2v=NK$ siendo $K$ un entero positivo. Para evitar que esto pueda producirse basta con tomar $N>2v$.
 \end{problem}
 
 \begin{problem}[6]
 Si en una imagen en formato JPEG hacemos cero todos los coeficientes de Fourier excepto los $a_{00}$ que corresponden a la función $\phi_{00}$, ¿qué ocurrirá?
 \solution
-
-\yoP  corregido en clase, esta guay :D
 
 La imagen se verá totalmente pixelada, pues para cada bloque de $8\times 8$ estaremos tomando el color que tenía el pixel $(0,0)$ del bloque.
 
@@ -1306,7 +1315,6 @@ En este caso, igualar los desarrollos anteriormente calculados (de $f(x)$ y $f(-
 \begin{problem}[11]
 Explica cómo calcularía la función tangente para cualquier valor real si tu calculadora sólo te permitiera evaluarla en $[-π/4,π/4]$. Consiera el desarrollo de Chebyshev-Fourier de $f(x)=\tan(πx/4)$ truncando hasta los dos primeros coeficientes no nulos. Con ayuda de un ordenador, aproxima estos dos coeficientes con 6 cifras decimales y comprueba la precisión al proximar $\tan (3/4)$. Compara el resultado obtenido al emplear dos términos no nulos de la siere de Taylor de $f$
 \solution
-%\yoP
 
 Para empezar sabemos que la función tangente es una función 1-periódica con la siguiente gráfica:
 
@@ -1314,18 +1322,17 @@ Para empezar sabemos que la función tangente es una función 1-periódica con l
 	\includegraphics{img/grafica_tangente.png}
 \end{center}
 
-Podemos observar que el período no se da en $[-π/4,π/4]$ sino en $[-π/2,π/2]$. Por tanto tendríamos que calcular el desarrollo de Fourier de la función tangente, sabiendo que se trata de una función 1-periódica.
+Podemos observar que el período no se da en $[-π/4,π/4]$ sino en $[-π/2,π/2]$. No obstante, tenemos que
+\[\tan\left(\frac{π}{2}-x\right)=\frac{\sin(π/2-x)}{\cos(π/2-x)}=\frac{\cos(x)}{\sin(x)}=\frac{1}{\tan(x)}\]
 
-Para ello emplearíamos la fórmula:
-\[f(x)=\sum_{n=-\infty}^{\infty}\hat{f}(n)e(nx)\text{ donde } \hat{f}(n)=\int_0^1 f(x)e(-nx)dx\]
+Así podemos obtener el valor de la tangente para un punto comprendido entre π/4 y π/2 puesto que al restarle π/2 a un valor de este tipo caemos en la zona conocidoa: $[-π/4,π/4]$
 
-Si tomamos la función $f(x)=\tan(πx/4)$ tendremos una función conocida en el intervalo $[0,1]$, que es lo que necesitamos para calcular el desarrollo de Fourier. En este caso, la tangente resulta ser una función impar, de modo que $\tan (x) = -\tan(-x)$.
+Sabemos que el desarrollo de Chebyshev-Fourier es de la forma:
+\[f(x)=a_0+2\sum_{n=1}^{\infty}a_nT_n(x) \text{ con } T_n(x)=\cos(n \arccos(x))\]
 
-Empecemos calculando los coeficientes de Fourier, que serán de la forma:
-\[\hat{f}(n)=\int_0^1 \tan(πx/4)e(-nx)dx=\int_0^1 \tan(πx/4)(\cos(-nx)+i\sin(-nx))dx\]
+Ṕuesto que nuestra función $f$ es impar sabemos que los coeficientes con $n$ par serán nulos y por tanto nos queda:
 
-
-\textcolor{blue}{No se bien cómo seguir}
+\[\tan\left(\frac{πx}{4}\right) = 2c_1T_1(x)+c_3T_3(x)\]
 
 \end{problem}
 
