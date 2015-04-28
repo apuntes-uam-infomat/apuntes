@@ -1211,6 +1211,8 @@ Halla los coeficientes antes de cuantificar una imagen JPEG que consta sólo de 
 
 \yoP
 
+\textcolor{green}{corregido en clase}
+
 Podemos estudiar el desarrollo de Fourier de la función que nos da el color para cada uno de los tres colores básicos RGB que, en este ejemplo, serán los tres iguales.
 
 Los resultados experimentales vistos en clase muestran que el resultado será una función real, es decir, que sólo dependerá de cosenos.
@@ -1219,7 +1221,7 @@ Aplicamos pues la transformada coseno discreta:
 \[F=\sum_{n=0}^7\sum_{m=0}^7 a_{nm}\phi_{nm} \text{ con } \phi_{nm}(l,k)=\cos\left(\frac{πn}{16}(2k+1) \right) \cos\left( \frac{πm}{16}(2l+1)\right)\]
 
 Despejando podemos ver que los coeficientes se calculan según la siguiente fórmula, que aparece en los apuntes del profesor:
-\[a_{nm}=\frac{α_nα_m}{64}\sum_{k=0}^7\sum_{l=0}^7F(k,l) \phi_{nm}(l,k) \text{ donde } α_n=2,1 \text{ si } n\neq0 | n = 0 \text{ respectivamente}\]
+\[a_{nm}=\frac{α_nα_m}{64}\sum_{k=0}^7\sum_{l=0}^7F(k,l) \phi_{nm}(l,k) \text{ donde } α_n=2 \text{ si } n\neq0 \text{ y }1 \text{ si }  n = 0 \]
 
 Todos los bloques que no estén en la frontera izquierda de la imagen tendrán todos sus coeficientes nulos puesto que al calcular $a_{nm}$ tendremos $F=0$.
 
@@ -1228,6 +1230,18 @@ Por tanto, el caso interesante lo constituyen los cuadrados fronterizos. Puesto 
 
 Sabemos que todos los píxeles de la frontera tienen el mismo color, 255, de modo que $F(k,l)=255$ por lo que podemos simplicar la fórmula y escribir:
 \[a_{nm}=\frac{α_nα_m}{64}\cdot 255 \cdot \sum_{k=0}^7\cos\left(\frac{πn}{16}(2k+1) \right) \cos\left( \frac{πm}{16}\right)\]
+
+Vemos que 
+\[\sum_{k=0}^7\cos\left(\frac{πn}{16}(2k+1) \right) = \begin{cases}
+8 \textbf{ si } n= 0\\
+0 \textbf{ si } n\neq0
+\end{cases}\]
+
+Entonces como la parte real del sumatorio de exponencial da el sumatorio de cosenos puedo calcular:
+\[ \sum_{k=0}^7e\left(\frac{n}{32}(2k+1) \right)\]
+que es una progresión geométrica.
+
+Y luego cojo su parte real
 
 \textcolor{blue}{Yo ya lo veo bastante simple}
 
@@ -1239,7 +1253,7 @@ en un fondo blanco no es invariante por traslaciones; es decir, el tamaño del f
 
 \solution
 
-%\yoP
+\yoP
 El tamaño depende de la altura de la linea, vamos a ver porqué.
 
 En JPEG se dividian los bloques en 8 y se interpretaba cada bloque por Fourier.
@@ -1285,13 +1299,29 @@ Y sustituyendo este resultado en la ecuación anterior obtenemos el resultado bu
 
 Una vez hemos probado que la ecuación recursiva es cierta nos basta con fijarnos en que $T_1(x)=\cos(\arccos(x))=x$. Sabiendo además que $T_0(x)=1$ queda perfectamente claro que la ecuación recursiva nos lleva a obtener polinomios.
 
+\textcolor{green}{Otra forma de hacerlo (hecho en clase)}
+
+
+Llamamos $\arccos x = y$ entonces
+$$T_n(x) = \cos (ny)$$
+
+Intentamos relacionar $T_{n+1}(x)$ con $\cos(ny)$. Para ello vemos que:
+
+$$T_{n+1}(x) = \cos((n+1)y) = \cos(ny) cos y - \sen(ny) \sen y$$
+
+Vemos que $\cos(ny) = T_n(x)$ , el $\cos y= x$ y para los senos utilizamos las fórmulas de procudo de cosenos de forma que nos queda que:
+$$ \sen(ny) \sen y = \frac{\cos((n+1)y) - \cos((n-1)y)}{2} = \frac{T_{n+1}(x) - T_{n-1}(x)}{2}$$
+
+Teniendo esto ya podemos ver que:
+$$\implies T_{n+1}= x\cdot T_n + \frac{T_{n+1} - T_{n-1}}{2} \iff T_{n+1} = 2xT_n - T_{n-1}$$
+
 \end{problem}
 
 \begin{problem}[10]
 Prueba que para funciones impares los coeficientes con índice par en el desarrollo de Chebyshev-Fourier son nulos. Busca un análogo para funciones pares.
 \solution
 
-%\yoP
+\yoP
 
 Recordemos que una función impar es cualquier función que satisface
 \[f(-x)=-f(x)\]
@@ -1300,7 +1330,7 @@ El desarrollo de Chebyshev-Fourier de una función $f(x)$ dada es de la forma:
 \[f(x)=a_0+2\sum_{n=1}^{\infty}a_nT_n(x) = a_0+2\sum_{n=1}^{\infty}a_n\cos(n \arccos x)\]
 Por otro lado, el desarrollo de Chebyshev-Fourier de $f(-x)$ tenemos:
 \[f(-x)=a_0+2\sum_{n=1}^{\infty}a_n\cos(n \arccos (-x))=a_0+2\sum_{n=1}^{\infty}a_n\cos(n (π - \arccos x))=\]
-\[=a_0+2\sum_{n=1}^{\infty}a_n\left( \cos(nπ)\cos(n\arccos x) + \sin(nπ)\text{algo}\footnote{No nos importa puesto que irá multiplicado por 0}}\right) =a_0+2\sum_{n=1}^{\infty}a_n \cos(nπ)\cos(n\arccos x)=\]
+\[=a_0+2\sum_{n=1}^{\infty}a_n\left( \cos(nπ)\cos(n\arccos x) + \sin(nπ)\text{algo}\footnote{No nos importa puesto que irá multiplicado por 0}\right) =a_0+2\sum_{n=1}^{\infty}a_n \cos(nπ)\cos(n\arccos x)=\]
 \[=a_0+2\sum_{n=1}^{\infty}a_n(-1)^n\cos(n\arccos x)\]
 
 Sabiendo que $f$ es una función impar, igualamos los dos desarrollos obtenidos invirtiendo el signo en el segundo. Así nos quedan dos desarrollos exactamente idénticos en los términos impares pero con signos opuestos en todos los pares. La única opción para que se mantenga la igualdad es que estos términos de índice par sean nulos.
@@ -1310,13 +1340,37 @@ Por otro lado las funciones pares son aquellas que cumplen
 
 En este caso, igualar los desarrollos anteriormente calculados (de $f(x)$ y $f(-x)$) nos quedarían dos series idénticas en los términos pares y con signos opuestos en los impares. La única forma de que ambas series sean idénticas es que esos términos impares sean nulos.
 
+\textcolor{green}{Otra forma de hacerlo (hecho en clase)}
+
+Tenemos que
+$$a_n = \int_{0}^{1} f(\cos(2\pi x)) \cos (2\pi nx) dx$$
+Esto lo hemos sacado de la fórmula de los coeficientes de Fourier:
+$$F(x) = f(\cos(2\pi x)) \rightarrow a_n = \int_{0}^{1} F(x) e(-nx)dx$$
+
+Vemos que \textbf{para f impar} $\implies a_{2k} = 0$
+
+Vamos a probar esto último:
+
+Hacemos un cambio de variable en la integral de forma que $x = t+\frac{1}{2}$
+
+$$a_{2k} = \int_{0}^{1}... = \int_{-\frac{1}{2}}^{\frac{1}{2}} f(\cos(2\pi t + \pi)\cdot \cos(2 \pi 2kt + 2 \pi k)dt $$ 
+
+Vemos que $\cos(2 \pi 2kt + 2 \pi k) = \cos(2\pi 2k t)$ y que $f(\cos(2\pi t + \pi) = f(-\cos(2\pi t) = -f(\cos(2\pi t)$
+
+Entonces 
+$$a_{2k} = -\int_{-\frac{1}{2}}^{\frac{1}{2}} f(\cos(2\pi t)\cdot \cos(2 \pi 2kt)dt$$
+y por ser 1-periódica nos queda
+$$a_{2k} = -\int_{a}^{a+1}  f(\cos(2\pi t)\cdot \cos(2 \pi 2kt)dt$$
+y para $a=0$
+
+$$\implies \int_{0}^{1} .... dx = -\int_{0}^{1}.... dt \implies \int_{0}^{1} = 0 \implies a_{2k} = 0$$
 \end{problem}
 
 \begin{problem}[11]
 Explica cómo calcularía la función tangente para cualquier valor real si tu calculadora sólo te permitiera evaluarla en $[-π/4,π/4]$. Consiera el desarrollo de Chebyshev-Fourier de $f(x)=\tan(πx/4)$ truncando hasta los dos primeros coeficientes no nulos. Con ayuda de un ordenador, aproxima estos dos coeficientes con 6 cifras decimales y comprueba la precisión al proximar $\tan (3/4)$. Compara el resultado obtenido al emplear dos términos no nulos de la siere de Taylor de $f$
 \solution
 
-Para empezar sabemos que la función tangente es una función 1-periódica con la siguiente gráfica:
+Para empezar sabemos que la función tangente es una función $\pi$-periódica con la siguiente gráfica:
 
 \begin{center}
 	\includegraphics{img/grafica_tangente.png}
@@ -1330,9 +1384,18 @@ Así podemos obtener el valor de la tangente para un punto comprendido entre π/
 Sabemos que el desarrollo de Chebyshev-Fourier es de la forma:
 \[f(x)=a_0+2\sum_{n=1}^{\infty}a_nT_n(x) \text{ con } T_n(x)=\cos(n \arccos(x))\]
 
-Ṕuesto que nuestra función $f$ es impar sabemos que los coeficientes con $n$ par serán nulos y por tanto nos queda:
+Puesto que nuestra función $f$ es impar sabemos que los coeficientes con $n$ par serán nulos 
 
-\[\tan\left(\frac{πx}{4}\right) = 2c_1T_1(x)+c_3T_3(x)\]
+Calculamos $a_1$ y $a_3$:
+
+\[a_1 = \int_{0}^{1} \tan(\frac{\pi}{4} \cos (2\pi x)) \cdot \cos(2 \pi x) dx = 0.469225\]
+\[ a_3 = 0.028585\]
+
+Entonces
+
+\[ \tan\frac{3}{4} = f(\frac{\pi}{3})\simeq 2 a_1 T_1(\frac{3}{\pi}) +2 a_3 T_3 (\frac{3}{\pi}) = 0.931506\]
+
+
 
 \end{problem}
 
