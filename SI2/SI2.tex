@@ -443,8 +443,229 @@ El LB debe ser capaz de hacer que un cliente se conecte siempre a un mismo servi
 \end{itemize}
 
 \subsubsection{Redundancia en los sistemas de almacenamiento de la información}
+La información es el punto más crítico de todo sistema informático puesto que perder datos o no tenerlos disponibles adecuadamente puede ser fatal para cualquier tipo de negocio.
+
+La redundancia de este tipo de elementos es más compleja pues es necesario mantener la consistencia y garantizar que los elementos de procesamiento redundantes accedan a la misma copia de la información.
+
+Existen diferentes arquitecturas de almacenamiento. Veamos algunas:
+\begin{itemize}
+\item \textbf{Conexión direta (Direct Attached Storage, DAS)}. Consiste en conectar el dispositivo de almacenamiento directamente al servidor o estación de trabajo, es decir, físicamente conectado al dispositivo que hace uso de él. Normalmente se usa directamente el protocolo SCSI en alguna de sus variantes.
+
+\item \textbf{Conexión a red (Network Attached Storage, NAS)}. Es el nombre dado a una tecnología de almacenamiento dedicada a compartir la capacidad de almacenamiento de un computador (Servidor) con computadoras personales o servidores clientes a través de una red (normalmente TCP/IP), haciendo uso de un Sistema Operativo optimizado para dar acceso con los protocolos CIFS, NFS, FTP o TFTP.
+
+\item \textbf{Red de área de almacenamiento (Storage Area Network, SAN)}. Red dedicada al almacenamiento que está conectada a las redes de comunicación de una compañía. Además de contar con interfaces de red tradicionales, los equipos con acceso a la SAN tienen una interfaz de red específica que se conecta a la SAN. Utiliza fibra óptica como medio de transporte y el protocolo \textit{FibreChannel}
+
+\item \textbf{Internet SCSI (iSCSI)} Estándar que permite el uso del protocolo SCSI sobre redes TCP/IP
+
+\item \textbf{FibreChannel Over IP (FCIP)} Encapsula el protocolo FibreChannel sobre IP estableciendo túneles FC sobre TCP.
+
+\item \textbf{Internet Fibre Channel Protocol (iFCP)} Implementa FC sobre IP pero no en modo túnel sino interpretando el protocolo FC.
+\end{itemize}
+
+Uno de los métodos para mantener redundante la información en unos ciertos discos es el uso de \textbf{Redundan Array of Independen Disks, RAID}, que ya hemos estudiado en otras asignaturas.
+
+\begin{center}
+\includegraphics[width=\linewidth]{img/raid.png}
+\end{center}
+
+Los servidores de disco proporcionan herramientas autónomas para garantizar la copia de la información, y garantizar así su disponibilidad para los servidores que la utilizan, liberando así a los servidores de aplicaciones de la tarea de realización de las copias.
+
+Estas copias pueden ser locales o remotas. Estas últimas podrían ser síncronas o asíncronas.
+
+Dentro de las copias locales existen dos tipos: clonación de discos (se copia la información de una Unidad Lógica\footnote{Viene a ser como las particiones lógicas pero que afectan a diferentes discos, no sólo a 1} a otra) y las copias instantáneas (\textit{Snapshots o Flash Copy}).
+
+\begin{defn}[Flash Copy]
+Copia de una Unidad Lógica en el instante que se solicita, copiando los punteros a los sectores que contienen la información.
+
+En caso de que haya una actualización de un sector, se copia la información antigua y se actuliza el puntero de la copia instantánea.
+
+Se emplean para generar una copia consistente de la información en un momento preciso para su uso posterior.
+
+\obs Básicamente guardas un puntero a la posición guardada. Si no la modifican, pues ya lo tienes. Si se modifica esa parte del disco, mueves la antigua información a otro sitio y actualizas tu puntero.
+\end{defn}
+
+Las copias remotas \textbf{síncronas} consisten en que la actualización de la información del servidor primario se copia a los secundarios y el proceso no finaliza hasta que no se ha actualizado la información en todos los servidores, lo que da lugar a una alta latencia de escritura. \textbf{Empleado para realizar copias locales que garanticen la alta disponibilidad}
+
+En las \textbf{asíncronas}, una vez se actualiza el primario se guardan los cambios en un buffer y se van aplicando en el resto de servidores mediante un proceso en paralelo. Requiere un protocolo de sincronización. \textbf{Empleado para realizar copias remotas que permitan la recuperación ante desastres} \href{http://searchdatacenter.techtarget.com/es/consejo/Ventajas-e-inconvenientes-de-la-replicacion-remota-en-la-recuperacion-de-desastres}{Leer más}
+
+Las posibles averías en discos físicos individuales son resueltas por la arquitectura RAID. Si se producen averías en una Unidad Lógica (LUN) completa o en un servidor de disco se siguen los siguientes pasos:
+\begin{enumerate}
+\item[1] \textbf{Fail-Over}. Se interrumpe la copia remota y la LUN secundaria pasa a principal. Para ello se notifica al servidor de proceso que debe usar a LUN secundaria y se comienza a registrar los cambios.
+
+\item[2] \textbf{Fail-Back} Se copia el secundario activo al primario una vez recuperado. Para ello se detiene el trabajo del servidor de proceso, se reestablece la copia y se notifica al servidor de proceso que puede seguir utilizando el primario.
+\end{enumerate}
 
 
+\subsubsection{Redundancia en los sistemas de proceso}
+Este tipo de redundancia se consigue mediante la asociación de los elementos de proceso (servidores) en grupos (clusters) que realizan una tarea común.
 
+Cada servidor ejecutará un determinado número de grupos de servicio compuesto por una identidad de red (direcciones a las que el servicio responde), un conjunto de información almacenada en discos físicos o LUNs y un conjunto de procesos.
+
+Si un servidor de un cluster falla, los grupos de servicio que soporta deben ser trasladados a otro elemento del cluster.
+
+Básicamente un grupo de servicios es un conjunto de actividades que desempeña un servidor, es decir, procesos que ejecuta, direcciones a las que responde y memoria que usa. Si el servidor cae y no puede desempeñar estas actividades, otro tiene que ocupar su lugar.
+
+Hay tres tipos de clusters según su modo de funcionamiento y gestión.
+\begin{enumerate}
+\item[1] \textbf{Clusters Activo-Pasivo o asimétricos:} Cada grupo de servicio se ejecuta en un nodo. Existen nodos de reserva en stand-by para ejecutarlos en caso de fallo.
+
+\begin{defn}[Heartbeat]
+In computer clusters, heartbeat network is a private network which is shared only by the cluster nodes, and is not accessible from outside the cluster. It is used by cluster nodes in order to monitor each node's status and communicate with each other.
+
+Es uno de los puntos críticos de un \textit{cluster} de alta disponibilidad. Si falla se producirá la activación simultánea de ambos nodos, generando conflicos y caída del servicio.
+
+Puede implementarse como una red de área local o mediante la escritura en una sección reservada de disco compartido.
+\end{defn}
+
+Para aumentar la fiablidiad del \textbf{heartbeat} se pueden tomar diversas medidas:
+\begin{itemize}
+\item Eliminar SPOF en los mecanismos de transporte del heartbeat.
+\item Emplear dos heartbeat (dos redes o red+disco). Actuar sólo en caso de fallo
+de ambos.
+\item Emplear redes independientes lo más simples posibles: cable cruzado para
+dos nodos, o segmentos de LAN con switches independientes.
+\item Vigilar el correcto funcionamiento de los procesos que generan y atienden los
+hearbeats en cada nodo. Instalar un watchdog local que los rearranque en caso de caída.
+\end{itemize}
+
+Existe una serie de \textbf{problemas a la hora de rearrancar en el servidor secundario} en el caso de fallo de uno de los nodos.
+
+Si el cambio en la dirección IP se realiza sobre un adaptador con otra dirección MAC, la caché ARP de los clientes mantendrá la antigua hasta que detecten la nueva situación. Por ello se asume también la antigua dirección MAC.
+
+Cuando la parada es no planificada (se dió un fallo en el sistema) se perderán datos de las aplicaciones, las cachés de disco y/o transacciones que se estuvieran realizando. Es por ello que el arranque de servicios en el servidor de reserva se hace siguiente los procedimientos de arranque tras un cierre anormal:
+\begin{itemize}
+\item Revisión de la consistencia de los sistemas de archivos a nivel de sistema operativo.
+\item Revisión de la consistencia de los datos en disco a nivel de aplicación (por ejemplo, bases de datos).
+\item Rollback de las transacciones activas en el momento del fallo.
+\end{itemize}
+
+En caso del fail-back este proceso será planificado, realizándose un cierre ordenado. En ambos casos se interrumpirá el servicio.
+
+\item[2] \textbf{Clusters Activo-Pasivo cruzados o simétricos:} Cada grupo de servicio se ejecuta en un nodo. Todos los nodos ejecutan grupos de servicio. En caso de fallo de un nodo, el resto se hacen cargo de la ejecución de sus grupos de servicio.
+
+El modelo es similar al anterior, pero con grupos de servicios activos en ambos nodos. Cada nodo tiene direcciones de servicio fijas y, en caso de fallo, el resto de nodos deberá hacerse cargo de todas las direcciones.
+
+En este modelo nunca se parará el sistema y, si no hay fallo, hay menos capacidad de proceso desaprovechada.
+
+Por otro lado, este modelo tiende a sobrecargar los nodos y, debido a la carga de trabajo de los supervivientes tras un fallo, es posible que les cueste absorber la carga del nodo caído. Además, es imposible asignar dos o más direcciones MAC en el adaptador de un nodo de modo que los clientes del nodo caído deberán realizar un nuevo ARP para conectar con otro nodo.
+
+
+\item[3] \textbf{Clusters Activo-Activo:} Cada grupo de servicio se ejecuta en múltiples nodos. El fallo de uno de los nodos no supone la caída del grupo de servicio.
+
+En este modelo existe un mecanismo de balanceo de carga para asignar las peticiones de los clientes a alguno de los nodos activos, que realiza el reparto de la carga y la verificación de la actividad.
+
+Sif all uno nodo no cae el grupo de servicio e incluso, dependiendo del tipo de aplicación, las conexiones activas en el momento del fallo pueden mantenerse también.
+
+El cluster debe incluir soluciones para el acceso compartido a discos en lectura y escritura, creación de áreas de memoria compartida entre los nodos del cluster, consistencia de la información distribuída entre los distintos nodos, etc.
+
+\begin{example}
+Ya vimos en el tema 2 la arquitectura de un servidor de aplicaciones J2EE, que es la que muestra la siguiente imagen:
+\begin{center}
+\includegraphics[width=\linewidth]{img/j2ee.png}
+\end{center}
+
+Se trata de un \textbf{cluster Activo-Activo}.
+
+El balanceo de carga entre servidores Web lo realiza el Edge Server y el balanceo de carga entre Servlet Engines lo realiza el Web Plug In.
+
+La alta disponibilidad en el acceso a los contenedores EJB y a los servicios de Back End es proporcionada por IIOP (corba) y por mecanismos de \textit{clustering} respectivamente.
+
+La continuidad de la sesión entre distintas Servlet Engines se obtiene mediante el mantenimiento común de los datos de sesión. Este soporte común se puede conseguirse mediante una tabla de sesiones en una BD compartida, un gestor de réplica centralizado (Redundado para evitar SPOF) o un gestor de réplica distribuído.
+\end{example}
+
+\end{enumerate}
+
+\subsection{Recuperación ante desastres}
+
+Un desastre es cualquier circunstancia que puede producir un fallo en la operativa del negocio de una empresa. Pueden ser naturales, humanos, accidentes ...
+
+Aunque tengan poca probabilidad, el impacto puede ser muy alto (por ejemplo, si se queman tus servidores de datos). Para garantizar la recuperación ante un desastre no basta con las técnicas de alta disponibilidad vistas hasta ahora sino que son necesarias nuevas técnicas que se presentan en esta sección.
+
+Veamos algunas definiciones necesarias para entender los conceptos que analizaremos en este apartado:
+
+\begin{defn}[Recovery Point Objective (RPO)]
+Instante de tiempo al que se es capaz de recuperar la información existente en el sistema tras un fallo. Si no es 0, habrá perdida de datos
+\end{defn}
+
+\begin{defn}[Recovery Time Objective (RTO)]
+Tiempo que se tarda en recuperar los sistemas tras producirse un fallo. Si no es 0, habrá interrupciones de servicio.
+\end{defn}
+
+Menores valores de RTO y RPO requieren mayor coste por lo que hay que analizar bien las necesidades del servicio.
+
+Hay unas reglas básicas en el diseño de arquitecturas tolerantes a desastres:
+\begin{enumerate}
+\item Proteger datos y nodos de proceso mediante distribución geográfica.
+
+Cuanto más alejados se encuentren, mayor seguridad, pero mayor
+complejidad y coste.
+
+\item Proporcionar a los CPDs redundancia en el suministro de energía.
+Preferiblemente con acometidas independientes, a través de rutas alternativas de
+distribución y proporcionadas por distintas entidades suministradoras.
+
+\item Proporcionar a los CPDs redundancia en el acceso de telecomunicaciones. Con
+las mismas consideraciones que en el caso anterior.
+
+\item Generar copias consistentes de la información, garantizando la capacidad de
+recuperar los datos desde ellas.
+\begin{itemize}
+\item \textbf{Copias off-line:} backups en cinta. Proporcionan un RPO elevado.
+
+Puesto que hay que hacerlos de forma consistente, debe detenerse las aplicaciones mientras se realiza el backup o emplear técnicas de copia instantánea.
+
+Además debe probarse que la información se restaura correctamente.
+
+\item \textbf{Copias on-line:} réplicas directas de disco a disco. Proporcionan un RPO reducido.
+
+Los mecanismos más habituales, ordenados de menor a mayor fiabilidad son:
+\begin{enumerate}
+\item Scripts de usuario. Automatizados por planificador.
+\item Réplicas basadas en software en los sistemas de proceso, a distintos niveles:
+
+\item Réplicas basadas en nivel de driver: mirroring remoto.
+\item Réplicas basadas en el hardware de los servidores de disco: síncronas y
+asíncronas, estudiadas previamente.
+\end{enumerate}
+\end{itemize}
+
+\end{enumerate}
+
+\subsubsection{Arquitecturas de CPDs orientadas a la recuperación ante desastres}
+\textbf{Clusters a nivel de campus}
+\begin{itemize}
+\item Los elementos del cluster se distribuyen entre dos edificios próximos.
+\item Extensión de LAN y SAN entre ambos edificios, normalmente con cableado propio.
+\item Es posible la copia síncrona de información entre servidores de disco.
+\item El funcionamiento lógico es como un cluster local: Proporciona alta disponibilidad.
+\item Protege frente a desastres que ocurran en un único edificio.
+
+\end{itemize}
+
+\textbf{Clusters metropolitanos}
+\begin{itemize}
+\item Similar al anterior, pero con edificios en ubicaciones distantes que no excedan el rango en el que es posible realizar copia síncrona de la información.
+\item Extensión de LAN y SAN con enlaces alquilados de alta velocidad (“fibra oscura”, WDM).
+\item Protege frente a desastres locales.
+
+\end{itemize}
+
+\textbf{Clusters contienentales}
+\begin{itemize}
+\item Sin límite de distancia entre centros.
+\item Requieren conexión a través de red WAN.
+\item Protege frente a desastres en áreas extensas (región o estado), según la distancia entre centros.
+
+\end{itemize}
+\newpage
+\textbf{Soluciones mixtas}
+\begin{itemize}
+\item Cluster local o metropolitano para garantizar alta disponibilidad, añadiendo un cluster continental para garantizar recuperación ante desastres.
+
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=\linewidth]{img/continuidad_negocio.png}
+\end{center}
 \printindex
 \end{document}
