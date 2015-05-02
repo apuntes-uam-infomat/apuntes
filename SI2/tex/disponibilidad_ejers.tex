@@ -292,11 +292,19 @@ Como sabemos que $A_a < 1$, tenemos que $2 - A_a > 1$ y por lo tanto $A_b = A_a(
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[10]
-Los servidores de directorios DSA1 y DSA2 descritos en el problema número 20 del Tema 2 (\ref{tema2:prob20}) se encuentran conectados por una línea de comunicaciones que tiene una disponibilidad de 0.99. La disponibilidad de DSA2 es de 0.98. Si el MTTF de DSA1 es de 2000 horas, ¿cuál será el MTTR que deberemos garantizar para él, para conseguir que la disponibilidad del sistema total se igual a 0.95? ¿Cuál sería, en este caso, la disponibilidad de DSA considerado aislado del resto del sistema?
+Los servidores de directorios DSA1 y DSA2 descritos en el problema número 20 del Tema 2 (\ref{tema2:prob20}) se encuentran conectados por una línea de comunicaciones que tiene una disponibilidad de 0.99. La disponibilidad de DSA2 es de 0.98. Si el MTTF de DSA1 es de 2000 horas, ¿cuál será el MTTR que deberemos garantizar para él, para conseguir que la disponibilidad del sistema total sea igual a 0.95? ¿Cuál sería, en este caso, la disponibilidad de DSA considerado aislado del resto del sistema?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
+\doneby{Guille}
 
+El problema en cuestión nos decía que tenemos un servidor de directorio DSA1, que en el $25\%$ de los casos redirige las peticiones al servidor DSA2. Lo del $25\%$ es importante, ya que tenemos una parte que sólo se va a usar en una de cada cuatro peticiones, y tendremos que tener eso en cuenta para calcular la disponibilidad.
+
+Empezamos calculando la disponibilidad del sistema ``superior'', que consta del DSA2 y de la línea de comunicaciones. Son dos componentes en serie, luego $A_s = 0.99 · 0.98 = 0.9702$. ¿Cómo afecta esto a la disponibilidad del sistema total? Haciendo un cálculo de probabilidades, nos debería quedar algo como esto: \[ A = 0.75 · A_1 + 0.25 · A_1 · A_s \]
+
+Es una media ponderada entre las dos disponibilidades posibles: en un $75\%$ de los casos sólo nos importa el DSA1, mientras que en el $25\%$ restante (cuando DSA1 pide datos al servidor superior) nos importa que funcione DSA1 y además la línea de comunicación y DSA2.
+
+Ahora hacemos la ecuación para hallar la disponibilidad necesaria de DSA1 \[ 0.95 = A_1 (0.75 + 0.25 · 0.9702) \implies A_1 \approx 0.9571 \] y además resolvemos para sacar el MTTR: \[ 0.9571 = \frac{2000}{2000 + \text{MTTR}} \implies \text{MTTR} = 89.579 \]
 
 \end{problem}
 
