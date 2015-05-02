@@ -350,5 +350,30 @@ Calcular, en el caso peor, la disponibilidad del conjunto de dos balanceadores d
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
 
+\doneby{Guille}
+
+\spart
+
+La disponibilidad de un equipo es \[ A_e = \frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} = \frac{4000}{4048} \approx 0.9881 \], luego si ponemos dos equipos en paralelo para la capa de presentación tenemos que \[ A_{pres} = 1 - (1 - A_e)^2 \approx 0.9998 \]
+
+\spart
+
+\textit{Seguro que los fallos son por usar Glassfish.}
+
+La disponibilidad del software del servidor de aplicaciones será \[ A_{soft} = \frac{24 · 7}{24 · 7 + 0.5} \approx 0.9970\], luego la nueva disponibilidad total de cada servidor será \[ A_{e-app} = A_{soft} · A_e = 0.9851 \]
+
+Poniendo dos en paralelo, tendremos una disponibilidad para la capa de aplicación de \[ A_{app} = 1 - (1 - A_{e-app})^2 \approx 0.9997 \]
+
+\spart
+
+Aquí seguimos teniendo el MTTF de 4000 horas, aunque el MTTR cambia al usar un cluster. El MTTR en este caso es la suma de todos los tiempos que nos dicen, luego $\text{MTTR} = 2.5083$ horas. Por lo tanto, la disponibilidad será \[ A_{DB} = \frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} = \frac{4000}{4002.5083} \approx 0.9993 \]
+
+\spart
+
+De nuevo tenemos que recalcular el MTTR, sumando básicamente. $\text{MTTR} = 0.0011$ horas. Por lo tanto, la disponibilidad será \[ A_{dist} = \frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} = \frac{4000}{4000.0011} \approx 0.9999 \]
+
+\spart
+
+Simplemente hacemos el producto de todo: \[ A = A_{dist} · A_{pres} · A_{app} · A_{DB} \approx 0.9999 · 0.9998 · 0.9997 · 0.9993 = 0.9987\]
 
 \end{problem}
