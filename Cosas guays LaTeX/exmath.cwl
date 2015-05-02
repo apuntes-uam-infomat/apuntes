@@ -225,3 +225,4 @@
 \tgsd#m
 \cind#m
 \fe{arg0}#m
+\doneby{arg0}#m
