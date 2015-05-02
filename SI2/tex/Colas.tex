@@ -59,8 +59,8 @@ Se desea diseñar un servidor para satisfacer un tráfico de Poisson con un tiem
 Si nos llega una petición cada 10 segundos, tenemos una tasa de llegadas de
 \[λ = 0.1 s^{-1}\]
 
-Dado que el tiempo medio de servicio es de 16s y tenemos $c$ servidores, la tasa de servicio es:
-\[μ=\frac{0.0625}{c}\]
+Dado que el tiempo medio de servicio es de 16s y tenemos $c$ servidores, la tasa de servicio es, en cada servidor:
+\[μ=0.0625\]
 
 Si queremos que el sistema no colapse, necesitamos que el factor de utilización sea menor que 1, es decir:
 \[ρ = \frac{λ}{cμ}<1 \implies λ < cμ \implies c>1.6\]
@@ -169,7 +169,7 @@ y a partir del Teorema de Little calculamos el tiempo medio de estancia en el si
 
 Ahora nos encontraríamos ante un sistema M/M/1/K siendo $K$ el número máximo de clientes en el sistema que se calcula como el número máximo de clientes en cola +1 (el que se está procesando).
 
-Puesto que conocemos el tamaño de la cola y el tamaño de los mensajes, podemos calcular $K=10$ mensajes. Es decir, tenemos un sistema M/M/1/10 y nos piden calcular $L$, el número máximo de clientes en el sistema.
+Puesto que conocemos el tamaño de la cola y el tamaño de los mensajes, podemos calcular $K=10$ mensajes. Es decir, tenemos un sistema M/M/1/10 y nos piden calcular $L$, el número medio de clientes en el sistema.
 
 Los valores de λ y μ calculados en el apartado anterior siguen siendo válidos, pues no han cambiado las condiciones de llegada y procesamiento de mensajes.
 
@@ -195,7 +195,6 @@ Deseamos instalar un servidor de envío de mensajes ("busca") a una serie de abo
 
 \end{enumerate}
 
-\newpage
 \TheSolution
 
 \begin{enumerate}
@@ -236,7 +235,7 @@ Una red de una entidad financiera consta de una serie de terminales remotos, en 
   \includegraphics[keepaspectratio=true,width=\linewidth]{img/ej8.png}
 \end{center}
 
-Los mensajes de las oficinas llegan al multiplexor según un proceso de Poisson con una tasa de llegadas total de 3 s -1 (es decir, incluyendo las peticiones de todos los servidores) y su longitud media es de 1 Kbyte. El tiempo de servicio del multiplexor por mensaje (total del proceso y envío del mensaje) se puede considerar distribuido exponencialmente con valor medio 250 ms.
+Los mensajes de las oficinas llegan al multiplexor según un proceso de Poisson con una tasa de llegadas total de 3$s^{-1}$ (es decir, incluyendo las peticiones de todos los servidores) y su longitud media es de 1 Kbyte. El tiempo de servicio del multiplexor por mensaje (total del proceso y envío del mensaje) se puede considerar distribuido exponencialmente con valor medio 250 ms.
 
 \begin{enumerate}
 \item Calcular la ocupación media en memoria de la cola de mensajes en espera de servicio del multiplexor
@@ -272,7 +271,7 @@ Tenemos una tasa de llegadas $λ=3$ y un tiempo de servicio por parte del multip
 
 Analizando por separado el multiplexor, tenemos un sistema M/M/1 de modo que calculamos ρ y lo usamos para calcular el número medio de clientes $L$.
 
-\[π=\frac{λ}{μ}=0.75\]
+\[ρ=\frac{λ}{μ}=0.75\]
 \[L=\frac{ρ}{1-ρ}=3\]
 
 \item
@@ -308,11 +307,11 @@ El servidor de fecha y hora de una red resuelve cada petición en un tiempo que 
 Sabemos que el tiempo medio de servicio es de 100 ms, por lo que tendremos que
 \[μ = \frac{1}{T_s}=\frac{1}{100 ms} = \frac{1}{0.1s}=10s^{-1}\]
 
-El tiempo de servicio es el tiempo medio de estancia en el sistem y queremos que sea menor que 1, por lo que:
+El tiempo de servicio es el tiempo medio de estancia en el sistema y queremos que sea menor que 1, por lo que:
 \[W=\frac{L}{λ}=\frac{\rho}{λ(1-\rho)}=\frac{1}{μ-λ} < 1 \implies μ > λ +1\]
 por lo que el sistema no podrá atender más de 9 peticiones por segundo.
 
-\item Ahora queremos que λ=18 manteniendo el tiempo medio de respuesta de 1 s. Sustituyendo en la ecuación anterior tenemos:
+\item Ahora queremos que λ=18 reduciendo el tiempo de respuesta a la mitad. Sustituyendo en la ecuación anterior tenemos:
 
 \[W < \frac{1}{2} \implies μ > λ +2 \implies μ > 20 \implies T_s < \frac{1}{20} = 50 ms\]
 \end{enumerate}
@@ -348,9 +347,9 @@ Un 10\% de las peticiones procesadas por el servidor web requieren que, adiciona
 \item
 Para esta parte podemos suponer que el sistema se acaba al salir del servidor de modo que nos encontramos ante un sistema M/M/1 bastante sencillo. Vamos a calcular el tiempo medio de estancia en ese sitema reducido como hacemos siempre.
 
-\[λ = 6, T_s = 50 ms \implies μ=\frac{1}{T_s}=20 \implies ρ = \frac{λ}{μ}=0.3\]
+\[λ = 0.9\cdot 6 = 5.4\footnote{Al considerar sólo las peticiones que sólo requerían procesamiento por parte del servidor web, la tasa de llegadas se reduce},\ T_s = 50 ms \implies μ=\frac{1}{T_s}=20 \implies ρ = \frac{λ}{μ}=0.27\]
 
-\[L=\frac{ρ}{1-ρ}=0.43 \implies W = \frac{L}{λ}=0.07s\]
+\[L=\frac{ρ}{1-ρ}=0.37 \implies W = \frac{L}{λ}=0.07s\]
 
 \item
 
@@ -383,6 +382,7 @@ Un middleware orientado a colas de mensajes (MOM) recibe mensajes en una cola lo
 \item Calcular cuál es la probabilidad de que el tamaño de la cola de mensajes sea mayor de 100 Kbytes.
 \end{enumerate}
 
+\newpage
 \TheSolution
 
 Los datos que podemos extraer del enunciado son:
@@ -406,7 +406,7 @@ Por el teorema de Little tenemos
 \[L_q = λ W_q\]
 
 Pero sabemos que el tiempo de estancia en el sistema es la suma del tiempo de servicio más el tiempo de espera en cola, de modo que
-\[L_q = λ w_q = λ (W-T_s)\]
+\[L_q = λ W_q = λ (W-T_s)\]
 
 y aplicando nuevamente el teorema de Little para calcula W tenemos:
 \[L_q = λ\left(\frac{L}{λ}-\frac{1}{μ}\right)=L-cρ\]
@@ -451,7 +451,8 @@ El tiempo medio de estancia en el sistema puede calcularse, a partir del Teorema
 \item La probabilidad de que el tamaño de la cola de mensajes sea mayor de 100 Kb equivale a la probabilidad de tener más de 4 mensajes en la cola que, a su vez, equivale a la probabilidad de que haya más de 6 clientes en el sistema.
 
 Vamos a calcular esta probabilidad:
-\[P\{N(t) \geq 7\} = \sum_{n=6}^{\infty} p_0\cdot \frac{c^c}{c!} \cdot ρ^n=p_0\cdot \frac{c^c}{c!} \cdot ρ^6 \sum_{n=6}^{\infty}ρ^{n-6} =p_0\cdot \frac{c^c}{c!} \cdot ρ^7 \frac{1}{1-ρ} = \frac{0.6\cdot 2 \cdot 6.10 \cdot 10^{-5} }{0.75}=9.76 \cdot 10^{-5}\]
+\[P\{N(t) \geq 7\} = \sum_{n=6}^{\infty} p_0\cdot \frac{c^c}{c!} \cdot ρ^n=p_0\cdot \frac{c^c}{c!} \cdot ρ^6 \sum_{n=6}^{\infty}ρ^{n-6} =p_0\cdot \frac{c^c}{c!} \cdot ρ^7 \frac{1}{1-ρ} = \frac{0.6\cdot 2 \cdot 6.10 \cdot 10^{-5} }{0.75}=\]
+\[=9.76 \cdot 10^{-5}\]
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 12
@@ -464,17 +465,22 @@ Para dar servicio de consultas a base de datos en una red se dispone de dos orde
 \item Calcular el tiempo medio de estancia en el sistema total compuesto por los servidores A y B.
 \end{itemize}
 
-\newpage
 \TheSolution
 \begin{itemize}
 \item
 El sevidor $A$ un sistema M/M/1/K con $K=6$, 5 clientes en cola + 1 siendo procesado. Para calcular el tiempo medio de estancia en el sistema emplearemos las fórmulas del formulario para hallar $L$, el número medio de clientes en el sistema. Una vez hayamos calculado este valor aplicaremos el teorema de Little para conocer W. Vamos a ello.
 
-\[λ_A = 9, \ μ_A=\frac{1}{T_{S_A}}=10 \implies ρ=\frac{λ}{μ}=0.9\]
+\[λ_A = 9, \ μ_A=\frac{1}{T_{S_A}}=10\]
 
 \[L_A = \frac{λ/μ}{1-λ/μ}\frac{1-(K+1)(λ/μ)^K+K(λ/μ)^{K+1}}{1-(λ/μ)^{K+1}}=\frac{λ/μ}{1-λ/μ}\frac{1-(7)(λ/μ)^6+6(λ/μ)^{7}}{1-(λ/μ)^{7}}=2.5\]
 
-\[W_A = \frac{L}{λ} = 0.28s\]
+\[W_A = \frac{L}{λ'}=\frac{L}{λ(1-p_k)}\]
+
+Para calcular $p_k$ necesitamos conocer previamente $p_0$. Vamos a por ambos valores
+\[p_0 = \frac{1-λ/μ}{1-(λ/μ)^{k+1}}=0.19 \implies p_k = p_0\left( \frac{λ}{μ}\right)^k=0.1\]
+
+Así nos queda:
+\[W_A = \frac{2.5}{9(1-0.1)}=0.3s\]
 
 \item
 
@@ -483,7 +489,7 @@ Tenemos que estudiar ahora el subsistema compuesto por el servidor $B$. Para con
 \[p_6=p_0\left( \frac{λ}{μ}\right)^6=\frac{1-λ/μ}{1-(λ/μ)^{7}}\left( \frac{λ}{μ}\right)^6=0.1\]
 
 Puesto que sólo llegan peticiones al servidor $B$ cuando se satura el $A$ tenemos
-\[λ_B = p_6λ_A=0.91 \ \ μ_B=\frac{1}{T{S_b}}=2 \implies ρ=0.46\]
+\[λ_B = p_6λ_A=0.91 \ \ μ_B=\frac{1}{T_{S_b}}=2 \implies ρ=0.46\]
 
 Este segundo servidor se trata de un sistema M/M/1 de modo que calculamos mediante la fórmula $L$ a partir de ρ y con el teorema de Little obtenemos $W_B$
 
@@ -517,7 +523,7 @@ Basándose en los conceptos de teoría de colas expuestos en las clases de teor�
 \end{itemize}
 \TheSolution
 
-Estamos ante un modelo M/M/c por lo que tenemos un factor de utilización de
+Estamos ante un modelo M/M/c con limitación del número de clientes en cola, por lo que tenemos un factor de utilización de
 \[ρ=\frac{λ}{cμ}\]
 
 Puesto que el numero de unidades en el sistema está limitado a $K$ ya sabemos que la probabilidad de haber $n$ clientes en el sistmea siendo $n>K$ es 0.
@@ -576,7 +582,7 @@ La probabilidad de que se rechace una solicitud es la probabilidad de que haya t
 La ocupación media del servidor se calcula con la fórmula:
 \[L=\frac{λ/μ}{1-λ/μ}\frac{1-4(λ/μ)^3+3(λ/μ)^4}{1-(λ/μ)^4}=1.69\]
 
-Para el tiempo medio de estnacia en el servidor aplicamos el teorema de Little con lo que obtenemos
+Para el tiempo medio de estancia en el servidor aplicamos el teorema de Little con lo que obtenemos
 \[W = \frac{L}{λ}=0.56s\]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROBLEMA 17
@@ -599,6 +605,8 @@ Datos numéricos: R = 2$s^{-1}$; p = 0.8; T1 = 20 ms.; T2 = 100 ms.
 \item A partir de los resultados obtenidos, identificar los ``cuellos de botella'' del sistema, y realizar sugerencias sobre las modificaciones que sería necesario introducir en el mismo para reducir el tiempo medio de estancia en él.
 \end{enumerate}
 \TheSolution
+
+\textcolor{red}{Está mal, tengo que corregirlo. Debería considerarse M/M/2 y no M/M/1 con doble potencia}
 
 \begin{enumerate}
 \item Se trata de una red de colas M/M/1
@@ -819,20 +827,20 @@ Se realizan medidas sobre el tiempo que emplea en procesar peticiones un servido
 \begin{enumerate}
 \item Primero tenemos que calcular el tiempo medio de servicio. Para ello calculamos la esperanza de la distribución que nos dan:
 
-\[T_s = \int 3t \frac{125}{t^4} = 1.8 ms\]
+\[T_s = \int 3t \frac{1,25\cdot 10^{-7}}{t^4} = 1,875\cdot 10^{-7} s\]
 
 A partir de aquí podemos calcular la tasa de servicio
-\[μ=\frac{1}{T_s}=559 s^{-1}\]
+\[μ=\frac{1}{T_s}=5.33 \cdot 10^6 s^{-1}\]
 
-Calculamos ahora el factor de utilización y con él el número medio de clientes en el sistema, pues estamos ante un sistema M/M/1
-\[ρ=\frac{λ}{μ}=0.18 \implies L= \frac{ρ}{1-ρ}=0.22\]
+Calculamos ahora el factor de utilización y con él el número medio de clientes en el sistema, pues estamos empleando un modelo M/G/1
+\[ρ=\frac{λ}{μ}=1,875\cdot 10^{-5} \implies L= \frac{λ^2E[S^2]}{2(1-ρ)}=1,875\cdot 10^{-3}\]
 
 Con esto podemos calcular el tiempo medio de respuesta apoyándonos en el teorema de Little:
-\[W = \frac{L}{λ} = 2.195\cdot 10^{-3}\]
+\[W = \frac{L}{λ} = 1.875\cdot 10^{-4}\]
 
 \item
 
-Deberíamos utilizar una red de colas con dos servidores M/M/1
+Deberíamos utilizar una red de colas con dos servidores siendo el primero M/G/1 y el segundo G/M/1 donde $G$ es la distribución de Pareto.
 
 \end{enumerate}
 
