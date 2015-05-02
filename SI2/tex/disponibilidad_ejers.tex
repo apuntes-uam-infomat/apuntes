@@ -273,7 +273,20 @@ Comparar desde el punto de vista de disponibilidad las dos soluciones propuestas
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
+\doneby{Guille}
 
+Por recordar, tenemos las dos soluciones siguientes para resolver un cuello de botella en el acceso a disco:
+
+\begin{enumerate}
+\item Comprar un disco con tiempo de acceso menor, pero más caro. En este caso, se encolan las peticiones cuando el disco se encuentre ocupado.
+\item Poner dos discos en espejo (mirroring) que tendrán un tiempo de acceso mayor que el anterior, pero más baratos. En este caso, se accede indistintamente a cualquiera de los dos discos cuando se produce una petición, dependiendo de cuál esté libre, encolándose todas las peticiones en una cola común.
+\end{enumerate}
+
+Así visto, el ejercicio es bastante absurdo, por decirlo de alguna forma. Por un lado, si los discos son distintos no deberían tener la misma fiabilidad, pero bueno. Por otro, está claro que si ponemos dos discos en espejo (esto es, a efectos de disponibilidad, en paralelo) tendrán más disponibilidad. En cualquier caso, vamos a hacer los cálculos. Tenemos por un lado la disponibilidad de la solución $a$, dada por \[ A_a = \frac{\text{MTTF}}{\text{MTTR} + \text{MTTF}} \]
+
+La disponibilidad de la solución $b$ se basa en usar dos discos con la misma disponibilidad individual $A_a$, así que aplicamos la fórmula de sistemas en paralelo para saber la disponibilidad del conjunto: \[ A_b = 1 - (1- A_a)^2 = 1 - 1 - A_a^2 + 2A_a = A_a(2 - A_a) \]
+
+Como sabemos que $A_a < 1$, tenemos que $2 - A_a > 1$ y por lo tanto $A_b = A_a(2-A_a) > A_a$, así que, tal y como habíamos dicho al principio, la solución con dos discos en paralelo es mejor.
 
 \end{problem}
 
