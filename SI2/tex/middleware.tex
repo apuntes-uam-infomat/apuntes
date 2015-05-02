@@ -334,7 +334,7 @@ Es un middleware avanzado que es la repera y permite :
 
 \begin{itemize}
 	\item Permite llamadas estáticas y dinámicas a objetos. Incluye descubrimiento dinámico de objetos.
-	\item Describir las interfaces independientemente del lenguaje de programación. El lenguaje de descripción se llama IDL (Interface Description Language)
+	\item Describir las interfaces independientemente del lenguaje de programación. El lenguaje de descripción se llama \concept{IDL}\label{IDL} (Interface Description Language)
 	\item Enlace directo de aplicaciones escritas en múltiples lenguajes de alto nivel (no necesariamente orientados a objetos).
 	\item Sistema auto-descrito. Genera meta-información consultable dinámicamente.
 	\item Soporte de seguridad,transacciones y autenticación de las comunicaciones
@@ -376,6 +376,7 @@ Esta plataforma de objetos ha ido mejorandose y evolucionando a lo largo del tie
 \end{defn}
 
 \paragraph{Características}
+<<<<<<< Updated upstream
 Un objeto COM es un objeto en el mismo sentido que en CORBA,  es independiente del lenguaje de programación y cada objeto tiene una o varias interfaces. Estas interfaces se definen con el Lenguaje de Definición de Interfaces de Microsoft (en inglés \concept{MIDL}). Este lenguaje está basado en el IDL\ref{IDL} del \textit{Distributed Computing Environment} (\concept{DCE}) que utiliza Apollo RFC.
 
 Los sistemas COM se organizan en componentes COM que son módulos binarios (ejecutables o librerías dinámicas). Estos módulos pueden contener uno o varios objetos COM, una interfaz gráfica e incluso otro componente\footnote{Si un componente incluye a otro, el grande se llama componente \textit{ActiveX}}
@@ -439,3 +440,72 @@ Este es un ejemplo de un espacio de nombres jerárquico
 \caption{Espacio de nombres jerárquico.}
 \label{namespaces}
 \end{figure}
+
+Estos espacios de nombres se pueden utilizar también orientándolo a objetos, de tal manera que cada entrada es una instancia de un objeto. También se pueden tener distintas copias para cada dominio o distribuirlo organizándolo en servicios administrados separadamente ya que el acceso dentro de un dominio sólo requiere un nombre local.
+
+\paragraph{Estándar \concept{X.500}}
+Vamos a definir unas cuantas siglas\footnote{Por si acaso no llevamos ya suficientes} necesarias para explicar este estándar
+\begin{defn}[XDS]
+	APIs de X/Open Direcrory Service
+\end{defn}
+\begin{defn}[DUA]
+	Directory User Agent
+\end{defn}
+\begin{defn}[DAP]
+	Direcroty Access Protocol
+\end{defn}
+\begin{defn}[DSA]
+	Directory System Agent
+\end{defn}
+\begin{defn}[DSP]
+	Direcroty System Protocol
+\end{defn}
+
+Los clientes contienen el DUA y se comunicacn con los servidores utilizando DAP.
+
+Los servidores contienen el DSA y se comunican entre servicores utilizando DSP.
+
+Al directorio en sí se accede con las APIs de XDS.
+
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=1\textwidth]{img/X500.png}
+\caption{Esquema de funcionamiento del estándar X.500.}
+\label{X500}
+\end{figure}
+
+Existe una alternativa al DAP que es el \concept{LDAP} (\textit{Lightweigth Directory Access Protocol}). Este protocolo no requiere espefícicamente de un directorio X.500, puede utilizarse con \textit{Microsoft Active Directory}.
+
+Esto es un protocolo de comunicaciones, no es una especificación de directorio ni una API de programación. No confundirse.
+
+
+\subsection{Servicios de tiempo}
+
+Es básico y fundamental que cuando tenemos un sistema distribuido todos los relojes estén perfectamente sincronizados. Para ello existen los servicios de tiempo que vamos a estudiar a continuación.
+
+Sincronizar 2 personas sus relojes es fácil, porque los 2 ven en el mismo instante de tiempo los 2 relojes. 2 ordenadores separados no pueden ver los relojes a la vez, ya que el mensaje con la hora que tiene cada uno tarda en llegar, es por ello que cada ordenador \textbf{mantiene un componente de inexactitud} y que es necesario \textbf{sincronizar periódicamente} cuando ese componente de inexactitud supere un umbral definido\footnote{Tal vez nos podemos permitir 0.01 segundos de desincronización, pero no podemos permitirnos 0.05}
+
+Mantener sincronizado el tiempo es imporescindible para la consistencia y para la \textbf{seguridad}.
+
+Para lograr esta sincronización existen proveedores de tiempo (\concept{timer ticks}) que pueden sincronizar por radir y actualizar el reloj del administrador de nuestro sistema distribuido. Podemos conectar más de un servidor a estos proveedores.
+
+Una vez tenemos definidos los servidores de nuestro servicio con la hora buena (sincronizados con los timer ticks) el resto de nuestros servidores realizan consultas para sincronizar sus relojes. El formato utilizado es \concept{UTC} (Universal Time Coordinated) que cuenta desde el principio del calendario gregoriano.
+
+
+\subsubsection{NTP}
+¿Y cómo implementamos o utilizamos un servicio de tiempo? Con el \concept{NTP} \textit{Network Time Protocol}, que define una arquitectura para un servicio de tiempo y un protocolo para distribuir la información del tiempo.
+
+\begin{itemize}
+	\item Precisión en la sincronización a UTC.
+	\item Fiabilidad
+	\item Actualizaciones frecuentes (por lo que será necesario que sea resistente a alto nivel de carga)
+\end{itemize}
+
+La red de servidores está organizada jerárquicamente. El primer estrato recibe UTC de fuentes  físicas de tiempo (llamadas estrato 0 en wikipedia) y el estrato 2 sincroniza con los primeros. El resto de la red sincroniza con el estrato 2.
+
+En la sección de ejercicios veremos cómo se pueden sincronizar 2 servidores y cómo podemos saber la inexactitud de nuestra desincronización.
+
+\subsection{Seguridad}
+Aunque es un tema superimportante (porque en un sistema distribuido se complican las cosas) y tiene un tema dedicado explícitamente a esto, no se va a ver en este curso porque ...
+
