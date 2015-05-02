@@ -5,7 +5,7 @@ Se dispone de un equipo con un MTTF de 500 horas, que se encuentra bajo un contr
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
-\textcolor{red}{Hecho por Edu}
+\textcolor{red}{Hecho por Edu. Se ruegan correcciones.}
 
 \spart
   Calculemos la \textit{availability} de cada equipo:
@@ -30,7 +30,7 @@ Calcular el MTTF que debe tener el equipo para poder satisfacer el requerimiento
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
-\textcolor{red}{Hecho por Edu}
+\textcolor{red}{Hecho por Edu. Se ruegan correcciones.}
 \spart
   Calculemos la \textit{availability}:
   \[ A > \frac{365\cdot24-10}{365\cdot24} \implies A > 0.99886 \]
@@ -52,7 +52,7 @@ Calcular el MTTF que debe tener el equipo para poder satisfacer el requerimiento
 	n\cdot \log(1 - 0.98814) \geq  \log(1 - 0.99886) \iff n \geq 1.52
 	\end{gather*}
 
-	Como buscamos el mínimo n tal que cumpla esa desigualdad y $n \in \mathbb{N} \implies n = 2$.
+	Como buscamos el mínimo n tal que cumpla esa desigualdad y $n \in \nat \implies n = 2$.
 
 \end{problem}
 
@@ -69,8 +69,11 @@ Calcular la disponibilidad total del sistema.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
+\textcolor{red}{Hecho por Edu. Se ruegan correcciones.}
 
+Como son 2 elementos en serie, la disponibilidad total es el producto de las disponibilidades.\\
 
+Como $ A_{\text{receptor}} = \frac{1000}{1000+5}$ y $A_{\text{difusor}} = \frac{1500}{1500+5}$, luego $A_{\text{total}} = \frac{1500\cdot1000}{1505\cdot1005} \approx 0.9917$
 
 \end{problem}
 
@@ -89,44 +92,63 @@ Suponiendo la existencia de dos únicos terminales remotos, realizar el diagrama
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
+\textcolor{red}{Hecho por Edu. Se ruegan correcciones.}
 
+Aquí hay que interpretar un poco el problema\footnote{se aceptan críticas.}, lo que yo entiendo es un esquema como el de la figura \ref{tema3:prob4:esquema}.
+\begin{figure}[hbtp]
+	\centering
+	\includegraphics[keepaspectratio=true,width=\linewidth]{img/tema3_ej4.png}
+	\caption{Esquema.}
+	\label{tema3:prob4:esquema}
+\end{figure}
 
+Siguiendo este esquema, hay que calcular la disponibilidad de cada cliente en serie con su canal, luego calcular la disponibilidad en paralelo de los clientes, y luego calcular la disponibilidad de los clientes, el multiplexor y el servidor en serie. Vamos a ello:
+\begin{itemize}
+\item \textbf{De un par cliente-canal}:
+\[ A_1 = \frac{1000}{1000+5} \cdot \frac{500}{500+5} = \frac{20000}{20301} \approx 0.9852 \]
+\item \textbf{De los clientes}:
+\[ A_{\text{Clientes}} = 1 - (1 - 0.9852)^2 \approx 0.9998 \]
+\item \textbf{Del multiplexor y el servidor}:\footnote{que tienen el mismo MTTF.}
+\[ A_{\text{MUL}} = \frac{2000}{2000+5} = \frac{2000}{2005} \approx 0.9975 \]
+\item \textbf{De la red}:\\
+Juntándolo todo obtenemos lo siguiente:
+\[ A = 0.9998 \cdot 0.9975 \cdot 0.9975 \approx 0.9948 \]
+\end{itemize}
 
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[5]
-Un servidor de fecha y hora de una red se compone de dos elementos, que deben estar operativos para
-atender el servicio: Un ordenador, que satisface las peticiones, y un receptor
-de señales horarias externo, que permite obtener la hora exacta. Si ambos equipos
-tienen un MTTF de 1500 horas, calcular el MTTR mínimo que debemos considerar,
-supuesto igual en ambos, si se desea una disponibilidad total del servicio mayor del 99\%.
+Un servidor de fecha y hora de una red se compone de dos elementos, que deben estar operativos para atender el servicio: Un ordenador, que satisface las peticiones, y un receptor
+de señales horarias externo, que permite obtener la hora exacta. Si ambos equipos tienen un MTTF de 1500 horas, calcular el MTTR mínimo que debemos considerar, supuesto igual en ambos, si se desea una disponibilidad total del servicio mayor del 99\%.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
+\textcolor{red}{Hecho por Edu. Se ruegan correcciones.}
 
+Como son componentes en serie, la disponibilidad es el producto:
+\begin{gather*}
+A = \frac{1500}{1500+\text{MTTR}} \cdot \frac{1500}{1500+\text{MTTR}} > 0.99 \iff\\
+1500^2 > 0.99 \cdot (1500+\text{MTTR})^2 \iff \\
+\frac{1500^2}{0.99} = \frac{1500^2 \cdot 10^2}{99} > 1500^2 + 3000 \cdot \text{MTTR} + \text{MTTR}^2 \iff \\
+0 > 1500^2(1 -\frac{100}{99}) + 3000 \cdot \text{MTTR} + \text{MTTR}^2
+\end{gather*}
 
+Primero resolvemos la ecuación de segundo grado:
+\[ \text{MTTR} = \frac{-3000 \pm \sqrt{3000^2 - 4 \cdot 1 \cdot 1500^2(1 -\frac{100}{99})}}{2} = \frac{-3000 \pm 3015.1134}{2} \]
 
+Como el resultado de $\text{MTTR}=-3007.5567$ horas es absurdo, $\text{MTTR}=7.5567$ horas es el único resultado que tiene sentido.\\
+
+Como lo que queremos resolver es la inecuación, el resultado es $\text{MTTR} < 7.5567$.
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[6]
-Un  servicio que debe tener una disponibilidad mínima de 0.99
-se debe proporcionar con un sistema cuyo tiempo medio hasta el fallo es de
- 2000 horas.
+Un  servicio que debe tener una disponibilidad mínima de 0.99 se debe proporcionar con un sistema cuyo tiempo medio hasta el fallo es de 2000 horas.
 \begin{enumerate}
 	\item Calcular el tiempo medio para reparar el equipo que es necesario para satisfacer la disponibilidad solicitada.
-	\item Al comenzar con la explotación del servicio se descubre que el
-programa que lo implementa tiene fallos que hacen que en ocasiones se
-bloquee, dejando de atender peticiones. Para resolverlo es necesario
-detener el proceso y volverlo a arrancar. Se ha estimado que en media se
- produce un fallo cada dos días. El fallo se tarda en descubrir un
-promedio de 5 min. y la reiniciación del proceso requiere, también en
-promedio, 7 min. Calcular la disponibilidad del sistema considerando este
- efecto.
-	\item Suponiendo imposible modificar el programa o cambiar el equipo,
-proponer una alternativa que permita, en las nuevas circunstancias,
-satisfacer el requerimiento inicial de disponibilidad.
+	\item Al comenzar con la explotación del servicio se descubre que el programa que lo implementa tiene fallos que hacen que en ocasiones se bloquee, dejando de atender peticiones. Para resolverlo es necesario detener el proceso y volverlo a arrancar. Se ha estimado que en media se produce un fallo cada dos días. El fallo se tarda en descubrir un promedio de 5 min. y la reiniciación del proceso requiere, también en promedio, 7 min. Calcular la disponibilidad del sistema considerando este efecto.
+	\item Suponiendo imposible modificar el programa o cambiar el equipo, proponer una alternativa que permita, en las nuevas circunstancias, satisfacer el requerimiento inicial de disponibilidad.
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
