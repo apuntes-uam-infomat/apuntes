@@ -222,22 +222,46 @@ Sabiendo que $A = \frac{2000}{2000+100} = \frac{200}{201}$:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[8]
-Cada uno de los elementos que componen el servidor de transacciones descrito en el problema número 15 del Tema 2 (\ref{tema2:prob15}) se ejecuta en un ordenador independiente que tiene un MTTF de 4000
-horas. Calcular el MTTR necesario para garantizar una disponibilidad del sistema total del 99.9\%.
+Cada uno de los elementos que componen el servidor de transacciones descrito en el problema número 15 del Tema 2 (\ref{tema2:prob15}) se ejecuta en un ordenador independiente que tiene un MTTF de 4000 horas. Calcular el MTTR necesario para garantizar una disponibilidad del sistema total del 99.9\%.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
+\textcolor{red}{Hecho por Edu. Se ruegan correcciones.}\\
 
+Tenemos:
+\[ A_{\text{proceso}} = A_{\text{DB}} = \frac{4000}{4000+\text{MTTR}}\]
 
+Debido a que hay un bucle, hay que ver cuántas vueltas se dan. El número de vueltas sigue una geométrica\footnote{del tipo: ``número de fallos hasta primer acierto''. Ver \url{http://en.wikipedia.org/wiki/Geometric_distribution}.}, con esperanza $\frac{1-q}{q}$, llamando a eso n, tenemos que:
+\[ A_T = A_{\text{proceso}}^{n+1} \cdot A_{\text{DB}}^{n} \]
+
+Esto es: si se dan 0 vueltas, la disponibilidad del sistema es la del primer componente; si se da una, es como si la cadena fuera el primer componente, seguido de la DB, seguido del proceso; y así sucesivamente.
+
+Luego
+\begin{gather*}
+0.999 = (\frac{4000}{4000+\text{MTTR}})^{n+1} \cdot (\frac{4000}{4000+\text{MTTR}})^{n} \eqreason{sage} \left(\frac{4000}{\text{MTTR} + 4000}\right)^{2n + 1}\\
+(\text{MTTR} + 4000)^{2n + 1} = \frac{4000^{2n + 1}}{0.999} \\
+\text{MTTR} + 4000 = \sqrt[2n+1]{\frac{4000^{2n + 1}}{0.999}}\\
+\text{MTTR} = \sqrt[2n+1]{\frac{4000^{2n + 1}}{0.999}} - 4000\\
+\end{gather*}
+
+Luego en función de n (que dependen del q del problema \ref{tema2:prob15}), podemos calcular el MTTR.\\
+
+\newpage
+\textcolor{blue}{Hecho por Herea.}\\
+MTTF$_{\text{proceso}} = MTTF_{\text{BD}} = 4000$ horas.\\
+Disponibilidad exigida 99.9\%. ¿MTTR?
+\begin{gather*}
+0.999 = \left(\frac{4000}{4000+\text{MTTR}}\right)^2 \\
+(4000+\text{MTTR})^2 = \frac{4000^2}{0.999} \\
+4000^2 + 8000 \text{MTTR} + \text{MTTR}^2 - \frac{4000^2}{0.999} = 0\\
+\text{MTTR} = \frac{-8000 \pm \sqrt{8000^2 - 4 \cdot (-16016.016)}}{2} = \\
+= \frac{-8000 \pm 8004.003}{2} = \frac{4.003}{2} = 2.0015 \text{ horas}
+\end{gather*}
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[9]
-Comparar desde el punto de vista de disponibilidad las dos soluciones propuestas en el problema número 18 del Tema 2 (\ref{tema2:prob18})
- para resolver un cuello de botella en acceso a disco. Suponer que todos
- los discos empleados tienen los mismos MTTF y MTTR, y justifique qué
-alternativa es más fiable calculando y comparando las disponibilidades
-en ambos casos.
+Comparar desde el punto de vista de disponibilidad las dos soluciones propuestas en el problema número 18 del Tema 2 (\ref{tema2:prob18}) para resolver un cuello de botella en acceso a disco. Suponer que todos los discos empleados tienen los mismos MTTF y MTTR, y justifique qué alternativa es más fiable calculando y comparando las disponibilidades en ambos casos.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
