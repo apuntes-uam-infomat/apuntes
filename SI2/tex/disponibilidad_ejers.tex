@@ -145,17 +145,37 @@ Como lo que queremos resolver es la inecuación, el resultado es $\text{MTTR} < 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{problem}[6]
 Un  servicio que debe tener una disponibilidad mínima de 0.99 se debe proporcionar con un sistema cuyo tiempo medio hasta el fallo es de 2000 horas.
-\begin{enumerate}
-	\item Calcular el tiempo medio para reparar el equipo que es necesario para satisfacer la disponibilidad solicitada.
-	\item Al comenzar con la explotación del servicio se descubre que el programa que lo implementa tiene fallos que hacen que en ocasiones se bloquee, dejando de atender peticiones. Para resolverlo es necesario detener el proceso y volverlo a arrancar. Se ha estimado que en media se produce un fallo cada dos días. El fallo se tarda en descubrir un promedio de 5 min. y la reiniciación del proceso requiere, también en promedio, 7 min. Calcular la disponibilidad del sistema considerando este efecto.
-	\item Suponiendo imposible modificar el programa o cambiar el equipo, proponer una alternativa que permita, en las nuevas circunstancias, satisfacer el requerimiento inicial de disponibilidad.
-\end{enumerate}
+\ppart
+Calcular el tiempo medio para reparar el equipo que es necesario para satisfacer la disponibilidad solicitada.
+\ppart
+Al comenzar con la explotación del servicio se descubre que el programa que lo implementa tiene fallos que hacen que en ocasiones se bloquee, dejando de atender peticiones. Para resolverlo es necesario detener el proceso y volverlo a arrancar. Se ha estimado que en media se produce un fallo cada dos días. El fallo se tarda en descubrir un promedio de 5 min. y la reiniciación del proceso requiere, también en promedio, 7 min. Calcular la disponibilidad del sistema considerando este efecto.
+\ppart
+Suponiendo imposible modificar el programa o cambiar el equipo, proponer una alternativa que permita, en las nuevas circunstancias, satisfacer el requerimiento inicial de disponibilidad.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \solution
+\textcolor{red}{Hecho por Edu. Se ruegan correcciones.}
 
+\spart
+\[ A = \frac{2000}{2000+\text{MTTR}} > 0.99 \iff \frac{2000}{0.99} - 2000 > \text{MTTR} \iff 20.\gor{20} > \text{MTTR} \]
+Luego tomando el MTTR más grande posible, $MTTR = 20.202$ horas es suficiente.\footnote{Añadidle todos los 020's que queráis detrás.}
+\spart
+Con estos datos, decimos que $MTTF_{\text{programa}} = 48$ horas (2880 min), $MTTR_{\text{programa}} = 5+7 = 12$ min
+\[ A_{\text{programa}} = \frac{2880}{2880+12} = \frac{240}{241} \approx 0.99585\]
+Luego:
+\[ A_{\text{total}} = 0.99 \cdot 0.99585 \approx 0.98589 \]
+Y descubrimos, con estupor, que no cumplimos el contrato.
 
+\spart
+``Debido a que tenemos el deber de cumplirlo, nos embarcamos en la búsqueda de una solución.
+Primero, consideramos poner elementos en paralelo, pero como no podemos cambiar el programa para solucionar sus fallos ni añadirle funcionalidad para que se pueda repartir la carga entre varios, no podemos llevar a cabo esta solución. En segundo lugar, se nos ocurre aumentar el tiempo medio hasta el fallo, pero el \textit{sysadmin} nos amenaza con cortarnos las gónadas si le tocamos su sistema, y la empresa que proporciona el programa tampoco es capaz de solucionarnos el problema resolviendo los \textit{bugs}. No desesperando en nuestro empeño, perseveramos, y observamos que, desembolsando algunos euros más, podemos contratar un becario para mejorar la disponibilidad reduciendo el MTTR. ¡Albricias! -pensamos, pero, ¿cuánto debemos reducirlo?''\\
 
+Tras esta bonita historia, vamos a resolver el problema:\\
+Observamos que hay dos MTTRs que podemos mejorar, pero el del programa ya es bastante bajo en comparación con el del sistema (12 min frente a 20.20 horas)\footnote{obsérvese que la disponibilidad no tiene unidades.}, luego es evidente que mejorando el del sistema podemos cumplir con el contrato:
+\[ 0.99 = 0.99585 \cdot \frac{2000}{2000+\text{MTTR}} \iff \text{MTTR} = \frac{0.99585 \cdot 2000}{0.99} - 2000 \approx 11.\gor{81} \text{ horas}\]
+Y, tomando un MTTR $=11.818$ horas para el sistema, comprobamos que la nueva disponibilidad es:
+\[ A = \frac{2000}{2000+11.818} \cdot 0.99585 \approx 0.99... > 0.99 \]
+Y nos vamos felices, sabiendo que hemos hecho un \textit{buen trabajo}.
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
