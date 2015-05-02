@@ -224,3 +224,4 @@
 \tgs#m
 \tgsd#m
 \cind#m
+\fe{arg0}#m
