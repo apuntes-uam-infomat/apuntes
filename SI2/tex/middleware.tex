@@ -166,12 +166,72 @@ Los WebServices necesitan de 3 protocolos estándares. En el siguiente gráfico 
 
 
 \subsubsection{SOAP}
-\subsubsection{WSDL}
-\subsubsection{UDDI}
+\begin{defn}[SOAP]
+Service Oriented Architecture Protocol. Es un protocolo de comunicación basado en XML lo que hace que sea independiente de la plataforma y del lenguaje de programación.
+\end{defn}
 
-\paragraph{Ventajas e inconvenientes}
+Los mensajes SOAP se componen de 3 elementos. El sobre (SOAP-ENV:Envelope), la cabecera (SOAP-ENV:Header) y el cuerpo del mensaje (SOAP-ENV:Body). Además, el cuerpo puede incluir genéricos con información sobre errroes (SOAP-ENV:Faults)
+
+\subsubsection{WSDL}
+\begin{defn}[WSDL]
+Web Service Description Language. Basándose en XML se define la interfaz del servicio públicamente.
+\end{defn}
+
+Estos son algunos elementos importantes de una declaración WSDL.
+\begin{itemize}
+\item \textit{<definitions>:} Elemento raíz que contiene el resto. Define su nombre y los espacios de nombres que utiliza.
+\item \textit{<types>:} Tipos de datos utilizados entre cliente y servidor. Usa W3C XML Schema (XSD) por defecto.
+\item \textit{<message>:} Declaraciones de mensajes empleados para peticiones y respuestas y los elementos que los forman.
+\item \textit{<portType>:} Operaciones soportadas y encadenamiento de mensajes que implica su ejecución.
+\item \textit{<binding>:} Modo en que los mensajes se transmiten sobre un protocolo de RPC, con extensiones específicas para SOAP.
+\item \textit{<service>:} Contiene la información de la dirección en la que se localiza el servicio.
+\end{itemize}
+
+
+\subsubsection{UDDI}
+\begin{defn}[UDDI]
+Es el mecanismo de registro y búsqueda de servicios Web. Las siglas significan: Universal Description, Discovery and Integration
+\end{defn}
+
+Consta de 3 partes: \textbt{modelo de datos} (esquema XML), la \textbf{API} (RPCs con SOAP para registrar y buscar servicios) y los \textbf{Cloud Services} (los servidores que proporcionan el servicio).
+
+Existen 3 categorías de datos en UDDI:\begin{itemize}
+\item Páginas blancas: Información general de una compañía.
+\item Páginas amarillas: Se clasifican en categorías.
+\item Páginas verdes: Describen los servicios que se prestan.\end{itemize}
+
+
+\paragraph{Ventajas e inconvenientes de los Web Services}
+
+\begin{itemize}
+\item Ventajas:
+\subitem Estándares. Acuerdo global entre fabricantes.
+\subitem Independientes de plataforma.
+\item Inconvenientes:
+\subitem Sobrecarga de información en los mensajes por su formato (XML).
+\subitem Seguridad.
+\subitem No hay fiabilidad transaccional de las comunicaciones.
+\end{itemize}
 
 \subsection{Rest}
+\begin{defn}[REST]
+Representational State Transfer. Es una arquitectura para la web definida por W3C.
+\end{defn}
+
+La idea es utilizar los métodos de HTTP para acceder a los recursos y servicios del servidor. El servidor define su interfaz normalmente utilizando \concpet{WADL} \textit{Web Application Description Language}. El programador del cliente tiene que saberse la especificación concreta, y saber qué objetos recibe qué peticiones. 
+
+Para entender mejor REST, miramos el ejemplo de la API de onedrive:
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=1\textwidth]{img/REST.png}
+\caption{API de OneDrive utilizando REST.}
+\label{REST}
+\end{figure}
+
+Aquí están descritas las posibilidades que existen en el servidor de OneDrive. Con simples peticiones HTTP podemos funcionar. La petición \textit{https://api.onedrive.com/v1.0/drive/} (un GET de HTTP normal) nos devolvería el directorio con las carpetas que tiene el usuario con el que nos hayamos autenticado antes. ¿Cómo autenticarse? Con una petición POST con los datos pertinentes. ¿Y cómo nos devuelve los datos? Lo más habitual es en formato \textbf{JSON} aunque también puede ser en XML.
+
+La utilización de HTTP y JSON/XML hace posible la programación de clientes en cualquier plataforma y es una comunicación más ligera que SOAP. Un inconveniente es que es menos ``transparente''\footnote{transparente en el sentido de que no te enteras de nada. Para utilizar REST tienes que saber más del servicio que utilizas.}. 
 
 \subsection{Comuncación mediante colas de mensajes}
 
