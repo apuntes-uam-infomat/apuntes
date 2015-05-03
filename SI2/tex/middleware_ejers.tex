@@ -197,6 +197,8 @@ dependiente del nodo C, denominada C1.
   \item[1] B1 pregunta a B por C1
   \item[2] B no conoce a C1 (sólo conoce a las estaciones que dependen de él), así que manda a B1 a preguntar a A, pasándole su dirección IP
   \item[3] B1 pregunta a A por C1 y A reconoce que estará asociado a C por que le envía a B1 la dirección de C. \textcolor{blue}{Dejuan opina que A debería preguntar a C y a D a ver de quién es C1, porque A sólo conoce los que dependen de Él, ¿no?}
+
+  \textcolor{red}{Pedro manda a de Juan y a aquellos que tengan esta duda a mirar el ejercicio 20, que resolvió la profesora y en el que se observa que tu no buscas C1 a pelo sino que lo buscas conociendo su nombre completo. Es decir, estás buscando A.C.C1}
   \item[4] B1 pregunta a C por C1 y este, puesto que C1 depende de él, lo conoce y le dice a B1 la dirección de C1
   \item[5] B1 conecta con C1
   \end{enumerate}
@@ -500,21 +502,30 @@ que contiene y un puntero al lugar donde está almacenado. Cada objeto
 contiene información sobre su tamaño, los atributos que posee y los
 tipos de datos correspondientes, que pueden ser:
 
+\begin{enumerate}
+  \item	Vectores de enteros
 
-  a)	vectores de enteros
-
-  b)	vectores de strings.
+  \item	Vectores de strings.
+\end{enumerate}
   El servidor asigna a cada cliente un hilo y se comunica con él mediante una tubería
   (pipe)
-  \begin{itemize}
-      \item ¿Qué operaciones posibles realizará el servidor, y qué información debe enviarle el cliente para solicitarlas?
-    \item ¿Qué información debe devolver el servidor?
-    \item Definir una estructura de mensajes adecuada, para que un objeto pase a través de la tubería.
- \end{itemize}
+      \ppart ¿Qué operaciones posibles realizará el servidor, y qué información debe enviarle el cliente para solicitarlas?
+    \ppart ¿Qué información debe devolver el servidor?
+    \ppart Definir una estructura de mensajes adecuada, para que un objeto pase a través de la tubería.
 
  \solution
 
- Olakase
+\yoP
+
+\spart
+Puesto que se trata de un diccionario on-line, el servidor deberá hacer las funciones de búsqueda de objetos a partir de su nombre.
+
+\spart
+Para cada palabra que se busque se deberán devolver los datos de dicha palabra.
+
+\spart
+
+Se pueden escribir los atributos del objeto separados por el símbolo ';'. Para los vectores separamos cada elemento del siguiente mediante una coma, ',' y un vector del otro con ';'
 
  \end{problem}
 
@@ -527,7 +538,39 @@ tipos de datos correspondientes, que pueden ser:
   de B. Estimar la deriva entre B y A y la precisión de la estimación.
   \solution
 
-  Olakase
+  \yoP
+
+  El esquema que tenemos para el ejercicio es el que hemos visto en teoría:
+
+  \begin{center}
+  \includegraphics[width=1\textwidth]{img/ntp.png}
+  \end{center}
+
+Con la misma nomenclatura de la imagen tenemos:
+
+  \[\left\{ \begin{align}
+T_{i-3}&=430 \\
+T_{i-2}&=10050\\
+T_{i-1}&= 12270\\
+T_{i}&=2995
+\end{align}
+\right.\]
+
+donde los tiempos los hemos tomado midiendo desde las 16:34:13, para hacer los números más pequeños y manejables (trabajando en milisegundos).
+
+Nuestro objetivo es calcular $o$, que es la diferencia de tiempos entre ambos relojes. Observando el esquema, podemos deducir las ecuaciones:
+\begin{align}
+T_{i-3}+o+t=T_{i-2}\\
+T_{i}+o=T_{i-1}+t'
+\end{align}
+Tampoco conocemos $t$ n $t'$, pues no sabemos el tiempo que ha tardado el mensaje en ser transmitido. Si sumamos las dos ecuaciones y despejamos $o$ de la nueva ecuación nos queda:
+\[o=\underbrace{\frac{T_{i-2}+T_{i-1}-T_i-T_{i-3}}{2}}_{o_i}+\frac{t'-t}{2}\]
+
+Así, tenemos $o$ escrito como la suma de un valor conocido más una desviación. Puesto que todos los tiempos son positivos, tenemos que $t+t'>t'-t$ por lo que podemos acotar $o$ mediante:
+\[o_i-\frac{\overbrace{t'+t}^{d_i}}{2}\leq o \leq o_i + \frac{\overbrace{t'+t}^{d_i}}{2}\]
+
+Así, podemos decir que la deriva es: $o_i=9447.5ms$ con una precisión de $\pm 172.5 ms\footnote{Para obtener t'+t restamos las dos ecuaciones del sistema}$
+
 
   \end{problem}
 
@@ -538,9 +581,60 @@ tipos de datos correspondientes, que pueden ser:
   e identificar el tipo más adecuado para realizar accesos a un servidor
   iterativo o a un servidor concurrente.
   \solution
+\begin{itemize}
+\item \textbf{Orientado a conexión: TCP}
 
-  Olakase
+ \subitem \textbf{Ventajas:}
+ \begin{itemize}
+\item Confiable: se garantiza recepción del mensaje.
+\item Garantiza entrega de mensajes en el orden correcto.
+\item Incorpora control de flujo.
+\item No hay límite en el tamaño de los mensajes.
+\end{itemize}
+\subitem \textbf{Desventajas:}
+\begin{itemize}
+\item Mayor sobrecarga de procesamiento (mantener conexión).
+\item Mayor información de protocolo en las cabeceras.
+\item Limitado a la comunicación 1 a 1.
+\end{itemize}
 
+\item \textbf{No orientado a conexión: UDP}
+\end{itemize}
+ \subitem \textbf{Ventajas:}
+ \begin{itemize}
+\item Comunicación 1 a N utilizando broadcast y multicast.
+\item Menos sobrecarga (no hay que mantener conexión).
+\item Menor información de protocolo en las cabeceras.
+\end{itemize}
+\subitem \textbf{Desventajas:}
+\begin{itemize}
+\item No hay información sobre mensajes consecutivos.
+\item Posible pérdida de mensajes o duplicidad de los mismos.
+\item Mensajes de tamaño limitado.
+\item No hay control de flujo.
+\end{itemize}
+
+Una vez hemos analizado estas ventajas e inconvenientes de ambos protocolos, podemos decidir cuál de ellos es más ventajoso utilizar en cada uno de los casos planteados:
+\newpage
+\begin{itemize}
+\item \textbf{Servidor Concurrente:}
+\begin{itemize}
+\item Generalmente utilizan protocolos orientados a conexión.
+\item Cuando se recibe una nueva petición de conexión se crea un
+nuevo proceso o hilo que se encargará de gestionarla.
+\item Ejemplos: servidores web (HTTP), servidores de acceso
+remoto (Telnet), servidores FTP.
+\item Excepciones: servidor TFTP (usa protocolo UDP)
+\end{itemize}
+\item \textbf{Servidor Iterativo:}
+\begin{itemize}
+\item Generalmente utilizan protocolos NO orientados a conexión.
+\item Servidores del tipo petición / respuesta que no almacenan
+estado.
+\item Ejemplos: servidores DNS o servidores DHCP.
+\item Excepciones: servidor Daytime (utiliza protocolo TCP).
+\end{itemize}
+\end{itemize}
   \end{problem}
 
   \begin{problem}[18]
@@ -551,8 +645,18 @@ tipos de datos correspondientes, que pueden ser:
   a cada uno de estos tipos de servidores.
   \solution
 
-  Olakase
+  Para los servidores \textbf{statefull}, por su facilidad para identificar mensajes consecutivos de un mismo cliente, son
+más apropiados los \textbf{protocolos orientados a conexión}. Si se usasen protocolos no orientados a conexión habría que incluir un campo adicional en cada mensaje para asociarlos a un mismo cliente.
 
+No obstante, existen algunas excepciones, como DHCP que utiliza UDP pero guarda un estado asociado a cada cliente (qué dirección IP tiene asignada)
+
+ Los servidores \textbf{stateless} no guardan información alguna asociada a cada cliente. Generalmente son del tipo petición respuesta donde no se guarda información asociada a cada cliente ni importa el orden de los mensajes enviados.
+
+ Un ejemplo son los servidores DNS, servidores web o NTP. Un cliente solicita una
+pagina web, sin importar qué páginas web ha solicitado anteriormente. Ya que no hace falta identificar mensajes consecutivos de un mismo cliente son más apropiados los \textbf{protocolos no orientados a conexión} como UDP pues tienen menos sobrecarga.
+
+Como en todo dentro de la informática existen expeciciones como son los servidores web o los servidores web que utilizan TCP, probablemente debido a la limitación en el tamaño del mensaje en
+UDP.
   \end{problem}
 
   \begin{problem}[19]
@@ -609,24 +713,75 @@ administrativos:
 dominios. Cada dominio tiene un servidor de nombres que reside en un
 ordenador, cuyo nombre coincide con el del dominio, con capacidad de
 almacenamiento local de resultados de consultas a otros dominios \textit{(cache)}. Se supone que al principio las caches están todas vacías.
-  \begin{itemize}
-    \item Escribir los nombres completos en el dominio global de todos los ordenadores
+
+    \ppart Escribir los nombres completos en el dominio global de todos los ordenadores
     situados en las hojas del árbol.
-    \item Detallar los mensajes necesarios para que el ordenador jupiter localice
+    \ppart Detallar los mensajes necesarios para que el ordenador jupiter localice
     el servidor seguridad en el directorio a partir de su nombre en la red.
-    \item Inmediatamente después de la consulta anterior, el
+    \ppart Inmediatamente después de la consulta anterior, el
 ordenador saturno desea localizar el servidor seguridad. Indicar el
 flujo de mensajes correspondiente.
-    \item Suponemos que el sistema de nombres utiliza el estándar X500. Decir qué ordenadores contienen un \textit{Directory User Agent} y cuáles contienen un \textit{Directory System Agent}.
-    \item Escribir tres parejas de ordenadores entre los que se utilice el \textit{Directory Access Protocol}.
-    \item Escribir tres parejas de ordenadores entre los que se utilice el \textit{Directory System Protocol}.
-    \item Para cada uno de los cuatro servidores (ficheros,
+    \ppart Suponemos que el sistema de nombres utiliza el estándar X500. Decir qué ordenadores contienen un \textit{Directory User Agent} y cuáles contienen un \textit{Directory System Agent}.
+    \ppart Escribir tres parejas de ordenadores entre los que se utilice el \textit{Directory Access Protocol}.
+    \ppart Escribir tres parejas de ordenadores entre los que se utilice el \textit{Directory System Protocol}.
+    \ppart Para cada uno de los cuatro servidores (ficheros,
 impresora, correo y seguridad) elegir razonadamente el mecanismo de
 transporte aconsejable para conectar a ellos los ordenadores clientes:
 peer to peer orientado a conexión, peer to peer no orientado a conexión,
  RPC o MOM.
-  \end{itemize}
-\solution
-Olakase
 
+\solution
+
+\spart
+\begin{itemize}
+\item ficheros.servicio1.empresa
+\item impresora.servicio1.empresa
+\item correo.servicio2.empresa
+\item seguridad.servicio2.empresa
+\item jupiter.gestion.empresa
+\item saturno.gestion.empresa
+\end{itemize}
+
+\spart
+\begin{center}
+\includegraphics[width=1\textwidth]{img/H2_E20_B.png}
+\end{center}
+
+\spart
+\begin{center}
+\includegraphics[width=1\textwidth]{img/H2_E20_C.png}
+\end{center}
+
+\spart
+\begin{itemize}
+\item \textbf{Directory User Agent}
+
+ficheros, impresora, correo, seguridad, jupiter, saturno
+\item \textbf{Directory System Agent}
+
+empresa, servicio1, servicio2, gestion
+\end{itemize}
+
+\spart
+
+\begin{itemize}
+\item fichero – servicio1
+\item correo – servicio2
+\item seguridad – gestion
+\end{itemize}
+
+\spart
+\begin{itemize}
+\item servicio1 – empresa
+\item servicio2 – empresa
+\item gestion – empresa
+\end{itemize}
+
+\spart
+
+\yoP
+
+TO BE CONTINUED...
+
+Me da mucha pereza y no estoy seguro de lo que quieren pero creo que habría que pensar que para la impresora nos interesa cola de mensajes, para el correo igual, para la parte de seguridad posiblemente necesitemos RTP, para la de ficheros TCP si es sólo escritura directa, o incluso UDP y para la parte de gestión pues no sabemos nada porque no tenemos detalles.
 \end{problem}
