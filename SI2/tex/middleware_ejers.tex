@@ -7,7 +7,7 @@
 
   \solution
 
-  Olakase
+
 
   \end{problem}
 
@@ -79,6 +79,15 @@ No entiendo bien la pregunta. Para diseñarlo en serio haría falta más informa
 
 Por middleware genérico tampoco entiendo qué incluye. Una de las características deseables del NOS es \textit{Single Sign On, SSO}, un único usuario y contraseña para todos los servicios. Si el middleware genérico que tenemos incluye un NOS con SSO, entonces tendríamos que añadir la funcionalidad de permitir inicio de sesión distribuido, sabiendo que el usuario y la contraseña es la misma para todo el sistema.
 
+\yoP
+
+Entiendo que lo que piden es describir una arquitectura o procedimiento que te permita llevar a cabo esta tarea.
+
+Suponiendo que tenemos un sistema con varios servidores, podemos hacer que uno de ellos sea el encargado de la autenticación de los usuarios. Una vez que este servidor comprueba que tienes permisos de acceso te devuelve un identificador y el mismo identificador codificado con su clave privada (a modo de firma).
+
+Cada vez que el cliente conecte con alguno de los servidores, enviará este identificador junto con la firma con lo que el servidor destino sólo tendrá que coger su clave para comprobar que el cliente ya está loggeado.
+
+Al margen de las claves que permitan relacionarse a un servidor con otro a través del cliente de modo seguro, serían necesarias más pares de claves de modo que la comunicación cliente-servidor también fuese segura.
   \end{problem}
 
   \begin{problem}[6]
@@ -103,16 +112,29 @@ mercancía que se realizan en su red de almacenes, y de ellos debe ser capaz en
 todo momento de conocer la cantidad de cada producto que existe en toda la red.
 Proponer el mecanismo de comunicaciones que se considere más adecuado para
 realizar estos envíos, considerando distintos casos:
-  \begin{itemize}
-    \item Todos los sistemas operan simultáneamente, y disponen de enlaces de
+
+    \ppart Todos los sistemas operan simultáneamente, y disponen de enlaces de
 comunicaciones dedicados.
-    \item Todos los sistemas operan simultáneamente, pero los enlaces de que disponen
+    \ppart Todos los sistemas operan simultáneamente, pero los enlaces de que disponen
 son conmutados.
-    \item Los sistemas tienen distinto horario de funcionamiento.
-   \end{itemize}
+    \ppart Los sistemas tienen distinto horario de funcionamiento.
+
     \solution
 
-    Olakase
+    \yoP
+
+    Entendemos que tenemos un sistema de varios servidores (conectados, obviamente, a muchos clientes pero eso no nos importa) y queremos que estén correctamente sincronizados estos servidores, de modo que si un cliente compra algo, el stock de todos se reduzca.
+
+    \spart
+
+    Si tienen enlaces de comunicación dedicados es posible que cada servidor informe al resto en tiempo real de todos los cambios que se experimentan, de modo que todos los servidores pudieran tener siempre información actualizada.
+
+    \spart
+    Si los enlaces son conmutados, al mandar un servidor un mensaje, el enlace queda bloqueado, por lo que una comunicación en tiempo real no sería viable. \textcolor{blue}{No se exactamente qué se debería hacer aquí}
+
+    \spart
+
+    Por definición, parece que lo óptimo es el empleo de una cola de mensajes donde los servidores informan de los cambios. Cuando un servidor arranque, antes de empezar a trabajar, actualiza su información en base a los mensajes de la cola.
 
     \end{problem}
 
@@ -122,11 +144,17 @@ preferible emplear colas no persistentes en lugar de colas persistentes.
 Razonar la respuesta.
   \solution
 
-\textcolor{blue}{Dejuan opina que:} 
+\textcolor{blue}{Dejuan opina que:}
 
 Recordamos que persistencia en colas significa que persistan los mensajes de la cola, no la cola en sí. (La persistencia de la cola se llama temporalidad).
 
-Si eres el de misión imposible y quieres que los mensajes con la misión que mandas se autodestruyan, puede ser interesante implementar una cola no persistente. 
+Si eres el de misión imposible y quieres que los mensajes con la misión que mandas se autodestruyan, puede ser interesante implementar una cola no persistente.
+
+\yoP
+
+En general puede ser interesante cuando no te preocupe preservar o no los mensajes, puesto que hacer la cola persistente implica un coste extra que puedes ahorrar.
+
+No creo que haya ningún momento en que te interese perder la información, simplemente puede darse el caso de que no rente el coste necesario para mantener esos mensajes en caso de fallo.
 
 
   \end{problem}
@@ -139,7 +167,16 @@ de \textit{MQSeries} para comunicar dos aplicaciones en el mismo ordenador.
 Justificar brevemente cada una de ellas.
   \solution
 
-  Olakase
+  \yoP
+
+  Para empezar es posible que no nos interese emplear colas de mensajes. Si necesitamos que una aplicación espere hasta que la otra finalice el proceso nos interesará emplear mecanismos de comunicación como los sockets en lugar de colas.
+
+  Puestos a que nos interese el empleo de colas, las colas de MQSeries tienen el problema de que implican más carga de trabajo para el sistema operativo, pues en el fondo serán otro programa que se está ejecutando en el mismo host.
+
+  Una posible ventaja del empleo de colas MQSeries es que, si tienen appis adecuadas para distintos lenguajes de programación, puede ser más sencilla la comunicación con ellas, pues las llamadas al sistema no son igual de sencillas en todos los lenguajes.
+
+  Frente al empleo de áreas de memoria compartidas o sistemas de archivos, se tiene la ventaja de que las colas de mensajes, y en concreto las de MQSeries, permiten gestionar fácilmente el control de los mensajes leídos y los destinatarios de los mismos.
+
 
   \end{problem}
 
@@ -154,7 +191,15 @@ denominaremos B1, pueda recuperar la información de directorio de una estación
 dependiente del nodo C, denominada C1.
   \solution
 
-  Olakase
+  \yoP
+
+  \begin{enumerate}
+  \item[1] B1 pregunta a B por C1
+  \item[2] B no conoce a C1 (sólo conoce a las estaciones que dependen de él), así que manda a B1 a preguntar a A, pasándole su dirección IP
+  \item[3] B1 pregunta a A por C1 y A reconoce que estará asociado a C por que le envía a B1 la dirección de C.
+  \item[4] B1 pregunta a C por C1 y este, puesto que C1 depende de él, lo conoce y le dice a B1 la dirección de C1
+  \item[5] B1 conecta con C1
+  \end{enumerate}
 
   \end{problem}
 
@@ -183,6 +228,11 @@ vacío.
 
   \solution
 
+  \yoP
+
+  Me niego a hacer los cálculos, hacemos cuentas para obtener el tiempo de transporte y atendiendo a las cuentas realizadas en el ejemplo \ref{ejemplo_tiempos}, vemos que la tolerancia mínima es $\pm\frac{t+t'}{2}$ donde $t$ y $t'$ son los tiempos de transporte del mensaje en ambas direcciones.
+
+
   \end{problem}
 
   \begin{problem}[12] A efectos de asignación de nombres a los distintos recursos
@@ -202,32 +252,81 @@ vacío.
     cuyo nombre coincide con el del dominio, con capacidad de almacenamiento local
     de resultados de consultas a otros dominios (cache). Inicialmente se supone que
     todas las caches de los dominios se encuentran vacías.
-  \begin{itemize}
-    \item Poner los nombres completos en el dominio global de cada uno de los
+
+    \ppart Poner los nombres completos en el dominio global de cada uno de los
       ordenadores representados en cursiva en la figura.
-    \item Detallar los mensajes que serán necesarios y entre qué sistemas deben
+    \ppart Detallar los mensajes que serán necesarios y entre qué sistemas deben
         circular para que el ordenador atlas localice el servidor salarios en el
         directorio a partir de su nombre en la red.
-      \item Inmediatamente después de la anterior consulta, el ordenador axis necesita
+      \ppart Inmediatamente después de la anterior consulta, el ordenador axis necesita
           establecer una conexión con salarios. Indicar el flujo de mensajes que ocurrirá
         para que pueda localizarlo en el directorio.
-      \item Supuesto que el sistema de nombres que se emplea sigue el estándar X.500,
-            nombrar:
-
-              \subitem Ordenadores que contendrán un \textit{Directory User Agent}.
-              \subitem Ordenadores que contendrán un \textit{Directory System Agent}.
-              \subitem Tres parejas de ordenadores entre las que se empleará un \textit{Directory Access Protocol}.
-              \subitem Tres parejas de ordenadores entre las que se empleará un \textit{Directory System Protocol}.
-      \item Proponer un sistema de comunicaciones (\textit{peer to peer}orientado a conexión, no orientado a conexión, \textit{Remote Procedure Calls},
+      \ppart Supuesto que el sistema de nombres que se emplea sigue el estándar X.500, nombrar:
+            \begin{itemize}
+              \item Ordenadores que contendrán un \textit{Directory User Agent}.
+              \item Ordenadores que contendrán un \textit{Directory System Agent}.
+              \item Tres parejas de ordenadores entre las que se empleará un \textit{Directory Access Protocol}.
+              \item Tres parejas de ordenadores entre las que se empleará un \textit{Directory System Protocol}.
+            \end{itemize}
+      \ppart Proponer un sistema de comunicaciones (\textit{peer to peer} orientado a conexión, no orientado a conexión, \textit{Remote Procedure Calls},
  colas de mensajes) para producir los intercambios de mensajes de
 resolución de nombres en el directorio, y razonar la respuesta.
 
-\end{itemize}
 
 \solution
 
+\yoP
 
-Olakase
+\spart
+
+No pienso escribirlos todos. Es trivial. Por ejemplo, en el caso del host \textit{hércules} su nombre completo en el dominio global sería \textit{empresa/técnico/pruebas/hércules}
+
+\spart
+
+Equivalente al ejercicio 10.
+
+\begin{enumerate}
+\item[1] \textit{Atlas} pregunta a \textit{desarrollo} por \textit{salarios}
+\item[2] \textit{Desarrollo} pregunta a \textit{técnico} por \textit{salarios}
+\item[3] \textit{Técino} pregunta a \textit{empresa} por \textit{salarios}
+\item[4] \textit{Empresa} pregunta a \textit{gestión} por \textit{salarios}
+\item[5] \textit{Gestión} pregunta a \textit{administración} por \textit{salarios}
+\item[6] \textit{Administración} envía a \textit{gestión} la dirección de \textit{salarios}
+\item[7] El mensaje recorre la cadena en dirección contraria hasta llegar a \textit{atlas}
+\end{enumerate}
+
+\spart
+
+Suponiendo que los servidores guardan en la caché información de las consultas recientes, el servidor \textit{desarrollo} ya tiene guardado en caché la dirección de \textit{salarios}, por lo que le responde directamente a \textit{axis}
+
+\spart
+
+\begin{itemize}
+\item \textbf{Directory User Agent}:
+
+Los que están en cursiva
+\item \textbf{Directory System Agent}
+
+Los que están en negrita
+\item \textbf{Directory Acces Protocol}
+
+\subitem axis-atlas
+\subitem atlas-hércules
+\subitem salarios-bigboss
+
+\item \textbf{Directory System Protocol}
+\subitem desarrollo-técinico
+\subitem empresa-gestión
+\subitem administración-dirección
+\end{itemize}
+
+\spart
+
+La cola de mensajes no tiene sentido pues necesitamos obtener respuestas en tiempo real.
+
+Peer to peer tampoco termina de encajar con la lógica del sistema, pues hay un claro comportamiento jerárquico y cada host pregunta de forma única a otro host y no pregunta a un tercero hasta no obtener su respuesta.
+
+El método más interesante sería RPC donde cada host establece comunicación directa con aquel con el que quiere comunicarse. Además no tenemos que preocuparnos por la representación interna de los datos por lo que cada no podría estar programado en un lenguaje completamente diferente.
 
 \end{problem}
 
@@ -238,23 +337,23 @@ punto focal de recepción de alarmas que se produzcan en las estaciones de
 trabajo ante situaciones de diversos tipos (conexión de estación, fallos de
 programas, errores en disco,introducciones de contraseñas equivocadas, etc.).
 
-    Enumerar los mecanismos de comunicaciones que se pueden emplear para
+    \ppart Enumerar los mecanismos de comunicaciones que se pueden emplear para
 enlazar los clientes con el servidor para realizar esta función u otras
 similares.
-\begin{itemize}
-    \item Valorar el empleo de cada uno de los mecanismos anteriores para realizar la
+
+    \ppart Valorar el empleo de cada uno de los mecanismos anteriores para realizar la
 aplicación, y elegir la que se considere más apropiada a este caso, razonando
 la respuesta.
-    \item Si el prototipo de función que se desea utilizar en las estaciones clientes
+    \ppart Si el prototipo de función que se desea utilizar en las estaciones clientes
 para enviar una alerta es el siguiente:
-    \begin{verbatim}
+\begin{verbnobox}[\small]
 long alerta (
 char tipo_alerta,      // Tipo de alerta que se ha producido
 char nivel_gravedad,   // Nivel de gravedad de la misma
 char * datos_adicionales,// Texto informativo dado por el cliente
 long * codigo_accion   // Acción recomendada por el servidor
 );                     //  para resolver la situación.
-\end{verbatim}
+\end{verbnobox}
     en la que el valor que retorna la función indica si se ha completado
 correctamente o no la función, tanto por motivos de la red como del servidor,
 definir:
@@ -267,16 +366,53 @@ pseudocódigo, comentado).
       \item Explicar el proceso de \textit{Parameter Unmarshalling} que será necesario
 realizar en el cliente al recibir el mensaje de contestación. (Igual sugerencia).
     \end{itemize}
-    \end{itemize}
       \solution
 
-      Olakase
+      \yoP
+
+      \spart
+
+      Puestos a enumerar tendríamos: WS, P2P, RPC y colas de mensajes como principales opciones.
+
+      \spart
+
+      Vamos a analizar cada posibilidad por separado
+
+      \begin{itemize}
+      \item \textbf{WS}
+
+      Sería fácil de emplear pero bastante lento para la comunicación. Además requiere comunicación síncrona lo cual puede no ser demasiado interesante a la hora de que muchos servidores envíen mensajes a un único punto.
+
+      \item \textbf{P2P}
+
+      No encaja con la idea del trabajo a desarrollar puesto que tenemos una clara jerarquía con un único nodo con el que nos queremos comunicar. Además fuerza a que todas las estaciones de servicio acuerden un mismo lenguaje, pues no está ideado para host heterogéneos.
+
+      \item \textbf{RPC}
+
+      Útil para trabajar con host heterogéneos pues el propio middleware se encargará del marshalling y unmarshalling. Establece conexión directa entre los dos hosts que se quieren comunicar.
+
+      \item \textbf{Colas de mensajes}
+
+      Independiente de la plataforma sobre la que se implemente cada estación de trabajo salvo por el formato de los mensajes, que se debe acordar previamente. Permite la comunicación asíncrona, cosa que no permitían ninguna de las anteriores opciones.
+
+      \end{itemize}
+    Puesto que queremos que cada estación de servicio envíe la alarma y siga trabajando en detectar posibles fallos y, presumiblemente, habrá diferentes categorías de alarmas, lo más interesante sería el empleo de \textbf{colas de mensajes} que ayudan a la organización jerárquica de los errores y evitan la saturación del ordenador central.
+
+      \spart
+
+      \begin{itemize}
+        \item Basta con que el mensaje tenga 2 campos, cada uno de los cuales se corresponde a uno de los strings que forman parte de la alerta. El tipo del mensaje será el tipo de alerta y la prioridad será el nivel de gravedad.
+
+        \item El marshalling será el proceso de escribir el mensaje a partir de una variable de tipo alerta.
+
+        \item El unmarshalling será justo el proceso contrario, a partir de un mensaje se construye una variable de tipo alerta.
+      \end{itemize}
 
       \end{problem}
 
   \begin{problem}[14]
   A continuación se presentan cuatro casos de sistemas servidores.
-  \begin{itemize}
+  \begin{enumerate}
     \item Servidor de archivos Unix para una red de ordenadores personales en MS-DOS.
     Los clientes deben ver el disco del servidor como si fuera un disco local.
     \item Servidor de envío diferido de fax. El servidor del que se dispone permite a
@@ -289,7 +425,7 @@ encontraran en una pantalla local del mismo.
     \item Servidor de validación de contraseñas para una red de ordenadores
 homogénea. Recibirá un identificador de usuario y contraseña, debidamente
 cifrados, y contestará al cliente únicamente si ambos son correctos, enviando un mensaje de reconocimiento.
-  \end{itemize}
+  \end{enumerate}
   Para cada uno de ellos se pide:
   \begin{itemize}
     \item Elegir razonadamente el mecanismo de transporte (\textit{peer to peer} orientado a conexión, \textit{peer to peer }no orientado a conexión, RPCs, colas de menajes) que sería aconsejable utilizar para conectar a ellos los sistemas clientes.
@@ -299,7 +435,37 @@ habría que implementar sobre el protocolo elegido para garantizar que el
   \end{itemize}
     \solution
 
-    Olakase
+
+    \begin{enumerate}
+    \item
+
+    Puesto que los ordenadores serán heterogéneos (ordenadores personales en MS-DOS pero servidor de archivos UNIX)  será necesario un proceso de marshalling y unmarshalling. Un único fichero puede estar repartido entre múltiples servidores pero los clientes no deben notarlo.
+
+    Además necesitamos un acceso rápido y ligero, por lo que lo más interesante sería el uso de RTP.
+
+    \item
+
+    Puesto que el envío del fax no se realizará en el instante exacto en que se selecciona la opción sino que se aprovecharán las horas de menor coste de las llamadas telefónicas, lo más apropiado sería el empleo de una cola de mensajes.
+
+    El cliente que quiera mandar un fax deja un mensaje en el servidor y este, cuando la línea esté desocupada, tomara un mensaje de la cola y enviará el fax pedido.
+
+    \item
+
+    Es necesaria comunicación fiable sin pérdida de paquetes o los comandos que se ejecuten podrían llegar incompletos dando lugar a resultados inesperados. Por tratarse de sistemas heterogéneos (unos emplean ASCII y otros EBCDIC) sería recomendable el uso de RTP que se encarga del unmarshalling y marshalling de manera transparente a los usuarios.
+
+    \textcolor{red}{La solución de la profesora dice que no merece la pena el RPC puesto que la funcionalidad de traducción necesaria es muy sencilla. Por tanto emplean P2P orientada a conexión}
+
+    \item
+
+   Los dos sistemas tienen que estar conectados a la vez. La red es homogénea, luego no es necesario traducción de datos para garantizar transparencia de acceso.
+   Puesto que la funcionaldiad es muy elemental no merece la pena RPC.
+
+   Sólo tenemos un mensaje y una respuesta por lo que no merece la pena crear
+   una conexión y las llamadas son síncronas.
+
+  La solución más apropiada es comunicación P2P no orientada a conexión.
+
+    \end{enumerate}
 
     \end{problem}
 
