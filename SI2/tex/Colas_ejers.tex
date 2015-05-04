@@ -805,17 +805,14 @@ Básicamente tenemos que igualar las dos ecuaciones $W$ escritas anteriormente y
 Un servidor de validación de firmas que se encuentra en una determinada red procesa mensajes de modo iterativo. Los mensajes de solicitud que recibe tienen un tamaño medio de 100 bytes, y se puede suponer que su llegada al servidor sigue un proceso de Poisson. El tiempo de proceso de cada mensaje es aleatorio, sabiéndose que su valor medio es 10 ms. y que su distribución de probabilidades se puede considerar exponencial.
 
 La monitorización de la red únicamente nos permite conocer el tamaño medio de la ocupación que tiene en memoria la cola donde se almacenan los mensajes pendientes de procesar, que es de 325 bytes.
-\begin{enumerate}
-\item Calcular el tiempo medio total que transcurre desde que llega un mensaje de petición al servidor y este termina de procesarlo.
-\item En los acuerdos de nivel de servicio de este servidor se establece que ``El tiempo que debe transcurrir desde que llegue un mensaje de petición al servidor y este termine de procesarlo debe ser inferior a 80 ms en el 90\% de las peticiones''. Explicar razonadamente si se cumple o no este punto del acuerdo de nivel de servicio. En caso negativo, sugerir cualitativamente soluciones que permitirían resolver el problema.
-\end{enumerate}
+\ppart Calcular el tiempo medio total que transcurre desde que llega un mensaje de petición al servidor y este termina de procesarlo.
+\ppart En los acuerdos de nivel de servicio de este servidor se establece que ``El tiempo que debe transcurrir desde que llegue un mensaje de petición al servidor y este termine de procesarlo debe ser inferior a 80 ms en el 90\% de las peticiones''. Explicar razonadamente si se cumple o no este punto del acuerdo de nivel de servicio. En caso negativo, sugerir cualitativamente soluciones que permitirían resolver el problema.
 
 \solution
 
 \yoP
 
-\begin{itemize}
-\item
+\spart
 
 Un mensaje de 100 bytes tarda una media de 10 ms en procesarse, lo que indica que se procesa a una velocdiad de 10 bytes/ms.
 
@@ -824,13 +821,19 @@ Puesto que en media la cola ocupa 325 bytes, la media de tiempo que tardará un 
 Así, el tiempo medio pedido es:
 \[W=32.5ms+10ms=42.5ms\]
 
-\item
+\spart
 
-En media si que se cumplen los requisitos del sistema pero para comprobar si se cumples los porcentajes indicados necesitaríamos conocer las varianzas de los tiempos así como del tamaño de los mensajes y de la cola.
+Está claro que en media se cumplen los requisitos, pero para comprobar que se cumple el porcentaje hay que calcular el percentil. De la fórmula de la distribución (que aparece en el chuletario), queremos:
 
-En caso de no cumplirse el acuerdo se podría mejorar la situación sustituyendo el servidor por uno más potente y añadiendo nuevos servidores.
+\[
+0.9=1-e^{-(µ-λ)t} \implies 1-0.9=e^{-(µ-λ)t} \implies t=\frac{1}{µ-λ}ln\left(\frac{1}{0.1}\right) = -Wln(1-p) = 97.86ms
+\]
 
-\end{itemize}
+Comprobamos que $97 > 80$ con lo que no se cumpliría el contrato. Si aumentáramos la potencia del servidor, reduciendo $W$ podríamos cumplir el requisito.
+
+$$80ms =-W·ln(0.1) \to W=34.74ms$$
+
+Utilizando $W=\frac{1}{-µ+λ}$ podríamos sacar $µ$ y con ello la tasa de servicio necesaria. (Entiendo que a este tipo de razonamiento se refiere con \textit{sugerir cualitativamente soluciones})
 
 \end{problem}
 
