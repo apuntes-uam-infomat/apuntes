@@ -852,10 +852,39 @@ Cuando al procesar una petición recibida DSA1 no tiene los datos necesarios par
 
 Se sabe que DSA2 recibe consultas de muchos más servidores, componiendo el total de ellas un tráfico de Poisson con una media de 200 peticiones / s. Su tiempo de servicio, que también se puede considerar distribuido exponencialmente, hace que sea capaz de procesar un promedio de 300 peticiones / s.
 
-Si se desea que el tiempo medio de respuesta de una petición realizada a DSA1, independientemente de quién la procese, sea igual o inferior a 6 ms, determinar cuál sería la capacidad media que debería tener DSA1 para poder cumplir este requerimiento. ¿Qué condición es más restrictiva para el sistema, esta o la establecida por el primer apartado, de modo que la elijamos en nuestro diseño, si DSA1 debe cumplir ambas?
+Si se desea que el tiempo medio de respuesta de una petición realizada a DSA1, independientemente de quién la procese, sea igual o inferior a 6 ms, determinar cuál sería la capacidad media que debería tener DSA1 para poder cumplir este requerimiento. ¿Qué condición es más restrictiva para el sistema, esta o la establecida por el primer apartado? ¿Cuál elegiríamos en nuestro diseño si DSA1 debe cumplir ambas?
 \solution
+\doneby{Guille}
 
-\textcolor{red}{Por hacer}
+\spart
+
+Sabiendo que la función de distribución del tiempo de espera es $F_W(t) = 1 - e^{-(μ-λ)t}$, despejamos: \begin{align*}
+0.95 &= 1 - e^{-(μ-50)· 0.010} \\
+0.05 &= e^{-(μ-50)· 0.010} \\
+\log 0.05 &= -(μ-50)· 0.010 \\
+\frac{\log 0.05}{0.010} &= 50 - μ \\
+μ &= 50 - \frac{\log 0.05}{0.010} \approx 180.103
+\end{align*}
+
+Luego la tasa de servicio tiene que ser de $180.103$ peticiones por segundo o superior.
+
+\spart
+
+Vamos a suponer que el tiempo que tarda DSA1 en redirigir la petición es despreciable. Tenemos que calcular primero cuál es el tiempo medio de espera de peticiones a DSA2. Sabiendo que es un \textit{M/M/1}, tenemos que \[ W_2 = \frac{\frac{1}{μ}}{1-\frac{λ}{μ}} = \frac{\frac{1}{300}}{1 - \frac{200}{300}} = 0.01\,s\]
+
+Sabemos que el tiempo total de estancia será una media ponderada entre los de DSA1 y DSA2, luego \[ W = 0.75 W_1 + 0.25 W_2\], así que si queremos que ese tiempo sea igual o inferior a 6 milisegundos, despejamos y vemos que \[ 0.006 ≥ 0.75 W_1 + 0.25 · 0.01 \implies \frac{0.0035}{0.75} ≥ W_1 \implies 0.004\gor{6} ≥ W_1 \]
+
+Tenemos unos 4 milisegundos para responder en DSA1. Vamos a despejar ahora para sacar la tasa de servicio μ:
+
+\begin{align*}
+W_1 &= \frac{L_1}{λ} \\
+W_1 &= \frac{\frac{1}{μ}}{1-\frac{λ}{μ}} \\
+W_1 &= \frac{1}{μ - λ} \\
+W_1μ &= 1 + W_1 λ \\
+μ &= \frac{1 + W_1λ}{W_1}
+\end{align*}
+
+Sustituyendo, nos queda $μ ≥ 264.285$. Dado que esta condición nos da una tasa de servicio más grande, elegiríamos esta para cumplir los dos requisitos que se nos piden.
 
 \end{problem}
 
