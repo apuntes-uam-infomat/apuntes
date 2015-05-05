@@ -257,25 +257,33 @@ Debido a que hay un bucle, hay que tener en cuenta cuántas vueltas se dan para 
 \end{itemize}
 
 Luego
-\[ \esp{A_T} = \sum\limits_{n}^{\infty} A^{n} q^{n-1}(1-q) \]
+\[ \esp{A_T} = \sum\limits_{n=1}^{\infty} A^{2n-1} q^{n-1}(1-q) \]
 
 Utilicemos el truco de la suma geométrica:
 \begin{gather*}
-\mathbb{S} = A(1-q) + A^{2} q(1-q) + A^{3} q^{2}(1-q) + ...\\
-Aq \cdot \mathbb{S} = A^{2} q(1-q) + A^{3} q^{2}(1-q) + A^{4} q^{3}(1-q) + ...\\
-(1-Aq)\mathbb{S} = A(1-q)
+\mathbb{S} = A(1 - q) + A^{3} q(1-q) + A^{5} q^{2}(1-q) + ...\\
+A^{2} q \cdot \mathbb{S} = A^{3} q(1-q) + A^{5} q^{2}(1-q) + A^{4} q^{7}(1-q) + ...\\
+(1 - A^{2} q)\mathbb{S} = A(1 - q)
 \end{gather*}
 
 Por lo tanto, la disponibilidad total promedio es
-\[ \esp{A_T} = \frac{A(1 - q)}{1 - A q} \]
+\[ \esp{A_T} = \frac{A(1 - q)}{1 - A^{2} q} \]
 
 Como queremos que $A_T \approx 0.999$
 \begin{gather*}
-0.999 = \frac{A(1 - q)}{1 - A q}\\
-\text{MTTR} \eqreason{sage} \frac{-4000 \cdot q}{999} + \frac{4000}{999}
+0.999 = \frac{A(1 - q)}{1 - A^{2} q}\\
+0.999 (1 - A^{2} q) = A(1 - q)\\
+A^{2} q + A (1 - q) \frac{1000}{999} - 1 = 0
+\end{gather*}
+Resolviendo con sage el polinomio de segundo grado obtenemos:\footnote{este monstruo}
+\begin{gather*}
+A = \frac{500 \cdot q - 500 - \sqrt{250000 \cdot q^2 + 498001 \cdot q + 250000}}{999 \cdot q}\\
+A = \frac{500 \cdot q - 500 + \sqrt{250000 \cdot q^2 + 498001 \cdot q + 250000}}{999 \cdot q}\\
+\text{MTTR} = \frac{-2000000 \cdot q}{999} - \frac{4000}{999} \sqrt{250000 \cdot q^2 + 498001 \cdot q + 250000} - \frac{1996000}{999}\\
+\text{MTTR} = \frac{-2000000 \cdot q}{999} + \frac{4000}{999} \sqrt{250000 \cdot q^2 + 498001 \cdot q + 250000} - \frac{1996000}{999}
 \end{gather*}
 
-Luego $0 \leq$ MTTR $\leq \frac{4000}{999}$ horas, en función de q.
+Quedándonos con la solución positiva, tenemos que $0 \leq$ MTTR $\leq \frac{4000}{999}$ horas, en función de q.
 
 \end{problem}
 
