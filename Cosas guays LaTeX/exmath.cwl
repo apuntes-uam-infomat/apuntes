@@ -224,5 +224,6 @@
 \lie{arg0}#m
 \tgs#m
 \tgsd#m
+\inmr{arg0}{arg1}{arg2}#m
 \cind#m
 \fe{arg0}#m
