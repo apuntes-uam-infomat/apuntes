@@ -1,0 +1,76 @@
+\begin{tikzpicture}[scale=1.5]
+\tikzset{
+	surface/.style={left color=gray!10,right color=gray!70, opacity = 0.5},
+	highlight-a/.style={left color=blue!20,right color=blue!50, opacity = 0.3},
+	highlight-b/.style={bottom color=orange!20,top color=orange!70, opacity = 0.7}
+}
+
+\coordinate (vertex-left) at (0,0);
+\coordinate (vertex-right) at (8,0);
+
+
+\shade[surface]
+	(vertex-left)
+		to[out = -20, in = 200]
+			node[pos = 0.2] (border-a) {}
+			node[pos = 0.4] (border-b) {}
+			(vertex-right)
+		to[out = 120, in = 60] (vertex-left);
+
+\shade[surface]
+	(vertex-left)
+		to[out = 20, in = 160] (vertex-right)
+		to[out = 120, in = 60] (vertex-left);
+
+\coordinate (border-u-a) at ($(border-a) + (0.2,1)$);
+\coordinate (border-u-b) at ($(border-b) + (0.1,1)$);
+
+\shade[highlight-a] (border-a.center)
+			to[bend right, looseness = 0.1] (border-b.center)
+			to[bend right, looseness = 0.2] (border-u-b.center)
+			to[bend right, looseness = 0.3] (border-u-a.center)
+			to[bend right, looseness = 0.2] (border-a.center)
+			;
+
+\draw[blue] (border-a.center)
+			to[bend right, looseness = 0.1] (border-b.center);
+
+\coordinate (inner-u-a) at (4.3, 0.9) {};
+\coordinate (inner-u-b) at (5.6, 0.8) {};
+\coordinate (inner-a) at (4.3, 0.1) {};
+\coordinate (inner-b) at (5.8, 0.25) {};
+
+\shade[highlight-b] (inner-a.center)
+			to[bend right, out = 0, looseness = 0.4] (inner-b.center)
+			to[bend right, looseness = 0.4] (inner-u-b.center)
+			to[bend right, in = 0, looseness = 0.3] (inner-u-a.center)
+			to[bend right, looseness = 0.4] (inner-a.center)
+			;
+
+\coordinate (border-center) at ($0.25*(border-a)+0.25*(border-b)+0.25*(border-u-a)+0.25*(border-u-b)$);
+\coordinate (inner-center) at ($0.25*(inner-a)+0.25*(inner-b)+0.25*(inner-u-a)+0.25*(inner-u-b)$);
+
+\begin{scope}[yshift = -2cm, xshift = 1cm]
+\draw[->] (-1,0) -- (1,0);
+\draw[->] (0,-1) -- (0,1);
+
+\fill[blue!30, opacity=0.5] (-0.7,-0.7) rectangle (0,0.7);
+\draw[thick, blue] (0, -0.7) -- (0, 0.7);
+
+\node[blue] (border-param) at (0.7, 0.7) {$U_i \subset \mathbb{H}^2$};
+\end{scope}
+
+
+\begin{scope}[yshift = -2cm, xshift = 7cm]
+\draw[->] (-1,0) -- (1,0);
+\draw[->] (0,-1) -- (0,1);
+
+\fill[orange!30, opacity=0.5] (-0.7,-0.7) rectangle (0.7,0.7);
+
+\node[orange] (inner-param) at (0.8, 0.9) {$U_j \subset \mathbb{R}^2$};
+\end{scope}
+
+
+\draw[very thick, blue, ->] (border-param) to[bend left] node[midway, below] {$f_i$} (border-center);
+\draw[very thick, orange, ->] (inner-param) to[bend right] node[midway, below] {$f_j$} (inner-center);
+\end{tikzpicture}
