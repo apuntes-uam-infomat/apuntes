@@ -1,6 +1,8 @@
 \elst{arg0}{arg1}{arg2}#m
 \do{arg0}#m
 \pbreak#m
+\doneby{arg0}#m
+\approvedby{arg0}#m
 \mop{operacion}#m
 \imgref{referencia}#m
 \dimplies#m
@@ -65,6 +67,9 @@
 \eq#m
 \rango#m
 \eqexpl{arg0}#m
+\wrapreasontext{arg0}#m
+\eqreason{arg0}#m
+\eqreasonup{arg0}#m
 \x#m
 \appl{f}{dominio}{imagen}#m
 \uexists#m
@@ -216,12 +221,10 @@
 \tc[Id. superior][Id. inferior][máx superior]{arg3}#m
 \dif#m
 \AlignFootnote{arg0}#m
-\wrapreasontext{arg0}#m
-\eqreason{arg0}#m
-\eqreasonup{arg0}#m
 \projp#m
 \lie{arg0}#m
 \tgs#m
 \tgsd#m
+\inmr{arg0}{arg1}{arg2}#m
 \cind#m
 \fe{arg0}#m

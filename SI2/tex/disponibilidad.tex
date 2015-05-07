@@ -1,5 +1,5 @@
 \section{Introducción}
-A lo largo de este tema vamos a estudiar la teoría de la disponibilidad de los sistemas distribuídos así como algunas arquitecturas que permiten obtener un incremento de la misma.
+A lo largo de este tema vamos a estudiar la teoría de la disponibilidad de los sistemas distribuidos así como algunas arquitecturas que permiten obtener un incremento de la misma.
 
 Para empezar debemos definir qué es la disponibilidad.
 
@@ -13,7 +13,7 @@ Hay dos motivos por los que un sistema puede no estar disponible:
 
 Este tipo de paradas se deben a fallos en los equipos o en los programas que implementan los servicios.
 
-Requieren tratamiento estadístico, pues no habrá dos iguales. Los sistemas que las minimizan se llaman de \textbf{Alta Disponibilidad} \textit{(High Availability, HA)}
+Requieren tratamiento estadístico, pues no habrá dos iguales. Los sistemas que las minimizan se llaman de \textbf{Alta Disponibilidad} \textit{(High Availability, HA)}\index{High!  Availability} \index{HA}
 
 
 Algunas de las causas más frecuentes por las que se producen este tipo de paradas son:
@@ -31,7 +31,7 @@ Algunas de las causas más frecuentes por las que se producen este tipo de parad
 
 Son requeridas por la aplicación para su correcto funcionamiento: Rearranques programados, copias de seguridad, cambios de configuración...
 
-Por ser previsibles permiten un tratamiento sistemático. Los sistemas que las minimizan se denominan de \textbf{Operación Continua} \textit{(Continuous Operation, CO)}
+Por ser previsibles permiten un tratamiento sistemático. Los sistemas que las minimizan se denominan de \textbf{Operación Continua} \textit{(Continuous Operation, CO)} \index{Continuous! Operation} \index{CO}
 
 Algunas de las causas más frecuentes por las que se producen este tipo de paradas son:
 
@@ -48,34 +48,34 @@ Evidentemente, un sistema ideal sería de Alta Disponibilidad y de Operación Co
 
 Antes de seguir estudiando el tema de la disponibilidad, vamos a ver una serie de definiciones de términos que aparecerán a lo largo de los apuntes y que es necesario precisar.
 
-\begin{defn}[Fiabilidad (Reliability)]
+\begin{defn}[Fiabilidad (Reliability)][Fiabilidad]\index{Reliability}
 Probabilidad de que un componente o sistema continúe funcionando en un determinado instante en el tiempo.
 \end{defn}
 
-\begin{defn}[Elasticidad o Resiliencia (Resiliency)]
+\begin{defn}[Elasticidad o Resiliencia (Resiliency)][Resiliencia]\index{Elasticidad}\index{Resiliency}
 Capacidad de un sistema para adaptarse a
 condiciones externas imprevistas (fallos, aumento de carga...) para continuar cumpliendo sus parámetros de calidad.
 \end{defn}
 
-\begin{defn}[Mantenibilidad (Serviceability)]
+\begin{defn}[Mantenibilidad (Serviceability)][Mantenibilidad]\index{Serviceability}
 Es la probabilidad de realizar una reparación satisfactoria en un tiempo determinado.
 \end{defn}
 
-\begin{defn}[Sistemas tolerantes a fallos (Fault-Tolerant Systems)]
+\begin{defn}[Sistemas\IS tolerantes a fallos (Fault-Tolerant Systems)][Sistemas\IS tolerantes a fallos]\label{cluster:FT}
 Sistemas que contienen
 componentes hardware dobles de modo que el fallo de uno de ellos no suspende su
 operación.
 \end{defn}
 \newpage
-\begin{defn}[Clusters de alta disponibilidad (High Availability Clusters)]
+\begin{defn}[Clusters\IS de alta disponibilidad (High Availability Clusters)][Clusters\IS de alta disponibilidad]
 Conjunto de nodos de servicio que comparten conexiones externas (red, discos...) y están gestionados por un software especial que permite proporcionar servicio sin interrupciones ante el fallo de alguno de sus componentes.
 \end{defn}
 
-\begin{defn}[Clusters de alto rendimiento (High Performance Clusters)]
+\begin{defn}[Clusters\IS de alto rendimiento (High Performance Clusters)][Clusters\IS de alto rendimiento]\label{cluster:HP}
 Conjunto de nodos de servicio que comparten una misma carga de trabajo.
 \end{defn}
 
-\begin{defn}[Recuperación ante desastres (Disaster Recovery)]
+\begin{defn}[Recuperación ante desastres (Disaster Recovery)][Recuperación\IS ante desastres]
 Capacidad de una instalación de
 recuperar la operatividad tras un evento de gran magnitud, bien de tipo local (edificio), urbano (ciudad) o regional (área extendida con infraestructuras comunes).
 \end{defn}
@@ -174,11 +174,11 @@ Este tiempo incluye el tiempo necesario para descubrir el fallo, encontrar la ca
 
 \[MTTR=E[T']\]
 
-\subsection{Componentes en serie vs Componentes en paralelo}
+\subsection{Componentes en serie frente a Componentes en paralelo}
 
 Si tenemos un sistema compuesto por componentes en serie, un fallo en cualquiera de ellos implica un fallo global. La conexión en serie puede no ser física pero si lógica, una componente depende del resultado del trabajo de otra.
 
-Suponiendo que el fallo en cada componente es independiende del resto, tenemos:
+Suponiendo que el fallo en cada componente es independiente del resto, tenemos:
 \[A= \prod_{i=1}^{n}A_i; \ \ \; R(t)=\prod_{i=1}^{n}R_i(t); \  \ \; r(t)=\sum_{i=1}^{n}r_i(t)\footnote{No veo clara esta fórmula}\]
 
 Si tenemos un sistema compuesto por componentes en paralelo y estas componentes son redundantes para su funcionamiento, un fallo en una de ellas no implicará un fallo en el sistema.
@@ -215,7 +215,7 @@ simplemente viendo esta fracción podemos ver que la disponibilidad de un sistem
 
 \subsection{Arquitecturas que incrementan la disponibilidad}
 
-La disponibilidad de una cadena de procesamiento es siempre menor que la menor de las disponibilidades de sus componentes. Denominamos \concept{Single Point Of Failure, SPOF} a los puntos más criticos del sistema, aquellos que al fallar implican la caída del servicio.
+La disponibilidad de una cadena de procesamiento es siempre menor que la menor de las disponibilidades de sus componentes. Denominamos \concept{Single Point Of Failure, SPOF} a los puntos más críticos del sistema, aquellos que al fallar implican la caída del servicio.
 
 Como es evidente, la forma en que más podemos incrementar el $MTTF$ de cada componente es mediante la creación de un \textbf{cluster} (elementos redundantes) en cada parte de la cadena de procesamiento. Esta solución, además, elimina los SPOF al añadir redundancias incluso a esos componentes más críticos.
 
@@ -247,8 +247,8 @@ Las características de los equipos que actualmente se emplean para implementar 
 \begin{itemize}
 \item \textbf{Nivel 2 compartido} Múltiples servidores se conectan a un mismo segmento de LAN implementado en un \textit{Hub}. Es el menos utilizado por ser el menos eficiente y flexible.
 
-El hub es un dispositivo que tiene la función de interconectar las computadoras de una red local. Su funcionamiento es más simple comparado con el Switch y el router:
-El hub recibe datos procedentes de una computadora, los transmite a los demás. En el momento en que esto ocurre, ninguna otra conmutadora puede enviar una señal. Su liberación surge después que la señal anterior haya sido completamente distribuida.
+El \textit{hub} es un dispositivo que tiene la función de interconectar las computadoras de una red local. Su funcionamiento es más simple comparado con el \textit{Switch} y el \textit{router}:
+El \textit{hub} recibe datos procedentes de una computadora, los transmite a los demás. En el momento en que esto ocurre, ninguna otra conmutadora puede enviar una señal. Su liberación surge después que la señal anterior haya sido completamente distribuida.
 
 
 \item \textbf{Nivel 2 conmutado} Cada enlace es un segmento de LAN. Todos los componentes se interconectan mediante \textit{switches}, que actúan como puentes multipuerta.
@@ -273,27 +273,27 @@ En definitiva, si en la red de comunicación tenemos redundancias en un determin
 
 \subsection{Rapid Spanning Tree Protocol, RSTP}
 
-Al aplicar este protocolo tenemos cada switch asociado a un identificador que nos da su prioridad. El de mayor prioridad (menor identificador, ID1) se denomina switch raíz. El siguiente en prioridad se le denomina switch raíz alternativo (ID2).
+Al aplicar este protocolo tenemos cada \textit{switch} asociado a un identificador que nos da su prioridad. El de mayor prioridad (menor identificador, ID1) se denomina \textit{switch} raíz. El siguiente en prioridad se le denomina \textit{switch} raíz alternativo (ID2).
 
 Para cada puerto hay que determinar de que tipo es:
 \begin{itemize}
-\item Raíz. Da el mejor camino al switch raíz
+\item Raíz. Da el mejor camino al \textit{switch} raíz
 
-\item Designado. Proporciona a cada segmento de red conectado al switch el mejor camino al switch raíz. Es decir, que para algún nodo, su mejor camino hasta el nodo raíz implicar coger justo este enlace.
+\item Designado. Proporciona a cada segmento de red conectado al \textit{switch} el mejor camino al \textit{switch} raíz. Es decir, que para algún nodo, su mejor camino hasta el nodo raíz implicar coger justo este enlace.
 
 \item Alternativo. Otros.
 \end{itemize}
 
-Periódicamente, cada switch genera una \textit{Bridge Protocol Data Unit, BDPU} y la envía a todos los switches de la red.
+Periódicamente, cada \textit{switch} genera una \textit{Bridge Protocol Data Unit, BDPU} y la envía a todos los \textit{switches} de la red.
 
 \textcolor{red}{Mirar el ejemplo de moodle subido por la profesora. Explica bastante bien el protocolo}
 
 \subsection{Detección de fallos en RSTP}
-Puede producirse un fallo en un enlace conectado a un RP o DP, que se detecta directamente por los switches que forman el enlace; o puede darse un fallo en un switch. Si hay tres turnos seguidos en los que no se recibe BDPU de un switch, se le da por muerto.
+Puede producirse un fallo en un enlace conectado a un RP o DP, que se detecta directamente por los \textit{switches} que forman el enlace; o puede darse un fallo en un \textit{switch}. Si hay tres turnos seguidos en los que no se recibe BDPU de un \textit{switch}, se le da por muerto.
 
-Tras el fallo, todos los switches reconfiguran el spanning tree, mediante intercambios locales de los switches afectados por el cambio y el resultado se propaga al resto de la red.
+Tras el fallo, todos los \textit{switches} reconfiguran el \textit{spanning tree}, mediante intercambios locales de los \textit{switches} afectados por el cambio y el resultado se propaga al resto de la red.
 
-\obs Hay otra versión de este mecanismo es el \textit{spanning tree normal}, en el que únicamente el root bridge transmite BPDU. Sólo se detecta un problema tras 20 segundos (vida máxima) y tras esto recalculamos el spanning tree completo.
+\obs Hay otra versión de este mecanismo es el \textit{spanning tree normal}, en el que únicamente el \textit{root bridge} transmite BPDU. Sólo se detecta un problema tras 20 segundos (vida máxima) y tras esto recalculamos el \textit{spanning tree} completo.
 
 \subsection{Redundancia en la conexión de servidores a nivel 2}
 La redundancia básica en la conexión de un ordenador a una LAN se consigue mediante el uso de dos o más adaptadores de red.
@@ -303,52 +303,52 @@ Los puertos de estos adaptadores (un puerto por adaptador) tendrán la misma MAC
 \begin{defn}[EtherChannels]
 Consiste en la agrupación de enlaces Ethernet donde todos los puertos poseen la misma MAC como si fuesen sólo 1 (y así lo ven desde arriba) y están activos simultáneamente.
 
-Da mayor rapidez en la resolución de fallos y mejora el ancho de banda pero su implementación es costosa. Se requiere que ambos extremos de la conexión tengan soporte de \textbf{EtherChannels}. Los componentes de un \txtbf{EtherChannel} no se pueden disgregar para conectar varios dispositivos distintos. A todos los efectos, es un único enlace.
+Da mayor rapidez en la resolución de fallos y mejora el ancho de banda pero su implementación es costosa. Se requiere que ambos extremos de la conexión tengan soporte de \textbf{EtherChannels}. Los componentes de un \textbf{EtherChannel} no se pueden disgregar para conectar varios dispositivos distintos. A todos los efectos, es un único enlace.
 
 \end{defn}
 
 \subsection{Redundancia de las WAN}
-Las redes WAN permiten establecer la interconexión entre elementos distantes de sistemas distribuídos. Se basan en el protocolo TCP/IP y se distinguen dos tipos de componenetes: enlaces y unidades de encadenamiento (routers).
+Las redes WAN permiten establecer la interconexión entre elementos distantes de sistemas distribuidos. Se basan en el protocolo TCP/IP y se distinguen dos tipos de componentes: enlaces y unidades de encadenamiento (\textit{routers}).
 
-La alta disponibilidad de las WAN se consigue teniendo muchos routers y enlaces para que siempre haya caminos alternativos. La gestión del tráfico a través de las diferentes rutas se lleva a cabo con los protocolos de encadenamiento dinámico que estudiamos en Redes: OSPB y BGP.
+La alta disponibilidad de las WAN se consigue teniendo muchos \textit{routers} y enlaces para que siempre haya caminos alternativos. La gestión del tráfico a través de las diferentes rutas se lleva a cabo con los protocolos de encadenamiento dinámico que estudiamos en Redes: OSPB y BGP.
 
 \begin{defn}[OSPF]
-Protocolo de encadenamiento dinámico eficaz y ampliamente utilizado en redes IP. Se basa en el conocimiento de toda la red y el empleo de Dijkstra para localizar el camino más corto. Se organiza la red en áreas dentro de las cuales los routers encaminan los paquetes. Para cambiar de área se emplean los Area Border Gateways (routers fronterizos)
+Protocolo de encadenamiento dinámico eficaz y ampliamente utilizado en redes IP. Se basa en el conocimiento de toda la red y el empleo de Dijkstra para localizar el camino más corto. Se organiza la red en áreas dentro de las cuales los \textit{routers} encaminan los paquetes. Para cambiar de área se emplean los Area Border Gateways (\textit{routers} fronterizos)
 
-El mensaje OSPF Hello se emplea para conocer la topología de la red con lo que cada router conoce a sus vecinos. Y con el mensaje Link State se informa del estado de los enlaces.
+El mensaje OSPF Hello se emplea para conocer la topología de la red con lo que cada \textit{router} conoce a sus vecinos. Y con el mensaje Link State se informa del estado de los enlaces.
 \end{defn}
 
-Se puede producir un fallo en OSPF por la caída de un enlace, que se deteca de forma inmediata, por la caída de un router, que se detecta gracias al protocolo OSPF Hello, que sirve de \textit{keep-alive}. El mensaje Hello se intercambia cada 10 segundos. Si tras cuatro rondas no se han recibido Hello's de un router, se le da por muerto.
+Se puede producir un fallo en OSPF por la caída de un enlace, que se detecta de forma inmediata, por la caída de un \textit{router}, que se detecta gracias al protocolo OSPF Hello, que sirve de \textit{keep-alive}. El mensaje Hello se intercambia cada 10 segundos. Si tras cuatro rondas no se han recibido Hello's de un \textit{router}, se le da por muerto.
 
-Si en un caso concreto se requiere una configuración estática (estaciones de trabajo, por ejemplo) el router por defecto que se asigna a estos dispositivos se convierte en un SPOF (Single Point Of Failure). Para evitarlo se emplea un cluster de routers controlado con el protocolo \textit{Virtual Router Redundancy Protocolo, VRRP}
+Si en un caso concreto se requiere una configuración estática (estaciones de trabajo, por ejemplo) el \textit{router} por defecto que se asigna a estos dispositivos se convierte en un SPOF (Single Point Of Failure). Para evitarlo se emplea un cluster de \textit{routers} controlado con el protocolo \textit{Virtual Router Redundancy Protocolo, VRRP}
 
 \begin{defn}[VRRP]
-Protocolo de \textit{clustering} para routers empleado para proporcionar redundancia en routers en los casos en que representan un punto único de fallo en rutas de la red. El router se sustituye por un \textit{virtual router} formado por un router activo y otro en \textit{stand-by}.
+Protocolo de \textit{clustering} para \textit{routers} empleado para proporcionar redundancia en \textit{routers} en los casos en que representan un punto único de fallo en rutas de la red. El \textit{router} se sustituye por un \textit{virtual \textit{router}} formado por un \textit{router} activo y otro en \textit{stand-by}.
 
-El router de mayor prioridad será el activo y asume como propias una dirección IP y una MAC que habrán sido asignadas al router virtual. Si cae el router se activa otro.
+El \textit{router} de mayor prioridad será el activo y asume como propias una dirección IP y una MAC que habrán sido asignadas al \textit{router} virtual. Si cae el \textit{router} se activa otro.
 \end{defn}
 
-El router activo envía mensajes Hello en \textit{multicast} cada x segundos. Si transcurre un tiempo predefinido sin recibir mensajes Hello se da al router por muerto y se activa el siguiente en prioridad. Este tiempo de espera predefinido es menor cuanto menor sea la prioridad. Así cuando esté un router activo que no sea el inicial, tendrá más probabilidades de que se le de por muerto, por lo que el router principal tendrá más probabilidades de volver.
+El \textit{router} activo envía mensajes Hello en \textit{multicast} cada x segundos. Si transcurre un tiempo predefinido sin recibir mensajes Hello, se da al \textit{router} por muerto y se activa el siguiente en prioridad. Este tiempo de espera predefinido es menor cuanto menor sea la prioridad. Así cuando esté un \textit{router} activo que no sea el inicial, tendrá más probabilidades de que se le dé por muerto, por lo que el \textit{router} principal tendrá más probabilidades de volver.
 
 En el \textbf{fail-back} hay dos opciones:
 \begin{itemize}
-\item Si la configuración activa preempt, el router de mayor prioridad asume el tráfico. Supone una breve interrupción del servicio mientras se produce el cambio.
-\item Si la configuración desactiva preempt, se deja el router actual como activo hasta un posible fallo, quedando el reincorporado como router de backup.
+\item Si la configuración activa preempt, el \textit{router} de mayor prioridad asume el tráfico. Supone una breve interrupción del servicio mientras se produce el cambio.
+\item Si la configuración desactiva preempt, se deja el \textit{router} actual como activo hasta un posible fallo, quedando el reincorporado como \textit{router} de backup.
 \end{itemize}
 
-\begin{defn}[Balanceador de carga]
+\begin{defn}[Balanceador de carga]\label{cluster:LB}
 Un balanceador de carga es un dispositivo capaz de distribuir peticiones entre un grupo de servidores para su proceso. Tiene como objeto aumentar la capacidad de proceso y la disponibilidad del servicio.
 
 Previamente se realizaba este proceso en redes IP a través del DNS, resolviendo el mismo nombre por distintas IP pero esto no garantizaba que el servidor estuviera activo y los cambios del DNS son lentos al propagarse por la red.
 
-Frente a un switch que sólo maneja información de nivel 2 y un router que sólo maneja información a nivel 3, el \textbf{Load Balancer, LB} también utiliza información de los niveles de transporte y aplicación para realizar el encadenamiento. Como mínimo debe garantizar que en TCP todos los paquetes de la misma conexión van al mismo servidor.
+Frente a un \textit{switch} que sólo maneja información de nivel 2 y un \textit{router} que sólo maneja información a nivel 3, el \textbf{Load Balancer, LB} también utiliza información de los niveles de transporte y aplicación para realizar el encadenamiento. Como mínimo debe garantizar que en TCP todos los paquetes de la misma conexión van al mismo servidor.
 \end{defn}
 
 Para emplear un LB, se asigna una dirección IP virtual (VIP), puerto y protocolo para el servicio a prestar; se asocian al LB los servidores que prestan el servicio y se definen unos mecanismos de distribución de carga y entrega de paquetes.
 
-Cuando llega una petición, el LB decide qué servidor debe atenderla y se la reenvía. El servidor procesará la petición y devolverá una respuesta que será reenviada al cliente. Este último paso, según la configuración de entrega de paquetes, puede eliminarse siendo el servidor quien directamente responde al cliente. (Direct Server Return vs Destination NAT)
+Cuando llega una petición, el LB decide qué servidor debe atenderla y se la reenvía. El servidor procesará la petición y devolverá una respuesta que será reenviada al cliente. Este último paso, según la configuración de entrega de paquetes, puede eliminarse siendo el servidor quien directamente responde al cliente. (\textit{Direct Server Return} vs \textit{Destination NAT})
 
-El mecanismo de distribución de carga puede ser cualquiera: Round Robin, alterno, menor número de conexiones, ponderado, mejor tiempo de respuesta, por origen de la petición, etc.
+El mecanismo de distribución de carga puede ser cualquiera: \textit{Round Robin}, alterno, menor número de conexiones, ponderado, mejor tiempo de respuesta, por origen de la petición, etc.
 
 En cualquier caso es necesario considerar condiciones límite para realizar la entrega:
 \begin{itemize}
@@ -364,7 +364,7 @@ El LB debe ser capaz de hacer que un cliente se conecte siempre a un mismo servi
 \begin{itemize}
 \item Aplicando un algoritmo de balanceo por origen. Tiene el problema de que si varios clientes están tras una NAT son indistinguibles en este sentido.
 \item Por concurrencia de conexiones. Una nueva petición de un cliente se envía al mismo servidor que mantiene la actual
-\item Cookies o identificadors SSL que guarden información de la sesión. Requiere analizar el paquete e impide que el balanceo se haga por paquete. Es necesario partir la conexión TCP en el LB
+\item Cookies o identificadores SSL que guarden información de la sesión. Requiere analizar el paquete e impide que el balanceo se haga por paquete. Es necesario partir la conexión TCP en el LB
 \end{itemize}
 
 \subsection{Redundancia en los sistemas de almacenamiento de la información}
@@ -374,7 +374,7 @@ La redundancia de este tipo de elementos es más compleja pues es necesario mant
 
 Existen diferentes arquitecturas de almacenamiento. Veamos algunas:
 \begin{itemize}
-\item \textbf{Conexión direta (Direct Attached Storage, DAS)}. Consiste en conectar el dispositivo de almacenamiento directamente al servidor o estación de trabajo, es decir, físicamente conectado al dispositivo que hace uso de él. Normalmente se usa directamente el protocolo SCSI en alguna de sus variantes.
+\item \textbf{Conexión directa (Direct Attached Storage, DAS)}. Consiste en conectar el dispositivo de almacenamiento directamente al servidor o estación de trabajo, es decir, físicamente conectado al dispositivo que hace uso de él. Normalmente se usa directamente el protocolo SCSI en alguna de sus variantes.
 
 \item \textbf{Conexión a red (Network Attached Storage, NAS)}. Es el nombre dado a una tecnología de almacenamiento dedicada a compartir la capacidad de almacenamiento de un computador (Servidor) con computadoras personales o servidores clientes a través de una red (normalmente TCP/IP), haciendo uso de un Sistema Operativo optimizado para dar acceso con los protocolos CIFS, NFS, FTP o TFTP.
 
@@ -402,7 +402,7 @@ Dentro de las copias locales existen dos tipos: clonación de discos (se copia l
 \begin{defn}[Flash Copy]
 Copia de una Unidad Lógica en el instante que se solicita, copiando los punteros a los sectores que contienen la información.
 
-En caso de que haya una actualización de un sector, se copia la información antigua y se actuliza el puntero de la copia instantánea.
+En caso de que haya una actualización de un sector, se copia la información antigua y se actualiza el puntero de la copia instantánea.
 
 Se emplean para generar una copia consistente de la información en un momento preciso para su uso posterior.
 
@@ -417,7 +417,7 @@ Las posibles averías en discos físicos individuales son resueltas por la arqui
 \begin{enumerate}
 \item[1] \textbf{Fail-Over}. Se interrumpe la copia remota y la LUN secundaria pasa a principal. Para ello se notifica al servidor de proceso que debe usar a LUN secundaria y se comienza a registrar los cambios.
 
-\item[2] \textbf{Fail-Back} Se copia el secundario activo al primario una vez recuperado. Para ello se detiene el trabajo del servidor de proceso, se reestablece la copia y se notifica al servidor de proceso que puede seguir utilizando el primario.
+\item[2] \textbf{Fail-Back} Se copia el secundario activo al primario una vez recuperado. Para ello se detiene el trabajo del servidor de proceso, se restablece la copia y se notifica al servidor de proceso que puede seguir utilizando el primario.
 \end{enumerate}
 
 
@@ -435,20 +435,20 @@ Hay tres tipos de clusters según su modo de funcionamiento y gestión.
 \item[1] \textbf{Clusters Activo-Pasivo o asimétricos:} Cada grupo de servicio se ejecuta en un nodo. Existen nodos de reserva en stand-by para ejecutarlos en caso de fallo.
 
 \begin{defn}[Heartbeat]
-In computer clusters, heartbeat network is a private network which is shared only by the cluster nodes, and is not accessible from outside the cluster. It is used by cluster nodes in order to monitor each node's status and communicate with each other.
+``In computer clusters, heartbeat network is a private network which is shared only by the cluster nodes, and is not accessible from outside the cluster. It is used by cluster nodes in order to monitor each node's status and communicate with each other.'' -{}- Wikipedia.\footnote{\url{http://en.wikipedia.org/wiki/Heartbeat_network}}\\
 
-Es uno de los puntos críticos de un \textit{cluster} de alta disponibilidad. Si falla se producirá la activación simultánea de ambos nodos, generando conflicos y caída del servicio.
+Es uno de los puntos críticos de un \textit{cluster} de alta disponibilidad. Si falla se producirá la activación simultánea de ambos nodos, generando conflictos y caída del servicio.
 
 Puede implementarse como una red de área local o mediante la escritura en una sección reservada de disco compartido.
 \end{defn}
 
-Para aumentar la fiablidiad del \textbf{heartbeat} se pueden tomar diversas medidas:
+Para aumentar la fiabilidad del \textbf{heartbeat} se pueden tomar diversas medidas:
 \begin{itemize}
 \item Eliminar SPOF en los mecanismos de transporte del heartbeat.
 \item Emplear dos heartbeat (dos redes o red+disco). Actuar sólo en caso de fallo
 de ambos.
 \item Emplear redes independientes lo más simples posibles: cable cruzado para
-dos nodos, o segmentos de LAN con switches independientes.
+dos nodos, o segmentos de LAN con \textit{switches} independientes.
 \item Vigilar el correcto funcionamiento de los procesos que generan y atienden los
 hearbeats en cada nodo. Instalar un watchdog local que los rearranque en caso de caída.
 \end{itemize}
@@ -457,7 +457,7 @@ Existe una serie de \textbf{problemas a la hora de rearrancar en el servidor sec
 
 Si el cambio en la dirección IP se realiza sobre un adaptador con otra dirección MAC, la caché ARP de los clientes mantendrá la antigua hasta que detecten la nueva situación. Por ello se asume también la antigua dirección MAC.
 
-Cuando la parada es no planificada (se dió un fallo en el sistema) se perderán datos de las aplicaciones, las cachés de disco y/o transacciones que se estuvieran realizando. Es por ello que el arranque de servicios en el servidor de reserva se hace siguiente los procedimientos de arranque tras un cierre anormal:
+Cuando la parada es no planificada (se dio un fallo en el sistema) se perderán datos de las aplicaciones, las cachés de disco y/o transacciones que se estuvieran realizando. Es por ello que el arranque de servicios en el servidor de reserva se hace siguiente los procedimientos de arranque tras un cierre anormal:
 \begin{itemize}
 \item Revisión de la consistencia de los sistemas de archivos a nivel de sistema operativo.
 \item Revisión de la consistencia de los datos en disco a nivel de aplicación (por ejemplo, bases de datos).
@@ -481,7 +481,7 @@ En este modelo existe un mecanismo de balanceo de carga para asignar las peticio
 
 Si falla uno nodo no cae el grupo de servicio e incluso, dependiendo del tipo de aplicación, las conexiones activas en el momento del fallo pueden mantenerse también.
 
-El cluster debe incluir soluciones para el acceso compartido a discos en lectura y escritura, creación de áreas de memoria compartida entre los nodos del cluster, consistencia de la información distribuída entre los distintos nodos, etc.
+El cluster debe incluir soluciones para el acceso compartido a discos en lectura y escritura, creación de áreas de memoria compartida entre los nodos del cluster, consistencia de la información distribuida entre los distintos nodos, etc.
 
 \begin{example}
 Ya vimos en el tema 2 la arquitectura de un servidor de aplicaciones J2EE, que es la que muestra la siguiente imagen:
@@ -495,7 +495,7 @@ El balanceo de carga entre servidores Web lo realiza el Edge Server y el balance
 
 La alta disponibilidad en el acceso a los contenedores EJB y a los servicios de Back End es proporcionada por IIOP (corba) y por mecanismos de \textit{clustering} respectivamente.
 
-La continuidad de la sesión entre distintas Servlet Engines se obtiene mediante el mantenimiento común de los datos de sesión. Este soporte común se puede conseguirse mediante una tabla de sesiones en una BD compartida, un gestor de réplica centralizado (Redundado para evitar SPOF) o un gestor de réplica distribuído.
+La continuidad de la sesión entre distintas Servlet Engines se obtiene mediante el mantenimiento común de los datos de sesión. Este soporte común se puede conseguirse mediante una tabla de sesiones en una BD compartida, un gestor de réplica centralizado (Redundado para evitar SPOF) o un gestor de réplica distribuido.
 \end{example}
 
 \end{enumerate}
@@ -508,11 +508,11 @@ Aunque tengan poca probabilidad, el impacto puede ser muy alto (por ejemplo, si 
 
 Veamos algunas definiciones necesarias para entender los conceptos que analizaremos en este apartado:
 
-\begin{defn}[Recovery Point Objective (RPO)]
+\begin{defn}[Recovery\IS Point Objective (RPO)][Recovery\IS Point Objective]\index{RPO}
 Instante de tiempo al que se es capaz de recuperar la información existente en el sistema tras un fallo. Si no es 0, habrá perdida de datos
 \end{defn}
 
-\begin{defn}[Recovery Time Objective (RTO)]
+\begin{defn}[Recovery\IS Time Objective (RTO)][Recovery\IS Time Objective]\index{RTO}
 Tiempo que se tarda en recuperar los sistemas tras producirse un fallo. Si no es 0, habrá interrupciones de servicio.
 \end{defn}
 
@@ -556,7 +556,7 @@ asíncronas, estudiadas previamente.
 
 \end{enumerate}
 
-\subsection{Arquitecturas de CPDs orientadas a la recuperación ante desastres}
+\subsection{Arquitecturas de CPDs orientadas a la recuperación ante desastres}\label{cluster:disaster}
 \textbf{Clusters a nivel de campus}
 \begin{itemize}
 \item Los elementos del cluster se distribuyen entre dos edificios próximos.
@@ -570,12 +570,12 @@ asíncronas, estudiadas previamente.
 \textbf{Clusters metropolitanos}
 \begin{itemize}
 \item Similar al anterior, pero con edificios en ubicaciones distantes que no excedan el rango en el que es posible realizar copia síncrona de la información.
-\item Extensión de LAN y SAN con enlaces alquilados de alta velocidad (“fibra oscura”, WDM).
+\item Extensión de LAN y SAN con enlaces alquilados de alta velocidad (``fibra oscura'', WDM).
 \item Protege frente a desastres locales.
 
 \end{itemize}
 
-\textbf{Clusters contienentales}
+\textbf{Clusters continentales}
 \begin{itemize}
 \item Sin límite de distancia entre centros.
 \item Requieren conexión a través de red WAN.
@@ -592,3 +592,12 @@ asíncronas, estudiadas previamente.
 \begin{center}
 \includegraphics[width=\linewidth]{img/continuidad_negocio.png}
 \end{center}
+
+\subsection{Resumen de tipos de clusters}
+En resumen, en este tema se han visto 4 tipos de clusters:
+\begin{itemize}
+	\item \textbf{High performance cluster} : \ref{cluster:HP}
+	\item \textbf{Load balancer} : \ref{cluster:LB}
+	\item \textbf{Cluster orientado a la recuperación ante desastres} : \ref{cluster:disaster}
+	\item \textbf{Cluster tolerante a fallos} : \ref{cluster:FT}
+\end{itemize}

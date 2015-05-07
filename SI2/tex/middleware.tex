@@ -4,19 +4,23 @@ Para este tema es importante tener claros varios conceptos que vamos a ir defini
 Conjunto de aplicaciones encargadas de enlazar los componentes de un sistema distribuido.
 \end{defn}
 
-\section{Network Operating System (NOS)}
-Este conjunto de aplicaciones está dividido en el protocolo específico del servicio con el que estamos trabajando (ODBC, HTTP, SMTP...), el protocolo de transporte (TCP/IP) y una capa intermedia llamada Network Operating System (NOS)}.
+Este conjunto de aplicaciones está dividido en el protocolo específico del servicio con el que estamos trabajando (ODBC, HTTP, SMTP...), el protocolo de transporte (TCP/IP) y una capa intermedia llamada Network Operating System (NOS).
 
+\section{Network Operating System (NOS)}
 \begin{defn}[Network Operating System]
 Es una extensión del sistema operativo que proporciona transparencia al cliente, para que éste realice las llamadas como si fueran locales.
+\label{NOS}
 \end{defn}
 
-Algunas de las maneras de proporcionar transparencia del NOS según \concept{RM-ODP} (Open Distributed
-Processing Reference Model) son
+Algunas de las maneras de proporcionar transparencia del NOS según \concept{RM-ODP} (Open Distributed Processing Reference Model) son
 \begin{itemize}
 \item Ubicación: Ocultar dónde reside cada recurso (y permite que éste se mueva, incluso mientras está siendo utilizado).
 \item Persistencia: Ocultar tanto la activación y desactivación de objetos como sus fallos y recuperaciones mediante la replicación.
 \item Concurrencia: Ocultar la utilización de recursos concurrentes.
+\end{itemize}
+
+Otras características deseables para un NOS serían
+\begin{itemize}
 \item Prestaciones: Escalar el tamaño y reconfigurar el sistema para mejorar sus prestaciones según varía la carga de trabajo.
 \item Espacio de nombres:
 \item SSO: Single Sign On - Un único usuario y contraseña para todo el sistema.
@@ -87,7 +91,7 @@ Para el funcionamiento de RPCs necesitamos unos componentes intermedios llamados
 
 \obs La espera del cliente es \textbf{bloqueante}.
 
-\obs Una ventaja realmente interesante de esto es la transparencia de representación de los datos. RPC (y los stubs intermedios) permiten que un cliente que utiliza Big Endian pueda pasarle los parámetros a una función que se ejecute en un servidor que utiliza Little Endian. Esta \textit{transformación} de los datos de un sistema de codificación al otro se llama \concept{Marshalling} (el codificarlos para enviar) y \concpet{Unmarhsalling} (descodificarlos al recibirlos). Ambos stubs tienen que hacer marshalling y unmarshalling al enviar y recibir mensajes respectivamente.
+\obs Una ventaja realmente interesante de esto es la transparencia de representación de los datos. RPC (y los stubs intermedios) permiten que un cliente que utiliza Big Endian pueda pasarle los parámetros a una función que se ejecute en un servidor que utiliza Little Endian. Esta \textit{transformación} de los datos de un sistema de codificación al otro se llama \concept{Marshalling} (el codificarlos para enviar) y \concept{Unmarhsalling} (descodificarlos al recibirlos). Ambos stubs tienen que hacer marshalling y unmarshalling al enviar y recibir mensajes respectivamente.
 
 \paragraph{Problemas de RPC}
 \begin{itemize}
@@ -126,11 +130,11 @@ Sólo por si interesa, incluimos un esquema de cómo funciona y qué ficheros se
 
 \paragraph{Algunas diferencias entre RPCs}
 \begin{itemize}
-	\item Parámetros: Aunque en general soporten múltiples parámetros (\concept{Apollo RPC} por ejemplo), Sun RPC sólo tiene un único parámetro, tanto de entrada como de salida (obviamente puedes ser estructuras).
+	\item Parámetros: Aunque en general soporten múltiples parámetros (\concept{Apollo RPC} por ejemplo), Sun RPC sólo tiene un único parámetro, tanto de entrada como de salida (obviamente pueden ser estructuras).
 	\item Marshalling: En general lo hace el RPC, aunque en Sun RPC el marshalling que se realiza es mínimo. Es responsabilidad del usuario tener cuidado con eso.
 \end{itemize}
 
-Comentamos que Apollo RFC tiene su propio lenguaje de representación de datos, \textit{Network Data Representation} \concept{NDR} (como el XDR de Sun RPC). Apoollo tiene también un lenguaje de representación de interfaces \concept{NIDL} (\textit{Network Interface Definition Language}).
+Comentamos que Apollo RPC tiene su propio lenguaje de representación de datos, \textit{Network Data Representation} \concept{NDR} (como el XDR de Sun RPC). Apollo tiene también un lenguaje de representación de interfaces \concept{NIDL} (\textit{Network Interface Definition Language}).
 
 \subsection{Web Services (SOAP-WSDL-UDDI)}
 Es un modelo de uso de la Web. La idea es tener servidores que ofrecen servicios (localizar geográficamente a través de la IP, ofrecer información de finanzas...) y que cualquiera puede requerir esos servicios. ¿Qué diferencia tiene con RPC? Que en RPC el programador tiene que codificar el lado del servidor y tener conciencia de como funciona, mientras que con los WebServices, el programador que está haciendo un cliente puede utilizar los servicios que le proporciona un servidor que otro programador haya hecho en cualquier otro momento.
@@ -167,58 +171,88 @@ Los WebServices necesitan de 3 protocolos estándares. En el siguiente gráfico 
 
 \subsubsection{SOAP}
 \begin{defn}[SOAP]
-Service Oriented Architecture Protocol. Es un protocolo de comunicación basado en XML lo que hace que sea independiente de la plataforma y del lenguaje de programación.
+(siglas de Simple Object Access Protocol) Es un protocolo estándar que define cómo dos objetos en diferentes procesos pueden comunicarse por medio de intercambio de datos XML.
+
+Es independiente de la plataforma y el lenguaje de programación y, aunque se puede usar en distintos sistemas de mensajes y sobre distintos protocolos de transporte, su uso principal es transportar RPCs sobre HTTP.
 \end{defn}
 
-Los mensajes SOAP se componen de 3 elementos. El sobre (SOAP-ENV:Envelope), la cabecera (SOAP-ENV:Header) y el cuerpo del mensaje (SOAP-ENV:Body). Además, el cuerpo puede incluir genéricos con información sobre errroes (SOAP-ENV:Faults)
+Un mensaje SOAP es un documento XML ordinario con una estructura definida en la especificación del protocolo. Dicha estructura la conforman las siguientes partes:
+\begin{itemize}
+\item \textbf{Envelope (obligatoria)}: Raíz que da la estructura, es la parte que identifica al mensaje SOAP como tal.
+\item \textbf{Header}: Esta parte es un mecanismo de extensión ya que permite enviar información relativa a cómo debe ser procesado el mensaje. Es una herramienta para que los mensajes puedan ser enviados de la forma más conveniente para las aplicaciones. El elemento "Header" se compone a su vez de "Header Blocks" que delimitan las unidades de información necesarias para el header.
+\item \textbf{Body (obligatoria)}: Contiene la información relativa a la llamada y la respuesta.
+\item \textbf{Fault}: Bloque que contiene información relativa a errores que se hayan producido durante el procesado del mensaje y el envio desde el "SOAP Sender" hasta el "Ultimate SOAP Receiver"
+\end{itemize}
 
 \subsubsection{WSDL}
 \begin{defn}[WSDL]
-Web Service Description Language. Basándose en XML se define la interfaz del servicio públicamente.
+WSDL son las siglas de Web Services Description Language, un formato XML que se utiliza para describir servicios Web.
+
+WSDL describe la interfaz pública de los servicios Web. Está basado en XML y describe la forma de comunicación, es decir, los requisitos del protocolo y los formatos de los mensajes necesarios para interactuar con los servicios listados en su catálogo. Las operaciones y mensajes que soporta se describen en abstracto y se ligan después al protocolo concreto de red y al formato del mensaje
 \end{defn}
 
-Estos son algunos elementos importantes de una declaración WSDL.
+Estructura de una declaración WSDL
 \begin{itemize}
-\item \textit{<definitions>:} Elemento raíz que contiene el resto. Define su nombre y los espacios de nombres que utiliza.
-\item \textit{<types>:} Tipos de datos utilizados entre cliente y servidor. Usa W3C XML Schema (XSD) por defecto.
-\item \textit{<message>:} Declaraciones de mensajes empleados para peticiones y respuestas y los elementos que los forman.
-\item \textit{<portType>:} Operaciones soportadas y encadenamiento de mensajes que implica su ejecución.
-\item \textit{<binding>:} Modo en que los mensajes se transmiten sobre un protocolo de RPC, con extensiones específicas para SOAP.
-\item \textit{<service>:} Contiene la información de la dirección en la que se localiza el servicio.
-\end{itemize}
+\item \textbf{definitions}: Elemento raíz que contiene el resto. Define su
+nombre y los espacios de nombres que utiliza.
+\item \textbf{types}: Tipos de datos utilizados entre cliente y servidor. Usa
+W3C XML Schema (XSD) por defecto.
+\item \textbf{message}: Declaraciones de mensajes empleados para
+peticiones y respuestas y los elementos que los forman.
+\item \textbf{portType}: Operaciones soportadas y encadenamiento de
+mensajes que implica su ejecución.
+\item \textbf{binding}: Modo en que los mensajes se transmiten sobre un
+protocolo de RPC, con extensiones específicas para SOAP.
+\item \textbf{service}: Contiene la información de la dirección en la que se
+localiza el servicio.
 
+\end{itemize}
 
 \subsubsection{UDDI}
 \begin{defn}[UDDI]
-Es el mecanismo de registro y búsqueda de servicios Web. Las siglas significan: Universal Description, Discovery and Integration
+UDDI son las siglas del catálogo de negocios de Internet denominado Universal Description, Discovery and Integration. El registro en el catálogo se hace en XML. UDDI es una iniciativa industrial abierta (sufragada por la OASIS) entroncada en el contexto de los servicios Web.
 \end{defn}
 
-Consta de 3 partes: \textbt{modelo de datos} (esquema XML), la \textbf{API} (RPCs con SOAP para registrar y buscar servicios) y los \textbf{Cloud Services} (los servidores que proporcionan el servicio).
+Consta de 3 partes: \textbf{modelo de datos} (esquema XML), la \textbf{API} (RPCs con SOAP para registrar y buscar servicios) y los \textbf{Cloud Services} (los servidores que proporcionan el servicio).
 
-Existen 3 categorías de datos en UDDI:\begin{itemize}
-\item Páginas blancas: Información general de una compañía.
-\item Páginas amarillas: Se clasifican en categorías.
-\item Páginas verdes: Describen los servicios que se prestan.\end{itemize}
-
-
-\paragraph{Ventajas e inconvenientes de los Web Services}
-
+El registro de un negocio en UDDI distingue tres categorías de datos:
 \begin{itemize}
-\item Ventajas:
-\subitem Estándares. Acuerdo global entre fabricantes.
-\subitem Independientes de plataforma.
-\item Inconvenientes:
-\subitem Sobrecarga de información en los mensajes por su formato (XML).
-\subitem Seguridad.
-\subitem No hay fiabilidad transaccional de las comunicaciones.
+\item \textbf{Páginas blancas}. Dirección, contacto y otros identificadores conocidos.
+\item \textbf{Páginas amarillas}. Categorización industrial basada en taxonomías.
+\item \textbf{Páginas verdes}. Información técnica sobre los servicios que aportan las propias empresas.
+\end{itemize}
+UDDI es uno de los estándares básicos de los servicios Web cuyo objetivo es ser accedido por los mensajes SOAP y dar paso a documentos WSDL, en los que se describen los requisitos del protocolo y los formatos del mensaje solicitado para interactuar con los servicios Web del catálogo de registros.
+
+
+\textbf{Ventajas e inconvenientes de los Web Services}
+
+\textbf{Ventajas}
+\begin{itemize}
+\item Aportan interoperabilidad entre aplicaciones de software independientemente de sus propiedades o de las plataformas sobre las que se instalen.
+\item Los servicios Web fomentan los estándares y protocolos basados en texto, que hacen más fácil acceder a su contenido y entender su funcionamiento.
+\item Permiten que servicios y software de diferentes compañías ubicadas en diferentes lugares geográficos puedan ser combinados fácilmente para proveer servicios integrados.
 \end{itemize}
 
-\subsection{Rest}
+
+\textbf{Inconvenientes}
+\begin{itemize}
+\item Para realizar transacciones no pueden compararse en su grado de desarrollo con los estándares abiertos de computación distribuida como CORBA (Common Object Request Broker Architecture).
+\item Su rendimiento es bajo si se compara con otros modelos de computación distribuida, tales como RMI (Remote Method Invocation), CORBA o DCOM (Distributed Component Object Model). Es uno de los inconvenientes derivados de adoptar un formato basado en texto. Y es que entre los objetivos de XML no se encuentra la concisión ni la eficacia de procesamiento.
+\item Al apoyarse en HTTP, pueden esquivar medidas de seguridad basadas en firewall cuyas reglas tratan de bloquear o auditar la comunicación entre programas a ambos lados de la barrera.
+\end{itemize}
+
+\subsection{REST}
 \begin{defn}[REST]
-Representational State Transfer. Es una arquitectura para la web definida por W3C.
+Si bien el término REST se refería originalmente a un conjunto de principios de arquitectura, en la actualidad se usa en el sentido más amplio para describir cualquier interfaz web simple que utiliza XML y HTTP, sin las abstracciones adicionales de los protocolos basados en patrones de intercambio de mensajes como el protocolo de servicios web SOAP.
+
+Es posible diseñar sistemas de servicios web de acuerdo con el estilo arquitectural REST de Fielding y también es posible diseñar interfaces XMLHTTP de acuerdo con el estilo de llamada a procedimiento remoto (RPC), pero sin usar SOAP.
+
+Estos dos usos diferentes del término REST causan cierta confusión en las discusiones técnicas, aunque RPC no es un ejemplo de REST.
 \end{defn}
 
-La idea es utilizar los métodos de HTTP para acceder a los recursos y servicios del servidor. El servidor define su interfaz normalmente utilizando \concpet{WADL} \textit{Web Application Description Language}. El programador del cliente tiene que saberse la especificación concreta, y saber qué objetos recibe qué peticiones. 
+Al trabajar con REST se considera que el sistema se compone de \textbf{recursos}, es decir, elementos que deben ser accedidos en el sistema distribuído y a los que se accede a través de su identificador global \concept{URI}.
+
+La idea es utilizar los métodos de HTTP para acceder a los recursos y servicios del servidor. El servidor define su interfaz normalmente utilizando \concept{WADL} \textit{Web Application Description Language}. El programador del cliente tiene que saberse la especificación concreta, y saber qué objetos recibe qué peticiones.
 
 Para entender mejor REST, miramos el ejemplo de la API de onedrive:
 
@@ -231,7 +265,10 @@ Para entender mejor REST, miramos el ejemplo de la API de onedrive:
 
 Aquí están descritas las posibilidades que existen en el servidor de OneDrive. Con simples peticiones HTTP podemos funcionar. La petición \textit{https://api.onedrive.com/v1.0/drive/} (un GET de HTTP normal) nos devolvería el directorio con las carpetas que tiene el usuario con el que nos hayamos autenticado antes. ¿Cómo autenticarse? Con una petición POST con los datos pertinentes. ¿Y cómo nos devuelve los datos? Lo más habitual es en formato \textbf{JSON} aunque también puede ser en XML.
 
-La utilización de HTTP y JSON/XML hace posible la programación de clientes en cualquier plataforma y es una comunicación más ligera que SOAP. Un inconveniente es que es menos ``transparente''\footnote{transparente en el sentido de que no te enteras de nada. Para utilizar REST tienes que saber más del servicio que utilizas.}. 
+La utilización de HTTP y JSON/XML hace posible la programación de clientes en cualquier plataforma y es una comunicación más ligera que SOAP. Un inconveniente es que es menos ``transparente''\footnote{transparente en el sentido de que no te enteras de nada. Para utilizar REST tienes que saber más del servicio que utilizas.}.
+
+\textbf{REST es una arquitectura, no un estándar.}
+
 
 \subsection{Comuncación mediante colas de mensajes}
 
@@ -253,7 +290,7 @@ Las conexiones en colas de mensajes pueden ser 1-1, 1-N, N-1 y N-M.
  \obs Permite balanceo automático de carga en un sistema distribuido. Se pueden procesar los mensajes con prioridades, no necesariamente FIFO.
 
 Vamos a ver algunos ejemplos de gestores de colas.
-\subsubsecction{IBM Web Sphere MQ}
+\subsubsection{IBM Web Sphere MQ}
 Es el MOM más extendido. Es multiplataforma y multiprotocolo.
 
 
@@ -282,7 +319,7 @@ A continuación mostramos un esquema de funcionamiento de un sistema de mensajer
 
 Vemos que se distinguen 3 tipos de colas, las locales (del propio sistema) y las remotas, que el sistema reconoce que pertenecen a otro sistema y entonces el mensaje tiene que ser enviado al sistema al que pertenece la cola remota.
 
-Además de estos 3 tipos de colas (locales remotas y de transmisión) podemos definir en nuestras colas un par de propiedades: persistentes o temporales (en el almacenamiento de los mensajes) y estáticas (definidas permanentemente) o dinámicas (creadas por aplicaciones). Las colas dinámicas se crean a partir de una cola modelo.
+Además de estos 3 tipos de colas (locales, remotas y de transmisión) podemos definir en nuestras colas un par de propiedades: persistentes o temporales (en el almacenamiento de los mensajes) y estáticas (definidas permanentemente) o dinámicas (creadas por aplicaciones). Las colas dinámicas se crean a partir de una cola modelo.
 
 También existen las colas de activación, y de cartas muertas (con mensajes que no se han podido entregar)
 
@@ -325,7 +362,7 @@ Extendiendo el modelo de publicador/suscriptor tenemos un ESB. El ESB actúa com
 \end{figure}
 
 A continuación, estudiamos las ventajas e inconvenientes que puede tener un sistema como este:
-\paragrpaph{Ventajas:}
+\paragraph{Ventajas:}
 \begin{itemize}
 \item Adaptación rápida en entornos existentes.
 \item Flexibilidad. Fácil de adaptar a nuevos requerimientos.
@@ -334,7 +371,7 @@ A continuación, estudiamos las ventajas e inconvenientes que puede tener un sis
 \item Convierte tareas de programación en configuración (manipulación de datos, por ejemplo).
 \item Facilita la gestionabilidad del sistema, al proporcionar un punto único de control para todos los intercambios.
 \end{itemize}
-\paragrpaph{ Inconvenientes:}
+\paragraph{ Inconvenientes:}
 \begin{itemize}
 \item Posible punto único de fallo.
 \item Fácil saturación del ESB a cargas altas de comunicación.
@@ -360,7 +397,7 @@ En RMI también es necesario realizar marshalling y unmarshalling. El componente
 
 El otro componente que merece mención es el módulo de la referencia remota. El objeto que tiene el cliente es una referencia que el módulo de referencias remotas se encarga de traducir la referencia local (a algo remoto) a una referencia remota (al objeto remoto).
 
-Aparte del RMI de Java, existen otras alternativas, como \concept{CORBA} (Common Object Request Broker Architecture) creada por \concept{OMG} (Object Management Group) y \concpet{DCOM} (Distributed Component Object Model) creada por Microsoft.
+Aparte del RMI de Java, existen otras alternativas, como \concept{CORBA} (Common Object Request Broker Architecture) creada por \concept{OMG} (Object Management Group) y \concept{DCOM} (Distributed Component Object Model) creada por Microsoft.
 
 \subsubsection{OMA}
 \begin{defn}[OMA]
@@ -376,7 +413,7 @@ Vamos a ver el modelo de referencias.
 \centering
 \includegraphics[width=1\textwidth]{img/OMA_Ref.png}
 \caption{Esquema de funcionamiento del modelo de referencias de OMA.}
-\label{OMA}
+\label{OMAimg}
 \end{figure}
 
 \begin{itemize}
@@ -436,7 +473,6 @@ Esta plataforma de objetos ha ido mejorandose y evolucionando a lo largo del tie
 \end{defn}
 
 \paragraph{Características}
-<<<<<<< Updated upstream
 Un objeto COM es un objeto en el mismo sentido que en CORBA,  es independiente del lenguaje de programación y cada objeto tiene una o varias interfaces. Estas interfaces se definen con el Lenguaje de Definición de Interfaces de Microsoft (en inglés \concept{MIDL}). Este lenguaje está basado en el IDL\ref{IDL} del \textit{Distributed Computing Environment} (\concept{DCE}) que utiliza Apollo RFC.
 
 Los sistemas COM se organizan en componentes COM que son módulos binarios (ejecutables o librerías dinámicas). Estos módulos pueden contener uno o varios objetos COM, una interfaz gráfica e incluso otro componente\footnote{Si un componente incluye a otro, el grande se llama componente \textit{ActiveX}}
@@ -505,18 +541,23 @@ Estos espacios de nombres se pueden utilizar también orientándolo a objetos, d
 
 \paragraph{Estándar \concept{X.500}}
 Vamos a definir unas cuantas siglas\footnote{Por si acaso no llevamos ya suficientes} necesarias para explicar este estándar
+
 \begin{defn}[XDS]
 	APIs de X/Open Direcrory Service
 \end{defn}
+
 \begin{defn}[DUA]
 	Directory User Agent
 \end{defn}
+
 \begin{defn}[DAP]
 	Direcroty Access Protocol
 \end{defn}
+
 \begin{defn}[DSA]
 	Directory System Agent
 \end{defn}
+
 \begin{defn}[DSP]
 	Direcroty System Protocol
 \end{defn}
@@ -548,7 +589,7 @@ Sincronizar 2 personas sus relojes es fácil, porque los 2 ven en el mismo insta
 
 Mantener sincronizado el tiempo es imporescindible para la consistencia y para la \textbf{seguridad}.
 
-Para lograr esta sincronización existen proveedores de tiempo (\concept{timer ticks}) que pueden sincronizar por radir y actualizar el reloj del administrador de nuestro sistema distribuido. Podemos conectar más de un servidor a estos proveedores.
+Para lograr esta sincronización existen proveedores de tiempo (\concept{timer ticks}) que pueden sincronizar por radio      y actualizar el reloj del administrador de nuestro sistema distribuido. Podemos conectar más de un servidor a estos proveedores.
 
 Una vez tenemos definidos los servidores de nuestro servicio con la hora buena (sincronizados con los timer ticks) el resto de nuestros servidores realizan consultas para sincronizar sus relojes. El formato utilizado es \concept{UTC} (Universal Time Coordinated) que cuenta desde el principio del calendario gregoriano.
 
@@ -564,7 +605,34 @@ Una vez tenemos definidos los servidores de nuestro servicio con la hora buena (
 
 La red de servidores está organizada jerárquicamente. El primer estrato recibe UTC de fuentes  físicas de tiempo (llamadas estrato 0 en wikipedia) y el estrato 2 sincroniza con los primeros. El resto de la red sincroniza con el estrato 2.
 
-En la sección de ejercicios veremos cómo se pueden sincronizar 2 servidores y cómo podemos saber la inexactitud de nuestra desincronización.
+Veamos un ejemplo de los cálculos necesarios para sincronizar dos servidores.
+
+\begin{example}
+El esquema de la comunicación (intercambio de mensajes) entre los dos servidores que se van a sincronizar es:
+\begin{center}
+\includegraphics[width=1\textwidth]{img/ntp.png}
+\label{ejemplo_tiempos}
+\end{center}
+
+Nuestro objetivo es calcular $o$, que es la diferencia de tiempos entre ambos relojes. Observando el esquema, podemos deducir las ecuaciones:
+\begin{align}
+T_{i-3}+o+t=T_{i-2}\\
+T_{i}+o=T_{i-1}+t'
+\end{align}
+Tampoco conocemos $t$ n $t'$, pues no sabemos el tiempo que ha tardado el mensaje en ser transmitido. Si sumamos las dos ecuaciones y despejamos $o$ de la nueva ecuación nos queda:
+\[o=\underbrace{\frac{T_{i-2}+T_{i-1}-T_i-T_{i-3}}{2}}_{o_i}+\frac{t'-t}{2}\]
+
+Así, tenemos $o$ escrito como la suma de un valor conocido más una desviación. Puesto que todos los tiempos son positivos, tenemos que $t+t'>t'-t$ por lo que podemos acotar $o$ mediante:
+\[o_i-\frac{\overbrace{t'+t}^{d_i}}{2}\leq o \leq o_i + \frac{\overbrace{t'+t}^{d_i}}{2}\]
+
+Parece que a la diferencia $\frac{t'+t}{2}$ se le llama \concept{tolerancia mínima de reloj}. Esta tolerancia se obtiene restando las 2 ecuaciones iniciales.
+
+\begin{align}
+T_{i-3} + o + t - T_i - o = T_{i-2} - T_{i-1} -t' \implies t+t'=d_i=T_{i-1}+T_i+T_{i_2}-T_{i-3}
+\end{align}
+
+\end{example}
+
 
 \subsection{Seguridad}
 Aunque es un tema superimportante (porque en un sistema distribuido se complican las cosas) y tiene un tema dedicado explícitamente a esto, no se va a ver en este curso porque ...

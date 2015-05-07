@@ -1,6 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{apuntes}[2013/04/20 Note taking class]
 
+\RequirePackage[usenames,dvipsnames]{xcolor}
 \RequirePackage{pdfpages}
 \RequirePackage{datetime}
 
