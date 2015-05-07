@@ -2,6 +2,7 @@
 \do{arg0}#m
 \pbreak#m
 \doneby{arg0}#m
+\approvedby{arg0}#m
 \mop{operacion}#m
 \imgref{referencia}#m
 \dimplies#m
