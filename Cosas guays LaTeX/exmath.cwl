@@ -64,6 +64,7 @@
 \floor{arg0}#m
 \argmin#m
 \argmax#m
+\sign#m
 \eq#m
 \rango#m
 \eqexpl{arg0}#m
@@ -216,6 +217,7 @@
 \gal#m
 \tens#m
 \dif#m
+\Dif#m
 \tc{arg3}#m
 \tc[Id. superior]{arg3}#m
 \tc[Id. superior][Id. inferior]{arg3}#m
