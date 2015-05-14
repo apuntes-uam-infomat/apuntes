@@ -2553,9 +2553,9 @@ Y queremos probar que $\forall \epsilon > 0$:
 
 Partimos de la definición de convergencia en probabilidad:
 \[
-P(\abs{X_n -X}\geq \epsilon) = \int \ind_{\abs{X_n - X}> \epsilon}dP = \int \ind_{\abs{X_n - X}^p> \epsilon^p}dP \leq \int \frac{\abs{X_n - X}^p}{\epsilon^p}
+P(\abs{X_n -X}\geq \epsilon) = \int \ind_{\{\abs{X_n - X}> \epsilon\}}dP = \int \ind_{\{\abs{X_n - X}^p> \epsilon^p\}}dP \leq \int \frac{\abs{X_n - X}^p}{\epsilon^p}
 \]
-\[ \ind_{\abs{X_n - X}^p> \epsilon^p}dP \leq \frac{1}{\epsilon^p}  \int \abs{X_n - X}^p dP
+\[ \ind_{\{\abs{X_n - X}^p> \epsilon^p\}}dP \leq \frac{1}{\epsilon^p}  \int \abs{X_n - X}^p dP
 \]
 
 Que por hipótesis tiende a 0 cuando la n tiende a infinito.
@@ -2984,6 +2984,37 @@ en las $n$ primeras posiciones de la expansi\'on decimal de $w$ (por ejemplo, $X
 
 \solution
 
+\spart
+La ley fuerte de los grandes números de Kolgomorov dice:
+
+Sea $\{X_n\}_{n \geq 1}$ una sucesión de v.a.i.i.d en $L^1$, entonces:
+\[
+\frac{1}{n}\sum_{j=1}^{n} \stackrel{c.s.}{\rightarrow} \mathbb{E}(X_1)
+\]
+
+\spart
+Por la ley fuerte de Kolgomorov: \textcolor{red}{¿Qué es exactamente que estén identicamente distribuidas?Por que en este caso lo están?}
+\[
+\frac{1}{n}\sum_{j=1}^{n} \stackrel{c.s.}{\rightarrow} \mathbb{E}(X_1) = \frac{1}{10}
+\]
+
+\spart
+
+\[
+\lim_n \frac{X_n-\frac{n}{10}}{n^{2/3}}
+\]
+
+Podemos usar el siguiente teorema:
+Sean $\{X_n\}_{n\geq 1}$ v.a.i.i.d con $X_1 \in L^p$, $p \in [1,2)$. Entonces:
+\[
+\frac{1}{n^{1/p}}\sum_{j=1}^{n}X_j \stackrel{c.s.}{\rightarrow} 0
+\]
+Sea $Y_j \sim Bernoulli(1/10)$. $Y_j \in L^p$ $\forall p \in [1, \infty]$, en particular $Y_j \in L^{\frac{3}{2}}$, luego por la tasa de convergencia anterior para v.a en $L^p$ con $p \in [1,2)$, tenemos que:
+\[
+\lim_n \frac{X_n-\frac{n}{10}}{n^{2/3}} = \lim_n \frac{\sum_{i=1}^{n} (Y_i -\frac{1}{10})}{n^{2/3}} = 0
+\]
+
+Con $X_i = Y_i - \frac{1}{10}$. \textcolor{red}{Valdría sin poner el $\frac{1}{10}$ no?}
 
 \end{problem}
 
@@ -3067,7 +3098,7 @@ Función generatriz de momentos.
 
 \solution
 
-Sea $X~N(0,1)$. Completando el cuadrado y usando el hecho de que la integral de una densidad es 1, tenemos que la función generatriz:
+Sea $X~N(0,1)$. Su función de densidad es $f_X(t)=e^{\frac{-x^2}{2}}$ Completando el cuadrado y usando el hecho de que la integral de una densidad es 1, tenemos que la función generatriz:
 
 \[
 \psi_X(t)=\mathbb{E}(e^{tX})=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}e^{tX}e^{-\frac{x^2}{2}}dx=e^{\frac{t^2}{2}}\frac{1}{\sqrt{2\pi}} \int_{-\infty}^{\infty}e^{-\frac{(x-t)^2}{2}} dx = e^{\frac{t^2}{2}}
@@ -3100,6 +3131,8 @@ cuando $t\to 0$. Sugerencia: usar la expansi\'on de Taylor de $e^{ir}$, donde $r
 \varphi_X(t)=\mathbb{E}(e^{itX})=\mathbb{E}(1+itX-\frac{t^2}{2}X^2+o(t^2X^2))=1-\frac{t^2}{2}\mathbb{E}(X^2)+o(t^2\mathbb{E}(X^2)) \stackrel{t \rightarrow 0}{=} 1-\frac{t^2}{2}+o(t^2)
 \]
 
+Recordar que $\mathbb{E}(X)=0$ y que $0=Var(X)=\mathbb{E}(X-\mathbb{E}(X))^2=\mathbb{E}(X-0)^2=\mathbb{E}(X^2)$
+
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3110,6 +3143,28 @@ caracter\'{\i}sticas, y el Teorema de Continuidad de L\'evy-Cram\'er.
 
 
 \solution
+El TCL para v.a.i.i.d en $L^2$. Suponemos sin pérdida de generalidad que $\mathbb{E}(X_1)=0$ y $Var(X_1)=1$ (Si no, en vez de $X_i$ usamos $Y_i =\frac{X_i -\mathbb{E}(X_i)}{\sqrt{Var(X_i)}}$).
+
+Cogemos la función característica siguiente:
+\[
+\phi_{\frac{\sum_{i=1}^{n}}{\sqrt{n}}}(t) =
+\]
+
+Por la propiedad multiplicativa, es igual a:
+\[
+=\prod_{i=1}^{n} \phi_{\frac{X_i}{\sqrt{n}}}(t)= \prod_{i=1}^{n} \mathbb{E}(e^{it(\frac{X_i}{\sqrt{n}})})=
+\prod_{i=1}^{n} \mathbb{E}(e^{iX_i(\frac{t}{\sqrt{n}})})= 
+\]
+
+Usando el ejercicio 7 y el hecho de que $Var(X)=1$ \textcolor{red}{Este paso por que?}:
+\[
+=\mathbb{E}\left(1-\frac{1}{2}\left(\frac{t}{\sqrt{n}}\right)^2+o(\frac{t^2}{n})\right)^n =
+\]
+
+Que por el ejercicio 6:
+\[
+=\left(e^{\frac{-t^2}{2n}}\right)^n=e^{\frac{-t^2}{2}}
+\]
 
 \end{problem}
 
