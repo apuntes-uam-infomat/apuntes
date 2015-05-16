@@ -3147,7 +3147,7 @@ El TCL para v.a.i.i.d en $L^2$. Suponemos sin pérdida de generalidad que $\math
 
 Cogemos la función característica siguiente:
 \[
-\phi_{\frac{\sum_{i=1}^{n}}{\sqrt{n}}}(t) =
+\phi_{\frac{\sum_{i=1}^{n}X_i}{\sqrt{n}}}(t) =
 \]
 
 Por la propiedad multiplicativa, es igual a:
@@ -3156,14 +3156,19 @@ Por la propiedad multiplicativa, es igual a:
 \prod_{i=1}^{n} \mathbb{E}(e^{iX_i(\frac{t}{\sqrt{n}})})= 
 \]
 
-Usando el ejercicio 7 y el hecho de que $Var(X)=1$ \textcolor{red}{Este paso por que?}:
+Usando el ejercicio 7, es decir, que para una variable aleatoria con media 0 y varianza 1, se tiene que: \textcolor{red}{El paso de rojo no pillo de donde sale}
 \[
-=\mathbb{E}\left(1-\frac{1}{2}\left(\frac{t}{\sqrt{n}}\right)^2+o(\frac{t^2}{n})\right)^n =
+=\left(1-\frac{1}{2}\left(\frac{t}{\sqrt{n}}\right)^2+o(\frac{t^2}{n})\right)^n = \textcolor{red}{\left(e^{\frac{-t^2}{2n}}\right)^n=e^{\frac{-t^2}{2}}}
 \]
 
-Que por el ejercicio 6:
+Ahora recordamos Levi-Cramer:
 \[
-=\left(e^{\frac{-t^2}{2n}}\right)^n=e^{\frac{-t^2}{2}}
+\forall t \in \mathbb{R}, \lim_{n \rightarrow \infty} \phi_{X_n}(t)=\phi_X(t) \Leftrightarrow X_n \stackrel{D}{\rightarrow} X
+\]
+
+Y usamos Levi-Cramer y el ejercicio 6 para decir que $\phi_X(t)=e^{-t^2/2}$ para $X\sim N(0,1)$:
+\[
+\forall t \in \mathbb{R}, \lim_{n \rightarrow \infty} \phi_{}(t)=\phi_{\frac{\sum_{i=1}^{n}X_i}{\sqrt{n}}}(t)=e^{\frac{-t^2}{2}} = \phi_X(t) \Leftrightarrow {\frac{\sum_{i=1}^{n}X_i}{\sqrt{n}}} \stackrel{D}{\rightarrow} X\sim N(0,1)
 \]
 
 \end{problem}
@@ -3177,6 +3182,26 @@ Usar el Teorema de Berry-Esseen para demostrar que si $a \le p_n \le b$ para tod
 entonces $(S_n - n p_n)/\sqrt{n p_n (1 - p_n)}$ converge en distribuci\'on a $Z\sim N(0,1)$.
 \solution
 
+EL teorema de Berry-Esseen dice lo siguiente:
+Sean $\{X_n\}_{n\geq 1}$ v.a.i.i.d con $\mathbb{E}(X_1)=\mu$, $Var(X_1)=\sigma^2$ y $\mathbb{E}(\abs{X_1}^3)<\infty$; entonces $\forall x \in \mathbb{R}$:
+\[
+\abs{F_{\frac{(\sum_{j=1}^{n}X_j)-n\mu}{\sigma \sqrt{n}}}(x)-F_Z(x)} \leq \frac{c\cdot \mathbb{E}(\abs{X_1}^3)}{\sigma^3\sqrt{n}} \text{ , donde $Z\sim N(0,1)$ y $c\in (0.4,0.5)$}
+\]
+
+En este caso tenemos $S_n = \sum_{i=1}^{n}X_{n,i}$ con $X_{i,n} \sim Bernoulli(p_n)$ por tanto: $\mathbb{E}(X_{i,n})=p=\mu$ y $Var(X_{i,n})=p(1-p)=\sigma^2$.
+
+Por tanto, $\forall n$ y por Berry-Jensen, se tiene que $
+\forall x$:
+\[
+\frac{(S_n - n p_n)}{\sqrt{n p_n (1 - p_n)}} = \frac{(\sum_{j=1}^{n}X_{n,j})-n\mu}{\sigma \sqrt{n}} \Rightarrow \abs{F_{\frac{(\sum_{j=1}^{n}X_{n,j})-n\mu}{\sigma \sqrt{n}}}(x)-F_Z(x)} \leq \frac{c\cdot \mathbb{E}(\abs{X_1}^3)}{\sigma^3\sqrt{n}}
+\]
+
+Pero $\sigma$ es mayor que $C_1=\min(\sqrt{a-a^2},\sqrt{b-b^2}) < \sigma$ y por tanto $\sigma^3 > C_1^3$ constante > 0. Además $\norm{X_{n,m}}_{\infty}=1$ por tanto $C_2=\norm{X_{n,m}}_3=\mathbb{E}(\abs{X_{n,m}}^3) \leq 1$.
+
+Por tanto nos queda que:
+\[
+\abs{F_{\frac{(\sum_{j=1}^{n}X_{n,j})-n\mu}{\sigma \sqrt{n}}}(x)-F_Z(x)} \leq \frac{c\cdot \mathbb{E}(\abs{X_1}^3)}{\sigma^3\sqrt{n}} \leq  \frac{c\cdot C_2}{C_1\sqrt{n}} \stackrel{n \rightarrow \infty}{\rightarrow} 0
+\]
 
 \end{problem}
 
@@ -3188,9 +3213,25 @@ la condici\'on de Lindeberg. Sugerencia, usar el Teorema de la Convergencia Domi
 Lebesgue.
 
 \solution
+La condición de Lindeberg es que:
+$\forall \epsilon>0$, $\lim_{n \rightarrow \infty} L(n, \epsilon)=0$.
 
+Siendo:
+\[
+L(n, \epsilon)= \frac{1}{S^2_n}\sum_{i=1}^{n}\mathbb{E}\left( \abs{X_i-\mu_i}^2 \ind_{\{\abs{X_i - \mu_i} \geq \epsilon S_n\}} \right)
+\]
 
+En nuestro caso tenemos $S_n^2=n \sigma^2$, y nos queda:
+\[
+\frac{1}{ \sigma^2}\sum_{i=1}^{n}\mathbb{E}\left( \abs{X_i-\mu_i}^2 \ind_{\{\abs{X_i - \mu_i} \geq \epsilon \sigma \sqrt{n}\}} \right) = \frac{n}{ \sigma^2}\mathbb{E}\left( \abs{X_i-\mu_i}^2 \ind_{\{\abs{X_i - \mu_i} \geq \epsilon \sigma \sqrt{n}\}} \right)
+\]
 
+Como:
+\[
+0 \leq \abs{X_1 - \mu}^2\ind_{\{\abs{X_i - \mu_i} \geq \epsilon \sigma \sqrt{n}\}} \leq \abs{X_1 - \mu}^2
+\]
+
+Que converge c.s a 0, y \textcolor{red}{no entiendo por que}
 
 \end{problem}
 
@@ -3214,9 +3255,18 @@ d) Decidir razonadamente qu\'e sucede si en el apartado b), en
 vez de  $p_n = n^{- 1/2}$ tenemos $p_n = n^{ - 1}$.
 Sugerencia: recordar la Ley de los N\'umeros Peque\~nos.
 \solution
+\spart La condición de Lindeberg es que:
+$\forall \epsilon>0$, $\lim_{n \rightarrow \infty} L(n, \epsilon)=0$.
 
+Siendo:
+\[
+L(n, \epsilon)= \frac{1}{S^2_n}\sum_{i=1}^{n}\mathbb{E}\left( \abs{X_i-\mu_i}^2 \ind_{\{\abs{X_i - \mu_i} \geq \epsilon S_n\}} \right)
+\]
 
+\spart 
+\textcolor{red}{No entiendo porque se hace 0 lo de dentro de la integral}
 
+\textcolor{red}{Se puede aplicar berry jensen para demostrarlo?}
 
 \end{problem}
 
