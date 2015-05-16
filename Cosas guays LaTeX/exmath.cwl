@@ -230,4 +230,6 @@
 \inmr{arg0}{arg1}{arg2}#m
 \halfp#m
 \cind#m
+\Re#m
+\Im#m
 \fe{arg0}#m
