@@ -232,4 +232,5 @@
 \cind#m
 \Re#m
 \Im#m
+\Res#m
 \fe{arg0}#m
