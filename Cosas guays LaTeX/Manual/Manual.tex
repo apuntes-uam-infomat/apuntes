@@ -1,6 +1,7 @@
 \documentclass[nochap]{apuntes}
 
 \usepackage{longtable}
+\usepackage{fancysprefs}
 
 \author{Guillermo Julián Moreno}
 \date{\today}
@@ -11,6 +12,8 @@
 
 \pagestyle{plain}
 \maketitle
+
+\tableofcontents
 
 \section{Formato y maquetación}
 
@@ -56,6 +59,39 @@ Además, hay diferencias entre usar el modo \textit{inline} y las ecuaciones en 
 
 La solución en estos casos es usar \verb|\displaystyle|. Por ejemplo, \verb|$\displaystyle\sum_{i=1}^{k}$| saca $\displaystyle\sum_{i=1}^{k}$.
 
+\subsection{Etiquetas y referencias}
+\label{sec:Etiquetas}
+
+Una característica muy potente de \LaTeX\ son las referencias. Usa \verb|\label{nombreEtiqueta}| cuando quieras referenciar otras partes del documento con \verb|\ref{nombreEtiqueta}}|. Por ejemplo, si pones una etiqueta debajo de un comando de sección, \verb|\ref{nombreEtiqueta}}| mostrará el número de esa sección. También puedes hacerlo en figuras, tablas, listados de código y otros entornos definidos en el paquete \texttt{exmath}.
+
+Hay un paquete adicional que mejora las características de las referencias de \LaTeX\, \texttt{fancysprefs}, que está basado en \texttt{fancyref}. Este paquete provee tres comandos adicionales: \verb|\fref{nombreEtiqueta}|, \verb|\nref{nombreEtiqueta}| y \verb|\nlref{nombreEtiqueta}|.
+
+Estos comandos permiten referenciar automáticamente un elemento con su tipo y su posición, en el caso de \texttt{fref}. Por ejemplo, \verb|\fref{sec:Tikz}| se transforma en ``\fref{sec:Tikz}''. La ventaja de \texttt{fref} es que es más o menos inteligente y sólo muestra la información de la página cuando toca. Por ejemplo, \verb|\fref{sec:Etiquetas}| muestra ``\fref{sec:Etiquetas}'' porque la etiqueta está en la misma página y no hace falta nada adicional. \verb|\fref{thm:Gallinas}| (etiqueta en la siguiente página) muestra ``\fref{thm:Gallinas}''.
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{l|l}
+Elemento & Prefijo \\ \hline
+Capítulo & chap \\
+Sección & sec \\
+Ecuación & eq \\
+Figura & fig \\
+Tabla & tab \\
+Ejercicio & ej \\
+Proposición & prop \\
+Lema & lem \\
+Teorema & thm \\
+Definición & def
+\end{tabular}
+\caption{Prefijos establecidos para que \texttt{fref} funcione correctamente.}
+\label{tab:PrefjosFref}
+\end{table}
+
+
+Para que \texttt{fref} funcione, es necesario seguir bien los prefijos de las etiquetas de \fref{tab:PrefjosFref}. Si no se siguen y se llama a \texttt{fref}, es posible que la compilación falle con un error poco explícito.
+
+El comando \texttt{nref} hace algo parecido, pero incluye también el nombre de lo que estemos referenciando. Así, sólo nos hace falta poner \verb|\nref{thm:Gallinas}| para que aparezca ``\nref{thm:Gallinas}''. Obviamente, el nombre cambiará automáticamente aquí si lo cambiamos en el entorno correspondiente. La variante \texttt{nlref} hace exactamente lo mismo pero con el título en minúsculas (muestra: \nlref{thm:Gallinas}), que viene bien cuando estamos referenciado definiciones y no queremos que la primera letra esté en mayúscula.
+
 \section{Entornos}
 \subsection{Teorema y definición}
 
@@ -67,7 +103,7 @@ Teorema.
 \end{theorem}
 \end{verbatim}
 
-\begin{theorem}[Teorema de las gallinas cluecas]
+\begin{theorem}[Teorema de las gallinas cluecas]\label{thm:Gallinas}
 Teorema.
 \end{theorem}
 
@@ -286,7 +322,6 @@ También está el comando \verb|\easyimg|, el uso es el mismo salvo que sólo ne
 \item ¿Símbolos matemáticos demasiado pequeños? Por ejemplo, $\sum_{i=0}^n$. Usa \verb|\displaystyle|, así: \verb|$\displaystyle\sum_{i=0}^n$| que queda mejor: $\displaystyle\sum_{i=0}^n$.
 \item Si quieres poner un código LaTeX en el texto, hazlo con \verb|\verb$comandoquesea$| o \verb|\begin{verbatim}código que sea.\end{verbatim}|.
 \item El entorno \texttt{wrapfigure} permite crear figuras rodeadas por texto, que queda bien cuando no ocupa  todo el ancho del texto.
-\item Usa etiquetas \verb|\label{nombreEtiqueta}| cuando quieras referenciar otras partes del documento con \verb|\ref{nombreEtiqueta}}|. Por ejemplo, si pones una etiqueta debajo de un comando de sección, \verb|\ref{nombreEtiqueta}}| mostrará el número de esa sección. También puedes hacerlo en figuras, tablas y listados de código. Además, tienes el comando \verb|\pageref{nombreEtiqueta}| si lo que quieres mostrar es el número de página donde está la etiqueta.
 \end{itemize}
 
 \subsection{Entornos matemáticos}
@@ -326,6 +361,7 @@ k(x) = g'(x) + \dpa{α}{x} \\
 \end{gather*}
 
 \section{Tikz}
+\label{sec:Tikz}
 
 Para facilitar los dibujos de Tikz, el paquete \texttt{tikztools.sty} tiene varios comandos predefinidos. Incluye las librerías usuales, algunos estilos interesantes: \textit{nodepoint} para poner puntos sencillos, \textit{vnlin, hnlin} para poner marcas verticales u horizontales, varias clases para marcar con flechas líneas (\textit{directed, dense directed, etc}, todas con un nombre bastante claro) y varios comandos para dibujar familias de curvas que programé en su momento para EDO y ahora mismo no tengo huevos a entender. También está el comando \texttt{tikzangle} para marcar ángulos en LaTeX.
 
