@@ -148,12 +148,17 @@
 \begin{problemS}[N. ejercicio]#
 \listtheoremname#m
 \ithm{arg0}#m
+\set@labelname{arg0}#m
+\label@hook#m
 \begin{defn}#
 \begin{defn}[titulo]#
 \begin{defn}[titulo][indice]#
 \begin{theorem}#
 \begin{theorem}[titulo]#
 \begin{theorem}[titulo][indice]#
+\begin{lemma}#
+\begin{lemma}[titulo]#
+\begin{lemma}[titulo][indice]#
 \concept{arg0}{arg1}#m
 \printtheorems#m
 \begin{proof}#
