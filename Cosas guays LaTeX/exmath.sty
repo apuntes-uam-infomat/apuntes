@@ -30,6 +30,7 @@
 \RequirePackage{tablefootnote} % Permite poner notas al pie en más entornos
 \RequirePackage{xstring} % Para trabajar con cadenas.
 \RequirePackage{mathtools} % Arregla bastantes cosas de los entornos matemáticos por defecto.
+\RequirePackage{nameref}
 
 % Para evitar que el \md de nuestro paquete tenga conflictos con el de commath
 \let\mder\md
@@ -257,7 +258,7 @@
 %\numberwithin{equation}{section}
 \renewcommand{\thethm}{\thesection.\arabic{thm}} % IGN
 
-\newtheorem{lemma}[thm]{Lema}
+\newtheorem{ilemma}[thm]{Lema}
 \newtheorem{itheorem}[thm]{Teorema}
 \newtheorem{corol}[thm]{Corolario}
 \newtheorem{prop}[thm]{Proposici\'{o}n}
@@ -267,6 +268,8 @@
 \newtheorem*{props}{Propiedades}
 
 \newcommand{\IS}{} % IGN
+\def\toggle@IS@print{\renewcommand{\IS}{ }}
+\def\toggle@IS@index{\renewcommand{\IS}{!}}
 
 \newenvironment{op}[1]{\indent \\ \noindent\textsc{#1}\\\[}{\]}
 
@@ -347,28 +350,53 @@
 \refstepcounter{ithm}
 \addcontentsline{ithmc}{ithm}{\protect\numberline{\theithm}#1}\par}
 
+\newcommand{\set@labelname}[1]{%IGN
+	\ifthenelse{\equal{#1}{}}
+		{}
+		{\toggle@IS@print\protected@edef\@currentlabelname{#1}%
+		\renewcommand{\label@hook}{}}
+}
+
 \newenvironmentx{defn}[2][1=, 2=None]{  % 1O: titulo; 2O: indice;
 	\vspace{15 pt}
+	\set@labelname{#1}
 	\noindent \refstepcounter{thm} \textit{Definici\'{o}n \thethm}
 	\concept[#2]{#1}.\itshape}
 	{\vspace{2 pt}}
 
 \newenvironmentx{theorem}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
 	\vspace{2pt}
-	\renewcommand{\IS}{!} %IGN
+	\toggle@IS@index %IGN
+	\ifthenelse{\equal{#2}{None}}
+		{\index{#1}}
+		{\index{#2}}
+	\set@labelname{potato}
+	\ifthenelse{\equal{#1}{}}
+		{}
+		{\ithm{#1}}
+	\toggle@IS@print %IGN
+	\begin{framed}
+
+	\begin{itheorem}[#1]}
+	{\end{itheorem}\end{framed}}
+
+
+\newenvironmentx{lemma}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
+	\vspace{2pt}
+	\set@labelname{#1}
+	\toggle@IS@index %IGN
 	\ifthenelse{\equal{#2}{None}}
 		{\index{#1}}
 		{\index{#2}}
 	\ifthenelse{\equal{#1}{}}
 		{}
 		{\ithm{#1}}
-	\renewcommand{\IS}{ } %IGN
-	\begin{framed}
+	\toggle@IS@print %IGN
+	\begin{ilemma}[#1]}
+	{\end{ilemma}}
 
-	\begin{itheorem}[#1]}
-	{\end{itheorem}\end{framed}}
 
-\newcommand{\concept}[2][None]{\renewcommand{\IS}{ }\textbf{#2}% IGN
+\newcommand{\concept}[2][None]{\toggle@IS@print\textbf{#2}% IGN
 	\marginpar{\footnotesize \textit{\makefirstuc{#2}}}%
 	\renewcommand{\IS}{!}%
 	\ifthenelse{\equal{#1}{None}}{\index{#2}}{\index{#1}}}

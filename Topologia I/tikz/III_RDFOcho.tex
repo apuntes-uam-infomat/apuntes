@@ -1,11 +1,26 @@
 \begin{tikzpicture}
 \pgfmathsetmacro{\radius}{2}
-\draw[] (-\radius,0) circle[radius=\radius];
-\draw[] (\radius,0) circle[radius=\radius];
+\pgfmathsetmacro{\radiusgrowfactor}{2}
+
+\foreach \h in {-0.6, -0.2, ..., 0.8}
+{
+	\draw[blue, dense directed] (\h * \radius, {\radius * \radiusgrowfactor}) -- (\h * \radius, 0);
+	\draw[blue, dense directed] (\h * \radius, {- \radius * \radiusgrowfactor}) -- (\h * \radius, 0);
+}
+
+\draw[thick, black, fill = white] (-\radius,0) circle[radius=\radius];
+\draw[thick, black, fill = white] (\radius,0) circle[radius=\radius];
 
 \foreach \c in {-\radius, \radius}
 {
-	\foreach \a in {0, 30, ..., 360}
+	\foreach \a in {0, 20, ..., 360}
 		\draw[dense directed, orange] ({\c}, 0) -- ({\c + \radius * cos(\a)}, {\radius * sin(\a)});
 }
+
+\foreach \a in {90, 110, ..., 270}
+	\draw[dense directed, blue] ({-\radius + \radius * cos(\a) * \radiusgrowfactor}, {\radius * sin(\a) * \radiusgrowfactor}) -- ({-\radius + \radius * cos(\a)}, {\radius * sin(\a)});
+
+\foreach \a in {90, 70, ..., -90}
+	\draw[dense directed, blue] ({\radius + \radius * cos(\a) * \radiusgrowfactor}, {\radius * sin(\a) * \radiusgrowfactor}) -- ({\radius + \radius * cos(\a)}, {\radius * sin(\a)});
+
 \end{tikzpicture}
