@@ -10,7 +10,7 @@ Puedes descargar los apuntes en PDF, actualizados diariamente, [aquí](https://w
 
 * [Víctor de Juan Sanz](http://github.com/VicDeJuan)
 * [Guillermo Julián Moreno](http://github.com/gjulianm)
-* [Guillermo Ruiz Álvarez](http://github.com/rual93)
+* [Guillermo Ruiz Álvarez](http://github.com/guillermoruizalv)
 * [Pedro Valero Mejía](http://github.com/pevalme)
 * [Jorge Martín Pérez](https://github.com/MartinPJorge)
 * [Eduardo Miravalls Sierra](https://github.com/EduardoMiravalls)
