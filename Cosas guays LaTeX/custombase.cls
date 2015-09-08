@@ -1,6 +1,8 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{custombase}[2013/04/20 Base class]
 
+\def\@fontsizeopt{}
+
 % Si nos pasan la opción nochap, no ponemos número de capítulo en las secciones.
 \DeclareOption{nochap}{\def\thesection{\arabic{section}}}
 
@@ -8,11 +10,15 @@
 	\renewcommand{\rmdefault}{ppl}
 	\renewcommand{\sfdefault}{lmss}
 	\renewcommand{\ttdefault}{lmtt}
-	\renewcommand{\familydefault}{\rmdefault}
+	\renewcommand*{\familydefault}{\rmdefault}
+	\def\@fontsizeopt{11pt}
+	\message{Loading Palatino fonts}
 }
 
 \DeclareOption{sansserif}{
-	\renewcommand{\familydefault}{\sfdefault}
+	\renewcommand*{\familydefault}{\sfdefault}
+	\def\@fontsizeopt{12pt}
+	\message{Loading Sans-Serif fonts}
 }
 
 \def\@exmathload{\RequirePackage{exmath}}
@@ -24,11 +30,13 @@
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
 
 \ExecuteOptions{sansserif}
-\ProcessOptions\relax
+\ProcessOptions
 
+\PassOptionsToClass{\@fontsizeopt}{report}
 
-\LoadClass[12pt,a4paper,reqno]{report}
+\LoadClass[a4paper,reqno]{report}
 
+\RequirePackage[usenames,dvipsnames]{xcolor}
 \RequirePackage[includemp, left=3cm,right=1cm,top=3cm,bottom=2cm, marginparwidth=1.6cm, marginparsep=0.7cm]{geometry} % Márgenes
 \RequirePackage{imakeidx} % Creación de índices
 \RequirePackage{titling} % Para poder referenciar \thetitle, \thedate, etc.

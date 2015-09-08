@@ -1,22 +1,28 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{apuntes}[2013/04/20 Note taking class]
 
-\RequirePackage[usenames,dvipsnames]{xcolor}
-\RequirePackage{pdfpages}
-\RequirePackage{datetime}
-
 \def\printbuilddate{\footnotetext{\tiny Documento compilado el \today\ a las \currenttime}}
 \def\enableindexbuilddate{\renewcommand{\compdate}{\tiny{\today\, \currenttime}}}
 
-\LoadClass[titlepage,sansserif]{custombase}
-\DeclareOption{nochap}{\def\thesection{\arabic{section}}
-\numberwithin{equation}{subsection}}
+\newif\if@removechapters
+
+\DeclareOption{nochap}{\@removechapterstrue}
 \DeclareOption{nobuilddate}{%
 	\def\printbuilddate{}%
 	\def\enableindexbuilddate{}%
 }
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
-\ProcessOptions\relax
+\ProcessOptions
+
+\LoadClass[titlepage]{custombase}
+
+\RequirePackage{pdfpages}
+\RequirePackage{datetime}
+
+\if@removechapters
+	\def\thesection{\arabic{section}}
+	\numberwithin{equation}{subsection}
+\fi
 
 \newcommand{\compdate}{}
 
