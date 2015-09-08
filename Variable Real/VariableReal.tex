@@ -38,6 +38,72 @@ Este curso consistirá en la búsqueda y manejo de esos ``puntos malos'': veremo
 
 Para trabajar con estas ideas desarrollaremos el concepto de las medidas que, por así decirlo, serán ``funciones generalizadas''. Por ejemplo, la \concept{delta\IS de Dirac}, una ``función'' que vale cero en todo punto menos en $x = 0$, donde tiene un valor no concreto, se define en realidad como una medida dada por \[ δ_0 (A) = \begin{cases} 1 & 0 ∈ A \\ 0 & 0 ∉ A \end{cases} \] pero con $\int_{ℝ} \dif δ = 0$.
 
+\subsection{Conjuntos, espacios y funciones medibles}
+
+A lo largo del curso trabajaremos con varias convenciones. Trabajaremos sobre la tres-tupla $(X, \mathcal{X}, μ)$, lo que llamaremos un espacio de medida. $X$ será el conjunto sobre el que mediremos. Normalmente será un subconjunto de $ℝ^n$, pero para el caso nos da igual. $\mathcal{X}$ será la σ-álgebra, el conjunto de subconjuntos medibles de $X$\footnote{Ver apuntes de TIM de Pedro.}. Por último, μ será la medida que usemos para integrar, usando la integral de Lebesgue.
+
+¿Cuál es la diferencia entre las integrales de Riemann y de Lebesgue? Lo que se suele decir es que el primero mide en vertical y el segundo en horizontal. Una analogía es verlo como contar billetes. Por ejemplo, tenemos un billete de 50, uno de 20, dos de 10 y dos de 5. Riemann los contaría según le salen de la cartera, mientras que Lebesgue los agruparía primero en conjuntos de billetes iguales y luego contaría.
+
+Mirando funciones, lo que hace Riemann es montar rectángulos en el eje $X$, mientras que Lebesgue los monta en el eje $Y$. De esta forma, la integral de Lebesgue es más estable, mientras que la de Riemann ve mejor las oscilaciones, por así decirlo. Un ejemplo curioso es el de la siguiente integral, \[ \int_0^∞ \frac{\sin x}{x} \dif x \], que es Riemann integrable pero no Lebesgue porque el valor absoluto no es integrable.
+
+Para seguir trabajando con las medidas y poder integrar, necesitaremos saber qué funciones podemos medir y cuáles no.
+
+\begin{defn}[Función\IS medible] Dados dos espacios de medida $(X, \mathcal{X}, μ),\,(Y, \mathcal{Y},ν)$, se dice que una función \stdf es medible si y sólo si $\inv{f}(E) ∈ \mathcal{X}\; ∀E ∈ \mathcal{Y}$.
+\end{defn}
+
+También necesitaremos saber en qué σ-álgebra estamos trabajando. Nosotros usaremos normalmente la σ-álgebra de Borel:
+
+\begin{defn}[{σ}-álgebra\IS de Borel] Denotada por \borel, es la σ-álgebra más que pequeña tal que los abiertos son medibles.\end{defn}
+
+Otra $\salgb$ importante es la \concept{{σ}-álgebra\IS de Lebesgue}, denotada por $\lebg (ℝ^n)$. La relación entre esta y la de Borel es que la de Borel está contenida en la de Lebesgue: $\borel \subsetneq \lebg $. De hecho, $\lebg  \setminus \borel = \mathcal{N}$, que es el conjunto de conjuntos de medida Lebesgue 0. Por ejemplo, las uniones numerables tienen medida cero, como los racionales. Este es el gran avance de Lebesgue: identificar los conjuntos de medida 0 para poder integrar más funciones.
+
+Algo que nos interesará es ver la composición de funciones.
+
+\begin{prop}
+
+\begin{enumerate}
+\item La composición de funciones \borel-medibles es \borel-medible.
+\item La composición de funciones \lebg-medibles no es, en general, \lebg-medible.
+\item La composición de funciones \lebg-medibles con una de ellas continua sí es \lebg-medible.
+\end{enumerate}
+\end{prop}
+
+\subsection{Medidas positivas}
+
+\begin{defn}[Medida\IS positiva]\footnote{Positivas implicará a partir de ahora mayor \textit{o igual} que cero.} Una medida positiva (no negativa) en un espacio medible \meds es una función
+\begin{align*}
+\appl{μ}{\mathcal{X}&}{[0,+∞)} \\
+E &\longmapsto μ(E) ≥ 0
+\end{align*} y tal que
+\begin{enumerate}
+\item $μ(∅) = 0$.
+\item $μ\left(\bigcup_{n=1}^∞ E_n\right) = \sum_{n=1}^∞ μ(E_n)$ con $E_n$ disjuntos dos a dos.
+\end{enumerate}
+\end{defn}
+
+Hay dos nombres cocretos que nos interesarán. Si $μ(X) < ∞$, entonces se dice que μ es una \concept{medida\IS finita}. Si $μ(X) = 1$, será una \concept{medida\IS de probabilidad}.
+
+Un ejemplo de una medida que no es una función es la delta de Dirac que habíamos visto antes, que de hecho es una medida de probabilidad.
+
+\begin{prop}[Propiedades de la medida] Dado un espacio medible \meas:
+
+\begin{enumerate}
+\item \textbf{Monotonía}: Si $E⊂F$, entonces $μ(E) ≤ μ(F)$.
+\item \textbf{Sub-aditividad}: $μ\left(\bigcup_{n=1}^∞ E_n\right) ≤ \sum_{n=1}^∞ μ(E_n)$ (sólo es igual si los conjuntos son disjuntos).
+\item \textbf{Convergencia monótona}: Dada una sucesión de conjuntos $E_1 ⊂ E_2 ⊂ \dotsb$, entonces $μ\left(\bigcup_{n=1}^∞ E_n\right) = \lim μ(E_n)$.
+\item \textbf{Convergencia dominada}: Dada una sucesión decreciente de conjuntos $E_1 ⊃ E_2 ⊃ \dotsb$, entonces $μ\left(\bigcap E_n\right) = \lim μ(E_n)$.
+\end{enumerate}
+\end{prop}
+
+\subsection{Teorema de Littlewood}
+
+Al principio de esta sección veíamos los principios de Littlewood. Estos se traducen en teoremas para los que ya tenemos suficiente teoría para enunciarlos. El primer teorema, obviamente, corresponde al primer principio de Littlewood.
+
+\begin{theorem} Para todo $ε>0$ y para todo $E∈\mathcal{X}$ con $μ(E) < ∞$, existe un $F∈\algbA⊂ \mathcal{X}$ tal que \[ μ\left((E\setminus F) ∪ (F \setminus E)\right) < ε \], con $\algbA$ la familia de conjuntos simples (intervalos, cuadrados o cubos según la dimensión, que son los que sabemos medir).
+\end{theorem}
+
+Lo que este teorema nos dice es que cualquier conjunto medible se puede aproximar tan bien como queramos por conjuntos simples, que es la idea del primer principio de Littlewood.
+
 \section{Teoría de la integral y la medida}
 
 \section{Espacios de Banach y Hilbert. Espacios $L^p$}

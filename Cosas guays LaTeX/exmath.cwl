@@ -239,3 +239,10 @@
 \Im#m
 \Res#m
 \fe{arg0}#m
+\lebg#m
+\borel#m
+\meds#m
+\meds[X]#m
+\meas#m
+\meas[X]#m
+\meas[X][\mu]#m
