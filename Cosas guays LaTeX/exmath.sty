@@ -32,6 +32,14 @@
 \RequirePackage{mathtools} % Arregla bastantes cosas de los entornos matemáticos por defecto.
 \RequirePackage{nameref}
 
+\newtoggle{probframes} % Controla si los problemas tienen marcos o no
+
+\DeclareOption{problemframes}{\toggletrue{probframes}}
+\DeclareOption{noproblemframes}{\togglefalse{probframes}}
+
+\ExecuteOptions{problemframes}
+\ProcessOptions\relax
+
 % Para evitar que el \md de nuestro paquete tenga conflictos con el de commath
 \let\mder\md
 
@@ -309,7 +317,7 @@
 	\renewcommand{\iPartSpaceSkip}{\vspace{10pt}}
 	\indent \refstepcounter{apr}\textsc{Apartado #1)} \par
 	}
-\newcommand{\solution}{\end{framed}\setcounter{apr}{0} } %IGN
+\newcommand{\solution}{\iftoggle{probframes}{\end{framed}}{}\setcounter{apr}{0} } %IGN
 \newcommand{\ejrheader}{\theejr} % IGN
 \newenvironmentx{problem}[1][1=] % 1O: N. ejercicio;
 {
@@ -325,7 +333,7 @@
 	}
 	\refstepcounter{ejr}
 	\renewcommand{\iPartSpaceSkip}{}
-	\begin{framed}
+	\iftoggle{probframes}{\begin{framed}}{}
 	\textbf{Ejercicio \ejrheader}:
 	\setcounter{apr}{0}
 }{\vspace{10 pt}}
@@ -334,9 +342,18 @@
 \newenvironmentx{problemS}[1][1=] % 1O: N. ejercicio;
 {
 	\vspace{1 pt}
-	\renewcommand{\ejrheader}{{#1}}
+	\renewcommand{\ejrheader}{\arabic{ejr}}
+	\ifthenelse{\equal{#1}{}}{}{
+		\IsInteger{#1}{
+			\setcounter{ejr}{#1}
+			\addtocounter{ejr}{-1}
+		}{
+			\renewcommand{\ejrheader}{#1}
+		}
+	}
+	\refstepcounter{ejr}
 	\renewcommand{\iPartSpaceSkip}{}
-	\begin{framed}
+	\iftoggle{probframes}{\begin{framed}}{}
 	\textbf{Ejercicio \ejrheader}:
 	\setcounter{apr}{0}
 }{\vspace{10 pt}}

@@ -8,7 +8,7 @@
 \def\printbuilddate{\footnotetext{\tiny Documento compilado el \today\ a las \currenttime}}
 \def\enableindexbuilddate{\renewcommand{\compdate}{\tiny{\today\, \currenttime}}}
 
-\LoadClass[titlepage]{custombase}
+\LoadClass[titlepage,sansserif]{custombase}
 \DeclareOption{nochap}{\def\thesection{\arabic{section}}
 \numberwithin{equation}{subsection}}
 \DeclareOption{nobuilddate}{%
