@@ -1,5 +1,7 @@
 \documentclass[nochap,palatino]{apuntes}
 
+\usepackage{fancysprefs}
+
 \title{Variable Real}
 \author{Guillermo Julián Moreno}
 \date{15/16 C1}
@@ -44,7 +46,7 @@ A lo largo del curso trabajaremos con varias convenciones. Trabajaremos sobre la
 
 ¿Cuál es la diferencia entre las integrales de Riemann y de Lebesgue? Lo que se suele decir es que el primero mide en vertical y el segundo en horizontal. Una analogía es verlo como contar billetes. Por ejemplo, tenemos un billete de 50, uno de 20, dos de 10 y dos de 5. Riemann los contaría según le salen de la cartera, mientras que Lebesgue los agruparía primero en conjuntos de billetes iguales y luego contaría.
 
-Mirando funciones, lo que hace Riemann es montar rectángulos en el eje $X$, mientras que Lebesgue los monta en el eje $Y$. De esta forma, la integral de Lebesgue es más estable, mientras que la de Riemann ve mejor las oscilaciones, por así decirlo. Un ejemplo curioso es el de la siguiente integral, \[ \int_0^∞ \frac{\sin x}{x} \dif x \], que es Riemann integrable pero no Lebesgue porque el valor absoluto no es integrable.
+Mirando funciones, lo que hace Riemann es montar rectángulos en el eje $X$, mientras que Lebesgue los monta en el eje $Y$. De esta forma, la integral de Lebesgue es más estable, mientras que la de Riemann ve mejor las oscilaciones, por así decirlo. Un ejemplo curioso es el de la siguiente integral, \( \int_0^∞ \frac{\sin x}{x} \dif x \label{eq:IntRiemmanNoLeb} \) que es Riemann integrable pero no Lebesgue porque el valor absoluto no es integrable.
 
 Para seguir trabajando con las medidas y poder integrar, necesitaremos saber qué funciones podemos medir y cuáles no.
 
@@ -104,6 +106,87 @@ Al principio de esta sección veíamos los principios de Littlewood. Estos se tr
 
 Lo que este teorema nos dice es que cualquier conjunto medible se puede aproximar tan bien como queramos por conjuntos simples, que es la idea del primer principio de Littlewood.
 
+\subsection{Integración}
+
+Dado \meas un espacio de medida, definiremos la integral de la siguientes formas. Primero iremos a lo más simple, que son (atención al nombre) las funciones simples:
+
+\begin{defn}[Función\IS simple] Se dice que $\appl{f}{X}{[0, +∞)}$ es simple si $f$ es de la forma \[ f(x) = \sum a_i \ind_{E_i}(x) \] para $\set{E_i} ⊆ \mathcal{X}$.\end{defn}
+
+Para funciones simples $\appl{f}{X}{[0,+∞)}$ como \[ \int_X f\ \dif μ = \sum_{i=1}^n a_i μ\set{\inv{f}(a_i)} \] Como notación, hay que tener en cuenta que \[ \set{\inv{f}(a_i)} \equiv \set{x∈X\tq f(x)=a_i} \]
+
+Para funciones más complicadas usaremos, como siempre, límites. Dada $\appl{f}{X}{[0, +∞)}$ medible, definiremos su integral como \[\int_X f \dif μ = \sup_{\substack{0≤g≤f \\ g \text{ simple}}} \int_X g \dif μ \]
+
+Una observación que necesitaremos para poder usar esa definición es la siguiente proposición:
+
+\begin{prop} Dada una familia de funciones $\appl{f_n}{X}{(-∞,+∞)}$ medibles, entonces $\sup f_n$ y $\inf f_n$ son medibles.\end{prop}
+
+Con esto, ya podemos dar la definición de función integrable, que es bastante sencilla:
+
+\begin{defn}[Función\IS integrable] Se dice que $f$ es integrable si y sólo si $\int f \dif μ < ∞$.\end{defn}
+
+Ahora sólo nos falta aprender a integrar funciones negativas. Para eso definiremos las dos partes de una función: \begin{align*}
+f_+ &= \max\set{f,0} \\
+f_- &= \max\set{-f, 0}\end{align*}, de tal forma que $f = f_+ - f_-$, $\abs{f}= f_+ + f_-$ y entonces su integral es \[ \int_X f \dif μ = \int_X f_+ \dif μ - \int_X f_- \dif μ \]
+
+Análogamente podemos hacer la integral de funciones complejas descomponiendo \[ f = (\Re f)_+ - (\Re f)_- + \imath (\Im f)_+ - \imath (\Im f)_- \] e integrando igual que antes.
+
+Vamos a ver ahora las propiedades de las integrales.
+
+\begin{prop} Dada $\appl{f}{X}{[-∞,+∞]}$, entonces
+
+\begin{enumerate}
+\item $f$ es integrable si y sólo si $\abs{f}$ es integrable\footnote{Esto en Riemann no es cierto, ver el contraejemplo de la \fref{eq:IntRiemmanNoLeb}.}, esto es, que $\int_X \abs{f} \dif μ < ∞$. En este caso decimos $f ∈ \lebg^1\meas \equiv \lebg^1 (X) \equiv \lebg_μ^1 (X) \equiv \lebg^1$, según lo que demos por supuesto en cada caso, donde $\lebg^1$ es el espacio vectorial de las funciones absolutamente integrable.
+\item La aplicación que lleva cada función a su integral $f\longmapsto \int_X f \dif μ$ es lineal. Es fácil ver que $αf + βg = α \int_X f \dif μ + β \int_X g\dif μ$.
+\item \concept{Desigualdad\IS triangular en $\lebg^1$}. Dada $\appl{f}{X}{ℂ}$ absolutamente integrable, entonces $\abs{\int f \dif μ} ≤ \int \abs{f}\dif μ$.
+\item \textbf{Comparación}. Si $0 ≤ f ≤ g$, entonces $0 ≤ \int f \dif μ ≤ \int g \dif μ$. Además, si $f ≥ 0$ entonces $\int f = 0$ si y sólo si $f = 0$ en casi todo punto\footnote{$f = 0$ en casi todo punto si $∃N ⊂ X$ tal que $μ(N) = 0$ con $f ≠ 0$ en $N$.}. En el otro sentido, si $\int\abs{f} = 0$ entonces $f \equiv 0$ en casi todo punto.
+\item Una función integrable se puede modificar todo lo que se quiera en un conjunto de medida nula mantieniendo su integral constante. Esta propiedad será un problema para definir los espacios de funciones integrables, como veremos más tarde.
+\item $f ∈ \lebg^1_μ(X;ℂ)$ entonces $f$ es finita en casi todo punto.
+\item La integral de Lebesgue ``generaliza'' la de Riemman, en el sentido de que todas las fórmulas como integración por partes, jacobianos y cambios de coordenadas son las mismas.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+\begin{enumerate}
+\item % TODO.
+\end{enumerate}
+\end{proof}
+
+Ahora vamos con varios teoremas sobre integración.
+
+\begin{theorem}[Teorema\IS de Fubini-Tonelli] Dada $\appl{f}{X×Y}{ℂ}$ medible, entonces \[ \iint\limits_{X×Y} f \dif μ \dif ν = \int_X \underbrace{\left(\int_Y f(x,y) \dif ν(y)\right)}_{F_1(x)} \dif μ(x) = \int_Y \underbrace{\left(\int_X f(x,y) \dif μ(x)\right)}_{F_2(y)} \dif ν(y) \] con $F_1$, $F_2$ medibles.
+
+Concretamente, Tonelli nos da la medibilidad para funciones no negativas y Fubini la condición de integrabilidad.
+\end{theorem}
+
+Otro teorema, que se corresponde con el tercer principio de Littlewood.
+
+\begin{theorem}[Teorema\IS de Egorov] Dada $\appl{f}{X}{ℂ}$ medible y $f_n \convs f$ en casi todo punto en $A⊆X$, entonces $f_n \convs f$ casi uniformemente en $A$. Esto es, converge uniformemente salvo en un conjunto de medida cero. Más formalmente, $∀ε>0$ existe un $N_ε⊆A$ tal que $f_n \convs f$ en $A\setminus N_ε$ y $0 ≤ μ(N_ε) < ε$.
+
+
+Entonces, por convergencia dominada de las medidas, sabemos que $\lim_{n\to \infty} μ(E_n(k)) = μ\left(\bigcap E_n\right) = μ(∅) = 0$.
+
+Ahora la prueba se acaba de forma bastante sencilla: dado $ε > 0$ y $k∈ℕ$, elegimos $m_k$ tal que $μ(E_n(k)) ≤ \frac{ε}{2^k}$. Entonces, definimos $E = \bigcup_{k=1}^∞ E_{n_k}(k)$, y entonces $μ(E) ≤ \sum_{n≥1} μ(E_{n_k}) ≤ \sum_{k≥1} \frac{ε}{2^k} ≤ ε$.
+
+Así, si $n > n_k$ y $x ∉ E$, tendremos que $\abs{f_n(x) - f(x)} < \frac{1}{k}$.
+
+En definitiva, lo que hemos hecho ha sido coger todos los puntos donde va a converger y hacer algo más que me he perdido completamente.
+\end{theorem}
+
+La prueba de este teorema es sencilla y bonita:
+
+\begin{proof} Podemos asumir que $f_n \convs f$ en todo punto\footnote{TODO: Entender por qué.}. Entonces, para $k,n ∈ ℕ$ definimos \[ E_n(k) = \sum_{m=n}^∞ \set{x∈X \tq \abs{f_m(x) - f(x)} > \frac{1}{k}} \], es decir, el conjunto de puntos en los que la función se aleja del límite.
+Para todo $k$ fijo, es fácil ver que $E_n(k) ⊇ E_{n+1}(k) ⊇ \dotsb $ y además $\bigcap_{n=1}^∞ E_n(k) = ∅$\footnote{Esto también queda TODO.}
+\end{proof}
+
+\begin{theorem}[Teorema\IS de Lusin] Dada $\appl{f}{X}{ℂ}$ medible con $μ(X) < ∞$, entonces $f$ es casi continua, que como viene siendo hasta ahora significa que $f$ es continua salvo en un conjunto de medida cero. Esto es, que $∀ε>0$ existe un $N_ε⊆X$ tal que $f$ es continua en $X\setminus N_ε$ y $μ(N_ε) < ε$.
+\end{theorem}
+
+Para la siguiente semana, tenemos que entender qué son las coordenadas polares en $ℝ^n$. Entender \cite{folland99} proposiciones 2.53, 2.54, ver por qué \[ \int_{ℝ^N} e^{-a\abs{x}^2} = \left(\frac{π}{a}\right)^{N/2} \] para $a ≥ 0$.
+
+También tenemos que ver si es cierto que $\int_{ℝ^ℕ}\frac{1}{\abs{x}^α} \dif x = ∞$ para todo $α∈ℝ$ (spoiler: sí).
+
+Comprobar que $\int_{ℝ^N} \frac{1}{(1 + \abs{x})^α} < ∞$ para cierto $α$ encontrarlo (pone algo de cambio a polares) y luego que $\int_{B_1(0)} \frac{1}{\abs{x}^{β}} < ∞$ y $\int_{B_1(0)} \frac{1}{(1-\abs{x})^α}$.
+
 \section{Teoría de la integral y la medida}
 
 \section{Espacios de Banach y Hilbert. Espacios $L^p$}
@@ -121,5 +204,7 @@ Lo que este teorema nos dice es que cualquier conjunto medible se puede aproxima
 
 \chapter{Ejercicios}
 \input{tex/VariableReal_Ejs.tex}
+
+\bibliography{../Apuntes.bib}
 \printindex
 \end{document}
