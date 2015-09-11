@@ -1,0 +1,159 @@
+\section{Introducción criptografía y seguridad informática}
+\subsection{ Definiciones básicas}
+
+ \begin{defn}[Criptografía] Proviene de la palabra griega "oculto". Escribir de forma enigmática.
+ \end{defn}
+ 
+ 
+ \begin{defn}[Texto plano]
+ 	Texto original.El mensaje que se quiere cifrar está escrito en texto plano
+ \end{defn}
+ 
+ 
+ \begin{defn}[Texto cifrado]
+	DIBUJO
+ \end{defn}
+ 
+ \begin{defn}[Estenografía]
+ 	Técnica para esconder mensajes dentro de otro mensaje.
+ \end{defn}
+ 
+ 
+ \subsection{Contexto histórico de la criptografía}
+ 
+ \subsubsection{Principales motores de la criptografía}
+ 
+ \begin{itemize}
+ 	\item Político\item Bélico \item Económico
+ \end{itemize}
+ 
+\subsection{Esquema general de cifrado y servicios proporcionados a la seguridad}
+
+\textbf{Notación:}
+
+\begin{itemize}
+	\item $Z_m \rightarrow Z$ mod $m$
+	\item $P \rightarrow$ conjunto de textos planos
+	\item $C \rightarrow$ conjunto dde textos encriptados
+	\item $K \rightarrow$ claves
+	\item $E_k(x) \rightarrow$ función de cifrado
+	\item $D_k(x) \rightarrow$ función de descifrado
+\end{itemize}
+\subsubsection{Cifrado de desplazamiento}
+
+\begin{itemize}
+	\item $P\in Z_m$
+	\item $C\in Z_m$
+	\item $K\in Z_m$
+	\item $y=E_k(x)= x+k$ mod m, con $x\in Z_m$ y $K \in Z_m$
+	\item $D_k(y) = x- k$ mod m
+	
+\end{itemize}
+
+La complejidad de descifrado depende de $|K|$, en este caso
+$$|K| = |Z_m| = m$$
+Vemos que $E_k$ y $D_k$ son muy rápidas, por lo que se pueden ejecutar en tiempo real, pero a la vez es muy fácil de descifrar.
+
+\subsubsection{Cifrado de sustitución}
+
+\begin{itemize}
+		\item $P\in Z_m$
+		\item $C\in Z_m$
+		\item $K \rightarrow$ permutación de símbolos
+		\item $y=E_k(x)= \Pi(x)$ ($\Pi \rightarrow$ permutación)
+		\item $D_k(y) = \Pi^{-1}(y)$
+\end{itemize}
+
+Es importante ver que en $Pi$ no puede haber índices repetidos.
+\begin{example}
+	
+	
+	\textbf{\\ \\ Bien:}
+	
+	$\begin{matrix}
+		1 & 2 & 3 & 4\\
+		2 & 1 & 3 & 4
+	\end{matrix}$
+	
+	\textbf{\\ Mal:}
+	
+		$\begin{matrix}
+		1 & 2 & 3 & 4\\
+		1 & 1 & 3 & 4
+		\end{matrix}$
+	
+	
+\end{example}
+
+Este cifrado es más complejo ya que $|K| = m!$
+
+\subsubsection{Cifrado afín}
+
+\begin{itemize}
+	\item $P\in Z_m$
+	\item $C\in Z_m$
+	\item $K \in (a,b)$
+	\item $y=E_k(x)= ax + b$ mod $m , a\in Z^*_m$ y $b\in Z_m$
+	\item $D_k(y) = (y-b)* a^{-1}$ mod $m$
+\end{itemize}
+
+Decimos que $ a\in Z^*_m$ ya que si $ a\in Z_m$, entonces $a^{-1}$ no tiene porqué existir. Por esto definimos
+$$Z^*_m = \{a\in Z_m | mcd(m,a) = 1\}$$
+
+Esto nos asegura que $\forall a \in Z^*_m $ existe $a^{-1}$
+
+Para saber que $a$ queremos utilizar, tenemos que ver:
+\begin{enumerate}
+	\item mod(a,m) = 1. Para comprobar esto utilizamos el algoritmo de Euclides.
+	
+	\item ¿Cómo hallamos $a^{-1}$? . Para esto utilizaremos el algoritmo de Euclides extendido.
+\end{enumerate}
+
+\begin{enumerate}
+	\item \textbf{mcd(a,m) = mcd(m, a mod m)}\\
+	
+	
+	\underline{EUCLIDES}
+	
+	Llamamos $r_0 = a$ y $r_1 = m$
+	
+	$r_0 = q_1 r_1 + r_2$
+	
+	$r_1 = q_2 r_2 + r_3$
+	
+	$\dots$
+	
+	$r_{n-2} = q_{n-1}r_{n-1} + r_n$
+	
+	$r_{n-1} = q_{n}r_{n}$
+	
+	Y asi nos queda que
+	$$r_n = mcd (a,m)$$
+	
+	\item \textbf{¿ $a^{-1}$?}
+	
+	\underline{EUCLIDES EXTENDIDO}
+	
+	La idea es escribir el algoritmo de Euclides pero escribiendo todos los restos en función de $a$ y $m$.
+	
+	Llamamos $r_0 = a$ y $r_1 = m$
+	\begin{itemize}
+		\item $r_0 = q_1 r_1 + r_2 \rightarrow r_2 = r_0 - q_1 r_1 \rightarrow r_2 = a-q_1m$
+		
+		\item $r_1 = q_2 r_2 + r_3 \rightarrow r_3 = m - q_2 r_2$ , y como $r_2$ está e función de $a$ y $m \rightarrow r_3 = m(1+q_1q_2) - q_2a$
+		
+		\item $r_4 = r_2 - q_3 r_3$
+		
+		$\dots$
+		
+		\item $r_{n} = m\cdot U + a\cdot V \Rightarrow a \cdot V = 1$ mod $m \Rightarrow a^{-1} = V$
+		
+	\end{itemize}
+	
+	Ejercicio: ¿Cómo calculamos esa $V$?
+	
+\end{enumerate}
+
+\subsection{Tipos de ataques}
+\subsection{Modelos y estándares de seguridad informática , auditoría y certificación}
+
