@@ -8,7 +8,7 @@ donde los símbolos representan
 	\item $\implies:$ implicación.
 	\item $\wedge:$ conjunción.
 	\item $\vee:$ disyunción.
-	\item $\implies:$ equivalencia.
+	\item $\iff:$ equivalencia.
 	\item $\perp:$ verdadero.
 	\item $\top:$ falso.
 	\item $):$ paréntesis derecho.
@@ -20,7 +20,7 @@ donde los símbolos representan
 $p\implies q$ es una abreviación de $\neg p \vee q$.
 \end{mdframed}
 
-\subsection{Fórmulas bien formadas}
+\subsection{Sintaxis}
 Dado $A$, un conjunto (finito, numerable o no numerable), de variables proposicionales $p, q, r, \hdots$, se definen:
 
 \begin{defn}[Palabra]
@@ -28,7 +28,7 @@ Dado $A$, un conjunto (finito, numerable o no numerable), de variables proposici
 \end{defn}
 
 \begin{defn}[Proposición o fórmula bien formada]
-	Palabra que pertenece a la clase más pequeña cerrada bajo las siguientes operaciones:
+	Palabra que pertenece a la clase más pequeña cerrada bajo las siguientes propiedades:
 	\begin{itemize}
 		\item Los elementos de $A$: $\perp$ y $\top$ son fórmulas atómicas (no se pueden dividir).
 		\item Si $F_1$ y $F_2$ son fórmulas, también lo son
@@ -79,7 +79,7 @@ Hay que distinguir los siguientes casos:
 \end{itemize}
 
 \begin{obs}
-	$a\wedge b \wedge c$ no es una fórmula bien formada. Si son fórmulas bien formadas las siguientes. $(a\wedge (b\wedge c)) \neq ((a\wedge b) \wedge c)$. Pero como fórmulas son distintas, aunque su significado sea el mismo.
+	$a\wedge b \wedge c$ no es una fórmula bien formada. Si son fórmulas bien formadas las siguientes. $(a\wedge (b\wedge c))$, $((a\wedge b) \wedge c)$. Pero como fórmulas son distintas, aunque su significado sea el mismo.
 \end{obs}
 
 \begin{mdframed}
@@ -113,6 +113,68 @@ Los axiomas 2-8 son esquemas de axiomas. Por ejemplo, si $p\neq r$, $p\implies (
 La regla de deducción que vamos a utilizar es el \textbf{modus ponens}: Si tenemos $p$ y $p\implies q$, deducimos $q$.
 
 \begin{defn}[Demostración o prueba]
-	Una demostración o prueba es una sucesión (finita) $p_1, p_2, \hdots, p_n$ donde cada $p_i$ o bien es un axioma o se obtiene de dos fórmulas anteriores mediante modus ponens.
-	Escribimos $\vdash p_n$ para denotar que existe una demostración de $p_n$.
+	Una demostración o prueba (formal) es una sucesión (finita) $p_1, p_2, \hdots, p_n$ donde cada $p_i$ o bien es un axioma o se obtiene de dos fórmulas anteriores mediante modus ponens.
 \end{defn}
+
+\begin{mdframed}
+\textbf{Notación}
+\begin{itemize}
+	\vspace{-3mm}
+	\item Escribimos $\vdash p$ para denotar que existe una demostración de $p$.
+	\item Escribimos $\vDash p$ para denotar que $p$ es verdad.
+\end{itemize}
+\end{mdframed}
+
+\begin{theorem}[Teorema de completitud]
+$$\vdash p \iff \vDash p$$
+\end{theorem}
+
+\begin{defn}[Teoría]
+	$T$ (o $\Sigma$) es una teoría si es un conjunto de FBF$(L)$.
+\end{defn}
+\begin{example}
+	$T$ nos dice que un grafo $G$ puede colorearse con cuatro colores. (Ver ejercicio 4 de la hoja 2).
+\end{example}
+
+\noindent \textbf{Recordatorio}: $(G,E)$ es un grafo si 
+\begin{equation*}
+	\left\{
+	\begin{array}{l l}
+	G=\{v_\alpha \tq \alpha \in \Lambda \} & \\
+	E = \left\{\{v_\alpha, v_\beta \}\tq v_\alpha, v_\beta\in G \right\} &  v_\alpha \neq v_\beta
+	\end{array}
+	\right.
+\end{equation*}
+
+Dado que son pares de elementos distintos, no puede haber una arista que empiece y acabe en el mismo vértice, puesto que en dicho caso tendríamos un conjunto de un sólo elemento.
+
+\begin{defn}[Demostración o prueba (II)]
+	Una demostración a partir de los axiomas y una teoría $T$ es una sucesión finita $p_1, \hdots, p_n$, donde cada $p_i$ es o un axioma, o $p_i\in T$ o se obtiene de dos $p_j,p_k$ anteriores mediante modus ponens.
+\end{defn}
+
+\begin{mdframed}
+\textbf{Notación: } Usamos $T\vdash p$ para denotar que existe una prueba de $p$ usando los axiomas y las fórmulas de $T$.
+\end{mdframed}
+
+\subsection{Semántica}
+La semántica se refiere a las interpretaciones que se le dan a las FBF. En el lenguaje formal interpretamos $\top$ como ``verdadero'' y $\perp$ como ``falso''. Informalmente utilizaremos $0$ para ``falso'' y $1$ para ``verdadero''.
+
+Vamos a considerar el siguiente lenguaje: tomamos $$L= A\cup \left\{\neg, \wedge, \vee, \top, \perp, ), ( \right\}$$
+
+\begin{defn}[Interpretación]
+Una interpretación es una valoración booleana $\sigma$: $$\sigma: FBF(L)\to (\mathbb{Z}_2, +, \cdot) $$
+que satisface
+\begin{itemize}
+	\item $\sigma(\top) = 1, \sigma(\perp) = 0$
+	\item $\sigma(\neg p) = 1+\sigma(p)$,  siendo $p$ una FBF.
+	\item $\sigma (p\vee q) = \sigma(p) \vee \sigma (q) = \max\left\{\sigma(p), \sigma(q)\right\}$
+	\item $\sigma (p\wedge q) = \sigma(p) \wedge \sigma (q) = \min\left\{\sigma(p), \sigma(q)\right\}$
+\end{itemize}
+\end{defn}
+
+\begin{theorem}
+	Sea $\sigma: A \to \{0, 1\}$ una función arbitraria. Entonces $\sigma$ se extiende a una valoración booleana $\hat{\sigma}:FBF(L) \to \mathbb{Z}_2$ de modo único.
+\end{theorem}
+\begin{proof}
+	Por el lema de legibilidad única.
+\end{proof}
