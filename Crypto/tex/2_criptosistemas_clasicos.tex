@@ -54,7 +54,7 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 			\item $A = \{A,B...Z\}$
 			\item $A = \{0,1\}$
 			\item $A = \{A,B...Z,\hdots,\text{?`},\text{?},1,2,3,\hdots,9,0\}$
-			\item $A = $ Código ASCII 
+			\item $A = $ Código ASCII
 		\end{itemize}
 
 
@@ -89,7 +89,7 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 		\vspace{1.5cm}
 
 		\begin{example}{Como romper la criptografía Cesar}
-		
+
 			Se puede romper "facilmente" la criptografía Cesar con análisis de frecuencias. Por ejemplo, en castellano la letra más frecuente es la E, con un 13,68\%, sabiendo la letra más frecuente de un mensaje cifrado se puede calcular la distancia entre esa y la E y muy probablemente hayamos hallado la clave de cifrado.
 
 			La fiabilidad de este método puede verse mermada por la genericidad del texto cifrado. Si es corto y si habla de un tema en particular es posible que las frecuencias varíen respecto a otros textos genéricos en Español.
@@ -128,10 +128,10 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 			$$ax = y - b$$
 
 			Si $a \in U(\mathbb{Z}/N)
-			\implies 
-			x = a^{-1} (y-b) \implies 
+			\implies
+			x = a^{-1} (y-b) \implies
 			x = a^{-1}y - a^{-1}b$
-			
+
 
 			$$f^{-1}_{a,b} = f_{a^{-1},-a^{-1}b}$$
 
@@ -166,7 +166,7 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 
 					\textbf{$\Leftarrow$}
 
-					$(a,n) = 1$. Esto se demuestra usando el algoritmo de euclides. 
+					$(a,n) = 1$. Esto se demuestra usando el algoritmo de euclides.
 
 				\end{proof}
 			\end{prop}
@@ -187,19 +187,95 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 
 				$\phi(N) =N \Pi \phi(P_i^{n_i}) = \Pi P_i^{n_i} n_i \Pi (1- \frac{1}{p_i}) = N \Pi(1 - \frac{1}{p_i})$
 
-
-
-
-
-
-
-
-
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.5\textwidth]{img/protocol.png}
 	\end{center}
 \end{figure}
 
+Veamos un ejemplo de como un espía podría realizar un ataque contra un usuario que emplea este sistema de cifrado.
+\begin{example}
+El objetivo es conseguir conocer los valores $a$ y $b$ que han sido empleados para lo que deberemos resolver un sistema de dos ecuaciones de dos incógnitas, una vez hemos obtenido una muestra de un texto cifrado y su original sin cifrar.
 
+Como, en teoría, el atacante no tendría acceso al texto original, empleará una tabla de frecuencias que, en un texto en inglés, nos dice que las letras más frecuentes son la E y la T.
 
+Ahora podemos estudiar el texto cifrado y ver que las letras más usadas son, respectivamente, U y D. Por tanto, convirtiendo estas letras en sus correspondientes números (según la posición que ocupan en el alfabeto inglés) tenemos el siguiente sistema de ecuaciones:
+\[
+\left\{
+20α + β = 4\atop
+2α +β = 19
+\right.\]
+
+Que, si restamos a la primera ecuación la segunda y nos apoyamos en el hecho de que estamos trabajando en $\ent_{26}$ nos queda:
+\[
+\left\{
+20α + β = 4\atop
+17α = 11
+\right.\]
+
+Ahora debemos encontrar el inverso multiplicativo de 17 trabajando en módulo 26, para lo que emplearemos el algoritmo de euclides que vimos anteriormente.
+
+Con ello llegamos a que:
+\[α = \frac{1}{17} = 19 \implies β = 14\]
+\end{example}
+
+Veamos otro ejemplo un poco más interesante.
+\begin{example}
+En este caso consideramos que el conjunto de símbolos válidos empleados por el emisor al escribir el texto original son: el alfabeto inglés, el espacio y el símbolo de interrogación.
+
+En este caso el espía intercepta un mensaje y encuentra que los símbolos más habituales en ese mensaje han sido la B y ?. En este caso no podemos emplear la misma tabla de frecuencias que en el ejemplo anterior, puesto que el alfabeto inicial ha cambiado.
+
+Con las nuevas condiciones tenemos que las letras más habituales se relacionan de la forma:
+\[B \to \_ \]
+\[? \to E\]
+que nos lleva al sistema de ecuaciones:
+\[
+\left\{
+α+β = -2\atop
+-α+β = 4
+\right. \implies 2α = -6\]
+
+Pero en esta ocasión no podemos emplear el algoritmo de Euclides, pues el 2 no es coprimo con 6 ni con su inverso aditivo.
+
+En esta ocasión, el problema se debe a que estamos trabajando en $\ent_{28}$ que es un cuerpo con divisores de 0 y, por tanto, el sistema de ecuaciones no tendrá una única solución sino varias. En este caso nos quedan que son soluciones posibles los pares de valores:
+\[α=11, \ β=15 \;\;\; \& α=25 \ β=1\]
+
+Ahora lo que podríamos hacer es probar ambas combinaciones y ver cuál de ellas nos permite obtener un texto original con sentido.
+
+Otra posibilidad es acudir a la tabla de frecuencias y ver cuál de los dos sistemas nos permite obtener la siguiente letra más frecuente. Si las cosas funcionan bien, sólo uno de los dos sitemas nos funcionará.
+
+Así, tomamos la I, que es la tercera letra más habitual en el mensaje cifrado y vemos que nuestros valores de α y β nos llevan a que la letra original podría ser T o F.
+
+Puesto que la T es una de las letras menos habituales, la hipótesis razonable es pensar que los valores correctos de α y β es $(11,15)$.
+\end{example}
+
+Tras estos ejemplos hay una duda que debería surgir directamente en el lector. En ambos ejemplos nos hemos basado en un absoluto conocimiento acerca del sisteme alfanumérico empleado en el mensaje original, pero esto no es realista.
+
+Para explicar esto debemos fijarnos en el \textbf{Principio de Kerkhoffs} que dice:
+\begin{prop}[Principio de Kerkhoffs]
+No puede requerirse que un criptosistema sea secreto. Tiene que poder caer en manos del enemigo sin que esto suponga un inconveniente.
+
+Es decir: la seguridad del sistema tiene que depender UNICAMENTE de mantener secretas las claves.
+\end{prop}
+
+Recordemos que el sistema de Cesar tenía el gran inconveniente de que había muy pocas posibilidades. Es decir, con hacer 26 pruebas se puede obtener el mensaje original a partir de un mensaje cifrado.
+
+Este problema se ha relajado mediante el empleo de la criptografía afín pero, como acabamos de ver, sigue siendo sencillo descifrar un mensaje.
+
+Con el fin de mejorar la seguridad aparece el \textbf{Criptosistema de sustitución}
+
+\section{Criptosistema de sustitución}
+
+Este sistema simplemente consiste en una mejora del sistema César. En lugar de desplazar todas las letras del alfabeto lo que se hace es tomar una reordenación del mismo.
+
+% TRASPAS
+\section{Definción de Criptabeto}
+
+El problema de los sistemas que hemos visto, y sobre todo del último, es que es necesario que el emisor y el receptor del mensaje se pongan de acuerdo en la relación alfabeto original - alfabeto crifrado que se va a emplear.
+
+Para llevarlo a cabo existen diferentes alternativas:
+\begin{itemize}
+\item \textbf{Frase clave}
+
+\item \textbf{Palabra clave - lectura clave}
+\end{itemize}
