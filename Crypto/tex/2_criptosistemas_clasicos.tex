@@ -1,25 +1,29 @@
 \chapter{Criptosistemas clásicos}
 
-Problema a solucionar:
+La criptografía tiene como objetivo resolver el siguiente problema:
 
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.5\textwidth]{img/aliceBobEve.png}
+		\caption{Cómo enviar un mensaje de manera segura entre Bob y Alice por un canal al que Eve tiene acceso}
 	\end{center}
 \end{figure}
 
 
-El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay que resolver problemas tanto de confidencialidad como de identificación.
+El objetivo es garantizar tanto la confidencialidad del mensaje (Eve no es capaz de saber qué se están diciendo) como de autentifiación (Alice está segura de que es Bob quien mandó el mensaje y viceversa)
 
-\textbf{Primeras soluciones}
+A lo largo de este capítulo veremos los métodos que han sido empleados a lo largo de la historia para lograr este objetivo.
 
 	\section{Esteganografía}
 
 		Intentar ocultar la existencia del mensaje. Es un método con origen muy antigüo (~486-425 a.C)
 
 	\section{Criptografía}
+		\begin{defn}[Criptografía]
+		Tradicionalmente se ha definido como el ámbito de la criptología el que se ocupa de las técnicas de cifrado o codificado destinadas a alterar las representaciones lingüísticas de ciertos mensajes con el fin de hacerlos ininteligibles a receptores no autorizados.
 
-		Intentar que el mensaje no se pueda leer aunque se intercepte. También tiene unorigen muy antigüo (~500 a.C)
+		El primer método de criptografía data del siglo V antes de cristo
+		\end{defn}
 
 		La mayoría de estos métodos se basaban en transposición.
 
@@ -29,8 +33,8 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 
 		\subsection{El criptosistema de Cesar}
 
-			Se utiliza la sustitución como método de encriptación, normalmente cambiando cada letra por su correspondiente al desplazarse \texttt{d} espacios atrás en el abecedario. Por ejemplo:
-
+			Se utiliza la sustitución como método de encriptación, normalmente cambiando cada letra por su correspondiente al desplazarse $d$ espacios atrás en el abecedario. Por ejemplo:
+			\begin{center}
 			\begin{tabular}[h]{c|c}
 			sin cifrar & cifrado \\ \hline
 			A & D\\
@@ -38,18 +42,24 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 			C & F\\
 			... & ...
 			\end{tabular}
+			\end{center}
 
 		\subsection{Formalización}
 
-		Hay dos colecciones de mensajes:
+		Vamos a ver cómo denominamos formalmente los elementos que intervienen en un proceso de cifrado:
+		\begin{itemize}
+			\item \textbf{Mensajes}
 
-		\begin{enumerate}
+			Tenemos dos diferentes mensajes en todo proceso de cifrado
+			\begin{enumerate}
 			\item M = Mensajes en claro
 			\item C = Mensajes cifrados
 		\end{enumerate}
 
-		Un alfabeto, o dos, si el alfabeto de M y el de C son distintos:
+		\item \textbf{Alfabeto}
+		Tendremos un alfabeto o dos, dependiendo de si los alfabetos de M y C son el mismo o no.
 
+		Ejemplos de alfabetos serían:
 		\begin{itemize}
 			\item $A = \{A,B...Z\}$
 			\item $A = \{0,1\}$
@@ -57,18 +67,16 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 			\item $A = $ Código ASCII
 		\end{itemize}
 
+		\item \textbf{Funciones para cifrar}
 
+		Serán funciones de la forma $f: M \rightarrow C$ donde $f$ es inyectiva
 
-		Funciones para cifrar:
+		\item \textbf{Funciones para descifrar}
 
-		$f: M \rightarrow C$ inyectiva
+		Serán funciones de la forma $f^{-1}: C \rightarrow M$ donde $f$ es la misma función empleada para cifrar el mensaje.
+		\end{itemize}
 
-		La correspondiente función para descifrar sería:
-
-		$f^{-1}: C \rightarrow M$
-
-
-		A debe conocer $f$ y $B$ debe conocer $f^{-1}$. A envía un mensaje $m\in M$ a $B$ usando $f(m)=c$ y enviando $c$. $B$ puede obtener el mensaje calculando $f^{-1}(c) = m$.
+		Para que pueda llevarse a cabo la comunicación entre $A$ y $B$, A debe conocer $f$ y $B$ debe conocer $f^{-1}$. A envía un mensaje $m\in M$ a $B$ usando $f(m)=c$ y enviando $c$. $B$ puede obtener el mensaje calculando $f^{-1}(c) = m$.
 
 		En este modelo, romper el sistema de cifrado equivale a que un tercero averigüe $f^{-1}$.
 
@@ -77,9 +85,8 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 
 		En el sistema de Cesar se puede cambiar, por ejemplo, la longitud desplazmiento por el abecedario al realizar la encriptación, aunque no hay muchas posibilidades.
 
-
 		\begin{defn}[Criptosistema]
-			Colección de functiones para fifrar:
+			Colección de functiones para cifrar:
 
 			$f_e : M_e \rightarrow C_e$
 
@@ -111,18 +118,20 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 
 		\section{Criptosistema afín (sobre letras)}
 
-			Alfabeto de N letras $\leftrightarrow \mathbb{Z}/N$
+			\begin{defn}[Cifrado afín]
+			El cifrado afín también se le llama cifrado de transformación afín o cifrado monoalfabético genérico. Es un tipo de cifrado por sustitución en el que cada símbolo del alfabeto en claro (el alfabeto del texto en claro) es sustituido por un símbolo del alfabeto cifrado (el alfabeto del texto cifrado) siendo el número de símbolos del alfabeto en claro igual que el número de símbolos del alfabeto cifrado. Para hallar el símbolo del alfabeto cifrado que sustituye a un determinado símbolo del alfabeto en claro, se usa una función matemática afín en aritmética modular. Para poder aplicar la función matemática lo primero que hay que hacer es asignar un orden que a cada símbolo de cada uno de los alfabeto le asocie un número de orden.
+			\end{defn}
 
-			Claves: $a,b \in \mathbb{Z}/N$
+			Si tenemos un alfabeto de N letras $\leftrightarrow \mathbb{Z}/N$ y denominamos a las claves: $a,b \in \mathbb{Z}/N$, tenemos que el proceso de cifrado puede representarse mediante la siguiente fórmula matemática:
 
 			\begin{align*}
 				f_{a,b} :&  \mathbb{Z}/N\to \mathbb{Z}/N\\
 				& x \rightarrow ax + b
 			\end{align*}
 
-			¿Para qué valores de a,b es $f_{a,b}$ inyectiva?
+			\subsection{¿Para qué valores de a,b es $f_{a,b}$ inyectiva?}
 
-			Calculamos $f^{-1}_{a,b}$
+			Para verlo calculamos $f^{-1}_{a,b}$
 
 			$$ax+b = y$$
 			$$ax = y - b$$
@@ -177,7 +186,14 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 			$$ \#E = \#U(\mathbb{Z}/N) * \#\mathbb{Z}/N = \phi(N)*N $$
 
 
-			\subsection{La función de euler}
+			\subsection{La función de Euler}
+
+				\begin{defn}[Función de Euler]
+				La función φ de Euler (también llamada función indicatriz de Euler) es una función importante en teoría de números. Si n es un número entero positivo, entonces φ(n) se define como el número de enteros positivos menores o iguales a n y coprimos con n, es decir, formalmente se puede definir como:
+
+				\[\phi(m) = \left| \{n \in \nat \tq n \leq m \wedge mcd(m,n)=1\}\right|\]
+
+				En el caso de que queramos calcular la función de Euler de un número primo $p$ tenemos:
 
 				$\phi(p) = p-1$
 
@@ -186,6 +202,8 @@ El problema radica en enviar un mensaje por un canal al que E tiene accesso. Hay
 				Como es una función multiplicativa:
 
 				$\phi(N) =N \Pi \phi(P_i^{n_i}) = \Pi P_i^{n_i} n_i \Pi (1- \frac{1}{p_i}) = N \Pi(1 - \frac{1}{p_i})$
+
+				\end{defn}
 
 \begin{figure}[h]
 	\begin{center}
@@ -213,10 +231,22 @@ Que, si restamos a la primera ecuación la segunda y nos apoyamos en el hecho de
 17α = 11
 \right.\]
 
-Ahora debemos encontrar el inverso multiplicativo de 17 trabajando en módulo 26, para lo que emplearemos el algoritmo de euclides que vimos anteriormente.
+Ahora debemos encontrar el inverso multiplicativo de 17 trabajando en módulo 26, para lo que emplearemos el algoritmo de Euclides.
 
+\begin{enumerate}
+\item $26 = 17 + 9$
+\item $17 = 9 + 8$
+\item $9 = 8 + 1 $
+\item $8 = 8 \cdot 1 + 0$
+\end{enumerate}
+
+Como al final hemos obtenido un $+0$ el propio algoritmo de Euclides nos garantiza que existe el inverso multiplicativo modulo 27 de 17.
+
+Ahora aplicamos el algoritmo de Euclides para obtener el inverso y para ello expresamos cada resto sustituyendo en la fórmula resultando el resto siguiente. Es decir:
+\[1 = 9 - 8 = 9- (17-9) = 2 \cdot 9 - 17 = 2 \cdot (26 - 17) - 17 = 2 \cdot 26 - 3 \cdot 17 = -24 \cdot 26 + 23 \cdot 17 \implies \]
+\[\implies 1 + 24 \cdot 26 = 23 \cdot 17 \implies 1 = 23 \cdot 17\]
 Con ello llegamos a que:
-\[α = \frac{1}{17} = 19 \implies β = 14\]
+\[\frac{1}{17} = 23 \implies α = 23 \cdot 11 = 19 \& β = 14\]
 \end{example}
 
 Veamos otro ejemplo un poco más interesante.
