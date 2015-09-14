@@ -73,7 +73,7 @@ Más repaso de probabilidad: probabilidad condicionada (regla de la suma)
 
 Vamos a ver cómo utilizar esta regla combinándola con los silogismos:
 
-Podemos incluir el primer silogismo fuerte \ref{silogismofuerte} hacienndo $I= A\implies B$, entonces tenemos:
+Podemos incluir el primer silogismo fuerte \ref{silogismofuerte} haciendo $I= A\implies B$, entonces tenemos:
 \[P(A,B|A\implies B) = ... = 1\]
 Y aplicando el segundo silogismo fuerte, tenemos:
 \[P(A|\bar{B}, A\implies B) = ... = 0\]
@@ -81,6 +81,87 @@ Y aplicando el segundo silogismo fuerte, tenemos:
 Sin embargo, utilizando los silogismos débiles:
 
 \[ P(A|B,A\implies B) = \frac{P(A|A\implies B)}{P(B|A\implies B)} \geq P(A|A\implies B)\]
+
+
+\section{Toma de decisiones}
+
+A la hora de tomar decisiones, podemos utilizar 2 criterios. El criterio de máxima verosimilitud y el de ...
+
+
+\begin{defn}[Criterio MAP]
+\label{CriterioMAP}
+Maximiza la probabilidad a posteriori.
+
+\[H_i = \max_i\{p(H_i | D)\} = \max_i \{\frac{P(D|H_i)·P(H_i)}{P(D)}\} = \max_i \{P(D|H_i)·P(H_i)\}\]
+
+Donde $\max_i$ devuelve la hipótesis en la que se encuentra el máximo.
+\end{defn}
+
+\begin{defn}[Criterio MV]
+\label{CriterioMV}
+Maximiza la máxima verosimilitud.
+\[
+H_i = \max_i\{P(D|H_i)\}
+\]
+
+\end{defn}
+
+La diferencia entre los 2 criterios es la corrección y por tanto la complejidad. \textbf{MAP es más correcto}, pero \textbf{MV} es \textbf{más fácil.} 
+
+Vamos a verlo con un ejemplo.
+
+\begin{example}
+Tenemos monedas justas y monedas trucadas. Las monedas trucadas tienen un 75\% de salir cara.
+
+Hemos obtenido cara en un lanzamiento. ¿Cuál es la probabilidad de que sea una moneda justa?
+
+$D=c, H=t|j$
+
+\[
+P(j|c) = \frac{P(c|j)·P(j)}{P(c)} = \frac{0.5·0.5}{P(c)}
+\]
+\[
+P(t|c) = \frac{P(c|t)·P(j)}{P(c)} = \frac{0.75·0.5}{P(c)}
+\]
+
+Como $P(j|c) + P(t|c) = 1$, tenemos que $P(c) = 0.5·0.5 + 0.75·0.5 = 0.625$, entonces:
+
+\[P(j|c) = 0.4\]
+\[P(t|c) = 0.6\]
+
+Según el criterio MAP diríamos que es más probable que la moneda esté trucada. 
+
+Por algún motivo, calculamos:
+
+\[P(j|x) = ... = \frac{2}{3}\]
+\[P(j|x) = ... = \frac{1}{3}\]
+
+
+\paragraph{Existen 4 modelos posibles:}
+Tenemos:
+\begin{itemize}
+\item Espacio de atributos = $\{c,x\}$ 
+\item Clase = $H\in\{j,t\}$
+\end{itemize}
+
+Vamos a construir los 4 modelos:
+
+\begin{itemize}
+	\item $h_1(c) = j$ y $h_1(x) = t$ 
+	\item $h_2(c) = t$ y $h_2(x) = j$ 
+	\item $h_3(c) = j$ y $h_3(x) = j$ 
+	\item $h_4(c) = t$ y $h_4(x) = t$ 
+\end{itemize}
+
+Con lo calculado anteriormente, observamos que el modelo $h_1$ es elegido según el criterio MAP.
+
+Pero podemos plantearnos, ¿qué modelo es mejor? Pues el que menos se equivoque. Vamos entonces a calcular las probabilidades de error de los modelos.
+
+\subparagraph{$h_1$:} $P(error) = p(j,c) + p(t,x) = P(j|c)·P(c) + P(x|t)·P(t) = ... = 37.5\%$
+\subparagraph{$h_2$:} $P(error) = p(j,x) + p(t,c) = P(j|x)·P(x) + P(c|t)·P(t) = ... = 62.5\%$
+\subparagraph{$h_3$:} $P(error) = p(j,x) + p(t,x) = P(j|x)·P(x) + P(x|t)·P(t) = ... = 50\%$
+\subparagraph{$h_4$:} $P(error) = p(j,c) + p(t,c) = P(j|c)·P(c) + P(c|t)·P(t) = ... = 50\%$
+\end{example}
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
