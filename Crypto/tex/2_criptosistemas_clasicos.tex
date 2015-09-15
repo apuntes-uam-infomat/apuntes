@@ -298,6 +298,12 @@ Con el fin de mejorar la seguridad aparece el \textbf{Criptosistema de sustituci
 
 Este sistema simplemente consiste en una mejora del sistema César. En lugar de desplazar todas las letras del alfabeto lo que se hace es tomar una reordenación del mismo.
 
+El principal problema del sistema de crifrado César es que sólo existen 26 posibles claves (correctamente hay N posibles claves siendo N el tamaño del alfabeto empleado), que es un número muy pequeño.
+
+Con el sistema de sustitución simple pasamos a tener un total de $26! = 4 \cdot 10^{26}$ posibles claves. Para que nos hagamos una idea de lo desorbitadamente grande que es este número, tened en cuenta que la NASA calculó que con un procesador de Intel de los más potentes hasta la fecha de 2009, serían necesarios más de 10.000 años para probar todas las posibles claves.
+
+Aún así, el sistema de cifrado por sustitución sigue siendo vulnerable a ataques por análisis de frecuencias.
+
 % TRASPAS
 \section{Definción de Criptabeto}
 
@@ -312,9 +318,31 @@ Para llevarlo a cabo existen diferentes alternativas:
 
 En este punto es interesante mirar las transparencias de la asignatura que pueden encontrarse en moodle.
 
-%Criptosistema de hill o lineal
-% Criptosistema afín sobre vectores (de dimensión 2)
-% Va de tomar las letras de dos en dos y mandarlas en un número o en un vector (según queramos)
+\section{Lucha contra el análisis de frecuencias}
+Una posible forma de hacer el sistema menos vulnerable a este tipo de ataques consiste en cifrar las letras por grupos. Por ejemplo, podemos agruparlas de 2 en 2.
+
+Una vez decidimos cómo de grande es el grupo de letras que vamos a juntar (y por ahora suponemos es 2) podemos cifrarlo de dos formas diferentes:
+
+\begin{itemize}
+\item \textbf{Pares de letras vistas como números de dos cifras en base 26}
+
+En este caso emplearíamos funciones del tipo
+\[f(m)= (Am + B) \ mod \ 26, \;\; A,B \in \ent_{26}\]
+
+\item \textbf{Pares de letras vistas como vectores de dimensión 2 sobre $\ent_{26}$}
+
+Este sistema nos permite emplear matrices y se conoce como \textbf{Criptosistema de Hill}
+
+\[ f(m_1\ m_2) = \left( \begin{array}{cc}
+a & b \\
+c & d  \end{array} \right) \cdot\left( \begin{array}{c}
+m_1 \\
+m_2  \end{array} \right) \ \text{ con } a,b,c,d \in \ent_{26}\]
+\end{itemize}
+
+Ambos sistemas pueden extenderse a alfabetos más grandes y a agrupaciones de letras mayores. Sin embargo, el criptosistema de Hill (también conocido como lineal) requiere que la matriz sea invertible, pues de lo contrario el mensaje no sería descifrable.
+
+Veamos cuándo la matriz será invertible, teniendo en cuenta qué significa ser invertible en el cuerpo en que estamos trabajando.
 
 \begin{prop}
 Una matriz con coeficientes en $\ent_{N}$ tiene inversa si y sólo si el determinante de la matriz pertenece al conjunto de las unidades de $\ent_{N}$
@@ -361,7 +389,24 @@ Evidentemente no es viable mantener el mismo procedimiento y, como el profesor d
 
 Por tanto tenemos que encontrar un método alternativo. Para ello podemos pensar qué característica nos muestra si una matriz tiene determinante 0 o no. Aquí está la idea genial. \textbf{Una matriz tiene módulo 0 si sus filas/columnas no son linealmente independientes}
 
-%Completar las cuentas aquí
+En este caso tendremos una matriz de la forma:
+\[\left( \begin{array}{cc}
+a & b \\
+c & d  \end{array} \right)\]
+
+Como hicimos en el apartado anterior, vamos a buscar de cuántas formas podemos hacer las filas proporcionales, esto es, cuántos valores posibles permiten la existencia de un λ tal que:
+\[\left( \begin{array}{c}
+a \\
+b  \end{array} \right) = λ \cdot \left( \begin{array}{c}
+c \\
+d  \end{array} \right)\]
+
+Para el vector $(c,d)$ podemos tener cualquier valor excepto el $(0,0)$, es decir, tenemos $p^2 -1$ opciones. Para el vector $(a,b)$ tendremos un total de $p^3-p$ opciones.
+
+Por otro lado, si $(c,d)$ son ambos $0$, tenemos un total de $p^2$ matrices con determinante nulo (segunda fila de 0s y lo que sea en la primera). Así tenemos un total de
+\[p^4 - p^3 -p^2+p \text{ matrices invertibles en } \ent_{26}\]
+
+que, como era de esperar, coincide con lo calculado en el apartado anterior.
 
 \end{itemize}
 \end{example}
