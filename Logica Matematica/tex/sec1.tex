@@ -165,7 +165,7 @@ Vamos a considerar el siguiente lenguaje: tomamos $$L= A\cup \left\{\neg, \wedge
 Una interpretación es una valoración booleana $\sigma$: $$\sigma: FBF(L)\to (\mathbb{Z}_2, +, \cdot) $$
 que satisface
 \begin{itemize}
-	\item $\sigma(\top) = 1, \sigma(\perp) = 0$
+	\item $\sigma(\top) = 1$, $\sigma(\perp) = 0$
 	\item $\sigma(\neg p) = 1+\sigma(p)$,  siendo $p$ una FBF.
 	\item $\sigma (p\vee q) = \sigma(p) \vee \sigma (q) = \max\left\{\sigma(p), \sigma(q)\right\}$
 	\item $\sigma (p\wedge q) = \sigma(p) \wedge \sigma (q) = \min\left\{\sigma(p), \sigma(q)\right\}$
@@ -173,8 +173,96 @@ que satisface
 \end{defn}
 
 \begin{theorem}
-	Sea $\sigma: A \to \{0, 1\}$ una función arbitraria. Entonces $\sigma$ se extiende a una valoración booleana $\hat{\sigma}:FBF(L) \to \mathbb{Z}_2$ de modo único.
+	Sea $\sigma: A \to \{0, 1\}$ una función arbitraria. Entonces $\sigma$ se extiende, de modo único, a una valoración booleana $$\hat{\sigma}:FBF(L) \to \mathbb{Z}_2$$
 \end{theorem}
 \begin{proof}
 	Por el lema de legibilidad única.
 \end{proof}
+
+A partir de los valores $\sigma(p), \sigma(q),\hdots$ se define $\sigma$ para las $FBF(L)$ tal y como describen las tablas de verdad.
+\begin{center}
+\begin{tabular}{c|c}
+	& $\top$\\
+	\hline
+	& 1 \\
+\end{tabular}\hspace{1cm}
+\begin{tabular}{c|c}
+	& $\perp$\\
+	\hline
+	& 0 \\
+\end{tabular}\hspace{1cm}
+\begin{tabular}{|c|c|}
+	\hline
+	$p$ & $\neg p$\\
+	\hline
+	1 & 0 \\
+	\hline
+	0 & 1\\
+	\hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|c|c|}
+	\hline
+	$p$ & $q$ & $p\vee q$ & $p \wedge q$ & $p\implies q$ &  $p\iff q$\\
+	\hline
+	1 & 1 & 1 & 1 & 1 & 1 \\
+	\hline
+	1 & 0 & 1 & 0 & 0 & 0 \\
+	\hline
+	0 & 1 & 1 & 0 & 1 & 0 \\
+	\hline
+	0 & 0 & 0 & 0 & 1 & 1 \\
+	\hline
+\end{tabular}
+\end{center}
+
+\begin{obs}
+	\begin{itemize}
+	\item $\top \equiv (p\vee \neg p)$
+	\item $\perp \equiv \neg \top $
+	\item $(p\implies q) \equiv (\neg p \vee q)$
+	\item $(p\iff q) \equiv (p\implies q)\wedge (q \implies p)$
+	\end{itemize}
+\end{obs}
+
+\begin{defn}[Sistema completo]
+	Un sistema de conectivas es completo si las demás conectivas pueden definirse en términos de ellas.
+\end{defn}
+
+\begin{example}
+	Los siguientes conjuntos son completos.
+	$$\{\neg, \vee\}, \{\neg, \wedge\}, \{\neg, \implies\}, \{\neg, \iff\}, \{\perp, \implies\}$$
+	
+	$\{\vee,\wedge\}$ no es completo. Se puede probar por monotonía.
+\end{example}
+
+\begin{defn}[Modelo]
+	Sea $T\subset FBF(L)$. Un modelo de $T$ es una valoración booleana $\sigma \tq \forall p\in T, \sigma (p) = 1$.
+\end{defn}
+
+\begin{defn}[Consecuencia tautológica]
+	Decimos que $p$ es una consecuencia tautológica de $T$, y escribimos $T\vDash p$, si para todo modelo $\sigma$ de $T$, $\sigma(p) = 1$, decimos que $p$ es una \textbf{tautología} y escribimos  $\vDash p$.
+	Si $p\in T = \emptyset$, entonces toda $\sigma$ es un modelo de $T$.
+\end{defn}
+
+\begin{defn}
+	Si $\vDash p \iff q$, es decir, si $p\iff q$ es una tautología, decimos que $p$ y $q$ son lógicamente equivalentes.
+\end{defn}
+
+\begin{obs}
+	Sea $r$ una $FBF(L)$, sea $p$ una subfórmula de $r$ y se $\sigma$ cualquier valoración booleana. Si $p\iff q$ y reemplazamos cada instancia de $p$ en $r$ por $q$ denotando por $r^\prime$ la fórmula así obtenida, entonces $\sigma(r^\prime) = \sigma(r)$.
+\end{obs}
+
+\begin{defn}[Teoría inconsistente]
+	Una teoría $T$ es inconsistente si $T\vdash \perp$.
+\end{defn}
+
+\begin{theorem}[Teorema de completitud]
+	$T$ demuestra $p$ si y sólo si $p$ es consecuencia lógica de $T$.
+	$$T\vdash p \iff T\vDash p$$
+\end{theorem}
+
+\begin{obs}
+	Si $T$ es inconsistente, $T\vdash$ cualquier cosa.
+	Por otra parte, ninguna valoración satisface $T$, es decir, ninguna $\sigma$ cumple $\sigma(r) = 1$ $\forall r\in T$. Luego cualquier cosa es una consecuencia lógica de $T$ porque no hay ninguna valoración que satisfaga $T$.
+\end{obs}
