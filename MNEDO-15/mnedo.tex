@@ -249,21 +249,64 @@ A continuación mencionaremos algunos métodos numéricos:
 	\item \textbf{Desarrollo en serie de Taylor}
 	\[y(x_{n+1}) = y(x_n+h) = y(x_n) + h·y'(x_n) + R_n =\]
 	\[= y(x_n) + h·f(x_n,y(x_n)) + R_n\]
+
+	\item \textbf{Método leap-frog}
+	\[y(x_{n+2} - y(x_n) = \int_{x_n}^{x_{n+2}} y'(x) = \int_{x_n}^{x_{n+2}} f(x,y(x))\dif x \approx (x_{n+1}-x_n)f(x_{n+1},y(x_{n+1})\]
+	donde la aproximación se ha realizado empleando la regla del punto medio.
+
+	Finalmente nos queda:
+	\[y(x_{n+2} - y(x_n) = 2h f(x_{n+1},y(x_{n+1}))\]
 \end{itemize}
 
-\textcolor{red}{Aquí falta la clase del martes. La completará el malvado}
+\begin{defn}[Método numérico de $k$ pasos]
+Se dice que un método numérico es de $k$ pasos si para conocer $y_{n+k}$ necesitamos conocer los $k$ valores: $y_{n}, y_{n+1},... y_{n+k-1}$
+\end{defn}
 
-\subsection{Demostración del método de Euler}
+\begin{defn}[Método numérico convergente]
+Se dice que un método numérico es convergente si para todo problema de valor inicial se tiene que:
+\[\lim_{N \to \infty} \max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n)}= 0\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=0\]
+
+Evidentemente no nos referimos a cualquier problema imaginable sino a todos aquellos problemas de valor inicial en los que la función $f$ sea continua y Lipschitz en la segunda variable, pues esos son lso únicos problmeas con los que hemos trabajado hasta ahora.
+\end{defn}
+
+\begin{theorem}[]
+Sea $y(x)$ la solución de un problema de valor inicial y sean $\{y_n\}$ los valores que vamos aproximando en cada iteración del método de Euler, se cumple que $\{y_n\}$ converge a $y(x)$
+\end{theorem}
+\begin{proof}
 Al trabajar con este método obtendremos una serie de funciones de la forma
 \[y_{n+1} = y_n + h f(x_n, y_b)\]
 
-Esta sucesión de funciones es convergente si:
-\[|y(x_n)-y_0 | = 0 \ \implies \lim_{N \to \infty} \max_n |y(x_n)-y_n| = 0\]
+Para empezar vamos a definir el residuo que no es más que la diferencia entre el valor aproximado $y_n$ obtenido al aplicar el método en cuestión y el valor real $y(x_n)$. Así, podemos escribir:
+\[y(x_{n+1})=y(x_n)+hf(x_n,y(x_n))+R_n \text{ siendo } R_n \text{ el residuo }\]
+
+Despejando podemos ver que
+\[R_n = \underbrace{y(x_{n+1})-y(x_n)}_{hy'}-h\underbrace{f(x_n,y(x_n))}_{y'} = \frac{h^2}{2}y''(ε)\]
+
+
+Según la definición de convergencia, para demostrar que la sucesión converge basta con ver que:
+\[|y(x_n)-y_n | = 0 \ \implies \lim_{N \to \infty} \max_n |y(x_n)-y_n| = 0\]
+
 
 \begin{itemize}
-\item \textbf{Gracias a la condición de Lipschitz tenemos que}
-\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n)+K \text{ siendo } C_{n+1} \leq (1+Lh)C_n + K \text{ con } K = \max_n |R_n|\]
+\item Basándonos en la condición de Lipschitz:
+\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n)+K \text{ siendo } e_{n+1} \leq (1+Lh)e_n + K \text{ con } K = \max_n |R_n|\]
 
+\begin{proof}
+\[e_n = |y(x_n)-y_n| \implies e_{n+1} \leq (1+Lh)e_n+K \implies e_n \leq (1+Lh)^n e_0 + K \frac{1-(1+hL)^n}{1-(1+kL)}\]
+que simplificando nos queda:
+\[e_n \leq (1+Lh)^n e_0 + \frac{K}{h}\frac{(1+hL)^n-1}{L}\]
+
+Esta fórmula puede ser deducida de forma sencilla estudiando como se comporta el error en cada iteración, con lo que veremos que no es más que una sucesión geométrica. Otra opción posible es hacer la demostración de la misma por inducción.
+
+Ambos procedimientos son muy sencillos y se dejan como ejercicio para el lector.
+\end{proof}
+
+Gracias a esto tenemos demostrada la \textbf{estabilidad} pues
+\[|y(x_n)-y_n| \leq (1+hL)^n |y(x_0)-y_0| + \frac{(1+hL)^{n+1}-1}{L}\cdot \max_n \frac{|R_n|}{h}\]
+
+Por otro lado tenemos que:
+\[\lim_{h \to 0} \frac{|R_n|}{h} = 0\]
+con lo que vemos que el residuo lo tenemos controlado
 \item \textbf{ Tras esto demostramos por inducción que $C_n$ satisface:}
 \[C_n \leq (1+Lh)^n C_0 + K\frac{(1+Lh)^n-1}{Lh}\]
 % Jorge, esta parte en teoría es repaso de la clase que tienes que completar tu. Mételo como puedas aquí.
@@ -299,6 +342,7 @@ A partir de aquí vemos fácilmente que
 Esto es sencillo de ver puesto que la derivada segunda de $y$ está acotada.
 %Aquí faltan cositas Jorge
 \end{itemize}
+\end{proof}
 
 \subsection{Orden del método de Euler}
 \begin{defn}[Método numérico de orden p]
