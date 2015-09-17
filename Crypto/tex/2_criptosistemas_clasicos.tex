@@ -362,8 +362,8 @@ Una vez tenemos esto es claro ver que
 \end{proof}
 
 Ahora lo que nos interesa es saber cuántas matrices invertibles de este tipo existen para cada $N$, ya que esto nos permitirá saber cómo de seguro es este sistema de cifrado. Veámoslo como un ejercicio.
-\begin{example}
-Vamos a buscar cuántas matrices invertibles hay con coeficientes en $\ent_{p}$ por casos:
+
+Vamos a buscar cuántas matrices invertibles hay con coeficientes en $\ent_{N}$ por casos:
 \begin{itemize}
 \item \textbf{N=2}
 En este caso tendremos que el determinante sería de la forma $ad-bc$.
@@ -408,5 +408,87 @@ Por otro lado, si $(c,d)$ son ambos $0$, tenemos un total de $p^2$ matrices con 
 
 que, como era de esperar, coincide con lo calculado en el apartado anterior.
 
+\item \textbf{N=p primo}
+
+En este caso tenemos que tener en cuenta que $\ent_p$ es un cuerpo.
+
+Nuevamente queremos ver cuántas matrices invertibles pueden definirse con coeficientes en $\ent_p$ y para ello veremos de cuántas formas podemos seleccionar $p$ vectores de $p$ coordenadas independientes.
+
+Para la primera columna podemos escoger cualquier vector no nulo, es decir, tendremos $p^n-1$ posibilidades.
+
+Para el segundo vector debemos escoger un vector que no sea múltiplo del primero, es decir, tendremos $p^n-p²$ posibles vectores.
+
+De forma general, para el vector $c_i$ tendremos un total de $p^n-p^(i-1)$ posibilidades.
+
+Finalmente, multiplicando todos estos valores, vemos el número de posibles matrices es:
+\[ \phi_n(p) = \prod_{i=0}^{n-1} (p^n-p^i)\]
+
+\item \textbf{N = } $p^r$
+
+En esta ocasión lo que hacemos el reducir la matriz según el homomorfismo de anillos:
+\[\appl{\pi}{Mat_{n\times n}(\ent_{p^r})}{Mat_{n\times n}(\ent_{p})}\]
+tal que $\pi(a_{ij} \text{ mod } p^r )=a_{ij} \text{ mod } p$
+
+\textcolor{red}{Me he perdido. Lo completo con los apuntes de Jorge}
+
+\[\phi_n(p^r) = (p^{r-1})^n \prod_{i=0}^{n-1}(p^n-p^i)\]
+
+\item $\phi_n(NM)$ siendo $N$ y $M$ coprimos.
+
+En esta ocasión emplearemos como reducción el ismorfismo de anillos:
+\[\appl{\pi}{\ent_{NM}}{\ent_N\times \ent_M}\]
+
+Puesto que el núcleo estará formado por aquellos elementos que son múltiplos de $N$ y de $mM$ simultáneamente (puesto que al calcular su módulo $n$ y $m$ obtendremos 0). Pero, puesto que $N$ y $M$ son coprimos, el único factor común que tienen es su producto, es decir, $NM = 0$.
+
+Por tanto, su núcleo es el trivial y por tanto la aplicación es inyectiva. Además, por ser inyectiva entre anillos de igual cardinal finito, tendremos que la aplicación $\pi$ es biyectiva.
+
+Al ser sobreyectiva tenemos que:
+\[U(\ent_{NM}) \approx U(\ent_N)\times U(\ent_M) \implies \phi(NM)=\phi(N)\times \phi(M)\]
+
+Si extendemos ahora esta aplicación a matrices con coeficientes en $\ent_{NM}$ tendremos que obtenemos nuevamente un isomorfismo\footnote{Lo podemos comprobar repitiendo el razonamiento anterior}
+
+Puesto que es un isomorfismo entre matrices, tenemos:
+\[GL_n(\ent_{NM})=GL_n(\ent_N)\times GL_n(\ent_M) \implies \phi_n(NM)=\phi_n(N)\times \phi_n(M)\]
+
+A partir de aquí ya podemos deducir el caso general, pues dado cualquier número podremos descomponerlo apoyándonos en esta propiedad.
+
 \end{itemize}
+
+Veamos ahora un ejemplo numérico
+\begin{example}
+Nuestro espía intercepta un mensaje cifrado escrito originalmente en inglés y donde el alfabeto empleado es $A=\{A,B,...,Z,\_\}$, un total de 27 símbolos.
+
+Sabemos, además, que el mensaje se ha cifrado empleando un digrafo en $\ent_{N^2}$ y una función afín $\appl{f_{ab}}{\ent_{27^2}}{\ent_{27^2}}$ tal que $f_{ab}(x)=ax+b$
+
+Puesto que no tenemos más información, no nos queda otra que recurrir a un análisis de frecuencia (por pares). Tras este análisis, obtenemos:
+\begin{center}
+\begin{tabular}{| c | c |}
+\hline
+\textbf{Mensaje cifrado} & \textbf{Ingles} \\
+\hline
+ZA & E\_\\
+\hline
+IA & S\_\\
+\hline
+IW & \_T \\
+\hline
+\end{tabular}
+\end{center}
+
+Ahora tenemos que buscar la función inversa $f^{-1}_{ab} = f_{α,β}$. Para ello observamos la tabla y vemos que tenemos que el valor $ZA = 25*27+0 = 675$ tiene que ir a parar a $E\_=4*27+26=134$.
+
+Así mismo obtenemos también que nuestra función debe cumplir $f_{αβ}(IA = 216)=S\_ = 512$.
+
+Para encontrar α y β debemos resolver el sistema:
+\[\left( \begin{array}{cc}
+675 & 1 \\
+216 & 1  \end{array} \right)\left( \begin{array}{c}
+α \\
+β  \end{array} \right) = \left( \begin{array}{c}
+134 \\
+512  \end{array} \right)\]
+
+Sin embargo, el sistema no puede resolverse puesto que la matriz del sistema no es invertible, ya que su determinante es múltiplo de 27.
+
+A partir de aquí, deberíamos trata de trabajar con la tercera relación para lograr escribir un sistema soluble.
 \end{example}
