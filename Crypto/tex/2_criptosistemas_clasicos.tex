@@ -300,7 +300,6 @@ Con el sistema de sustitución simple pasamos a tener un total de $26! = 4 \cdot
 
 Aún así, el sistema de cifrado por sustitución sigue siendo vulnerable a ataques por análisis de frecuencias.
 
-% TRASPAS
 \section{Definción de Criptabeto}
 
 El problema de los sistemas que hemos visto, y sobre todo del último, es que es necesario que el emisor y el receptor del mensaje se pongan de acuerdo en la relación alfabeto original - alfabeto crifrado que se va a emplear.
@@ -354,27 +353,33 @@ Antes de poder ver esta demostración debemos recordar, de lo que aprendimos en 
 
 Una vez tenemos esto es claro ver que
 \[A \left( \frac{1}{det(A)}Adj(A)^t \right) = I\]
+
+Es decir, una vez sabemos que el determinante de la matriz pertenece al conjunto de unidades de $\ent_N$ sabemos que tiene inverso, lo que nos permite escribir $\frac{1}{det(A)}$ que es necesario para la definición constructiva que todos conocemos de matriz inversa.
 \end{itemize}
 \end{proof}
 
-Ahora lo que nos interesa es saber cuántas matrices invertibles de este tipo existen para cada $N$, ya que esto nos permitirá saber cómo de seguro es este sistema de cifrado. Veámoslo como un ejercicio.
+La cuestión que surge ahora es bastante obvia. ¿Y si al exigir que la matriz sea invertible estamos acotando demasiado el espacio de claves posibles?. Vamos a contar cuántas matrices hay invertibles para cada $n$ dado.
 
-Vamos a buscar cuántas matrices invertibles hay con coeficientes en $\ent_{N}$ por casos:
+De aquí en adelante $N$ será el número de letras que estamos agrupando, es decir, el orden de la matriz y $n$ será el tamaño del alfabeto empleado, que denotaremos como $p$ siempre que sea primo.
 \begin{itemize}
-\item \textbf{N=2}
+\item \textbf{Agrupamos las letras por parejas}
+
 En este caso tendremos que el determinante sería de la forma $ad-bc$.
 
-Ahora vamos a contar cuántas matrices hay que tengan determinante 0. Para que esto sea así tenemos que
+Ahora vamos a contar cuántas matrices hay que tengan determinante 0. Podemos ver que el determinante será nulo siempre que:
 \[ad = bc\]
 
 Así tenemos:
 \[d \neq 0 \implies a = \frac{bc}{d} \to (p-1)p^2\text{ matrices con determinante 0}\footnote{Podemos combinar elementos cualesquiera de $\ent_{p}$ puesto que es un cuerpo y está cerrado por la división} \]
 Por otro lado, si $d=0$ necesitaremos que $b$ o $c$ sean iguales a 0. Lo que nos da un total de $p(p-1) + p^2$ matrices posibles con determinante 0.
 
-Por tanto, nos queda que existe un total de
-\[p^4 - p^2 -p(p-1) -p^2(p-1) = p(p^2-1)(p-1) \text{ matrices invertibles en } \ent_{p}\]
+Para comprender la cuenta basta con ver que si $b$ es cero entonces tenemos $p$ posibles valores para $c$ y si $b$ tiene uno de los otros $p-1$ posibles valores no nulos, entonces $c$ tendrá que ser 0. Por otro lado, la $a$ puede tomar cualquier valor.
 
-\item \textbf{N > 2}
+Por tanto, nos queda que existe un total de
+\[p^4 - p^2 -p(p-1) -p^2(p-1) =p^4-p^3-p^2+p \text{ matrices invertibles en } \ent_{p}\]
+
+\begin{remark}
+\textbf{Extensión del procedimiento a $N$ mayores}
 
 Si repitiéramos el razonamiento anterior para $N$ mayores, por ejemplo $N=6$ el número de sumandos de la fórmula que representa el determinante crece de forma factorial, llegando a 720 en el caso que acabamos de mencionar.
 
@@ -404,57 +409,63 @@ Por otro lado, si $(c,d)$ son ambos $0$, tenemos un total de $p^2$ matrices con 
 
 que, como era de esperar, coincide con lo calculado en el apartado anterior.
 
-\item \textbf{N=p primo}
+A partir de ahora emplearemos este razonamiento.
+\end{remark}
+\item \textbf{Agrupamos las letras en bloques de tamaño N grande}
 
-En este caso tenemos que tener 
-en cuenta que $\ent_p$ es un cuerpo.
+En este caso tenemos que tener en cuenta el hecho de que $\ent_p$ es un cuerpo.
 
 Nuevamente queremos ver cuántas matrices invertibles pueden definirse con coeficientes en $\ent_p$ y para ello veremos de cuántas formas podemos seleccionar $p$ vectores de $p$ coordenadas independientes.
 
-Para la primera columna podemos escoger cualquier vector no nulo, es decir, tendremos $p^n-1$ posibilidades.
+Para la primera columna podemos escoger cualquier vector no nulo, es decir, tendremos $p^N-1$ posibilidades.
 
-Para el segundo vector debemos escoger un vector que no sea múltiplo del primero, es decir, tendremos $p^n-p$ posibles vectores.
+Para el segundo vector debemos escoger un vector que no sea múltiplo del primero, es decir, tendremos $p^N-p$ posibles vectores.
 
-Para el tercer vector debemos escoger un vector que no sea múltiplo de posibles combinaciones lineales entre el primero y el segundo $a·c_2 + b·c_1$, es decir, tendremos $p^n - p²$ posibles vectores (tenemos $p$ elecciones para $a$ y $p$ para $b$).
+Para el tercer vector debemos escoger un vector que no sea múltiplo de posibles combinaciones lineales entre el primero y el segundo $a·c_2 + b·c_1$, es decir, tendremos $p^N - p²$ posibles vectores (tenemos $p$ elecciones para $a$ y $p$ para $b$).
 
-De forma general, para el vector $c_i$ tendremos un total de $p^n-p^i$ posibilidades.
+De forma general, para el vector $c_i$ tendremos un total de $p^N-p^{i-1}$ posibilidades.
 
 Finalmente, multiplicando todos estos valores, vemos el número de posibles matrices es:
-\[ \phi_n(p) = \prod_{i=0}^{n-1} (p^n-p^i)\]
+\[ φ_N(p) = \text{\# matrices invertibles = }\prod_{i=0}^{N-1} (p^N-p^i)\]
+\end{itemize}
+que m
+Hasta ahora hemos estado considerando que el alfabeto tiene un tamaño primo y, con esa condición, hemos visto cómo calcular el número de claves posibles sea cual sea la forma en que hemos agrupado las letras.
 
-\item \textbf{N = } $p^r$
+\newpage
+Sin embargo, la condición de que $n$ sea primero es demasiado restrictiva. Veamos qué hacer cuando no es así:
+\begin{itemize}
+\item \textbf{Si el tamaño del alfabeto es potencia de un primo}
 
-En esta ocasión lo que hacemos el reducir la matriz según el homomorfismo de anillos:
-\[\appl{Π}{Mat_{n\times n}(\ent_{p^r})}{Mat_{n\times n}(\ent_{p})}\]
+En esta ocasión lo que haremos será reducir la matriz según el homomorfismo de anillos:
+\[\appl{Π}{Mat_{N\times N}(\ent_{p^r})}{Mat_{N\times N}(\ent_{p})}\]
 tal que $Π(a_{ij} \text{ mod } p^r )=a_{ij} \text{ mod } p$
 
-\textcolor{red}{Me he perdido. Lo completo con los apuntes de Jorge}
 
-Dada $\overline{A} ∈ Mat_{n × n}(ℤ/p)$, sabemos que $\#Π^{-1}(\overline{A})=(p^{r-1})^{n²}$ (pues cada elemento tiene $p^{r-1}$ inversos).
+Dado $\tilde{A} ∈ Mat_{N × N}(ℤ_p)$, sabemos que $\#Π^{-1}(\tilde{A})=(p^{r-1})^{N²}$ (pues cada elemento tiene $p^{r-1}$ inversos).
 
-Si elijo $A$ tal que $Π(A)=\overline{A}$ tenemos que $Π^{-1}(A)=A + Ker(Π)$.
+Además, podemos ver que si elijo $A$ tal que $Π(A)=A$ tenemos que $Π^{-1}(A)=A + Ker(Π)$.
 
-Para encontrar la inversa de $A$ nos basta que el el determinante esté en las unidades de $ℤ/p$:
-\[A∈GL_n(ℤ/p^r) \iff (det(A), p^r)=1 \iff (det(A), p)=1\]
+Para encontrar la inversa de $\tilde{A}$ nos basta que el el determinante esté en las unidades de $ℤ_p$:
+\[A∈GL_n(ℤ_p^r) \iff (det(A), p^r)=1 \iff (det(A), p)=1\]
 Esto se debe a que $det(Π(A)) \equiv det(A)\ mod\ p$, pues $Π$ es homomorfismo de anillos. Además la congruencia se ve fácilmente si llevamos a cabo el desarrollo del determinante:
-\[det(A) = \sum_{σ∈S_n}\overline{a}_{nσ(1)} - \overline{a}_{nσ(n)} = \overline{\sum_{σ∈S_n} a_{1σ_n} - a_{nσ(n)}}\]
+\[det(A) = \sum_{σ∈S_N}\overline{a}_{Nσ(1)} - \overline{a}_{Nσ(N)} = \overline{\sum_{σ∈S_N} a_{1σ_N} - a_{Nσ(N)}}\]
 
 De modo que:
-\[\appl{Π}{GL_n(ℤ/p^r)}{GL_n(ℤ/p)}\]
-Y por tanto $φ_n(p^r)=φ_n(p)·\#Ker(Π)$. Así que:
-\[\phi_n(p^r) = (p^{r-1})^n \prod_{i=0}^{n-1}(p^n-p^i)\]
+\[\appl{Π}{GL_N(ℤ_{p^r})}{GL_N(ℤ_p)}\]
+Y por tanto $φ_N(p^r)=φ_N(p)·\#Ker(Π)$. Así que:
+\[φ_N(p^r) = (p^{r-1})^N \prod_{i=0}^{N-1}(p^N-p^i)\]
 
-\item $\phi_n(NM)$ siendo $N$ y $M$ coprimos.
+\item \textbf{Si el tamaño del alfabeto puede escribirse como producto de coprimos}
 
 En esta ocasión emplearemos como reducción el ismorfismo de anillos:
-\[\appl{\pi}{\ent_{NM}}{\ent_N\times \ent_M}\]
+\[\appl{\Pi}{\ent_{NM}}{\ent_N\times \ent_M}\]
 
-Puesto que el núcleo estará formado por aquellos elementos que son múltiplos de $N$ y de $mM$ simultáneamente (puesto que al calcular su módulo $n$ y $m$ obtendremos 0). Pero, puesto que $N$ y $M$ son coprimos, el único factor común que tienen es su producto, es decir, $NM = 0$.
+Podemos ver que el núcleo estará formado por aquellos elementos que son múltiplos de $N$ y de $M$ simultáneamente (puesto que al calcular su módulo $N$ y $M$ obtendremos 0). Pero, puesto que $N$ y $M$ son coprimos, el único factor común que tienen es su producto, es decir, $NM = 0$.
 
-Por tanto, su núcleo es el trivial y por tanto la aplicación es inyectiva. Además, por ser inyectiva entre anillos de igual cardinal finito, tendremos que la aplicación $\pi$ es biyectiva.
+Por tanto, su núcleo es el trivial, lo que nos dice que la aplicación es inyectiva. Además, por ser inyectiva entre anillos de igual cardinal \textbf{finito}, tendremos que la aplicación $\Pi$ es biyectiva.
 
 Al ser sobreyectiva tenemos que:
-\[U(\ent_{NM}) \approx U(\ent_N)\times U(\ent_M) \implies \phi(NM)=\phi(N)\times \phi(M)\]
+\[U(\ent_{NM}) \approx U(\ent_N)\times U(\ent_M) \implies φ(NM)=φ(N)\times φ(M)\]
 
 Si extendemos ahora esta aplicación a matrices con coeficientes en $\ent_{NM}$ tendremos que obtenemos nuevamente un isomorfismo\footnote{Lo podemos comprobar repitiendo el razonamiento anterior}
 
@@ -471,7 +482,7 @@ Nuestro espía intercepta un mensaje cifrado escrito originalmente en inglés y 
 
 Sabemos, además, que el mensaje se ha cifrado empleando un digrafo en $\ent_{N^2}$ y una función afín $\appl{f_{ab}}{\ent_{27^2}}{\ent_{27^2}}$ tal que $f_{ab}(x)=ax+b$
 
-Puesto que no tenemos más información, no nos queda otra que recurrir a un análisis de frecuencia (por pares). Tras este análisis, obtenemos:
+Puesto que no tenemos más información, no nos queda otra que recurrir a un análisis de frecuencia (por pares). Tras este análisis, obtenemos que los pares de letras más empleados son:
 \begin{center}
 \begin{tabular}{| c | c |}
 \hline
@@ -501,5 +512,38 @@ Para encontrar α y β debemos resolver el sistema:
 
 Sin embargo, el sistema no puede resolverse puesto que la matriz del sistema no es invertible, ya que su determinante es múltiplo de 27.
 
-A partir de aquí, deberíamos trata de trabajar con la tercera relación para lograr escribir un sistema soluble.
+A partir de aquí, deberíamos trata de trabajar con la tercera relación para lograr escribir un sistema soluble. Probamos por tanto con la primera y la última relación, con lo que llegamos al sistema:
+\[\left( \begin{array}{cc}
+675 & 1 \\
+238 & 1  \end{array} \right)\left( \begin{array}{c}
+α \\
+β  \end{array} \right) = \left( \begin{array}{c}
+134 \\
+721  \end{array} \right)\]
+
+Para poder resolver el sistema necesitamos encontrar la inversa de la matriz, para lo que necesitamos el inverso de su determinante, que es 437. Emplearemos el algoritmo de Euclides para calcular este inverso:
+\small
+\[\begin{array}{l}
+729 = 1 \cdot 437 + 292\\
+437 = 1 \cdot 292 + 145 \\
+292 = 2 \cdot 145 + 2 \\
+145 = 72 \cdot 2 + 1
+\end{array} \rightarrow \begin{array}{l}
+1 = 145 - 72 \cdot 2\\
+2 = 292 -2 \cdot 145 \to 1 = 145 - 72 (292 - 2 \cdot 145) = 145 \cdot 145 - 72 \cdot 292\\
+145 = 437 - 292 \to 1 = 145 \cdot (437 - 292) - 72 \cdot 292 = 145 \cdot 437 - 217 \cdot 292\\
+292 = 729 - 437 \to 1 = 145 \cdot 437 - 217 \cdot (729 - 437) = 362 \cdot 437 - 217 \cdot 729
+\end{array}\]
+\normalsize
+Así tenemos que $437^{-1} = 362$. Así el sistema nos queda:
+
+\[\left( \begin{array}{c}
+α \\
+β  \end{array} \right) = 362 \cdot \left( \begin{array}{cc}
+1 & -238 \\
+-1 & 675  \end{array} \right)\left( \begin{array}{c}
+134\\
+721  \end{array} \right) = \left( \begin{array}{c}
+580 \\
+295  \end{array} \right) \]
 \end{example}
