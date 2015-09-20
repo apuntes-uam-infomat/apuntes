@@ -230,13 +230,13 @@ Durante este curso, al emplear los diferentes métodos numéricos usaremos versi
 \end{remark}
 En este curso la distancia entre cada muestra será igual $x_{n+1}-x_n=h=\frac{b-a}{N}$.
 
-A continuación mencionaremos algunos métodos numéricos:
+A continuación mencionaremos algunos métodos numéricos que estudiaremos más adelante:
 \begin{itemize}
 	\item \textbf{Método de Euler}
 	\[y'(x) = f(x,y(x))\]
 	\[y'(x_n) = f(x_n,y(x_n))\]
 	Pero dado que $x$ toma valores discretos:
-	\[\frac{y(x_{n+1}) - y(x_n)}{h} \implies \frac{y_{n+1} - y_n}{h} = f(x_n,y(x))\]
+	\[\frac{y(x_{n+1}) - y(x_n)}{h} \implies \frac{y_{n+1} - y_n}{h} = y'(x_n) = f(x_n,y(x))\]
 	Así la fórmula de recurrencia del método de Euler queda como:
 	\[y_{n+1} = y_n + h·f(x,y_n)\]
 	\[y_0=y_a\]
@@ -246,12 +246,14 @@ A continuación mencionaremos algunos métodos numéricos:
 	\[= y(x_n) + h·f(x_n,y(x_n)) + R_n\]
 
 	\item \textbf{Método leap-frog}
-	\[y(x_{n+2} - y(x_n) = \int_{x_n}^{x_{n+2}} y'(x) = \int_{x_n}^{x_{n+2}} f(x,y(x))\dif x \approx (x_{n+1}-x_n)f(x_{n+1},y(x_{n+1})\]
+	\[y(x_{n+2}) - y(x_n) = \int_{x_n}^{x_{n+2}} y'(x) = \int_{x_n}^{x_{n+2}} f(x,y(x))\dif x \approx (x_{n+2}-x_n)f(x_{n+1},y(x_{n+1}))\]
 	donde la aproximación se ha realizado empleando la regla del punto medio.
 
 	Finalmente nos queda:
-	\[y(x_{n+2} - y(x_n) = 2h f(x_{n+1},y(x_{n+1}))\]
+	\[y(x_{n+2}) - y(x_n) = 2h f(x_{n+1},y(x_{n+1}))\]
 \end{itemize}
+
+Antes de continuar, veamos un par de conceptos que serán necesarios a lo largo de este curso.
 
 \begin{defn}[Método numérico de $k$ pasos]
 Se dice que un método numérico es de $k$ pasos si para conocer $y_{n+k}$ necesitamos conocer los $k$ valores: $y_{n}, y_{n+1},... y_{n+k-1}$
@@ -259,11 +261,20 @@ Se dice que un método numérico es de $k$ pasos si para conocer $y_{n+k}$ neces
 
 \begin{defn}[Método numérico convergente]
 Se dice que un método numérico es convergente si para todo problema de valor inicial se tiene que:
-\[\lim_{N \to \infty} \max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n)}= 0\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=0\]
+\[\lim_{N \to \infty} \max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n}= 0\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=0\]
 
 Evidentemente no nos referimos a cualquier problema imaginable sino a todos aquellos problemas de valor inicial en los que la función $f$ sea continua y Lipschitz en la segunda variable, pues esos son lso únicos problmeas con los que hemos trabajado hasta ahora.
 \end{defn}
 
+\chapter{Algunos Métodos Numéricos para EDOs}
+\section{Método de Euler}
+
+Dado un problema de valor inicial del tipo:
+\[y'(x) = f(x,y(x))\]
+\[y'(x_n) = f(x_n,y(x_n))\]
+el método de Euler nos permitía aproximarnos a la solución a través de la siguiente relación de recurrencia:
+\[y_{n+1} = y_n + h·f(x,y_n)\]
+\[y_0=y_a\]
 \begin{theorem}[]
 Sea $y(x)$ la solución de un problema de valor inicial y sean $\{y_n\}$ los valores que vamos aproximando en cada iteración del método de Euler, se cumple que $\{y_n\}$ converge a $y(x)$
 \end{theorem}
@@ -284,7 +295,7 @@ Según la definición de convergencia, para demostrar que la sucesión converge 
 
 \begin{itemize}
 \item Basándonos en la condición de Lipschitz:
-\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n)+K \text{ siendo } e_{n+1} \leq (1+Lh)e_n + K \text{ con } K = \max_n |R_n|\]
+\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n|+K \text{ siendo } e_{n+1} \leq (1+Lh)e_n + K \text{ con } K = \max_n |R_n|\]
 
 \begin{proof}
 \[e_n = |y(x_n)-y_n| \implies e_{n+1} \leq (1+Lh)e_n+K \implies e_n \leq (1+Lh)^n e_0 + K \frac{1-(1+hL)^n}{1-(1+kL)}\]
@@ -298,43 +309,43 @@ Ambos procedimientos son muy sencillos y se dejan como ejercicio para el lector.
 
 Gracias a esto tenemos demostrada la \textbf{estabilidad} pues
 \[|y(x_n)-y_n| \leq (1+hL)^n |y(x_0)-y_0| + \frac{(1+hL)^{n+1}-1}{L}\cdot \max_n \frac{|R_n|}{h}\]
+%
+%Por otro lado tenemos que:
+%\[\lim_{h \to 0} \frac{|R_n|}{h} = 0\]
+%con lo que vemos que el residuo lo tenemos controlado
 
-Por otro lado tenemos que:
-\[\lim_{h \to 0} \frac{|R_n|}{h} = 0\]
-con lo que vemos que el residuo lo tenemos controlado
-\item \textbf{ Tras esto demostramos por inducción que $C_n$ satisface:}
-\[C_n \leq (1+Lh)^n C_0 + K\frac{(1+Lh)^n-1}{Lh}\]
-% Jorge, esta parte en teoría es repaso de la clase que tienes que completar tu. Mételo como puedas aquí.
 
-\item Ahora vamos a demostrar que
-\[|y(x_n) - y_n| \leq (1+Lh)^n |y(x_n)-y_0|+K\frac{(1+Lh)^n-1}{Lh}\]
-
-Para ello basta con ver que
-\[\max_n |y(x_n)-y_n| \leq (1+Lh)^N|y(x_n)-y_0| + K\frac{(1+Lh)^n-1}{Lh}\]
-
-Por otro lado tenemos que
-\[h = \frac{b-a}{N}= \left( 1+\frac{L(b-a)}{N}\right)^N|y(x_n)-y_0| + K \frac{\left(1+\frac{L(b-a)}{N} \right)^N-1}{Lh}\]
-
-Además sabemos que
-\[\lim_{N \to \infty} \max_n |y(x_n)-y_0| \leq e^{L(b-a)} |y(x_n)-y_0| + \frac{e^{L(b-a)}-1}{L}\lim_{h \to 0} \frac{K}{h}\]
+%\item Ahora vamos a demostrar que
+%\[|y(x_n) - y_n| \leq (1+Lh)^N |y(x_n)-y_0|+K\frac{(1+Lh)^N-1}{Lh}\]
+%donde $N$ es el número total de $y_n$ que estamos tomando al aplicar el método.
+%
+%Para ello basta con ver que
+%\[\max_n |y(x_n)-y_n| \leq (1+Lh)^N|y(x_n)-y_0| + K\frac{(1+Lh)^N-1}{Lh}\]
+%
+%Por otro lado tenemos que
+%\[h = \frac{b-a}{N}\]
+%con lo que podemos escribir la parte derecha de la desigualdad que queremos probar %como:%
+%\[ \l%eft( 1+\frac{L(b-a)}{N}\right)^N|y(x_n)-y_0| + K \frac{\left(1+\frac{L(b-a)}{N%} %\righ%t)^N-1}{Lh}\]%
+%
+%Además sabemos que
+%\[\lim_{N \to \infty} \max_n |y(x_n)-y_0| \leq e^{L(b-a)} |y(x_n)-y_0| + \frac{e^{L(b-a)}-1}{L}\lim_{h \to 0} \frac{K}{h}\]
 
 \item \textbf{Control del residuo}
 
 El residuo puede escribirse como:
 \[R_n = y(x_{n+1})-y(x_n)-hy'(x_n) = \frac{h^2}{2}y''(ε)\]
 
-De aquí podemos ver que
+Si logramos probar que
 \[\max_n \frac{|R_n|}{h} \leq C h\]
-lo cual nos garantiza que el residuo es 0.
+tendríamos garantizado que el residuo es 0.
 
-Sin embargo esto no es tan sencillo, puesto que para poder acotar el máximo como hemos hecho nos apoyamos en que la derivada segunda, $y''$, está acotada módulo infinito por $C$. Pero nosotros no sabemos nada acerca de nuestra solución por que no lo podemos realizar este tipo de asunciones.
+Sin embargo esto no es tan sencillo, puesto que para poder acotar el máximo como hemos queremos nos apoyamos en que la derivada segunda, $y''$, está acotada módulo infinito por una constance $C$. Pero nosotros no sabemos nada acerca de nuestra solución y, por tanto, no podemos realizar este tipo de asunciones.
 
-Pero esto puede mejorarse. Sabemos que
+Pero esto puede arreglarse fácilmente. Sabemos que
 \[\frac{R_n}{h} = \frac{y(x_{n+1})-y(x_n)}{h} = y'(x_n) = y'(ε)-y'(x_n) \text{ siendo } x_n \leq ε \leq x_{n+1}\]
 A partir de aquí vemos fácilmente que
 \[\lim_{h\to 0} \frac{|R_n|}{h} = 0\]
 
-Esto es sencillo de ver puesto que la derivada segunda de $y$ está acotada.
 %Aquí faltan cositas Jorge
 \end{itemize}
 \end{proof}
@@ -354,12 +365,12 @@ Decimos que $f= O(g)$ en $x \to x_0$ si
 
 \begin{defn}[O pequeña]
 Decimos que $f=o(g)$ en $x \to x_0$ si
-\[\exists r > 0 \tq 0 < |x-x_0|<r \text{tal que, donde } g \text{ no se anule, tenemos} \lim_{x\to x_0} \frac{f(x)}{g(x)}=0\]
+\[\exists r > 0 \tq 0 < |x-x_0|<r \text{ tal que, donde } g \text{ no se anule, tenemos} \lim_{x\to x_0} \frac{f(x)}{g(x)}=0\]
 \end{defn}
 
 Una vez vistas estas definiciones, supongamos que tenemos $f \in C [\real \times \real^d]$. En este caso ya hemos visto que el orden de convergencia del método de Euler es al menos 1.
 
-Para poder confirmar que el método es de orden 1, ahora sólo nos queda comprobar que el orden no puede ser 2. Para comprobarlo nos basta con ver un ejemplo en el que no se cumpla:
+Para poder confirmar que el método es de orden 1, sólo nos queda comprobar que el orden no puede ser 2. Para comprobarlo nos basta con ver un ejemplo en el que no se cumpla:
 \begin{example}
 Tomamos el caso $y'(x)=x, \ x \in [0,1]$ con valor inicial $y(0)=0$. En este caso sabemos que la solución es $y(x)=\frac{1}{2}x^2$
 
@@ -369,7 +380,8 @@ con lo que obtendríamos la sucesión de funciones:
 \[y_1 = 0 \; ; \; y_2 = 0 + hx_1 =h^2 \; ; \; y_3 = h^2+2h^2=h^2(1+2+3) \; ; \; ...\]
 
 De donde podemos deducir la fórmula general para $y_n$:
-\[y_n = h^2\sum_{i=1}^{n-1} i = h^2\frac{n(n-1)}{2}=\frac{n^2+n}{2} =h^2\frac{x_n^2-x_n}{2}\]
+\[y_n = h^2\sum_{i=1}^{n-1} i = h^2\frac{n(n-1)}{2}=h^2 \cdot\frac{n^2-n}{2} =\frac{x_n^2-hx_n}{2}\footnote{Recordamos que, puesto que el valor inicial era el origen, $x_n=0+nh=nh$}\]
+
 
 Así podemos ver que:
 \[|y(x_n)-y_n| = \left|\frac{x_n^2}{2}-\frac{x_n^2}{2}+\frac{x_nh}{2} \right| = \frac{x_nh}{2} \implies \frac{1}{h}|y(x_n)-y_n|  = \frac{x_n}{2}\]
@@ -379,7 +391,7 @@ Así podemos ver que:
 \textbf{Esperemos que hayáis disfrutado hasta aquí porque nos disponemos a entrar en la parte aburrida del curso.}
 
 
-\chapter{Algunos Métodos Numéricos para Ecuaciones Diferenciales Ordinarias}
+
 \section{Métodos de Taylor}
 Como siempre, tenemos que $y'(x)=f(x,y(x))$ y debemos buscar una relación entre $y(x_{n+1})$ y los $y(x_m)$ con $m < n+1$.
 
@@ -398,14 +410,10 @@ En la práctica estos métodos no se utiliza nunca puesto que no son demasido ef
 
 Al hablar de estos métodos en plural hacemos referencia a las diferentes estimaciones posibles, pues podemos usar un desarrollo de Taylor de grado superior, lo que añade complejidad a la fórmula pero aproxima mejor el resultado, pues hace el residuo cada vez más pequeño.
 
-\section{Métodos basados en cuadraturas}
-Ya hemos visto un método de este tipo, \textbf{el método de Euler}, en el que se define:
-\[y(x_{n+1}) -y(x_n) = \int_{x_n}^{x_{n+1}} y'(x)\dif x = \int_{x_n}^{x_{n+1}} f(x_n,y(x_n)) \dif x \approx f(x_n,y(x_n))h \implies \]
-\[\implies y(x_{n+1}) =y(x_n)+f(x_n,y(x_n))h\]
 
 \section{Método del trapecio}
 En esta ocasión escribimos:
-\[y(x_{n+1})=y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x)\dif x \approx y(x_n)+ \frac{h}{2}\left( f(x_n,y(x_n))+f(x_{n+1},y(x_{n+1})) \right)\]
+\[y(x_{n+1})=y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n)+ h\cdot \frac{f(x_n,y(x_n))+f(x_{n+1},y(x_{n+1}))}{2}  \]
 
 Este método presenta una difernecia radical respecto a los demás, pues el objetivo del método es calcular $y_{x+1}$ en lugar de $y_n$.
 
@@ -420,7 +428,11 @@ Podemos ver bajo qué condiciones la función es Lipchitz y, y por tanto tiene s
 Por tanto, la recurrencia tendrá solución siempre que $\frac{Lh}{2} \leq 1$
 
 \section{Métodos basados en cuadraturas}
-\subsection{Método Predictor corrector Euler-trapecio}
+Ya hemos visto un método de este tipo, \textbf{el método de Euler}, en el que se define:
+\[y(x_{n+1}) -y(x_n) = \int_{x_n}^{x_{n+1}} y'(x)\dif x = \int_{x_n}^{x_{n+1}} f(x_n,y(x_n)) \dif x \approx f(x_n,y(x_n))h \implies \]
+\[\implies y(x_{n+1}) =y(x_n)+f(x_n,y(x_n))h\]
+
+\subsection{Método Predictor Corrector Euler-trapecio}
 En este método partimos de la fórmula del trapecio
 \[y_{n+1} = y_n + \frac{h}{2} \left(f(x_n,y_n)+f(x_{n+1}, y_{n+1}) \right)\]
 
@@ -431,16 +443,16 @@ Una vez hemos empleado el método de Euler para hacer una predicción de $y_{n+1
 
 \subsection{Método de Euler modificado}
 Este método emplea la relación:
-\[y(x_{n+1}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n) + h f(x+\frac{h}{2},y(x+\frac{h}{2}))\]
+\[y(x_{n+1}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n) + h f\left(x+\frac{h}{2},y\left(x+\frac{h}{2}\right)\right)\]
 
 El problema que tenemos ahora es que necesitamos aproximar $y(x+\frac{h}{2})$, cosa que haremos mediante la ecuación:
-\[y(x+\frac{h}{2}) = y(x_n)+\frac{h}{2}f(x_n, y(x_n))\]
+\[y\left(x+\frac{h}{2}\right) = y(x_n)+\frac{h}{2}f(x_n, y(x_n))\]
 
 Este método es realmente importante pues es el padre de una serie de métodos denominados \textbf{Métodos de Runge-Kutta}, que veremos a continuación
 
 \section{Métodos de Runge-Kutta}
 Estos métodos se caracterizan porque vamos a empezar calculando una serie de valores $K_i$ como sigue:
-\[K_i = f\left(x_n+c_ih, y_n+h \sum_{j=1}^sa_{ij}K_j\right)\]
+\[K_i = f\left(x_n+c_ih, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\]
 \[y_{n+1} = y_n+ h \sum_{i=1}^s b_i K_i\]
 
 La idea de este método es que
@@ -455,7 +467,7 @@ De entre los diferentes métodos Runge-Kutta el más empleado, por ser uno de lo
 siendo:
 \[K_1 = f(x_n,y_n)\]
 \[K_2 = f(x_n+\frac{h}{2}, y_n+\frac{h}{2}K_1)\]
-\[K_3 = f(x_n+\frac{h}{2}, y_n + \frac{h}{2}K_2\]
+\[K_3 = f(x_n+\frac{h}{2}, y_n + \frac{h}{2}K_2)\]
 \[K_4 = f(x_n+h, y_n + h K_3)\]
 
 \textbf{Ejercicio punto extra: ¿De dónde salen estos números del Runge Kutta de cuarto orden?}
