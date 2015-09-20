@@ -263,6 +263,8 @@ Se dice que un método numérico es de $k$ pasos si para conocer $y_{n+k}$ neces
 Se dice que un método numérico es convergente si para todo problema de valor inicial se tiene que:
 \[\lim_{N \to \infty} \max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n}= 0\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=0\]
 
+$k$ será el número de pasos del método numérico, es decir, para el método de Euler tendremos $k=1$, mientras que para el método leap-frog tendremos $k=2$.
+
 Evidentemente no nos referimos a cualquier problema imaginable sino a todos aquellos problemas de valor inicial en los que la función $f$ sea continua y Lipschitz en la segunda variable, pues esos son lso únicos problmeas con los que hemos trabajado hasta ahora.
 \end{defn}
 
@@ -275,12 +277,14 @@ Dado un problema de valor inicial del tipo:
 el método de Euler nos permitía aproximarnos a la solución a través de la siguiente relación de recurrencia:
 \[y_{n+1} = y_n + h·f(x,y_n)\]
 \[y_0=y_a\]
-\begin{theorem}[]
+
+\begin{theorem}[El método de Euler es convergente]
+
 Sea $y(x)$ la solución de un problema de valor inicial y sean $\{y_n\}$ los valores que vamos aproximando en cada iteración del método de Euler, se cumple que $\{y_n\}$ converge a $y(x)$
 \end{theorem}
 \begin{proof}
-Al trabajar con este método obtendremos una serie de funciones de la forma
-\[y_{n+1} = y_n + h f(x_n, y_b)\]
+Al trabajar con este método tenemos la relación de recurrencia:
+\[y_{n+1} = y_n + h f(x_n, y_n)\]
 
 Para empezar vamos a definir el residuo que no es más que la diferencia entre el valor aproximado $y_n$ obtenido al aplicar el método en cuestión y el valor real $y(x_n)$. Así, podemos escribir:
 \[y(x_{n+1})=y(x_n)+hf(x_n,y(x_n))+R_n \text{ siendo } R_n \text{ el residuo }\]
@@ -346,27 +350,54 @@ Pero esto puede arreglarse fácilmente. Sabemos que
 A partir de aquí vemos fácilmente que
 \[\lim_{h\to 0} \frac{|R_n|}{h} = 0\]
 
-%Aquí faltan cositas Jorge
+Cuando $h \rightarrow 0$ estrechamos las distancias entre los $x_n$ (es decir $x_{n+1} \rightarrow x_n$). De esta forma se acaba consiguiendo que $ε$ (que inicialmente se encontraba en el intervalo $[x_n,x_{n+1}]$) pase a ser $x_n$, y así $y'(ε)-y'(x_n) = y'(x_n)-y'(x_n) = 0$.
+
 \end{itemize}
 \end{proof}
 
+\obs En la prueba hemos evitado apoyarnos en información acerca de la derivada segunda de la solución $y$, pero en realidad sí que podríamos haberlo hecho:
+
+\[
+	\text{PVI} :
+		\begin{cases}
+			y'(x) = f(x,y(x)) \\
+			f ∈ C^1([a,b]×ℝ^d)
+		\end{cases}
+\]
+
+Si aplicamos el teorema de Picard \ref{TeoremaPicard} obtenemos que la solución única $y$ es $C^1$, por tanto $f$ compuesta con $y$ (nuestra $f(x,y(x))$) será también $C^1$; y por tanto $y' ∈ C^1$. Pero si tenemos que $y'$ es $C^1$, $y$ será $C^2$.
+
+De modo que podemos obtener acotaciones para $y''$:
+\[y''(x)=f_x(x,y(x)) + f_y(x,y(x))·y'(x) = f_x(x,y(x)) + f_y(x,y(x))·f(x,y(x))\]
+\[\implies \md{y''}_{L^∞[a,b]} ≤ C_f\]
+
+Con $C_f$ una constante que depende de la norma $C^1 \left( [a,b]×ℝ^d \right)$ de $f$.
+
 \subsection{Orden del método de Euler}
 \begin{defn}[Método numérico de orden p]
-Se dice que un método numérico es convergente de orden $p$ si $p$ es el mayor de los enteros tales que $f \in C^p$ y
-\[\max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n)}= O(n)\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=O(h^p)\]
+	Se dice que un método numérico es convergente de orden $p$ si $p$ es el mayor de los enteros tales que $f \in C^p$ y
+	\[\max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n)}= O(h^p)\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=O(h^p)\]
 \end{defn}
 
-Recordemos las definiciones de 'O' y 'o'
+Recordemos las definiciones de `O' y `o'
 
 \begin{defn}[O grande]
 Decimos que $f= O(g)$ en $x \to x_0$ si
-\[\exists k,r > 0 \tq \forall x_0 < |x-x_0|< r \text{ se tiene } |f(x)| \leq k |g(x)|\]
+\[\exists k,r > 0 \tq ∀x,\ 0 < |x-x_0|< r \text{ se tiene } |f(x)| \leq k |g(x)|\]
 \end{defn}
 
 \begin{defn}[O pequeña]
 Decimos que $f=o(g)$ en $x \to x_0$ si
-\[\exists r > 0 \tq 0 < |x-x_0|<r \text{ tal que, donde } g \text{ no se anule, tenemos} \lim_{x\to x_0} \frac{f(x)}{g(x)}=0\]
+
+\[\exists r > 0 \tq ∀x,\ 0 < |x-x_0|<r \text{ tal que, donde } g \text{ no se anule, tenemos} \lim_{x\to x_0} \frac{f(x)}{g(x)}=0\]
+
 \end{defn}
+
+\obs En la práctica $\max_{k≤n≤N} \md{y(x_n) - y(x_n)} = O(h^p)$ lo tomaremos como:
+\[ \max_{k≤n≤N} \md{y(x_n) - y(x_n)} ≤ C·h^p \]
+
+\obs En la práctica $\max_{k≤n≤N} \md{y(x_n) - y(x_n)} = o(h^p)$ lo tomaremos como:
+\[ \max_{k≤n≤N} \md{y(x_n) - y(x_n)} ≤ c·h^s,\ s>p,\ s∈ℝ \]
 
 Una vez vistas estas definiciones, supongamos que tenemos $f \in C [\real \times \real^d]$. En este caso ya hemos visto que el orden de convergencia del método de Euler es al menos 1.
 
@@ -380,17 +411,26 @@ con lo que obtendríamos la sucesión de funciones:
 \[y_1 = 0 \; ; \; y_2 = 0 + hx_1 =h^2 \; ; \; y_3 = h^2+2h^2=h^2(1+2+3) \; ; \; ...\]
 
 De donde podemos deducir la fórmula general para $y_n$:
-\[y_n = h^2\sum_{i=1}^{n-1} i = h^2\frac{n(n-1)}{2}=h^2 \cdot\frac{n^2-n}{2} =\frac{x_n^2-hx_n}{2}\footnote{Recordamos que, puesto que el valor inicial era el origen, $x_n=0+nh=nh$}\]
+
+\[y_n = h^2\sum_{i=1}^{n-1} i = h^2\frac{n(n-1)}{2} \underbrace{=}_{x_n=n·h} =\frac{x_n^2-x_n·h}{2}\]
 
 
 Así podemos ver que:
 \[|y(x_n)-y_n| = \left|\frac{x_n^2}{2}-\frac{x_n^2}{2}+\frac{x_nh}{2} \right| = \frac{x_nh}{2} \implies \frac{1}{h}|y(x_n)-y_n|  = \frac{x_n}{2}\]
+
+Por tanto el método de Euler no es convergente de orden 2, pues:
+\[\max_n \md{y(x_n)-x_n} = \frac{1}{2}·h \overbrace{\implies}^{\text{por def.}}\text{es convergente de orden 1}\]
 \end{example}
+
 
 
 \textbf{Esperemos que hayáis disfrutado hasta aquí porque nos disponemos a entrar en la parte aburrida del curso.}
 
 
+\chapter{Algunos Métodos Numéricos para Ecuaciones Diferenciales Ordinarias}
+De aquí en adelante tomaremos $d=1$, es decir:
+\[\appl{y}{ℝ}{ℝ}\]
+\[\appl{f}{ℝ×ℝ}{ℝ}\]
 
 \section{Métodos de Taylor}
 Como siempre, tenemos que $y'(x)=f(x,y(x))$ y debemos buscar una relación entre $y(x_{n+1})$ y los $y(x_m)$ con $m < n+1$.
