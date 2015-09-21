@@ -4,13 +4,11 @@
 \def\printbuilddate{\footnotetext{\tiny Documento compilado el \today\ a las \currenttime}}
 \def\enableindexbuilddate{\renewcommand{\compdate}{\tiny{\today\, \currenttime}}}
 
-\newif\if@removechapters
-
-\DeclareOption{nochap}{\@removechapterstrue}
 \DeclareOption{nobuilddate}{%
 	\def\printbuilddate{}%
 	\def\enableindexbuilddate{}%
 }
+
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
 \ProcessOptions
 
@@ -20,7 +18,6 @@
 \RequirePackage{datetime}
 
 \if@removechapters
-	\def\thesection{\arabic{section}}
 	\numberwithin{equation}{subsection}
 \fi
 

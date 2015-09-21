@@ -2,9 +2,11 @@
 \ProvidesClass{custombase}[2013/04/20 Base class]
 
 \def\@fontsizeopt{}
+\newif\if@removechapters
+
 
 % Si nos pasan la opción nochap, no ponemos número de capítulo en las secciones.
-\DeclareOption{nochap}{\def\thesection{\arabic{section}}}
+\DeclareOption{nochap}{\@removechapterstrue}
 
 \DeclareOption{palatino}{%
 	\renewcommand{\rmdefault}{ppl}
@@ -52,6 +54,9 @@
 \RequirePackage{MathUnicode} % Paquete para poder poner caracteres griegos y demás cosas raras.
 \RequirePackage{listings} % Para poner código.
 
+\if@removechapters
+	\def\thesection{\arabic{section}}
+\fi
 
 % Números en las subsecciones
 \setcounter{secnumdepth}{3}
