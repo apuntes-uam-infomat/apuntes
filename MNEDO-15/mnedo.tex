@@ -1,7 +1,7 @@
 \documentclass{apuntes}
 
 \title{MNEDO}
-\author{Pedro Valero \& El Malvado}
+\author{Pedro Valero \& Jorge Martín}
 \date{15/15 C1}
 % Paquetes adicionales
 \usepackage{tikztools}
@@ -519,5 +519,129 @@ En este caso empelamos la relación:
 \[y(x_{n+2}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x)) \dif x \approx y(x_n) + 2h f(x_{n+1},y_{n+1})\]
 
 La diferencia entre este método y los anteriores es que este método consta de dos pasos, pues debemos aproximas $y_1$ ya que para calcular cada $y_n$ necesitamos conocer $y_{n-1}$ e $y_{n-2}$
+
+\section{Método de Adams-Bashforth}
+
+Se trata de un método basado en cuadratura que emplea la relación
+\[y(x_{n+2}) - y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) \dif x\]
+
+\begin{remark}
+Esta relación es sencilla de entender puesto que, por definición del problema original, $f(x,y(x))=y'$. Así, lo única que estamos haciendo es aplicar el Teorema Fundamental del Cálculo, es decir, estamos resolviendo la integral.
+
+El problema, como siempre, es que no se puede hacer esta integral directamente pues la $f$ depende de $y(x)$ que no es conocida.
+\end{remark}
+
+donde $f(x,y(x))$ se aproxima por medio de la recta interpolante entre los puntos $(x_n,y(x_n))$ y $(x_{n+1},y(x_{n+1}))$, es decir:
+\[f(x,y(x)) \approx f(x_n, y(x_n)) \frac{x-x_{n+1}}{x_n-x_{n+1}}+f(x_{n+1},y(x_{n+1}))\frac{x-x_n}{x_{n+1}-x_n}\]
+
+Finalmente, el método queda expresado como:
+\[y_{n+2} = y_{n+1}+\frac{h}{2}\left( 3f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+Como podemos ver, se trata de un método de dos pasos, pues necesitamos conocer dos puntos antes de empezar a aplicar el método, y es explícito, pues directamente nos da la función que queremos conocer.
+
+\section{Métodos de Adams-Moulton}
+Se trata de un método muy similar al anterior en el que la función se interpola de otra forma distinta. De nuevo tenemos la relación:
+\[y(x_{n+2}) - y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) \dif x\]
+
+pero en esta ocasión la función $f$ la aproximamos mediante una interpolación con polinomios de orden 2 en lugar de rectas:
+\[f(x,y(x)) \approx f(x_n,y_n) \frac{(x-x_{n+1})(x-x_{n+2})}{(x_n-x_{n+1})(x_{n+1}-x_{n+2})} + f(x_{n+1},y_{n+1})\frac{(x-x_{n+2})(x-x_{n+2})}{(x_{n+1}-x_n)(x_{n+1}-x_{n+2})} \atop+f(x_{n+2},y_{n+2})\frac{(x-x_{n})(x-x_{n+1})}{(x_{n+2}-x_n)(x_{n+2}-x_{n+1})}\]
+
+Ahora introducimos esta aproximación en la integral e integramos, con lo que obtenemos la siguiente fórmula de recurrencia:
+\[y_{n+2} = y_{n+1} + \frac{h}{12}\left( 5f(x_{n+2},y_{n+2})+8f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+En esta ocasión se trata de un método implícito puesto que la misma $y_{n+2}$ que queremos calcular aparece en la propia fórmula.
+
+\section{Método predictor-corrector de Adams-Bashforth / Adamas-Moulton}
+
+El método anterior tiene el problema de ser implícito, es decir, vamos a tener que resolver una complicada ecuación de recurrencia.
+
+Para solucionar esto, la idea es aproximar $y_{n+2}$, calcular $y_{n+2}$ empleando la fórmula y basándonos en la aproximación y posteriormente ir corrigiendo las aproximaciones en cada paso.
+
+Así, tendremos la fórmula de recurrencia:
+\[y_{n+2} = y_{n+1} + \frac{h}{12}\left( 5f(x_{n+2},y_{n+2}^*)+8f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+La predicción que haremos para $y^*$ será:
+\[y_{n+2}^* = y_{n+1} + \frac{h}{2} \left( 3f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+es decir, combinamos los dos métodos vistos anteriormente.
+
+\section{Ejemplos}
+
+\begin{problem}[1]
+Escribir la siguiente ecuación diferencial de grado $n$ como un sistema de ecuaciones diferenciales de primer orden.
+\[y^{n)} + \sum_{i=1}^n a_{n-i}y^{n-i)} = 0\]
+
+\solution
+La idea de este ejercicio es que, a priori, uno puede pensar que todo lo que llevamos visto durante el curso es inútil ante un problema como el aquí mostrado.
+
+Para convertir esta ecuación en un sistema, vamos a definir una serie de nuevas ecuaciones de forma que
+\[y^{i} = y_i \text{ para } i=1...n-1\]
+
+Así el sistema de ecuaciones nos queda de la forma:
+\[\begin{array}{l}
+y' = y_1\\
+y_1' = y_2\\
+y_2' = y_3 \\
+...\\
+y_{n-1}' = -\left( a_{n-1}y_{n-1} + a_{n-2}y_{n-2}+...+a_1y_1 + a_0 y\right)
+\end{array} \]
+
+Como podemos comprobar, en nuestro sistema, todas las ecuaciones son de primer orden.
+
+\end{problem}
+
+\begin{problem}[2]
+Convertir el siguiente sistema de ecuaciones diferenciales en otro donde todas las ecuaciones tengan orden 1.
+\[\begin{array}{l}
+u''' = u''+v'\\
+v''' = u^2+e^xu'v'+\sin(v)
+\end{array} \]
+con $u'(0)=u''(0)=v'(0)=0 \ , \ v(0)=1$
+\solution
+
+Renombrando las variables de la forma: $u' = u_1$, $u''=u_2$, $v'=v_1$, podemos reescribir el sistema como sigue.
+
+\[\begin{array}{l}
+u' = u_1\\
+u_1'=u_2\\
+v'=v_1\\
+u_2' = u_2+v_1\\
+v_1' = u^2+e^xu_1v_1 + \sin(v)
+\end{array} \]
+con $u_1(0)=u_2(0)=v_1(0)=0 \ , \ v(0)=1$
+
+\end{problem}
+
+\begin{problem}[3]
+Comprobar que las siguientes funciones satisfacen la condición de Lipschitz
+
+\ppart
+\[f(x,y)=2yx^{-4} \text{ con } x \in [1,\infty)\]
+
+\ppart
+\[f(x,y)=e^{-x^2}\arctg(y) \text{ con } x \in [1, \infty)\]
+
+\ppart
+\[\appl{f}{\real \times \real^2}{\real} \text{ tal que }f(x,y)=\left(x+\sin(y_2), \frac{x^2}{2}+\cos(y_1)\right)\]
+\solution
+
+\spart
+\[|f(x,y)-f(x,\tilde{y})| = 2x^{-4}|y-\tilde{y}| < 2 |y-\tilde{y}|\]
+
+\spart
+\[|f(x,y)-f(x,\tilde{y})| = e^{-x^2} | \arctg(y)-\arctg(\tilde{y})| = e^{-x^2}\int_{\tilde{y}}^y \frac{\partial}{\partial x}\arctg{x}\dif x = e^{-x^2}\int_{\tilde{y}}^y \frac{1}{|+x^2} \dif x \leq \]
+\[\leq e^{-x^2} \sup \frac{1}{1+x^2}|y-\tilde{y}| \leq \frac{e^{-1}}{2}|y-\tilde{y}|\]
+
+\spart
+Según en qué norma estemos trabajando, el módulo de $y$ se calculará de una forma diferente.
+
+En esta ocasión, por que así lo ha indicado el profesor para este ejercicio, vamos a trabajar con la norma $L1$ de forma que
+\[\norm{y}_{L_2} = |y_1| + |y_2|\]
+
+Con esta medida, nos queda:
+\[\norm{f(x,y)-f(x,\tilde{y})}_{L_2} = |\sin(y_2)-\sin(\tilde{y}_2)| + |\cos(y_1)-\cos(\tilde{y}_2)| \leq |y_2 - \tilde{y}_2|+ |y_1-\tilde{y}_1| \leq \norm{y}_{L_2}\]
+
+\end{problem}
+
+
 \end{document}
 
