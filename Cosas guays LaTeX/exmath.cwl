@@ -67,10 +67,13 @@
 \sign#m
 \eq#m
 \rango#m
-\eqexpl{arg0}#m
+\eqexpl{arg1}#m
+\eqexpl[=]{arg1}#m
 \wrapreasontext{arg0}#m
-\eqreason{arg0}#m
-\eqreasonup{arg0}#m
+\eqreason{arg1}#m
+\eqreason[=]{arg1}#m
+\eqreasonup{arg1}#m
+\eqreasonup[=]{arg1}#m
 \x#m
 \appl{f}{dominio}{imagen}#m
 \uexists#m
