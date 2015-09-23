@@ -125,10 +125,6 @@ La regla de deducción que vamos a utilizar es el \textbf{modus ponens}: Si tene
 \end{itemize}
 \end{mdframed}
 
-\begin{theorem}[Teorema de completitud]
-$$\vdash p \iff \vDash p$$
-\end{theorem}
-
 \begin{defn}[Teoría]
 	$T$ (o $\Sigma$) es una teoría si es un conjunto de FBF$(L)$.
 \end{defn}
@@ -257,11 +253,6 @@ A partir de los valores $\sigma(p), \sigma(q),\hdots$ se define $\sigma$ para la
 	Una teoría $T$ es inconsistente si $T\vdash \perp$.
 \end{defn}
 
-\begin{theorem}[Teorema de completitud]
-	$T$ demuestra $p$ si y sólo si $p$ es consecuencia lógica de $T$.
-	$$T\vdash p \iff T\vDash p$$
-\end{theorem}
-
 \begin{obs}
 	Si $T$ es inconsistente, $T\vdash$ cualquier cosa.
 	Por otra parte, ninguna valoración satisface $T$, es decir, ninguna $\sigma$ cumple $\sigma(r) = 1$ $\forall r\in T$. Luego cualquier cosa es una consecuencia lógica de $T$ porque no hay ninguna valoración que satisfaga $T$.
@@ -341,12 +332,12 @@ A partir de los valores $\sigma(p), \sigma(q),\hdots$ se define $\sigma$ para la
 Se sabe que \textbf{TAUT} es NP-difícil.
 \paragraph{Clases de complejidad}
 \begin{itemize}
-	\item \textbf{P:} clase de problemas para los que existe un algoritmo que los resuelve en tiempo polinómicoen función del número de datos de entrada.
+	\item \textbf{P:} clase de problemas para los que existe un algoritmo que los resuelve en tiempo polinómico en función del número de datos de entrada, es decir, $\exists K\ge 0$ (dependiendo el problema pero no del número de datos $n$) tal que si tenemos $n$ datos de entrada, el algoritmo requiere $\le O(n^K)$ operaciones.
 	\item \textbf{NP:} tiempo polinómico no determinista. La solución la proporciona un oráculo (\ref{fig:oraculo}), que podemos comprobar que es correcta (o no) en tiempo polinómico.
 	\item Si un problema es \textbf{NP-difícil} $\implies$ {P}={NP}.
 	\item Obviamente P$\subset$NP.
 	\item Si un problema es \textbf{NP-completo} $\implies$ el problema está en {NP} y si puede resolverse en tiempo polinómico, entonces P$=$NP.
-	\item No se sabe si P$=$NP. Clay Mathematics Institute ha ofrecido un premio de un millón de dólares estadounidenses para quién desarrolle la primera demostración correcta (si lo haces tú el profesor te pone una matrícula además).
+	\item No se sabe si P$=$NP. Clay Mathematics Institute ha ofrecido un premio de un millón de dólares estadounidenses para quién desarrolle la primera demostración correcta (el profesor no tiene tanto dinero, el te ofrece una matrícula).
 \end{itemize}
 
 \begin{figure}[h]
@@ -385,3 +376,55 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 		\item \textbf{Comprobación:} tiempo $O(n+k)$.
 	\end{itemize}
 \end{example}
+
+\textbf{Recordatorio:} Podemos reemplazar $p$ por cualquier fórmula equivalente. Por ejemplo, podemos remplazar $p\implies q$ por $\neg p \Or q$, $(p\y q)\y r$ por $p\y (q\y r)$, cualquier contradicción por $\perp$, etc.
+
+\begin{theorem}
+	Si existe una prueba de $p$ a partir de los axiomas y modus ponens, entonces, $p$ es una tautología.
+	$$\vdash p \implies \vDash p$$
+\end{theorem}
+\begin{proof}
+	Por inducción en la longitud de la demostración. 
+	
+	Sean $p_1,\hdots, p_n=p$.
+	\begin{itemize}
+		\item Caso $n=1$: $p_1$ = $p$ es un axioma, luego es una tautología.
+		\item Caso $n>1$: $p=p_n$, y para toda $j\subset n$, $p_j$ es una tautología.
+		\begin{itemize}
+			\item Si $p$ es una axioma, entonces $p$ es una tautología.
+			\item Si $p$ no es un acioma, entonces se obtiene de dos fórmulas anteriores mediante modus ponens, digamos $p_i = r$ y $p_k=r\implies p$ con $i,k<n$. 
+			
+			Sea $\sigma$ una valoración booleana. Hay que probar que $\sigma(p) = 1)$. Por la hipótesis inicial, $\sigma(r) = 1 = \sigma(r\implies p) = \sigma(\neg r \Or p) = \sigma(\neg r) \Or \sigma(p) = max(0,\sigma(p))$.
+			Por tanto $\sigma(p) = 1$.
+		\end{itemize}
+	\end{itemize}
+\end{proof}
+
+\begin{theorem}[Teorema de la completitud]	Sea $T = \emptyset$.
+	\begin{itemize}
+		\item \textbf{Validez}: 
+		$\vdash p \implies \vDash p$
+		\item \textbf{Adecuación:}
+		$\vDash p \implies \vdash p$
+	\end{itemize}
+	En general $$T\vdash p \iff T\vDash p$$
+\end{theorem}
+\begin{proof}
+	
+	\textbf{Validez:} Sea $V$ el conjunto de todas las valoraciones que satisfacen a $T$. Si $V=\emptyset$, entonces $T\vdash \sigma$ trivialmente. Si $V\neq \emptyset$, entonces, argumentamos como en el teorema anterior pero considerando sólo las valoraciones en $V$ en lugar de todas.
+	
+	\textbf{Adecuación:} Consideramos extensiones de teorías (incluso en el caso $\vDash p \implies \vdash p$).
+	
+\end{proof}
+
+\textbf{Recordatorio: } $T$ es consistente si $T\nvdash \perp$. La consistencia o coherencia puede caracteriarse de forma sencilla:
+$$T\nvdash\perp \iff \exists p\in FBF(L)\tq T\nvdash p$$.
+
+Equivalentemente, $T\vdash\perp$ ($T$ es inconsistente) $\iff$ $\forall p\in FBF(L)$.
+
+\begin{theorem}
+	Si $\exists p\in FBF(L) \tq T\nvdash p$, entonces $T\nvdash \perp$ ($T$ es consistente).
+\end{theorem}
+\begin{proof}
+	Probamos $\neg G\implies \neg F$ en vez de $F\implies G$.
+\end{proof}

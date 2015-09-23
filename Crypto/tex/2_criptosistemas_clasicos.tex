@@ -193,7 +193,7 @@ A lo largo de este capítulo veremos los métodos que han sido empleados a lo la
 
 				$\phi(p) = p-1$
 
-				$\phi(p^n) = p^{n} - p^{n-1} = p^{n-1} p(p-1) = p^{n}(1- \frac{1}{p})$
+				$\phi(p^n) = p^{n} - p^{n-1} = p^{n-1} (p-1) = p^{n}(1- \frac{1}{p})$
 
 				Como es una función multiplicativa:
 
@@ -217,7 +217,7 @@ Ahora podemos estudiar el texto cifrado y ver que las letras más usadas son, re
 \[
 \left\{
 20α + β = 4\atop
-2α +β = 19
+3α +β = 19
 \right.\]
 
 Que, si restamos a la primera ecuación la segunda y nos apoyamos en el hecho de que estamos trabajando en $\ent_{26}$ nos queda:
@@ -322,7 +322,7 @@ Una vez decidimos cómo de grande es el grupo de letras que vamos a juntar (y po
 \item \textbf{Pares de letras vistas como números de dos cifras en base 26}
 
 En este caso emplearíamos funciones del tipo
-\[f(m)= (Am + B) \ mod \ 26, \;\; A,B \in \ent_{26}\]
+\[f(m)= (Am + B) \ mod \ 26^2, \;\; A,B \in \ent_{26^2}\]
 
 \item \textbf{Pares de letras vistas como vectores de dimensión 2 sobre $\ent_{26}$}
 
@@ -415,7 +415,7 @@ A partir de ahora emplearemos este razonamiento.
 
 En este caso tenemos que tener en cuenta el hecho de que $\ent_p$ es un cuerpo.
 
-Nuevamente queremos ver cuántas matrices invertibles pueden definirse con coeficientes en $\ent_p$ y para ello veremos de cuántas formas podemos seleccionar $p$ vectores de $p$ coordenadas independientes.
+Nuevamente queremos ver cuántas matrices invertibles pueden definirse con coeficientes en $\ent_p$ y para ello veremos de cuántas formas podemos seleccionar $N$ vectores de $N$ coordenadas independientes.
 
 Para la primera columna podemos escoger cualquier vector no nulo, es decir, tendremos $p^N-1$ posibilidades.
 
@@ -428,7 +428,7 @@ De forma general, para el vector $c_i$ tendremos un total de $p^N-p^{i-1}$ posib
 Finalmente, multiplicando todos estos valores, vemos el número de posibles matrices es:
 \[ φ_N(p) = \text{\# matrices invertibles = }\prod_{i=0}^{N-1} (p^N-p^i)\]
 \end{itemize}
-que m
+
 Hasta ahora hemos estado considerando que el alfabeto tiene un tamaño primo y, con esa condición, hemos visto cómo calcular el número de claves posibles sea cual sea la forma en que hemos agrupado las letras.
 
 \newpage
@@ -452,7 +452,7 @@ Esto se debe a que $det(Π(A)) \equiv det(A)\ mod\ p$, pues $Π$ es homomorfismo
 De modo que:
 \[\appl{Π}{GL_N(ℤ_{p^r})}{GL_N(ℤ_p)}\]
 Y por tanto $φ_N(p^r)=φ_N(p)·\#Ker(Π)$. Así que:
-\[φ_N(p^r) = (p^{r-1})^N \prod_{i=0}^{N-1}(p^N-p^i)\]
+\[φ_N(p^r) = \underbrace{(p^{r-1})^{N^2}}_{\text{Ker. Permutaciones de inversos de 0}} \underbrace{\prod_{i=0}^{N-1}(p^N-p^i)}_{\text{Matrices invertibles en }\ent_p}\]
 
 \item \textbf{Si el tamaño del alfabeto puede escribirse como producto de coprimos}
 
@@ -469,7 +469,7 @@ Al ser sobreyectiva tenemos que:
 Si extendemos ahora esta aplicación a matrices con coeficientes en $\ent_{NM}$ tendremos que obtenemos nuevamente un isomorfismo\footnote{Lo podemos comprobar repitiendo el razonamiento anterior}
 
 Puesto que es un isomorfismo entre matrices, tenemos:
-\[GL_n(\ent_{NM})=GL_n(\ent_N)\times GL_n(\ent_M) \implies \phi_n(NM)=\phi_n(N)\times \phi_n(M)\]
+\[GL_n(\ent_{NM})=GL_n(\ent_N)\times GL_n(\ent_M) \implies \varphi_n(NM)=\varphi_n(N)\times \varphi_n(M)\]
 
 A partir de aquí ya podemos deducir el caso general, pues dado cualquier número podremos descomponerlo apoyándonos en esta propiedad.
 
@@ -539,10 +539,78 @@ Así tenemos que $437^{-1} = 362$. Así el sistema nos queda:
 \[\left( \begin{array}{c}
 α \\
 β  \end{array} \right) = 362 \cdot \left( \begin{array}{cc}
-1 & -238 \\
--1 & 675  \end{array} \right)\left( \begin{array}{c}
+1 & -1 \\
+-238 & 675  \end{array} \right)\left( \begin{array}{c}
 134\\
 721  \end{array} \right) = \left( \begin{array}{c}
-580 \\
-295  \end{array} \right) \]
+374 \\
+647  \end{array} \right) \]
+\end{example}
+
+\subsection{Sustitución polialfabética}
+
+Hasta ahora todos los sistemas de cifrado que hemos visto son susceptibles de ser superados por medio de un análisis de frecuencia.
+
+Esto se debe a que una letra siempre es cifrada de la misma forma, pero esto puede cambiar.
+
+Antes de seguir avanzando veamos un concepto nuevo
+
+\begin{defn}[Indice de coincidencia]
+Suponemos que tomamos todos los libros escritos en un idioma dado y metemos todas las letras de esos libros en un saco para después sacar dos de ellas.
+
+El \textbf{índice de coincidencia} nos da la probabilidad de que las dos letras sacadas del saco coincidan. Si cada letra tiene una probabilidad $p_i$ donde $i$ indica su posición en el alfabeto, tendremos:
+\[I = \sum_{i=1}^N p_i^2\]
+
+A modo de referencia, el índice de coincidencia en inglés es un 6,5\% y en español un 7.62\%.
+
+Si tomamos un idioma ficticeo en el que todas las letras son equiprobables tendremos que su índice es $\sum_{i=1}^{26}\frac{1}{26^2} = \frac{1}{26} = 3.6\%$
+\end{defn}
+
+Esto puede ser útil a la hora de descifrar un mensaje pues indica si es probable o no que el texto haya sido cifrado por sustitución monoalfabética.
+
+\begin{example}
+Sabemos que se está usando un criptosistema lineal con la aplicación
+\[\appl{f_A}{(\ent_{26})^2}{(\ent_{26})^2}\]
+
+El mensaje cifrado es \textit{WKNCCHSSJH} y, además, sabemos que el inicio del mensaje dice \textit{GLUE}.
+
+Si quisiésemos hacerlo a la fuerza, tendríamos que $\varphi{26} = 17248$ que es asequible con los ordenadores de hoy en día, pero no lo era hace años, cuando este criptosistema se empleaba.
+
+Con los datos que tenemos, podemos plantear la ecuación:
+\[A \cdot \left( \begin{array}{cc}
+W & N \\
+K & C  \end{array} \right) = \left( \begin{array}{cc}
+G & V \\
+I & E  \end{array} \right) \equiv A \cdot \left( \begin{array}{cc}
+22 & 13 \\
+10 & 2  \end{array} \right) = \left( \begin{array}{cc}
+6 & 21 \\
+8 & 4  \end{array} \right)\]
+
+El problema que tenemos ahora es que al despejar $A$, no podemos calcular la inversa de la matriz que la multiplica, pues su determinante es 18, que no es coprimo ocn 26.
+
+Sin embargo, podemos trabajar módulo 13, con lo que obtendríamos:
+\[  A = \left( \begin{array}{cc}
+22 & 13 \\
+10 & 2  \end{array} \right)^{-1} \left( \begin{array}{cc}
+6 & 21 \\
+8 & 4  \end{array} \right) = \left( \begin{array}{cc}
+6 & 8 \\
+8 & 4  \end{array} \right)\left(\frac{1}{5} = 8 \right) \left( \begin{array}{cc}
+2 & 0 \\
+3 & 2  \end{array} \right) = \left( \begin{array}{cc}
+2 & 4 \\
+3 & 2  \end{array} \right)\]
+
+Ahora tenemos que volver a módulo 26, que es donde estábamos trabajando originalmente. Así podemos ver que
+\[A = \left( \begin{array}{cc}
+2 & 4 \\
+3 & 2  \end{array} \right) + 13 \left( \begin{array}{cc}
+a & b \\
+c & d  \end{array} \right)\]
+
+Por lo pronto ya hemos reducido el total de matrices posibles de 17 000 a sólo 16. Pero realmente aún podemos reducir más este valor, puesto que necesitamos que $A$ sea invertible \footnote{Qué sentido tiene emplear un sistema de cifrado que no es descifrable ni si quiera para aquellos que conozcan la clave...}.
+
+En el espacio de matrices de orden 2 sólo existen 6 matrices invertibles que son:
+TODO
 \end{example}

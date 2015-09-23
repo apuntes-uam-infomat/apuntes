@@ -280,7 +280,7 @@ Para saber el $\limsup$, vamos al siguiente lema:
 
 Para probar este lema, simplemente hay que aplicar el lema de Fatou normal (\ref{thm:Fatou}) a $F_n = g - f_n ≥ 0$.
 
-\begin{theorem}[Teorema\IS de convergencia dominada] Dada una sucesión $f_n \convs f$ en casi todo punto, si existe una función $g$ integrable y no negativa tal que $\abs{f_n} ≤ g$ entonces \[ \int_X \lim_n f_n \dif μ = \lim_n \int f_n \dif μ\]
+\begin{theorem}[Teorema\IS de convergencia dominada] \label{thm:ConvDominada} Dada una sucesión $f_n \convs f$ en casi todo punto, si existe una función $g$ integrable y no negativa tal que $\abs{f_n} ≤ g$ entonces \[ \int_X \lim_n f_n \dif μ = \lim_n \int f_n \dif μ\]
 \end{theorem}
 
 \begin{proof}[Esquema]
@@ -298,10 +298,66 @@ Como ejercicio, tendríamos que ver qué le ocurre a la función \[ f_n(x) = \be
 
 Después de todo esto, vamos con el primer ``teorema de verdad del curso'', que nos va a dar el término que falta en el lema de Fatou. A modo de curiosidad, es un resultado que se ha obtenido en los años 80, bastante después de los resultados de Lebesgue y Fatou. Es además un teorema con muchas aplicaciones y con una prueba muy bonita.
 
-\begin{theorem}\citep[Teorema 1.9]{liebLoss}, publicado en \cite{brezis1983relation}. Dado un espacio de medida \meas y una sucesión de funciones $\appl{f_n}{X}{ℂ}$ medibles, con $f_n \convs f$ en casi todo punto y $f$ medible\footnote{Esto viene gratis por ser $f_n$ medibles.}, y además\footnote{Pedimos una versión más general de la función dominante de otros teoremas: simplemente queremos todas las funciones de la familia sean similares en su integral (o algo así).} $\abs{f_n}^p$ es integrable y $\int \abs{f_n}^p ≤ C$ para todo $n$. Entonces \[ \lim_{n\to ∞ } \int_X\abs{\abs{f_n}^p - \abs{f}^p - \abs{f_n - f}^p} \dif μ = 0\]
+\begin{theorem}\label{thm:LiebLoss}\citep[Teorema 1.9]{liebLoss}, publicado en \cite{brezis1983relation}. Dado un espacio de medida \meas y una sucesión de funciones $\appl{f_n}{X}{ℂ}$ medibles, con $f_n \convs f$ en casi todo punto y $f$ medible\footnote{Esto viene gratis por ser $f_n$ medibles.}, y además\footnote{Pedimos una versión más general de la función dominante de otros teoremas: simplemente queremos todas las funciones de la familia sean similares en su integral (o algo así).} $\abs{f_n}^p$ es integrable y $\int \abs{f_n}^p ≤ C$ para todo $n$. Entonces \[ \lim_{n\to ∞ } \int_X\abs{\abs{f_n}^p - \abs{f}^p - \abs{f_n - f}^p} \dif μ = 0\]
 \end{theorem}
 
 ¿Qué tiene que ver ese churro con el lema de Fatou? Si recordamos la desigualdad triangular ($\abs{\abs{a} - \abs{b}} ≤ \abs{a-b}$), tomando $a = \abs{f_n}^p - \abs{f}^p$ y $b = \abs{f_n -f}^p$, tendremos que \[ \lim_f \int \abs{\abs{f_n}^p - \abs{f}^p} - \lim \int \abs{f_n - f}^p ≤ \lim \int \abs{\abs{f_n}^p - \abs{f}^p - \abs{f_n - f}^p} \dif μ = 0\], por lo que quitando también los límites nos quedará \[ \int \abs{\abs{f_n}^p - \abs{f}^p} = \int\abs{f_n -f}^p + o(n) \] con $o(n) \convs 0$. Esto nos quedará claro si lo vemos con el contraejemplo de Fatou de \eqref{eq:ContrajemploFatou1}, viendo cómo la diferencia entre los términos nosequé.
+
+En la fórmula de Fatou, nos quedará un ``resto'' (igual que el $o$ de Taylor): \[ \liminf \int \abs{f_n}^p ≥ \int \liminf \abs{f_n}^p + \int \abs{f-f_n}^p + o(n) ≥ 0 \]
+
+Ahora, un poquito de notación:
+
+\begin{defn}[Función\IS absolutamente integrable de orden $p$] Decimos que $f$ es absolutamente integrable de orden $p$ con $p > 0$ si y sólo si $\abs{f}^p$ es absolutamente integrable, esto es, que \[ 0 ≤ \int_X \abs{f}^p \dif μ < ∞ \]. Por notación, diremos que $f ∈ \lebg^p\meas$
+\end{defn}
+
+También es interesante ver que los espacios $\lebg^p$ son espacios vectoriales. Si tomamos $α,β ∈ ℂ$ y $f,g ∈ \lebg^p$, entonces querremos ver si $αf + βg ∈ \lebg^p$. Operando, podemos descomponer \[ \int\abs{αf+βg}^p \dif μ ≤ C_p \int \left(\abs{αf}^p + \abs{βg}^p\right) ≤ C_p \left(\abs{α}^p \int \abs{f}^p + \abs{β}^p \int \abs{g}^p \right) < ∞ \] y ver que efectivamente la combinación lineal también es absolutamente integrable.
+
+Se ha tirado mucho rato insistiendo así que yo lo escribo: cuidado con confundir entre la convergencia en \textit{casi} todo punto y la convergencia en \textit{todo} punto.
+
+Y ahora un \textit{mindfuck}: ¿por qué necesitamos la integral de Lebesgue? ¿Por qué puñetas querríamos hacer integrales de monstruos como el de $\ind_{ℝ\setminus ℚ}$? Pues por lo siguiente: \[ \lim_{m,n\to \infty} \left(\cos (n!x)\right)^m = \ind_{ℝ\setminus ℚ}\]
+
+Resulta que, cosas de las mates, algunos límites de funciones continuas no son continuos, sin convergencia uniforme, y Lebesgue nos soluciona estos problemas.
+
+Ahora vamos con la prueba del \fref{thm:LiebLoss}.
+
+\begin{proof}
+Para el primer paso, recordamos la desigualdad numérica: para todo $ε>0$ y $p > 0$, existe una constante $C_{ε,p} >0$ tal que $∀a,b∈ℂ$ se tiene que \( \abs{\abs{a+b}^p - \abs{b}^p} ≤ ε\abs{b}^p C_{ε,p} \abs{a}^p \label{eq:ProofLiebLossDesNum} \).
+
+Para el segundo paso necesitaremos una función especial para usar en ella el teorema de convergencia dominada (\fref{thm:ConvDominada}). Entonces escribiremos la serie como $f_n ≝ f + g_n$, por lo que $g_n \convs 0$.
+
+Entonces, declaramos (hay que probarlo) que
+\( \underbracket{G_{ε,n}}_{(A)} = \left[\underbracket{\abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p}}_{(B)} - ε\abs{g_n}^p\right]_+ \convs 0
+\label{eq:ProofLiebLoss1} \)
+para todo $ε > 0$, donde $[F]_+ = \max \set{F, 0}$.
+
+Ahora, fijamos $ε > 0$, y entonces tendremos que \[ \lim_{n\to ∞} \int G_{n,ε} = 0\], más que nada porque como decíamos $g_n \to 0$ CTP\footnote{En casi todo punto.}.
+
+Seguimos:
+\(
+0 ≤ \int \underbracket{\abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p}}_{(B)} ≤ ε \int \abs{g_n}^p + \underbracket{\int G_{ε,n}}_{(A)}
+\label{eq:ProofLiebLoss2} \)
+, donde lo único que hemos hecho ha sido reestructurar \eqref{eq:ProofLiebLoss1}.
+
+Anteriormente hemos dicho que $(A) \to 0$, así que sólo nos queda saber qué pasa con $ε\int\abs{g_n}^p$. Para ello, usaremos la hipótesis que nos queda del teorema, y es que sabemos que
+\(
+\int_X \abs{f_n}^p \dif μ ≤ C < ∞
+\label{eq:ProofLiebLossH2} \)
+, así que podemos estimar
+\(
+\int\abs{g_n}^p = \int \abs{f_n -f}^p ≤ C_p \int \left(\abs{f_n}^p + \abs{f}^p \right) \eqreasonup[≤]{\eqref{eq:ProofLiebLossH2}} 2 C C_p = \bar{C}
+\label{eq:ProofLiebLoss3} \)
+
+Tomando límites en \eqref{eq:ProofLiebLoss2} y sustituyendo con \eqref{eq:ProofLiebLoss3}, tenemos \[ 0 ≤ \lim_n \int \abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p} ≤ ε\bar{C} + \underbracket{\lim_n \int G_{ε,n}}_{\to 0} \]
+
+Ponemos ahora $ε \to 0^+$ y nos quedará (sándwich) \[ \lim_n \abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p} = 0 \]
+
+Ya lo tenemos hecho salvo por los pasos intermedios. Tenemos que demostrar \eqref{eq:ProffLiebLoss2}. Usando la desigualdad triangular, sabemos que
+\[ \abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p} ≤ \abs{\abs{f+g_n}^p - \abs{g_n}^p} + \abs{f}^p \]
+
+Ahora podemos usar la desigualdad numérica de \eqref{eq:ProofLiebLossDesNum} con $a = f$, $b = g_n$ y nos quedará que \[ \abs{\abs{f+g_n}^p - \abs{g_n}^p} + \abs{f}^p  ≤ ε\abs{g_n}^p + C_ε \abs{f}^p + \abs{f}^p \]
+
+Entonces, \[ 0 ≤ G_{ε,n} ≤ (1 + C_ε) \abs{f}^p \] y podemos usar el teorema de convergencia dominada (\fref{thm:ConvDominada}) para decir que $\int G_{ε,n} \convs 0$.
+\end{proof}
 
 \section{Teoría de la integral y la medida}
 
