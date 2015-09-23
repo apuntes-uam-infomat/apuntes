@@ -163,6 +163,156 @@ Pero podemos plantearnos, ¿qué modelo es mejor? Pues el que menos se equivoque
 \subparagraph{$h_4$:} $P(error) = p(j,c) + p(t,c) = P(j|c)·P(c) + P(c|t)·P(t) = ... = 50\%$
 \end{example}
 
+
+\subsection{Parte de Cazakas}
+% % % Pedirselo a Parra.
+
+
+\begin{problem}[lentillas]
+
+Este es un ejemplo de problema multidimensional.
+
+Aquí tenemos los datos de donde sacar las probabilidades:
+
+\begin{tabular}{c|c|c|c|c}
+\textbf{EDAD} & \textbf{LESIÓN} & \textbf{ASTIGM.} & \textbf{PROD\_LAGRIM} & \textbf{DIAGNOSTICO}\\\hline
+joven & miopía & no & reducida & no \\
+joven & miopía & no & normal & blandas \\
+
+joven & miopía & sí & reducida & no \\
+joven & miopía & no & normal & duras \\
+
+joven & hipermetropía & no & reducida & no \\
+joven & hipermetropía & no & normal & blandas \\
+
+joven & hipermetropía & sí & reducida & no \\
+joven & hipermetropía & sí & normal & duras \\
+
+mediana & miopía & no & reducida & no \\
+mediana & miopía & no & normal & blandas \\
+
+mediana & miopía & sí & reducida & no \\
+mediana & miopía & no & normal & duras \\
+
+mediana & hipermetropía & no & reducida & no \\
+mediana & hipermetropía & no & normal & blandas \\
+
+mediana & hipermetropía & sí & reducida & no \\
+mediana & hipermetropía & sí & normal & no \\
+
+mediana & miopía & no & reducida & no \\
+mediana & miopía & no & normal & no \\
+
+mediana & miopía & sí & reducida & no \\
+mediana & miopía & no & normal & duras \\
+
+mediana & hipermetropía & no & reducida & no \\
+mediana & hipermetropía & no & normal & blandas \\
+
+mediana & hipermetropía & sí & reducida & no \\
+mediana & hipermetropía & sí & normal & no 
+
+\end{tabular}
+
+\begin{itemize}
+	\item Hipótesis: no llevar lentillas (n), lentillas duras (d) o lentilla blandas (b)
+	\item Datos o atributos
+	\subitem edad: joven (j); mediana (m); avanzada (a)
+	\subitem lesión (l): miopía (m); hipermetropía (h)
+	\subitem Astigmatismo(a): sí (s), no (n)
+	\subitem Producción de lágrimas (p): normal (n), reducido (r)
+\end{itemize}
+
+\ppart Llega un paciente con $(l=m,p=n)$. ¿Diagnóstico?
+\ppart Llega un paciente con $(l=h,p=n)$. ¿Diagnóstico?
+\ppart Llega un paciente con $(l=m,p=r)$. ¿Diagnóstico?
+\ppart Llega un paciente con $(l=h,p=r)$. ¿Diagnóstico?
+
+
+\solution 
+
+\spart \[P(d=n | l=m, p=n ) = \frac{P(l=m, p=n | d=n) P(d=n)}{P(l=m, p=n)}\]
+
+\paragraph{Probabilidades a priori}
+\begin{itemize}
+	\item $P(d=n) = \frac{15}{24}$
+	\item $P(d=d) = \frac{4}{24}$
+	\item $P(d=b) = \frac{5}{24}$
+\end{itemize}
+\paragraph{Verosimilitues:}
+\begin{itemize}
+	\item $P(l=m,p=n | d = n) = \frac{1}{15}$
+	\item $P(l=m,p=n | d=d) = \frac{3}{4}$
+	\item $P(l=m,p=n | d=b) = \frac{2}{5}$
+\end{itemize}
+
+Por el criterio de máxima verosimilitud, diagnosticaríamos lentillas duras, ya que ese diagnóstico es el que tiene mayor verosimilitud.
+
+Por el criterio de máxima probabilidad a posteriori (MAP) tendríamos:
+
+\[P(d=n | l=m, p=n ) = \frac{P(l=m, p=n | d=n) P(d=n)}{P(l=m, p=n)} = \frac{\frac{1}{15}\frac{15}{24}}{...}\]
+\[P(d=d | l=m, p=n ) = \frac{P(l=m, p=n | d=n) P(d=n)}{P(l=m, p=n)} = \frac{\frac{3}{4}\frac{4}{24}}{...} \impliedby MAP\]
+\[P(d=b | l=m, p=n ) = \frac{P(l=m, p=n | d=n) P(d=n)}{P(l=m, p=n)} = \frac{\frac{2}{5}\frac{5}{24}}{...}\]
+
+Por el criterio MAP, el diagnóstico será lentillas duras.
+
+\spart $(l=h,p=n)$ Calculamos las probabilidades a posteriori (para el criterio MAP):
+
+\[P(d=n | l=h, p=n) = ... = \frac{1}{3} = 33\%\]
+\[P(d=d | l=h, p=n) = ... = \frac{1}{6} = 16\%\]
+\[P(d=b | l=h, p=n) = ... = \frac{3}{6} = 50\%\]
+
+La manera ``chapucera'' de hacer este cálculo es restringir la tabla a aquellos que tengan hipermetropía y una producción de lágrimas normal, y obtenemos una subtabla con 6 filas. De estas 6 filas contamos cuántos tienen diagnóstico blandas y encontramos 3. De las 6 filas, encontramos a 2 que tengan diagnóstico duras y a 1 que tenga diagnóstico blanda.
+
+Calculamos las verosimilitudes:
+\[P(l=h, p=n | d=n) = ... = \frac{2}{15} = 6\%\]
+\[P(l=h, p=n | d=b) = ... = \frac{3}{5} = 60\%\]
+\[P(l=h, p=n | d=d) = ... = \frac{1}{4} = 25\%\]
+
+La manera ``chapucera'' de hacer este cálculo es restringir por diagnóstico. Nos quedamos con los que tengan diagnóstico no. De esas 15 filas, contamos los que tienen hipermetropía y producción normal de lágrimas. 
+
+
+\spart $(l=m, p=r)$ Calculamos las probabilidades a posteriori (para el criterio MAP):
+
+\[P(d=n | l=h, p=n) = ... = 100\%\]
+\[P(d=d | l=h, p=n) = ... = 0\%\]
+\[P(d=b | l=h, p=n) = ... = 0\%\]
+
+
+Calculamos las verosimilitudes:
+\[P(l=m, p=r | d=n) = ... = \]
+\[P(l=m, p=r | d=b) = ... = \]
+\[P(l=m, p=r | d=d) = ... = \]
+
+
+\spart $(l=h, p=r)$ Calculamos las probabilidades a posteriori (para el criterio MAP):
+
+\[P(d=n | l=h, p=r) = ... = 100\%\]
+\[P(d=d | l=h, p=r) = ... = 0\%\]
+\[P(d=b | l=h, p=r) = ... = 0\%\]
+
+Calculamos las verosimilitudes:
+\[P(l=h, p=r | d=n) = ... = \]
+\[P(l=h, p=r | d=b) = ... = \]
+\[P(l=h, p=r | d=d) = ... = \]
+
+\end{problem}
+
+\subsection{Naive Bayes}
+
+Dimensión del espacio de atributos de lentillas: $3·2·2·2 = 24$ ejemplos distintos, los mismos que en la tabla. En ejemplos con un espacio de atributos así reducido, podemos dedicarnos a contar para hallar las probabilidades, pero en caso de tener 10 atributos binarios, tendríamos un espacio de 1024 donde ya es más difícil ponerse a contar.
+
+A este fenómeno se le denomina \textbf{MALDICIÓN DE LA DIMENSIONALIDAD}. Oh my god.
+
+\begin{defn}[Maldción de la dimensionalidad]
+Básicamente, lo que dice esta maldición que nos ha caido es que:
+
+El número de ejemplos necesario para cubrir el espacio de atributos de forma uniforme crece exponencialmente con el número de atributos.
+\end{defn}
+
+\paragraph{Solución inocente: } Suponemos que todos los atributos son independientes. Con esto conseguimos que $P(l=m,p=n | d=d) = P(l=m | d=d)·P(p=n | d=d)$ 
+
+
 %% Apéndices (ejercicios, exámenes)
 \appendix
 
