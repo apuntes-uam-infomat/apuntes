@@ -246,3 +246,5 @@
 \meas#m
 \meas[X]#m
 \meas[X][\mu]#m
+\minuszero#m
+\essup#m
