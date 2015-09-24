@@ -318,12 +318,45 @@ Y ahora un \textit{mindfuck}: ¿por qué necesitamos la integral de Lebesgue? ¿
 
 Resulta que, cosas de las mates, algunos límites de funciones continuas no son continuos, sin convergencia uniforme, y Lebesgue nos soluciona estos problemas.
 
-Ahora vamos con la prueba del \fref{thm:LiebLoss}.
+Ahora vamos con la prueba del \fref{thm:LiebLoss}. Antes, alguna desigualdad que necesitaremos:
+
+\begin{prop}[Desigualdad\IS de Young] \label{prop:Young} Dados $p > 0$ y $a,b≥0$, entonces \[ (a+b)^p ≤ C_p (a^p + b^p)\]
+\end{prop}
+
+\begin{proof} Podemos simplificar la desigualdad dividiendo entre $b^p$ en ambos lados, y nos queda \[ \left(\frac{a}{b} + 1\right)^p ≤ C_p \left(\left(\frac{a}{b}\right)^p + 1\right) \]
+
+Si hacemos un cambio de variable $t = \frac{a}{b}$, entonces podemos definir dos funciones \begin{align*}
+f(t) &= (t+1)^p \\
+g(t) &= C_p(t^p + 1)
+\end{align*} y sólo nos queda demostrar que $f(t) ≤ g(t)$ para $t ≥ 0$. Para $p=1$ la desigualdad es trivial. Para $p ∈ (0,1)$ algo que me he perdido.
+
+Cuando $p > 1$, vemos que para $t=0$, $f(0) = 1$ y $g(0) = C_p$, luego tiene que ser $C_p ≥ 1$. Si derivamos, tenemos que \[ p(t+1)^{p-1} ≤ pC_p t^{p-1} \]
+
+Como la desigualdad de Young es simétrica, nos vale demostrarlo que $t ≥ 1$ (si $t<1$, cambiamos $a$ por $b$ a la hora de despejar). Un salto raro aquí, y ahora vemos que para $t = 1$ nos queda que $C_p ≥ 2^{p-1}$.
+\end{proof}
+
+\begin{prop} Dados $a,b∈ℂ$, para todo $ε> 0$ y $p > 0$, se tiene que
+\( \abs{\abs{a+b}^p - \abs{b}^p} ≤ ε\abs{b}^p + C_{ε,p} \abs{a}^p \label{eq:ProofLiebLossDesNum} \) \label{prop:DesigualdadLiebLoss}
+\end{prop}
+
+\begin{proof} Al igual que en la desigualdad anterior, podemos llamar $t = \frac{a}{b}$ y suponer $t ≥ 0$. Entonces, tenemos que demostrar (podemos quitarnos un valor absoluto por ahí) que \begin{align*}
+\abs{x+1}^p - 1 &≤ ε + C_{ε,p}\abs{x}^p \\
+\abs{x+1}^p - C_{ε,p}\abs{x}^p - 1 &≤ ε
+\end{align*}
+
+Buscamos el máximo de la parte izquierda de la ecuación, así que derivamos con respecto a $x$ y buscamos la solución a \[ p(x+1)^{p-1} = p C_{ε,p} x^{p-1} \]
+
+Ahora despejando tenemos que \[ x = \frac{1}{C_{ε,p}^{\frac{1}{p-1}} - 1} \] y sustituyendo sale.
+
+Luego hay otra prueba, la forma rápida de hacerlo. Sabemos que una función convexa es una $f$ tal que $f\left((1-λ)A + λB\right) ≤ (1-λ) f(A) + λf(B)$ para todo $λ∈[0,1]$. Ponemos entonces \[ A = \frac{a}{1-λ} \quad B = \frac{b}{λ} \] y nos queda que \[ f(a+b) ≤ (1-λ) f\left(\frac{a}{1-λ}\right) + λ f\left(\frac{b}{λ}\right) \]
+
+Ahora proponemos que $f(t) = \abs{t}^p$ es convexa, con $t ∈ ℂ$. En ese caso, sustituimos, nos sale $ε = λ^{1-p}$ y sale.
+\end{proof}
+
+Vamos ahora con la prueba del teorema de verdad.
 
 \begin{proof}
-Para el primer paso, recordamos la desigualdad numérica: para todo $ε>0$ y $p > 0$, existe una constante $C_{ε,p} >0$ tal que $∀a,b∈ℂ$ se tiene que \( \abs{\abs{a+b}^p - \abs{b}^p} ≤ ε\abs{b}^p C_{ε,p} \abs{a}^p \label{eq:ProofLiebLossDesNum} \).
-
-Para el segundo paso necesitaremos una función especial para usar en ella el teorema de convergencia dominada (\fref{thm:ConvDominada}). Entonces escribiremos la serie como $f_n ≝ f + g_n$, por lo que $g_n \convs 0$.
+Para el primer paso, recordamos la desigualdad numérica de la \fref{prop:DesigualdadLiebLoss}. Para el segundo paso necesitaremos una función especial para usar en ella el teorema de convergencia dominada (\fref{thm:ConvDominada}). Entonces escribiremos la serie como $f_n ≝ f + g_n$, por lo que $g_n \convs 0$.
 
 Entonces, declaramos (hay que probarlo) que
 \( \underbracket{G_{ε,n}}_{(A)} = \left[\underbracket{\abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p}}_{(B)} - ε\abs{g_n}^p\right]_+ \convs 0
@@ -358,6 +391,41 @@ Ahora podemos usar la desigualdad numérica de \eqref{eq:ProofLiebLossDesNum} co
 
 Entonces, \[ 0 ≤ G_{ε,n} ≤ (1 + C_ε) \abs{f}^p \] y podemos usar el teorema de convergencia dominada (\fref{thm:ConvDominada}) para decir que $\int G_{ε,n} \convs 0$.
 \end{proof}
+
+\subsubsection{Modos de convergencia}
+
+Vamos a ver ahora algunos ejemplos de sucesiones de funciones que nos serán muy útiles para ver contraejemplos y hacer pruebas. Esto está inspirado en \citep[Sección 2.4]{folland99}. En todos los casos, vamos a ver definiciones para decir si una sucesión $f_n$ converge a $f$ en los diferentes modos.
+
+\begin{defn}[Convergencia\IS en sentido integral $L^p$] Si y sólo si \[ \int_X \abs{f_n - f}^p \dif μ \to 0\] \label{def:ConvLp}
+\end{defn}
+
+\begin{defn}[Convergencia\IS en sentido uniforme $C^0$] Si y sólo si \[ \sup_{x∈X} \abs{f_n(x) - f(x)} \to 0 \]
+\end{defn}
+
+\begin{defn}[Convergencia\IS en sentido esencialmente uniforme $L^{∞}$] Si y sólo si \[ \essup_{x∈X} \abs{f_n(x) - f(x)} \to 0\]
+\end{defn}
+
+\begin{defn}[Convergencia\IS en sentido casi uniforme] Si y sólo si $f_n\to f$ uniformemente en $X\setminus N_ε$ con $μ(N_ε) < ε$ para todo $ε > 0$
+\end{defn}
+
+\begin{defn}[Convergencia\IS puntual] Si y sólo si $∀x∈X$ $f_n(x) \to f(x)$.
+\end{defn}
+
+\begin{defn}[Convergencia\IS en casi todo punto] Si y sólo si $f_n(x) \to f(x)$ $∀x∈X \setminus N$ y $μ(N) = 0$. \label{def:ConvCTP}
+\end{defn}
+
+\begin{defn}[Convergencia\IS en medida] Si y sólo si $∀ε>0$ se tiene que \[ μ\left(\set{x∈X \tq \abs{f_n(x) - f(x)} > ε}\right) \convs 0\], esto es, que la medida del conjunto donde no converge tiende a ser nula.
+\end{defn}
+
+\begin{defn}[Sucesión\IS de Cauchy en medida] Si y sólo si $∀ε>0$ se tiene que \[ μ\left(\set{x∈X \tq \abs{f_n(x) - f_m(x)} > ε}\right) \convs[][n,m] 0\]
+\end{defn}
+
+Normalmente, cada una de estas definiciones suele tener un lema, un teorema o una definición detrás. Por ejemplo, ¿es cierto que la convergencia en casi todo punto (\fref{def:ConvCTP}) implica la convergencia $L^1$ (\fref{def:ConvLp})? En general, esto es falso, pero si $\abs{f_n} ≤ g ∈ L^1$ podemos usar el \nref{thm:ConvDominada}. Si en cambio tenemos una sucesión monótona, podemos usar el \nref{thm:ConvMonotona}.
+
+En el otro sentido, ¿es esto cierto? En general no, pero sí que existe una subsucesión $f_{n_k} \convcs[n_k] f$.
+
+\begin{prop}[Desigualdad\IS de Markov] \[ μ\left(\set{x∈X \tq \abs{f_n(x) -f} > ε }\right) ≤ \frac{1}{ε} \int_X \abs{f_n -f} \dif μ \]
+\end{prop}
 
 \section{Teoría de la integral y la medida}
 
