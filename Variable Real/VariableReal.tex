@@ -245,27 +245,30 @@ Comprobar que $\int_{ℝ^N} \frac{1}{(1 + \abs{x})^α} < ∞$ para cierto $α$ e
 
 \subsection{Convergencia de funciones}
 
-Aunque hasta ahora hemos visto bastante sobre convergencia, hay conceptos con diferencias sutiles. Por ejemplo, la diferencia entre \concept[Supremo]{supremo} y supremo esencial. Como lo último no sé qué es, lo definimos:
+A lo largo del curso, nos interesará estudiar y entender la convergencia de funciones. Sin embargo, como hemos visto en otros cursos, hay varios tipos de convergencia y varios resultados sobre lo que les ocurre a las funciones y a la integral.
 
-\begin{defn}[Supremo\IS esencial] Supremo menos un conjunto de medida cero % TODO WAT.
+Antes de entrar en materia, una pequeña definición que no hemos visto, que es la del supremo esencial. Es análogo a todo lo que estamos haciendo hasta ahora, extendiendo conceptos no a todos los puntos sin a todos ``salvo un conjunto de medida cero''. En el caso del supremo es un poco más delicado, así que vamos a hacerlo bien.
+
+\begin{defn}[Supremo\IS esencial] Sea $\appl{f}{X}{ℝ}$ una función y \meas nuestro espacio de medida habitual. Definimos entonces el supremo esencial como \[ \essup_{x∈X} f(x) = \inf \set{a ∈ ℝ \tq μ\left(\inv{f}((a, ∞))\right) = 0} \]
+
+En otras palabras, es el mayor valor de $f$ tal que por encima sólo hay un conjunto de valores de medida cero.
 \end{defn}
 
-Es fácil ver que $\sup_{x∈(0,1)} x^n = 1$; pero $\essup_{x∈(0,1)}x^n$ ya es más complicado. Lo podemos ver sin cosas esenciales: \[ x^n \convs l(x) = \begin{cases} 0 & x < 1 \\ 1 & x = 1 \end{cases} \], converge puntualmente en todo punto pero no uniformemente (el límite no es continuo). Esto nos diría que según Riemann $\int_0^1 x^n$ no converge a 0 por no ser uniforme.
+Por ejemplo, es fácil ver que $\sup_{x∈(0,1)} x^n = 1$; pero $\essup_{x∈(0,1)}x^n$ ya es más complicado. Lo podemos ver sin cosas esenciales: \[ x^n \convs l(x) = \begin{cases} 0 & x < 1 \\ 1 & x = 1 \end{cases} \], converge puntualmente en todo punto pero no uniformemente (el límite no es continuo). Además, es fácil ver así que $\essup_{x∈(0,1)} x^n = 0$, ya que la función sólo es mayor que ese valor en un conjunto de medida cero (un único punto).
 
-Sin embargo, $l(x) = 0$ en casi todo punto (el único punto donde no es cero tiene medida nula). Por lo tanto $x^n \convs 0$ en casi todo punto. Por el teorema de convergencia dominada, como $x^n ≤ 1$ (la función $1$ es integrable) podemos intercambiar el límite con la integral y tendremos que \[ \lim \int x^n \dif x = \int \lim x^n \dif x = 0 \]
+Después de esta ligeramente útil introducción, vamos a ver los teoremas.
 
-Vamos a ver ahora los teoremas sobre convergencia.
-
+\subsubsection{Teoremas de convergencia de funciones}
 
 \begin{theorem}[Teorema\IS de convergencia monótona] (o teorema de Beppo-Levi) \label{thm:ConvMonotona}
-Dado un espacio de medida \meas  y una sucesión monótona de funciones $0 ≤ f_1 ≤ \dotsb ≤ f_n ≤ \dotsb$ medibles, entonces  \[ \int_X \lim_n f_n \dif μ = \lim_n \int_X f_n \dif μ \]
+Dado un espacio de medida \meas y una sucesión monótona de funciones $0 ≤ f_1 ≤ \dotsb ≤ f_n ≤ \dotsb$ medibles, entonces  \[ \int_X \lim_n f_n \dif μ = \lim_n \int_X f_n \dif μ \]
 
 Se puede extender a sucesiones decrecientes simplemente cambiado el signo.
 \end{theorem}
 
 Hay una variación sutil de este teorema: es prácticamente lo mismo pero aun así lo veremos.
 
-\begin{theorem}[Teorema\IS de convergencia monótona para series] Dada una sucesión de funciones $\appl{f_n}{X}{[0,+∞]}$ medibles y no negativa, entonces \[ \int_X \sum_x f_n \dif μ = \sum_n \int f_n \dif μ\]
+\begin{theorem}[Teorema\IS de convergencia monótona para series] Dada una sucesión de funciones $\appl{f_n}{X}{[0,+∞]}$ medibles y no negativas, entonces \[ \int_X \sum_x f_n \dif μ = \sum_n \int f_n \dif μ\]
 \end{theorem}
 
 ¿Por qué decimos que es casi lo mismo? Si definimos las sumas parciales $S_N = \sum_{n=1}^N f_n$ tendremos una sucesión monótona creciente y podremos aplicar el \fref{thm:ConvMonotona}.
@@ -298,7 +301,7 @@ Como ejercicio, tendríamos que ver qué le ocurre a la función \[ f_n(x) = \be
 
 Después de todo esto, vamos con el primer ``teorema de verdad del curso'', que nos va a dar el término que falta en el lema de Fatou. A modo de curiosidad, es un resultado que se ha obtenido en los años 80, bastante después de los resultados de Lebesgue y Fatou. Es además un teorema con muchas aplicaciones y con una prueba muy bonita.
 
-\begin{theorem}\label{thm:LiebLoss}\citep[Teorema 1.9]{liebLoss}, publicado en \cite{brezis1983relation}. Dado un espacio de medida \meas y una sucesión de funciones $\appl{f_n}{X}{ℂ}$ medibles, con $f_n \convs f$ en casi todo punto y $f$ medible\footnote{Esto viene gratis por ser $f_n$ medibles.}, y además\footnote{Pedimos una versión más general de la función dominante de otros teoremas: simplemente queremos todas las funciones de la familia sean similares en su integral (o algo así).} $\abs{f_n}^p$ es integrable y $\int \abs{f_n}^p ≤ C$ para todo $n$. Entonces \[ \lim_{n\to ∞ } \int_X\abs{\abs{f_n}^p - \abs{f}^p - \abs{f_n - f}^p} \dif μ = 0\]
+\begin{theorem}\label{thm:LiebLoss}\citep[Teorema 1.9]{liebLoss01}, publicado en \cite{brezis1983relation}. Dado un espacio de medida \meas y una sucesión de funciones $\appl{f_n}{X}{ℂ}$ medibles, con $f_n \convs f$ en casi todo punto y $f$ medible\footnote{Esto viene gratis por ser $f_n$ medibles.}, y además\footnote{Pedimos una versión más general de la función dominante de otros teoremas: simplemente queremos todas las funciones de la familia sean similares en su integral (o algo así).} $\abs{f_n}^p$ es integrable y $\int \abs{f_n}^p ≤ C$ para todo $n$. Entonces \[ \lim_{n\to ∞ } \int_X\abs{\abs{f_n}^p - \abs{f}^p - \abs{f_n - f}^p} \dif μ = 0\]
 \end{theorem}
 
 ¿Qué tiene que ver ese churro con el lema de Fatou? Si recordamos la desigualdad triangular ($\abs{\abs{a} - \abs{b}} ≤ \abs{a-b}$), tomando $a = \abs{f_n}^p - \abs{f}^p$ y $b = \abs{f_n -f}^p$, tendremos que \[ \lim_f \int \abs{\abs{f_n}^p - \abs{f}^p} - \lim \int \abs{f_n - f}^p ≤ \lim \int \abs{\abs{f_n}^p - \abs{f}^p - \abs{f_n - f}^p} \dif μ = 0\], por lo que quitando también los límites nos quedará \[ \int \abs{\abs{f_n}^p - \abs{f}^p} = \int\abs{f_n -f}^p + o(n) \] con $o(n) \convs 0$. Esto nos quedará claro si lo vemos con el contraejemplo de Fatou de \eqref{eq:ContrajemploFatou1}, viendo cómo la diferencia entre los términos nosequé.
@@ -394,7 +397,7 @@ Entonces, \[ 0 ≤ G_{ε,n} ≤ (1 + C_ε) \abs{f}^p \] y podemos usar el teorem
 
 \subsubsection{Modos de convergencia}
 
-Vamos a ver ahora algunos ejemplos de sucesiones de funciones que nos serán muy útiles para ver contraejemplos y hacer pruebas. Esto está inspirado en \citep[Sección 2.4]{folland99}. En todos los casos, vamos a ver definiciones para decir si una sucesión $f_n$ converge a $f$ en los diferentes modos.
+Vamos a ver ahora algunos tipos de convergencia de funciones que nos serán muy útiles para ver contraejemplos y hacer pruebas. Esto está inspirado en \citep[Sección 2.4]{folland99}. En todos los casos, vamos a ver definiciones para decir si una sucesión $f_n$ converge a $f$ en los diferentes modos.
 
 \begin{defn}[Convergencia\IS en sentido integral $L^p$] Si y sólo si \[ \int_X \abs{f_n - f}^p \dif μ \to 0\] \label{def:ConvLp}
 \end{defn}
