@@ -260,8 +260,12 @@ A partir de los valores $\sigma(p), \sigma(q),\hdots$ se define $\sigma$ para la
 	Sea $r$ una $FBF(L)$, sea $p$ una subfórmula de $r$ y sea $\sigma$ cualquier valoración booleana. Si $p\iff q$ y reemplazamos cada instancia de $p$ en $r$ por $q$ denotando por $r^\prime$ la fórmula así obtenida, entonces $\sigma(r^\prime) = \sigma(r)$.
 \end{obs}
 
-\begin{defn}[Teoría inconsistente]
-	Una teoría $T$ es inconsistente si $T\vdash \perp$.
+\begin{defn}[Teoría consistente]
+ $T$ es consistente si $T\nvdash \perp$. La consistencia o coherencia puede caracteriarse de forma sencilla:
+ $$T\nvdash\perp \iff \exists p\in FBF(L) \tq  T\nvdash p$$ 
+ Equivalentemente, una teoría $T$ es inconsistente si $T\vdash \perp$.
+ $$T\vdash\perp \iff T\vdash p\ \forall p\in FBF(L)$$
+
 \end{defn}
 
 \begin{obs}
@@ -340,16 +344,15 @@ El problema es saber cuánto tiempo se tarda en averiguar si $F$ es una tautolog
 		\end{itemize}
 \end{example}
 
-Se sabe que \textbf{TAUT} es NP-difícil.
 \paragraph{Clases de complejidad}
 \begin{itemize}
-	\item \textbf{P:} clase de problemas para los que existe un algoritmo que los resuelve en tiempo polinómico en función del número de datos de entrada, es decir, $\exists K\ge 0$ (dependiendo el problema pero no del número de datos $n$) tal que si tenemos $n$ datos de entrada, el algoritmo requiere $\le O(n^K)$ operaciones.
-	\item \textbf{NP:} tiempo polinómico no determinista. La solución la proporciona un oráculo (\ref{fig:oraculo}), que podemos comprobar que es correcta (o no) en tiempo polinómico.
-	\item Si un problema es \textbf{NP-difícil} $\implies$ {P}={NP}.
-	\item Obviamente P$\subset$NP.
-	\item Si un problema es \textbf{NP-completo} $\implies$ el problema está en {NP} y si puede resolverse en tiempo polinómico, entonces P$=$NP.
+	\item \textbf{P:} clase de problemas para los que existe un algoritmo que los resuelve en tiempo polinómico en función del número de datos de entrada, es decir, $\exists K\ge 0$ (dependiendo el problema pero no del número de datos $n$) tal que si tenemos $n$ datos de entrada, el algoritmo requiere menos de $O(n^K)$ operaciones.
+	\item \textbf{NP:} tiempo polinómico no determinista. La solución la proporciona un oráculo (\ref{fig:oraculo}), que podemos comprobar que es correcta (o no) en tiempo polinómico. Obviamente P$\subset$NP.
+		\item La clase de problemas \textbf{NP-difícil} se define como aquella que contiene a los problemas que son como mínimo tan difíciles como un problema de NP. Alternativamente, se define como la clase de problemas H tal que todo problema en NP puede ser transformado polinomialmente en H.
+	\item La clase de problemas \textbf{NP-completo} se define como la intersección entre la clase de problemas NP y la clase de problemas NP-difícil.
 	\item No se sabe si P$=$NP. Clay Mathematics Institute ha ofrecido un premio de un millón de dólares estadounidenses para quién desarrolle la primera demostración correcta (el profesor no tiene tanto dinero, el te ofrece una matrícula).
 \end{itemize}
+Se sabe que \textbf{TAUT} es NP-difícil.
 
 \begin{figure}[h]
 	\centering
@@ -359,17 +362,18 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 \end{figure}
 
 \begin{defn}[Satisfación]
-	$\sigma$ satisgace a $T$ si $\forall p \in T$, $\sigma(p) = 1$, o equivalentemente, si $sigma$ es un modelo de $T$.
+	$\sigma$ satisface a $T$ si $\forall p \in T$, $\sigma(p) = 1$, o equivalentemente, si $\sigma$ es un modelo de $T$.
 \end{defn}
 
 \begin{mdframed}
-	\textbf{Problema de la satisfación (SAT)}: Determinar si existe una interpretación $\sigma$ que satisfaga a $F$. \textbf{SAT} es {NP-completo}.
+	\textbf{Problema de la satisfación (SAT)}: Si $F\in FBF(L)$, determinar si existe una interpretación $\sigma$ que satisfaga a $F$. \textbf{SAT} es {NP-completo}.
 \end{mdframed}
 
 \begin{example}
 	Comprobar si $p\implies (p\implies q)$.
 	
 	El oráculo (\ref{fig:oraculo}) dice que
+	\vspace{-3mm}
 	\begin{itemize}
 		\item $\sigma(p) = 0$
 		\item $\sigma(q) = 0$
@@ -387,7 +391,7 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 		\item \textbf{Comprobación:} tiempo $O(n+k)$.
 	\end{itemize}
 \end{example}
-
+\subsection{Completitud}
 \textbf{Recordatorio:} Podemos reemplazar $p$ por cualquier fórmula equivalente. Por ejemplo, podemos remplazar $p\implies q$ por $\neg p \Or q$, $(p\y q)\y r$ por $p\y (q\y r)$, cualquier contradicción por $\perp$, etc.
 
 \begin{theorem}
@@ -403,9 +407,9 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 		\item Caso $n>1$: $p=p_n$, y para toda $j\subset n$, $p_j$ es una tautología.
 		\begin{itemize}
 			\item Si $p$ es una axioma, entonces $p$ es una tautología.
-			\item Si $p$ no es un acioma, entonces se obtiene de dos fórmulas anteriores mediante modus ponens, digamos $p_i = r$ y $p_k=r\implies p$ con $i,k<n$. 
+			\item Si $p$ no es un axioma, entonces se obtiene de dos fórmulas anteriores mediante modus ponens, digamos $p_i = r$ y $p_k=r\implies p$ con $i,k<n$. 
 			
-			Sea $\sigma$ una valoración booleana. Hay que probar que $\sigma(p) = 1)$. Por la hipótesis inicial, $\sigma(r) = 1 = \sigma(r\implies p) = \sigma(\neg r \Or p) = \sigma(\neg r) \Or \sigma(p) = max(0,\sigma(p))$.
+			Sea $\sigma$ una valoración booleana. Hay que probar que $\sigma(p) = 1$. Por la hipótesis inicial, $\sigma(r) = 1 = \sigma(r\implies p) = \sigma(\neg r \Or p) = \sigma(\neg r) \Or \sigma(p) = \max(0,\sigma(p))$.
 			Por tanto $\sigma(p) = 1$.
 		\end{itemize}
 	\end{itemize}
@@ -414,9 +418,9 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 \begin{theorem}[Teorema de la completitud]	Sea $T = \emptyset$.
 	\begin{itemize}
 		\item \textbf{Validez}: 
-		$\vdash p \implies \vDash p$
+		$T \vdash p \implies T \vDash p$
 		\item \textbf{Adecuación:}
-		$\vDash p \implies \vdash p$
+		$T \vDash p \implies T \vdash p$
 	\end{itemize}
 	En general $$T\vdash p \iff T\vDash p$$
 \end{theorem}
@@ -427,11 +431,6 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 	\textbf{Adecuación:} Consideramos extensiones de teorías (incluso en el caso $\vDash p \implies \vdash p$).
 	
 \end{proof}
-
-\textbf{Recordatorio: } $T$ es consistente si $T\nvdash \perp$. La consistencia o coherencia puede caracteriarse de forma sencilla:
-$$T\nvdash\perp \iff \exists p\in FBF(L)\tq T\nvdash p$$.
-
-Equivalentemente, $T\vdash\perp$ ($T$ es inconsistente) $\iff$ $\forall p\in FBF(L)$.
 
 \begin{theorem}
 	Si $\exists p\in FBF(L) \tq T\nvdash p$, entonces $T\nvdash \perp$ ($T$ es consistente).
