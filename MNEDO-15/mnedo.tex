@@ -642,6 +642,80 @@ Con esta medida, nos queda:
 
 \end{problem}
 
+\section{Sesión 1 de Laboratorio}
+En esta primera sesión vamos a empezar a familiarizarnos con MATLAB (o en su defecto Octave) y a implementar el método de Euler, para después poder realizar algunas comparaciones visuales a fin de comprobar lo efectivo del método.
 
+Vamos a resolver el siguiente problema de valor incial.
+\[\left\{\begin{array}{l}
+\left( \begin{array}{c}
+v_1' \\
+v_2'  \end{array} \right)=f(t,v) =\left( \begin{array}{cc}
+-2 & 1 \\
+1 & -2 \end{array} \right)\left( \begin{array}{c}
+v_1 \\
+v_2 \end{array} \right) + \left( \begin{array}{c}
+2\sin(t) \\
+2(\cos(t)-\sin(t))  \end{array} \right)
+v(0) = \left( \begin{array}{c}
+2 \\
+3  \end{array} \right)\end{array}\right.\]
+
+Hemos escogido un sistema que somos capaces de resolver a mano puesto que así podremos comprobar la calidad de la solución obtenida.
+
+En este caso, sabemos de antemano que la solución es:
+\[v(t)=\left( \begin{array}{c}
+2e^{-t}+\sin(t) \\
+2e^{-t}+\cos(t)  \end{array} \right)\]
+
+Vamos ahora a implementarlo en el ordenador. Lo primero que tenemos que hacer es definir las funciones mencionadas anteriormente, es decir, $f(t,v)$ y la solución. Vamos a emplear para ello ficheros distintos (cada fichero con el mismo nombre que la función que estamos definiendo para que MATLAB/Octave pueden encontrar la función) aunque podría hacerse todo en el mismo.
+
+\begin{center}
+    \begin{minipage}{0.55\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/f.png}
+    \end{minipage}
+    \begin{minipage}{.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/result.png}
+    \end{minipage}
+\end{center}
+
+Una vez tenemos estas funciones definidas, procedemos a implementar el propio método de Euler, que podemos ver en la siguiente imagen.
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/euler.png}
+\end{center}
+
+Por último sólo tenemos que crear un programa principal que, llamando a las funciones ya definidas, resuelva el PVI planteado al inicio de esta sección.
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/aplicacion_euler.png}
+\end{center}
+
+Vamos a explicar detenidamente qué se está haciendo en este código. Para empezar estamos simplemente resolviendo el problema aplicando el método de Euler y pintando, en una misma gráfica, la solución dada por el método y la solución real, con lo que podemos observar la gran precisión de la solución obtenida por este método.
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/figure1.png}
+\end{center}
+
+La última parte del código es la más compleja. Lo se está haciendo ahí es llamar numerosas veces al método de Euler y guardar, en cada llamada, la diferencia entre la función obtenida y la solución así como el $h$ empleado en esa ocasión.
+
+Posteriormente calculamos la pendiente de la función que representan los pares de valores que hemos guardado. Para ello tomamos escala logarítmica y estudiamos la pendiente de la función en cada punto para, finalmente, tomar la media de esos valores.
+
+Por último, pintamos estos valores junto con una función claramente lineal, que es $h$ con respecto a $h$ y obtenemos la siguiente gráfica.
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/figure2.png}
+\end{center}
+
+Ahora la pregunta que nos surge es clara, \textbf{¿por qué es interesante esta pendiente?}.
+
+La idea se basa en el hecho de haber trabajado con logaritmos de los valores y no con los valores directamente. En general sabemos que el error se comporta como $e \leq c h^p$ para una cierta constante $c$, donde $p$ es el orden del método. Evidentemente podemos aplicar logaritmos a ambos lados sin que nada se estropee, obteniendo:
+\[\log(e) \leq p \log(ch)\]
+
+Si ahora dibujásemos la gráfica que relaciona el logaritmo del error con el logaritmo de $h$ obtendremos una recta con pendiente $p$ que es justo el \textbf{orden del método}.
+
+Por tanto, esa pendiente que hemos calculado en el código, nos permite conocer el orden del método de Euler.
 \end{document}
+
+
 
