@@ -156,6 +156,9 @@
 \begin{defn}#
 \begin{defn}[titulo]#
 \begin{defn}[titulo][indice]#
+\begin{prop}#
+\begin{prop}[titulo]#
+\begin{prop}[titulo][indice]#
 \begin{theorem}#
 \begin{theorem}[titulo]#
 \begin{theorem}[titulo][indice]#
