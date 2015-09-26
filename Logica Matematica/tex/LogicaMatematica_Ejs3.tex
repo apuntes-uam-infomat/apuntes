@@ -66,6 +66,17 @@ Demostrar que el  conjunto de conectivas $\{\vee, \wedge\}$ no es completo.
 Sugerencia: usar monoton\'{\i}a.
 \solution
 
+Sea $C$ el conjunto de FBFs constituidas a partir del lenguaje $\{a, \y, \Or\}$. Este conjunto puede describirse como:
+\begin{enumerate}
+\item $a \in C$
+\item Si $α,β \in C \implies α\y β \ , α \Or β \in C$
+\item $C$ es el menor conjunto de FBFs que satisface las propiedades $1$ y $2$.
+\end{enumerate}
+
+Cuando tengamos $a=\top$ tendremos que las fórmulas $a \Or a$, $a \y a$ son también verdaderas y, por definición del conjunto $C$, cualquier fórmula $ε \in C$ tendrá valor verdadero cuando $a$ sea verdadera.
+
+Por tanto, es imposible que la negación se deduzca de ese conjunto y, por tanto, el conjunto no es completo.
+
 \end{problem}
 
 
@@ -155,7 +166,84 @@ El lema simplemente nos da una serie de 8 equivalencias. Procedemos a demostrar 
 \begin{problem}[5]
 Demostrar el Lema 2.1.3 p. 17.
 \solution
-\textcolor{red}{Viene demostrado en el libro. Que alguien lo copie}
+
+El lema que queremos demostrar dice:
+\begin{lemma}
+Sea $\sum \subset Prop(A)$ y sean $p,q \in Prop(A)$, entonces
+\begin{enumerate}
+\item $\sum \vDash p \y q \iff \sum \vDash p \text{ y } \sum \vDash q$
+\item $\sum \vDash p \implies \sum \vDash p \Or q$
+\item $\sum \cup \{p\} \vDash q \iff \sum \vDash p \to q$
+\item Si $\sum \vDash p$ y $\sum \vDash p\to q$, entonces $\sum \vDash q$ (Modus Ponens)
+\end{enumerate}
+\end{lemma}
+
+Vamos a demostrarlo
+\begin{enumerate}
+\item
+
+Por definición decimos que $\sum \vDash p$ si para todo modelo $σ$ de $\sum$ tenemos que $\sigma(p) = 1$.
+
+Si tenemos que para todo modelo $σ$ de $\sum$, $σ(p \y q) = \top$ y sabemos que
+\[σ(p \y q ) = σ(p) \y σ(q) = \top\]
+queda claro que $σ(p)=\top$ y $σ(q)=\top$.
+
+Evidentemente esto también es cierto en sentido contrario, si tenemos $σ(p)=\top$ y $σ(q)=\top$ es claro que
+\[σ(p \y q ) = σ(p) \y σ(q) = \top\]
+
+\item
+Puesto que tenemos
+\[σ(p\Or q ) = σ(p) \Or σ(q)\]
+
+Es claro que si $σ(p)$ = $\top$ para todo modelo $σ$ de $\sum$, entonces tendremos $σ(p\Or q) = σ(p) \Or σ(q) = \top$ para todo modelo $σ$ de $\sum$.
+
+\item
+
+Esta demostración es algo más compleja pero ya la vimos en teoría. Procedemos a llevar a cabo la demostración por casos:
+\begin{itemize}
+		\item \textbf{Caso 1}: $q\notin T$, $q\neq p$, $q$ no es un axioma lógico.
+
+		Consideramos $p_1,\hdots, p_n=q$ una demostración de $q$. Llevaremos a cabo la demostración por inducción en la longitud de las pruebas (fórmulas).
+
+		\begin{itemize}
+			\item Si $n=1$ entonces $q=p$ o $q\in T$ o $q$ es un axioma lógico, lo cual no corresponde a este caso, por tanto suponemos que $n>1$ y que el Teorema de la deducción es cierto para todas las pruebas de longitud menor que $n$.
+			\item Si para alguna $j<n$, $p_j = p\implies q$, no hay nada que probar.
+			\item Si no, $\exists i,j<n \tq p_i=r$, $p_j=r\implies q$. Por la hipótesis de inducción tenemos $T\vdash (p\implies r)$ y $T\vdash (p\implies (r\implies q))$.
+			Utilizamos el axioma
+			$$(p\implies (r\implies q)) \implies ((p\implies r)\implies (p\implies q))$$
+			y por modus ponens junto con lo anterior obtenemos
+			$$(p\implies r)\implies (p\implies q)$$
+			Finalmente, por modus ponens aplicado a $T\vdash (p\implies r)$ y a lo anterior obtenemos $T\vdash (p\implies q)$.
+		\end{itemize}
+	\item \textbf{Caso 2}: $q$ es un axioma lógico, $q\in T$ o $q=p$.
+
+	\begin{itemize}
+		\item Si $q$ es un axioma o $q\in T$
+
+		Tenemos que $T\vdash q$ y utilizando el segundo axioma de la lista de axiomas:
+		$$r\implies (q \vee r) \equiv r\implies (\neg q \implies r)$$ en el que usamos $q$ en lugar de $r$ y $p$ en lugar de $\neg q$, instanciamos
+		$$q\implies(p\implies q)$$
+
+		Usando modus ponens y lo anterior
+		$T\vdash (p\implies q)$.
+
+		\item Si $q$ no es axioma ni está en $T$, entonces $q = p$.
+		Tenemos $T\cup\{p\}\vdash p$.
+		Y utilizando (del ejercicio 1a de la hoja dos) $\vdash p\implies p$.
+		entonces $$T\vdash p\implies p \equiv p\implies q$$
+	\end{itemize}
+	\end{itemize}
+
+\item
+
+	Tenemos que para todo modelo σ de $\sum$, $σ(p) = σ(p \to q ) = \top$. Es decir, tenemos que
+	\[σ(p)=σ(\neg p \Or q) = \neg σ(p) \Or σ(q)\]
+
+	Sabiendo que $σ(p)=\top$ llegamos a
+	\[\top = \perp \Or σ(q) \implies σ(q) = \top\]
+
+\end{enumerate}
+
 \end{problem}
 
 
@@ -421,8 +509,6 @@ Por el Lema de la Deducción, concluimos $\emptyset \vdash (p\to p)$, es decir $
 Decidir razonadamente si el conjunto de conectivas $\{¬,\iff\}$ es completo.
 \label{ejer::H3P10}
 \solution
-
-\textcolor{red}{This article may require cleanup to meet OUR standards.}
 
 No es completo debido a que tanto el $\land$ como el $\lor$ generan siempre un numero impar de 0's y 1's, mientras que $\iff$ siempre genera un numero par de 0's y un número par 1's y el $\neg$ solo intercambia el numero de 0's por el número de 1's. Por tanto, no es posible solo con $\iff$ y con $\neg$ generar un número impar de 0's ó 1's, y en consecuencia, no se puede encontrar una fórmula equivalente al $\land$ o al $\lor$, es decir, $\{\neg,\iff\}$ NO es completo.
 
