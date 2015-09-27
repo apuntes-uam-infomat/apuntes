@@ -1,14 +1,13 @@
 \documentclass[nochap,palatino]{apuntes}
 
 \usepackage{fancysprefs}
+\usepackage{natbib}
+
+\bibliographystyle{plainnat}
 
 \title{Variable Real}
 \author{Guillermo Julián Moreno}
 \date{15/16 C1}
-
-% Paquetes adicionales
-
-% --------------------
 
 \begin{document}
 \pagestyle{plain}
@@ -50,7 +49,7 @@ Mirando funciones, lo que hace Riemann es montar rectángulos en el eje $X$, mie
 
 Para seguir trabajando con las medidas y poder integrar, necesitaremos saber qué funciones podemos medir y cuáles no.
 
-\begin{defn}[Función\IS medible] Dados dos espacios de medida $(X, \mathcal{X}, μ),\,(Y, \mathcal{Y},ν)$, se dice que una función \stdf es medible si y sólo si $\inv{f}(E) ∈ \mathcal{X}\; ∀E ∈ \mathcal{Y}$.
+\begin{defn}[Función\IS medible] Dados dos espacios de medida $(X, \mathcal{X}, μ),\,(Y, \mathcal{Y},ν)$, se dice que una función \stdf es medible si y sólo si $\inv{f}(E) ∈ \mathcal{X}\quad ∀E ∈ \mathcal{Y}$.
 \end{defn}
 
 También necesitaremos saber en qué σ-álgebra estamos trabajando. Nosotros usaremos normalmente la σ-álgebra de Borel:
@@ -156,6 +155,8 @@ Ahora vamos con varios teoremas sobre integración.
 \begin{theorem}[Teorema\IS de Fubini-Tonelli] Dada $\appl{f}{X×Y}{ℂ}$ medible, entonces \[ \iint\limits_{X×Y} f \dif μ \dif ν = \int_X \underbrace{\left(\int_Y f(x,y) \dif ν(y)\right)}_{F_1(x)} \dif μ(x) = \int_Y \underbrace{\left(\int_X f(x,y) \dif μ(x)\right)}_{F_2(y)} \dif ν(y) \] con $F_1$, $F_2$ medibles.
 
 Concretamente, Tonelli nos da la medibilidad para funciones no negativas y Fubini la condición de integrabilidad.
+
+\label{thm:FubiniTonelli}
 \end{theorem}
 
 Otro teorema, que se corresponde con el tercer principio de Littlewood.
@@ -178,11 +179,256 @@ En definitiva, lo que hemos hecho ha sido coger todos los puntos donde va a conv
 \begin{theorem}[Teorema\IS de Lusin] Dada $\appl{f}{X}{ℂ}$ medible con $μ(X) < ∞$, entonces $f$ es casi continua, que como viene siendo hasta ahora significa que $f$ es continua salvo en un conjunto de medida cero. Esto es, que $∀ε>0$ existe un $N_ε⊆X$ tal que $f$ es continua en $X\setminus N_ε$ y $μ(N_ε) < ε$.
 \end{theorem}
 
-Para la siguiente semana, tenemos que entender qué son las coordenadas polares en $ℝ^n$. Entender \cite{folland99} proposiciones 2.53, 2.54, ver por qué \[ \int_{ℝ^N} e^{-a\abs{x}^2} = \left(\frac{π}{a}\right)^{N/2} \] para $a ≥ 0$.
+\subsubsection{Integración en coordenadas polares}
 
-También tenemos que ver si es cierto que $\int_{ℝ^ℕ}\frac{1}{\abs{x}^α} \dif x = ∞$ para todo $α∈ℝ$ (spoiler: sí).
+Además de las coordenadas lineales, en los reales podemos usar (y lo haremos habitualmente) las coordenadas polares o esféricas, esto es, coordenadas basadas en el uso de una esfera o equivalente en $ℝ^n$ en lugar del cuadrado/cubo/cosa. Veamos cómo generalizar las coordenadas polares sin necesidad de usar cosenos y senos por todas partes.
+
+\begin{defn}[Coordenadas\IS polares] Sea $\set{x ∈ ℝ^n \tq \md{x} = 1} = \bbs^{n-1}$ la esfera unidad en $ℝ^n$. Entonces, si $x ∈ ℝ^n \minuszero$ las coordenadas polares de $x$ son
+\begin{align*}
+r  &= \md{x} ∈ (0,∞) \\
+θ &= \frac{x}{\md{x}} ∈ \bbs^{n-1} \\ % TODO: Esta notación es caca.
+\end{align*}
+con el cambio de coordenadas dado por la aplicación biyectiva
+\begin{align*}
+\appl{Φ}{ℝ^n\minuszero&}{(0,∞)×\bbs^{n-1}} \\
+x &\longmapsto (r,θ)
+\end{align*} con inversa continua $\inv{Φ}(r,θ) = rθ$.
+\end{defn}
+
+Dadas estas coordenadas, necesitamos definir una medida. Lo fácil será hacerlo usando $ℝ^n$, que para eso sabemos medirlo perfectamente. Denotaremos por $μ_\ast$ la medida de Borel en $(0,∞)×\bbs^{n-1}$ inducida por Φ desde la medida $μ$ de Lebesgue en $ℝ^n$. En otras palabras, \[ μ_\ast (E) = μ(\inv{Φ}(E)) \]
+
+Pero podemos definir esa misma medida de forma constructiva, desde el espacio de las coordenadas polares.
+
+\begin{theorem} \citep[Teorema 2.49]{folland99} Sea $ρ=ρ_n$ la medida en $(0,∞)$ dada por $ρ(E) = \int_E r^{n-1}\dif r$. Entonces existe una única medida de Borel $σ = σ_{n-1}$ en $\bbs^{n-1}$ tal que $μ_\ast = ρ × σ$. Si $f$ es Borel-medible en $ℝ^n$ y $f ≥ 0$ o $f ∈ \lebg^1(μ)$, entonces
+\(
+\int_{ℝ^n} f(x) \dif x = \int_0^{∞} \int_{\bbs^{n-1}} f(rθ) r^{n-1} \dif σ(θ) \dif r
+\label{eq:MedidaPolares} \)
+\end{theorem}
+
+\begin{proof} Es fácil ver que, si $f$ es la función característica de un conjunto (esto es, $f \equiv \ind_E$), entonces \eqref{eq:MedidaPolares} es simplemente otra forma de decir que $μ_\ast = ρ × σ$, y se puede generalizar a $f$ sin mucha dificultad\footnote{TODO: Generalízalo, anda, so vago.}. Entonces, sólo tenemos que construir σ.
+
+Si $E$ es un conjunto de Borel en $\bbs^{n-1}$ y $a > 0$, sea \[ E_a = \inv{Φ}\left((0,a] × E\right) = \set{rθ \tq 0 < r ≤ a, θ ∈ E }\]
+
+Dado que \eqref{eq:MedidaPolares} se tiene que cumplir cuando en particular $f = \ind_{E_1}$; tenemos que tener que \[ μ(E_1) = \int_0^1\int_E r^{n-1} \dif σ(θ) \dif r = σ(E) \int_0^1 r^{n-1} \dif r = \frac{σ(E)}{n} \]
+
+Definimos entonces $σ(E) = n · μ(E_1)$. Dado que la aplicación $E\mapsto E_1$ lleva conjuntos de Borel a conjuntos de Borel y conmuta con la unión, intersección y comlemento, está claro\footnote{TODO: Esto debería mirarlo bien.} que σ es una medida de Borel en $\bbs^{n-1}$. Además, dado que $E_a$ es la imagen de $E_a$ por la aplicación $x \mapsto ax$, se sigue de \citep[Teorema 2.44]{folland99} que $μ(E_a) = a^n μ(E_1)$, y por lo tanto si $0 < a < b$, entonces \[ μ_\ast\left((a,b] × E\right) = μ(E_b \setminus E_a) = \frac{b^n-a^n}{n}σ(E) = σ(E) \int_a^b r^{n-1}\dif r = (ρ × σ) \left((a,b]×E\right)\]
+
+Fijado un conjunto de Borel $E$ de $\bbs^{n-1}$, sea $\algbA_E$ la colección de uniones finitas y disjuntas de conjutnos de la forma $(a,b] × E$, que es un álgebra en $(0,∞)×E$ que genera la σ-álgebra $\mathcal{M}_E = \set{A×E \tq A ∈ \borel_{\bbs^{n-1}}}$. Por el cálculo anterior tenemos que $μ_\ast = ρ × σ$ en $\algbA_E$, y por ser la medida única entonces esta ecuación también se cuple en $\mathcal{M}_E$. Pero\footnote{Se me acaba el tiempo y no me apetece seguir copiando. TODO.}
+
+\end{proof}
+
+\begin{corol} Si $f$ es una función medible en $ℝ^n$ tal que $f(x) = g(\abs{x})$ para alguna función $g$ en $(0,∞)$, entonces \[ f(x) \dif x = σ(S^{n-1}) \int_0^{∞} g(r) r^{n-1}\dif r \]
+\label{crl:MediblePolares1}
+\end{corol}
+
+\begin{prop} \citep[Proposición 2.53]{folland99} Si $a > 0$, entonces \[ \int_{ℝ^n} e^{-a\md{x}^2} \dif x = \left(\frac{π}{a}\right)^\frac{n}{2} \]
+\end{prop}
+
+\begin{proof} Denotamos la integral por $I_n$. Para $n=2$, por el \fref{crl:MediblePolares1} tenemos que \[ I_2 = 2π\int_0^∞ re^{-ar^2} \dif r = \eval{- \left(\frac{π}{a}\right) e^{-ar^2}}_0^∞ = \frac{π}{a} \]
+
+Dado que $e^{-a\md{x}^2} = \prod_{j=1}^n e^{-ax_j^2}$, por el teorema de Tonelli (\ref{thm:FubiniTonelli}) tenemos que $I_n=(I_1) ^ n$. En particular $I_1 = (I_2)^{\frac{1}{2}}$, y la proposición sigue naturalmente.
+\end{proof}
+
+Este resultado nos permitirá calcular $σ(\bbs^{n-1})$ para todo $n$ en términos de la función $Γ$.
+
+\begin{prop} \citep[Proposición 2.54]{folland99} \label{prop:MedidaSn} \[ σ(\bbs^{n-1}) = \frac{2π^\frac{n}{2}}{Γ(n/2)} \]
+\end{prop}
+
+Podemos usar esta proposició para sacar la medida de la esfera unitaria en $n$ dimensiones.
+
+\begin{corol} \label{crl:MedidaBn} Sea $\bola_n = \set{x ∈ ℝ^n \tq \md{x} < 1}$. Entonces \[ μ(\bola_n) = \frac{π^{n/2}}{Γ\left(\frac{n}{2} + 1\right)} \]
+\end{corol}
+
+Para practicar la integración en polares, podemos ver algunas integrales. Por ejemplo, veamos \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x \] para $α ∈ ℝ$. Si usamos el \fref{crl:MediblePolares1}, con $f(x) = g(\md{x})$ para $g(r) = \frac{1}{r}$ tenemos que \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ g(r) r^{n-1} \dif r = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ r^{n-1 - α} \dif r\]
 
 Comprobar que $\int_{ℝ^N} \frac{1}{(1 + \abs{x})^α} < ∞$ para cierto $α$ encontrarlo (pone algo de cambio a polares) y luego que $\int_{B_1(0)} \frac{1}{\abs{x}^{β}} < ∞$ y $\int_{B_1(0)} \frac{1}{(1-\abs{x})^α}$.
+
+\subsection{Convergencia de funciones}
+
+A lo largo del curso, nos interesará estudiar y entender la convergencia de funciones. Sin embargo, como hemos visto en otros cursos, hay varios tipos de convergencia y varios resultados sobre lo que les ocurre a las funciones y a la integral.
+
+Antes de entrar en materia, una pequeña definición que no hemos visto, que es la del supremo esencial. Es análogo a todo lo que estamos haciendo hasta ahora, extendiendo conceptos no a todos los puntos sin a todos ``salvo un conjunto de medida cero''. En el caso del supremo es un poco más delicado, así que vamos a hacerlo bien.
+
+\begin{defn}[Supremo\IS esencial] Sea $\appl{f}{X}{ℝ}$ una función y \meas nuestro espacio de medida habitual. Definimos entonces el supremo esencial como \[ \essup_{x∈X} f(x) = \inf \set{a ∈ ℝ \tq μ\left(\inv{f}((a, ∞))\right) = 0} \]
+
+En otras palabras, es el mayor valor de $f$ tal que por encima sólo hay un conjunto de valores de medida cero.
+\end{defn}
+
+Por ejemplo, es fácil ver que $\sup_{x∈(0,1)} x^n = 1$; pero $\essup_{x∈(0,1)}x^n$ ya es más complicado. Lo podemos ver sin cosas esenciales: \[ x^n \convs l(x) = \begin{cases} 0 & x < 1 \\ 1 & x = 1 \end{cases} \], converge puntualmente en todo punto pero no uniformemente (el límite no es continuo). Además, es fácil ver así que $\essup_{x∈(0,1)} x^n = 0$, ya que la función sólo es mayor que ese valor en un conjunto de medida cero (un único punto).
+
+Después de esta ligeramente útil introducción, vamos a ver los teoremas.
+
+\subsubsection{Teoremas de convergencia de funciones}
+
+\begin{theorem}[Teorema\IS de convergencia monótona] (o teorema de Beppo-Levi) \label{thm:ConvMonotona}
+Dado un espacio de medida \meas y una sucesión monótona de funciones $0 ≤ f_1 ≤ \dotsb ≤ f_n ≤ \dotsb$ medibles, entonces  \[ \int_X \lim_n f_n \dif μ = \lim_n \int_X f_n \dif μ \]
+
+Se puede extender a sucesiones decrecientes simplemente cambiado el signo.
+\end{theorem}
+
+Hay una variación sutil de este teorema: es prácticamente lo mismo pero aun así lo veremos.
+
+\begin{theorem}[Teorema\IS de convergencia monótona para series] Dada una sucesión de funciones $\appl{f_n}{X}{[0,+∞]}$ medibles y no negativas, entonces \[ \int_X \sum_x f_n \dif μ = \sum_n \int f_n \dif μ\]
+\end{theorem}
+
+¿Por qué decimos que es casi lo mismo? Si definimos las sumas parciales $S_N = \sum_{n=1}^N f_n$ tendremos una sucesión monótona creciente y podremos aplicar el \fref{thm:ConvMonotona}.
+
+\begin{theorem}[Lema\IS de Fatou] \label{thm:Fatou} Dada una sucesión de funciones $0 ≤ f_n$ no negativas y medibles, entonces \[ \int_X \liminf_n f_n \dif μ ≤ \liminf_n \int_X f_n \dif μ \]
+\end{theorem}
+
+Para saber el $\limsup$, vamos al siguiente lema:
+
+\begin{theorem}[Lema\IS de Fatou-Lebesgue] \label{thm:FatouInverso} (también llamado de Fatou inverso) Dada una sucesión de funciones $f_n$ $0 ≤ f_n ≤ g$, con $g$ integrable, entonces \[ \limsup_n \int f_n \dif μ ≤ \int_X \limsup f_n \dif μ \]
+\end{theorem}
+
+Para probar este lema, simplemente hay que aplicar el lema de Fatou normal (\ref{thm:Fatou}) a $F_n = g - f_n ≥ 0$.
+
+\begin{theorem}[Teorema\IS de convergencia dominada] \label{thm:ConvDominada} Dada una sucesión $f_n \convs f$ en casi todo punto, si existe una función $g$ integrable y no negativa tal que $\abs{f_n} ≤ g$ entonces \[ \int_X \lim_n f_n \dif μ = \lim_n \int f_n \dif μ\]
+\end{theorem}
+
+\begin{proof}[Esquema]
+Para la prueba del teorema, simplemente usaríamos los dos teoremas \ref{thm:Fatou} y \ref{thm:FatouInverso}. Si existe el límite de las integrales, existen los límites superior e inferior y tenemos las desigualdades. % TODO: Se deja como ejercicio al lector.
+\end{proof}
+
+\begin{theorem}[Teorema\IS de convergencia dominada para series] Dada una sucesión de funciones $f_n$ medibles tal que $f_n \convs f$ en casi todo punto. Entonces si $\sum_n \int \abs{f_n}\dif μ < ∞$, entonces  \[ \int_X \sum_n f_n \dif μ = \sum_n \int f_n \dif μ\]
+\end{theorem}
+
+Además de los teoremas, nos interesará ver varios ejemplos de series especiales que nos ``fastidien'' los teoremas.
+
+Uno sencillo para Fatou es \( f_n(x) = \begin{cases} \frac{1}{n} & x ∈ [0,n] \\ 0 & x ∉ [0,n] \end{cases} \label{eq:ContrajemploFatou1} \), que convege puntualmente a 0 uniformemente. Sin embargo, $\int_ℝ f_n \dif x = 1$ para todo $n$. Entonces tenemos un menor estricto en la ecuación del lema de Fatou (\ref{thm:Fatou}).
+
+Como ejercicio, tendríamos que ver qué le ocurre a la función \[ f_n(x) = \begin{cases} \frac{-1}{n} & x ∈ [n, 2n] \\ 0 & x ∉ [n, 2n] \end{cases} \], que converge uniformemente a cero pero la integral es -1 para todo punto. % TODO
+
+Después de todo esto, vamos con el primer ``teorema de verdad del curso'', que nos va a dar el término que falta en el lema de Fatou. A modo de curiosidad, es un resultado que se ha obtenido en los años 80, bastante después de los resultados de Lebesgue y Fatou. Es además un teorema con muchas aplicaciones y con una prueba muy bonita.
+
+\begin{theorem}\label{thm:LiebLoss}\citep[Teorema 1.9]{liebLoss01}, publicado en \cite{brezis1983relation}. Dado un espacio de medida \meas y una sucesión de funciones $\appl{f_n}{X}{ℂ}$ medibles, con $f_n \convs f$ en casi todo punto y $f$ medible\footnote{Esto viene gratis por ser $f_n$ medibles.}, y además\footnote{Pedimos una versión más general de la función dominante de otros teoremas: simplemente queremos todas las funciones de la familia sean similares en su integral (o algo así).} $\abs{f_n}^p$ es integrable y $\int \abs{f_n}^p ≤ C$ para todo $n$. Entonces \[ \lim_{n\to ∞ } \int_X\abs{\abs{f_n}^p - \abs{f}^p - \abs{f_n - f}^p} \dif μ = 0\]
+\end{theorem}
+
+¿Qué tiene que ver ese churro con el lema de Fatou? Si recordamos la desigualdad triangular ($\abs{\abs{a} - \abs{b}} ≤ \abs{a-b}$), tomando $a = \abs{f_n}^p - \abs{f}^p$ y $b = \abs{f_n -f}^p$, tendremos que \[ \lim_f \int \abs{\abs{f_n}^p - \abs{f}^p} - \lim \int \abs{f_n - f}^p ≤ \lim \int \abs{\abs{f_n}^p - \abs{f}^p - \abs{f_n - f}^p} \dif μ = 0\], por lo que quitando también los límites nos quedará \[ \int \abs{\abs{f_n}^p - \abs{f}^p} = \int\abs{f_n -f}^p + o(n) \] con $o(n) \convs 0$. Esto nos quedará claro si lo vemos con el contraejemplo de Fatou de \eqref{eq:ContrajemploFatou1}, viendo cómo la diferencia entre los términos nosequé.
+
+En la fórmula de Fatou, nos quedará un ``resto'' (igual que el $o$ de Taylor): \[ \liminf \int \abs{f_n}^p ≥ \int \liminf \abs{f_n}^p + \int \abs{f-f_n}^p + o(n) ≥ 0 \]
+
+Ahora, un poquito de notación:
+
+\begin{defn}[Función\IS absolutamente integrable de orden $p$] Decimos que $f$ es absolutamente integrable de orden $p$ con $p > 0$ si y sólo si $\abs{f}^p$ es absolutamente integrable, esto es, que \[ 0 ≤ \int_X \abs{f}^p \dif μ < ∞ \]. Por notación, diremos que $f ∈ \lebg^p\meas$
+\end{defn}
+
+También es interesante ver que los espacios $\lebg^p$ son espacios vectoriales. Si tomamos $α,β ∈ ℂ$ y $f,g ∈ \lebg^p$, entonces querremos ver si $αf + βg ∈ \lebg^p$. Operando, podemos descomponer \[ \int\abs{αf+βg}^p \dif μ ≤ C_p \int \left(\abs{αf}^p + \abs{βg}^p\right) ≤ C_p \left(\abs{α}^p \int \abs{f}^p + \abs{β}^p \int \abs{g}^p \right) < ∞ \] y ver que efectivamente la combinación lineal también es absolutamente integrable.
+
+Se ha tirado mucho rato insistiendo así que yo lo escribo: cuidado con confundir entre la convergencia en \textit{casi} todo punto y la convergencia en \textit{todo} punto.
+
+Y ahora un \textit{mindfuck}: ¿por qué necesitamos la integral de Lebesgue? ¿Por qué puñetas querríamos hacer integrales de monstruos como el de $\ind_{ℝ\setminus ℚ}$? Pues por lo siguiente: \[ \lim_{m,n\to \infty} \left(\cos (n!x)\right)^m = \ind_{ℝ\setminus ℚ}\]
+
+Resulta que, cosas de las mates, algunos límites de funciones continuas no son continuos, sin convergencia uniforme, y Lebesgue nos soluciona estos problemas.
+
+Ahora vamos con la prueba del \fref{thm:LiebLoss}. Antes, alguna desigualdad que necesitaremos:
+
+\begin{prop}[Desigualdad\IS de Young] \label{prop:Young} Dados $p > 0$ y $a,b≥0$, entonces \[ (a+b)^p ≤ C_p (a^p + b^p)\]
+\end{prop}
+
+\begin{proof} Podemos simplificar la desigualdad dividiendo entre $b^p$ en ambos lados, y nos queda \[ \left(\frac{a}{b} + 1\right)^p ≤ C_p \left(\left(\frac{a}{b}\right)^p + 1\right) \]
+
+Si hacemos un cambio de variable $t = \frac{a}{b}$, entonces podemos definir dos funciones \begin{align*}
+f(t) &= (t+1)^p \\
+g(t) &= C_p(t^p + 1)
+\end{align*} y sólo nos queda demostrar que $f(t) ≤ g(t)$ para $t ≥ 0$. Para $p=1$ la desigualdad es trivial. Para $p ∈ (0,1)$ algo que me he perdido.
+
+Cuando $p > 1$, vemos que para $t=0$, $f(0) = 1$ y $g(0) = C_p$, luego tiene que ser $C_p ≥ 1$. Si derivamos, tenemos que \[ p(t+1)^{p-1} ≤ pC_p t^{p-1} \]
+
+Como la desigualdad de Young es simétrica, nos vale demostrarlo que $t ≥ 1$ (si $t<1$, cambiamos $a$ por $b$ a la hora de despejar). Un salto raro aquí, y ahora vemos que para $t = 1$ nos queda que $C_p ≥ 2^{p-1}$.
+\end{proof}
+
+\begin{prop} Dados $a,b∈ℂ$, para todo $ε> 0$ y $p > 0$, se tiene que
+\( \abs{\abs{a+b}^p - \abs{b}^p} ≤ ε\abs{b}^p + C_{ε,p} \abs{a}^p \label{eq:ProofLiebLossDesNum} \) \label{prop:DesigualdadLiebLoss}
+\end{prop}
+
+\begin{proof} Al igual que en la desigualdad anterior, podemos llamar $t = \frac{a}{b}$ y suponer $t ≥ 0$. Entonces, tenemos que demostrar (podemos quitarnos un valor absoluto por ahí) que \begin{align*}
+\abs{x+1}^p - 1 &≤ ε + C_{ε,p}\abs{x}^p \\
+\abs{x+1}^p - C_{ε,p}\abs{x}^p - 1 &≤ ε
+\end{align*}
+
+Buscamos el máximo de la parte izquierda de la ecuación, así que derivamos con respecto a $x$ y buscamos la solución a \[ p(x+1)^{p-1} = p C_{ε,p} x^{p-1} \]
+
+Ahora despejando tenemos que \[ x = \frac{1}{C_{ε,p}^{\frac{1}{p-1}} - 1} \] y sustituyendo sale.
+
+Luego hay otra prueba, la forma rápida de hacerlo. Sabemos que una función convexa es una $f$ tal que $f\left((1-λ)A + λB\right) ≤ (1-λ) f(A) + λf(B)$ para todo $λ∈[0,1]$. Ponemos entonces \[ A = \frac{a}{1-λ} \quad B = \frac{b}{λ} \] y nos queda que \[ f(a+b) ≤ (1-λ) f\left(\frac{a}{1-λ}\right) + λ f\left(\frac{b}{λ}\right) \]
+
+Ahora proponemos que $f(t) = \abs{t}^p$ es convexa, con $t ∈ ℂ$. En ese caso, sustituimos, nos sale $ε = λ^{1-p}$ y sale.
+\end{proof}
+
+Vamos ahora con la prueba del teorema de verdad.
+
+\begin{proof}
+Para el primer paso, recordamos la desigualdad numérica de la \fref{prop:DesigualdadLiebLoss}. Para el segundo paso necesitaremos una función especial para usar en ella el teorema de convergencia dominada (\fref{thm:ConvDominada}). Entonces escribiremos la serie como $f_n ≝ f + g_n$, por lo que $g_n \convs 0$.
+
+Entonces, declaramos (hay que probarlo) que
+\( \underbracket{G_{ε,n}}_{(A)} = \left[\underbracket{\abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p}}_{(B)} - ε\abs{g_n}^p\right]_+ \convs 0
+\label{eq:ProofLiebLoss1} \)
+para todo $ε > 0$, donde $[F]_+ = \max \set{F, 0}$.
+
+Ahora, fijamos $ε > 0$, y entonces tendremos que \[ \lim_{n\to ∞} \int G_{n,ε} = 0\], más que nada porque como decíamos $g_n \to 0$ CTP\footnote{En casi todo punto.}.
+
+Seguimos:
+\(
+0 ≤ \int \underbracket{\abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p}}_{(B)} ≤ ε \int \abs{g_n}^p + \underbracket{\int G_{ε,n}}_{(A)}
+\label{eq:ProofLiebLoss2} \)
+, donde lo único que hemos hecho ha sido reestructurar \eqref{eq:ProofLiebLoss1}.
+
+Anteriormente hemos dicho que $(A) \to 0$, así que sólo nos queda saber qué pasa con $ε\int\abs{g_n}^p$. Para ello, usaremos la hipótesis que nos queda del teorema, y es que sabemos que
+\(
+\int_X \abs{f_n}^p \dif μ ≤ C < ∞
+\label{eq:ProofLiebLossH2} \)
+, así que podemos estimar
+\(
+\int\abs{g_n}^p = \int \abs{f_n -f}^p ≤ C_p \int \left(\abs{f_n}^p + \abs{f}^p \right) \eqreasonup[≤]{\eqref{eq:ProofLiebLossH2}} 2 C C_p = \bar{C}
+\label{eq:ProofLiebLoss3} \)
+
+Tomando límites en \eqref{eq:ProofLiebLoss2} y sustituyendo con \eqref{eq:ProofLiebLoss3}, tenemos \[ 0 ≤ \lim_n \int \abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p} ≤ ε\bar{C} + \underbracket{\lim_n \int G_{ε,n}}_{\to 0} \]
+
+Ponemos ahora $ε \to 0^+$ y nos quedará (sándwich) \[ \lim_n \abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p} = 0 \]
+
+Ya lo tenemos hecho salvo por los pasos intermedios. Tenemos que demostrar \eqref{eq:ProffLiebLoss2}. Usando la desigualdad triangular, sabemos que
+\[ \abs{\abs{f+g_n}^p - \abs{g_n}^p - \abs{f}^p} ≤ \abs{\abs{f+g_n}^p - \abs{g_n}^p} + \abs{f}^p \]
+
+Ahora podemos usar la desigualdad numérica de \eqref{eq:ProofLiebLossDesNum} con $a = f$, $b = g_n$ y nos quedará que \[ \abs{\abs{f+g_n}^p - \abs{g_n}^p} + \abs{f}^p  ≤ ε\abs{g_n}^p + C_ε \abs{f}^p + \abs{f}^p \]
+
+Entonces, \[ 0 ≤ G_{ε,n} ≤ (1 + C_ε) \abs{f}^p \] y podemos usar el teorema de convergencia dominada (\fref{thm:ConvDominada}) para decir que $\int G_{ε,n} \convs 0$.
+\end{proof}
+
+\subsubsection{Modos de convergencia}
+
+Vamos a ver ahora algunos tipos de convergencia de funciones que nos serán muy útiles para ver contraejemplos y hacer pruebas. Esto está inspirado en \citep[Sección 2.4]{folland99}. En todos los casos, vamos a ver definiciones para decir si una sucesión $f_n$ converge a $f$ en los diferentes modos.
+
+\begin{defn}[Convergencia\IS en sentido integral $L^p$] Si y sólo si \[ \int_X \abs{f_n - f}^p \dif μ \to 0\] \label{def:ConvLp}
+\end{defn}
+
+\begin{defn}[Convergencia\IS en sentido uniforme $C^0$] Si y sólo si \[ \sup_{x∈X} \abs{f_n(x) - f(x)} \to 0 \]
+\end{defn}
+
+\begin{defn}[Convergencia\IS en sentido esencialmente uniforme $L^{∞}$] Si y sólo si \[ \essup_{x∈X} \abs{f_n(x) - f(x)} \to 0\]
+\end{defn}
+
+\begin{defn}[Convergencia\IS en sentido casi uniforme] Si y sólo si $f_n\to f$ uniformemente en $X\setminus N_ε$ con $μ(N_ε) < ε$ para todo $ε > 0$
+\end{defn}
+
+\begin{defn}[Convergencia\IS puntual] Si y sólo si $∀x∈X$ $f_n(x) \to f(x)$.
+\end{defn}
+
+\begin{defn}[Convergencia\IS en casi todo punto] Si y sólo si $f_n(x) \to f(x)$ $∀x∈X \setminus N$ y $μ(N) = 0$. \label{def:ConvCTP}
+\end{defn}
+
+\begin{defn}[Convergencia\IS en medida] Si y sólo si $∀ε>0$ se tiene que \[ μ\left(\set{x∈X \tq \abs{f_n(x) - f(x)} > ε}\right) \convs 0\], esto es, que la medida del conjunto donde no converge tiende a ser nula.
+\end{defn}
+
+\begin{defn}[Sucesión\IS de Cauchy en medida] Si y sólo si $∀ε>0$ se tiene que \[ μ\left(\set{x∈X \tq \abs{f_n(x) - f_m(x)} > ε}\right) \convs[][n,m] 0\]
+\end{defn}
+
+Normalmente, cada una de estas definiciones suele tener un lema, un teorema o una definición detrás. Por ejemplo, ¿es cierto que la convergencia en casi todo punto (\fref{def:ConvCTP}) implica la convergencia $L^1$ (\fref{def:ConvLp})? En general, esto es falso, pero si $\abs{f_n} ≤ g ∈ L^1$ podemos usar el \nref{thm:ConvDominada}. Si en cambio tenemos una sucesión monótona, podemos usar el \nref{thm:ConvMonotona}.
+
+En el otro sentido, ¿es esto cierto? En general no, pero sí que existe una subsucesión $f_{n_k} \convcs[n_k] f$.
+
+\begin{prop}[Desigualdad\IS de Markov] \[ μ\left(\set{x∈X \tq \abs{f_n(x) -f} > ε }\right) ≤ \frac{1}{ε} \int_X \abs{f_n -f} \dif μ \]
+\end{prop}
 
 \section{Teoría de la integral y la medida}
 
@@ -202,6 +448,8 @@ Comprobar que $\int_{ℝ^N} \frac{1}{(1 + \abs{x})^α} < ∞$ para cierto $α$ e
 \chapter{Ejercicios}
 \input{tex/VariableReal_Ejs.tex}
 
-\bibliography{../Apuntes.bib}
+\nocite{terence10,folland99}
+
+\bibliography{../Apuntes.bib}{}
 \printindex
 \end{document}

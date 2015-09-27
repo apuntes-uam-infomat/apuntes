@@ -67,10 +67,13 @@
 \sign#m
 \eq#m
 \rango#m
-\eqexpl{arg0}#m
+\eqexpl{arg1}#m
+\eqexpl[=]{arg1}#m
 \wrapreasontext{arg0}#m
-\eqreason{arg0}#m
-\eqreasonup{arg0}#m
+\eqreason{arg1}#m
+\eqreason[=]{arg1}#m
+\eqreasonup{arg1}#m
+\eqreasonup[=]{arg1}#m
 \x#m
 \appl{f}{dominio}{imagen}#m
 \uexists#m
@@ -153,6 +156,9 @@
 \begin{defn}#
 \begin{defn}[titulo]#
 \begin{defn}[titulo][indice]#
+\begin{prop}#
+\begin{prop}[titulo]#
+\begin{prop}[titulo][indice]#
 \begin{theorem}#
 \begin{theorem}[titulo]#
 \begin{theorem}[titulo][indice]#
@@ -246,3 +252,5 @@
 \meas#m
 \meas[X]#m
 \meas[X][\mu]#m
+\minuszero#m
+\essup#m

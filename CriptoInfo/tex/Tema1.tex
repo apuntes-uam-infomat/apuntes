@@ -448,6 +448,8 @@ En el caso \textbf{A} no es inmediato pero también es sencillo. Se hace utiliza
 	Sabemos que la letra que más se usa en el español es la E ($16'.. \%$) , si en nuestro texto cifrado la letra más repetida es la D, es lógico pensar que $e_K(E) = D$.
 	
 	A partir de aquí es fácil hallar la clave.
+	
+	Si vemos que el resultado es un texto sin sentido, cambiaremos nuestra hipótesis(en función de las estadísticas) y seguiremos probando.
 \end{example}
 
 
@@ -464,6 +466,75 @@ y_2 = x_2 + b \text{ mod }m\\
 Y resuelvo el sistema.
 
 En el caso \textbf{A} no es tan sencillo pero con estadística también se puede romper. Si la primera hipótesis falla, probaremos con la siguiente letra más probable hasta dar con un texto que tenga sentido.
+
+\subsubsection{Cifrado de Sustitución}
+
+Este es más complicado, necesitaremos estadísticas más completas (COMPLETAR DEL LIBRO)
+
+\subsubsection{Cifrado de Vigenere}
+
+$$\overrightarrow{y} = \overrightarrow{x} + \overrightarrow{K} \text{ mod } m$$
+
+Para analizar esto una simple estadística no vale, porque dependiendo de cual sea  la longitud de la clave, \textbf{mismos textos se cifran de forma diferente}.
+
+Por lo tanto el criptoanálisis se hace en dos pasos:
+\begin{enumerate}
+	\item\textbf{ Hallar el tamaño de la clave $\rightarrow$ ¿n?}
+	
+	Para esto podemos utilizar dos métodos $\begin{cases}
+	KASISKI \rightarrow 1863\\
+	\textit{Índice de coincidencia}\\
+	\end{cases}$
+	\begin{itemize}
+		\item \textbf{KASISKI} $\rightarrow$ Se basa en la suposición de que puede haber repeticiones en el texto cifrado que vengan de la misma parte del texto plano.
+		
+		\begin{enumerate}
+			\item localizamos las repeticiones y las llamamos $Y_1$
+			\item llamamos a la posición de inicio de cada repetición $i_1, i_2,i_3...$
+			\item llamamos la distancia entre las repeticiones $\delta_1 , \delta_2....$
+			\item vemos que :
+			
+			$\begin{cases}
+			i_2 = i_1 + K_1\cdot n\\
+			i_3 = i_2 + K_2\cdot n\\
+			....\\
+			\end{cases}$ 
+			
+			COMPLETAR!!!!
+		\end{enumerate}
+		\item \textbf{Índice de coincidencia} $\rightarrow$ Dado una cadena de datos $\overrightarrow{X} = X_1 X_2 .... X_l$, el índice de coincidencia de dicha cadena $I_c(\overrightarrow{X})$ es la probabilidad de que dos elementos de esa cadena coincidan.
+		
+		Supongamos que tenemos una serie de caracteres en $\overrightarrow{X}$ con frecuencias de ocurrencia $f_0,f_1, f_2 ....$.
+		
+		Nos preguntamos: ¿De cuantas formas podemos combinar un caracter $X_i$ en dicha cadena?
+		$$\comb{f_i}{n}$$
+		¿De cuantas formas podemos coger n $X_i$ iguales?
+		$$\sum_{i} \comb{f_i}{n}$$
+		
+		\begin{remark}
+			Supongamos que tenemos n objetos y queremos elegir los objetos de $r$ en $r$ sin atender a la ordenación de los mismos.
+			
+			El número de combinaciones que existen de n objetos tomados de $r$ en $r$ es $\comb{r}{n}$
+		\end{remark}
+		
+
+		
+		Por lo tanto el caso de mayor $I_c(X)$ es el caso en que la cadena tenga todos los caracteres iguales.
+		
+		Una vez visto todo esto podemos definir el $I_c(X)$ como:
+		$$I_c(\overrightarrow{X}) = \frac{\sum_{i}\comb{f_i}{2}}{\comb{l}{2}} = ... = \frac{\sum_{i} f_i \cdot (f_i -1)}{l\cdot(l-1)} = \sum_{i} \frac{f_i}{l} \cdot \frac{f_i-1}{l-1} $$
+		
+		Si nos fijamos:
+		
+		$\frac{f_i}{l} = P_i$ es la probabilidad de cada letra y $\frac{f_i-1}{l-1} \sim P_i$, por lo tanto
+		$$I_c(\overrightarrow{X}) \sim \sum_{i} P^2_i$$
+		
+		
+		
+	\end{itemize}
+	\item \textbf{Descubrir las $K_i$}
+\end{enumerate}
+
 
 
 

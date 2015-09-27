@@ -1,7 +1,7 @@
 \documentclass{apuntes}
 
 \title{MNEDO}
-\author{Pedro Valero \& El Malvado}
+\author{Pedro Valero \& Jorge Martín}
 \date{15/15 C1}
 % Paquetes adicionales
 \usepackage{tikztools}
@@ -230,13 +230,13 @@ Durante este curso, al emplear los diferentes métodos numéricos usaremos versi
 \end{remark}
 En este curso la distancia entre cada muestra será igual $x_{n+1}-x_n=h=\frac{b-a}{N}$.
 
-A continuación mencionaremos algunos métodos numéricos:
+A continuación mencionaremos algunos métodos numéricos que estudiaremos más adelante:
 \begin{itemize}
 	\item \textbf{Método de Euler}
 	\[y'(x) = f(x,y(x))\]
 	\[y'(x_n) = f(x_n,y(x_n))\]
 	Pero dado que $x$ toma valores discretos:
-	\[\frac{y(x_{n+1}) - y(x_n)}{h} \implies \frac{y_{n+1} - y_n}{h} = f(x_n,y(x))\]
+	\[\frac{y(x_{n+1}) - y(x_n)}{h} \implies \frac{y_{n+1} - y_n}{h} = y'(x_n) = f(x_n,y(x))\]
 	Así la fórmula de recurrencia del método de Euler queda como:
 	\[y_{n+1} = y_n + h·f(x,y_n)\]
 	\[y_0=y_a\]
@@ -246,12 +246,14 @@ A continuación mencionaremos algunos métodos numéricos:
 	\[= y(x_n) + h·f(x_n,y(x_n)) + R_n\]
 
 	\item \textbf{Método leap-frog}
-	\[y(x_{n+2} - y(x_n) = \int_{x_n}^{x_{n+2}} y'(x) = \int_{x_n}^{x_{n+2}} f(x,y(x))\dif x \approx (x_{n+1}-x_n)f(x_{n+1},y(x_{n+1})\]
+	\[y(x_{n+2}) - y(x_n) = \int_{x_n}^{x_{n+2}} y'(x) = \int_{x_n}^{x_{n+2}} f(x,y(x))\dif x \approx (x_{n+2}-x_n)f(x_{n+1},y(x_{n+1}))\]
 	donde la aproximación se ha realizado empleando la regla del punto medio.
 
 	Finalmente nos queda:
-	\[y(x_{n+2} - y(x_n) = 2h f(x_{n+1},y(x_{n+1}))\]
+	\[y(x_{n+2}) - y(x_n) = 2h f(x_{n+1},y(x_{n+1}))\]
 \end{itemize}
+
+Antes de continuar, veamos un par de conceptos que serán necesarios a lo largo de este curso.
 
 \begin{defn}[Método numérico de $k$ pasos]
 Se dice que un método numérico es de $k$ pasos si para conocer $y_{n+k}$ necesitamos conocer los $k$ valores: $y_{n}, y_{n+1},... y_{n+k-1}$
@@ -259,17 +261,30 @@ Se dice que un método numérico es de $k$ pasos si para conocer $y_{n+k}$ neces
 
 \begin{defn}[Método numérico convergente]
 Se dice que un método numérico es convergente si para todo problema de valor inicial se tiene que:
-\[\lim_{N \to \infty} \max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n)}= 0\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=0\]
+\[\lim_{N \to \infty} \max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n}= 0\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=0\]
+
+$k$ será el número de pasos del método numérico, es decir, para el método de Euler tendremos $k=1$, mientras que para el método leap-frog tendremos $k=2$.
 
 Evidentemente no nos referimos a cualquier problema imaginable sino a todos aquellos problemas de valor inicial en los que la función $f$ sea continua y Lipschitz en la segunda variable, pues esos son lso únicos problmeas con los que hemos trabajado hasta ahora.
 \end{defn}
 
-\begin{theorem}[]
+\chapter{Algunos Métodos Numéricos para EDOs}
+\section{Método de Euler}
+
+Dado un problema de valor inicial del tipo:
+\[y'(x) = f(x,y(x))\]
+\[y'(x_n) = f(x_n,y(x_n))\]
+el método de Euler nos permitía aproximarnos a la solución a través de la siguiente relación de recurrencia:
+\[y_{n+1} = y_n + h·f(x,y_n)\]
+\[y_0=y_a\]
+
+\begin{theorem}[El método de Euler es convergente]
+
 Sea $y(x)$ la solución de un problema de valor inicial y sean $\{y_n\}$ los valores que vamos aproximando en cada iteración del método de Euler, se cumple que $\{y_n\}$ converge a $y(x)$
 \end{theorem}
 \begin{proof}
-Al trabajar con este método obtendremos una serie de funciones de la forma
-\[y_{n+1} = y_n + h f(x_n, y_b)\]
+Al trabajar con este método tenemos la relación de recurrencia:
+\[y_{n+1} = y_n + h f(x_n, y_n)\]
 
 Para empezar vamos a definir el residuo que no es más que la diferencia entre el valor aproximado $y_n$ obtenido al aplicar el método en cuestión y el valor real $y(x_n)$. Así, podemos escribir:
 \[y(x_{n+1})=y(x_n)+hf(x_n,y(x_n))+R_n \text{ siendo } R_n \text{ el residuo }\]
@@ -284,7 +299,7 @@ Según la definición de convergencia, para demostrar que la sucesión converge 
 
 \begin{itemize}
 \item Basándonos en la condición de Lipschitz:
-\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n)+K \text{ siendo } e_{n+1} \leq (1+Lh)e_n + K \text{ con } K = \max_n |R_n|\]
+\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n|+K \text{ siendo } e_{n+1} \leq (1+Lh)e_n + K \text{ con } K = \max_n |R_n|\]
 
 \begin{proof}
 \[e_n = |y(x_n)-y_n| \implies e_{n+1} \leq (1+Lh)e_n+K \implies e_n \leq (1+Lh)^n e_0 + K \frac{1-(1+hL)^n}{1-(1+kL)}\]
@@ -298,68 +313,95 @@ Ambos procedimientos son muy sencillos y se dejan como ejercicio para el lector.
 
 Gracias a esto tenemos demostrada la \textbf{estabilidad} pues
 \[|y(x_n)-y_n| \leq (1+hL)^n |y(x_0)-y_0| + \frac{(1+hL)^{n+1}-1}{L}\cdot \max_n \frac{|R_n|}{h}\]
+%
+%Por otro lado tenemos que:
+%\[\lim_{h \to 0} \frac{|R_n|}{h} = 0\]
+%con lo que vemos que el residuo lo tenemos controlado
 
-Por otro lado tenemos que:
-\[\lim_{h \to 0} \frac{|R_n|}{h} = 0\]
-con lo que vemos que el residuo lo tenemos controlado
-\item \textbf{ Tras esto demostramos por inducción que $C_n$ satisface:}
-\[C_n \leq (1+Lh)^n C_0 + K\frac{(1+Lh)^n-1}{Lh}\]
-% Jorge, esta parte en teoría es repaso de la clase que tienes que completar tu. Mételo como puedas aquí.
 
-\item Ahora vamos a demostrar que
-\[|y(x_n) - y_n| \leq (1+Lh)^n |y(x_n)-y_0|+K\frac{(1+Lh)^n-1}{Lh}\]
-
-Para ello basta con ver que
-\[\max_n |y(x_n)-y_n| \leq (1+Lh)^N|y(x_n)-y_0| + K\frac{(1+Lh)^n-1}{Lh}\]
-
-Por otro lado tenemos que
-\[h = \frac{b-a}{N}= \left( 1+\frac{L(b-a)}{N}\right)^N|y(x_n)-y_0| + K \frac{\left(1+\frac{L(b-a)}{N} \right)^N-1}{Lh}\]
-
-Además sabemos que
-\[\lim_{N \to \infty} \max_n |y(x_n)-y_0| \leq e^{L(b-a)} |y(x_n)-y_0| + \frac{e^{L(b-a)}-1}{L}\lim_{h \to 0} \frac{K}{h}\]
+%\item Ahora vamos a demostrar que
+%\[|y(x_n) - y_n| \leq (1+Lh)^N |y(x_n)-y_0|+K\frac{(1+Lh)^N-1}{Lh}\]
+%donde $N$ es el número total de $y_n$ que estamos tomando al aplicar el método.
+%
+%Para ello basta con ver que
+%\[\max_n |y(x_n)-y_n| \leq (1+Lh)^N|y(x_n)-y_0| + K\frac{(1+Lh)^N-1}{Lh}\]
+%
+%Por otro lado tenemos que
+%\[h = \frac{b-a}{N}\]
+%con lo que podemos escribir la parte derecha de la desigualdad que queremos probar %como:%
+%\[ \l%eft( 1+\frac{L(b-a)}{N}\right)^N|y(x_n)-y_0| + K \frac{\left(1+\frac{L(b-a)}{N%} %\righ%t)^N-1}{Lh}\]%
+%
+%Además sabemos que
+%\[\lim_{N \to \infty} \max_n |y(x_n)-y_0| \leq e^{L(b-a)} |y(x_n)-y_0| + \frac{e^{L(b-a)}-1}{L}\lim_{h \to 0} \frac{K}{h}\]
 
 \item \textbf{Control del residuo}
 
 El residuo puede escribirse como:
 \[R_n = y(x_{n+1})-y(x_n)-hy'(x_n) = \frac{h^2}{2}y''(ε)\]
 
-De aquí podemos ver que
+Si logramos probar que
 \[\max_n \frac{|R_n|}{h} \leq C h\]
-lo cual nos garantiza que el residuo es 0.
+tendríamos garantizado que el residuo es 0.
 
-Sin embargo esto no es tan sencillo, puesto que para poder acotar el máximo como hemos hecho nos apoyamos en que la derivada segunda, $y''$, está acotada módulo infinito por $C$. Pero nosotros no sabemos nada acerca de nuestra solución por que no lo podemos realizar este tipo de asunciones.
+Sin embargo esto no es tan sencillo, puesto que para poder acotar el máximo como hemos queremos nos apoyamos en que la derivada segunda, $y''$, está acotada módulo infinito por una constance $C$. Pero nosotros no sabemos nada acerca de nuestra solución y, por tanto, no podemos realizar este tipo de asunciones.
 
-Pero esto puede mejorarse. Sabemos que
+Pero esto puede arreglarse fácilmente. Sabemos que
 \[\frac{R_n}{h} = \frac{y(x_{n+1})-y(x_n)}{h} = y'(x_n) = y'(ε)-y'(x_n) \text{ siendo } x_n \leq ε \leq x_{n+1}\]
 A partir de aquí vemos fácilmente que
 \[\lim_{h\to 0} \frac{|R_n|}{h} = 0\]
 
-Esto es sencillo de ver puesto que la derivada segunda de $y$ está acotada.
-%Aquí faltan cositas Jorge
+Cuando $h \rightarrow 0$ estrechamos las distancias entre los $x_n$ (es decir $x_{n+1} \rightarrow x_n$). De esta forma se acaba consiguiendo que $ε$ (que inicialmente se encontraba en el intervalo $[x_n,x_{n+1}]$) pase a ser $x_n$, y así $y'(ε)-y'(x_n) = y'(x_n)-y'(x_n) = 0$.
+
 \end{itemize}
 \end{proof}
 
+\obs En la prueba hemos evitado apoyarnos en información acerca de la derivada segunda de la solución $y$, pero en realidad sí que podríamos haberlo hecho:
+
+\[
+	\text{PVI} :
+		\begin{cases}
+			y'(x) = f(x,y(x)) \\
+			f ∈ C^1([a,b]×ℝ^d)
+		\end{cases}
+\]
+
+Si aplicamos el teorema de Picard \ref{TeoremaPicard} obtenemos que la solución única $y$ es $C^1$, por tanto $f$ compuesta con $y$ (nuestra $f(x,y(x))$) será también $C^1$; y por tanto $y' ∈ C^1$. Pero si tenemos que $y'$ es $C^1$, $y$ será $C^2$.
+
+De modo que podemos obtener acotaciones para $y''$:
+\[y''(x)=f_x(x,y(x)) + f_y(x,y(x))·y'(x) = f_x(x,y(x)) + f_y(x,y(x))·f(x,y(x))\]
+\[\implies \md{y''}_{L^∞[a,b]} ≤ C_f\]
+
+Con $C_f$ una constante que depende de la norma $C^1 \left( [a,b]×ℝ^d \right)$ de $f$.
+
 \subsection{Orden del método de Euler}
 \begin{defn}[Método numérico de orden p]
-Se dice que un método numérico es convergente de orden $p$ si $p$ es el mayor de los enteros tales que $f \in C^p$ y
-\[\max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n)}= O(n)\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=O(h^p)\]
+	Se dice que un método numérico es convergente de orden $p$ si $p$ es el mayor de los enteros tales que $f \in C^p$ y
+	\[\max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n)}= O(h^p)\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=O(h^p)\]
 \end{defn}
 
-Recordemos las definiciones de 'O' y 'o'
+Recordemos las definiciones de `O' y `o'
 
 \begin{defn}[O grande]
 Decimos que $f= O(g)$ en $x \to x_0$ si
-\[\exists k,r > 0 \tq \forall x_0 < |x-x_0|< r \text{ se tiene } |f(x)| \leq k |g(x)|\]
+\[\exists k,r > 0 \tq ∀x,\ 0 < |x-x_0|< r \text{ se tiene } |f(x)| \leq k |g(x)|\]
 \end{defn}
 
 \begin{defn}[O pequeña]
 Decimos que $f=o(g)$ en $x \to x_0$ si
-\[\exists r > 0 \tq 0 < |x-x_0|<r \text{tal que, donde } g \text{ no se anule, tenemos} \lim_{x\to x_0} \frac{f(x)}{g(x)}=0\]
+
+\[\exists r > 0 \tq ∀x,\ 0 < |x-x_0|<r \text{ tal que, donde } g \text{ no se anule, tenemos} \lim_{x\to x_0} \frac{f(x)}{g(x)}=0\]
+
 \end{defn}
+
+\obs En la práctica $\max_{k≤n≤N} \md{y(x_n) - y(x_n)} = O(h^p)$ lo tomaremos como:
+\[ \max_{k≤n≤N} \md{y(x_n) - y(x_n)} ≤ C·h^p \]
+
+\obs En la práctica $\max_{k≤n≤N} \md{y(x_n) - y(x_n)} = o(h^p)$ lo tomaremos como:
+\[ \max_{k≤n≤N} \md{y(x_n) - y(x_n)} ≤ c·h^s,\ s>p,\ s∈ℝ \]
 
 Una vez vistas estas definiciones, supongamos que tenemos $f \in C [\real \times \real^d]$. En este caso ya hemos visto que el orden de convergencia del método de Euler es al menos 1.
 
-Para poder confirmar que el método es de orden 1, ahora sólo nos queda comprobar que el orden no puede ser 2. Para comprobarlo nos basta con ver un ejemplo en el que no se cumpla:
+Para poder confirmar que el método es de orden 1, sólo nos queda comprobar que el orden no puede ser 2. Para comprobarlo nos basta con ver un ejemplo en el que no se cumpla:
 \begin{example}
 Tomamos el caso $y'(x)=x, \ x \in [0,1]$ con valor inicial $y(0)=0$. En este caso sabemos que la solución es $y(x)=\frac{1}{2}x^2$
 
@@ -369,17 +411,27 @@ con lo que obtendríamos la sucesión de funciones:
 \[y_1 = 0 \; ; \; y_2 = 0 + hx_1 =h^2 \; ; \; y_3 = h^2+2h^2=h^2(1+2+3) \; ; \; ...\]
 
 De donde podemos deducir la fórmula general para $y_n$:
-\[y_n = h^2\sum_{i=1}^{n-1} i = h^2\frac{n(n-1)}{2}=\frac{n^2+n}{2} =h^2\frac{x_n^2-x_n}{2}\]
+
+\[y_n = h^2\sum_{i=1}^{n-1} i = h^2\frac{n(n-1)}{2} \underbrace{=}_{x_n=n·h} =\frac{x_n^2-x_n·h}{2}\]
+
 
 Así podemos ver que:
 \[|y(x_n)-y_n| = \left|\frac{x_n^2}{2}-\frac{x_n^2}{2}+\frac{x_nh}{2} \right| = \frac{x_nh}{2} \implies \frac{1}{h}|y(x_n)-y_n|  = \frac{x_n}{2}\]
+
+Por tanto el método de Euler no es convergente de orden 2, pues:
+\[\max_n \md{y(x_n)-x_n} = \frac{1}{2}·h \overbrace{\implies}^{\text{por def.}}\text{es convergente de orden 1}\]
 \end{example}
+
 
 
 \textbf{Esperemos que hayáis disfrutado hasta aquí porque nos disponemos a entrar en la parte aburrida del curso.}
 
 
 \chapter{Algunos Métodos Numéricos para Ecuaciones Diferenciales Ordinarias}
+De aquí en adelante tomaremos $d=1$, es decir:
+\[\appl{y}{ℝ}{ℝ}\]
+\[\appl{f}{ℝ×ℝ}{ℝ}\]
+
 \section{Métodos de Taylor}
 Como siempre, tenemos que $y'(x)=f(x,y(x))$ y debemos buscar una relación entre $y(x_{n+1})$ y los $y(x_m)$ con $m < n+1$.
 
@@ -398,14 +450,10 @@ En la práctica estos métodos no se utiliza nunca puesto que no son demasido ef
 
 Al hablar de estos métodos en plural hacemos referencia a las diferentes estimaciones posibles, pues podemos usar un desarrollo de Taylor de grado superior, lo que añade complejidad a la fórmula pero aproxima mejor el resultado, pues hace el residuo cada vez más pequeño.
 
-\section{Métodos basados en cuadraturas}
-Ya hemos visto un método de este tipo, \textbf{el método de Euler}, en el que se define:
-\[y(x_{n+1}) -y(x_n) = \int_{x_n}^{x_{n+1}} y'(x)\dif x = \int_{x_n}^{x_{n+1}} f(x_n,y(x_n)) \dif x \approx f(x_n,y(x_n))h \implies \]
-\[\implies y(x_{n+1}) =y(x_n)+f(x_n,y(x_n))h\]
 
 \section{Método del trapecio}
 En esta ocasión escribimos:
-\[y(x_{n+1})=y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x)\dif x \approx y(x_n)+ \frac{h}{2}\left( f(x_n,y(x_n))+f(x_{n+1},y(x_{n+1})) \right)\]
+\[y(x_{n+1})=y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n)+ h\cdot \frac{f(x_n,y(x_n))+f(x_{n+1},y(x_{n+1}))}{2}  \]
 
 Este método presenta una difernecia radical respecto a los demás, pues el objetivo del método es calcular $y_{x+1}$ en lugar de $y_n$.
 
@@ -415,32 +463,37 @@ con lo que el problema a resolver se reduce a encontrar un punto fijo de este op
 \[T(y)=y\]
 
 Podemos ver bajo qué condiciones la función es Lipchitz y, y por tanto tiene solución. Para ello vemos que
-\[|T(y) - T(\tilde{y})| \leq \frac{h}{2} \left( |f(x_{n+1}, \tilde{y}) - f(x_{n+1},\tilde{y})|\right) \leq \frac{Lh}{2}\left( |y-\tilde{y}|\right)\]
+\[|T(y) - T(\tilde{y})| \leq \frac{h}{2} \left( |f(x_{n+1}, y) - f(x_{n+1},\tilde{y})|\right) \leq \frac{Lh}{2}\left( |y-\tilde{y}|\right)\]
 
 Por tanto, la recurrencia tendrá solución siempre que $\frac{Lh}{2} \leq 1$
 
 \section{Métodos basados en cuadraturas}
-\subsection{Método Predictor corrector Euler-trapecio}
-En este método partimos de la fórmula del trapecio
-\[y_{n+1} = y_n + \frac{h}{2} \left(f(x_n,y_n)+f(x_{n+1}, y_{n+1}) \right)\]
+Ya hemos visto un método de este tipo, \textbf{el método de Euler}, en el que se define:
+\[y(x_{n+1}) -y(x_n) = \int_{x_n}^{x_{n+1}} y'(x)\dif x = \int_{x_n}^{x_{n+1}} f(x_n,y(x_n)) \dif x \approx f(x_n,y(x_n))h \implies \]
+\[\implies y(x_{n+1}) =y(x_n)+f(x_n,y(x_n))h\]
 
-Lo que vamos a hacer ahora es aproximar el $y_{n+1}$, empleado a la derecha de la fórmula, por el método de Euler:
+\subsection{Método Predictor Corrector Euler-trapecio}
+En este método partimos de la fórmula del trapecio
+\[y_{n+1} = y_n + \frac{h}{2} \left(f(x_n,y_n)+f(x_{n+1}, y^*_{n+1}) \right)\]
+
+Lo que vamos a hacer ahora es aproximar el $y^*_{n+1}$, empleado a la derecha de la fórmula, por el método de Euler:
 \[y^*_{n+1} = y_n + h f(x_n,y_n)\]
 
-Una vez hemos empleado el método de Euler para hacer una predicción de $y_{n+1}$ empleamos el método del trapecio para corregir el valor.
+Una vez hemos empleado el método de Euler para hacer una predicción de $y^*_{n+1}$ empleamos el método del trapecio para corregir el valor.
 
 \subsection{Método de Euler modificado}
 Este método emplea la relación:
-\[y(x_{n+1}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n) + h f(x+\frac{h}{2},y(x+\frac{h}{2}))\]
+\[y(x_{n+1}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n) + h f\left(x+\frac{h}{2},y\left(x+\frac{h}{2}\right)\right)\]
 
-El problema que tenemos ahora es que necesitamos aproximar $y(x+\frac{h}{2})$, cosa que haremos mediante la ecuación:
+
+El problema que tenemos ahora es que necesitamos aproximar $y(x+\frac{h}{2})$ (ya que $x+\frac{h}{2}$ no pertenece a nuestro mallado $\{x_n\}$), cosa que haremos mediante la ecuación:
 \[y(x+\frac{h}{2}) = y(x_n)+\frac{h}{2}f(x_n, y(x_n))\]
 
 Este método es realmente importante pues es el padre de una serie de métodos denominados \textbf{Métodos de Runge-Kutta}, que veremos a continuación
 
 \section{Métodos de Runge-Kutta}
 Estos métodos se caracterizan porque vamos a empezar calculando una serie de valores $K_i$ como sigue:
-\[K_i = f\left(x_n+c_ih, y_n+h \sum_{j=1}^sa_{ij}K_j\right)\]
+\[K_i = f\left(x_n+c_ih, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\]
 \[y_{n+1} = y_n+ h \sum_{i=1}^s b_i K_i\]
 
 La idea de este método es que
@@ -455,7 +508,7 @@ De entre los diferentes métodos Runge-Kutta el más empleado, por ser uno de lo
 siendo:
 \[K_1 = f(x_n,y_n)\]
 \[K_2 = f(x_n+\frac{h}{2}, y_n+\frac{h}{2}K_1)\]
-\[K_3 = f(x_n+\frac{h}{2}, y_n + \frac{h}{2}K_2\]
+\[K_3 = f(x_n+\frac{h}{2}, y_n + \frac{h}{2}K_2)\]
 \[K_4 = f(x_n+h, y_n + h K_3)\]
 
 \textbf{Ejercicio punto extra: ¿De dónde salen estos números del Runge Kutta de cuarto orden?}
@@ -466,5 +519,233 @@ En este caso empelamos la relación:
 \[y(x_{n+2}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x)) \dif x \approx y(x_n) + 2h f(x_{n+1},y_{n+1})\]
 
 La diferencia entre este método y los anteriores es que este método consta de dos pasos, pues debemos aproximas $y_1$ ya que para calcular cada $y_n$ necesitamos conocer $y_{n-1}$ e $y_{n-2}$
+
+\section{Método de Adams-Bashforth}
+
+Se trata de un método basado en cuadratura que emplea la relación
+\[y(x_{n+2}) - y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) \dif x\]
+
+\begin{remark}
+Esta relación es sencilla de entender puesto que, por definición del problema original, $f(x,y(x))=y'$. Así, lo única que estamos haciendo es aplicar el Teorema Fundamental del Cálculo, es decir, estamos resolviendo la integral.
+
+El problema, como siempre, es que no se puede hacer esta integral directamente pues la $f$ depende de $y(x)$ que no es conocida.
+\end{remark}
+
+donde $f(x,y(x))$ se aproxima por medio de la recta interpolante entre los puntos $(x_n,y(x_n))$ y $(x_{n+1},y(x_{n+1}))$, es decir:
+\[f(x,y(x)) \approx f(x_n, y(x_n)) \frac{x-x_{n+1}}{x_n-x_{n+1}}+f(x_{n+1},y(x_{n+1}))\frac{x-x_n}{x_{n+1}-x_n}\]
+
+Finalmente, el método queda expresado como:
+\[y_{n+2} = y_{n+1}+\frac{h}{2}\left( 3f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+Como podemos ver, se trata de un método de dos pasos, pues necesitamos conocer dos puntos antes de empezar a aplicar el método, y es explícito, pues directamente nos da la función que queremos conocer.
+
+\section{Métodos de Adams-Moulton}
+Se trata de un método muy similar al anterior en el que la función se interpola de otra forma distinta. De nuevo tenemos la relación:
+\[y(x_{n+2}) - y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) \dif x\]
+
+pero en esta ocasión la función $f$ la aproximamos mediante una interpolación con polinomios de orden 2 en lugar de rectas:
+\[f(x,y(x)) \approx f(x_n,y_n) \frac{(x-x_{n+1})(x-x_{n+2})}{(x_n-x_{n+1})(x_{n+1}-x_{n+2})} + f(x_{n+1},y_{n+1})\frac{(x-x_{n+2})(x-x_{n+2})}{(x_{n+1}-x_n)(x_{n+1}-x_{n+2})} \atop+f(x_{n+2},y_{n+2})\frac{(x-x_{n})(x-x_{n+1})}{(x_{n+2}-x_n)(x_{n+2}-x_{n+1})}\]
+
+Ahora introducimos esta aproximación en la integral e integramos, con lo que obtenemos la siguiente fórmula de recurrencia:
+\[y_{n+2} = y_{n+1} + \frac{h}{12}\left( 5f(x_{n+2},y_{n+2})+8f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+En esta ocasión se trata de un método implícito puesto que la misma $y_{n+2}$ que queremos calcular aparece en la propia fórmula.
+
+\section{Método predictor-corrector de Adams-Bashforth / Adamas-Moulton}
+
+El método anterior tiene el problema de ser implícito, es decir, vamos a tener que resolver una complicada ecuación de recurrencia.
+
+Para solucionar esto, la idea es aproximar $y_{n+2}$, calcular $y_{n+2}$ empleando la fórmula y basándonos en la aproximación y posteriormente ir corrigiendo las aproximaciones en cada paso.
+
+Así, tendremos la fórmula de recurrencia:
+\[y_{n+2} = y_{n+1} + \frac{h}{12}\left( 5f(x_{n+2},y_{n+2}^*)+8f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+La predicción que haremos para $y^*$ será:
+\[y_{n+2}^* = y_{n+1} + \frac{h}{2} \left( 3f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+es decir, combinamos los dos métodos vistos anteriormente.
+
+\section{Ejemplos}
+
+\begin{problem}[1]
+Escribir la siguiente ecuación diferencial de grado $n$ como un sistema de ecuaciones diferenciales de primer orden.
+\[y^{n)} + \sum_{i=1}^n a_{n-i}y^{n-i)} = 0\]
+
+\solution
+La idea de este ejercicio es que, a priori, uno puede pensar que todo lo que llevamos visto durante el curso es inútil ante un problema como el aquí mostrado.
+
+Para convertir esta ecuación en un sistema, vamos a definir una serie de nuevas ecuaciones de forma que
+\[y^{i} = y_i \text{ para } i=1...n-1\]
+
+Así el sistema de ecuaciones nos queda de la forma:
+\[\begin{array}{l}
+y' = y_1\\
+y_1' = y_2\\
+y_2' = y_3 \\
+...\\
+y_{n-1}' = -\left( a_{n-1}y_{n-1} + a_{n-2}y_{n-2}+...+a_1y_1 + a_0 y\right)
+\end{array} \]
+
+Como podemos comprobar, en nuestro sistema, todas las ecuaciones son de primer orden.
+
+\end{problem}
+
+\begin{problem}[2]
+Convertir el siguiente sistema de ecuaciones diferenciales en otro donde todas las ecuaciones tengan orden 1.
+\[\begin{array}{l}
+u''' = u''+v'\\
+v''' = u^2+e^xu'v'+\sin(v)
+\end{array} \]
+con $u'(0)=u''(0)=v'(0)=0 \ , \ v(0)=1$
+\solution
+
+Renombrando las variables de la forma: $u' = u_1$, $u''=u_2$, $v'=v_1$, podemos reescribir el sistema como sigue.
+
+\[\begin{array}{l}
+u' = u_1\\
+u_1'=u_2\\
+v'=v_1\\
+u_2' = u_2+v_1\\
+v_1' = u^2+e^xu_1v_1 + \sin(v)
+\end{array} \]
+con $u_1(0)=u_2(0)=v_1(0)=0 \ , \ v(0)=1$
+
+\end{problem}
+
+\begin{problem}[3]
+Comprobar que las siguientes funciones satisfacen la condición de Lipschitz
+
+\ppart
+\[f(x,y)=2yx^{-4} \text{ con } x \in [1,\infty)\]
+
+\ppart
+\[f(x,y)=e^{-x^2}\arctg(y) \text{ con } x \in [1, \infty)\]
+
+\ppart
+\[\appl{f}{\real \times \real^2}{\real} \text{ tal que }f(x,y)=\left(x+\sin(y_2), \frac{x^2}{2}+\cos(y_1)\right)\]
+\solution
+
+\spart
+\[|f(x,y)-f(x,\tilde{y})| = 2x^{-4}|y-\tilde{y}| < 2 |y-\tilde{y}|\]
+
+\spart
+\[|f(x,y)-f(x,\tilde{y})| = e^{-x^2} | \arctg(y)-\arctg(\tilde{y})| = e^{-x^2}\int_{\tilde{y}}^y \frac{\partial}{\partial x}\arctg{x}\dif x = e^{-x^2}\int_{\tilde{y}}^y \frac{1}{|+x^2} \dif x \leq \]
+\[\leq e^{-x^2} \sup \frac{1}{1+x^2}|y-\tilde{y}| \leq \frac{e^{-1}}{2}|y-\tilde{y}|\]
+
+\spart
+Según en qué norma estemos trabajando, el módulo de $y$ se calculará de una forma diferente.
+
+En esta ocasión, por que así lo ha indicado el profesor para este ejercicio, vamos a trabajar con la norma $L1$ de forma que
+\[\norm{y}_{L_1} = |y_1| + |y_2|\]
+
+Con esta medida, nos queda:
+\[\norm{f(x,y)-f(x,\tilde{y})}_{L_1} = |\sin(y_2)-\sin(\tilde{y}_2)| + |\cos(y_1)-\cos(\tilde{y}_2)| \leq |y_2 - \tilde{y}_2|+ |y_1-\tilde{y}_1| \leq \norm{y - \tilde{y}}_{L_1}\]
+
+\end{problem}
+
+
+\begin{problem}[4]
+Dado:
+\[
+	\begin{cases} 
+	y'=f(x,y), & y(0)=(0,1) \\
+	\tilde{y'}=f(x,\tilde{y}), & \tilde{y}(0)=(0,1)
+	\end{cases}
+\]
+Acotar $\max_{x∈[0,1]}{\md{y - \tilde{y}}} = \norm{y - \tilde{y}}_{L^∞}$
+
+\solution
+Tomaremos ({\color{blue} Jorge: no sé de dónde sale}):
+\[ \abs{y - \tilde{y}} ≤ \underbrace{\abs{y(0) - \tilde{y}(0)} + L \int_0^x \abs{y - \tilde{y}}(s)\ ds}_{g(x)} \]
+
+Derivando $g$ se obtiene $g'(x)=L\abs{y-\tilde{y}}$. Se ve que:
+\[g'(x)≤Lg(x)\]
+Usando el factor integrante llegamos a:
+\[g'(x)e^{-Lx} ≤ Lg(x)e^{-Lx}\]
+Que si nos fijamos no es más que:
+\[\left( ge^{-Lx} \right)' ≤ 0\]
+Que si además lo integramos en ambas partes por $\int_0^x$:
+\[g(x) ≤ g(0) e^{Lx}\]
+Así llegamos a:
+\[\abs{y - \tilde{y}} ≤ g(x) ≤ g(0)e^{Lx} = \abs{\tilde{y}(0) - y(0)}e^{Lx} = \sqrt{2}e^{Lx}\]
+De modo que tendremos la cota:
+\[\max_{x∈[0,1]} \abs{y - \tilde{y}} ≤ \sqrt{2}e^{Lx}\]
+
+\end{problem}
+
+\section{Sesión 1 de Laboratorio}
+En esta primera sesión vamos a empezar a familiarizarnos con MATLAB (o en su defecto Octave) y a implementar el método de Euler, para después poder realizar algunas comparaciones visuales a fin de comprobar lo efectivo del método.
+
+Vamos a resolver el siguiente problema de valor incial.
+\[\left\{\begin{array}{l}
+\left( \begin{array}{c}
+v_1' \\
+v_2'  \end{array} \right)=f(t,v) =\left( \begin{array}{cc}
+-2 & 1 \\
+1 & -2 \end{array} \right)\left( \begin{array}{c}
+v_1 \\
+v_2 \end{array} \right) + \left( \begin{array}{c}
+2\sin(t) \\
+2(\cos(t)-\sin(t))  \end{array} \right)
+v(0) = \left( \begin{array}{c}
+2 \\
+3  \end{array} \right)\end{array}\right.\]
+
+Hemos escogido un sistema que somos capaces de resolver a mano puesto que así podremos comprobar la calidad de la solución obtenida.
+
+En este caso, sabemos de antemano que la solución es:
+\[v(t)=\left( \begin{array}{c}
+2e^{-t}+\sin(t) \\
+2e^{-t}+\cos(t)  \end{array} \right)\]
+
+Vamos ahora a implementarlo en el ordenador. Lo primero que tenemos que hacer es definir las funciones mencionadas anteriormente, es decir, $f(t,v)$ y la solución. Vamos a emplear para ello ficheros distintos (cada fichero con el mismo nombre que la función que estamos definiendo para que MATLAB/Octave pueden encontrar la función) aunque podría hacerse todo en el mismo.
+
+\begin{center}
+    \begin{minipage}{0.55\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/f.png}
+    \end{minipage}
+    \begin{minipage}{.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/result.png}
+    \end{minipage}
+\end{center}
+
+Una vez tenemos estas funciones definidas, procedemos a implementar el propio método de Euler, que podemos ver en la siguiente imagen.
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/euler.png}
+\end{center}
+
+Por último sólo tenemos que crear un programa principal que, llamando a las funciones ya definidas, resuelva el PVI planteado al inicio de esta sección.
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/aplicacion_euler.png}
+\end{center}
+
+Vamos a explicar detenidamente qué se está haciendo en este código. Para empezar estamos simplemente resolviendo el problema aplicando el método de Euler y pintando, en una misma gráfica, la solución dada por el método y la solución real, con lo que podemos observar la gran precisión de la solución obtenida por este método.
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/figure1.png}
+\end{center}
+
+La última parte del código es la más compleja. Lo se está haciendo ahí es llamar numerosas veces al método de Euler y guardar, en cada llamada, la diferencia entre la función obtenida y la solución así como el $h$ empleado en esa ocasión.
+
+Posteriormente calculamos la pendiente de la función que representan los pares de valores que hemos guardado. Para ello tomamos escala logarítmica y estudiamos la pendiente de la función en cada punto para, finalmente, tomar la media de esos valores.
+
+Por último, pintamos estos valores junto con una función claramente lineal, que es $h$ con respecto a $h$ y obtenemos la siguiente gráfica.
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/figure2.png}
+\end{center}
+
+Ahora la pregunta que nos surge es clara, \textbf{¿por qué es interesante esta pendiente?}.
+
+La idea se basa en el hecho de haber trabajado con logaritmos de los valores y no con los valores directamente. En general sabemos que el error se comporta como $e \leq c h^p$ para una cierta constante $c$, donde $p$ es el orden del método. Evidentemente podemos aplicar logaritmos a ambos lados sin que nada se estropee, obteniendo:
+\[\log(e) \leq p \log(ch)\]
+
+Si ahora dibujásemos la gráfica que relaciona el logaritmo del error con el logaritmo de $h$ obtendremos una recta con pendiente $p$ que es justo el \textbf{orden del método}.
+
+Por tanto, esa pendiente que hemos calculado en el código, nos permite conocer el orden del método de Euler.
 \end{document}
+
+
 
