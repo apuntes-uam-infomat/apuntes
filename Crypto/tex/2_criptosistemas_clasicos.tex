@@ -563,7 +563,7 @@ El \textbf{índice de coincidencia} nos da la probabilidad de que las dos letras
 
 A modo de referencia, el índice de coincidencia en inglés es un 6,5\% y en español un 7.62\%.
 
-Si tomamos un idioma ficticeo en el que todas las letras son equiprobables tendremos que su índice es $\sum_{i=1}^{26}\frac{1}{26^2} = \frac{1}{26} = 3.6\%$
+Si tomamos un idioma fictíceo en el que todas las letras son equiprobables tendremos que su índice es $\sum_{i=1}^{26}\frac{1}{26^2} = \frac{1}{26} = 3.6\%$
 \end{defn}
 
 Esto puede ser útil a la hora de descifrar un mensaje pues indica si es probable o no que el texto haya sido cifrado por sustitución monoalfabética.
@@ -574,10 +574,11 @@ Sabemos que se está usando un criptosistema lineal con la aplicación
 
 El mensaje cifrado es \textit{WKNCCHSSJH} y, además, sabemos que el inicio del mensaje dice \textit{GLUE}.
 
-Si quisiésemos hacerlo a la fuerza, tendríamos que $\varphi{26} = 17248$ que es asequible con los ordenadores de hoy en día, pero no lo era hace años, cuando este criptosistema se empleaba.
+Si quisiésemos hacerlo a la fuerza, tendríamos que $\varphi(26) = 17248$ que es asequible con los ordenadores de hoy en día, pero no lo era hace años, cuando este criptosistema se empleaba.
 
 Con los datos que tenemos, podemos plantear la ecuación:
-\[A \cdot \left( \begin{array}{cc}
+\begin{eqnarray}\label{equation:matrix}
+A \cdot \left( \begin{array}{cc}
 W & N \\
 K & C  \end{array} \right) = \left( \begin{array}{cc}
 G & V \\
@@ -585,16 +586,16 @@ I & E  \end{array} \right) \equiv A \cdot \left( \begin{array}{cc}
 22 & 13 \\
 10 & 2  \end{array} \right) = \left( \begin{array}{cc}
 6 & 21 \\
-8 & 4  \end{array} \right)\]
+8 & 4  \end{array} \right)
+\end{eqnarray}
+El problema que tenemos ahora es que al despejar $A$, no podemos calcular la inversa de la matriz que la multiplica, pues su determinante es 18, que no es coprimo con 26.
 
-El problema que tenemos ahora es que al despejar $A$, no podemos calcular la inversa de la matriz que la multiplica, pues su determinante es 18, que no es coprimo ocn 26.
-
-Sin embargo, podemos trabajar módulo 13, con lo que obtendríamos:
-\[  A = \left( \begin{array}{cc}
-22 & 13 \\
-10 & 2  \end{array} \right)^{-1} \left( \begin{array}{cc}
+Sin embargo, podemos trabajar módulo 13, puesto que dos matrices iguales en módulo 26 serán también iguales en módulo 13\footnote{Si dos elementos son iguales es porque su diferencia es múltiplo de 26 y, por tanto, también es múltiplo de 13}, con lo que obtendríamos:
+\[  A =  \left( \begin{array}{cc}
 6 & 21 \\
-8 & 4  \end{array} \right) = \left( \begin{array}{cc}
+8 & 4  \end{array} \right) \left( \begin{array}{cc}
+22 & 13 \\
+10 & 2  \end{array} \right)^{-1} = \left( \begin{array}{cc}
 6 & 8 \\
 8 & 4  \end{array} \right)\left(\frac{1}{5} = 8 \right) \left( \begin{array}{cc}
 2 & 0 \\
@@ -602,7 +603,23 @@ Sin embargo, podemos trabajar módulo 13, con lo que obtendríamos:
 2 & 4 \\
 3 & 2  \end{array} \right)\]
 
-Ahora tenemos que volver a módulo 26, que es donde estábamos trabajando originalmente. Así podemos ver que
+Ya tenemos la matriz módulo 13, si conseguimos calcular también esta matriz módulo 2, por el \textbf{Teorema chino del resto}, tendríamos la matríz módulo 26 que buscamos.
+
+\begin{theorem}[Teorema chino del resto]
+Sean $n,m \in \mathbb{N}$ tales que $ \operatorname{mcd}(n, m) = 1 $, es decir, son primos relativos.
+
+Entonces dados cualesquiera $b_1,b_2 \in \mathbb{Z}$, existe un $x \in \mathbb{Z}$ tal que:
+
+\[x \equiv b_1 \pmod n\]
+\[x \equiv b_2 \pmod m\]
+
+Y además, si existen otros $v,w \in \mathbb{Z}$ que satisfagan las dos congruencias anteriores entonces:
+
+\[v \equiv w \pmod {n \cdot m} \]
+\end{theorem}
+
+No podemos calcular fácilmente la matriz módulo 2, pero sabemos que será una matriz de orden 2 con coeficientes $1s$ y $0s$ con lo que hemos restringido el problema a 16 posibles matrices, que combinaremos con $A$ mod $13$ para escribir:
+
 \[A = \left( \begin{array}{cc}
 2 & 4 \\
 3 & 2  \end{array} \right) + 13 \left( \begin{array}{cc}
@@ -612,5 +629,69 @@ c & d  \end{array} \right)\]
 Por lo pronto ya hemos reducido el total de matrices posibles de 17 000 a sólo 16. Pero realmente aún podemos reducir más este valor, puesto que necesitamos que $A$ sea invertible \footnote{Qué sentido tiene emplear un sistema de cifrado que no es descifrable ni si quiera para aquellos que conozcan la clave...}.
 
 En el espacio de matrices de orden 2 sólo existen 6 matrices invertibles que son:
-TODO
+\[\left( \begin{array}{cc}
+1 & 0 \\
+0 & 1  \end{array} \right),\left( \begin{array}{cc}
+1 & 1 \\
+0 & 1  \end{array} \right),\left( \begin{array}{cc}
+1 & 0 \\
+1 & 1  \end{array} \right),\left( \begin{array}{cc}
+0 & 1 \\
+1 & 0  \end{array} \right),\left( \begin{array}{cc}
+0 & 1 \\
+1 & 1  \end{array} \right),\left( \begin{array}{cc}
+1 & 1 \\
+1 & 0  \end{array} \right)\]
+
+Por otro lado, igual que hemos reducido la ecuación \ref{equation:matrix} a módulo 13, también podemos reducirla a módulo 2, obteniendo:
+\[A \cdot \left( \begin{array}{cc}
+0 & 1 \\
+0 & 0  \end{array} \right) = \left( \begin{array}{cc}
+0 & 1 \\
+0 & 0  \end{array} \right) \]
+
+Como era de esperar, de aquí no podemos calcular $A$ puesto que no podemos despejar. Sin embargo, si podemos sacar cierta información. Por ejemplo, podemos ver que la primera columna de $A$ será $(1,0)$.
+
+Recordando que necesitamos que esta matriz sea invertble y que hay sólo 6 matrices invertibles de orden 2 con coeficientes $1$s y $0$s, podemos anticipar que la matriz $A$ tendrá dos formas posibles:
+\[A=\left( \begin{array}{cc}
+1 & 0 \\
+0 & 1  \end{array} \right) \text{ ó } A= \left( \begin{array}{cc}
+1 & 1 \\
+0 & 1  \end{array} \right)\]
+
+Ahora ya estamos en disposición de calcular la propia matriz $A$. Para ello nos apoyamos en que sabemos si sus coeficientes serán pares o impares, de acuerdo a cómo será la matriz módulo 2. Además, sabemos cómo será la matriz módulo 13 y a esos valores podemos sumarle 13 o dejarlos como están, puesto que cuando hagámos módulo 26 no tendrá sentido haber sumado 13 más veces. Jugando con estos datos llegamos a calcular la matriz $A$ que buscábamos.
+
+Así obtenemos dos opciones para la matriz $A$ en módulo 26, que son:
+\[A=\left( \begin{array}{cc}
+15 & 4 \\
+16 & 15  \end{array} \right) \text{ ó } A= \left( \begin{array}{cc}
+15 & 17 \\
+16 & 15  \end{array} \right)\]
+
+Ahora simplemente debemos probar ambas matrices para descifrar el mensaje y ver cuál de las dos nos da un resultado con sentido.
 \end{example}
+
+\subsection{Criptosistema de Vionère}
+Este criptosistema se basa en emplear una palabra clave de longitud determinada a priori y la función de cifrado:
+\[f(m)=x+e \text{ siendo } e \text{ la palabra clave }\]
+
+Se trata de un sistema afín y consiste en aplicar $n$ sistemas de cesar simultáneamente, uno sobre cada letra y repitiendo cada $n$ letras, siendo $n$ la longitud de la palabra $e$.
+
+El sistema de César era muy fácil de descifrar, ya que podíamos simplemente comprobar todas las posibilidades. En este caso se complica un poco pero un análisis de frecuencia nos ayudaría a hacerlo fácilmente. La fortaleza del sistema radica en que el atacante no conoce a priori la longitud de la palabra clave.
+
+Si llegamos a conocer esta longitud, el sistema sería fácil de romper puesto que el problema se reduciría a descifrar varios sistemas César.
+
+Para poder luchar contra este sistema, resulta útil el concepto que vimos anteriormente de \textbf{índice de coincidencia} que, recordemos, nos medía la probabilidad de que tomando dos letras al azar del texto obtuviésemos la misma.
+
+
+Si calculamos el índice de frecuencia del texto cifrado que hemos obtenido, tendremos un resultado similar al de un texto aleatorio. Sin embargo, si tomamos sólo las letras que han sido cifradas empleando un mismo criptosistema de César, obtendremos un índice de coincidencia similar al del idioma empleado para escribir el texto en claro.
+
+Así, lo que haremos será considerar el texto como una cadena circular de caracteres y ver con qué frecuencia coincide la letra de la posición $i$ con la de la posición $i+n$ para diferentes valores de $n$. Llegamos a un punto, esta frecuencia de coincidencia coincidirá con el \textbf{índice de frecuencia} y esto nos hará saber que la longitud de la palabra clave era $n$.
+
+Podemos ver que el conjunto de claves de Vionère es la unión disjunta de todas las posibles palabras de todas las diferentes longitudes. Una pregunta que podemos plantearnos es qué pasaría si la longitud de la palabra clave y la longitud del mensaje son iguales.
+
+En este caso, nuestro método con los índices de coincidencia no serviría de nada puesto que cada letra estaría cifrada de una forma diferente. En este caso estaríamos ante lo que se conoce como \textbf{cuaderno de una sola vez o cifrado de Vernam}.
+
+La única forma de descifrar un mensaje cifrado con este sistema es conocer la clave, puesto que todas las letras del mensaje cifrado son aparentemente aleatoria.
+
+El inconveniente de este sistema es que para cada mensaje hay que emplear una nueva clave aleatoria distinta de la anterior. El motivo por el que no se usa este sistema es la necesidad de compartir ese cuaderno de claves y mantenerlo secreto.
