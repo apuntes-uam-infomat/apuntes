@@ -1,0 +1,69 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fancysprefs}[2015/05/21 Fancy spanish references]
+
+\DeclareOption{plain}{\def\@loadfancyref{\RequirePackage[plain]{fancyref}}}
+\DeclareOption{vario}{\def\@loadfancyref{\RequirePackage[vario]{fancyref}}}
+
+\ExecuteOptions{plain}
+\ProcessOptions
+
+\RequirePackage[spanish]{varioref}
+\RequirePackage{textcase}
+\@loadfancyref
+
+\makeatletter
+\def\mkfancyprefix#1#2{%
+  \@namedef{fancyref#1labelprefix}{#1}%
+  \begingroup\def\x{\endgroup\frefformat{vario}}%
+    \expandafter\x\csname fancyref#1labelprefix\endcsname
+      {\MakeLowercase{#2}\fancyrefdefaultspacing##1##3}%
+  \begingroup\def\x{\endgroup\Frefformat{vario}}%
+    \expandafter\x\csname fancyref#1labelprefix\endcsname
+      {#2\fancyrefdefaultspacing##1##3}%
+       \begingroup\def\x{\endgroup\frefformat{plain}}%
+    \expandafter\x\csname fancyref#1labelprefix\endcsname
+      {\MakeLowercase{#2}\fancyrefdefaultspacing##1}%
+  \begingroup\def\x{\endgroup\Frefformat{plain}}%
+    \expandafter\x\csname fancyref#1labelprefix\endcsname
+      {#2\fancyrefdefaultspacing##1}%
+}
+\makeatother
+
+\mkfancyprefix{thm}{Teorema}
+\mkfancyprefix{def}{Definici\'on}
+\mkfancyprefix{ej}{Ejercicio}
+\mkfancyprefix{prop}{Proposici\'on}
+\mkfancyprefix{lem}{Lema}
+\mkfancyprefix{crl}{Corolario}
+
+\providecommand*{\namerefl}[1]{%
+\refused{#1}%
+\MakeTextLowercase{%
+\getrefbykeydefault{#1}{name}{??}%
+}%
+}
+
+\newcommand{\nref}[1]{\nameref{#1} (\vref*{#1})}
+\newcommand{\nlref}[1]{\namerefl{#1} (\vref*{#1})}
+
+\fancyrefaddcaptions{spanish}{
+	\renewcommand*{\chaptername}{Cap\'itulo}%
+	\renewcommand*{\figurename}{Figura}%
+	\renewcommand*{\pagename}{P\'agina}%
+	\renewcommand*{\tablename}{Tabla}%
+	\renewcommand*{\Frefchapname}{\chaptername}%
+	\renewcommand*{\Frefenumname}{Elemento}%
+	\renewcommand*{\Frefeqname}{Ecuaci\'on}%
+	\renewcommand*{\Freffigname}{\figurename}%
+	\renewcommand*{\Freffnname}{Nota al pie}%
+	\renewcommand*{\Frefonname}{En}%
+	\renewcommand*{\Frefpgname}{\pagename}%
+	\renewcommand*{\Frefsecname}{Secci\'on}%
+	\renewcommand*{\Frefseename}{Ver}%
+	\renewcommand*{\Freftabname}{\tablename}%
+	\renewcommand*{\Freffigshortname}{Fig.}%
+	\renewcommand*{\Frefpgshortname}{P.}%
+	\renewcommand*{\Freftabshortname}{Tab.}
+}
+
+\selectlanguage{spanish}

@@ -1,0 +1,413 @@
+% -*- root: ../GeometriaDiferencial.tex -*-
+\chapter{Introducción a la Geometría Riemanniana}
+\label{chap:GeometriaRiemman}
+
+\section{Motivación}
+
+Hasta ahora hemos estudiado las herramientas básicas de la geometría. En el \fref{chap:FormasDiferenciales} desarrollábamos las formas diferenciales, los elementos que nos permiten hacer el cálculo diferencial sobre los objetos que estudiamos, a los que llamábamos ``variedades diferenciables'' en el \fref{chap:Variedades}. De ahí hemos pasado a entender y estudiar los campos vectoriales en esas variedades (\fref{chap:Campos}) y por último hemos aprendido a hacer cálculo con integrales en esas variedades en el \fref{chap:Integracion}.
+
+¿Qué nos falta? La respuesta la podemos encontrar pensando un poco: querremos medir distancias, ángulos y áreas. Para ello, vamos a necesitar una métrica, que como podrá imaginar el lector avispado, sirve para medir. El estudio de lo que ocurre cuando usamos una métrica para estudiar variedades diferenciables es un campo en sí mismo: Geometría Riemanniana.
+
+\section{Introducción: la métrica Riemanniana}
+
+Acabamos de decir que necesitamos una métrica. Ahora bien, ¿qué es una métrica? O, dicho de otra forma, ¿qué usamos en $ℝ^n$ para medir longitudes de vectores o ángulos entre ellos?
+
+Tal y como uno se puede imaginar, lo que buscamos es un ``producto escalar'' que nos funcione en variedades. El producto escalar nos da una norma ($\md{\vv} = \pesc{\vv, \vv}$) y la norma nos da una distancia ($\dst(\vx, \vy) = \md{\vx - \vy}$), así que parece claro que esto es lo que buscamos. ``Esto'', de hecho, tiene nombre:
+
+\begin{defn}[Métrica\IS Riemanniana] \label{def:MetricaRiemanniana} Sea $X$ una variedad diferenciable, y sea $\appl{\pesc{·,·}_p}{\tgs_p X}{ℝ}$ una aplicación bilineal definida en un punto $p∈X$ que cumple la siguientes propiedades:
+\begin{enumerate}[itemsep=2pt]
+\item $\pesc{\vx,\vy}_p = \pesc{\vy, \vx}_p$.
+\item $\pesc{\vx + \va, \vy}_p = \pesc{\vx,\vy}_p + \pesc{\va, \vy}_p$.
+\item $\pesc{α\vx, \vy}_p = α\pesc{\vx,\vy}_p$.
+\item $\pesc{\vx,\vx}_p ≥ 0$, siendo igual a $0$ si y sólo si $\vx = 0$.
+\end{enumerate}
+
+Es decir, pediremos que $\pesc{·,·}_p$ sea un producto escalar restringido a $\tgs_p X$ y que además varíe suavemente de punto a punto, esto es, que dados $D, D'$ campos en $M$, la aplicación \begin{align*}
+p & \longmapsto \pesc{D_p, D_p'}_p \\
+x & \longmapsto ℝ
+\end{align*} es infinitamente diferenciable en $X$.
+
+Diremos entonces que $\pesc{·,·}_p$ es una \textbf{métrica Riemanniana}.
+\end{defn}
+
+La métrica riemanniana nos viene casi regalada: el producto escalar habitual de $ℝ^n$ restringido a $\tgs_p X$ es una métrica Riemanniana. Por comodidad, diremos que una \concept[Variedad\IS Riemanniana]{variedad Riemanniana} es una variedad diferenciable dotada de una métrica Riemanniana.
+
+Una vez que tenemos definida la métrica podremos hacer cosas que habíamos visto en cursos anteriores, sólo que esta vez generalizadas a variedades Riemannianas. Por ejemplo, podemos medir la longitud de una curva $\appl{γ}{I}{X}$, dada por \[ \mop{long} γ ≝ \int_I \md{γ'(t)} \dif t \] con $\md{γ'(t)} = \pesc{γ'(t), γ'(t)}$, la norma inducida por la métrica Riemanniana.
+
+Esta noción de longitud de ``longitud de curva'' nos permite definir la distancia en una variedad Riemanniana. Aquí no podemos usar directamente la norma (no podemos ``salirnos'' de la variedad para medir la distancia entre dos puntos), así que usaremos la longitud de la curva más corta entre dos puntos. Es decir, \[ \dst(x, x') ≝ \inf_{γ\, curva} \mop{long} γ \]
+
+Curiosamente, esta es una distancia que nos da la misma topología que teníamos antes\footnote{La topología de la variedad es la topología de subespacio inducida por el espacio ambiente.}. Esto será lo que nos dé una \concept[Distancia\IS Riemanniana]{distancia Riemanniana}\footnote{Para demostrar que es una distancia lo más difícil es ver que si la distancia es cero entonces los dos puntos son el mismo. El resto es bastante trivial.}.
+
+De la misma forma que en $ℝ^n$ el producto escalar nos daba un ángulo, en variedades Riemannianas también lo hace: \[ \mop{ang}(\vx, \vy) = \frac{\pesc{\vx, \vy}}{\md{\vx}·\md{\vy}} \]
+
+Si la métrica es tan importante, nos interesará tratar con aplicaciones que la conservan. Esto es, isometrías:
+
+\begin{defn}[Isometría] Dadas dos variedades $X, X'$ y un difeomorfismo $\appl{Φ}{X}{X'}$, se dice que Φ es isometría si y sólo si para todo $p∈X$ y para todo par $D_p, D_p'$ de vectores tangentes se tiene que \[ \pesc{D_p, D_p'} = \pesc{Φ_{*,p}(D), Φ_{*,p}(D')} \]
+\end{defn}
+
+Dos variedades diferenciales isomorfas son la misma, aunque no tienen por qué tener la misma métrica riemanniana. En cambio, dos variedades isométricas sí que tienen la misma geometría riemanniana por conservar la misma métrica.
+
+\subsection{Métrica global en una variedad}
+
+Un comentario interesante es que podemos utilizar las particiones de la unidad (\fref{def:ParticionUnidad}) para pasar de una métrica local a una métrica global para toda la variedad.
+
+Tenemos la partición $(U_i, ρ_i)$. En cada abierto $U_i$ la métrica se puede definir con los \[ \pesc{\dpa{}{x_j}, \dpa{}{x_k}}_i = δ_{ij} \], tomando esas parciales como los elementos de la base del tangente. Esto no viene siendo más que la definición habitual de producto escalar.
+
+Podemos combinar estas definiciones locales y decir que, dados dos vectores $D,D'$, su producto escalar es\footnote{No estoy muy seguro de esto porque lo ha puesto sin $D,D'$, pero a mí me gustan las ecuaciones sin vacíos.} \[ \pesc{D, D'} = \sum_i ρ_i \pesc{D, D'}_i \]
+
+\section{Curvatura}
+
+Un concepto que nos falta definir en las variedades Riemannianas es el de la curvatura. Hasta ahora hemos tratado con espacios planos ($ℝ^n$), así que vamos a tener que cambiar algunas cosas.
+
+La curvatura la definiremos en un punto, y dependerá de lo que ocurra a su alrededor. Ahora bien, ¿qué tiene que ocurrir? ¿Qué cambia cuando nos movemos a lo largo de una variedad que nos dice algo sobre su curvatura?
+
+La respuesta no es trivial. Para encontrar la curvatura, vamos a tener que definir algunos conceptos nuevos usando el método de la referencia móvil de Cartan.
+
+\subsection{Método de las referencias móviles}
+
+La primera pregunta que tenemos que responder es cómo describimos el espacio local alrededor de un punto de la variedad. Por ejemplo, si estamos en una superficie, podemos pensar que necesitamos tres ``direcciones''. Querremos dos vectores que nos permitan movernos en el espacio tangente a la superficie, y probablemente nos interese saber el vector normal a esta superficie, ya que al fin y al cabo nos da una orientación para esa superficie. En general, para una variedad $n$-dimensional, querremos $n$ vectores que nos digan cómo movernos.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{VI_Referencia}
+\caption{Una transformación lineal $L$ nos lleva la base de $ℝ^n$ a una referencia distinta.}
+\label{fig:Referencia}
+\end{figure}
+
+¿Qué son esos vectores? En el fondo, no serán más que transformaciones lineales del espacio vectorial de $ℝ^n$, como se puede ver en la \fref{fig:Referencia}. Luego podemos definir nuestra referencia $\set{e_i}$ en un punto como \[ e_i ≝ L\left((0,\dotsc,1,\dotsc,0)\right) \] con ese $1$ en la posición $i$-ésima.
+
+Nos falta, claro está, saber dónde está el punto. El punto de la variedad no es más que una traslación del origen. A esta traslación la llamaremos $M$. Así, podemos construir una transformación afín $T = M + L$. El conjunto dado por $(M, e_1, \dotsc, e_n)$ será lo que llamaremos una \concept[Referencia\IS afín]{referencia afín}. Por así decirlo, esto será un marco que nos permitirá entender cómo es el espacio alrededor de un punto dado de la variedad. Al conjunto de todas estas referencias afines lo llamaremos $\mathcal{R}$. Dado que es una colección de $n+1$ vectores de $ℝ^n$, se tiene fácilmente que $\mathcal{R} ⊂ ℝ^{(n+1)n}$.
+
+Ahora bien, tener una referencia así es un poco incómodo, si tenemos que definir todos esos vectores para cada punto. Lo que querremos hacer es parametrizarla de alguna forma. Diremos que un conjunto $S⊂\mathcal{R}$ será una referencia móvil parametrizada. El parámetro que usar es obvio: el punto de la superficie en el que estamos.
+
+\subsection{Ecuaciones de estructura}
+
+Ya estamos cerca de encontrar qué es lo que cambia alrededor de un punto. Hemos dicho que los elementos $M, e_1, \dotsc,e_n$ están parametrizados por el punto en cuestión, luego los podemos considerar como aplicaciones lineales de $U ⊂ ℝ^n$, el abierto donde están definidas las coordenadas del punto, a $ℝ^n$.
+
+Podemos estudiar entonces cómo varía $M$, que recordemos que es el ``punto'' en el que estamos trabajando. Para ello, consideraremos $\dif M$. Ahora bien, hasta ahora habíamos trabajado con diferenciales de funciones escalares, no vectoriales. ¿Qué hacemos ahora?
+
+Pensemos un poco fuera del mundo de las formas diferenciales. La diferencial de $M$ nos dice hacia dónde se mueve $M$ cuando avanzamos en la parametrización. Luego nos va a tener que dar una dirección. Esa dirección estará dada como una combinación lineal de los vectores que nos describen el espacio vectorial alrededor del punto, los $e_1, \dotsc, e_n$.
+
+Además, tendremos que especificar qué significa eso de avanzar en la parametrización. En el fondo, no es más que movernos en una dirección dentro de la variedad $X$, y ese movimiento estará dado por un vector ξ tangente a la variedad en el punto, $ξ∈\tgs_p X$.
+
+Así, ya tenemos bastante bien definido qué es lo que queremos. Tenemos una diferencial que se aplica a vectores de $\tgs_p X$, y que se puede expresar como una combinación lineal de los vectores $e_i$ de la referencia, que llamaremos $r$. Luego, lo que tendremos con la diferencial es esta expresión: \[ (\dif M)_r\, ξ = \sum_i ω_{i,r} (ξ) (e_i)_r\]
+
+Hemos introducido un elemento que no habíamos mencionado antes, las $ω_{i,r}$. Son los coeficientes de la combinación lineal, e intuitivamente nos dan una medida de cuánto varía $M$ en la dirección de $e_i$ cuando nos movemos en la dirección de $ξ$.
+
+Ahora bien, ahí hay mucha cosa que realmente no nos aporta información. Por comodidad, escribiremos habitualmente \( \dif M = \sum_i ω_i e_i \label{eq:DifM} \) y sobreentendemos los puntos, los vectores a los que se aplican las formas y la referencia que usamos.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{VI_DiferencialM}
+\caption{Lo queremos ver es cómo cambia nuestra referencia. Estamos en el punto $p$ con la referencia dada por $M = p$ y tres vectores $e_1, e_2, e_3$. Queremos ver qué ocurre cuando nos movemos en una cierta dirección $ξ∈\tgs_p X$. Para ello, cogemos una curva que sea tangente a $ξ$ en $p$ (en el dibujo, línea verde punteada) y que nos lleve a un cierto punto cercano $p'$ en la variedad. Tendremos entonces una nueva referencia dada por $M' = p'$ y los vectores $e_1', e_2', e_3'$. Las diferenciales serán los vectores que nos dicen cómo han variado esos vectores de la referencia. Siendo poco formales, podríamos decir que $\dif e_i (ξ) \simeq e_i' - e_i$, y lo mismo con $M$.}
+\label{fig:DiferencialM}
+\end{figure}
+
+Podemos hacer lo mismo con los vectores $e_j$ y sacar sus diferenciales como \( \dif e_j = \sum_k ω_{jk} e_k \label{eq:DifE} \), con $ω_{jk}$ 1-formas igual que antes.
+
+La interpretación geométrica se puede observar en la \fref{fig:DiferencialM}. Al final, esas diferenciales expresan de alguna forma la estructura geométrica de la superficie. Por ejemplo, si $\dif e_i \equiv 0$, los vectores de la referencia no variarían y tendríamos que la variedad sería plana.
+
+En definitiva, merece la pena estudiar más esas diferenciales para ver qué podemos sacar. Y, como viene siendo habitual en geometría, vamos a tratar de sacar esas relaciones derivando de nuevo. Por ser formas diferenciales, sabemos que $\dif(\dif M) = \dif(\dif e_i) = 0$, detalle que tendremos que tener en cuenta durante nuestro cálculo.
+
+Empezamos calculando la diferencial de $\dif M$ \eqref{eq:DifM}. Por simplificar, calcularemos sólo la diferencial de un sumando $ω_ie_i$: \[ \dif(ω_i e_i) = \dif ω_i e_i - ω_i \y \dif e_i \]
+
+Ahora bien, la derivada de $\dif e_i$ la tenemos en \eqref{eq:DifE}, luego sustituimos y nos queda que \[ \dif(ω_i e_i) = \dif ω_i e_i - ω_i \y \left(\sum_k ω_{ik} e_k\right) \]. Recuperando el sumatorio de antes nos queda que \( 0 = \dif(\dif M) = \sum_i \dif ω_i e_i - \sum_i ω_i \y \sum_k ω_{ik} e_k \label{eq:Riemann2} \)
+
+Podemos agrupar para que nos quede que \[ 0 = \sum_k \left(\dif ω_k -\sum_i ω_i \y ω_{ik} \right) e_k \], de donde se concluye, que, dado que los $e_k$ son base, cada coordenada tiene que ser 0, esto es \( \dif ω_k = \sum_i ω_i \y ω_{ik} \label{eq:Estr1} \)
+
+Este resultado es, en el fondo, bastante curioso. Vamos a tratar de interpretarlo. Por un lado, habíamos visto que las formas $ω_i$ nos decían cuánto se movía $M$ (que, recordemos, no es más que el punto $p$ de la variedad en el que estamos) en la dirección del vector de la base $e_i$ cuando, en la variedad, nos desplazábamos en la dirección de un cierto vector ξ. Igualmente, $ω_{ik}$ nos dice cuánto varía el vector de la base $e_i$ en la dirección de $e_k$.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{VI_Rampa}
+\caption{Subiendo por una rampa cada vez más inclinada. Avanzar en la dirección del eje $X$ cuando estamos en el espacio tangente a $p$ es avanzar por la curva azul, lo que nos deja más adelante en el eje $X$ y también más altos en el eje $Z$ (con $ξ = (1,0,0)$, decíamos antes que teníamos $ω_3(ξ) = 1,\ ω_1(ξ) = 1$). Además, el vector $e_1$ apunta cada vez más para arriba ($ω_{13}(ξ) = 1$), luego la superficie se curva cada vez más hacia arriba.}
+\label{fig:Rampa}
+\end{figure}
+
+Por ejemplo, si tomamos $\set{e_i}$ como la base canónica de $ℝ^3$, y $ξ = (1,0,0)$ y nos sale que $ω_3(ξ) = 1$\footnote{En realidad, en superficies, se tiene que $ω_3 = 0$, como veremos en la sección \fref{sec:CurvaturaSuperficies}. Pero para nuestro propósito de entender qué está ocurriendo nos viene muy bien ``olvidarnos'' de este hecho.} ,$ω_1(ξ) = 1$ y que $ω_2(ξ) = 0$, la interpretación geométrica sería que, cuando nos movemos en nuestra variedad a lo largo del eje $X$, el punto se va a quedar con la misma coordenada $y$ pero la coordenada $z$ se va a incrementar. Por así decirlo, lo que representa es que estamos subiendo sin desviarnos lateralmente.
+
+Si además tenemos que $ω_{13}(ξ) = 1,\ ω_{23}(ξ) = 0$, lo que tenemos es que el vector $e_1$ se va a ``inclinar hacia arriba'' (aumenta en la dirección de $e_3$, el eje $Z$) cuando avanzamos en la dirección del eje $X$. Así que no sólo estamos subiendo por una rampa, sino que además esa rampa cada vez tiene más inclinación, algo parecido a lo que podemos ver en la \ref{fig:Rampa}.
+
+Por otra parte, ¿qué es $\dif ω_k$? Es una 2-forma, que se aplica a dos vectores. Además, es la diferencial de $ω_k$, luego tiene que codificar información sobre cómo varía $ω_k$. En definitiva, $\dif ω_k (ξ,ζ)$ nos diría cuánto se mueve $M$ en la dirección de $e_k$ cuando, desde $p$, nos movemos un poco en la dirección de $ξ$ y después en la de ζ.
+
+Por lo tanto, la \fref{eq:Estr1} lo que nos dice es que ese movimiento en dos direcciones sólo depende de cómo cambia la referencia en el punto en el que estamos.\footnote{Esto merece una explicación algo mejor.}
+
+Podríamos repetir el mismo cálculo para las otras $e_i$ y lo que queda es que \( \dif ω_{ij} = \sum_k ω_{ik} \y ω_{kj} \), que nos dice algo similar: todo depende únicamente de la referencia en la que estamos en este punto y como cambia cuando nos movemos en este punto.Estas ecuaciones son por lo tanto algo importante, y tienen hasta nombre y todo:
+
+\begin{defn}[Ecuaciones\IS de estructura] Dada $X$ una variedad diferenciable con $(M,e_1, \dotsc, e_n)$ su referencia móvil, consideramos $\dif M = \sum_i ω_i e_i$ y $\dif e_i = \sum_j ω_{ij} e_j$. Entonces, las ecuaciones de estructura de $X$ relacionan esas formas $ω_i,ω_{ij}$ y son \begin{align*}
+\dif ω_k &= \sum_i ω_i \y ω_{ik} \\
+\dif ω_{ij} &= \sum_k ω_{ik} \y ω_{kj}
+\end{align*} \label{def:EcuacionesEstructura}
+\end{defn}
+
+Como un detalle de notación, a las $ω_{ij}$ se les llaman las \concept[Forma\IS de conexión]{formas de conexión}\footnote{El nombre viene de que son las formas que dan la transformación del espacio tangente en un punto al espacio tangente en otro, pero de momento eso no nos interesa mucho. El concepto formal se llama ``conexión'' (no es lo mismo que la conexión topológica) y hay más en \href{http://en.wikipedia.org/wiki/Affine_connection}{Wikipedia}.}.
+
+\subsubsection{Ecuaciones de estructura con referencias ortonormales}
+
+Queda una cosa más, que es que usando las referencias afines se puede hacer geometría afín, pero normalmente querremos hacer geometría euclídea (Riemanniana). Luego lo que habrá que suponer es que la referencia sea ortonormal, luego querremos obligar a que $\pesc{e_i, e_j} = δ_{ij}$.
+
+Entonces, tendremos que $\dif (e_i · e_j) = 0$, pero por Leibiniz \[ \dif (e_i · e_j) = \dif e_i e_j + e_i \dif e_j \] y sustituyendo nos va a quedar que $ω_{ij} = -ω_{ji}$. Entonces en el caso de referencias ortonormales se añade otra ecuación a las ecuaciones de estructura. Esto sguiere que con estas ω se va a poder hacer una matriz antisimétrica de 1-formas que se le llama Ω, \concept[Matriz\IS de conexión]{matriz de conexión}.
+
+Con esto lo único que se ha hecho es la base digamos en $ℝ^n$ de la geometría que se va a hacer. La base viene luego de considerar variedades de $ℝ^n$. Lo que veremos el próximo día es qué ocurre cuando en $ℝ^n$ hay una subvariedad. De hecho, consideraremos el caso de $n=3$ con una subvariedad como superficie.
+
+\subsubsection{Ecuaciones de estructura en subvariedades inmersas}
+
+Un pequeño detalle es que hasta ahora hemos estado hablando de todo esto tranquilamente en variedades, cuando en realidad no hemos desarrollado la base formal para hacerlo. Por suerte, eso es sencillo.
+
+Simplemente tenemos toda la teoría de antes definida únicamente para $ℝ^n$. Para moverlo todo a una variedad $M$ inmersa en ese espacio con la inmersión $i$, simplemente definimos $\gor{ω}_i = i^* ω_i$ y $\gor{ω}_ij = i^* ω_{ij}$. Como el pullback se comporta bien con la diferencial y el producto exterior, las ecuaciones de estructura son las mismas. Por comodidad, la barra se quita y se supone el pullback.
+
+\subsection{Lemas de Cartan}
+
+Antes de seguir trabajando con las ecuaciones de estructura para obtener cosas como la curvatura, vamos a ver dos lemas puramente algebraicos que nos ayudarán a manejar estas ecuaciones.
+
+\begin{lemma}[Lema\IS de Cartan I] \cite[Página 80]{doCarmo94} Sea $E$ un espacio vectorial de dimensión $n$. Sean $ω_1, \dotsc, ω_r$ aplicaciones lineales de $E$ en $ℝ$ linealmente independientes\footnote{Es decir, linealmente independientes como covectores del espacio dual $E^*$.}. Supongamos que existen otras formas lineales de $E$ en $ℝ$ $θ_1, \dotsc, θ_r$ tal que \[ Λ^2 E^* \ni \sum ω_i \y θ_i = 0\]
+
+Entonces, existen $a_{ij}$ tales que \[ θ_i = \sum_j a_{ij} ω_j \] y con $a_{ij} = a_{ji}$.\label{lem:CartanI}
+\end{lemma}
+
+\begin{proof} Dado que las $ω_i$ que tenemos son independientes, podemos completarlas a una base $ω_1, \dotsc, ω_r, \dotsc, ω_n$ del espacio vectorial. Por lo tanto, podremos reescribir las $θ_i$ como \[ θ_i = \sum_{j≤r} a_{ij} ω_j + \sum_{l>r} b_{il} ω_l \]
+
+Queremos buscar que los $b_{il}$ son todos cero para que se cumpla el teorema. Usamos que $\sum ω_i \y θ_i = 0$, y operamos: \[
+0 = \sum_{i ≤ r} ω_i \y θ_i = \sum_{\substack{i ≤ r \\ j ≤ r}} a_{ij} · ω_i \y ω_j + \sum_{\substack{i ≤ r \\ l > r}} b_{il} · ω_i \y ω_l \eqexpl{\footnote{Agrupamos las formas usando la antisimetría del producto exterior.}} \sum_{i < j} (a_{ij} - a_{ji}) ω_i \y ω_j + \sum b_{il} ω_i \y ω_l
+\]
+
+Ahora usamos que el conjunto de los $ω_i \y ω_j, ω_i \y ω_l$ es linealmente independiente y concluimos: como todo eso tiene que ser cero, por un lado $a_{ij} = a_{ji}$ y $b_{il} = 0$.
+\end{proof}
+
+\begin{lemma}[Lema\IS de Cartan II] Sea un abierto $U⊂ℝ^n$ y $ω_1, \dotsc, ω_n$ 1-formas linealmente independientes. Supongamos que existen 1-formas $ω_{ij}$ con $1≤i,j≤n$ tales que \[ ω_{ij} = - ω_{ji},\qquad \dif ω_j = \sum ω_k \y ω_{kj} \]
+
+Entonces, las $ω_{ij}$ son únicas. \label{lem:CartanII}
+\end{lemma}
+
+\begin{proof} Vamos a demostrarlo por reducción al absurdo, suponiendo que existen otras $\gor{ω}_{ij}$ que cumplen las condiciones del teorema. En concreto, dado que la diferencial de $\dif ω_j$ tiene que ser la misma, si restamos vamos a tener que  \[ \dif ω_j - \difω_j = \sum_k ω_k \y (\gor{ω}_{kj} - ω_{kj}) = 0\]
+
+Usando el \fref{lem:CartanI}, tenemos una suma de productos diferenciales que es nula, luego sabemos que existen unos coeficientes simétricos, que llamaremos $B_{ki}^j$, tales que \[ \gor{ω}_{kj} - ω_{kj} = \sum_i B_{ki}^j ω_i \] y \( B_{ki}^j = B_{ik}^j \label{eq:CartanII_1}\). Querremos demostrar que esos coeficientes son 0.
+
+El truco es usar la antisimetría del producto de formas, y entonces \[ \gor{ω}_{kj} - ω_{kj} = -(\gor{ω}_{jk} - ω_{jk}) \]
+
+Por otra parte, cambiando el signo al sumatorio tendríamos que \[-(\gor{ω}_{jk} - ω_{jk}) = - \sum B_{ji}^k ω_i \]
+
+De ahí sacamos que \( B_{ji}^k = - B_{ki}^j \label{eq:CartanII_2} \). Ahora operamos rotando los índices para conseguir demostrar que un coeficiente es igual a menos él mismo, y que por lo tanto sólo puede ser cero:
+\[ B_{ji}^k \eqexpl{\eqref{eq:CartanII_2}} -B_{ki}^j \eqexpl{\eqref{eq:CartanII_1}} -B_{ik}^j \eqexpl{\eqref{eq:CartanII_2}} B_{jk}^i \eqexpl{\eqref{eq:CartanII_1}} B_{kj}^i \eqexpl{\eqref{eq:CartanII_2}} -B_{ij}^k \eqexpl{\eqref{eq:CartanII_1}} -B_{ji}^k  \]
+
+Por lo tanto, nos queda que $\gor{ω}_{kj} = ω_{kj}$ y entonces las formas son únicas.
+\end{proof}
+
+\subsection{Curvatura en superficies}
+\label{sec:CurvaturaSuperficies}
+
+Cuando en $ℝ^3$ tenemos una superficie $S$, en cada punto vamos a tener el vector $M$, que nos dice qué punto es, y esa elección es fija. La que no es fija es la de los vectores ortonormales $e_i$ que nos dan una base del espacio vectorial $ℝ^3$ en ese punto. Antes de seguir, vamos a tener que concretar y formalizar la elección de esos vectores $e_i$ en lo que se llaman referencias adaptadas.
+
+\subsubsection{Referencias adaptadas}
+
+Suponemos que tenemos la superficie $S \overset{i}{⊂} ℝ^3$, donde $i$ es una inmersión compatible con la topología. Entonces, para cualquier $p∈S$, tendremos $U,V$ entornos de $p$ en $S$ y $ℝ^3$ respectivamente tales que $V∩S = U$.
+
+En cada punto de la superficie vamos a tener un punto y un espacio tangente $\tgs_p S$. En cada uno de esos puntos elegiremos una referencia ortonormal que esté adaptada. ¿Qué quiere decir eso?
+
+Para elegir una referencia adaptada, elegiremos un campo normal\footnote{Módulo 1, con el producto escalar inducido por el de $ℝ^3$.} $e_1 ∈ \tgs_p S$ que no se anule, que será el primer vector de la referencia. Lo que tiene sentido ahora es tomar el ortogonal a $e_1$. La cuestión es que hay dos ortogonales. Para elegir entre ellos, lo que haremos será usar la orientación inducida del plano. Así, $e_2$ será unitario, perpendicular a $e_1$ y además, para la orientación inducida $Ψ_{\tgs_p S}(e_1, e_2) > 0$ donde $Ψ_{\tgs_p S}$ es\footnote{No sé qué es esto en realidad.} la aplicación bilineal inducida de $ℝ^3$. Por último, elegiremos un último vector ortogonal a esos tres tal que \[ Ψ_{ℝ^3} (e_1, e_2, e_3) > 0\]
+
+A esto le llamaremos una \concept[Referencia\IS adaptada]{referencia adaptada}. Esta referencia definirá una función $\appl{σ}{U⊂S}{\mathcal{O}(U)}$ donde $\mathcal{O}(U) = \set{r∈\mathcal{O} \tq M ∈ U}$. La aplicación inversa será la proyección $π$, tal que $π○σ = I_U$.
+
+La σ asocia una referencia a cada punto de $U$. Se puede ver como una referencia móvil porque cambia según el punto.
+
+Ahora, en $\mathcal{O}(U)$ teníamos 1-formas $ω_1, ω_2, ω_3$ y 1-formas $ω_{12}, ω_{13}, ω_{23}$. Uno puede definir entonces sus antiimágenes por $σ$, y veremos que esas formas $σ^*(ω_i), σ^*(ω_{ij})$ cumplen las mismas ecuaciones de estructura que habíamos visto antes, dado que el pullback es compatible con el producto exterior y la diferencial. Por abuso de notación, muchas veces se omitirá el $σ^*$ y se hablará simplemente de las $ω_i, ω_{ij}$: el contexto nos dirá de cuáles estamos hablando.
+
+\subsubsection{Ecuaciones de estructura en superficies y obtención de la curvatura}
+
+Vamos a sacar las ecuaciones de estructura en una superficie y ver qué tenemos. Lo primero de lo que nos damos cuenta de que en una superficie (dimensión 2), las tres 1-formas que tenemos no pueden ser independientes. Tiene que haber una relación de dependencia. En la referencia adaptada, esta relación es bastante tonta: $ω_3 = 0$. Dicho de otra forma, da igual en qué dirección nos vamos en el espacio tangente que nunca vamos a ``subir'' o ``bajar'': si nos moviésemos por el vector normal a la superficie nos saldríamos.
+
+Lo interesante es lo que se deduce de esto: si $ω_3$ es $0$ entonces $\dif ω_3 = 0$, y cuando escribimos las ecuaciones de estructura tendremos que  \[ \dif ω_3 = ω_1 \y ω_{13} + ω_2 \y ω_{23} = \]. Usando el lema de Cartan (\fref{lem:CartanI}), podremos escribir \begin{align*}
+ω_{13} &= h_{11} ω_1 + h_{12} ω_2 \\
+ω_{23} &= h_{12} ω_1 + h_{22} ω_2
+\end{align*}
+
+Podemos escribir esos $h_{ij}$ como una matriz simétrica \( \begin{pmatrix} h_{11} & h_{12} \\ h_{12} & h_{22}\end{pmatrix} \label{eq:MatrizH} \), que tendrá como invariantes el determinante y la traza. Entonces, definiremos la \concept[Curvatura\IS Gaussiana]{curvatura gaussiana} \[ K = h_{11} h_{22} - h_{12}^2 \] y la \concept[Curvatura\IS Media]{curvatura media} \[ H = \frac{h_{11} + h_{22}}{2} \]
+
+Lo interesante será ver que no dependen de la referencia que hemos usado, ya que el cambio de referencia es simplemente un cambio de base que mantiene los invariantes de la matriz de antes.
+
+Vamos a ver lo que comentábamos antes de que en superficies $ω_3 = 0$. Usando la notación es fácil: \[ \dif M (e_j) = \sum ω_i(e_j) e_i = e_j \], luego los coeficientes tienen que ser la delta de Kronecker, es decir, $ω_i(e_j) = δ_{ij}$. Así, las formas $ω_i$ que definíamos no son más que las formas duales de los vectores de la base del tangente. Como el tangente sólo está generado por $e_1, e_2$, la forma dual de $e_3$ tendrá que ser cero.
+
+\subsubsection{Curvatura a partir únicamente de formas diferenciales}
+
+Hay una manera de definir la curvatura sólo con formas. Recordamos que teníamos  \begin{align*}
+ω_{13} &= h_{11} ω_1 + h_{12} ω_2 \\
+ω_{23} &= h_{21} ω_1 + h_{22} ω_2
+\end{align*} con $h_{12} = h_{21}$. Podemos hacer la siguiente cuenta: \( \dif ω_{12} \eqreason{Por las ecuaciones de estructura.} ω_{11}\y ω_{12} + ω_{12} \y ω_{22} + ω_{13}\y ω_{32} \eqreasonup{Dado que estas formas son antisimétricas, $ω_{ii} = 0$.} -K ω_1 \y ω_2 \label{eq:CurvaturaGauss} \)donde $K$ es de nuevo la curvatura Gaussiana. Al sólo depender de $ω_1, ω_2$, es intrínseca.
+
+Podemos hacer lo mismo con la curvatura media: \( ω_{13} \y ω_2 + ω_1 \y ω_{23} = (h_{11} + h_{22}) ω_1 \y ω_2 = 2Hω_1\y ω_2 \label{eq:CurvaturaMedia} \)
+
+\subsubsection{Ejemplos}
+
+\begin{example}
+Vamos a hacer un ejemplo de cálculo de las ecuaciones de estructura de una superficie usando la helicoide. Esta variedad está dada de forma paramétrica por \begin{align*}
+\appl{f}{ℝ^2&}{ℝ^3} \\
+(s,t) & \longmapsto (s \cos t, s \sin t, at)
+\end{align*} con $a∈ℝ$.
+
+Lo primero es calcular la referencia ortonormal. Como ya sabremos de otros cursos, la referencia está dada por los vectores de las dos derivadas parciales (los dos vectores generan el plano tangente en cada punto), así que las calculamos
+\begin{align*}
+f_s = \dpa{f}{s} &= (\cos t, \sin t, 0) \\
+f_t = \dpa{f}{t} &= (-s \cos t, s \cos t, a)
+\end{align*}
+
+Este caso es simple porque $f_s$ y $f_t$ son perpendiculares en $ℝ^3$. De hecho, $f_s$ está normalizado, así que podemos definir fácilmente los vectores $e_1, e_2$ como \begin{align*}
+e_1 &≝ f_s \\
+e_2 &≝ \frac{f_t}{a^2 + s^2}
+\end{align*}
+
+Estos dos vectores son la base ortonormal del plano tangente. Para tener la base ortonormal de todo el espacio nos falta el vector $e_3$. Lo calcularemos usando el producto vectorial, que tiene implícita la orientación de la superficie. Resulta \[ e_3 = e_1 × e_2 = \frac{1}{a^2+s^2} (a \sin t, -a \cos t, s) \]
+
+Ahora hay que escribir las ecuaciones de estructura para esta referencia móvil. $M$ es el punto que estamos considerando, así que tendremos que $M = f(s,t)$. Luego podemos calcular la diferencial como \[ \dif M = \dif f = f_s \dif s + f_t \dif t \]
+
+Hay que tener en cuenta, eso sí, de qué estamos hablando cuando ponemos esa ecuación. $M$ es un vector, luego no podemos pasar simplemente a una forma diferencial. Lo que sí podemos hacer es hacer un poquito de abuso de notación: si $M = \sum f^i e_i'$ con $f^i$ la coordenada $i$-ésima de $f$, entonces $\dif M = \sum \dif f^i e_i'$ para alguna base $\set{e_i'}$. Es decir, que no tenemos ningún problema en manejar vectores de formas diferenciales, que es al final lo que estamos haciendo.
+
+Como son vectores, se pueden expresar como combinación lineal de elementos de la base. Antes hemos definido esa misma base como los vectores $e_1, e_2$, así que podremos escribir $\dif M = e_1 ω_1 + e_2 ω_2$, con $ω_1, ω_2$ las coordenadas \[ \dif M = \dif s · e_1 + \sqrt{a^2 + s^2} \dif t · e_2\], de tal forma que las dos formas $ω_1, ω_2$ de las ecuaciones de estructura serán los coeficientes de $e_1, e_2$: \begin{align*}
+ω_1 &= \dif s \\
+ω_2 &= \sqrt{a^2 + s^2} \dif t
+\end{align*}
+
+Sabemos que ahora podremos escribir \[ \dif e_3 = ω_{31} e_1 + ω_{32} e_2 + ω_{33} e_3 \], con $ω_{33} = 0$ por estar en una referencia ortonormal. Como teníamos $e_3$ escrito explícitamente, podemos escribirlo derivando: \begin{multline*} \dif e_3 = \left( -s \frac{1}{\sqrt{s^2 + a^2}} · (a \sin t, - a \cos t, s)+ \frac{1}{\sqrt{s^2 + a^2}} · (0,0,1)\right)\dif s \\ + \frac{1}{\sqrt{s^2 + a^2}} · (a \cos t, a \sin t, 0) \dif t \end{multline*}
+
+Reescribiendo para que el coeficiente de $\dif t$ esté en función de $e_1$ obtenemos $ω_{31}$: \[ \frac{a}{\sqrt{s^2+a^2}} · \frac{ω_2}{\sqrt{s^2 + a^2}} = ω_{31} \] y, haciendo lo mismo con el coeficiente de $\dif s$, nos queda que \[ \frac{a}{a^2 + s^2} ω_1 = ω_{32} \]
+
+Finalmente, podemos escribir ya las curvaturas. Para ello vamos a escribir la matriz de coeficientes $h_{ij}$ de la \fref{eq:MatrizH}, viendo que \begin{align*}
+ω_{13} &= h_{11} ω_1 + h_{12} ω_2 \\
+ω_{23} &= h_{12} ω_1 + h_{22} ω_2
+\end{align*}
+
+Es fácil ver que esas ecuaciones que se cumplen tomando $h_{11} = h_{22} = 0$ y \[ h_{12} = \frac{a}{a^2 + s^2} \]
+
+Ya podemos sacar la curvatura gaussiana y la media como el determinante y la traza de la matriz de $h_{ij}$, que es \[ \begin{pmatrix} 0 & \frac{a}{a^2 + s^2} \\ \frac{a}{a^2 + s^2} & 0 \end{pmatrix} \], así que $K = \frac{a^2}{(a^2+s^2)^2}$ y $H = 0$.
+
+Las superficies con curvatura media $0$ se llaman \concept[Superficie\IS mínima]{superficies mínimas} y son importantes porque son las que minimizan el área para un borde dado.
+\end{example}
+
+En el \fref{ej:Superficies-1} hay otro ejemplo en el que además calculamos la curvatura usando simplemente las formas diferenciales, sin matrices ni nada.
+
+\subsection{Teorema egregio de Gauss}
+
+Vamos a demostrar que la curvatura gaussiana no depende de la inmersión.
+
+\begin{theorem}[Teorema\IS egregio de Gauss] Sea $M_2$ una superficie (variedad de dimensión 2) con dos inmersiones $i, i'$ en $ℝ^3$. Supongamos que las dos inmersiones producen la misma métrica Riemanniana. Sea $K$ la curvatura usando la inmersión $i$ y $K'$ la curvatura usando la inmersión $i'$. Entonces, para todo $p ∈ M_2$, se tiene que $K(p) = K'(p)$, es decir, la curvatura es independiente de la inmersión elegida.
+\end{theorem}
+
+\begin{proof} Sean $e_1, e_2$ campos ortonormales en un abierto $U ⊂ M_2$ que contiene a $p$. Consideramos las formas duales $ω_1, ω_2$ de estos campos, que son iguales independientemente de la inmersión elegida, dado que las métricas son la misma.
+
+Usando el lema II de Cartan (\fref{lem:CartanII}), tenemos que \begin{align*}
+\dif ω_{12} &= \dif ω_{12}' \\
+-K ω_1 \y ω_2 &= -K' ω_1' \y ω_2' \\
+-K ω_1 \y ω_2 &= -K' ω_1 \y ω_2 \\
+-K &= -K'
+\end{align*}
+\end{proof}
+
+\subsection{Formas fundamentales}
+
+Vamos a revisar las formas fundamentales que veíamos en Geometría de Curvas y Superficies. La primera forma fundamental era $I_p(\vv) = \pesc{\vv, \vv}_p$, la métrica en el espacio tangente. Como podemos escribir \[ \vv = ω_1(\vv) e_1 + ω_2 (\vv) \], entonces podemos decir que \[ ω_1 (\vv) · ω_1 (\vv) + ω_2(\vv) · ω_2(\vv) \eqexpl{Not.} (ω_1^2 + ω_2^2)(\vv)\], luego podemos reescribir la primera forma fundamental como \[ I_p(\vv) = (ω_1^2 + ω_2^2) \]
+
+De forma similar, la segunda forma fundamental se escribe como\footnote{Como abuso de notación, aquí no hay producto exterior al multiplicar las formas: $(ω_i ω_j) (\vv) ≝ ω_i(\vv) · ω_j(\vv)$.}  \[ II_p (\vv) ≝ (ω_{13} · ω_1 + ω_{23} ω_2)(\vv) = \left(h_{11}ω_1·ω_1 + h_{12} ω_1ω_2 + h_{21} ω_2 ω_1 + h_{22} ω_2 ω_2 \right)(\vv)\], que se parece sospechosamente a la expresión de la segunda forma fundamental que veíamos en GCS.
+
+\begin{theorem} Sean $S, S'$ dos superficies en $ℝ^3$. Sea $\appl{f}{S}{S'}$ un difeomorfismo que mantiene las dos formas fundamentales. Entonces, existe una isometría $\appl{ρ}{ℝ^3}{ℝ^3}$ global tal que $ρ(S) = S'$.
+\end{theorem}
+
+Este teorema nos da una forma de ver cuándo dos superficies son la misma pero colocadas en distinta posición.
+
+\section{Geometría intrínseca de superficies}
+
+Tenemos una superficie $M_2$ abstracta, no sumergida en ningún espacio euclídeo. La pregunta es cómo podemos definir la parte intrínseca en este caso, sin depender de la inmersión.
+
+De lo que hemos visto hasta ahora, lo único intrínseco son las 1-formas de la ecuación de estructura $ω_1, ω_2, ω_{12}$.
+
+Tomamos un abierto $U ⊂ M_2$ y definimos campos $e_1, e_2$ que en cada punto definan una base ortonormal en el espacio tangente. Podemos definir $ω_1, ω_2$ como las formas duales tales que $ω_i(e_j) = δ_{ij}$.
+
+\begin{theorem}[Teorema\IS de Levi-Civita] \label{thm:LeviCivita} Existe una 1-forma única $ω_{12}$ que cumple \begin{gather*} \dif ω_1 = ω_{12} \y ω_2 \\ \dif ω_2 = -ω_{12} \y ω_1 \end{gather*}
+\end{theorem}
+
+\begin{proof} La unicidad viene del \fref{lem:CartanII}, y lo que dice el teorema es que se cumplen las ecuaciones de estructura en el caso intrínseco.
+
+Para la existencia, la hacemos por construcción: \begin{gather*}
+ω_{12}(e_1) ≝ \dif ω_1 (e_1, e_2) \\
+ω_{12}(e_2) ≝ \dif ω_2 (e_1, e_2)
+\end{gather*}
+
+Nos falta ver que las ecuaciones de estructura se cumplen. Si operamos: \[ \dif ω_1 (e_1, e_2) = ω_{12}(e_1) = ω_{12}(e_1) ω_2(e_2) - ω_{12}(e_1) ω_2(e_1) = ω_{12} \y ω_2 (e_1, e_2) \] vemos que sale, y efectivamente saldría lo mismo con el otro.
+
+\end{proof}
+
+\subsection{Independencia de las ecuaciones de estructura por cambios de referencia}
+\label{sec:IndependenciaEcsEstructura}
+
+Suponemos que tenemos $ω_1, ω_2, ω_{12}$ con sus vectores $e_1, e_2$ de la base; y otra referencia $\gor{ω}_1, \gor{ω}_2, \gor{ω}_{12}$ con sus vectores $\gor{e}_1, \gor{e}_2$, ambas con la misma orientación.
+
+Dado que ambas son bases ortonormales y tienen la misma orientación, es trivial ver que pasar de una a otra sólo puede ser un giro. Esto es, existen dos funciones $f,g$ tales que \( \begin{aligned}
+\gor{e}_1 &= f e_1 + g e_2 \\
+\gor{e}_2 &= -g e_1 + f e_2
+\end{aligned}\label{eq:CambioBaseGiro} \)
+
+Si nos da por calcular el módulo del vector $\gor{e}_1$, tenemos que $1 = \md{\gor{e}_1} = \pesc{f e_1 + g e_2, f e_1 + g e_2} = f^2 + g^2$. Vamos, un giro de toda la vida.
+
+¿Cómo cambian entonces las formas de las ecuaciones de estructura? Está claro que $ω_1$ y $ω_2$ van a cambiar porque son las formas duales de los vectores $e_1, e_2$. Pero, ¿qué pasa con $ω_{12}$?
+
+\begin{lemma} \label{lem:OmegaTau} Dadas dos bases $\set{\gor{e}_1, \gor{e}_2}$ y $\set{e_1, e_2}$ con la misma orientación, se tiene que  \[ ω_{12} = \gor{ω}_{12} - τ \] donde $τ$ es \[ τ = f ·\dif g - g · \dif f \] y $f,g$ son funciones de un giro diferenciables tales que $f^2 + g^2 = 1$.
+\end{lemma}
+
+\begin{proof} Dado que $ω_1, ω_2$ son las formas duales de $e_1, e_2$, tenemos fácilmente que
+\( \label{eq:ProofOmegaTau}
+\begin{aligned}
+\gor{ω}_1 &= f ω_1 + gω_2 \\
+\gor{ω}_2 &= -g ω_1 + f ω_2
+\end{aligned}\qquad
+\begin{aligned}
+ω_1 &= f \gor{ω}_1 - g \gor{ω}_2 \\
+ω_2 &= -g \gor{ω}_1 + f \gor{ω}_2
+\end{aligned}
+\)
+
+Vamos a hallar $ω_{12}$ usando las ecuaciones de estructura \eqref{def:EcuacionesEstructura}. Hallamos entonces la diferencial de $ω_1$ y simplificaremos usando esas ecuaciones y el hecho de que $\gor{ω}_{12} = - \gor{ω}_{21}$, que $f^2 + g^2 = 1$ y que por lo tanto $f \dif f + g\dif g = 0$: \begin{align*}
+\dif ω_1 &= \dif f \y \gor{ω}_1 + f \dif \gor{ω}_1 - \dif g \y \gor{ω}_2 - g \dif \gor{ω}_2
+	\eqexpl{Eq. Estr.} \\
+&= \dif f \y \gor{ω}_1 + f(\gor{ω}_{12} \y \gor{ω}_2) - \dif g \y \gor{ω}_2 - g(\gor{ω}_{21} \y \gor{ω}_1) \eqexpl{$\gor{ω}_{12} = - \gor{ω}_{21}$} \\
+&= \dif f \y \gor{ω}_1 + f(\gor{ω}_{12} \y \gor{ω}_2) - \dif g \y \gor{ω}_2 + g(\gor{ω}_{12} \y \gor{ω}_1) = \\
+&= (\dif f + g \gor{ω}_{12}) ∧ \gor{ω}_1 + (f\gor{ω}_{12} - \dif g) ∧ \gor{ω}_2 \eqexpl{\eqref{eq:ProofOmegaTau}} \\
+&=  (\dif f + g \gor{ω}_{12}) ∧ (fω_1 + gω_2) + (f\gor{ω}_{12} - \dif g) ∧ (-gω_1 + fω_2) = \\
+&= f · \dif f ∧ ω_1 + g · \dif f ∧ ω_2 + gf · \gor{ω}_{12} ∧ ω_1 + g^2 · \gor{ω}_{12} ∧ ω_2 + \\
+&\qquad -f g · \gor{ω}_{12} ∧ ω_1 + f^2 · \gor{ω}_{12} ∧ ω_2 + g · \dif g ∧ ω_1 - f · \dif g ∧ ω_2 = \\
+&= \underbracket{(f \dif f + g \dif g)}_0 ∧ ω_1 + \underbracket{(g \dif f - f \dif g)}_{-τ} ∧ ω_2 + \underbracket{(f^2 + g^2)}_{1} \gor{ω}_{12} ∧ ω_2 = \\
+&= (\gor{ω}_{12} - τ) ∧ ω_2
+\end{align*}
+
+Por otra parte, por el teorema de Levi-Civita (\fref{thm:LeviCivita}) sabemos que $\dif ω_1 = ω_{12} ∧ ω_2$ con $ω_{12}$ una 1-forma única, luego tiene que ser efectivamente $ω_{12} = \gor{ω}_{12} - τ$.
+\end{proof}
+
+\subsubsection{Elemento de área}
+
+Esta igualdad nos permite trabajar con algo muy interesante: el elemento de volumen.
+
+\begin{defn}[Elemento\IS de área] \label{def:ElementoArea} Dada una base $\set{e_1, e_2}$ para una superficie diferenciable, compacta y orientable $M$, se define el elemento de área como \[ σ = ω_1 ∧ ω_2 \] \end{defn}
+
+Se llama elemento de volumen por una razón muy simple: porque permite hallar el \concept[{Á}rea\IS de una superficie]{{á}rea de una superficie} como \[ \mop{\acute{A}rea} (M) = \int_M σ \]
+
+Además, es interesante porque ese elemento no depende de la referencia que tomemos.
+
+\begin{prop} El elemento de área es invariante con respecto a cambios de referencia. \label{prop:IndependenciaArea}
+\end{prop}
+
+\begin{proof} Tomamos $\set{e_1, e_2}$ y $\set{\gor{e}_1, \gor{e}_2}$ como dos referencias en $M$. Tal y como decíamos al principio de esta sección (\ref{eq:CambioBaseGiro}), sabemos que el cambio entre las dos bases está dado por dos funciones $f,g$. Usando las ecuaciones de cambio entre formas de \eqref{eq:ProofOmegaTau}, podemos calcular y ver que \[ ω_1 ∧ ω_2 = (f\gor{ω}_1 - g\gor{ω}_2) ∧ (g\gor{ω}_1 + f\gor{ω}_2) = (f^2 + g^2) · \gor{ω}_1 ∧ \gor{ω}_2 = \gor{ω}_1 ∧ \gor{ω}_2 \]
+\end{proof}
+
+Esta independencia del elemento del área nos da también un resultado importante sobre la curvatura:
+
+\begin{prop} La curvatura gaussiana $K$ es independiente de la referencia usada.
+\end{prop}
+
+\begin{proof} Tomamos τ del \fref{lem:OmegaTau}, y vemos que $\dif τ = 0$. Luego $\dif ω_{12} = \dif \gor{ω}_{12}$. Con la \fref{eq:CurvaturaGauss} sabemos que $\dif ω_{12} = -K ω_1 ∧ ω_2$ y, análogamente, que $\dif \gor{ω}_{12} = -\gor{K} \gor{ω}_1 ∧ \gor{ω}_2$.
+
+Ahora bien, por la \fref{prop:IndependenciaArea}, tenemos que $ω_1 ∧ ω_2 = \gor{ω}_1 ∧ \gor{ω}_2$, luego sólo queda que $\gor{K} = K$.
+\end{proof}
+
+\subsubsection{Ángulo entre referencias}
+
+La forma τ definida en \fref{lem:OmegaTau} tiene un significado geométrico, y es que se puede considerar como la diferencial del ángulo entre las referencias $e_1$ y $\gor{e}_1$ a lo largo de una curva. De hecho, esa función se puede definir.
+
+\begin{lemma} Sea $p∈U ⊂ M$ un punto y sea $\appl{γ}{I}{U}$ una curva tal que $γ(t_0) = p$. Sea $φ_0 = \mop{\acute{a}ngulo}(e_1(p), \gor{e}_1(p))$. Entonces \( \label{eq:PhiAngulo} φ(t) = \int_{t_0}^t \left(f\od{g}{t} - g \od{f}{t}\right) \dif t + φ_0 \) es una función diferenciable tal que \[ \cos φ(t) = f, \quad \sin φ(t) = g, \quad φ(t_0) = φ_0, \quad \dif φ = γ^* τ \]
+\end{lemma}

@@ -1,0 +1,66 @@
+% -*- root: ../SI2.tex -*-
+\section{Teoría}
+
+Para estudiar el rendimiento de sistemas, usamos teoría de colas. Tendremos interés en varios parámetros, a saber:
+
+\begin{itemize}
+\item \concept{Tasa\IS de llegadas} Denotada por λ, es el número de llegadas por unidad de tiempo.
+\item \concept{Tasa\IS de servicio} Denotada por μ, es el número de clientes servidos por unidad de tiempo.
+\item \concept{Intensidad\IS de tráfico} Se denota por $u$, y muestra la relación entre la tasa de llegadas y la de servicio: \[ u = \frac{λ}{μ} = \frac{T_s}{T_a} \]
+\item \concept{Factor\IS de utilización} ρ, es la probabilidad de que el sistema esté activo en un tiempo dado.
+\item \concept{Número medio\IS de clientes en el sistema} Denotado por $L$, no merece mucha más explicación.
+\item \concept{Número medio\IS de clientes en cola} En un alarde de originalidad, se denota por $L_q$.
+\item Análogamente, se define el tiempo medio de estancia y el tiempo medio de espera en cola como $W$ y $W_q$.
+\end{itemize}
+
+A partir de aquí, podemos encontrar relaciones. Por ejemplo, es fácil ver que el tiempo total de estancia en el sistema será el tiempo de espera en cola más el tiempo que se tarda en servir al usuario, de tal forma que \( W = W_q + T_s \label{colas:TiempoTotal} \)
+
+Por otra parte, el Teorema de Little nos da una relación entre esos tiempos de espera y el número de clientes.
+
+\begin{theorem}[Teorema\IS de Little] Sea $W$ el tiempo medio de estancia en el sistema, $L$ el número medio de clientes en el sistema y λ la tasa de llegadas. Se tiene entonces que \( L = λ W \label{colas:Little} \) y, análogamente para la cola, que \( L_q = λ W_q \label{colas:LittleQ} \)
+\end{theorem}
+
+\begin{proof} Hay varias pruebas disponibles en Internet, como \href{http://pubsonline.informs.org/doi/pdf/10.1287/opre.22.2.417}{esta}.
+\end{proof}
+
+Es fácil ver que, juntando esas tres ecuaciones anteriores \eqref{colas:TiempoTotal}, \eqref{colas:Little} y \eqref{colas:LittleQ} se tiene que \( L = L_q + λT_s = L_q + \frac{λ}{μ} \)
+
+Para modelar las colas, se utiliza la notación \textit{A/B/c/K/N/Z}, donde $A$ y $B$ son las distribuciones del tiempo de llegadas y servicio respectivamente, $c$ el número de servidores del sistema, $K$ la capacidad máxima, $N$ el número total de clientes y $Z$ la forma de servicio. Normalmente, $K = N = ∞$ y $Z = FIFO$, así que se omiten. Según estos parámetros existen fórmulas para sacar todos los parámetros, que podéis ver en \href{https://moodle.uam.es/pluginfile.php/372658/mod_resource/content/1/si2t2-formulas.pdf}{el formulario de la asignatura}.
+
+\subsection{Distribuciones no Poissonianas}
+
+La mayoría de las fórmulas de la asignatura se basan en distribuciones exponenciales para hacer los cálculos. Una forma de identificarlas es mediante el siguiente coeficiente:
+
+\begin{defn}[Coeficiente\IS cuadrático de variación] Dada una variable aleatoria $X$, se define su coeficiente cuadrático de variación como \[ C^2 = \frac{\var{X}}{\esp{X}^2}\]
+\end{defn}
+
+Según el valor de ese coeficiente se puede tratar de sacar el tipo de distribución, tal y como se ve en la tabla \ref{colas:TablaCoefsCuadr}.
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|ccc}
+$C^2$  & $(0, 0.7)$ & $(0.7, 1.3)$ & $(1.3, ∞)$ \\ \hline
+Distr. & Erlang-m & Poisson & Hiperexponencial
+\end{tabular}
+\caption{Distribuciones según coeficiente de variación}
+\label{colas:TablaCoefsCuadr}
+\end{table}
+
+Una vez identificada la distribución, se puede usar el modelo $M/G/1$ para la distribución con \( \esp{S^2} = \var{S} + \esp{S}^2 \)
+
+\subsection{Redes de colas}
+
+Cuando montamos varias colas, tenemos algunas definiciones que nos ayudan al modelado.
+
+\begin{defn}[Red\IS de colas abiertas] Se dice que un conjunto de $K$ colas es una red de colas abiertas si los clientes llegan en procesos de Poisson independientes, con tiempos de servicio distribuidos exponencialmente y si, tras el proceso en cada sistema $j$, el cliente pasa a la cola $i$ con probabilidad $p_{ij}$ o bien sale con probabilidad $1 - \sum_{i=1}^K p_{ji}$.
+\end{defn}
+
+Se tiene que la tasa de llegadas a cada servidor es \( λ_j = α_j + \sum_{i=1}^K λ_i p_{ij} \)
+
+A partir de aquí hay varios teoremas que nos ayudan
+
+\begin{theorem}[Teorema\IS de Burke] La salida en estado estacionario de un sistema \textit{M/M/c} con parámetro de entrada λ es también un proceso de Poisson de parámetro λ.
+\end{theorem}
+
+\begin{theorem}[Teorema\IS de Jackson] Dada una red de colas abierta, la probabilidad de un estado dado (entiendo como estado un vector $(n_1, \dotsc, n_K)$ donde $n_i$ es el número de clientes en el sistema $i$) está dada por el producto de las probabilidades de cada uno de los sistemas. Esto es, \(\prob{(N_1, \dotsc, N_k) = (n_1, \dotsc, n_K)} = \prod_{i=1}^K \prob{N_i = n_i} \)
+\end{theorem}

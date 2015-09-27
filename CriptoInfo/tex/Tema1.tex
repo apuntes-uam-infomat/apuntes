@@ -1,0 +1,541 @@
+\chapter{Introducción criptografía y seguridad informática}
+\section{ Definiciones básicas}
+
+ \begin{defn}[Criptografía] Proviene de la palabra griega "oculto". Escribir de forma enigmática.
+ \end{defn}
+ 
+ 
+ \begin{defn}[Texto plano]
+ 	Texto original.El mensaje que se quiere cifrar está escrito en texto plano
+ \end{defn}
+ 
+ 
+ \begin{defn}[Texto cifrado]
+	DIBUJO
+ \end{defn}
+ 
+ \begin{defn}[Estenografía]
+ 	Técnica para esconder mensajes dentro de otro mensaje.
+ \end{defn}
+ 
+ 
+ \section{Contexto histórico de la criptografía}
+ 
+ \subsection{Principales motores de la criptografía}
+ 
+ \begin{itemize}
+ 	\item Político\item Bélico \item Económico
+ \end{itemize}
+ 
+\section{Esquema general de cifrado y servicios proporcionados a la seguridad}
+
+\section{Tipos de ataques}
+\section{Modelos y estándares de seguridad informática, auditoría y certificación}
+
+\chapter{Métodos clásicos de cifrado y criptoanálisis}
+\section{Definición de criptosistema}
+\begin{defn}[Criptosistema]
+	Es una quíntupla $(P, C, K, E_k, D_k)$ que satisface
+	
+\begin{itemize}
+	\item $P \rightarrow$ conjunto de textos planos
+	\item $C \rightarrow$ conjunto dde textos encriptados
+	\item $K \rightarrow$ claves
+	\item $E_k(x) \rightarrow$ función de cifrado
+	\item $D_k(x) \rightarrow$ función de descifrado
+\end{itemize}
+
+\end{defn}
+\subsection{Cifrados alfabéticos}
+\subsubsection{Cifrado de desplazamiento}
+
+\begin{itemize}
+	\item $P\in Z_m$
+	\item $C\in Z_m$
+	\item $K\in Z_m$
+	\item $y=E_k(x)= x+k$ mod m, con $x\in Z_m$ y $K \in Z_m$
+	\item $D_k(y) = x- k$ mod m
+	
+\end{itemize}
+
+La complejidad de descifrado depende de $|K|$, en este caso
+$$|K| = |Z_m| = m$$
+Vemos que $E_k$ y $D_k$ son muy rápidas, por lo que se pueden ejecutar en tiempo real, pero a la vez es muy fácil de descifrar.
+
+\subsubsection{Cifrado de sustitución}
+
+\begin{itemize}
+		\item $P\in Z_m$
+		\item $C\in Z_m$
+		\item $K \rightarrow$ permutación de símbolos
+		\item $y=E_k(x)= \Pi(x)$ ($\Pi \rightarrow$ permutación)
+		\item $D_k(y) = \Pi^{-1}(y)$
+\end{itemize}
+
+Es importante ver que en $Pi$ no puede haber índices repetidos.
+\begin{example}
+	
+	
+	\textbf{\\ \\ Bien:}
+	
+	$\begin{matrix}
+		1 & 2 & 3 & 4\\
+		2 & 1 & 3 & 4
+	\end{matrix}$
+	
+	\textbf{\\ Mal:}
+	
+		$\begin{matrix}
+		1 & 2 & 3 & 4\\
+		1 & 1 & 3 & 4
+		\end{matrix}$
+	
+	
+\end{example}
+
+Este cifrado es más complejo ya que $|K| = m!$
+
+\subsubsection{Cifrado afín}
+
+\begin{itemize}
+	\item $P\in Z_m$
+	\item $C\in Z_m$
+	\item $K \in (a,b)$
+	\item $y=E_k(x)= ax + b$ mod $m , a\in Z^*_m$ y $b\in Z_m$
+	\item $D_k(y) = (y-b)* a^{-1}$ mod $m$
+\end{itemize}
+
+Decimos que $ a\in Z^*_m$ ya que si $ a\in Z_m$, entonces $a^{-1}$ no tiene porqué existir. Por esto definimos
+$$Z^*_m = \{a\in Z_m | mcd(m,a) = 1\}$$
+
+Esto nos asegura que $\forall a \in Z^*_m $ existe $a^{-1}$
+
+Para saber que $a$ queremos utilizar, tenemos que ver:
+\begin{enumerate}
+	\item mod(a,m) = 1. Para comprobar esto utilizamos el algoritmo de Euclides.
+	
+	\item ¿Cómo hallamos $a^{-1}$? . Para esto utilizaremos el algoritmo de Euclides extendido.
+\end{enumerate}
+
+\begin{enumerate}
+	\item \textbf{mcd(a,m) = mcd(m, a mod m)}\\
+	
+	
+	\underline{EUCLIDES}
+	
+	Llamamos $r_0 = a$ y $r_1 = m$
+	
+	$r_0 = q_1 r_1 + r_2$, de forma que $mcd(r_0,r_1) = r_2$
+	
+	$r_1 = q_2 r_2 + r_3$
+	
+	$\dots$
+	
+	$r_{n-2} = q_{n-1}r_{n-1} + r_n$
+	
+	$r_{n-1} = q_{n}r_{n}$
+	
+	Y asi nos queda que
+	$$r_n = mcd (a,m)$$
+	
+	\item \textbf{¿ $a^{-1}$?}\\
+	
+	\underline{EUCLIDES EXTENDIDO}
+	
+	La idea es escribir el algoritmo de Euclides pero escribiendo todos los restos en función de $a$ y $m$.
+	
+	Llamamos $r_0 = a$ y $r_1 = m$
+	\begin{itemize}
+		\item $r_0 = q_1 r_1 + r_2 \implies r_2 = r_0 - q_1 r_1 \implies r_2 = a-q_1m$
+		
+		\item $r_1 = q_2 r_2 + r_3 \implies r_3 = m - q_2 r_2$ , y como $r_2$ está e función de $a$ y de $m$ , entonces $r_3 = m(1+q_1q_2) - q_2a$
+		
+		\item $r_4 = r_2 - q_3 r_3$
+		
+		$\dots$
+		
+		\item $r_{n} = m\cdot U_n + a\cdot V_n \implies a \cdot V_n = 1$ mod $m \implies a^{-1} = V_n$
+		
+	\end{itemize}
+	
+	Ejercicio: ¿Cómo calculamos esa $V_n$?
+	
+	 $r_0 = r_0$\\ $r_1 = r_1$\\$r_2 = r_0 -q_1r_1$\\$r_3 = -q_2r_0 + (1+q_1q_2)r_1$\\ $r_4 = (1+ q_3q_2)r_0 -(q_1 +q_3(1+q_2q_1))r_1$\\ ... \\ Llamamos al término que acompaña al $r_0$ : $U_i$ y al término que acompaña al $r_1$ : $V_i$\\ 
+	 
+	 Para calcular $U_i$ cogemos $U_0=1$ , $U_1 = 0$ y calculamos:
+	 $$U_i = U_{i-2} - q_{i-1}U_{i-1} \iff i\geq 2$$
+	
+	 Para calcular $V_i$ cogemos $V_0=0$ , $V_1 = 1$ y calculamos:
+	 $$V_i = V_{i-2} - q_{i-1}U_{i-1} \iff i\geq 2$$
+	 
+	 \begin{example}
+	 Euclides (a,b)	 
+	 	
+	 	$r_0 \leftarrow a$\\$r_1\leftarrow b$\\$m\leftarrow 1$
+	 	
+	 	while $r_m \neq 0$
+	 	
+	 	 do 
+	 	$\begin{cases}
+	 		q_m \leftarrow \lfloor\frac{r_{m-1}}{r_m}\rfloor\\ r_{m+1} \leftarrow r_{m-1} - q_mr_m\\m\leftarrow m +1
+	 		
+	 	\end{cases}$
+	 	
+	 	$m\leftarrow m-1$
+	 	
+	 	return ($q_1,...,q_m; r_m$)
+	 \end{example}
+	 
+\end{enumerate}
+ \begin{theorem}[Teorema Fundamental de la Aritmética]
+ 	Todo número se puede descomponer en un producto de números primos.
+ 	$$m = \Pi^{n}_{i-1} \cdot p^{e_i}_{i}$$
+ 	
+ \end{theorem} 
+ 
+ \begin{theorem}[Función de Euler]
+ 	La función de Euler nos indica el número de coprimos a uno dado.
+ 	$$\phi(m) = |Z^{*}_m| = \Pi{n}_{i=1} (p^{e_i}_i - p^{e_i-1}_i)$$
+ 	
+ \end{theorem}
+ 
+
+ 
+ \begin{example}
+ 	Vamos a buscar cuantas claves tenemos en español (27 letras)
+ 	$$K = |Z_{27}| x |Z^{*}_{27}| = 27\cdot 18 = 486$$
+ \end{example}
+
+
+Vamos a ver una forma de calcular el inverso multiplicativo con Euler generalizado, esta forma no vale para números grandes.
+
+\begin{theorem}[Euler generalizado]
+	$$\text{a} \in Z^{*}_m \implies a^{\phi(m)} \equiv 1 \text{ mod } m$$
+\end{theorem}
+
+\textbf{Truco para inverso}:
+
+$$a^{\phi(m)} = a^{\phi(m) - 1} \cdot a \equiv 1 \text{ mod } m$$
+$$...$$
+$$a^{\phi(m) -1} = a^{-1} \text{ mod } m$$
+
+\textbf{¿Porqué no se utiliza esta forma de calcular en inverso?} Porque necesitamos $\phi(m)$ , que se calcula con la descomposición en números primos, y esto no es trivial para números grandes.
+
+Hasta ahora hemos estado viendo cifrados alfabéticos, es decir, que vamos cifrando cada letra del mensaje plano con una clave, de forma que nos queda el mensaje cifrado.
+
+
+A partir de ahora vamos a ver cifrados en bloque
+
+\subsection{Cifrados en bloque}
+
+\subsubsection{Cifrado de Vigenere}
+
+\begin{itemize}
+	\item $P= Z_m \times Z_m \times ..... \times Z_m = (Z_m)^{n}$
+	\item $C = (Z_m)^{n}$
+	\item $K = (Z_m)^{n} = P = C$
+	\item $E_{\overrightarrow{k}} = E_{k_1,...,k_n}(\overrightarrow{x}) = (x_1+ k_1,...,x_n+ k_n) \text{ mod } m \equiv Y$
+	\item $D_{k_1,...,k_n} ( \overrightarrow{Y}) = (y_1- k_1,...,y_n- k_n) \text{ mod } m $
+\end{itemize}
+
+\subsubsection{Cifrado de Hill}
+
+\begin{itemize}
+	\item $P= (Z_m)^{n}$
+	\item $C = (Z_m)^{n}$
+	\item $K$ es una matriz $n \times n$
+	\item $\overrightarrow{y} = E_{k}(\overrightarrow{x}) = (x_1,....,x_n) \cdot K \text{ mod } m$
+	\item $D_{k}(\overrightarrow{y})= (y_1,....,y_n) \cdot K^{-1}_{n \times n}$
+\end{itemize}
+\paragraph{Condiciones para este criptosistema}
+\begin{enumerate}
+	\item det($K$)$\neq 0$ $\implies$ esto es para que exista $K^{-1}$
+	\item mcd (det($K$) , $m$)$= 1$
+\end{enumerate}
+
+\subsubsection{Cifrado de permutación}
+\begin{itemize}
+	\item $P= (Z_m)^{n}$
+	\item $C = P$
+	\item $K$ es un vector de permutación $\overrightarrow{\Pi}$ de n permutaciones
+	\item $E_{k}(\overrightarrow{x}) = (x_{\Pi(1)},....,x_{\Pi(n)})= Y$
+	\item $D_{k}(\overrightarrow{y})= (y_{\Pi(1)},....,y_{\Pi(n)}$
+\end{itemize}
+
+\begin{example}
+	
+	$n=6$
+	
+	$$\begin{matrix}
+	x = & 1 & 2 & 3 & 4 & 5 & 6\\
+	\Pi(x) = & 3 & 5 & 1 & 6 & 4 & 2\\
+	\end{matrix}$$
+	
+	$$\begin{matrix}
+	y = & 1 & 2 & 3 & 4 & 5 & 6\\
+	\Pi(y)^{-1} = & 3 & 6 & 1 & 5 & 2 & 4\\
+	\end{matrix}$$
+\end{example}
+
+Es muy sencillo transformar un \textit{Cifrado de Permutación} en un \textit{Cifrado de Hill}. Vamos a ver como:
+
+\begin{example}
+	
+	Estamos en $Z^3_n$ , la permutación es $\Pi = (3,2,1)$.
+	
+	$\begin{matrix}
+		x\rightarrow & 1 & 2 & 3\\
+		\Pi(x)\rightarrow & 3 & 2 & 1\\
+	\end{matrix} \iff \begin{matrix}
+	(x_1 & x_2 & x_3)
+	\end{matrix} \left(\begin{matrix}
+		0 & 0 & 1\\ 0 & 1 & 0\\ 1 & 0 & 0
+	\end{matrix}\right) = \begin{matrix}
+	(x_3 & x_2 & x_1)
+	\end{matrix}$
+\end{example}
+
+\subsection{Cifrados de flujo}
+
+Hay dos tipos de cifrados de flujo:
+\begin{itemize}
+	\item \textbf{Síncronos} $\rightarrow$ K independiente de M
+	\item \textbf{Asíncronos} $\rightarrow$ si K depende de las claves anteriores
+\end{itemize}
+
+En este tipo de cifrado la transformación va a ser del tipo:
+
+$\begin{matrix}
+ X \sim & X_1 & X_2 & ....\\
+ Z \sim & Z_1 & Z_2 & ....\\
+\end{matrix} \implies \begin{matrix}
+y \sim & e_{Z_1}(x_1) & e_{Z_2}(x_2) & ....\\
+\end{matrix}$
+
+\begin{example}[Cifrado síncrono de flujo periódico de periodo d]
+	\begin{itemize}
+		\item $P= C = Z_n$
+		\item $e_Z(x) = x + Z$ mod $m$
+		\item $d_Z(x) = x - Z$ mod $m$
+		\item $Z \rightarrow$ es el flujo de claves $\implies Z = Z_1Z_2...$
+		
+		$Z_i \begin{cases}
+			K_i \text{ si } 1 \leq i \leq 1\\
+			Z_{i-n} \text{ si } i \geq n+1
+		\end{cases}$ 
+		
+		Al ser cifrado de flujo periódico de periodo d $\implies Z_{i+d} = Z_i$ 
+	\end{itemize}
+	\begin{remark}
+		El los \textbf{Alfabetos binarios},  $e_Z(x) = x + Z$ mod $2$ , que es lo mismo que hacer un XOR
+	\end{remark}
+\end{example}
+
+
+
+
+\subsubsection{Generador de claves}
+
+ Para obtener seguridad en los dispositivos hardware , se emplean registros de desplazamiento retoralimentados como generadores de números pseudoaleatorios para las claves de cifrados de flujo.
+ 
+ Estos registros pueden ser:
+ 
+\begin{itemize}
+	\item LFSR $\rightarrow$ registros de desplazamiento con retroalimentación lineal
+	\item NLFSR $\rightarrow$ registros de desplazamiento con retroalimentación no lineal
+\end{itemize}
+
+Con esto generamos una \textbf{key stream}.
+
+\textbf{¿Cómo funciona?}
+\begin{enumerate}
+	\item Primero generamos una clave : $Z_i = K_i$  $1< i \leq n$ ; $c = (c_0, c_1....c_{n-1}) \implies K = (K_1, K_2,..., K_n,c_0....c_{n-1})$
+	\item Recurrencia (de orden n). Un ejemplo es
+	$$Z_{i+n} = \sum_{j=0}^{n-1} c_j \times Z_{i+j} \text{ mod } 2$$
+\end{enumerate}
+
+\begin{example}[RC4]
+	\begin{center}
+		\Tree[.ClaveSecreta [.RC4 [.KeyStream [.Tp$\to\oplus\to$Tc ] ] ] ]
+	\end{center}
+\end{example}
+
+\begin{problem}
+	Hallar el orden de recurrencia de la siguiente clave:
+	$$(1000,1100)$$
+	
+	\solution Se deja como ejercicio para el lector. El orden deberá salir 15.
+	
+\end{problem}
+
+\subsection{Producto de Criptosistemas}
+Se define de la siguiente forma:
+
+
+	$S_1 = [ P, C, K_1 E_{K_1} D_{K_1}]$
+	
+	$S_2 = [ P, C, K_2 E_{K_2} D_{K_2}]$
+	
+	$$S_1 \times S_2 = [ P, C, K_1 E_{K_1} D_{K_1}] \times [ P, C, K_2 E_{K_2} D_{K_2}] = [ P, C, K_1 \times K_2, E_{K_1 K_2} D_{K_1 K_2}]$$
+	
+	\begin{problem}
+		Combina los siguientes criptosistemas:
+		$$\begin{cases}
+		 y = x + K_1 \text{ mod } m\\
+		 y = x + K_2 \text{ mod } m\\
+		\end{cases}$$
+		\solution
+		$E_{K_2}(E_{K_1}(x)) = E_{K_2}(x + K_1) = x + K_1 + K_2$
+	\end{problem}
+	
+	\begin{problem}
+		Combina los siguientes criptosistemas y halla la robusted del criptosistema resultante
+		$$\begin{cases}
+		y = x + b\\
+		y= ax\\
+		\end{cases}$$
+		
+		\solution
+		\begin{itemize}
+			\item $E_{K_2}(E_{K_1}(x)) = E_{K_2}(x + b) = a \cdot(x + b) = ax + ab$
+			
+			Como $ab \in Z_m$ llamamos $ab = \beta \in Z_m$ de forma que el producto de los criptosistemas nos queda:
+			$$ax + \beta \text{ mod } m$$
+			\item Para calcular la robusted vemos que 
+			\begin{itemize}
+				\item $|b| = m$
+				\item $|a| = |Z^{*}_m| = \phi(m) \text{ mod } m$
+			\end{itemize}
+			Ahora ya podemos calcular la robusted del producto
+			$$|a| \cdot |\beta| = |Z^{*}_m| \cdot |Z_m| = \phi(m) \cdot m$$
+		\end{itemize}
+			
+	\end{problem}
+	
+\begin{remark}
+Combinar cifrados de sustitución con permutación ha dado lugar a cifrados como : \textbf{CRIPITO, DES, AES...} 
+\end{remark}
+
+\section{Tipos de ataques}
+
+\subsection{Criptoanálisis}
+En el criptoanálisis el algoritmo es conocido.
+
+Del criptoanálisis deriban las \textbf{Reglas de Kerchhoffs}
+\begin{enumerate}
+	\item Algoritmo de cifrado público
+	\item La fortaleza del criptograma reside en K(clave)
+\end{enumerate}
+
+Vamos a ver los supuestos ataques con los que podeos encontrarnos
+
+\begin{itemize}
+	\item[A)] Solo texto cifrado $\rightarrow$ es el caso más difícil.
+	\item[B)] Texto claro conocido $\rightarrow$ texto cifrado + pareja plano-cifrado 
+	\item[C)] Texto claro elegido $\rightarrow$ texto cifrado + pareja plano elegida-cifrado
+	\item[D)] Texto cifrado elegido $\rightarrow$ texto cifrado + pareja plano-cifrado elegido 
+	\item[E)] Texto elegido 
+\end{itemize}
+
+\subsubsection{Cifrado de desplazamiento}
+
+Este cifrado se rompe de forma \textbf{inmediata} en los supuestos \textbf{B, C, D} y \textbf{E}.
+
+En el caso \textbf{A} no es inmediato pero también es sencillo. Se hace utilizando las estadísticas del idioma.
+
+\begin{example}[Supuesto A-] 
+	
+	Sabemos que la letra que más se usa en el español es la E ($16'.. \%$) , si en nuestro texto cifrado la letra más repetida es la D, es lógico pensar que $e_K(E) = D$.
+	
+	A partir de aquí es fácil hallar la clave.
+	
+	Si vemos que el resultado es un texto sin sentido, cambiaremos nuestra hipótesis(en función de las estadísticas) y seguiremos probando.
+\end{example}
+
+
+\subsubsection{Cifrado Afín}
+
+Este cifrado se rompe de forma \textbf{muy sencilla} en los supuestos \textbf{B, C, D} y \textbf{E} si tengo dos parejas de texto plano-cifrado (x-y)
+$$\begin{cases}
+x_1 - y_1\\
+x_2 - y_2
+\end{cases} \rightarrow \begin{cases}
+y_1 = x_1 + b \text{ mod }m\\
+y_2 = x_2 + b \text{ mod }m\\
+\end{cases}$$
+Y resuelvo el sistema.
+
+En el caso \textbf{A} no es tan sencillo pero con estadística también se puede romper. Si la primera hipótesis falla, probaremos con la siguiente letra más probable hasta dar con un texto que tenga sentido.
+
+\subsubsection{Cifrado de Sustitución}
+
+Este es más complicado, necesitaremos estadísticas más completas (COMPLETAR DEL LIBRO)
+
+\subsubsection{Cifrado de Vigenere}
+
+$$\overrightarrow{y} = \overrightarrow{x} + \overrightarrow{K} \text{ mod } m$$
+
+Para analizar esto una simple estadística no vale, porque dependiendo de cual sea  la longitud de la clave, \textbf{mismos textos se cifran de forma diferente}.
+
+Por lo tanto el criptoanálisis se hace en dos pasos:
+\begin{enumerate}
+	\item\textbf{ Hallar el tamaño de la clave $\rightarrow$ ¿n?}
+	
+	Para esto podemos utilizar dos métodos $\begin{cases}
+	KASISKI \rightarrow 1863\\
+	\textit{Índice de coincidencia}\\
+	\end{cases}$
+	\begin{itemize}
+		\item \textbf{KASISKI} $\rightarrow$ Se basa en la suposición de que puede haber repeticiones en el texto cifrado que vengan de la misma parte del texto plano.
+		
+		\begin{enumerate}
+			\item localizamos las repeticiones y las llamamos $Y_1$
+			\item llamamos a la posición de inicio de cada repetición $i_1, i_2,i_3...$
+			\item llamamos la distancia entre las repeticiones $\delta_1 , \delta_2....$
+			\item vemos que :
+			
+			$\begin{cases}
+			i_2 = i_1 + K_1\cdot n\\
+			i_3 = i_2 + K_2\cdot n\\
+			....\\
+			\end{cases}$ 
+			
+			COMPLETAR!!!!
+		\end{enumerate}
+		\item \textbf{Índice de coincidencia} $\rightarrow$ Dado una cadena de datos $\overrightarrow{X} = X_1 X_2 .... X_l$, el índice de coincidencia de dicha cadena $I_c(\overrightarrow{X})$ es la probabilidad de que dos elementos de esa cadena coincidan.
+		
+		Supongamos que tenemos una serie de caracteres en $\overrightarrow{X}$ con frecuencias de ocurrencia $f_0,f_1, f_2 ....$.
+		
+		Nos preguntamos: ¿De cuantas formas podemos combinar un caracter $X_i$ en dicha cadena?
+		$$\comb{f_i}{n}$$
+		¿De cuantas formas podemos coger n $X_i$ iguales?
+		$$\sum_{i} \comb{f_i}{n}$$
+		
+		\begin{remark}
+			Supongamos que tenemos n objetos y queremos elegir los objetos de $r$ en $r$ sin atender a la ordenación de los mismos.
+			
+			El número de combinaciones que existen de n objetos tomados de $r$ en $r$ es $\comb{r}{n}$
+		\end{remark}
+		
+
+		
+		Por lo tanto el caso de mayor $I_c(X)$ es el caso en que la cadena tenga todos los caracteres iguales.
+		
+		Una vez visto todo esto podemos definir el $I_c(X)$ como:
+		$$I_c(\overrightarrow{X}) = \frac{\sum_{i}\comb{f_i}{2}}{\comb{l}{2}} = ... = \frac{\sum_{i} f_i \cdot (f_i -1)}{l\cdot(l-1)} = \sum_{i} \frac{f_i}{l} \cdot \frac{f_i-1}{l-1} $$
+		
+		Si nos fijamos:
+		
+		$\frac{f_i}{l} = P_i$ es la probabilidad de cada letra y $\frac{f_i-1}{l-1} \sim P_i$, por lo tanto
+		$$I_c(\overrightarrow{X}) \sim \sum_{i} P^2_i$$
+		
+		
+		
+	\end{itemize}
+	\item \textbf{Descubrir las $K_i$}
+\end{enumerate}
+
+
+
+
+

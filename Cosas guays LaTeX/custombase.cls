@@ -1,16 +1,44 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{custombase}[2013/04/20 Base class]
 
+\def\@fontsizeopt{}
+\newif\if@removechapters
+
+
 % Si nos pasan la opción nochap, no ponemos número de capítulo en las secciones.
-\DeclareOption{nochap}{\def\thesection{\arabic{section}}}
+\DeclareOption{nochap}{\@removechapterstrue}
+
+\DeclareOption{palatino}{%
+	\renewcommand{\rmdefault}{ppl}
+	\renewcommand{\sfdefault}{lmss}
+	\renewcommand{\ttdefault}{lmtt}
+	\renewcommand*{\familydefault}{\rmdefault}
+	\def\@fontsizeopt{11pt}
+	\message{Loading Palatino fonts}
+}
+
+\DeclareOption{sansserif}{
+	\renewcommand*{\familydefault}{\sfdefault}
+	\def\@fontsizeopt{12pt}
+	\message{Loading Sans-Serif fonts}
+}
+
+\def\@exmathload{\RequirePackage{exmath}}
+
+\DeclareOption{noprobframes}{
+	\def\@exmathload{\RequirePackage[noproblemframes]{exmath}}
+}
+
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
-\ProcessOptions\relax
 
-\LoadClass[12pt,a4paper,reqno]{report}
+\ExecuteOptions{sansserif}
+\ProcessOptions
 
-% Tipo de letra
-\renewcommand*\familydefault{\sfdefault}
+\PassOptionsToClass{\@fontsizeopt}{report}
 
+\LoadClass[a4paper,reqno]{report}
+
+\RequirePackage[usenames,dvipsnames]{xcolor}
 \RequirePackage[includemp, left=3cm,right=1cm,top=3cm,bottom=2cm, marginparwidth=1.6cm, marginparsep=0.7cm]{geometry} % Márgenes
 \RequirePackage{imakeidx} % Creación de índices
 \RequirePackage{titling} % Para poder referenciar \thetitle, \thedate, etc.
@@ -20,12 +48,15 @@
 \RequirePackage{amsthm} % Paquete de matemáticas
 \RequirePackage{framed} % Marcos
 \RequirePackage{mdframed} % Más marcos
-\RequirePackage{exmath} % Nuestro querido paquete de utilidades
 \RequirePackage{hyperref} % Para que salgan enlaces en la tabla de contenidos y el glosario
+\@exmathload
 \RequirePackage{wrapfig} % Figuras flotantes
 \RequirePackage{MathUnicode} % Paquete para poder poner caracteres griegos y demás cosas raras.
 \RequirePackage{listings} % Para poner código.
 
+\if@removechapters
+	\def\thesection{\arabic{section}}
+\fi
 
 % Números en las subsecciones
 \setcounter{secnumdepth}{3}

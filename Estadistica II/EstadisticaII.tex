@@ -1,0 +1,164 @@
+\documentclass[nochap]{apuntes}
+
+\usepackage{hyperref}
+
+\usepackage{tikztools}
+\usepackage{fastbuild}
+\usepackage{tikz-3dplot}
+
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{latexsym, amsfonts, amsmath, amssymb, amscd, epsfig,amsthm}
+\input xy
+\xyoption{all} %%!!
+\usetikzlibrary{calc, intersections}
+\author{Alberto Parramón}
+\date{2014/2015 2º cuatrimestre}
+
+\renewcommand*{\arraystretch}{1.5}
+\title{Estadística II}
+\precompileTikz
+
+\begin{document}
+
+\pagestyle{plain}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Parte que tiene que pasar Parra}
+
+\subsection{Distribuciones condicionadas}
+
+\begin{prop}
+
+Sea $X=(X_1|X_2)$ con $X_1∈ℝ^p$ y $X_2∈ℝ^{p-q}$. Consideramos las particiones correspondientes de $µ$ y de $\Sigma$.
+
+\end{prop}
+
+\begin{proof}
+Definimos $X_{2.1} = X_2 - Σ_{21}Σ_{11}^{-1}X_1$.
+
+\[
+\begin{pmatrix}
+X_1\\
+X_{2.1}
+\end{pmatrix} = 
+\begin{pmatrix}
+I &| &0\\
+\hline
+- Σ_{21}Σ_{11}^{-1}  &| &I
+ \end{pmatrix}
+\]
+
+Como es una combinación lineal de $(X_1,X_{2.1})'$, entonces $X_{2.1}$ es normal multivariante.
+
+Vamos a calcular la media y la matriz de covarianzas de $X_{2.1}$
+
+$X_{2-1} = N\left( µ_2-Σ_{21}Σ_{11}^{-1}µ_1 , \begin{pmatrix} Σ_{11} &|&0\\\hline 0&|&Σ_{2.1} \end{pmatrix} \right)$
+
+Donde las covarianzas se calculan: $AΣA'$, siendo $A$ la matriz de la combinación lineal, es decir:
+
+\[
+A=\begin{pmatrix}
+I &| &0\\
+\hline
+- Σ_{21}Σ_{11}^{-1}  &| &I
+ \end{pmatrix}
+\]
+
+
+
+\paragraph{Conclusiones:}
+
+\begin{itemize}
+	\item $X_1$ es independiende de $X_{2.1}$
+	\item $X_{2.1}$ es normal, con media y varianza calculadas anteriormente.
+	\subitem $X_{2.1}|X_1$, al ser independientes, también se distribuye normalmente, con los mismos parámetros.
+	\item Dado $X_1$, los vectores $X_{2.1}$ y $X_2$  difieren en el vector constante $Σ_{21}Σ_{11}^{-1}X_1 \implies X_2|X_1 = N\left( µ_{2.1}, Σ_{2.1} \right)$
+\end{itemize}
+
+\end{proof}
+
+\begin{example}
+Vamos a considerar $X_1, X_2$ como escalares, para entender la proposición. Este ejemplo le surgió a un investigador que quería predecir la estatura de los hijos en función de la de los padres (que no padres y madres, sólo padres).
+
+
+\[
+\begin{pmatrix}
+X\\Y
+\end{pmatrix} \equiv N_2\left( \begin{pmatrix} µ_x \\ µ_y \end{pmatrix}, \begin{pmatrix}
+σ_x^2&σ_{xy}\\σ_{xy}&σ_y^2
+\end{pmatrix} \right)
+\]
+\label{form::EspVarCondicionada}
+Definimos $\gor{Y} = E(Y|X) = µ_y + \frac{σ_{xy}}{σ_x^2}(x-µ_x)$. La esperanza de la altura del hijo condicionada a la altura del padre será la media de las alturas de los hijos corregida por un factor en el que influye la diferencia de altura del padre con respecto a su media. Es de esperar que si Yao Ming tiene un hijo, sea más alto que la media.
+
+El factor de corrección $\frac{σ_{xy}}{σ_x^2}$ es importante y no me he enerado bien de dónde sale.
+
+Ahora vamos a calcular $V(Y|X) = σ_{y}^2 - \frac{σ_{xy}^2}{σ_x^2} = σ_y^2 \left( 1- \rho^2\right)$ donde $\rho = \frac{σ_{xy}^2}{σ_x^2σ_y^2}$, el coeficiente de correlación.
+
+Ha dicho algo así como \textbf{La única relación que puede existir entre 2 variables normales es una relación lineal.}
+
+
+Este coeficiente de correlación aparece también en la expresión de la esperanza. Vamos a verlo:
+
+ \[\gor{Y} = µ_y + \frac{σ_{xy}}{σ_x^2}(x-µ_x) \dimplies \frac{\gor{Y}-µ_y}{σ_y} = \frac{σ_{xy}}{σ_xσ_y}\frac{x-µ_x}{σ_x}\]
+
+ Es decir:
+
+ \[
+\frac{\gor{Y}-µ_y}{σ_y} = \rho \frac{x-µ_x}{σ_x}
+ \]
+
+Aplicado a la estatura de los hijos respecto de los padres, se interpreta como: ``Si un padre es muy alto, su hijo será alto pero no destacará tanto como el padre''. Este fenómeno lo definió como \concept{Regresión a la mediocridad}. 
+
+\end{example}
+
+\begin{defn}[Homocedástico]
+$Σ_{2.1}$ no depende de $X_1$.
+
+Esto se da cuando $\begin{pmatrix}X_1,X_2\end{pmatrix}$ es normal multivariante. Si no fueran normal multivariante, serían heterocedásticas. \footnote{Un ejemplo sería $X_1$ la renta de una familia y $X_2$ los ahorros de la misma. Los datos no se distribuyen conjuntamente normal, con lo que la $Σ_{2.1}$ si depende de $X_1$. Ya veremos más adelante este concepto con mayor detalle.}
+\end{defn}
+
+
+\begin{example}
+
+Ahora vamos a ver un par de ejemplos numéricos:
+
+Sea \[\begin{pmatrix}X,Y\end{pmatrix} \equiv N_2 \left( \begin{pmatrix}0,0\end{pmatrix}, \begin{pmatrix}10&3\\3&1\end{pmatrix} \right)\]
+ 
+\paragraph{Distribución $Y|X$:}
+
+\[E(Y|X) = \frac{3}{10}x\]
+\[V(Y|X) = \frac{1}{10}\]
+
+\paragraph{Distribución $X|Y$:}
+
+\[E(X|Y) = 3y\]
+\[V(X|Y) = 1\]
+
+Ambas son normales unidimensionales ya que $(X Y)$ es normal multivariante.
+
+Sea \[\begin{pmatrix}X,Y\end{pmatrix} \equiv N_2 ...\]
+
+Sea $Z_1 = X+Y$ y $Z_2 = X-Y$.
+
+\[
+\begin{pmatrix}Z_1//Z_2\end{pmatrix} = \begin{pmatrix}1&1\\1&-1\end{pmatrix}\begin{pmatrix}X\\Y\end{pmatrix} \implies \begin{pmatrix}Z_1\\Z_2\end{pmatrix} = N_2\left(\begin{pmatrix}2\\0\end{pmatrix},\begin{pmatrix}7&1\\1&3\end{pmatrix}\right)
+\]
+
+Ahora vamos a calcular lo que nos piden: $E(Z_1|Z_2=1)$.
+
+\[E(Z_1|Z_2=1) = 2 + \frac{1}{3}(1-0) = \frac{7}{3}\]
+
+Es importante destacar que la distribución no depende del valor concreto por ser homocedásticas.
+
+\end{example}
+
+\appendix
+\chapter{Ejercicios}
+\input{tex/EstII_ejercicios.tex}
+
+\end{document}

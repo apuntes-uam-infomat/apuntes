@@ -1,6 +1,8 @@
 \elst{arg0}{arg1}{arg2}#m
 \do{arg0}#m
 \pbreak#m
+\doneby{arg0}#m
+\approvedby{arg0}#m
 \mop{operacion}#m
 \imgref{referencia}#m
 \dimplies#m
@@ -62,8 +64,16 @@
 \floor{arg0}#m
 \argmin#m
 \argmax#m
+\sign#m
 \eq#m
 \rango#m
+\eqexpl{arg1}#m
+\eqexpl[=]{arg1}#m
+\wrapreasontext{arg0}#m
+\eqreason{arg1}#m
+\eqreason[=]{arg1}#m
+\eqreasonup{arg1}#m
+\eqreasonup[=]{arg1}#m
 \x#m
 \appl{f}{dominio}{imagen}#m
 \uexists#m
@@ -141,12 +151,20 @@
 \begin{problemS}[N. ejercicio]#
 \listtheoremname#m
 \ithm{arg0}#m
+\set@labelname{arg0}#m
+\label@hook#m
 \begin{defn}#
 \begin{defn}[titulo]#
 \begin{defn}[titulo][indice]#
+\begin{prop}#
+\begin{prop}[titulo]#
+\begin{prop}[titulo][indice]#
 \begin{theorem}#
 \begin{theorem}[titulo]#
 \begin{theorem}[titulo][indice]#
+\begin{lemma}#
+\begin{lemma}[titulo]#
+\begin{lemma}[titulo][indice]#
 \concept{arg0}{arg1}#m
 \printtheorems#m
 \begin{proof}#
@@ -209,14 +227,30 @@
 \sfin#m
 \gal#m
 \tens#m
+\dif#m
+\Dif#m
 \tc{arg3}#m
 \tc[Id. superior]{arg3}#m
 \tc[Id. superior][Id. inferior]{arg3}#m
 \tc[Id. superior][Id. inferior][máx superior]{arg3}#m
-\dif#m
 \AlignFootnote{arg0}#m
-\eqreason{arg0}#m
 \projp#m
 \lie{arg0}#m
 \tgs#m
 \tgsd#m
+\inmr{arg0}{arg1}{arg2}#m
+\halfp#m
+\cind#m
+\Re#m
+\Im#m
+\Res#m
+\fe{arg0}#m
+\lebg#m
+\borel#m
+\meds#m
+\meds[X]#m
+\meas#m
+\meas[X]#m
+\meas[X][\mu]#m
+\minuszero#m
+\essup#m
