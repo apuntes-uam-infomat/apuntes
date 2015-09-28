@@ -2,6 +2,7 @@
 
 \usepackage{fancysprefs}
 \usepackage{natbib}
+\usepackage{tikztools}
 
 \bibliographystyle{plainnat}
 
@@ -429,6 +430,46 @@ En el otro sentido, ¿es esto cierto? En general no, pero sí que existe una sub
 
 \begin{prop}[Desigualdad\IS de Markov] \[ μ\left(\set{x∈X \tq \abs{f_n(x) -f} > ε }\right) ≤ \frac{1}{ε} \int_X \abs{f_n -f} \dif μ \]
 \end{prop}
+
+Para ver esta desigualdad, podemos considerar $f_n - f = f$ y nos da lo mismo. Podemos definir entonces \[ f_ε(x) = \begin{cases} ε & f(x) ≥ ε \\ 0 & f(x) < ε \end{cases} \], y entonces la integral es \[ \int_X f(x) \dif μ ≥ \int_X f_ε(x) = \int_{f(x) < ε} 0 + ε \int_{f(x) ≥ ε} \dif μ \]. En otras palabras, lo que hacmos es simplificar la función y luego usar una desigualdad muy estúpida para quitarnos la parte de medida cero.
+
+Antes de seguir, una caracterización de la convergencia en medida que está escrita en los ejercicios:
+
+\begin{defn}[Convergencia\IS en medida] Se dice que $f_n \convs f$ en medida si y sólo si \[ \dst(f, f_n) = \int_X \frac{\abs{f_n -f}}{1 + \abs{f_n - f}} \dif μ \]
+\end{defn}
+
+\begin{proof}
+% TODO
+\end{proof}
+
+\begin{figure}[hbtp]
+\inputtikz{MapaConvergencias}
+\caption{Mapa de las diferentes convergencias y las relaciones entre ellas.}
+\label{fig:MapaConvergencias}
+\end{figure}
+
+
+\paragraph{Algunos contraejemplos interesantes} Es posible buscar ciertos ``monstruos'' que nos van a aclarar ciertas cosas en cuanto a modos de convergencia:
+
+\begin{align}
+f_n &= \ind_{(0,n)} \label{eq:Conv:CE1} \\
+f_n &= \ind_{(n, n+1)} \label{eq:Conv:CE2} \\
+f_n &= n \ind_{[0, \frac{1}{n}]} \label{eq:Conv:CE3} \\
+f_n &= \ind_{\left(\frac{j}{2^k}, \frac{j+1}{2^{k+1}}\right)}\quad 0≤j<2^k, \; n = j + 2^k \label{eq:Conv:CE4}
+\end{align}
+
+La primera ecuación, \eqref{eq:Conv:CE1}, converge uniformemente a 0 en $ℝ$. Ahora bien, es fácil ver que su integral es $1$ para todo $n$. En otras palabras, tenemos convergencia uniforme pero no en la integral. ¿Qué ocurre aquí?
+
+La cuestión es que \eqref{eq:Conv:CE1} tiene un soporte que se dispara a infinito. En este caso, hemos visto los teoremas de convergencia dominada (\fref{thm:ConvDominada}) y monótona (\fref{thm:ConvMonotona}), pero, ¿por qué no podemos aplicarlos? El de convergencia monótona es imposible porque no tenemos monotonía, y el de dominada tampoco porque no hay ninguna función integrable que lo domine. Una función dominante sería $\frac{1}{1 + \abs{x}}$, pero nuestro problema es que no es integrable cuando el soporte es infinito.
+
+Vamos con las otras ecuaciones. \eqref{eq:Conv:CE2} tiene convergencia puntual a $0$, pero con integral 1 (siempre tenemos el mismo escalón pero puesto en otro lugar del eje). Tenemos de nuevo el problema del soporte, que podríamos quitarnos si considerásemos un soporte finito: en ese caso, para $n$ suficientemente grande el intervalo se nos iría fuera del soporte y tendríamos integral cero.
+
+La siguiente ecuación, \eqref{eq:Conv:CE3}, que converge a cero en casi todo punto, nos da un ejemplo de lo contrario: concentración del soporte.\footnote{TODO: Habría que darle alguna vuelta a esto porque creo que me he perdido algo.}
+
+% TODO: Dibujar esta mierda de ecuación.
+El caso de la última ecuación \eqref{eq:Conv:CE4}, que a veces se le llama la ``máquina de escribir'', es más interesante todavía. Empezamos por ver que es convergente a $0$ en $L^1$ (ver \fref{def:ConvLp}). Si integramos, \[ \int_{ℝ} \abs{f_n} \dif x = \int_0^1 \ind_{\left(\frac{j}{2^k}, \frac{j+1}{2^{k+1}}\right)} = \int_{\frac{j}{2^k}}^{\frac{j+1}{2^k}} \dif x = \frac{1}{2^k} \convs 0 \]
+
+En ese caso, la teoría nos dice que existe una subsucesión $f_{n_k} \convs 0$ en CTP. Lo que no existe es convergencia puntual de \textit{toda} la sucesión. Si fijamos $x ∈ [0,1]$, por ejemplo, $x = 0$, tenemos que \[ f_n (0) = \begin{cases} 1 & \text{para ciertos } n\\ 0 &\text{para otros} \end{cases} \], esto es, la sucesión sería $f_n(0) = \{1,0,1,\underbracket{0,0,0}_{2^2 - 1},1,\underbracket{0,0,0,0,0,0,0}_{2^3 - 1},1,\dotsc\}$ y no va converger puntualmente. Ahora, es fácil ver que hay una subsucesión que sí converge a 0 (y otra que sí converge a $1$, que es la formada por los valores de las posiciones $2^k$).
 
 \section{Teoría de la integral y la medida}
 
