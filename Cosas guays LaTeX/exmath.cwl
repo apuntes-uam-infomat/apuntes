@@ -254,3 +254,4 @@
 \meas[X][\mu]#m
 \minuszero#m
 \essup#m
+\convsmed#m
