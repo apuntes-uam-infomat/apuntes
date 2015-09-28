@@ -585,6 +585,15 @@ Por último, solo nos queda cifrar el mensaje usando esta función, con lo que o
 \begin{center}
 VQKCAVICN MIQM
 \end{center}
+
+\doneby{Jorge}
+Si la función de descifrado del aptdo. (a) es:
+\[f(c) = α·c + β = m\]
+Tendremos que la de cifrado será:
+\[f^{-1}(m) = α^{-1}m-α^{-1}β = c\]
+
+Echando cuentas (las he hecho con el ordenador :) ) se llega al mismo resultado que Pedro.
+
 \end{problem}
 
 \begin{problem}[2]
@@ -599,7 +608,7 @@ Ciframos un mensaje utilizando una transformación afín sobre n-grafos en un al
 \doneby{Pedro}
 
 \spart
-Cuando ciframos un mensaje agrupamos las letras a cifrar en bloques, en este caso de longitud $n$. Es evidente que $c_i$ no dependerá de aquellas $m_j$ que no pertenezclan al bloque cifrado.
+Cuando ciframos un mensaje agrupamos las letras a cifrar en bloques, en este caso de longitud $n$. Es evidente que $c_i$ no dependerá de aquellas $m_j$ que no pertenezcan al bloque cifrado.
 
 Supongamos que ciframos las letras $m_1,...,m_n$. En este caso, la relación entre las letras sin cifrar y las cifradas queda representada por la ecuación:
 \[α\sum_{i=1}^N m_i\cdot n^{N-i} + β= \sum_{i=1}^N c_i\cdot n^{N-i}\ \text{ mod } n^n\]
@@ -610,8 +619,24 @@ Pero la única posibilidad de que esas ecuaciones coincidan es que $α\cdot m_i=
 En el fondo estamos escribiendo números en formato $n-ario$. La única forma de que dos números en la misma base sean iguales es que los coeficientes sean iguales. Véase los casos a los que estamos acostumbrados como base 10 o base 2.
 \end{remark}
 
+\doneby{Jorge}
+
+Sabemos que la cadena de letras $m_1m_2…m_n$ la codificamos como $N^{n-1}m_1 + N^{n-2}m_2 + … + Nm_{n-1} + m_n = \sum_{i=1}^n N^{n-i}m_i$.
+
+De modo que al pasar una cadena de este tipo por una función afín nos queda:
+\[c_1…c_n = f(m_1…m_n) = f\left(N^n \sum_{i=1}^n N^{-i} m_i\right) = αN^n \sum_{i=0}^nN^{-i}m_i + β\]
+
+Puesto que estamos en $ℤ_{N^n}$ tendremos (escribiendo también la secuencia codificada en forma de suma):
+\[α \sum_{i=0}^n N^{-i}m_i + β = \sum_{i=0}^n N^{-i}c_i\]
+
+Expresando $β$ en forma de suma $β = \sum_{i=0}^n N^{-i}β_i$ :
+\[\sum_{i=0}^n N^{-i}(α m_i + β_i) = \sum_{i=0}^n N^{-i}c_i\]
+
+Para el caso particular $n=1$ se tiene que $αm_1 + β_1 = c_1$, y se ve que $c_1$ es función afín de $m_1$. Procediendo por \textbf{inducción} llegamos a que cada $c_i$ es función afín del $m_i$ correspondiente.
+
+
 \spart
-Puesto que cada letra depende únicamente de la letra que ocupa su misma posición en el menaje original, nos encontramos ante la misma situación que en \textbf{Criptosistema de Vionère} visto en clase y, de la misma forma, podríamos apoyarnos en el \textbf{índice de coincidencia} para encontrar $N$.
+Puesto que cada letra depende únicamente de la letra que ocupa su misma posición en el menaje original, nos encontramos ante la misma situación que en \textbf{Criptosistema de Vigenère} visto en clase y, de la misma forma, podríamos apoyarnos en el \textbf{índice de coincidencia} para encontrar $N$.
 \end{problem}
 
 \begin{problem}[3]
@@ -621,7 +646,97 @@ Interceptas el mensaje, escrito en inglés, ``!IWGVIEX!ZRADRYD'' que se ha cifra
 
 \ppart Encuentra la matriz para cifrar y, haciéndote pasar por JO, que es la amiga a quien escribía María, envía cifrado el siguiente mensaje: ``DAMN FOG! JO''
 
+
 \solution
+\doneby{Jorge}
+
+\spart
+Nos serviremos de que ADRYD es la codificación de MARIA, y de que el mensaje se cifra a pares. De modo que para obtener la matriz $A$ para decodificar usaremos que $f(DR)=AR$ y $f(YD)=IA$.
+
+\[ \left( \begin{array}{cc}
+	a & b \\
+	c & d
+	\end{array} \right)
+	%
+	\left( \begin{array}{cc}
+	3 \\
+	17
+	\end{array} \right)
+	=
+	\left( \begin{array}{cc}
+	0 \\
+	17
+	\end{array} \right)
+\]
+\[
+	\left( \begin{array}{cc}
+	a & b \\
+	c & d
+	\end{array} \right)
+	%
+	\left( \begin{array}{cc}
+	24 \\
+	3
+	\end{array} \right)
+	=
+	\left( \begin{array}{cc}
+	8 \\
+	0
+	\end{array} \right)
+\]
+
+De estas matrices obtenemos los dos sistemas de ecuaciones:
+\[
+  \begin{cases}
+    3a + 17b = 0\\
+    24a + 3b = 8\\
+  \end{cases}
+\]
+
+\[
+  \begin{cases}
+    3c + 17d = 17\\
+    24c + 3d = 0\\
+  \end{cases}
+\]
+
+Solucionando el primer sistema (restando la segunda a 8 veces la primera):
+\[17b = -8 \implies 17b = 21 \implies b = 20 \implies a = 22\]
+
+Solucionando el segundo sistema (restando la segunda a 8 veces la primera):
+\[17d = 20 \implies d = 8 \implies c = -1 = 28\]
+
+De modo que tendremos:
+\[
+	A = 
+	\left( \begin{array}{cc}
+	22 & 20 \\
+	28 & 8
+	\end{array} \right)
+\]
+
+Si desciframos el mensaje usando $A$ se obtiene:
+\[f(``!IWGVIEX!ZRADRYD'') = ``WHY\ NO\ GO?\ MARIA''\]
+
+\spart
+Para obtener la matriz con la que cifrar, tenemos que encontrar la inversa de $A$. Haciendo cálculos se obtiene que $det(A)=22 \implies 22^{-1} = 4$, y por tanto:
+\[
+	A^{-1} = \frac{1}{det(A)} Adj^T(A) =
+	4·
+	\left( \begin{array}{cc}
+	8 & 1 \\
+	9 & 22
+	\end{array} \right)^T
+	=
+	\left( \begin{array}{cc}
+	3 & 7 \\
+	4 & 1
+	\end{array} \right)
+\]
+
+Haciendo uso de $A^{-1}$ para cifrar, se obtiene:
+\[f(``DAMN FOG! JO'')=``ILKCZVZDEVIU''\]
+
 \end{problem}
 
 \begin{problem}[4]

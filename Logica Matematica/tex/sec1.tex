@@ -415,7 +415,7 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 	\end{itemize}
 \end{proof}
 
-\begin{theorem}[Teorema de la completitud]	Sea $T \neq \emptyset$.
+\begin{theorem}[Teorema de completitud]	Sea $T = \emptyset$.
 	\begin{itemize}
 		\item \textbf{Validez}:
 		$T \vdash p \implies T \vDash p$
@@ -428,28 +428,19 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 
 	\textbf{Validez:} Sea $V$ el conjunto de todas las valoraciones que satisfacen a $T$. Si $V=\emptyset$, entonces $T\vdash \sigma$ trivialmente. Si $V\neq \emptyset$, entonces, argumentamos como en el teorema anterior pero considerando sólo las valoraciones en $V$ en lugar de todas.
 
-	\textbf{Adecuación:} Consideramos extensiones de teorías (incluso en el caso $\vDash p \implies \vdash p$).
+	\textbf{Adecuación:} Sea $p$ una tautología sin demostración. Como $\nvdash p$ entonces $T=\{\neg p\}$ es consistente (ver teorema \ref{thm:pconsnegp}). Pero $T\vdash \neg p$, como $p$ es una tautología, entonces $T\vdash \neg p\equiv \perp$
 
 \end{proof}
 
-\begin{theorem}
-	Si $\exists p\in FBF(L) \tq T\nvdash p$, entonces $T\nvdash \perp$ ($T$ es consistente).
+\begin{theorem}[Teorema de completitud II]
+	$T$ es consistente $\iff$ $T$ tiene un modelo.
 \end{theorem}
-\begin{proof}
-	Probamos $\neg G\implies \neg F$ en vez de $F\implies G$.
-\end{proof}
-
 \begin{corol}
 	Las teorías inconsistentes no tienen modelos.
 \end{corol}
 \begin{proof}
 	Por validez, $T\vdash p \implies T\vDash p$. Si $T$ es inconsistente, $T\vdash \perp$, luego $T\vDash\perp$. Como para toda valoración booleana, $\sigma(\perp) = 0$, ninguna $\sigma$ satisface a $T$.
 \end{proof}
-
-\begin{theorem}[Teorema de completitud II]
-	$T$ es consistente $\iff$ $T$ tiene un modelo.
-\end{theorem}
-
 
 \noindent\textbf{Criterio: }\mbox{}
 
@@ -470,6 +461,7 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 
 \begin{theorem}
 	Si $T \nvdash p$, entonces $T\cup \{\neg p\}$ es consistente. Por tanto $T$ es consistente.
+	\label{thm:pconsnegp}
 \end{theorem}
 \begin{proof}\mbox{}
 
@@ -478,7 +470,31 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 	$T\cup \{\neg p\}\vdash \perp$, por el teorema de la deducción, $T\vdash \neg p\implies \perp$. Por el axioma 8, con $(\neg p \implies \perp)\implies p$ y modus ponens, obtenemos $T\vdash p$.
 \end{proof}
 
-\paragraph*{Adecuación (o suficiencia, o completitud) para $T=\emptyset$}\mbox{}
+\begin{defn}[Teoría completa]
+	$T$ es completa si es consistente y $\forall p\in FBF(L)$, o $T\vdash p$ o $T\vdash \neg p$.
+\end{defn}
+
+\begin{theorem}[Teorema de Lindenbaum]
+	Toda teoría consistente puede extenderse a una teoría completa.
+\end{theorem}
 \begin{proof}
-	Por contradicción, suponemos que $p$ es una tautología. Entonces $T = \{\neg p \}$ es consistente. Pero $\{\neg p\}\vdash \neg p\equiv \perp$. Luego $\{\neg p\}$ es inconsistente. Contradicción.
+	Usamos el lema de Zorn. Sea $T$ consistente y sea $P$ el conjunto de todas las teorías consistentes que extienden a $T$. Definimos un orden parcial en $P$ mediante inclusión:
+	$$T_1\le T_2 \iff T_1\subset T_2$$ 
+	
+	Sea $\{T_\alpha\}_{\alpha\in\Lambda}$ una cadena en $P$.
+	
+	Si $\cup_{\alpha\in\Lambda} T_\alpha$ es consistente, entonces es una cota superior de la cadena. Trivialmente, $\forall\gamma\in\Lambda$, $T_\gamma \le \cup_{\alpha \in \Lambda} T_\alpha$.
+	
+	Para ver que toda $T_\alpha$ es consistente $\implies$ $\cup_{\alpha\in\Lambda}T_\alpha$ es consistente, consideramos la formulación equivalente: ``Si $\cup_{\alpha\in\Lambda}T_\alpha \vdash \perp$, entonces $\exists \beta\in\Lambda \tq T_\beta \vdash \perp$''.
+	
+	\textbf{Razón:} Sea $p_1,\hdots,p_n = \perp$ una prueba formal de $\perp$. Entonces, $\exists T_{\alpha_1}\vdash p_1$, $T_{\alpha_2} \supset T_{\alpha_1}$ tal que $T_{\alpha_2}\vdash p_2, \hdots, T_{\alpha_n}\supset T_{\alpha_{n-1}}$ tal que $T_{\alpha_n}\vdash \perp, T_\beta = T_{\alpha_n}$.
+	
+	Por Zorn, $P$ tiene un elemento maximal $M\supset T$, $M\in P \implies M$ consistente y $M$ maximal $\implies\forall p \in FBF(L)$, o $M\vdash p$ o $M\vdash \neg p$. Si no, es decir, si $M\nvdash p$ y $M\nvdash \neg p$, tanto $M\cup\{p\}$ como $M\cup\{\neg p\}$ son consistentes, por el teorema \ref{thm:pconsnegp}.
+\end{proof}
+
+\begin{theorem}
+	Si no existe una prueba de $p$, entonces $p$ no es una tautología.
+\end{theorem}
+\begin{proof}
+	Tenemos que probar que si $\nvdash p$, entonces $\exists \sigma \tq \sigma(\neg p) = 1$.
 \end{proof}
