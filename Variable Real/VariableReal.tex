@@ -415,10 +415,10 @@ Vamos a ver ahora algunos tipos de convergencia de funciones que nos serán muy 
 \begin{defn}[Convergencia\IS puntual] Si y sólo si $∀x∈X$ $f_n(x) \to f(x)$.
 \end{defn}
 
-\begin{defn}[Convergencia\IS en casi todo punto] Si y sólo si $f_n(x) \to f(x)$ $∀x∈X \setminus N$ y $μ(N) = 0$. \label{def:ConvCTP}
+\begin{defn}[Convergencia\IS en casi todo punto] \label{def:ConvCTP} Si y sólo si $f_n(x) \to f(x)$ $∀x∈X \setminus N$ y $μ(N) = 0$.
 \end{defn}
 
-\begin{defn}[Convergencia\IS en medida] Si y sólo si $∀ε>0$ se tiene que \[ μ\left(\set{x∈X \tq \abs{f_n(x) - f(x)} > ε}\right) \convs 0\], esto es, que la medida del conjunto donde no converge tiende a ser nula.
+\begin{defn}[Convergencia\IS en medida] \label{def:ConvMedida} Si y sólo si $∀ε>0$ se tiene que \[ μ\left(\set{x∈X \tq \abs{f_n(x) - f(x)} > ε}\right) \convs 0\], esto es, que la medida del conjunto donde no converge tiende a ser nula.
 \end{defn}
 
 \begin{defn}[Sucesión\IS de Cauchy en medida] Si y sólo si $∀ε>0$ se tiene que \[ μ\left(\set{x∈X \tq \abs{f_n(x) - f_m(x)} > ε}\right) \convs[][n,m] 0\]
@@ -435,11 +435,16 @@ Para ver esta desigualdad, podemos considerar $f_n - f = f$ y nos da lo mismo. P
 
 Antes de seguir, una caracterización de la convergencia en medida que está escrita en los ejercicios:
 
-\begin{defn}[Convergencia\IS en medida] Se dice que $f_n \convs f$ en medida si y sólo si \[ \dst(f, f_n) = \int_X \frac{\abs{f_n -f}}{1 + \abs{f_n - f}} \dif μ \]
-\end{defn}
+\begin{prop} Dada una sucesión $f_n$, $f_n \convs f$ en medida si y sólo si \[ \dst(f, f_n) = \int_X \frac{\abs{f_n -f}}{1 + \abs{f_n - f}} \dif μ \convs 0 \]
+\end{prop}
 
-\begin{proof}
-% TODO
+\begin{proof} Vamos a empezar probando la implicación hacia la izquierda. Sea $M_n = \set{x ∈ X \tq \abs{f_n -f} > ε}$, el ``conjunto malo''. Entonces \[ \int_X \frac{\abs{f_n-f}}{1 + \abs{f_n -f}} \dif μ ≥ \int_{M_n} \frac{\abs{f_n-f}}{1 + \abs{f_n -f}} \eqreasonup[≥]{Por ser $\frac{x}{1+x}$ func. creciente} \int_{M_n} \frac{ε}{1 + ε} \dif μ = \frac{ε}{1 + ε} μ(M_n) \]
+
+Sabiendo que la integral converge a 0 con $n$ para cada ε, tiene que ser $μ(M_n) \convs 0$ y por lo tanto se cumple la definición de \nref{def:ConvMedida}.
+
+Para ir al otro lado, suponemos que $f_n \convs f$ en medida. En ese caso \[ \int_X \frac{\abs{f_n-f}}{1 + \abs{f_n -f}} \dif μ = \int_{M^c_n} \frac{\abs{f_n-f}}{1 + \abs{f_n -f}} \dif μ + \int_{M_n} \underbracket{\frac{\abs{f_n-f}}{1 + \abs{f_n -f}}}_{≤1} \dif μ ≤ \int_{M^c_n} \frac{\abs{f_n-f}}{1 + \abs{f_n -f}}\dif μ + μ(M_n) \]
+
+
 \end{proof}
 
 \begin{figure}[hbtp]
@@ -471,7 +476,39 @@ El caso de la última ecuación \eqref{eq:Conv:CE4}, que a veces se le llama la 
 
 En ese caso, la teoría nos dice que existe una subsucesión $f_{n_k} \convs 0$ en CTP. Lo que no existe es convergencia puntual de \textit{toda} la sucesión. Si fijamos $x ∈ [0,1]$, por ejemplo, $x = 0$, tenemos que \[ f_n (0) = \begin{cases} 1 & \text{para ciertos } n\\ 0 &\text{para otros} \end{cases} \], esto es, la sucesión sería $f_n(0) = \{1,0,1,\underbracket{0,0,0}_{2^2 - 1},1,\underbracket{0,0,0,0,0,0,0}_{2^3 - 1},1,\dotsc\}$ y no va converger puntualmente. Ahora, es fácil ver que hay una subsucesión que sí converge a 0 (y otra que sí converge a $1$, que es la formada por los valores de las posiciones $2^k$).
 
-\section{Teoría de la integral y la medida}
+\subsection{Medidas con signo}
+
+Vamos a trabajar ahora con un espacio medible \meds. Consideramos $\mpos\meds$ como el espacio de medidas positivas (no negativas). Más formalmente, \[ \mpos\meds = \set{\appl{μ}{\algb{X}}{[0, +∞]} \tq μ(∅) = 0,\, μ \text{ es σ-aditiva}} \]
+
+El primer ejemplo es el siguiente. Tomaremos $m ∈ \mpos\meds$, y construimos la medida asociada a una función medible $\appl{f}{X}{[0,∞]}$ como $\appl{m_f}{\algb{X}}{[0,+∞)}$ dada por \[ m_f(E) = \int_X \ind_E f \dif m = \int_E f \dif m\]
+
+De una forma más tradicional, lo que hemos escrito es equivalente al $f \dif x$. Tendríamos además que $\dif m_f = f \dif m$, e incluso podríamos hacer una manipulación formal y definir una ``derivada'' un tanto extraña tal que \[ \deriv{m_f}{x} = f \]
+
+Pero tranquilos que todavía no nos hemos convertido en físicos pervirtiendo derivadas. A eso le podremos dar una definición estricta que tenga sentido para medidas multidimensionales y que nos dé la densidad de medida de una medida.
+
+Una pequeña definición antes de seguir:
+
+\begin{defn}[Medida\IS σ-finita] Dado un espacio medible \meds y una medida μ, se dice que μ es σ-finita si y sólo si existe un conjunto numerable $\algb{U} ⊆ \algb{X}$ tal que su unión recubre todo $X$ y $μ(U) < ∞$ para todo $U ∈ \algb{U}$. \end{defn}
+
+Ahora, un teorema-ejercicio.
+
+\begin{theorem} \citep[Signed Measures]{terence10} Sea μ una medida σ-finita. Dadas dos funciones $\appl{f,g}{X}{[0,∞]}$, entonces $m_f = m_g \iff f = g$ en casi todo punto.\end{theorem}
+
+\begin{proof}
+% TODO
+\end{proof}
+
+Vamos a empezar con la definición esa de derivadas de medidas. De momento, una definición temporal:
+
+\begin{defn}[Medida\IS derivable] Decimos que $μ∈\mpos$ es derivable con respecto a $m$ si y sólo si $\dif μ = f \dif μ$ con $\appl{f}{X}{[0,∞]}$ $m$-medible.
+
+En ese caso, $f$ será la \concept{Derivada\IS de Radon-Nikodin} dada por \[ \deriv{μ}{m} = f \]
+\end{defn}
+
+\begin{prop}
+Sea $μ$ una medida de Lebesgue en $X = [0,+∞] = ℝ_+$. Sea $μ ∈ \mpos\meas[X][m]$. Sea $\deriv{μ}{m} = f$ la derivada de Radon-Nikodin. Si $f$ es continua, entonces la función \[ F(x) = μ([0,x]) = \int_0^x \dif μ = \int_0^x f \dif x \] es derivable en sentido clásico y $\deriv{F}{x} = \deriv{}{x}μ([0,x]) = f(x)$.
+\end{prop}
+
 
 \section{Espacios de Banach y Hilbert. Espacios $L^p$}
 
