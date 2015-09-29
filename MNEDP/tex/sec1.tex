@@ -364,7 +364,7 @@ El algoritmo vectorial tendría la siguiente forma:
 			U_1^{n+1}\\
 			U_2^{n+1}\\
 			\vdots\\
-			U_{j-1}^{n+1}\\
+			U_{J-1}^{n+1}\\
 		\end{bmatrix}
 		=
 		\begin{bmatrix}
@@ -377,7 +377,7 @@ El algoritmo vectorial tendría la siguiente forma:
 			U_1^{n}\\
 			U_2^{n}\\
 			\vdots\\
-			U_{j-1}^{n}\\
+			U_{J-1}^{n}\\
 		\end{bmatrix}
 	\end{array}
 \end{equation*}
@@ -597,7 +597,7 @@ En la práctica sólo tenemos frecuencias distintas para $$j=-(J-1), -(J-2), \hd
 
 Las frecuencias se llaman alias, y el error se llama error de aliasis.
 \begin{equation*}
-	e^{im_1\pi j\Delta x} = e^{im_1\pi j / J} = e^{im_2\pi j / J}\underbrace{e^{i2l\pi_j}}_{=1}
+	e^{im_1\pi j\Delta x} = e^{im_1\pi j / J} = e^{im_2\pi j / J}\underbrace{e^{i2l\pi j}}_{=1}
 \end{equation*}
 
 \begin{figure}[h]
@@ -607,139 +607,275 @@ Las frecuencias se llaman alias, y el error se llama error de aliasis.
 	\label{fig:frecmalla}
 \end{figure}
 
-\color{red}{DE AQUI HACIA ALANTE HAY QUE COMPLETAR} 
  \begin{example}
- 	$$\sum_{m=-\infty}^\infty A_M\lambda(m\pi)e^{im\pi x}$$
-	Vamos a tomar una malla $J=20$, es decir, tenemos $21$ puntos en $[0,1]$
-	Las frecuencias que tenemos son
-	$m = -(J-1), -(J-2), \hdots, J = -19, -18, \hdots, 0, 1, \hdots, 20$.
-	$m = 8\to A_8$
-	
-	$(A_8\lambda(8\pi)+A_{-32}\lambda(-32\pi)+A_{48}\lambda(48\pi))
-	e^{i8\pi x}$
-	
-	En la figura se puede observar
-	En azul $cos(8\pi x)$
-	En rojo $cos(-32\pi x)$
-	
+ 	$$U_j^n = \sum_{m=-\infty}^\infty B_m\lambda(m\pi)e^{im\pi x}$$
+	Vamos a tomar una malla $J=20$, es decir, tenemos $21$ puntos en $[0,1]$.
+	Elegimos por ejemplo $m=8$. En la figura \ref{fig:frecmalla} se puede observar
+	\begin{itemize}
+		\item En azul $cos(8\pi x)$.
+		\item En rojo $cos(-32\pi x)$.
+	\end{itemize}
 	En todos los puntos de la malla, las funciones coinciden.
  \end{example}
  
- En el método explícito tenemos la restricción $\nu=\frac{\Delta t}{\Delta x ^2} \le \frac{1}{2}$
- $\Delta t \le \frac{\Delta x ^2}{2}$ En la práctica, a medida que refino la malla en $x$, tengo que aumentar muchísimo el número de pasos en tiempo para llegar al tiempo final.
+\paragraph{Método implícito}\mbox{}
+
+En el método explícito tenemos la restricción $\nu=\frac{\Delta t}{\Delta x ^2} \le \frac{1}{2}$, es decir, $\Delta t \le \frac{\Delta x ^2}{2}$. En la práctica, a medida que se refina la malla para la variable $x$, se tiene que aumentar muchísimo el número de pasos en tiempo para llegar al tiempo final.
  
-\paragraph{Método implícito}
+Vamos a construir un método implícito mediante la siguiente expresión:
 $$\frac{U_j^{n+1}-U_j^n}{\Delta t} = \frac{U_{j+1}^{n+1}-2U_{j}^{n+1}+U_{j-1}^{n+1}}{\Delta x^2}$$
 
-Tenemos que el método implícito es
+Obteniendo:
 $$U_j^{n+1} = U_j^n + \nu \left[U_{j+1}^{n+1}-2U_{j}^{n+1}+U_{j-1}^{n+1}\right]$$
 
-% %dibujos y matrices
+\subparagraph{Programación del método}\mbox{}
 
+Matricialmente, el método tiene la siguiente expresión:
+\begin{equation*}
+		\begin{array}{l l l}
+			\begin{bmatrix}
+				U_1^{n}\\
+				U_2^{n}\\
+				\vdots\\
+				U_{J-1}^{n}\\
+			\end{bmatrix}
+			=
+			\underbrace{
+			\begin{bmatrix}
+				1+2\nu & -\nu       &        & \\
+				-\nu    & \ddots    & \ddots & \\
+				& \ddots & \ddots & -\nu\\
+				&        & -\nu    & 1+2\nu\\
+			\end{bmatrix}}_{A}
+			\begin{bmatrix}
+				U_1^{n+1}\\
+				U_2^{n+1}\\
+				\vdots\\
+				U_{J-1}^{n+1}\\
+			\end{bmatrix}
+		\end{array}
+\end{equation*}
 
-Resuelvo el sistema lineal de la matriz $A$ para encontrar los valores en la primera fila.
+En la figura \ref{fig:calor_impl} se puede observar cómo obtiene el método los valores de un punto a partir del resto.
 
-Para cada paso en tiempo resuelvo el sistema de matriz tridiagonal. Es diagonalmente dominante:
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[domain=0:4]
+	%Grid
+	\draw[step=5mm,very thin,color=gray] (0,0) grid (4,4.25);
+	%Axis
+	\draw[thick,->] (0,0) -- (4.5,0) node[below right] {x};
+	\draw[thick,->] (0,0) -- (0,4.5) node[above left] {t};
+	\foreach \x in {0,1,2,3,4}
+	\draw (5*\x mm,1pt) -- (5*\x mm,-1pt) node[below] {$x_\x$};
+	\node[below] at (3,-4pt){$\hdots$};
+	\node[below] at (4,-1pt){$x_J$};
+	\foreach \y in {0,1,2,3,4}
+	\draw (1pt,5*\y mm) -- (-1pt,5*\y mm) node[left] {$t_\y$};
+	\node[left] at (-4pt,3){$\vdots$};
+	\node[left] at (-1pt,4){$t_N$};
+	%Data
+	\foreach \x in {0,...,8}{
+		\draw[rotate around={45:(0,5*\x mm)},red, line width=1pt] (0.15,5*\x mm) -- (-0.15,5*\x mm);
+		\draw[rotate around={135:(0,5*\x mm)},red, line width=1pt] (0.15,5*\x mm) -- (-0.15,5*\x mm);
+	}
+	\foreach \x in {0,...,8}{
+		\draw[rotate around={45:(4,5*\x mm)},red, line width=1pt] (4.15,5*\x mm) -- (3.85,5*\x mm);
+		\draw[rotate around={135:(4,5*\x mm)},red, line width=1pt] (4.15,5*\x mm) -- (3.85,5*\x mm);
+	}
+	\foreach \y in {0,...,8}{
+		\draw[rotate around={45:(5*\y mm,0)},blue, line width=1pt] (5*\y mm,0.15) -- (5*\y mm,-0.15);
+		\draw[rotate around={135:(5*\y mm,0)},blue, line width=1pt] (5*\y mm,0.15) -- (5*\y mm,-0.15);
+	}
+	\draw[thick,->] (1.5,1.5) -- (1.9,1.5);
+	\draw[thick,->] (2,1) -- (2,1.4);
+	\draw[thick,->] (2.5,1.5) -- (2.1,1.5);
+	\draw[fill=green!50!white, draw=black] (1.5,1.5) circle (1mm);
+	\draw[fill=green!50!white, draw=black] (2,1) circle (1mm);
+	\draw[fill=green!50!white, draw=black] (2.5,1.5) circle (1mm);
+	\draw[fill=yellow!70!white, draw=black] (2,1.5) circle (1mm);
+	\end{tikzpicture}
+	\caption{Método implícito: $U_j^{n+1} = U_j^n + \nu \left[U_{j+1}^{n+1}-2U_{j}^{n+1}+U_{j-1}^{n+1}\right]$}
+	\label{fig:calor_impl}
+\end{figure}
 
-$$||1+2\nu|\ge |-\nu|+|-\nu|$$
+Hay que resolver el sistema lineal de la matriz $A$, para cada paso en el tiempo se resuelve el sistema de la matriz tridiagonal, que es diagonalmente dominante, es decir:
+$$|1+2\nu|\ge |-\nu|+|-\nu|$$
 
-En matlab, para introducir $A$, introducimos sólo los 3 vectores de las diagonales. Rsolvemos el sistema por eliminación gaussiana, no es necesario pivotaje.
-
-$Ax =f$
-$x=\setminus f$
-
-$A=(J-1)x(J-1)$
-$\Delta x = \frac{1}{J}$
-coste computacional $O(3*(J-1))$.
-
+En \textsc{MatLab}, para introducir $A$, introducimos sólo los 3 vectores de las diagonales y resolvemos el sistema por eliminación gaussiana, sin ser necesario utilizar pivotaje.
 \begin{lstlisting}
-	J = 20
-	nu = 0.4
-	
-	e=ones(J-1,1);
-	e=(1+2*nu)+e;
-	eu=ones(J-2,1)
-	eu=-nu*eu;
-	ed=eu;
-	eu=[0, eu];
-	ed=[ed, 0];
-	A=spdiags([ed e eu],-1:1,J-1,J)
+	% Para resolver un sistema lineal Ax = B usamos
+	x = A\B;
 \end{lstlisting}
 
-\paragraph*{Análisis de Fourier del método implícito}
+Dado que la matrix $A$ tiene dimensión $(n-1)\times(n-1)$, el coste computacional de resolver el sistema es $O(3*(J-1))$.
 
-$$U_j^{n+1} = U_j^n + \nu \left[U_{j+1}^{n+1} - 2U_j^{n+1}+U_{j-1}^{n+1}\right]$$
+\newpage
+Veamos un ejemplo de como construir una matriz tridiagonal en \textsc{MatLab}.
+\begin{lstlisting}
+	% Elegimos el valor para J y para nu.
+	J = 20;
+	nu = 0.4;
+	
+	% Creamos un vector columna de J-1 elementos con todos 
+	% los valores a 1 (diagonal).
+	e = ones(J - 1, 1);
+	e = (1 + 2*nu) * e;
+	
+	% Creamos un vector columna de J-2 elementos con todos
+	% los valores a 1 (diagonal superior)
+	eu = ones(J - 2, 1);
+	eu = -nu * eu;
+	
+	% Creamos un vector columna de J-2 elementos con todos 
+	% los valores a 1 (diagonal inferior)
+	ed = eu;
+	
+	% Agregamos un cero al principio de la diagonal superior
+	% (para que tenga J-1 elementos)
+	eu = [0, eu];
+	
+	% Agregamos un cero al final de la diagonal inferior
+	% (para que tenga J-1 elementos)
+	ed = [ed, 0];
+	
+	% Creamos la matriz tridiagonal
+	A = spdiags([ed e eu], -1:1, J-1, J-1);
+\end{lstlisting}  
 
-$$U_j^n = \lambda^n e^{ik_j\Delta x}$$
+\subparagraph{Análisis de Fourier del método implícito}\mbox{}
 
-$\lambda{n+1} e^{ik_j\Delta x} = \lambda^n e^{ik_j\Delta x} + \nu \left[\lambda^{n+1}e^{ik_{j+1}\Delta x} - 2\lambda^{n+1}e^{ik_j\Delta x}+\lambda^{n+1}e^{ik_{j-1}\Delta x}\right]$
+El método implícito, como ya hemos visto, tiene la expresión:
+$$U_j^{n+1} = U_j^n + \nu \left[U_{j+1}^{n+1}-2U_{j}^{n+1}+U_{j-1}^{n+1}\right]$$
 
-Dividiendo por $\lambda^n e^{ik_j\Delta x}$
+Buscamos $U_j^n$ de la forma:
+$$U_j^n = \lambda^n e^{ik j\Delta x}$$
 
-$\lambda = 1+\nu\left[\lambda e^{ik\Delta x}-2\lambda + \lambda e^{-ik\Delta x}\right]$
+Sustituyendo en el método, obtenemos:
+$$\lambda^{n+1} e^{ik j\Delta x} = \lambda^n e^{ik j\Delta x} + \nu \left[\lambda^{n+1}e^{ik ({j+1})\Delta x} - 2\lambda^{n+1}e^{ik j\Delta x}+\lambda^{n+1}e^{ik ({j-1})\Delta x}\right]$$
 
-$\lambda =  1+\lambda \nu\left[e^{ik\Delta x} - 2 + e^{-ik\Delta x}\right]$
+Dividiendo por $\lambda^n e^{ik j\Delta x}$ obtenemos la siguiente expresión para $\lambda(k)$:
+\begin{align*}
+	\lambda(k) & = 1+\nu\left[\lambda e^{ik\Delta x}-2\lambda + \lambda e^{-ik\Delta x}\right]\\
+	& =  1+\lambda \nu\left[e^{ik\Delta x} - 2 + e^{-ik\Delta x}\right]\\
+	& = 1-4\nu\lambda sin^2\left(\frac{k}{2}\Delta x\right)\\
+\end{align*}
 
-$\lambda = 1-4\nu\lambda sin^2(\frac{k}{2}\Delta x)$
+Resolviendo el sistema:
+$$\lambda(k) = \frac{1}{1+4\nu sin^2\left(\frac{k}{2}\Delta x\right)}$$
 
-$1 = [1+4\nu sin^2(\frac{k}{2}\Delta x)]\lambda$
+El método implícito es incondicionalmente estable, lo que quiere decir que es siempre estable independientemente de los valores de $\Delta t$ y $\Delta x$.
 
-$\lambda(k) = \frac{1}{1+4\nu sin^2(\frac{k}{2}\Delta x)}$
+\paragraph{El $\theta$-método}\mbox{}
 
-
-El método implícito es incondicionalmente estable
-Siempre estable independientemente de los valores de $\Delta t$ y $\Delta X$.
-
-Consistente de orden 1 $\implies$ el metodo es convergente.
-
-\paragraph{El theta-método}
-
+El $\theta$-método es un método que combina el método explícito y el método implícito de la siguiente forma, con $0\le\theta\le 1$:
 $$\frac{U_j^{n+1}-U_j^n}{\Delta t} = 
-\theta \left[ \frac{U_{j+1}^n-2U_j^n+U_{j-1}^n}{(\Delta x)^2}\right] +
-(1-\theta)\left[\frac{U_{j+1}^{n+1}-2U_{j}^{n+1}+U_{j-1}^{n+1}}{\Delta x^2}\right]$$
+\theta \left[\frac{U_{j+1}^{n+1}-2U_{j}^{n+1}+U_{j-1}^{n+1}}{(\Delta x)^2}\right] +
+(1-\theta) \left[ \frac{U_{j+1}^n-2U_j^n+U_{j-1}^n}{(\Delta x)^2}\right]$$
 
-con $0\le\theta\le 1$
-
+Según el valor de $\theta$ se tiene:
 \begin{itemize}
-\item $\theta = 0$ Método explícito $\nu \le \frac{1}{2}$
-\item $\theta = 1$ Método implícito siempre de orden 1.
+	\vspace{-3mm}
+	\item $\theta = 0$ Método explícito (estable si $\nu \le \frac{1}{2}$).
+	\item $\theta = 1$ Método implícito siempre de orden 1.
 \end{itemize}
 
 Otra forma de escribirlo es
 $$U_j^{n+1} = U_j^n + \nu\theta\left[U_{j+1}^{n+1} - 2U_{j}^{n+1} + U_{j-1}^{n+1}\right] + \nu(1-\theta)\left[U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}\right]$$
 
-Escribiéndolo de forma matricial, tenemos
-$U^{n+1} = 
-\begin{bmatrix}
-u_1^{n+1}\\
-u_2^{n+1}\\
-\vdots\\
-u_{J-1}^{n+1}\\
-\end{bmatrix}$
+\subparagraph{Programación del método}\mbox{}
 
-Para programar el método
-%Matriz de kike
+Matricialmente, el método tiene la expresión:
+\begin{equation*}
+	\begin{array}{l l l}
+		\underbrace{
+		\begin{bmatrix}
+			1+2\nu\theta & -\nu\theta &        & \\
+			-\nu\theta   & \ddots     & \ddots & \\
+			& \ddots     & \ddots     & -\nu\theta\\
+			&            & -\nu\theta & 1+2\nu\theta\\
+		\end{bmatrix}}_A
+		\begin{bmatrix}
+			U_1^{n+1}\\
+			U_2^{n+1}\\
+			\vdots\\
+			U_{J-1}^{n+1}\\
+		\end{bmatrix}
+		=
+		(1-\theta)
+		\begin{bmatrix}
+			-2\nu         & \nu&        & \\
+			\nu            & \ddots       & \ddots & \\
+			& \ddots & \ddots        & \nu\\
+			&        & \nu & -2\nu\\
+		\end{bmatrix}
+	\end{array}
+	\end{equation*}
+	
+	Hay que resolver el sistema lineal en el que $A$ es una matriz tridiagonal y diagonalmente dominante:
+	$$|1+2\nu\theta| > |-\nu\theta| + |-\nu\theta|$$
+	
+	En la figura \ref{fig:calor_theta} se puede observar cómo obtiene el método los valores de un punto a partir del resto.
+	
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}[domain=0:4]
+		%Grid
+		\draw[step=5mm,very thin,color=gray] (0,0) grid (4,4.25);
+		%Axis
+		\draw[thick,->] (0,0) -- (4.5,0) node[below right] {x};
+		\draw[thick,->] (0,0) -- (0,4.5) node[above left] {t};
+		\foreach \x in {0,1,2,3,4}
+		\draw (5*\x mm,1pt) -- (5*\x mm,-1pt) node[below] {$x_\x$};
+		\node[below] at (3,-4pt){$\hdots$};
+		\node[below] at (4,-1pt){$x_J$};
+		\foreach \y in {0,1,2,3,4}
+		\draw (1pt,5*\y mm) -- (-1pt,5*\y mm) node[left] {$t_\y$};
+		\node[left] at (-4pt,3){$\vdots$};
+		\node[left] at (-1pt,4){$t_N$};
+		%Data
+		\foreach \x in {0,...,8}{
+			\draw[rotate around={45:(0,5*\x mm)},red, line width=1pt] (0.15,5*\x mm) -- (-0.15,5*\x mm);
+			\draw[rotate around={135:(0,5*\x mm)},red, line width=1pt] (0.15,5*\x mm) -- (-0.15,5*\x mm);
+		}
+		\foreach \x in {0,...,8}{
+			\draw[rotate around={45:(4,5*\x mm)},red, line width=1pt] (4.15,5*\x mm) -- (3.85,5*\x mm);
+			\draw[rotate around={135:(4,5*\x mm)},red, line width=1pt] (4.15,5*\x mm) -- (3.85,5*\x mm);
+		}
+		\foreach \y in {0,...,8}{
+			\draw[rotate around={45:(5*\y mm,0)},blue, line width=1pt] (5*\y mm,0.15) -- (5*\y mm,-0.15);
+			\draw[rotate around={135:(5*\y mm,0)},blue, line width=1pt] (5*\y mm,0.15) -- (5*\y mm,-0.15);
+		}
+		\draw[thick,->] (1.5,1.5) -- (1.9,1.5);
+		\draw[thick,->] (2,1) -- (2,1.4);
+		\draw[thick,->] (2.5,1.5) -- (2.1,1.5);
+		\draw[thick,->] (1.5,1) -- (1.9,1.4);
+		\draw[thick,->] (2.5,1) -- (2.1,1.4);
+		\draw[fill=green!50!white, draw=black] (1.5,1.5) circle (1mm);
+		\draw[fill=green!50!white, draw=black] (2,1) circle (1mm);
+		\draw[fill=green!50!white, draw=black] (2.5,1.5) circle (1mm);
+		\draw[fill=green!50!white, draw=black] (1.5,1) circle (1mm);
+		\draw[fill=green!50!white, draw=black] (2.5,1) circle (1mm);
+		\draw[fill=yellow!70!white, draw=black] (2,1.5) circle (1mm);
+		\end{tikzpicture}
+		\caption{El $\theta$-método}
+		\label{fig:calor_theta}
+	\end{figure}
 
-\begin{lstlisting}
-	for n = 1:N
-		U = B * U %Multiplicar por matriz tridiagonal O(3*(J-1)) operaciones
-		U = A \ U %Resolver sistema O(3*(J-1))
-	end
-\end{lstlisting}
-$A$ es una matriz tridiagonal y diagonalmente dominante
-$$1+2\nu\theta > |-\nu\theta| + |-\nu\theta|$$
-
-\paragraph*{Análisis de Fourier del método}
+\subparagraph{Análisis de Fourier del método}\mbox{}
 
 Buscamos $U_{j}^{n}$ de la forma
 $U_{j}^{n} = \lambda ^n e^{ikj\Delta x}$
 
-\begin{itemize}
-	\item Sustituimos $U_{j}^{n}$ por $\lambda^n e^{ikj\Delta x}$
-	\item Dividimos por $\lambda^n e^{ikj\Delta x}$
-\end{itemize}
+Los pasos a seguir, como ya hemos visto
+\begin{enumerate}
+	\item Sustituimos $U_{j}^{n}$ en el método por $\lambda^n e^{ikj\Delta x}$.
+	\item Dividimos por $\lambda^n e^{ikj\Delta x}$ y despejamos $\lambda(k)$.
+\end{enumerate}
 
-Nos quda
+Nos queda:
+
+\color{red}{DE AQUI HACIA ALANTE SE ESTÁ COMPLETANDO}
 
 $\lambda = 1+ \nu\theta\lambda\left[e^{ik\Delta x}-2+e^{-ik\Delta x}\right] = \nu(1-\theta)\left[e^{ik\Delta x} - 2 + e^{-ik\Delta x}\right]$
 
