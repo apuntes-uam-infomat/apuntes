@@ -255,3 +255,4 @@
 \minuszero#m
 \essup#m
 \convsmed#m
+\mpos#m
