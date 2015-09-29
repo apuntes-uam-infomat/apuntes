@@ -428,18 +428,10 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 
 	\textbf{Validez:} Sea $V$ el conjunto de todas las valoraciones que satisfacen a $T$. Si $V=\emptyset$, entonces $T\vdash \sigma$ trivialmente. Si $V\neq \emptyset$, entonces, argumentamos como en el teorema anterior pero considerando sólo las valoraciones en $V$ en lugar de todas.
 
-	\textbf{Adecuación:} Sea $p$ una tautología sin demostración. Como $\nvdash p$ entonces $T=\{\neg p\}$ es consistente (ver teorema \ref{thm:pconsnegp}). Pero $T\vdash \neg p$, como $p$ es una tautología, entonces $T\vdash \neg p\equiv \perp$
+	\textbf{Adecuación:} Sea $p$ una tautología sin demostración. Como $\nvdash p$ entonces $T=\{\neg p\}$ es consistente (ver teorema \ref{thm:pconsnegp}). Pero $T\vdash \neg p$, como $p$ es una tautología, entonces $T\vdash \neg p\equiv \perp$.
+	
+	\textit{Otra forma:} Probamos la formulación equivalente ``$T\nvdash p \implies T\nvDash p$'', es decir, hay un modelo $\sigma$ de $T$ tal que $\sigma(p) = 0$. $T\nvdash p \implies T\cup\{\neg p\}$ es consistente. Por \ref{thm:comp2}, $T\cup\{\neg p\}$ tiene un modelo $\sigma$. Por tanto, $\forall q\in T$, $\sigma(q) = 1$, pero $\sigma(p) = 0$ porque $\sigma(\neg p) = 1$.
 
-\end{proof}
-
-\begin{theorem}[Teorema de completitud II]
-	$T$ es consistente $\iff$ $T$ tiene un modelo.
-\end{theorem}
-\begin{corol}
-	Las teorías inconsistentes no tienen modelos.
-\end{corol}
-\begin{proof}
-	Por validez, $T\vdash p \implies T\vDash p$. Si $T$ es inconsistente, $T\vdash \perp$, luego $T\vDash\perp$. Como para toda valoración booleana, $\sigma(\perp) = 0$, ninguna $\sigma$ satisface a $T$.
 \end{proof}
 
 \noindent\textbf{Criterio: }\mbox{}
@@ -476,6 +468,7 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 
 \begin{theorem}[Teorema de Lindenbaum]
 	Toda teoría consistente puede extenderse a una teoría completa.
+	\label{thm:lindenbaum}
 \end{theorem}
 \begin{proof}
 	Usamos el lema de Zorn. Sea $T$ consistente y sea $P$ el conjunto de todas las teorías consistentes que extienden a $T$. Definimos un orden parcial en $P$ mediante inclusión:
@@ -492,9 +485,64 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 	Por Zorn, $P$ tiene un elemento maximal $M\supset T$, $M\in P \implies M$ consistente y $M$ maximal $\implies\forall p \in FBF(L)$, o $M\vdash p$ o $M\vdash \neg p$. Si no, es decir, si $M\nvdash p$ y $M\nvdash \neg p$, tanto $M\cup\{p\}$ como $M\cup\{\neg p\}$ son consistentes, por el teorema \ref{thm:pconsnegp}.
 \end{proof}
 
-\begin{theorem}
-	Si no existe una prueba de $p$, entonces $p$ no es una tautología.
+\begin{theorem}[Teorema de completitud II]
+	$T$ es consistente $\iff$ $T$ tiene un modelo.
+	\label{thm:comp2}
 \end{theorem}
 \begin{proof}
-	Tenemos que probar que si $\nvdash p$, entonces $\exists \sigma \tq \sigma(\neg p) = 1$.
+	\begin{itemize}
+		\item $\Longleftarrow$: Por validez, $T\vdash p \implies T\vDash p$. Si $T$ es inconsistente, $T\vdash \perp$, luego $T\vDash\perp$. Como para toda valoración booleana, $\sigma(\perp) = 0$, ninguna $\sigma$ satisface a $T$.
+		\item $\Longrightarrow$: Sea $T$ consistente, queremos probar que tiene un modelo. Por el teorema de Lindenbaum (\ref{thm:lindenbaum}), existe una $M\supset T \tq M$ es completa, es decir, $M$ es consistente y $\forall p \in FBF(L)$, o $M\vdash p$ o $M\vdash \neg p$. Definimos $\sigma(p) = 1 \iff M\vdash p$, y $\sigma(p) = 0 \iff M\nvdash p$.
+		
+		$\sigma$ está definida sobre el conjunto $FBF(L)$, y $\sigma(p) = 1$ $\forall p \in M$, y por tanto $\forall p\in T$.
+		
+		Como $\{\neg, \vee\}$ es un sistema completo de conectivas, podemos suponer que $L=A\cup\{\neg\vee\}$. Para ver que $\sigma$ es una valoración booleana, hay que comprobar
+		\begin{enumerate}
+			\item $\sigma(\neg p) = 1+\sigma(p)$ (mod $2$).
+			
+			Si $M \vdash \neg p$, entonces $M\nvdash p$ (por consistencia), luego 
+			$$1 = \sigma(\neg p) = 1+\sigma(p) = 1 + 0$$
+			
+			Si $M \nvdash \neg p$, entonces $M\vdash p$, y
+			$$0=\sigma(\neg p) = 1+\sigma(p) \text{ (mod 2)} = 1+1 \text{ (mod 2)}$$
+			
+			\item $\sigma(p\vee q) = \sigma(p)\vee\sigma(q)$.
+			Si $M\vdash p$ o $M\vdash q$, entonces, por $p\implies (p\vee q)$ o $q\implies (p\vee q)$, que es el axioma 2, y modus ponens, obtenemos
+			$$M\vdash p \vee q$$
+			
+			Por definición de $\sigma$,
+			$$\sigma(p\vee q) = 1 = \max\{\sigma(p), \sigma(q)\} = \sigma(p)\vee\sigma(q)$$
+			
+			Si $M\vdash \neg p$ y $M\vdash \neg q$, entonces, usando el axioma 3: $\neg p \implies (\neg q \implies \neg(p\vee q))$ y modus ponens dos veces, obtenemos:
+			$$M\vdash \neg(p\vee q)$$
+			
+			En este caso, $\sigma(p\vee q) = 0 = \sigma(p) \vee \sigma(q)$.
+		\end{enumerate}
+	\end{itemize}
+\end{proof}
+
+\begin{theorem}[Teorema de compacidad]
+	Si todo subconjunto finito de una teoría $T$ tiene un modelo, entonces $T$ tiene un modelo.
+\end{theorem}
+\begin{proof}
+	Como todo subconjunto finito de $T$ tiene un modelo, todo subconjunto finito es consistente, luego $T$ es consistente. 
+	
+	De otro modo, si $T\vdash \perp$, existe una demostración $p_1, \hdots, p_n = \perp$ usando las premisas en $T$. Pero $T\cap\{p_1,\hdots,p_{n-1}\}\vdash \perp$ y es finito.
+	
+	Por \ref{thm:comp2}, $T$ tiene un modelo.
+\end{proof}
+
+\begin{obs}
+	Si $\sigma$ es un modelo de $T$, también o es de todos sus subconjuntos finitos, luego la otra dirección en el teorema de compacidad es trivial.
+\end{obs}
+
+\begin{theorem}
+	La lógica proposicional es decidible, es decir, existe un algoritmo que nos permite saber si $\vdash p$ o $\nvdash p$.
+\end{theorem}
+\begin{proof}
+	Escribimos la tabla de verdad de $p$.
+	\begin{itemize}
+		\item Si $\sigma(p) = 1$ $\forall\sigma$, entonces $\vdash p$
+		\item Si $\sigma(p) = 0$ para algún $\sigma$, entonces $\nvdash p$.
+	\end{itemize}
 \end{proof}
