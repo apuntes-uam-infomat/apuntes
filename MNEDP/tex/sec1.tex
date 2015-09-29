@@ -903,34 +903,42 @@ En conclusión:
 	\item $\frac{1}{2}\le \theta \le 1$: tenemos estabilidad siempre.
 \end{itemize}
 
-\color{red}{DE AQUI HACIA ALANTE SE ESTÁ COMPLETANDO}
-
 \paragraph*{Error de truncación del método}
-Vamos a hacer el desarrollo de Taylor en el punto $(x_j, t_{n+\frac{1}{2}})$.
+Para analizar el error de truncación del método vamos a hacer el desarrollo de Taylor en el punto $(x_j, t_{n+\frac{1}{2}})$. Tenemos que el error de truncación tiene la forma:
 
-$T_j^n = \frac{u_{j}^{n+1} - u_{j}^{n}}{\Delta t} - \theta\left[\frac{u_{j+1}^{n+1}-2u_{j}^{n+1}+u_{j-1}^{n+1}}{\Delta x ^2}\right] - (1-\theta)\left[\frac{u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}}{\Delta t}\right]$
+$$T_j^n = \frac{u_{j}^{n+1} - u_{j}^{n}}{\Delta t} - \theta\left[\frac{u_{j+1}^{n+1}-2u_{j}^{n+1}+u_{j-1}^{n+1}}{(\Delta x) ^2}\right] - (1-\theta)\left[\frac{u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}}{\Delta t}\right]$$
 
-1) $u_{j}^{n+1} = \left[u + \frac{1}{2}\Delta tu_t + \frac{1}{2}(\frac{1}{2}\Delta t)^2u_{tt} + \frac{1}{6}(\frac{1}{2}\Delta t)^3u_{tttt} + \hdots \right]_j^{n+\frac{1}{2}}$
+Comencemos con el desarrollo:
+\begin{itemize}
+	\item  \textbf{Paso 1:}
+	\begin{align*}
+	u_{j}^{n+1} & = \left[u + \frac{1}{2}\Delta tu_t + \frac{1}{2}\left(\frac{1}{2}\Delta t\right)^2u_{tt} + \frac{1}{6}\left(\frac{1}{2}\Delta t\right)^3u_{tttt} + \hdots \right]_j^{n+\frac{1}{2}}\\\\
+	u_{j}^{n} & = \left[u - \frac{1}{2}\Delta tu_t + \frac{1}{2}\left(\frac{1}{2}\Delta t\right)^2u_{tt} - \frac{1}{6}\left(\frac{1}{2}\Delta t\right)^3u_{tttt} + \hdots \right]_j^{n+\frac{1}{2}}
+	\end{align*}
+	
+	Obtenemos:	
+	$$\frac{u_j^{n+1}-u_j^n}{\Delta t} = \left[u_t+\frac{1}{24}(\Delta t)^2u_{tttt}+\hdots \right]_j^{n+\frac{1}{2}}$$
+	
+	\item \textbf{Paso 2:}
+	\begin{align*}
+	u_{j+1}^{n+1} -2u_{j}^{n+1} + u_{j-1}^{n+1} & = \left[\Delta x ^2 u_{xx} + \frac{1}{12}\Delta x ^4 u_{xxxx} + \frac{2}{6!}\Delta x ^6 u_{xxxxxx}+\hdots \right]_j^{n+1}\\
+	u_{j+1}^{n} -2u_{j}^{n} + u_{j-1}^{n} & = \left[\Delta x ^2 u_{xx} + \frac{1}{12}\Delta x ^4 u_{xxxx} + \frac{2}{6!}\Delta x ^6 u_{xxxxxx}+\hdots \right]_j^{n}
+	\end{align*}
+	\item \textbf{Paso 3:} A partir de (1) y (2) obtenemos los desarrollos en $(x_j, t_{n+\frac{1}{2}})$
+	
+	\begin{align*}
+		u_{j+1}^{n+1} -2u_{j}^{n+1} + u_{j-1}^{n+1} & = \left[\Delta x ^2 u_{xx} + \frac{1}{12}\Delta x ^4 u_{xxxx} + \frac{2}{6!}\Delta x^6 u_{xxxxxx}+\hdots \right]_j^{n+\frac{1}{2}}\\
+		& + \left(\frac{1}{2}\Delta t\right) \left[\Delta x ^2 u_{xxt} + \frac{1}{12}\Delta x ^4 u_{xxxxt} +\hdots \right]_j^{n+\frac{1}{2}}\\
+		& + \frac{1}{2}\left(\frac{1}{2}\Delta t\right)^2 \left[\Delta x ^2 u_{xxtt} + \hdots \right]_j^{n+\frac{1}{2}}
+	\end{align*}
+	\begin{align*}
+		u_{j+1}^{n} -2u_{j}^{n} + u_{j-1}^{n} & = \left[\Delta x ^2 u_{xx} + \frac{1}{12}\Delta x ^4 u_{xxxx} + \frac{2}{6!}\Delta x^6 u_{xxxxxx}+\hdots \right]_j^{n+\frac{1}{2}}\\
+		& - \left(\frac{1}{2}\Delta t\right) \left[\Delta x ^2 u_{xxt} + \frac{1}{12}\Delta x ^4 u_{xxxxt} +\hdots \right]_j^{n+\frac{1}{2}}\\
+		& + \frac{1}{2}\left(\frac{1}{2}\Delta t\right)^2 \left[\Delta x ^2 u_{xxtt} + \hdots \right]_j^{n+\frac{1}{2}}
+	\end{align*}
+\end{itemize}
 
-$u_{j}^{n} = \left[u - \frac{1}{2}\Delta tu_t + \frac{1}{2}(\frac{1}{2}\Delta t)^2u_{tt} - \frac{1}{6}(\frac{1}{2}\Delta t)^3u_{tttt} + \hdots \right]_j^{n+\frac{1}{2}}$
-
-
-$\frac{u_j^{n+1}-u_j^n}{\Delta t} = \left[u_t+\frac{1}{24}(\Delta t)^2u_{tttt}+\hdots \right]_j^{n+\frac{1}{2}}$
-
-2) $u_{j+1}^{n+1} -2u_{j}^{n+1} + u_{j-1}^{n+1} = \left[\Delta x ^2 u_{xx} + \frac{1}{12}\Delta x ^4 u_{xxxx} + \frac{2}{6!}\Delta x ^6 u_{xxxxxx}+\hdots \right]_j^{n+1}$
-
-$u_{j+1}^{n} -2u_{j}^{n} + u_{j-1}^{n} = \left[\Delta x ^2 u_{xx} + \frac{1}{12}\Delta x ^4 u_{xxxx} + \frac{2}{6!}\Delta x ^6 u_{xxxxxx}+\hdots \right]_j^{n}$
-
-Desarrollos en $(x_j, t_{n+\frac{1}{2}})$.
-
-$u_{j+1}^{n+1} -2u_{j}^{n+1} + u_{j-1}^{n+1} = \left[\Delta x ^2 u_{xx} + \frac{1}{12}\Delta x ^4 u_{xxxx} + \frac{2}{6!}\Delta x^6 u_{xxxxxx}+\hdots \right]_j^{n+\frac{1}{2}}
-+ (\frac{1}{2}\Delta t) \left[\Delta x ^2 u_{xxt} + \frac{1}{12}\Delta x ^4 u_{xxxxt} +\hdots \right]_j^{n+\frac{1}{2}}
-+ \frac{1}{2}(\frac{1}{2}\Delta t)^2 \left[\Delta x ^2 u_{xxtt} + \hdots \right]_j^{n+\frac{1}{2}}$
-
-$u_{j+1}^{n} -2u_{j}^{n} + u_{j-1}^{n} = \left[\Delta x ^2 u_{xx} + \frac{1}{12}\Delta x ^4 u_{xxxx} + \frac{2}{6!}\Delta x^6 u_{xxxxxx}+\hdots \right]_j^{n+\frac{1}{2}}
-- (\frac{1}{2}\Delta t) \left[\Delta x ^2 u_{xxt} + \frac{1}{12}\Delta x ^4 u_{xxxxt} +\hdots \right]_j^{n+\frac{1}{2}}
-+ \frac{1}{2}(\frac{1}{2}\Delta t)^2 \left[\Delta x ^2 u_{xxtt} + \hdots \right]_j^{n+\frac{1}{2}}$
-
+\color{red}{DE AQUI HACIA ALANTE SE ESTÁ COMPLETANDO}
 Vamos a ver lo que vale
 
 $\theta\left[\frac{u_{j+1}^{n+1}-2u_{j}^{n+1}+u_{j-1}^{n+1}}{\Delta x ^2}\right] + (1 - \theta) \left[\frac{u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}}{\Delta x ^2}\right]
