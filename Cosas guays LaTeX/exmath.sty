@@ -11,6 +11,8 @@
 
 \def\@setframeconfig{}
 
+% Tenemos que retrasar la ejecución del \toggletrue/\togglefalse hasta que tengamos
+% 	el paquete cargado, así que lo que hacemos es guardarnos el comando.
 \DeclareOption{problemframes}{\def\@setframeconfig{\toggletrue{probframes}}}
 \DeclareOption{noproblemframes}{\def\@setframeconfig{\togglefalse{probframes}}}
 
@@ -42,7 +44,6 @@
 \RequirePackage{nameref}
 
 \newtoggle{probframes} % Controla si los problemas tienen marcos o no
-
 \@setframeconfig
 
 % Para evitar que el \md de nuestro paquete tenga conflictos con el de commath
@@ -89,8 +90,8 @@
 }
 
 % Se puede definir de forma genérica con \doneby{Quién}.
-\newcommand{\doneby}[1]{\textcolor{\@nameuse{probcolor-#1}}{\itshape Hecho por #1. Se aceptan correcciones.}} % IGN
-\newcommand{\approvedby}[1]{\textcolor{\@nameuse{probcolor-#1}}{\itshape Revisado por #1. Se siguen aceptando correcciones}} % IGN
+\newcommand{\doneby}[1]{\textcolor{\@nameuse{probcolor-#1}}{\itshape Hecho por #1. Se aceptan correcciones.}} % 1: Autor | Muestra el texto "Hecho por..."
+\newcommand{\approvedby}[1]{\textcolor{\@nameuse{probcolor-#1}}{\itshape Revisado por #1. Se siguen aceptando correcciones}} % 1: Autor | Muestra el texto "Revisado por..."
 
 % Colores para el \doneby
 \@namedef{probcolor-Guille}{OliveGreen}
@@ -316,13 +317,20 @@
 \renewcommand{\theapr}{\alph{apr}} % IGN
 
 \newcommand{\iPartSpaceSkip}{} %IGN
-\newcommandx{\ppart}[1][1=\theapr]{\par \indent \stepcounter{apr}\textbf{#1)} } % 1O: apartado; | IGN
-\newcommandx{\spart}[1][1=\theapr]{ % 1O: apartado; | IGN
+\newcommandx{\ppart}[1][1=\theapr]{\par \indent \stepcounter{apr}\textbf{#1)} } % 1O: apartado; | Marca nuevo apartado del problema
+\newcommandx{\spart}[1][1=\theapr]{ % 1O: apartado; | Marca de apartado para la solución
 	\iPartSpaceSkip
 	\renewcommand{\iPartSpaceSkip}{\vspace{10pt}}
 	\indent \refstepcounter{apr}\textsc{Apartado #1)} \par
-	}
-\newcommand{\solution}{\iftoggle{probframes}{\end{framed}}{\normalfont\textcolor{gray}{\hrulefill} \\}\setcounter{apr}{0} } %IGN
+}
+
+\newcommand{\solution}{  %IGN
+	\iftoggle{probframes}
+		{\end{framed}}
+		{\normalfont\textcolor{gray}{\hrulefill} \\}
+		\setcounter{apr}{0}
+}
+
 \newcommand{\ejrheader}{\theejr} % IGN
 
 \newenvironmentx{problem}[1][1=] % 1O: N. ejercicio;
@@ -345,7 +353,7 @@
 	\setcounter{apr}{0}
 }{\vspace{10 pt}}
 
-% Problemas sin numeración por secciones. IGN
+% Problemas sin numeración por secciones.
 \newenvironmentx{problemS}[1][1=] % 1O: N. ejercicio;
 {
 	\vspace{1 pt}
@@ -375,6 +383,10 @@
 \refstepcounter{ithm}
 \addcontentsline{ithmc}{ithm}{\protect\numberline{\theithm}#1}\par}
 
+% Esta cosa permite el uso de referencias con nombre
+% con comandos como \nref{ref}, que escribirá en el
+% documento algo como "Teorema nombre del teorema (1.25)".
+% Ver el paquete fancyspfrefs.sty
 \newcommand{\set@labelname}[1]{%IGN
 	\ifthenelse{\equal{#1}{}}
 		{}
