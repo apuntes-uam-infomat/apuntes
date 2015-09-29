@@ -61,3 +61,103 @@ En este caso, $\rho = \rho^{-1} \iff \rho = (a_1a_2)(a_3a_4)...(a_{25}a_{26})$, 
 
 Dada esta restricción tendremos un total de
 \[\frac{{26 \choose 2} {24 \choose 2} ... {2 \choose 2}}{13!} =\frac{26!}{13!2^{13}} \approx 1.01 \cdot 10^{15} \text{ claves posibles }\]
+
+\subsection{Criptosistemas de clave simétrica}
+Todos los sistemas que hemos visto hasta ahora, englobados como criptosistemas clásicos, comparten una misma propiedad: \textit{Si sabemos cómo cifrar sabremos cómo descifrar}. Esto se debe a que todos estos sistemas son de \textbf{clave simétrica}.
+
+Si pretendemos que diferentes usuarios puedan emplear el mismo criptosistema manteniendo seguridad entre ellos, neceistaremos una clave distinta para cada uno de ellos.
+
+En el mundo de la tecnología en que vivimos ahora mismo esto es inviable puesto que serían necesarias demasiadas claves (una por usuario/actividad). Además, al llegar un nuevo usuario sería necesario compartir con él la clave de alguna forma.
+
+La solución es la función $3^{n}$ en $\mathbb{F}_{1231}^*$:
+% TODO imagen de la función
+
+\begin{defn}[Función de un sólo sentido]
+Sea $\appl{f}{A}{B}$ una función inyectiva, se dice que es \textbf{de un sólo sentido} si:
+\begin{enumerate}
+\item $f(a)$ es fácil de calcular
+\item Dado $b \in Im(f)$ podemos encontrar $a\tq f(a) = b$ pero, en la práctica, es difícil de encontrar.
+\end{enumerate}
+\end{defn}
+
+Como ejemplo trivial podemos considerar un puzle y la función $f$ que consiste en desmontarlo. Esta función es trivial, basta con darle una patada al puzle, pero su inversa, que sería montar el puzle de nuevo, es compleja de calcular.
+
+Vamos a definir formalmente dos adjetivos que emplearemos al referirnos a diferentes problemas:
+
+\begin{defn}[Fácil]
+Si $k$ es el tamaño de los datos, el tiempo necesario para resolver el problema es polinómico en $k$, es decir $T=O(k)$
+\end{defn}
+
+\begin{defn}[Difícil]
+Si $k$ es el tamaño de los datos, el tiempo necesario para resolver el problmea es no polinómico. Puede ser exponencial $T=O(e^k)$, o subexponencial $T=e^{\sqrt{k}}$ entre otros
+\end{defn}
+
+\subsection{Estimaciones de tiempo}
+
+Los datos con los que vamos a trabajar serán, de un modo u otro, números. Por tanto debemos ser capaces de estimar cómo son estos números, a fin de ver si son manejables o no.
+
+El tamaño de $n \in \ent$ puede venir dado por $\log(n)$. Nos da igual el tipo de logaritmo que escojamos puesto que la relación entre logaritmos viene dada por una constante.
+
+Vamos a definir ahora una medida de unidad del tiempo.
+
+\begin{defn}[Bit-operación]
+Denominamos \textbf{bit-operación} al proceso de sumar dos bits.
+\end{defn}
+
+\begin{example}
+¿Cuánto tiempo es necesario para sumar dos enteros de $k$ y $l$ bits respectivamente?
+
+Sin pérdida de generalidad podemos suponer que $k\geq l$. En ese caso tendremos que hacer un total de $k$ bit-operaciones.
+
+En general, si estamos trabajando con números menores que $N$ (como ocurre al movernos en $\ent_N$), el tiempo empleado será $T= O (\log(N))$
+\end{example}
+
+\begin{example}
+¿Cuánto tiempo empleamos para multiplicar dos números enteros de $k$ y $l$ bits respectivamente?
+
+Recordando el procedimiento realizado para multiplicar números cuando estábamos en el colegio podemos ver que tendremos que realizar un total de $l-1$ sumas de $l+k-1$ dígitos.
+
+Así, considerando $k \geq l$, el tiempo que necesitaremos será de la forma $(l-1)O(k+l-1) = O(k)O(k)=O(k^2)$
+
+\end{example}
+
+En este último ejemplo podemos encontrar diferentes excepciones en función de la forma en que se realice la multiplicación. Por ejemplo, si multiplicamos empleando la transformación de Fourier rápida tendríamos $T=O(\log(N) \log(\log(N)) = O(k \log ( k ))$.
+
+Estos ejemplos (a los que podemos añadir el caso de la división) consistuyen ejemplos de operaciones que pueden realizarse en tiempo polinómico, es decir, serían catalogados como problemas fáciles.
+
+Veamos otro ejemplo un poco más interesante:
+
+\begin{example}
+¿Cuánto tiempo es necesario para calcular la exponencial módulo N?
+
+Lo que haremos para calcular esta exponencial será multiplicar la base por sí misma una vez tras otra, realizando el cálculo del módulo cuando sea necesario. Es decir, en cada paso tendremos $T=O(k^2)+O(k^2) = O(k^2)$, es decir, la suma de los tiempos empleados en la multiplicación y la correspondiente división.
+
+Además, esta operación se llevará a cabo un máximo de $N$ veces, (puesto que no tiene sentido poner un exponente mayor). Por tanto, el tiempo total será $T=O(\log^2(N))\cdot O(N) = O(N\log^2(N))$
+
+No obstante, hasta aquí estamos considerando que estamos multplicando de la forma más lenta posible. Es decir, estamos calculando $3^x = (((3\cdot 3)\cdot 3) \cdot 3) ...$.
+
+Si agrupamos los factores obtenidos al descomponer la potencia en productos de dos en dos, tendremos que el número de productos necesarios será mucho menor.
+
+En general, empleando el algoritmo de los cuadrados iterados requiere un tiempo total de $O(\log^2(N))$.
+\end{example}
+
+\begin{example}
+¿Cuánto tiempo es necesario para realizar un cambio de base?
+
+El razonamiento del resultado queda como ejercicio para el lector.
+
+El tiempo empleado será $T=O(k^3)$.
+
+Conocido este resultado, podemos ver que para calcular la exponencial, aunque tengamos que realizar un cambio de base para movernos cómodamente en base 2, tendremos un tiempo total $T=O(k^3)+O(k^4)=O(k^4)$, es decir, \textbf{exponenciar} es un proceso fácil.
+
+\end{example}
+
+\begin{defn}[Problema del logaritmo discreto]
+Sea $G=<g>$ un grupo cíclico de orden $N$, es decir, $G=\{g^i \}$, el \textbf{problema del logaritmo discreto, DLP} para $G$ consiste en encontrar $i \tq h=g^i$ dado $h \in G$.
+
+El mejor algoritmo conocido para resolver el $DLP$ en $(\ent_p)^*$ necesita tiempo subexponencial.
+\end{defn}
+
+\begin{corol}
+El problema $DLP$ con $\appl{f}{(\ent_p)^*}{(\ent_N) *}$ es de un dólo sentido si $p$ es suficientemente grande.
+\end{corol}
