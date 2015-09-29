@@ -758,18 +758,143 @@ Sabiendo que la función de descifrado ha transformado las letras $KVW? T$ en $C
 	\end{array} \right)
 	=
 	\left( \begin{array}{cc}
-	3 & 8\\
+	2 & 8\\
 	29 & 29
 	\end{array} \right)
 \]
 
 El determinante de la matriz que aparece multiplicando a nuestra matriz desconocida es $10 \cdot 27 - 22 \cdot 21 \text{ mod } 30 = 18$ que no es coprimo con 30, por lo que la matriz no es invertible.
 
-No obstante, tenemos información acerca de 6 letras, no solo 4, por lo que podemos plantear ecuaciones diferentes.
+No obstante, tenemos información acerca de 6 letras, no solo 4, por lo que podemos plantear ecuaciones diferentes. Así, teniendo en cuenta el descifrado de las letras $C.A.$ tenemos:
+\[
+	\left( \begin{array}{cc}
+	a & b \\
+	c & d
+	\end{array} \right)
+	%
+	\left( \begin{array}{cc}
+	10 & 26\\
+	21 & 19
+	\end{array} \right)
+	=
+	\left( \begin{array}{cc}
+	2 & 0\\
+	29 & 29
+	\end{array} \right)
+\]
+
+Aunque en este caso seguimos sin poder calcular la inversa de la matriz pues su determinante es: $10\cdot 19-21\cdot 26 = 4$, que no es coprimo con 30.
+
+Lo mismo ocurre si trabajamos con las letras $I.A.$ pues obtenemos una matriz con determinante $22\cdot 19-27\cdot 26 = 16$, que tampoco es coprimo con 30.
+
+Por tanto, tenemos que pensar un poco más. Tomamos la última ecuación matricial mencionada:
+\[
+	\left( \begin{array}{cc}
+	a & b \\
+	c & d
+	\end{array} \right)
+	%
+	\left( \begin{array}{cc}
+	10 & 26\\
+	21 & 19
+	\end{array} \right)
+	=
+	\left( \begin{array}{cc}
+	2 & 0\\
+	29 & 29
+	\end{array} \right)
+\]
+
+Vamos a trabajar módulo 15, así podremos invertir la matriz, puesto que 4 y 15 son coprimos. Con esto obtenemos:
+\[
+	A = \left( \begin{array}{cc}
+	a & b \\
+	c & d
+	\end{array} \right)
+	%
+	=
+	\left( \begin{array}{cc}
+	2 & 0\\
+	29 & 29
+	\end{array} \right)
+	\left( \begin{array}{cc}
+	10 & 26\\
+	21 & 19
+	\end{array} \right)^{-1} = \left( \begin{array}{cc}
+	2 & 0\\
+	14 & 14
+	\end{array} \right) 4 \left( \begin{array}{cc}
+	4 & 4\\
+	9 & 10
+	\end{array} \right) = \left( \begin{array}{cc}
+	2 & 2\\
+	8 & 4
+	\end{array} \right)
+\]
+
+Es decir, ya sabemos a qué es igual la matriz $A$ módulo 15.
+
+Por el teorema chino del resto sabemos que la matriz $A$ será de la forma:
+%\[A = \left( \begin{array}{cc}
+%	3 & 3\\
+%	8 & 4
+%	\end{array} \right) + 15 \cdot \left( \begin{array}{cc}
+%	a & b\\
+%	c & d
+%	\end{array} \right)\]
+Por otro lado, el sistema matricial del que partimos también será cierto si trabajamos módulo 2, es decir,
+\[\left( \begin{array}{cc}
+	a & b \\
+	c & d
+	\end{array} \right)
+	%
+	\left( \begin{array}{cc}
+	0 & 0\\
+	1 & 1
+	\end{array} \right)
+	=
+	\left( \begin{array}{cc}
+	0 & 0\\
+	1 & 1
+	\end{array} \right)
+\]
 \end{problem}
 
-\begin{problem}[5]
+Gracias a esto, aunque no podemos calcular $A$ módulo 2, podemos ver que:
+\[\left\{  a \cdot 0 + b \cdot 1 = 0 \implies b = 0 \atop
+ c \cdot 0 + d \cdot 1 = 1 \implies d = 1\right.\]
 
+ Puesto que $A$ es invertible módulo 30, lo será también módulo 2. Por tanto $a,c$ no pueden tener un valor cualquiera, deben ser tales que la matriz:
+ \[A = \left( \begin{array}{cc}
+	a & 0 \\
+	c & 1
+	\end{array} \right)\]
+sea invertible.
+
+Una vez sabemos esto hay dos posibilidades para la matriz $A$ módulo 2, que dan lugar a dos posibilidades para la matriz $A$ módulo 30. Estas posibilidades son:
+\[A = \left( \begin{array}{cc}
+	1 & 0 \\
+	0 & 1
+	\end{array} \right) \mod 2 \implies A = \left( \begin{array}{cc}
+	17 & 2 \\
+	8 & 19
+	\end{array} \right)\]
+\[A = \left( \begin{array}{cc}
+	1 & 0 \\
+	1 & 1
+	\end{array} \right) \mod 2 \implies A = \left( \begin{array}{cc}
+	17 & 2 \\
+	23 & 19
+	\end{array} \right)\]
+
+Ahora sólo nos queda probar a descifrar con ambas matrices y comprobar cuál nos da un resultado razonable.
+
+\textcolor{red}{Malvado, para de hacer abdominales por un momento y usa tus megafunciones javascriptianas para descifrar el mensaje.}
+
+\begin{problem}[5]
+Interceptamos el mensaje, escrito en inglés, ``S GNLIKD?KOZQLIOMKUL.VY'' que se ha cifrado usando una transformación lineal sobre vectores de $\ent_{30}^2$ donde 0...25 equivalen a las letras A...Z , 26 es el espacio en blanco, 27 el punto, 28 la coma y 29 el cierre de interrogación. Sabes que las últimas 6 letras corresponden a la firma: ``KARLA''. Descifra el mensaje.
+
+\obs Quizás interese empezar por calcular la matriz módulo 3 y módulo 10 para después emplear el Teorema Chino del Resto.
 
 \solution
 \end{problem}
