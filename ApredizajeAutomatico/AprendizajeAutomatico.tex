@@ -8,6 +8,7 @@
 
 % --------------------
 
+
 \begin{document}
 \pagestyle{plain}
 \maketitle
@@ -349,6 +350,7 @@ Básicamente, lo que dice esta maldición que nos ha caido es que:
 El número de ejemplos necesario para cubrir el espacio de atributos de forma uniforme crece exponencialmente con el número de atributos.
 \end{defn}
 
+\subsubsection{Primera puntualización}
 \paragraph{Solución inocente: } Suponemos que todos los atributos son independientes. Con esto conseguimos que $P(l=m,p=n | d=d) = P(l=m | d=d)·P(p=n | d=d)$ 
 
 \paragraph{Obtención y explicación del clasificador}
@@ -432,11 +434,81 @@ normal &3&5&4\\\hline
 
 Vamos a calcular el resto de cosas para comparar cuánto nos desviamos al suponer independencia:
 
-\[ P(d=n | l=m,p=n) = ... = 22\% ≠ 17\% \]
-\[ P(d=b | l=m,p=n) = ... = 31\% ≠ 33\% \]
-\[ P(d=d | l=m,p=n) = ... = 47\% ≠ 50\% \]
+\[ P(d=n | l=m,p=n) = \frac{P(l=m | d=?) P(p=n | d=?) P(d=?)}{P(...)} = \frac{1}{P(...)}·\left( ... \right) = 22\% ≠ 17\% \]
+\[ P(d=b | l=m,p=n) = \frac{P(l=m | d=?) P(p=n | d=?) P(d=?)}{P(...)} = \frac{1}{P(...)}·\left( ... \right) = 31\% ≠ 33\% \]
+\[ P(d=d | l=m,p=n) = \frac{P(l=m | d=?) P(p=n | d=?) P(d=?)}{P(...)} = \frac{1}{P(...)}·\left( ... \right) = 47\% ≠ 50\% \]
 
 No está muy desviado y obtenemos la misma decisión. Podría ocurrir, que saliera una decisión distinta al simplificar el algoritmo ignenuamente (naively).
+
+\subsubsection{Segunda puntualización: }
+
+Por ejemplo, vamos a cambiar uno de los datos anteriores:
+
+\begin{gather*}
+P(d=n | l=m,p=r) = \frac{P(l=m|d= n) P(p=r | d = n) P(d = n)}{P(...)} = \frac{\frac{7}{15}\frac{12}{15}\frac{15}{24}}{P(...)} = \frac{\frac{7}{30}}{P(...)} = 1\\
+P(d=b | l=m,p=r) = \frac{P(l=m|d= b) P(p=r | d = b) P(d = b)}{P(...)} = \frac{\frac{3}{4}\frac{0}{4}\frac{4}{24}}{P(...)} = 0\\
+P(d=d | l=m,p=r) = \frac{P(l=m|d= d) P(p=r | d = d) P(d = d)}{P(...)} = ... = 0
+\end{gather*}
+
+
+\paragraph{Problema: } Como es habitual en la asigatura, vamos a llevar el caso al extremo. Vamos a suponer que tenemos 150 atributos. Si en uno de los atributos hay un 0, toda la hipótesis se descarta. Lo que nos interesa es intentar evitar los $0$ sin inventarnos demasiado los resultados, asique aplicamos la corrección de Laplace.
+
+\begin{defn}[Corrección de Laplace]
+En casos en que aparecen valores nulos en las tablas se suma  1 a toda la tabla.
+\end{defn}
+\paragraph{Interpretación: } La idea intuitiva es que pueden faltarnos datos y que tal vez no es categórico ese $0$. Supongamos que tiro una moneda 3 veces y salen 3 caras. Sólo debería aparecer un $0$ si la moneda tuviera 2 caras. Si no, simplemente nos falta información. Como sólo tener 2 caras en una moneda es absurdo, nos inventamos un experimento positivo y otro negativo para compensar esa posible falta de información.
+
+Con esta modificación, reescribimos la tabla de producción de lágrimas:
+
+\begin{tabular}{|c|c|c|c|}
+\hline
+prod & n&b&d\\\hline
+reducida & 13 & 1 & 1\\\hline
+normal &4&6&5\\\hline
+\end{tabular}
+
+Y recalculamos las probabilidades de diagnóstico con esta corrección:
+
+\begin{gather*}
+P(d=n | l=m,p=r) = \frac{P(l=m|d= n) P(p=r | d = n) P(d = n)}{P(...)} = \frac{\frac{7}{15}\frac{13}{17}\frac{15}{24}}{P(...)} = \frac{0.22}{P(...)}\\
+P(d=b | l=m,p=r) = \frac{P(l=m|d= b) P(p=r | d = b) P(d = b)}{P(...)} = \frac{\frac{3}{4}\frac{1}{6}\frac{4}{24}}{P(...)} = \frac{1}{48}·\frac{1}{P(...)}\\
+P(d=d | l=m,p=r) = \frac{P(l=m|d= d) P(p=r | d = d) P(d = d)}{P(...)} = \frac{1}{84}\frac{1}{P(...)}
+\end{gather*}
+
+¿Podría pasar que al aplicar la corrección de Laplace variase la hipótesis elegida? ¡Claro que sí! 
+
+
+\subsubsection{Atributos cuantitativos} 
+
+\begin{example}[Naive Bayes para atributos cuantitativos]
+En este caso, vamos a estudiar un problema de clasificación de plantas en función de la anchura.
+
+Estos son los datos:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}\hline
+Anchura de pétalos & setosa & vesicolor & virginica \\[5pt]\hline\hline
+0-0.2 & 	$\frac{1}{10}$ & & \\[5pt]\hline
+0.2-0.4 & 	$\frac{18}{25}$ & & \\[5pt]\hline
+0.4-0.6 & 	$\frac{4}{25}$ & & \\[5pt]\hline
+0.6-0.8 & 	$\frac{4}{50}$ & & \\[5pt]\hline
+0.8-1.0 & & &\\[5pt]\hline
+1-1.2 &  & $\frac{1}{5}$ & \\[5pt]\hline
+1.2-1.4 & 				 & $\frac{18}{50}$ & \\[5pt]\hline
+1.4-1.6 & 				 & $\frac{17}{50}$ & $\frac{3}{50}$ \\[5pt]\hline
+1.6-1.8 & 				 & $\frac{4}{50}$ &  $\frac{1}{25}$\\[5pt]\hline
+1.8-2.0 & 				 & $\frac{1}{50}$ & $\frac{8}{25}$\\[5pt]\hline
+2.0-2.2 & 				 & & $\frac{6}{25}$\\[5pt]\hline
+2.2-2.4 & 				 & & $\frac{11}{50}$\\[5pt]\hline
+2.4-2.6 & 				 & & $\frac{3}{25}$\\[5pt]\hline
+2.6-2.8 & 				 & & \\[5pt]\hline
+2.8-3.0 & 				 & & \\[5pt]\hline
+\end{tabular}
+\end{center}
+
+La solución es suponer que la variable sigue una distribución normal dada la clase. 
+
+\end{example}
 
 
 %% Apéndices (ejercicios, exámenes)
