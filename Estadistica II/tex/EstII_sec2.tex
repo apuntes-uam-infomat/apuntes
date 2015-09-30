@@ -1,0 +1,137 @@
+% -*- root: ../EstadisticaII.tex -*-
+\section{Contrastes no paramétricos}
+Hipótesis no paramétrica: hipótesis que no se formula en términos de un número finito de parámetros.
+
+\begin{enumerate}
+\item Bondad de ajuste: A partir de una muestra $X_1,...,X_n \equiv F$ de variables aleatorias independientes idénticamente distribuidas, contrastar:
+\begin{itemize}
+\item $H_0: F=F_0$ donde $F_0$ es una distribución prefijada.
+\item $H_0: F \in \{F_O : O\in H\}$ H es el espacio paramétrico.
+\end{itemize}
+\item Homogeneidad: Dados $X_1,...,X_n \equiv F$ y $Y_1,...,Y_n \equiv G$ de variables aleatorias independientes idénticamente distribuidas. Contrastar $H_0: F=G$.
+\item Hipótesis de independencia: Dada $(X_1,Y_1),...,(X_n,Y_n) \equiv F$ de variables aleatorias independientes idénticamente distribuidas. Contrastar $H_0: X$ e $Y$ son independientes.
+\end{enumerate}
+
+\subsection{Contraste $\chi^2$ de bondad de ajuste}
+Consideramos una distribución totalmente especificada bajo $H_0: X_1,...,X_n \equiv F$ de variables i.i.d.
+
+$H_0: F=F_0$ es la hipótesis nula y queremos ver que F, que es la distribución obtenida con los datos verdaderos (obtenidos empíricamente) es igual a $F_0$ que es la distribución teórica.
+
+\begin{example}
+Tiramos un dado 100 veces y obtenemos:
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Resultados & 1 & 2 & 3 & 4 & 5 & 6 \\
+\hline
+Frecuencia & 10 & 20 & 20 & 10 & 15 & 25\\
+\hline
+\end{tabular}
+
+Y consideramos $H_0: p_i=1/6 \forall i=1,...,6$. Es decir que el dado no está trucado y cada cara tiene la misma probabilidad ($p_i$) de salir.
+
+Por otro lado consideramos $H_1: \exists i$ tal que $p_i\neq 1/6$. Es decir, que el dado está trucado y hay caras que salen mas que otras.
+
+\end{example}
+
+A la par que lo vemos en el ejemplo, vamos a definir los pasos que tenemos que seguir para comprobar si $H_0$ es cierta:
+\begin{enumerate}
+\item Se definen k clases $A_1,...,A_k$. En el caso del dado, los valores de cada cara.
+\end{enumerate}
+
+
+\subsubsection{Hipótesis nula compuesta}
+
+Vamos a estudiar el siguiente problema. Sea $X_1,...,X__n \overset{}{\sim}{iid}  F$ y una hipótesis compuesta: $H_0: F\in \{ F_{\theta}, \theta\in Ω \subset ℝ^n\}$. Esta hipótesis compuesta puede ser ``los datos se distribuyen normalmente, con media y varianza desconocidas''
+
+Los pasos a seguir son: 
+\begin{enumerate}
+	\item Definir las clases $A_1,...,A_k$
+	\item Calcular las frecuencias observadas $O_1,...,O_n$
+	\item Estimamos $\thete$ por el método de máxima verosimilitud. Sea $\gor{\theta}$ el e.m.v.
+	\subitem Pero para calcular las frecuencias esperadas, no tenemos una única normal. La idea intuitiva sería: hay unos parámetros que son los que mejor ajustan la distribución. ¿Cuál es la que mejor ajusta? La que tenga los parámetros estimados.
+	\item Ahora ya podemos calcular las frecuencias esperadas:
+	
+	$E_i = n\gor{p_i}$ donde $\gor{p_i} = P_{\theta}(A_i)$, con $i=1,...,k$
+	\item Ya podemos calcular el estadístico de Pearson:
+
+	\[
+	T= \sum_{i=1}^k \frac{(O_i - \gor{E_i})^2}{\gor{E_i}}
+	\]
+
+	\subitem ¿Qué distribución tiene este estadístico? Antes hemos visto que es una $\chi^2_{k-1}$ cuando se dan unas ciertas condiciones.
+
+	En este caso, es de esperar que $T$ tienda a tomar valores menores que en el caso simple.
+
+	Además, al estimar $r$ parámetros (las $r$ componenetes del vector $\theta$)) se introducen $r$ nuevas restricciones sobre el vector $(O_1,...,O_r)$.
+
+Se puede probar, \footnote{bajo ciertas condiciones de regularidad que las distribuciones que conocemos cumplen y que son demasiado complicadas de enunciar} que:
+
+\[
+	\sum_{i=1}^k \frac{(O_i - \gor{E_i})^2}{\gor{E_i}} \convs[d] \chi^2_{k-1-r}
+\]
+
+	\item Se rechaza $H_0$ en  la región crítica \[R = \{ T > \chi^2_{k-1-r}\}\]
+\end{enumerate}
+
+\begin{example} 
+\paragraph{Los bombardeos de Londres}
+
+Los alemanes bombardeaban mucho a Londres durante la guerra mundial, y los ingleses quérían saber si los alemanes podían dirigir los misiles, o los impactos eran aleatorios.
+
+Para ello, alguien hizo el estudio estadístico, para contrastar la hipótesis ``los impactos son aleatorios''.
+
+Los impactos deberían seguir una poisson \footnote{ya que es el límite de una binomial, en la que consideramos los impactos como éxitos}. Para ello, dividió Londres en $n=576$ cuadrados, cada uno de ellos será la variable $X_i$ que debería seguir una Poisson.
+
+La idea del contraste es: la Poisson que más se puede parecer es la que tenga de media el e.m.v. Si esa Poisson no se parece, entonces ninguna Poisson se puede parecer.
+
+
+
+\begin{enumerate}
+	\item[Clases] Los valores que toma la Poisson (recordamos que son número naturales). En este caso sólo se han definido 5, ya que la última es $>4$ \footnote{Se recomienda no definir más de 5 clases, para que la estimación no pierda demasiada información. }
+	\item[Obs] $O_i = \{#j : X_j=i\}$, por ejemplo, las frecuencias observadas de la clase $0$, es decir, $O_0 = 229$, donde ese número es el número de las $n$ regiones de Londres en donde no cayó ningún misil.
+	\item[e.m.v.] El e.m.v. de una Poisson es la media muestral, con lo que $\hat{λ} = \gor{x} = 0.9323$
+	\item[Esp] Calculamos las frecuencias esperadas utilizando el parámetro estimado $$\hat{E_i} = n\hat{p_i} = 576 · e^{-0.9323}\frac{(0.9323)^i}{i!}$$
+	\item[T] El estadístico $\chi^2$ de Pearson es: \[T = \sum_{i=1}^k \frac{(O_i - \gor{E_i})^2}{\gor{E_i}} = 1.01 \]
+
+	Desde esta información, ya podemos hacernos una idea de si vamos a poder rechazar. ¿Por que? Al estimar un único parámetro $T \overset{iid}{\sim} \chi^{2}_{5-1-1}$, y además $\mathbb{E}(\chi^2_k) = k$, con lo que  debería habernos salido $T=3$. Al ser un vector bastante normal, podemos ver que tiene muy poca pinta de que vayamos a poder rechazar la hipótesis nula. Al $T$ estar por debajo de $3$ no estaremos en la región crítica.
+
+\end{enumerate}
+
+
+\obs Este ejemplo se encuentra también en las transparencias, donde podemos ver los valores y algunas gráficas explicativas. 
+\end{example}
+
+
+\subsection{Contrastes con $R$}
+\paragraph{Hipótesis simple}
+Con el siguiente código de $R$, podemos hacer el contraste de bondad de ajuste de una $\chi^2$ fácilmente. 
+
+\begin{lstlisting}[style=mystyle]
+obs = c(10,20,20,10,15,25)
+ls.str(chisq.test(obs))
+\end{lstlisting}
+
+Si a \textit{chisq.test} no le damos más argumentos, supondrá hipótesis simple con equiprobabilidad de $p$. Podríamos darle otro argumento, y hacer lo siguiente para el ejemplo de los misiles:
+
+\begin{lstlisting}[style=mystyle]
+res = c(seq(0,4),7)
+obs = c(229,211,93,35,7,1)
+n = sum(obs)
+lambda = sum(res*obs)/n
+prob = dpois(res,lambda)
+esp = n*prob
+# Se agrupan las dos ultimas clases:
+obs = c(obs[1:4],sum(obs[5:6]))
+prob = c(p[1:4],1-sum(p[1:4]))
+esp = c(esp[1:4],n-sum(esp[1:4]))
+# Codigo para el grafico de barras:
+matriz = rbind(p,obs/n)
+rownames(matriz) = c('Frecuencias','Poisson')
+barplot(matriz,beside=TRUE,names.arg=c(0:4),legend.text=TRUE,
+col=c('lightgreen','orange'))
+# Test chi 2
+t = chisq.test(obs,p=prob)$statistic
+pvalor = 1 - pchisq(t,3)
+\end{lstlisting}
+
