@@ -717,6 +717,7 @@ TODO. Lo completará el malvado.
 
 
 \section{Sesión 1 de Laboratorio}
+\subsection{Método de Euler}
 En esta primera sesión vamos a empezar a familiarizarnos con MATLAB (o en su defecto Octave) y a implementar el método de Euler, para después poder realizar algunas comparaciones visuales a fin de comprobar lo efectivo del método.
 
 Vamos a resolver el siguiente problema de valor incial.
@@ -790,8 +791,81 @@ Si ahora dibujásemos la gráfica que relaciona el logaritmo del error con el lo
 
 Por tanto, esa pendiente que hemos calculado en el código, nos permite conocer el orden del método de Euler.
 
+\section{Sesión 2 de Laboratorio}
+\subsection{Método Runge Kutta de orden 4}
+En esta sesión vamos a implementar un método Runge Kutta explícito. Para ello, recordemos que el método Runge Kutta se basaba en el empleo de las funciones:
+\[K_i = f(x_n+c_ih,y_n+\sum_j A_{ij}K_j)\]
 
+En el caso del método Runge Kutta de cuarto orden teníamos:
 
+\[
+\begin{array}{ll}
+K_1 = & f(x_n,y_n)\\
+K_2 = & f(x_n+\frac{h}{2}, y_n+\frac{h}{2}K_1)\\
+K_3 = & f(x_n+\frac{h}{2}, y_n + \frac{h}{2}K_2)\\
+K_4 = & f(x_n+h, y_n + h K_3)
+\end{array}
+\]
+
+Si escribimos todas las variables en una tabla (que sería la matriz de las $A_{ij}$ unida a la columna formada por las $c_i$) podemos ver que el método que origina la tabla es explícito si y sólo si no hay ningún elemento no nulo por encima de la diagonal principal.
+
+\obs Queda como ejercicio para el lector la comprobación y el autoconvencimiento de que la afirmación anterior es cierta, pues es algo completamente trivial.
+
+Para implementar el método, lo primero que hacemos es crear un fichero con la función \textit{PKexplicito} cuyo contenido se muestra a continuación
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/RK4_explicito.png}
+\end{center}
+
+Ahora escribimos un pequeño programa que inicializará \textbf{el mismo PVI que ya resolvimos en la sesión de laboratorio anterior} (emplearemos por tanto las mismas funciones $f$ y $result$).
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/PVI_RK4_explicito.png}
+\end{center}
+
+El código es totalmente equivalente al empleado en la sesión anterior, salvo que invocamos el método RK4 en lugar del método de Euler.
+
+La primera gráfica obtenida, que dibuja la función resultado y la obtenida con RK4 queda como sigue:
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/RK4_explicito_grafica.png}
+\end{center}
+
+\obs La diferencia observada entre esta función y la obtenida en la sesión anterior radica en el intervalo sobre el que estamos trabajando. En la ocasión anterior trabajamos en [0,1]; esta vez, en [0,10].
+
+Al igual que hicimos en la sesión anterior, en esta ocasión también estamos dibujando la pendiente de la función que relaciona $h$ con el error en escala logarítmica con el fin de conocer el orden del método. Así, obtenemos:
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/RK4_explicito_pendiente.png}
+\end{center}
+
+Y tal y como hemos visto en clase, obtenemos que el método RK4 tiene orden 4.
+
+\subsection{Método del trapecio}
+Vamos a resolver una vez más el mismo PVI pero empleando esta vez el método del trapecio.
+
+Para ello empezamos escribiendo una función que implemente dicho método:
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/trapecio.png}
+\end{center}
+
+La parte interesante de esta función se encuentra en el bucle while. El inconveniente del método del trapecio es que no es explícito, es decir, para calcular un $y_{n}$, la fórmula implica que necesitamos $y_n$.
+
+La forma de resolver esto es aplicar el método del punto fijo para obtener una aproximación de $y_n$ y, a partir de esta aproximación, calcular el $y_n$ que nos da el método del trapecio.
+
+Una vez tenemos el método implementado, reutilizamos las funciones $f$ y $resulto$ ya empleadas anteriormente y escribimos un pequeño programa que plantea el problema y lo resuelve incovando al método del trapecio.
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/PVI_trapecio.png}
+\end{center}
+
+Nuevamente, pintamos las gráficas de las funciones (la solución y la obtenida por el método numérico) para comprobar que coinciden.
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/trapecio_grafica.png}
+\end{center}
+
+Por último, estudiamos la pendiente del error respecto a $h$ en escala logarítmica para conocer el orden del método con lo que obtenemos:
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/trapecio_pendiente.png}
+\end{center}
 
 \appendix
 
