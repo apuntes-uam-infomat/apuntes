@@ -903,7 +903,8 @@ En conclusión:
 	\item $\frac{1}{2}\le \theta \le 1$: tenemos estabilidad siempre.
 \end{itemize}
 
-\paragraph*{Error de truncación del método}
+\subparagraph{Error de truncación del método}\mbox{}
+
 Para analizar el error de truncación del método vamos a hacer el desarrollo de Taylor en el punto $(x_j, t_{n+\frac{1}{2}})$. Tenemos que el error de truncación tiene la forma:
 
 $$T_j^n = \frac{u_{j}^{n+1} - u_{j}^{n}}{\Delta t} - \theta\left[\frac{u_{j+1}^{n+1}-2u_{j}^{n+1}+u_{j-1}^{n+1}}{(\Delta x) ^2}\right] - (1-\theta)\left[\frac{u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}}{\Delta t}\right]$$
@@ -936,77 +937,70 @@ Comencemos con el desarrollo:
 		& - \left(\frac{1}{2}\Delta t\right) \left[\Delta x ^2 u_{xxt} + \frac{1}{12}\Delta x ^4 u_{xxxxt} +\hdots \right]_j^{n+\frac{1}{2}}\\
 		& + \frac{1}{2}\left(\frac{1}{2}\Delta t\right)^2 \left[\Delta x ^2 u_{xxtt} + \hdots \right]_j^{n+\frac{1}{2}}
 	\end{align*}
+
+	\item \textbf{Paso 4: }
+	\begin{align*}
+	\theta\left[\frac{u_{j+1}^{n+1}-2u_{j}^{n+1}+u_{j-1}^{n+1}}{\Delta x ^2}\right] + (1 - \theta) \left[\frac{u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}}{\Delta x ^2}\right] = \\
+	\left[u_xx + \frac{1}{12}\Delta x^2 u_{xxxx} + \frac{2}{6!}\Delta x ^4 u_{xxxxxx}  + \hdots\right]_j^{n+\frac{1}{2}}\\
+	+(\theta - \frac{1}{2})\Delta t \left[u_xxt + \frac{1}{12}\Delta x ^2 u_{xxxx}\right]_j^{n+\frac{1}{2}}\\
+	+\frac{1}{8}\Delta t ^2\left[u_{xxtt}\right]_j^{n+\frac{1}{2}}
+	\end{align*}
+	
+	\item \textbf{Paso 5: }	Reordenamos los términos de error
+	\begin{align*}
+	T_j^n = & \left[\left(\frac{1}{2}-\theta\right)\Delta t u_{xxt}- \frac{1}{12}(\Delta x)^2 u_{xxxx}\right]
+	+ \left[\frac{1}{24}\Delta t^2 u_{ttt}-\frac{1}{8}\Delta t ^2 u_{xxtt}\right]\\
+	& + \left[\frac{1}{12}\left(\frac{1}{2}-\theta\right)\Delta t \Delta x^2 u_{xxxxt}\right] - \frac{2}{6!}\Delta x ^4 u_{xxxxxx}
+	\end{align*}
+
 \end{itemize}
-
-\color{red}{DE AQUI HACIA ALANTE SE ESTÁ COMPLETANDO}
-Vamos a ver lo que vale
-
-$\theta\left[\frac{u_{j+1}^{n+1}-2u_{j}^{n+1}+u_{j-1}^{n+1}}{\Delta x ^2}\right] + (1 - \theta) \left[\frac{u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}}{\Delta x ^2}\right]
-= \left[u_xx + \frac{1}{12}\Delta x^2 u_{xxxx} + \frac{2}{6!}\Delta x ^4 u_{xxxxxx}  + \hdots\right]_j^{n+\frac{1}{2}} 
-+(\theta - \frac{1}{2})\Delta t \left[u_xxt + \frac{1}{12}\Delta x ^2 u_{xxxx}\right]_j^{n+\frac{1}{2}}
-+\frac{1}{8}\Delta t ^2\left[u_{xxtt}\right]_j^{n+\frac{1}{2}}
-$
-
-Reordenamos los términos de error
-
-$$T_j^n = \left[(\frac{1}{2}-\sigma)\Delta t u_{xxt}- \frac{1}{12}(\Delta x)^2 u_{xxxx}\right]
-+ \left[\frac{1}{24}\Delta t^2 u_{ttt}-\frac{1}{8}\Delta t ^2 u_{xxtt}\right]
-+ \left[\frac{1}{12}(\frac{1}{2}-\sigma)\Delta t \Delta x^2 u_{xxxxt}\right]
-- \frac{2}{6!}\Delta x ^4 u_{xxxxxx}$$
 
 El caso general es $T_j^n = O(\Delta t)$ consistencia de orden 1.
 
-\paragraph{Dos casos particulares}
-\subparagraph{Grank Nicolson}
-Es tomar $\theta = \frac{1}{2}$
+\subparagraph{El método de Grank Nicolson}\mbox{}
+
+Es un caso particular del  $\theta$-método en el que se toma $\theta = \frac{1}{2}$.
 
 Entonces
-$T_j^n = -\frac{1}{12}\Delta x^2 u_{xxxx} + \frac{1}{24}\Delta t^2u_{ttt}-\frac{1}{8}\Delta t ^2u_{xxtt} - \frac{2}{6!}\Delta x ^4 u_{xxxxxx} + \hdots$
+$$T_j^n = -\frac{1}{12}\Delta x^2 u_{xxxx} + \frac{1}{24}\Delta t^2u_{ttt}-\frac{1}{8}\Delta t ^2u_{xxtt} - \frac{2}{6!}\Delta x ^4 u_{xxxxxx} + \hdots = O(\Delta x^2 + \Delta t ^2)$$
 
-$u_t = u_xx$
-$u_ttt = U_xxtt$
+El orden de consistencia del método es $2$ en $\Delta t$ y $\Delta x$ y es siempre estable. Por tanto es convergente de orden 2 y se puede tomar $\Delta x = \Delta t$.
 
-$T_j^n = -\frac{-1}{12}\Delta x^2 u_{xxxx} -\frac{1}{12}\Delta t^2 u_{tt} + \hdots = O(\Delta x^2 + \Delta t ^2)$
-
-El error de consistencia en $2$ en $\Delta t$ y $Delta x$. Si $\sigma = \frac{1}{2}$ el esquema es siempre estable.
-Es un método convergente de orden 2. Se puede tomar $\Delta x = \Delta t$.
-
-\subparagraph{Se puede hacer el error de truncaçao más pequeña.}
-$u_{xxt} = u_{xxxx}$
+\subparagraph{Minimizar el error de truncación}\mbox{}
 
 Vamos a tratar de hacer cero la suma de los dos términos.
 
-$u_{xxt}\left[(\frac{1}{2}-\theta)\Delta t - \frac{1}{12}\Delta x^2\right] = 0$
-$(\frac{1}{2}-\theta)\nu\Delta x^2 - \frac{1}{12}\Delta x^2 = 0$
-$(\frac{1}{2}-\theta)\nu = \frac{1}{12}$
+\begin{align*}
+u_{xxt}\left[\left(\frac{1}{2}-\theta\right)\Delta t - \frac{1}{12}\Delta x^2\right] & = 0\\
+\left(\frac{1}{2}-\theta\right)\nu\Delta x^2 - \frac{1}{12}\Delta x^2  & = 0\\
+\left(\frac{1}{2}-\theta\right)\nu & = \frac{1}{12}
+\end{align*}
 
-$T_j^n = -\frac{1}{12}\Delta t^2 u_{ttt} + \frac{1}{12}(\frac{1}{2}-\theta)\Delta t \Delta x^2u_{xxxxt}
--\frac{2}{6!}\Delta x^4 u_{xxxxxx}$
+Nos queda que el error de truncación es
+$$T_j^n = -\frac{1}{12}\Delta t^2 u_{ttt} + \frac{1}{12}\left(\frac{1}{2}-\theta\right)\Delta t \Delta x^2u_{xxxxt}
+-\frac{2}{6!}\Delta x^4 u_{xxxxxx}$$
 
-$u_{ttt} = u_{xxxxt}$
-$\frac{1}{2}-\theta = \frac{1}{12}\frac{1}{\nu} = \frac{1}{12}\frac{\Delta x ^2}{\Delta t}$
+Aplicando la condición $\left(\frac{1}{2}-\theta\right)\nu = \frac{1}{12}$ tiene la forma
+$$T_j^n = -\frac{1}{12}\Delta t^2  u_{ttt} +\frac{1}{12}\frac{1}{20}\Delta x^4u_{xxxxt} +\hdots
+= O(\Delta t^2 + O(\Delta x ^4))$$
 
-%Esto se hace agrupando arriba y con uxxxxxx = uxxxxt
-$T_j^n = \frac{-1}{12}\Delta t^2  u_{ttt} +\frac{1}{12}\frac{1}{20}\Delta x^4u_{xxxxt} +\hdots
-= O(\Delta t^2 + O(\Delta x ^4))$
+Vamos a ver si la condición $\left(\frac{1}{2}-\theta\right)\nu = \frac{1}{12}$ es compatible con la condición de estabilidad.
 
-Vamos a ver si la condición $(\frac{1}{2}-\theta)\nu = \frac{1}{12}$ es compatible con la condición de estabilidad.
+Ya sabemos que si $0\le\theta\le\frac{1}{2}$ tenemos estabilidad si y sólo si $$\nu\le\frac{1}{2}\frac{1}{(1-2\theta)}$$
 
-\begin{itemize}
-	\item $0\le\theta\le\frac{1}{2} \to$ estabilidad $\iff$ $\nu\le\frac{1}{2}\frac{1}{(1-2\theta)}$
-	Si tomamos $(\frac{1}{2}-\theta)\nu = \frac{1}{12} \implies (1-2\theta)\nu=\frac{1}{6}$.
-	$\implies \nu=\frac{1}{6}\frac{1}{1-2\theta}\le\frac{1}{2}\frac{1}{1-2\theta}$
-\end{itemize}
+Si tomamos $(\frac{1}{2}-\theta)\nu = \frac{1}{12}$ entonces
+$$ (1-2\theta)\nu=\frac{1}{6}\implies \nu=\frac{1}{6}\frac{1}{1-2\theta}\le\frac{1}{2}\frac{1}{1-2\theta}$$
 
-\paragraph{Principio del máximo y convergencia para $\nu(1-\theta) \le \frac{1}{2}$}
+Por lo que tenemos estabilidad siempre.
+
+\paragraph{Principio del máximo y convergencia para $\nu(1-\theta) \le \frac{1}{2}$}\mbox{}
 
 \begin{obs}
-	La condición $\nu(1-\theta)\le\frac{1}{2}$ o $\nu\le\frac{1}{2}\frac{1}{1-\theta}$
+	La condición $\nu\le\frac{1}{2}\frac{1}{1-\theta}$
 	es más fuerte que la condición de estabilidad $\nu\le\frac{1}{2}\frac{1}{1-2\theta}$
 \end{obs}
 
-\begin{example}
-	$\theta = \frac{1}{2}$ Siemore es estable pero sólo verifica el principio del máximo si $\nu\le 1$
+\begin{example} $\theta = \frac{1}{2}$ Siempre es estable pero sólo verifica el principio del máximo si $\nu\le 1$.
 \end{example}
 
 \begin{theorem}
@@ -1014,29 +1008,370 @@ Vamos a ver si la condición $(\frac{1}{2}-\theta)\nu = \frac{1}{12}$ es compati
 	$$U_{min} \le U_j^n\le U^{max}$$
 	$\forall j,n$ donde 
 	\begin{itemize}
-		\item $U_{min} = min\{U_0^m, 0\le m\le n, U_j^0, 0 \le j \le J, U_J^m, 0 \le m \le n \}$
-		\item $U_{max} = max\{U_0^m, 0\le m\le n, U_j^0, 0 \le j \le J, U_J^m, 0 \le m \le n \}$
+		\item $U_{min} = min\{U_0^m, U_j^0, U_J^m\}$ con $0\le m\le n$ y $0 \le j \le J$.
+		\item $U_{max} = max\{U_0^m, U_j^0, U_J^m\}$ con $0\le m\le n$ y $0 \le j \le J$.
 	\end{itemize}
-	
 	Es decir, el máximo y el mínimo se alcanzan siempre en la condición inicial o en la frontera.
 \end{theorem}
 \begin{proof}
-	$(1+2\theta\nu)U_j^{n+1} = \theta\nu(U_{j-1}^{n+1}+U_{j+1}^{n+1}) + (1-\theta)\nu(U_{j-1}^{n}+U_{j+1}^{n})+
-	[1-2(1-\theta)\nu]U_{j}^{n}$
+	\begin{align*}
+	(1+2\theta\nu)U_j^{n+1} & = \theta\nu(U_{j-1}^{n+1}+U_{j+1}^{n+1})\\
+	& + (1-\theta)\nu(U_{j-1}^{n}+U_{j+1}^{n}) \\
+	& +	[1-2(1-\theta)\nu]U_{j}^{n}
+	\end{align*}
 	
-	Reducción al absurdo, razonamos con el máximo (la prueba para el mínimo sería igual).
+	Vamos a usar reducción al absurdo, razonando con el máximo (la prueba para el mínimo sería igual).
 	
-	Supongo que el máximo se alcanza en $U_j^{n+1}$ para $n\ge 0$, $1\le j \le J-1$.
+	Supongo que el máximo se alcanza en $U_j^{n+1}$ para $n\ge 0$ y $1\le j \le J-1$. 
 	
 	Llamamos $U^\ast = \max\{ U_{j-1}^{n+1},U_{j+1}^{n+1},U_{j-1}^{n},U_{j+1}^{n},U_{j}^{n} \}$
 	
-	$(1+2\theta\nu)U_{j}^{n+1} \le \theta\nu 2U^\ast + (1-\theta)\nu 2U^\ast + [1-2(1-\theta)\nu]U^\ast$
-	$2\theta\nu + 2(1-\theta) \nu + 1-2(1-\theta)\nu = 1+2\theta\nu$
-	$(1+2\theta\nu)U_{j}^{n+1} \le(1+2\theta\nu)U^\ast \implies U_{j}^{n+1} \le U^\ast$
+	\begin{align*}
+	(1+2\theta\nu)U_{j}^{n+1} & \le 2\theta\nu U^\ast + 2(1-\theta)\nu U^\ast + [1-2(1-\theta)\nu]U^\ast\\
+	& \le 2\theta\nu + 2(1-\theta) \nu + 1-2(1-\theta)\nu \\
+	& = 1+2\theta\nu (1+2\theta\nu)U_{j}^{n+1}\\
+	& \le(1+2\theta\nu)U^\ast \implies U_{j}^{n+1} \le U^\ast
+	\end{align*}
 	
-	$U_{j}^{n+1}$ es el máximo.
-	$U^\ast = U_{j}^{n+1}$
+	$U_{j}^{n+1}$ es el máximo y $U^\ast = U_{j}^{n+1}$.
 	
-	Acabo de probar que el máximo también se alcanza en $U_{j-1}^{n+1}$.
-	Contradicción.
+	Se acaba de probar que el máximo también se alcanza en $U_{j-1}^{n+1}$ lo que es una contradicción.
 \end{proof}
+
+\subparagraph{Prueba de la convergencia por la técnica del principio del máximo}\mbox{}
+
+Ya sabemos que error $e_j^n$ tiene la expresión:
+$$e_j^n = U_j^n-u_j^n$$
+
+Luego a partir de
+$$(u_j^{n+1}-u_j^n)-\nu\theta(u_{j}^{n+1}-2u_{j}^{n+1}+u_{j-1}^{n+1}) - (1-\theta)\nu(u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}) = \Delta t T_j^n$$
+
+tenemos que
+\begin{align*}
+(e_{j}^{n+1}-e_{j}^{n}) & = \nu\theta(e_{j+1}^{n+1}-e_{j}^{n+1}+e_{j-1}^{n+1})\\
+& + \nu(1-\theta)(e_{j+1}^{n}-2e_{j}^{n}+e_{j-1}^{n}) - \Delta tT_j^n
+\end{align*}
+
+Despejando:
+\begin{align*}
+	(1+2\nu\theta)e_j^{n+1} & = \nu\theta e_{j+1}^{n+1} + \nu\theta e_{j-1}^{n+1}\\
+	& +\left[1 - 2\nu(1-\theta)\right] e_{j}^{n}\\
+	& +\nu(1-\theta)e_{j+1}^{n} + \nu (1-\theta)e_{j-1}^{n} - \Delta t T_j^n
+\end{align*}
+
+\textbf{Condiciones para aplicar la técnica del principio del máximo}
+\begin{enumerate}
+	\item Los coeficientes a la derecha tienen que ser positivos
+			$$\nu \le \frac{1}{2}(1-\theta)^{-1}$$
+	\item La suma de coeficientes en el lado derecho tiene que ser menor o igual que el coeficiente del lado izquierdo.
+	\begin{align*}
+		2\nu\theta + 1 - 2\nu(1-\theta) + 2\nu(1-\theta)\\
+		= 2\nu\theta + 1 - 2\nu + 2\nu\theta + 2\nu -2\nu\theta\\
+		= 1+2\nu\theta
+	\end{align*}
+\end{enumerate}
+
+Dado que se cumplen las condiciones, aplicamos la técnica del principio del máximo. 
+
+Llamamos
+\begin{itemize}
+	\item $E^n= \max_{0\le j\le J}|e_j^n|$ (cota para el error).
+	\item $T = \max_{\forall j, n}$ (cota para el error de truncación).
+\end{itemize}
+
+Y tenemos
+\begin{align*}
+	(1+2\nu\theta)|e_j^{n+1}| & \le \theta\nu E^{n+1} + \nu\theta E^{n+1}\\
+	& +\left[1 - 2\nu(1-\theta)\right] E^{n}\\
+	& +\nu(1-\theta)E^{n} + \nu (1-\theta)E^{n} + \Delta t T_j^n\\
+	& = (2\nu\theta)E^{n+1}+E^n+\Delta t T
+\end{align*}
+
+Para todo $j$ se cumple
+$$(1+2\nu\theta)|e_j^{n+1}| \le (2\nu\theta)E^{n+1}+E^n+\Delta t T$$
+
+Por tanto
+$$(1+2\nu\theta)E^{n+1} \le (2\nu\theta)E^{n+1}+E^n+\Delta t T$$
+
+Es decir
+$$E^{n+1} \le E^n + \Delta t T$$
+
+Sabemos que
+\begin{itemize}
+	\item $E^0 = 0$
+	\item $E^n \le n\Delta t T \le t_f T$
+	\begin{itemize}
+		\item Caso $\theta = 1 \to O(\Delta t + (\Delta x)^2)$
+		\item Caso $\theta = \frac{1}{2} \to O((\Delta t)^2 + (\Delta x)^2)$
+		\item Caso $\theta = 0 \to O(\Delta t + (\Delta x)^2)$
+	\end{itemize}
+\end{itemize}
+
+Queda probada la convergencia.
+
+Hasta ahora hemos supuesto que nuestra aproximación númerica tiene error cero en la condición inicial y en los valores frontera. Vamos a ver que resultado obtenemos si no consideramos este supuesto. 
+
+Tenemos, para el $\theta$-método:
+\begin{equation*}
+	\left\{
+	\begin{array}{l l l}
+		U_j^0 & = & u^0(x_j) + \eta_j^0\\
+		U_0^n & = & \xi_0^n\\
+		U_J^n & = & \xi_J^n
+	\end{array}
+	\right.
+\end{equation*}
+
+donde $\eta_j^0$ es el error en la condición inicial y $\xi_0^n, \xi_J^n$ los errores en los datos frontera.
+
+Tenemos 
+$$e_j^n = (e_j^n)^{(1)}+(e_j^n)^{(2)}$$
+
+donde
+\begin{itemize}
+	\item $(e_j^n)^{(1)}$ verifica la misma ecuación del apartado anterior con error cero en datos iniciales y frontera.
+	\item $(e_j^n)^{(2)}$ verifica la ecuación del método en
+	\begin{itemize}
+		\item $(e_j^0)^{(2)} = \eta_j^0$
+		\item $(e_0^n)^{(2)} = \xi_0^n$
+		\item $(e_J^n)^{(2)} = \xi_J^n$
+	\end{itemize}
+\end{itemize}
+
+Vamos a acotar $(e_j^n)^{(1)}$ y $(e_j^n)^{(2)}$:
+\begin{itemize}
+	\item $\forall j,n$ tenemos $(e_j^n)^{(1)} \le t_F T$
+	\item $\max|(e_j^n)^{(2)}| \le \max\{|\eta_j^0|,|\xi_0^n|,|\xi_J^n|\}$
+\end{itemize}
+
+\subsubsection{Otros modelos parabólicos}
+
+\paragraph{Primer ejemplo}\mbox{}
+
+Consideramos el problema siguiente:
+\begin{equation*}
+	\left\{
+	\begin{array}{l}
+		u_t = a(x,t)u_{xx}\\
+		u(0,t) = u(1,t) = 0\\
+		u(x,0) = u_0(x)
+	\end{array}
+	\right.
+\end{equation*}
+
+Si quisiésemos hallar el método explícito, basta hallar aproximaciones de derivadas de la siguiente forma:
+
+$$\frac{U_{j}^{n+1}-U_{j}^{n}}{\Delta t} = a(x_j, t_n)\frac{U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}}{(\Delta x )^2}$$
+
+Si lo analizáramos, obtendríamos que el esquema es estable si $\nu a(x_j, t_n) \le \frac{1}{2}$.
+
+Si quisiésemos hallar el $\theta$-método, procedemos de la misma forma:
+$$\frac{U_{j}^{n+1}-U_{j}^{n}}{\Delta t} = a(x_j, t_n)\left(\theta\frac{U_{j+1}^{n+1}-2U_{j}^{n+1}+U_{j-1}^{n+1}}{(\Delta x )^2} + (1-\theta)\frac{U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}}{(\Delta x )^2}\right)$$
+
+Otra opción con el mismo error es tomar $\frac{a(x_j, t_n) + a(x_j, t_{n+1})}{2} = a(x_j, t_{n+\frac{1}{2}}) + O((\Delta t)^2)$ en lugar de $a(x_j, t_{n+\frac{1}{2}})$.
+
+\paragraph{Segundo ejemplo}\mbox{}
+
+Consideramos el problema siguiente:
+\begin{equation*}
+	\left\{
+	\begin{array}{l}
+		u_t = \frac{\partial}{\partial x}\left(p(x,t)\frac{\partial u}{\partial x}\right)\\
+		u(0,t) = u(1,t) = 0\\
+		u(x,0) = u_0(x)
+	\end{array}
+	\right.
+\end{equation*}
+	
+Procedemos del mismo modo, de forma que aproximando derivadas, obtenemos el siguiente método:
+$$\frac{U_{j}^{n+1}-U_{j+1}^{n}}{\Delta t} = \frac{1}{(\Delta x)^2}\left[p_{j+\frac{1}{2}}^n(U_{j+1}^{n} - U_{j}^{n}) - p_{j-\frac{1}{2}}^n(U_{j}^{n}-U_{j-1}^{n}) \right]$$
+
+
+\subsection{Ecuación parabólica general. Problemas de convección dominante}
+Consideramos el problema siguiente:
+\begin{equation*}
+	\left\{
+	\begin{array}{l}
+		u_t = a(x,t)u_{xx}+b(x,t)u_x+c(x,t)u+d(x,t)\\
+		u(0,t) = u(1,t) = 0\\
+		u(x,0) = u_0(x)
+	\end{array}
+	\right.
+\end{equation*}
+
+Vamos a ver un primer método para aproximar la solución a este probema:
+\begin{equation*}
+	\frac{U_{j}^{n+1}-U_{j}^{n}}{\Delta t} = a_j^n\left[\frac{U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}}{(\Delta x )^2}\right]+b_j^n\left[\frac{U_{j+1}^{n}-U_{j-1}^{n}}{2\Delta x}\right]+c_j^nU_{j}^{n}+d_j^n
+\end{equation*}
+
+Vamos a ver en que condiciones podemos aplicar el principio del máximo.
+Tenemos
+\begin{equation*}
+	\begin{array}{l}
+		\nu = \frac{\Delta t}{(\Delta x )^2}\\
+		\mu = \frac{\Delta t}{\Delta x}
+	\end{array}
+\end{equation*}
+
+El error tiene la forma
+$$e_j^n = U_j^n -u_j^n$$
+
+Por tanto
+\begin{align*}
+	e_j^{n+1} = & e_j^n + \nu a_j^n\left[e_{j+1}^{n}-2e_{j}^{n}+e_{j-1}^{n}\right]\\
+	& + \frac{\mu}{2}b_j^n\left[e_{j+1}^{n}-e_{j-1}^{n}\right]\\
+	& + \Delta t c_j^ne_j^n - \Delta t T_j^n
+\end{align*}
+
+Agrupando términos
+\begin{align*}
+	e_j^{n+1} = & (1-2\nu a_j^n + \Delta t c_j^n)e_j^n\\
+	& + (\nu a_j^n +\frac{\mu}{2}b_j^n)e_{j+1}^n\\
+	& + (\nu a_j^n - \frac{\mu}{2}b_j^n)e_{j-1}^n\\
+	& - \Delta T_j^n
+\end{align*}
+
+Vamos a ver si se cumplen las hipótesis:
+\begin{enumerate}
+	\item Coeficientes positivos:
+	\begin{align*}
+		1-2\nu a_j^n + \Delta t c_j^n \ge 0\\
+		\nu a_j^n + \frac{\nu}{2}b_j^n \ge 0\\
+		\nu a_j^n - \frac{\nu}{2}b_j^n \ge 0
+		2\nu a_j^n - \Delta t c_j^n \le 1
+	\end{align*}
+	Condición usual para estabilidad
+	$$\frac{1}{2}\mu |b_j^n| \le \nu a_j^n$$
+	\item Suma de coeficientes menor o igual que 1 ($c\le 0$):	
+	\begin{align*}	
+		1-2\nu a_j^n + \Delta t c_j^n + \nu a_j^n + \frac{\mu}{2} b_j^n + \nu a_j^n - \frac{\nu}{2} b_j^n\\
+		= 1+\Delta t c_j^n \le 1
+	\end{align*}
+\end{enumerate}
+
+La condición 
+$$\frac{1}{2}\mu |b_j^n| \le \nu a_j^n$$
+
+es propia de los problema de convección difusión ($a\neq 0, b\neq 0$).
+
+\paragraph{Caso particular}
+Los problemas de convección dominante son aquellos en los que domina el término convectivo.
+$$a(x,t) << b(x,t)$$
+
+Tenemos que si $b = 1$ y $a = \varepsilon$, entonces
+$$\frac{1}{2}\frac{\Delta t}{\Delta x} \le \frac{\Delta t}{(\Delta x )^2}\varepsilon$$
+
+Es decir
+$$\Delta x \le 2 \varepsilon$$
+
+Si $\varepsilon$ es muy pequeño, para que se cumpla el principio del máximo, se necesita una malla muy fina.
+
+Se cumplen las condiciones para el principio del máximo.
+
+\begin{align*}
+	E^n = & \max_j |e_j^n|\\
+	|e_j^{n+1}| & \le (1-2\nu a_j^n + \Delta t c_j^n) E^n\\
+	& + (\nu a_j^n + \frac{1}{2} \nu b_j^n )E^n\\
+	& + (\nu a_j^n + \frac{1}{2}\nu b_j^n)E^n + \Delta t T\\
+	|e_j^{n+1}| & \le (1+\Delta c_j^n) E^n + \Delta t T\\
+	& \le E^n + \Delta t T\\
+	E^{n+1} & \le E^n + \Delta t T\\
+\end{align*}
+
+Tenemos
+$$E^n \le (n\Delta t)T\le t_f T$$
+
+\begin{itemize}
+	\item Suma de coeficientes menor o igual que 1 ($c\ge 0$):
+	La suma de coeficientes es $(1+\Delta t c_j^n) > 1$. Todavía se puede obtener converencia
+	$$c_j^n = |c_j^n| \le C \text{ con } C=cte$$
+	$$E^{n+1} \le (1+C\Delta t)E^n + \Delta t T$$
+	
+	Iterando 
+	$$E^n \le \Delta t \sum_{j=0}^{n-1} (1+c\Delta t)^j T$$
+	
+	$$(1+C\Delta t)^j \le e^{C\Delta t j}\le e^{C t_F}$$
+	$$(1+x)^j \le e^{xj}$$
+	
+	Y obtenemos la converfencia mediante
+	$$E^n\le \Delta t n e^{Ct_F}T = t_Fe^{Ct_F}T$$
+\end{itemize}
+
+\paragraph{Esquema upwind}
+El esquema upwind tiene la siguiente forma
+$$u_t = a(x,t) u_{xx} + b(x,t)u_x$$
+
+Para $b>0$ la convección se mueve a la izquierda, y para $b<0$, la convección se mueve hacia la derecha.
+
+En este esquema, si $b>0$, se tiene una diferencia regresiva. $$u_x \equiv \frac{U_j^n - U_{j-1}^n}{\Delta x}$$
+Para $b<0$, se tiene una diferencia progresiva
+$$u_x \equiv \frac{U_{j+1}^n - U_j^n}{\Delta x}$$
+
+Usando el esquema upwind, las condiciones para el principio del máximo son más debiles. Sin embargo, antes usábamos diferencias centrales con orden $O((\Delta x)^2)$, es decir, orden 2, y con upwind usamos diferencias de orden $O(\Delta x)$ para $u_x$.
+
+Vamos a suponer $b>0$, el esquema es
+$$\frac{U_j^{n+1}-U_j^n}{\Delta t} = a_j^n\frac{U_{j+1}^{n}-2U_j^{n}+U_{j-1}^{n}}{(\Delta x)^2} + b_j^n \frac{U_{j+1}^n-U_{j}^{n}}{\Delta x}$$
+
+Despejando:
+$$U_{j}^{n+1} = U_{j}^{n} + a_j^n\nu\left[U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}\right] + b_j^n \nu \left[U_{j+1}^{n}-U_{j}^{n}\right]$$
+
+El error tiene la forma
+\begin{align*}
+	e_j^{n+1} = & e_j^n + \nu a_j^n\left[e_{j+1}^{n}-2e_{j}^{n}+e_{j-1}^{n}\right]\\
+	& + {\mu}b_j^n\left[e_{j+1}^{n}-e_{j}^{n}\right] - \Delta t T_j^n
+\end{align*}
+
+Agrupando términos
+\begin{align*}
+	e_j^{n+1} = & (1-2\nu a_j^n - b_j^n\nu)e_j^n\\
+	& + (\nu a_j^n + \mu b_j^n)e_{j+1}^n\\
+	& + \nu a_j^n e_{j-1}^n - \Delta T_j^n
+\end{align*}
+
+Coeficientes positivos. La única condición es
+$$1-2\nu a_j -  b_j^n \nu \ge 0$$
+
+El caso límite es en el que $a_j^n = 0$, quedando la condición 
+$$1\ge b_j^n \mu$$
+
+es decir
+$$\mu\frac{1}{b_j^n}$$
+
+En conclusión
+\begin{itemize}
+	\vspace{-3mm}
+	\item Con las diferencias centrales, tenemos que $a_j^n = \varepsilon$ y $\Delta x \equiv \varepsilon$.
+	\item Con upwind, tenemos que $\Delta x \equiv \Delta t$.
+\end{itemize}
+
+\begin{example}
+	Consideramos el problema siguiente, con una ecuación de convección-difusión, para $\varepsilon > 0$:
+	\begin{equation*}
+		\left\{
+		\begin{array}{l}
+			-\varepsilon u_{xx} + u_x = 1\\
+			u(0,t) = u(1,t) = 0\\
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	En primer lugar consideramos la ecuacion homogénea:
+	$$-\varepsilon u_{xx} + u_x = 0$$
+	
+	Cuya solución general es $$C_1\varepsilon e^{\frac{x}{\varepsilon}} + C_2$$
+	
+	Como solución particular, podemos ensayar $u_p = ax$, quedando $a=1$ y por tanto obteniendo la solución particular $u_p = x$.
+	
+	Obtenemos la solución general para la ecuación
+	$$C_1\varepsilon e^{\frac{x}{\varepsilon}} + C_2 + x$$
+	
+	Ahora aplicamos las condiciones iniciales del problema para obtener los valores $C_1$ y $C_2$, obteniendo
+	\begin{align*}
+		C_1 = & \frac{1}{1-e^{\frac{1}{\varepsilon}}}\\
+		C_2 = & \frac{-1}{1-e^{\frac{1}{\varepsilon}}}
+	\end{align*}
+	
+	El problema es que si $\varepsilon$ es muy pequeño, el primer término es como si no estuviese, y la pendiente en el punto $1$ se hace muy grande.
+\end{example}
+
+
