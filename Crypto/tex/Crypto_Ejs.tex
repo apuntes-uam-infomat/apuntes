@@ -611,7 +611,7 @@ Ciframos un mensaje utilizando una transformación afín sobre n-grafos en un al
 Cuando ciframos un mensaje agrupamos las letras a cifrar en bloques, en este caso de longitud $n$. Es evidente que $c_i$ no dependerá de aquellas $m_j$ que no pertenezcan al bloque cifrado.
 
 Supongamos que ciframos las letras $m_1,...,m_n$. En este caso, la relación entre las letras sin cifrar y las cifradas queda representada por la ecuación:
-\[α\sum_{i=1}^N m_i\cdot n^{N-i} + β= \sum_{i=1}^N c_i\cdot n^{N-i}\ \text{ mod } n^n\]
+\[α\sum_{i=1}^n m_i\cdot N^{n-i} + β= \sum_{i=1}^n c_i\cdot N^{n-i}\ \text{ mod } N^n\]
 
 Pero la única posibilidad de que esas ecuaciones coincidan es que $α\cdot m_i=c_i, \ \forall i \neq N$ y $αm_N +β = c_N$.
 
@@ -1135,31 +1135,225 @@ TO BE CONTINUED...
 \end{problem}
 
 \begin{problem}[9]
-
+Demuestra que si cifrásemos un mensaje utilizando una aplicación lineal dada por una matriz $A \in M_2 (\ent_N)$ que no fuese inversible, entonces cualquier unidad de texto cifrado, es decir, un vector $(c_1,c_2)$ donde $c_i$ son letras, podría ser el resultado de cifrar al menos dos unidades de mensaje en claro distintas.
 
 \solution
+\doneby{Pedro}
+
+Sabemos que una aplicación lineal es invertible si y sólo si es biyectiva. Por tanto, en caso de no ser invertible es claro que no es biyectiva.
+
+Por otro lado sabemos que una aplicación entre conjuntos finitos, como ocurre en este caso, es biyectiva si y sólo si es inyectiva. Por tanto al no ser biyectiva no sería inyectiva.
+
+Finalmente, si tenemos una aplicación que no es inyectiva, cualquier vector $(c_1,c_2)$ podría ser imagen de varios vectores distintos.
+
 \end{problem}
 
 \begin{problem}[10]
+Sean $\appl{f_1}{M_1}{C_1}$ y $\appl{f_2}{M_2}{C_2}$ dos funciones para cifrar (o criptosistemas). Si $C_1 \subset M_2$ podemos definir el \textit{criptosistema producto} mediante la función $f = f_2 \circ f_1$. Más formalmente, si llamamos $I=f_1(M_1)\subset C_1 \subset M_2$ ($I$=Intermedio), e criptosistema producto lo define la función $f$ dada por la composición:
+\[f:M_1 \to^{f_1} I \to^{f_2}C_2\]
 
+Supongamos que trabajamos con funciones para cifrar afines $\appl{f_i}{\ent_n^l}{\ent_n^l}$ con $n$ y $l$ fijos, que vendrán dadas por $f_i(m)=A_im+b_i$. Demuestra
+
+\ppart
+El producto de dos traslaciones es una traslación
+
+\ppart
+El producto de dos funciones de Hill es una función de Hill
+
+\ppart
+El producto de dos funciones afines cualesquiera es una función afín
 
 \solution
+
+\spart
+Si tenemos dos traslaciones $f_i(m)=m+b_i$ y estudiamos su composición tenemos:
+\[f(m)=f_2(m+b_1) = m+b_1+b_2 = m + b_3 \text{ siendo } b_3 = b_1+b_2\]
+y vemos que, efectivamente, sigue tratándose de una traslación.
+
+\spart
+Si tenemos dos funciones de Hill $f_i(m)=A_im$ y estudiamos su composición tenemos:
+\[f(m)=f_2(A_1m)=A_2A_1m = A_3m \text{ siendo } A_3 = A_2 \cdot A_1\]
+y vemos que, efectivamente, sigue tratándose de una función de Hill
+
+\spart
+Si tenemos ahora dos funciones afines cualesquiera $f_i(m)=A_im+b_i$ y estudiamos su composición tenemos:
+\[f(m)=f_2(A_1m+b_1)=A_2(A_1m+b_1)+b_2 = A_2A_1m + \underbrace{\underbrace{A_2b_1}_{b_4} + b_2}_{b_3} = A_3m + b_3\]
+y vemos que, efecitvamente, sigue tratándose de una función afín.
 \end{problem}
 
 \begin{problem}[11]
+(Un ejemplo del ejercicio anterio que sí introduce algo nuevo). Escribes en el alfabeto inglés de 26 letras con las equivalencias usuales. Para aumentar la dificutad de romper tu croptosistema decides cifrar tus mensajes escribiéndolos como vectores digrafos en $\ent_{26}^2$, aplicarles la matriz $\left( \begin{array}{cc} 3 & 11 \\ 4 & 15 \end{array} \right) \mod 26$ y luego al resultado aplicarle la matriz $\left( \begin{array}{cc} 10 & 15 \\ 5 & 9 \end{array} \right) $ pero esta vez trabajando módulo 29.
 
+Así tu mensaje cifrado estará formado por vectores digrafos en $\ent_{29}^2$ que veremos como escritos en el alfabeto de 29 letras donde el 26 es el espacio en blanco, 27=? y 28=!.
+
+\ppart
+Cifra el mensaje ``SEND''
+
+\ppart
+Descifra el mensaje ``ZMOY''
 
 \solution
+\doneby{Pedro}
+
+\spart
+El proceso de cifrado es sencillo y basta con seguir los pasos descritos en el enunciado. Vamos a ello:
+\[\left( \begin{array}{cc}
+ 3 & 11 \\
+ 4 & 15
+  \end{array} \right)
+  \left( \begin{array}{cc}
+  18 & 13\\
+  4 &  3
+  \end{array} \right) =  \left( \begin{array}{cc}
+  20 & 20\\
+  2  & 19
+  \end{array} \right)\]
+
+\[\left( \begin{array}{cc}
+ 10 & 15 \\
+ 5 & 9
+  \end{array} \right)
+  \left( \begin{array}{cc}
+  20 & 20\\
+  2 &  19
+  \end{array} \right) =  \left( \begin{array}{cc}
+  27 & 21\\
+  2  & 10
+  \end{array} \right)\]
+
+ Con lo que el mensaje cifrado es ``?CVK''
+
+\spart
+
+Para descifrar debemos calcular la inversa de las dos matrices y deshacer el proceso.
+
+Puesto que 29 es primo, la segunda matriz es invertible y, puesto que el determinante de la primera es 1, esta también lo es. Procedemos a calcular las inversas.
+
+\[\left( \begin{array}{cc}
+ 3 & 11 \\
+ 4 & 15
+  \end{array} \right)^{-1} = \left( \begin{array}{cc}
+ 15 & -11 \\
+ -4 & 3
+  \end{array} \right), \ \ \ \left( \begin{array}{cc}
+  20 & 20\\
+  2 &  19
+  \end{array} \right)^{-1} = \left(\frac{1}{15} = 2\right)\left( \begin{array}{cc}
+  19 & -20\\
+  -2 &  20
+  \end{array} \right) = \left( \begin{array}{cc}
+  9 & 18\\
+  25 &  11
+  \end{array} \right)\]
+
+Procedemos ahora a descifrar el mensaje.
+\[\left( \begin{array}{cc}
+ 9 & 18\\
+  25 &  11
+  \end{array} \right)
+  \left( \begin{array}{cc}
+  25 & 13\\
+  12 &  24
+  \end{array} \right) =  \left( \begin{array}{cc}
+  6 & 27\\
+  3 &  9
+  \end{array} \right)\]
+
+  \[\left( \begin{array}{cc}
+ 15 & -11 \\
+ -4 & 3
+  \end{array} \right)
+  \left( \begin{array}{cc}
+  6 & 27\\
+  3 &  9
+  \end{array} \right) =  \left( \begin{array}{cc}
+  5 & 20 \\
+  11 & 23
+  \end{array} \right)\]
+
+Con lo que el mensaje descifrado es ``FLUX''
+
+\textcolor{blue}{No estoy seguro de que tenga sentido haber obtenido este mensaje. En cualquier caso el procedimiento creo que es correcto y puedo haberme equivocado en las cuentas}
 \end{problem}
 
 \begin{problem}[12]
+(Un criptosistema ligeramente más complicado). El texto en claro está escrito en un alfabeto con $N$ letras y el texto cifrado en un alfabeto con $M$ letras, $M>N$. Las unidades de texto en claro serán digrafos vistos como números de dos cifras en base $N$, es decir, enteros entre $0$ y $N^2-1$,
 
+Análogamente, las unidades de texto cifrado serán enteros entre $0$ y $M^2-1$.
+
+Elegimos tres enteros positivos, $L,a,b$ tales que $N^2\leq L \leq M^2$ y $m.c.d.(a,L)=1$.
+
+La función para cifrar viene dada por $f(m)=am+b \mod L$.
+
+Para ver un ejemplo concreto supongamos que el alfabeto en claro tiene $N=27$ símbolos siendo los 26 primeros el alfabeto en inglés y 26= espacio en blanco; y que el alfabeto cifrado tiene $M=30$, añadiendo al anterior 27=?, 28=!, 29='.
+
+Usamos un criptosistema como el descrito con $L=853$. Sabemos que los digrafos en claro más frecuentes son ``E '' y ``S '', que se cifran, respectivamente como ``FQ'' y ``LE''.
+
+Lee el mensaje cifrado ``YAVAOCH'D''
 
 \solution
+\doneby{Pedro}
+
+Por lo pronto sabemos que $a$ es coprimo con $L=853$. Por ahora no nos dice nada, pero quién sabe qué nos deparará el futuro.
+
+Procedemos a calcular la función de descifrado, que tendrá la misma forma que la de cifrado aunque con diferentes constantes.
+
+\[\left\{ 166α + β = 134 \atop 334α+β = 512\right. \implies 168α = 378 \mod 853\]
+
+Puesto que 168 es coprimo con 853 podemos calcular su inverso mediante el algoritmo de Euclides. Vamos a ello:
+\[
+\begin{array}{l}
+853 = 5\cdot 168 +13\\
+168 = 12 \cdot 13 + 12 \\
+13 = 12 + 1 \\
+\end{array} \implies \begin{array}{l}
+1 = 13 - 12 \\
+12 = 168 - 12 \cdot 13 \implies 1 =-168 +13\cdot 13 \\
+13 = 853 -5\cdot 168 \implies 1 = 13\cdot 853 -66\cdot 168
+
+\end{array}
+\]
+
+Así llegamos a que el inverso de 168 módulo 853 es -66 = 787.
+
+Con esto podemos calcular α=$787\cdot 378 \mod 853 = 642 \implies β = 187$
+
+Una vez tenemos lista la función de descifrado sólo nos queda descifrar el mensaje.
+
+\textcolor{red}{Malvado, para de hacer abdominales por un momento y usa tus megafunciones javascriptianas para descifrar el mensaje.}
 \end{problem}
 
 \begin{problem}[13]
+(Combinar las ideas de los ejercicios 10 y 12 para, sin mucho esfuerzo, conseguir un criptosistema más difícil de romper). Sean $f_1,f_2$ funciones para cifrar como las del ejercicio anterior, es decir $f_i(m)=a_im+b_i \mod L_i$ donde $N,M$ son iguales para las dos funciones pero $a_i,b_i,L_i$ pueden cambiar.
 
+Supongaos $L2>L_1$. Podemos construir entonces el criptosistema producto $f= f_2 \circ f_1$ donde, a partir de una unidad de texto en claro $m$, el correspondiente texto cifrado se obtendrá en dos pasos:
+\[i=a_1+b_1 \mod L_1 \, c=a_2i+b_2 \mod L_2\]
 
+Observa que este criptosistema producto no es en general un criptosistema afín. Fijados los alfabetos, las claves son sextuplas sujetas a ciertas condiciones:
+\[N^2 \leq L_1 \leq L_2 \leq M^2 \ \ mcd(a_i,L_i)=1\]
+
+Para ver un ejemplo concreto supongamos que usamos para los textos en claro y cifrados los alfabetos con $N=27$ y $M=30$ letras del problema anterior. Sabiendo que la clave para cifrar es $(L_1,a_1,b_1,L_2,a_2,b_2)=(757,247,109,881,675,402)$, explica cómo descifrar y descifra el mensaje ``D!RAJ'KCTN''
 \solution
+
+\doneby{Pedro}
+
+Puesto que conocemos la clave para cifrar, lo \textit{único} que debemos hacer es calcular la función inversa a la de cifrado.
+
+Nuestro proceso de cifrado es:
+\[i=247m + 109 \mod 757 \, c=675i+402 \mod 881\]
+
+Puesto que podemos invertir, podemos escribir:
+\[i = (c-402)\cdot 201 \mod 881 = 201 c + 250 \mod 881 \ \]
+y una vez que tenemos la $i$ procedemos a calcular $m$ mediante la ecuación:
+\[m = (i-109)\cdot 331 \mod 778 = 331i +257 \mod 757\]
+
+\obs La inversión la he hecho a ordenador. Si quisiésemos hacerlo a mando tendríamos que emplear el algoritmo de Euclides que ya hemos empleado a lo largo de los ejercicios y la teoría en diversas ocasiones.
+
+Finalmente, procedemos a descifrar el mensaje tomando letras de 2 en 2 y obteniendo las siguientes relaciones:
+\[f^{-1}(118) = 365,\ \ f^{-1}(510) = 719,\ \ f^{-1}(299) = 127,\ \ f^{-1}(302) = 463,\ \ f^{-1}(583) = 19\ \]
+
+Por último, debemos expresar esos números en base $N$ para poder tener el mensaje descifrado. Así obtenemos el mensaje:
+\[NO\_RETREAT\]
+
+Poderosa magia hombre blanco, obtuvimos un resultado razonable.
 \end{problem}
