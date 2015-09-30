@@ -1,12 +1,13 @@
 % -*- root: ../EstadisticaII.tex -*-
 \section{Contrastes no paramétricos}
+
 Hipótesis no paramétrica: hipótesis que no se formula en términos de un número finito de parámetros.
 
 \begin{enumerate}
 \item Bondad de ajuste: A partir de una muestra $X_1,...,X_n \equiv F$ de variables aleatorias independientes idénticamente distribuidas, contrastar:
 \begin{itemize}
 \item $H_0: F=F_0$ donde $F_0$ es una distribución prefijada.
-\item $H_0: F \in \{F_O : O\in H\}$ H es el espacio paramétrico.
+\item $H_0: F \in \{F_{\theta} : {\theta}\in H\}$, donde H es el espacio paramétrico.
 \end{itemize}
 \item Homogeneidad: Dados $X_1,...,X_n \equiv F$ y $Y_1,...,Y_n \equiv G$ de variables aleatorias independientes idénticamente distribuidas. Contrastar $H_0: F=G$.
 \item Hipótesis de independencia: Dada $(X_1,Y_1),...,(X_n,Y_n) \equiv F$ de variables aleatorias independientes idénticamente distribuidas. Contrastar $H_0: X$ e $Y$ son independientes.
@@ -16,6 +17,41 @@ Hipótesis no paramétrica: hipótesis que no se formula en términos de un núm
 Consideramos una distribución totalmente especificada bajo $H_0: X_1,...,X_n \equiv F$ de variables i.i.d.
 
 $H_0: F=F_0$ es la hipótesis nula y queremos ver que F, que es la distribución obtenida con los datos verdaderos (obtenidos empíricamente) es igual a $F_0$ que es la distribución teórica.
+
+Vamos a definir los pasos que tenemos que seguir para comprobar si $H_0$ es cierta:
+\begin{enumerate}
+\item Se definen k clases $A_1,...,A_k$. En el caso del dado, los valores de cada cara.
+\item Se calculan las frecuencias observadas de datos en cada clase.
+\subitem \[O_i = #\{j\tq X_j ∈ A_i\}\]
+\[O_i \sim Bin\left(n,p_i = p_{H_0}(A_i)\right) \text{ es una variable aleatoria}\]
+\item Se calculan las frecuencias esperadas si $H_0$ fuera cierta:
+\subitem\[\esp_i = \esp_{H_0} = n·p_i \text{ al ser } O_i \text{ una binomial}\]
+\item Se comparan $O_i$ con $E_i$ mediante el \concpet{estadístico de Pearson}, para comprobar si lo observado se parece a lo esperado. 
+
+\[T = \sum_{i=1}^k \frac{(O_i - E_i)^2}{E_i}\]
+
+\subitem Más adelante justificaremos porqué este estadístico es el utilizado. Además, el estadístico puede calcularse de otra manera:
+
+\[
+T = \sum \frac{O_i^2}{E_i} - n
+\]
+\item Se rechaza $H_0$ en la región crítica $R = \{ T>c\}$, donde $c$ depende del nivel de significación $α$.
+\subitem $c$ se obtiene consultando en las tablas para $α = P_{H_0}(T>c)$
+\end{enumerate}
+
+Pero se nos presenta el siguiente problema, ¿Cuál es la distribución de $T$ bajo $H_0$?
+
+\begin{theorem}[Distribución del estadístico de Pearson]
+Bajo $H_0$
+
+\[
+T = \sum_{i=1}^k \frac{(O_i - E_i)^2}{E_i} \convs[d] \chi^2_{k-1}
+\]
+\end{theorem}
+
+\begin{proof}
+\textcolor{red}{Para otro momento}
+\end{proof}
 
 \begin{example}
 Tiramos un dado 100 veces y obtenemos:
@@ -28,16 +64,25 @@ Frecuencia & 10 & 20 & 20 & 10 & 15 & 25\\
 \hline
 \end{tabular}
 
-Y consideramos $H_0: p_i=1/6 \forall i=1,...,6$. Es decir que el dado no está trucado y cada cara tiene la misma probabilidad ($p_i$) de salir.
+Y consideramos $H_0: p_i=\frac{1}{6} \; \forall i=1,...,6$. Es decir que el dado no está trucado y cada cara tiene la misma probabilidad ($p_i$) de salir.
 
-Por otro lado consideramos $H_1: \exists i$ tal que $p_i\neq 1/6$. Es decir, que el dado está trucado y hay caras que salen mas que otras.
+¿Es cierta la hipótesis, con un nivel de confianza/significación del 95\%?
+
+
+Las clases son cada uno de los posibles resultados y las frecuencias observadas se encuentran en la tabla.
+
+Vamos a calcular el estadístico $T$ \[T = \sum_{i=1}^6 \frac{O_i^2}{E_i} - n = \frac{6}{100} (\sum O_1^2) - 100 = ... = 11\]
+
+Ahora, consultando las tablas buscamos el valor $\chi^2_{5;0.05} = 11.07 > T = 11$, entonces no estamos en la región crítica, por lo que no podemos rechazar la hipótesis.
+
+Al ser valores muy próximos, observamos que el p-valor\footnote{el menor nivel de confianza para poder rechazar} del contraste tendrá que ser algo mayor que $0.05$.
 
 \end{example}
 
-A la par que lo vemos en el ejemplo, vamos a definir los pasos que tenemos que seguir para comprobar si $H_0$ es cierta:
-\begin{enumerate}
-\item Se definen k clases $A_1,...,A_k$. En el caso del dado, los valores de cada cara.
-\end{enumerate}
+
+
+
+
 
 
 \subsubsection{Hipótesis nula compuesta}
