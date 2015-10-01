@@ -159,5 +159,77 @@ El mejor algoritmo conocido para resolver el $DLP$ en $(\ent_p)^*$ necesita tiem
 \end{defn}
 
 \begin{corol}
-El problema $DLP$ con $\appl{f}{(\ent_p)^*}{(\ent_N) *}$ es de un dólo sentido si $p$ es suficientemente grande.
+El problema $DLP$ con $\appl{f}{(\ent_p)^*}{(\ent_N)^*}$ es de un sólo sentido si $p$ es suficientemente grande.
 \end{corol}
+
+Una posible ``solución'' sería escribir una tabla en la que asociamos cada entero de $i \in\ent_N$ con la potencia $g^i$. No obstante, la construcción de esta tabla requeriría $e^{\log N}$ veces el tiempo de una multiplicación, lo que nos da un tiempo exponencial.
+
+
+\section{Usos criptográficos de las funciones de un sólo sentido}
+\begin{enumerate}
+\item \textbf{Compartición de clave privada}
+El problema es sencillo: Tenemos dos usuarios que quieren comunicarse de manera secreta pero, previamente, deben establecer una clave empleando para ello un canal no seguro.
+
+El procedimiento es el siguiente (Suponemos que los dos usuarios que quieren comunicarse son A y B):
+\begin{enumerate}
+\item A elige, al azar, un número $1<a<p$
+\item A envía a B $g^a$
+\item B elige, al azar, un número $1<b<p-1$
+\item B envía a A $g^b$
+
+\item La clave común se establece como $C=g^{ab}=(g^a)^b = (g^b)^a$
+\end{enumerate}
+
+El generador $g$ es perfectamente conocido por todo el mundo. Por tanto, aquel que quiera descifrar el mensaje conocerá perfectamente $g,g^a,g^b$ y necesitará calcular $g^{ab}$ para lo que necesita resolver un DLP. Si calcula $a$ ya lo tiene todo hecho.
+
+Tecnicamente, el atacante podría tratar de resolver un problema de Diffie-helman (DFP) en lugar del DLP. Este problema consistiría en encontrar $g^{ab}$ con los mismos datos que antes, pero sin pasar por calcular $a$.
+
+En general se cree que estos dos problemas son equivalentes, pero esto aún no ha sido demostrado.
+
+La seguridad del sistema radica en que no hay forma de resolver rápidamente el DLP pero en el momento en que desarrollemos ordenadores cuánticos con capacidad para trabajar con suficientes bits, tendremos la capacidad de resolver DLP de manera inmediata, con lo que el criptosistema de clave pública-privada dejará de ser seguro.
+
+Este procedimiento sólo nos explica como llegar a compartir una clave privada. Una vez tenemos esta clave, podríamos emplear cualquier método para cifrar, incluído cualquiera de los métodos clásicos vistos hasta ahora
+
+
+\item \textbf{Recibir mensajes cifrados sin necesidad de acordar claves a priori}
+
+Para hacer esto, $A$ hace pública una función de un sólo sentido que sólo $A$ sabe invertir. Si $B$ quiere envía un mensaje a $A$, sólo tiene que cifrarlos empleando esta función, obteniendo un mensaje que sólo $A$ es capaz de descifrar, pues solo ella conoce la función de descifrado.
+
+\item \textbf{Firmas}
+
+La idea de la \textbf{firma} es crear algo que no puedan imitar los demás. Así, el emisor puede emplear como firma el mensaje $m$ cifrado con la inversa de la función pública que él mismo presenta a los demás.
+
+Supongamos que queremos firmar con nuestro nombre. Evidentemente, no lo vamos a enviar tal cual, puesto que cualquiera podría copiarlo.
+
+Para evitarlo, tomamos nuestra función $f$ y enviamos $f^{-1}(firma)$ con lo que seremos los únicos capaces de escribir un mensaje $m$ tal que $f(m)=firma$, puesto que nadie más conocer $f^{-1}$.
+
+Sin embargo, tenemos un problema. Una vez que enviemos la firma, cualquiera puede copiarla y reutilizarla, aún sin concoer $f^{-1}$. Copia y reenvía $f^{-1}(firma)$ y puede suplantar al original.
+
+Por tanto, lo que se hace es emplear como firma $f^{-1}($mensaje enviado $)$.
+
+Pero nuevamente tenemos un problema y es que si cada vez que enviamos un mensaje tenemos que emplear una firma tan larga como el mensaje, la eficiencia se ve drásticamente reducida.
+
+Para solventar este problema existe una amplia variedad de opciones. Una de ellas es el empleo de una función HASH que ``resume el mensaje''. En la práctica se emplean funciones HASH criptográficamente seguras.
+
+Esto consiste en emplear funciones resistentes a colisiones, es decir, funciones HASH tales que en la práctica resulta prácticamente imposible que se produzcan colisiones.
+
+\begin{remark}
+El receptor calculara la imagen por $f$ de la firma y la función $hash$ del mensaje. Si obtenemos el mismo resultado, podemos confiar en la autoría del mensaje.
+\end{remark}
+
+\item \textbf{Identificación}
+
+Supongamos que queremos acceder a un sistema que requiere una clave.
+
+En esta ocasión la relación clave-usuario estará almacenada en el sistema lo que deja un vacío de seguridad, pues el administrador del sistema tendrá acceso a las claves.
+
+Lo que se puede hacer para proteger al usuario es que el sistema almacene la relación usuario-$f(\text{clave})$. Así a la hora de autentificarnos el sistema recibe la clave, \textbf{no la guarda}, calcula su imagen a por nuestra $f$ y compara.
+
+\item \textbf{Challenge: Identificación a partir de otro}
+
+\begin{enumerate}
+\item Suponemos que el usuario $A$ quiere que el usuario $B$ se identifique.
+\item Entonces el usuario $A$ le envía un reto a $B$, es decir, le envía $f_B(m)$
+\item Si el usuario $B$ es capaz de responder con $f_A(m)$ es que es quien dice ser.
+\end{enumerate}
+\end{enumerate}
