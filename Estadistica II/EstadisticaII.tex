@@ -44,7 +44,7 @@ Dada una variable aleatoria definimos:
 Propiedades:
 \begin{enumerate}
 \item $\mathbb{E}(aX) = a\mathbb{E}(X)$
-\item $\mathbb{E}(X+Y) = \mathbb{E}(X)-\mathbb{E}(Y)$
+\item $\mathbb{E}(X+Y) = \mathbb{E}(X)+\mathbb{E}(Y)$
 \item $\mathbb{E}(X+c) = \mathbb{E}(X)+c$ (La esperanza de una constante es la propia constante)
 \end{enumerate}
 \item Varianza: $Var(X) = \mathbb{E}((X-\mathbb{E}(X))^2) =\mathbb{E}((X-\mu)^2) = \mathbb{E}(X^2)-\mu^2$
@@ -608,19 +608,101 @@ Es importante destacar que la distribución no depende del valor concreto por se
 Hipótesis no paramétrica: hipótesis que no se formula en términos de un número finito de parámetros.
 
 \begin{enumerate}
-\item Bondad de ajuste: A partir de una muestra $X_1,...,X_n \equiv F$ de variables aleatorias independientes idénticamente distribuidas, contrastar:
+\item Bondad de ajuste: A partir de una muestra $X_1,...,X_n \equiv F$ de muestras (observaciones) \textcolor{red}{(son muestras o variables aleatorias o es simple notación?)} aleatorias independientes idénticamente distribuidas, contrastar:
 \begin{itemize}
 \item $H_0: F=F_0$ donde $F_0$ es una distribución prefijada.
 \item $H_0: F \in \{F_O : O\in H\}$ H es el espacio paramétrico.
 \end{itemize}
-\item Homogeneidad: Dados $X_1,...,X_n \equiv F$ y $Y_1,...,Y_n \equiv G$ de variables aleatorias independientes idénticamente distribuidas. Contrastar $H_0: F=G$.
-\item Hipótesis de independencia: Dada $(X_1,Y_1),...,(X_n,Y_n) \equiv F$ de variables aleatorias independientes idénticamente distribuidas. Contrastar $H_0: X$ e $Y$ son independientes.
+\item Homogeneidad: Dados $X_1,...,X_n \equiv F$ y $Y_1,...,Y_n \equiv G$ de muestras (observaciones) aleatorias independientes idénticamente distribuidas. Contrastar $H_0: F=G$.
+\item Hipótesis de independencia: Dada $(X_1,Y_1),...,(X_n,Y_n) \equiv F$ de muestras (observaciones) aleatorias independientes idénticamente distribuidas. Contrastar $H_0: X$ e $Y$ son independientes.
 \end{enumerate}
 
 \subsection{Contraste $\chi^2$ de bondad de ajuste}
-Consideramos una distribución totalmente especificada bajo $H_0: X_1,...,X_n \equiv F$ de variables i.i.d.
+Consideramos una distribución totalmente especificada bajo $H_0: X_1,...,X_n \equiv F$ de muestras i.i.d.
 
-$H_0: F=F_0$ es la hipótesis nula y queremos ver que F, que es la distribución obtenida con los datos verdaderos (obtenidos empíricamente) es igual a $F_0$ que es la distribución teórica.
+$H_0: F=F_0$ es la hipótesis nula y queremos ver que F, que es la distribución obtenida con los datos verdaderos (las muestras $X_i$ obtenidas empíricamente) es igual a $F_0$ que es la distribución teórica.
+
+\textbf{Notación: }$P_A(B)$ es la probabilidad de B condicionada a A.
+
+Vamos a definir los pasos que tenemos que seguir para comprobar si $H_0$ es cierta:
+\begin{enumerate}
+\item Se definen k clases $A_1,...,A_k$. 
+
+\item Se cuentan cuántos datos caen en cada clase (frecuencias observadas). Cada clase la llamaremos $O_i=\#\{j:X_j\in A_i\}$.
+
+\item Se calculan las frecuencias esperadas si $H_0$ fuese cierta. A este dato lo llamaremos $\mathbb{E}_i$ o $\mathbb{E}_{H_0}(O_i)$: 
+\[
+\mathbb{E}_{H_0}(O_i) = np_i
+\]
+
+\obs Las $O_i$ son variables aleatorias que se distribuyen como una binomial $B(n, p_i=P_{H_0}(A_i))$. Siendo $n$ el número de intentos y $p_i$ la probabilidad de que una muestra pertenezca a la clase $A_i$ bajo la hipótesis nula. 
+
+La notación puede resultar liosa, a grades rasgos:
+\begin{itemize}
+\item $O_i$ tendrá un valor que será la frecuencia observada de una clase i. Es decir, el número de observaciones que caen en una la clase i.
+\item $\mathbb{E}_{H_0}(O_i)$ será el valor esperado de $O_i$ considerando la hipótesis nula como cierta. La esperanza de una $B(n,p)$ es igual a $np$.
+\end{itemize}
+
+\item Se comparan las frecuencias observadas y esperadas mediante el estadístico de Pearson:
+\[
+T = \sum_{i=1}^n \frac{(O_i-E_i)^2}{E_i}
+\]
+
+Se divide entre $E_i$ para darle más importancia a la diferencia si el valor es pequeño, Por ejemplo, si E=100 y O=101, no es lo mismo que si E=1 y O=2. Sin embargo, si no dividiéramos por $E_i$ nos daría el mismo resultado.
+
+\item Se rechaza $H_0$ en la región crítica $R=\{T > c\}$ donde c es tal que $\alpha=P_{H_0}(T>c)$. Es decir, $\alpha$ (también llamado 'nivel de significación') es la probabilidad de rechazar la hipótesis nula siendo esta cierta. O dicho de otra forma, la probabilidad de entrar en la región de rechazo $'T>c'$ considerando que $H_0$ es cierta.
+\end{enumerate}
+
+
+Ahora vamos a ver qué podemos decir del estadístico de Pearson 'T':
+\[
+O_i=B(n,p_i) \simeq N(np_i, np_i(1-p_i))
+\]
+
+Imaginémonos por un momento que podríamos despreciar el término $np_i^2$ de la varianza de la normal. Nos quedaría:
+\[
+\simeq N(np_i, np_i(1-p_i)) \simeq N(np_i, np_i) \simeq N(E_i, E_i)
+\]
+
+Que por el Teorema Central del Límite (\url{https://es.wikipedia.org/wiki/Teorema_del_l%C3%ADmite_central}) nos queda:
+\[
+\frac{O_i-E_i}{\sqrt{E_i}} \simeq N(0,1)
+\]
+
+Y como deberíamos saber, una distribución $\chi^2_k$  no es más que una distribución de probabilidad continua con un parámetro k que representa los grados de libertad de la variable aleatoria $X = Z_1^2 + \cdots + Z_k^2$, donde $Z_i$ son variables aleatorias normales independientes de media cero y varianza uno. Por tanto:
+
+\[
+\frac{(O_i-E_i)^2}{E_i} \simeq \chi^2_1
+\]
+
+Por tanto, como tenemos k clases, podríamos tener $T\simeq \chi^2_k$. pero por otro lado sabemos que $O_1,O_2,...,O_k=n$, esta restricción hace que no haya una independencia entre todos los sumandos $O_i$, por tanto nos queda: $T\simeq \chi^2_{k-1}$.
+
+Finalmente nos queda que la región de rechazo, dado un nivel de significación $\alpha$, se alcanza cuando el estadístico de Pearson T, obtenido a partir de los datos muestrales, vale más que $\chi^2_{k-1}, \alpha$. $\chi^2_{k-1}, \alpha$ es, dada la función de densidad de una $\chi^2_{k-1}$, el valor del eje de abscisas que hace que se quede un $\alpha*100\%$ del área encerrada bajo la curva a la derecha de ese valor:
+
+%DIBUJOOOO
+
+\obs
+\begin{enumerate}
+\item  Tal y como lo hemos definido tenemos que $\sum_{i=1}^k O_i = n$ y que $\sum_{i=1}^k E_i = \sum_{i=1}^k np_i= n(p_1+p_2+...+p_k) = n$, por tanto tenemos:
+\[
+T=\sum_{i=1}^k \frac{(O_i-E_i)^2}{E_i} = \sum_{i=1}^k \frac{O_i^2}{E_i}-n
+\]
+
+\item Por definición de $\chi^2_{k-1}$, su esperanza es:
+\[
+\mathbb{E}_{H_0}(T) \simeq k-1
+\]
+
+\item Por definición de $\chi^2_{k-1}$, su varianza es:
+\[
+Var_{H_0}(T) \simeq 2(k-1)
+\]
+
+\begin{defn}[p-valor]
+valor de $\alpha$ mínimo con el que se empieza a rechazar la hipótesis nulo.
+\end{defn}
+
+\end{enumerate}
 
 \begin{example}
 Tiramos un dado 100 veces y obtenemos:
@@ -633,17 +715,30 @@ Frecuencia & 10 & 20 & 20 & 10 & 15 & 25\\
 \hline
 \end{tabular}
 
-Y consideramos $H_0: p_i=1/6 \forall i=1,...,6$. Es decir que el dado no está trucado y cada cara tiene la misma probabilidad ($p_i$) de salir.
+Y consideramos $H_0: p_i=1/6 \text{ } \forall i=1,...,6$. Es decir que el dado no está trucado y cada cara tiene la misma probabilidad ($p_i$) de salir.
 
 Por otro lado consideramos $H_1: \exists i$ tal que $p_i\neq 1/6$. Es decir, que el dado está trucado y hay caras que salen mas que otras.
 
-\end{example}
-
-A la par que lo vemos en el ejemplo, vamos a definir los pasos que tenemos que seguir para comprobar si $H_0$ es cierta:
+Seguimos los pasos:
 \begin{enumerate}
-\item Se definen k clases $A_1,...,A_k$. En el caso del dado, los valores de cada cara.
+\item En este caso cada clase será la cara del dado que sale, habrá por tanto 6 clases: k=6.
+\item Se cuentan cuantos datos caen en cada clase: $O_1=10$, $O_2=20$, $O_3=20$, $O_4=10$, $O_5=15$, $O_6=25$
+\item Se calculan las frecuencias esperadas si $H_0$ fuese cierta. En este caso $n=10+20+20+10+15+25=100$ y $p_i=1/6 \text{ } \forall i=1,...,6$. Nos queda: $\mathbb{E}_i=np_i = 100 \frac{1}{6}=100/6$.
+\item Se obtiene el estadístico de Pearson:
+\[
+T=\sum_{i=1}^n \frac{O_i^2}{E_i}-n = \frac{6}{100}(10^2+20^2+20^2+10^2+15^2+25^2)-100=11
+\]
+\item Rechazamos $H_0$ si $T>c$. En este caso, consideramos un nivel de significación $\alpha = 0.05$. Sabemos que $\alpha = P_{H_0}(T>c)$ Como tenemos 6 clases, el estadístico de Pearson tendrá una distribución $\chi^2_5$. Buscamos en la tabla (mirar apéndice) y obtenemos que $\chi^2_5, 0.05 = 11.07$. Este será nuestro valor de c.
+
+Puesto que nuestra región de rechazo es $R=(T>c)$, y tenemos que $11>11.07$, no podemos rechazar la hipótesis nula, y por tanto, no podemos concluir que el dado esta trucado.
+
+Si consideramos un valor de significación $\alpha = 0.06$ si hubiéramos rechazado la hipótesis nula (aunque con un 6\% de opciones de equivocarnos) y hubiéramos concluido que el dado esta trucado.
+
+%Meter dibujo de gráfico chi cuadrado con 5 grados de libertad
+%Meter tabla de chi cuadrado
 \end{enumerate}
 
+\end{example}
 
 
 
