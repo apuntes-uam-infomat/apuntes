@@ -256,3 +256,5 @@
 \essup#m
 \convsmed#m
 \mpos#m
+\msgn#m
+\mfin#m
