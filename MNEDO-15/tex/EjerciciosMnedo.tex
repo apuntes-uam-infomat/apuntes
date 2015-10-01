@@ -15,7 +15,21 @@ Recordamos que el método de Euler consiste en emplear
 
 Por inducción podemos resolverlo:
 
-TODO
+\begin{equation*}
+	\begin{multlined}[0.8\textwidth]
+		\underline{n=0}: \quad y_1=y_0+h(t_0) = h(t_0)\\[1em]
+		\shoveleft{\underline{n=1}: \quad y_2 = y_1 + hf(t_1) = hf(t_0) + hf(t_1)}\\
+		\shoveleft{\qquad \qquad \quad = h\left[ f(t_0) + f(t_1) \right]}\\
+	\end{multlined}
+\end{equation*}
+
+La hipótesis de inducción es para $N-1$: $y_N = \sum_{k=0}^{N-1} f(t_k)h$. Así que solo nos falta demostrar que se cumple en $N$:
+\begin{equation*}
+	\begin{multlined}[0.8\textwidth]
+		\underline{n=N}: \quad y_{N+1} = y_N + hf(t_N) = \sum_{k=0}^{N-1} f(t_k)h + hf(t_N) = \sum_{k=0}^N f(t_k)h
+	\end{multlined}
+\end{equation*}
+
 \end{problem}
 
 \begin{problem}[5]
@@ -27,28 +41,45 @@ Dado $α \in [0,1]$ encontrar el orden del método:
 Lo que debemos hacer es calcular el residuo cuya definición, recordemos, era:
 
 \begin{defn}[Residuo]
-Cuánto de lejos etá la solución de satisfacer en un paso la fórmula de recurrencia
+Cuánto de lejos está la solución de satisfacer en un paso la fórmula de recurrencia
 \end{defn}
 
 Según esta definición, nuestro residuo será:
-\[R_n = y(t_{t+1}) - y(t_n) -hf(t_n+(1-α)h, αy(t_n)+(1-α)y(t_{n+1}))\]
+\[R_n = \underbrace{y(t_{t+1})}_{\label{ej1-5_tresTerminos}1} - \left\{ \underbrace{y(t_n)}_{2} + \underbrace{hf(t_n+(1-α)h, αy(t_n)+(1-α)y(t_{n+1}))}_{3} \right\}\]
 
-Para conocer el orden de este residuo vamos a calcular los siguientes desarrollos de Taylor:
-\[y(t_{n+1}) = y(t_n)+y'(t_n)h + y''(t_n)\frac{h^2}{2} + o(h^3)\]
+Para conocer el orden de este residuo nos serviremos de los desarrollos de Taylor:
+\[\hyperref[ej1-5_tresTerminos]{1} \quad y(t_{n+1}) = y(t_n)+y'(t_n)h + y''(t_n)\frac{h^2}{2} + O(h^3)\]
 
-\[h\left( f(t_n,y(t_n))+\underbrace{f_x(t_n,y(t_n))\cdot (1-α)h +\underbrace{f_y(t_n,y(t_n))(1-α)h\left( y'(t_n)+y''(t_n)\frac{h}{2}+o(h^2)\right)}_{f_y(t_n,y(t_n))y'(t_n)(1-α)h + o(h^2)}}_{(1-α)h y''(t_n) + o(h^2)}\right) = \]
+La segunda variable para la $f$ que aparece en \hyperref[ej1-5_tresTerminos]{3} se puede desarrollar como:
+\[αy(t_n) + (1-α)y(t_{n+1}) = αy(t_n) + (1-α)\left[y(t_n) + y'(t_n)h +  y''(t_n)\frac{h^2}{2} + O(h^3) \right] \]
+\[\qquad \qquad \qquad \qquad = y(t_n) + (1-α)\left[ y'(t_n)h + y''(t_n) \frac{h^2}{2} + O(h^3) \right]\]
 
-\[=hy'(t_n)+(1-α)h^2y''(t_n)+o(h^3)\]
+Por tanto el desarrollo de Taylor de \hyperref[ej1-5_tresTerminos]{3} puede expresarse de la siguiente forma:
 
-Finalmente llegamos a
-\[R_n = y''(t_n)h^2 \left(\frac{1}{2}-(1-α) \right)+o(h^3)\]
+\[h\left( f(t_n,y(t_n))+\underbrace{f_x(t_n,y(t_n))\cdot (1-α)h +\underbrace{f_y(t_n,y(t_n))(1-α)h\left( y'(t_n)+y''(t_n)\frac{h}{2}+O(h^3)\right)}_{f_y(t_n,y(t_n))y'(t_n)(1-α)h + O(h^2)}}_{(1-α)h y''(t_n) + O(h^2)}\right) = \]
 
-Ahora tenemos dos casos posibles:
+\[=hy'(t_n)+(1-α)h^2y''(t_n)+O(h^3)\]
+
+De modo que las 3 expresiones las tenemos como:
+\begin{equation*}
+	\begin{multlined}[.8\textwidth]
+		\hyperref[ej1-5_tresTerminos]{1} =  \quad y(t_{n+1}) = y(t_n) + y'(t_n) h + y''(t_n) \frac{h^2}{2} + O(h^3) \\
+		\shoveleft{\hyperref[ej1-5_tresTerminos]{2} =  \quad y(t_n)} \\
+		\shoveleft{\hyperref[ej1-5_tresTerminos]{2} =  \quad hy'(t_n) + (1-α) h^2 y''(t_n) + O(h^3)}\\
+	\end{multlined}
+\end{equation*}
+
+
+Sumando \hyperref[ej1-5_tresTerminos]{1} y \hyperref[ej1-5_tresTerminos]{3}, y restando \hyperref[ej1-5_tresTerminos]{2} obtenemos:
+\[R_n = y''(t_n)h^2 \left(\frac{1}{2}-(1-α) \right)+O(h^3)\]
+
+
+Ahora tenemos dos casos posibles, y sabiendo que el orden de un método es $\frac{R_n}{h}$:
 \begin{itemize}
 \item α=1/2
-\[R_n=o(h^3) \implies \text{ orden } \geq 1\]
+\[R_n=O(h^3) \implies \text{ orden } \geq 2\]
 \item α$\neq$1/2
-\[R_n = y''(t_n)h^2 \left(\frac{1}{2}-(1-α) \right) \implies \text{ orden } 1\]
+\[R_n = y''(t_n)h^2 \left(\frac{1}{2}-(1-α) \right) + O(h^3) \implies \text{ orden } 1\]
 \end{itemize}
 
 \end{problem}
