@@ -12,60 +12,138 @@ $q_{i, 1} \wedge \dots \wedge q_{i,n_i}$, con $n_i\ge1$,
 y cada $q_{i, j}$ es o bien at\'omica o la negaci\'on de una f\'ormula at\'omica.
 Por ejemplo, si $p, q, $ y $r$ son \'atomos, entonces $\neg p$, $p\vee q$,
 $p \wedge q \wedge r$, y  $p \vee (q \wedge r)$ est\'an en forma normal disyuntiva,
-mientras que  $p \wedge (q \vee r)$ no lo est\'a. Probar que toda fbf
+mientras que  $p \wedge (q \vee r)$ no lo est\'a.
+
+Probar que toda fbf
 es equivalente a una fbf en forma normal disyuntiva (las formas
 normales conjuntivas se definen de modo an\'alogo, intercambiando conjunciones
 y disyunciones, y el resultado tambi\'en es cierto para ellas).
 
 \solution
 
+La forma más clara de demostrar que toda FBF puede expresarse en FND es mediante la descripción del algoritmo empleado para llevar a cabo esta conversión.
+
+El algoritmo es el siguiente:
+\begin{enumerate}
+\item \textbf{Eliminación de la doble implicación}
+
+Siempre que tengamos algo de la forma $(A \leftrightarrow B)$ lo convertimos en la representación equivalente:
+\[(A \to B) \y (B \to A)\]
+
+\item \textbf{Eliminación de la implicación}
+
+Siempre que tengamos una FBF de la forma: $(A \to B)$ lo transformamos en la representación equivalente:
+
+\[((\neg A) \Or B)\]
+
+\item \textbf{Desplazar los $\not$ hacia el interior}
+
+Empleamos las leyes de Morgan para transformar FBFs de la forma $\neg(A \Or B)$ y $\neg(A \y B)$ en:
+\[((\neg A) \y (\neg B)) \text{ y } ((\neg A) \Or (\neg B)) \text{ respectivamente}\]
+
+\item \textbf{Distribuir ANDs hacia dentro sobre ORs}
+
+Todas las FBFs de la forma $(A \y (B \Or C))$ las convertiremos en su representación equivalente:
+
+\[(A \y B) \Or (A \y C)\]
+
+obteniendo una FBF en FND.
+
+\end{enumerate}
+
+Por tanto, queda claro que dada cualquier FBF, si le aplicamos el algoritmo que acabamos de definir, queda convertida a una FBD equivalente.
 
 \end{problem}
 
-\begin{problem}
+\begin{problem}[2]
 Sea $A=\{p, q, r\}$, sea $L = A \cup \{\neg, \vee, \wedge, ), (\}$,
 y sea $\sigma : A\to \{0,1\}$ una funci\'on arbitraria. Denotando tambi\'en
 por $\sigma$ su extensi\'on \'unica a una valoraci\'on Booleana definida en $\operatorname{fbf}(L)$, decidir razonadamente
-si existe una fbf $F$ tal que $\sigma (F) = 1$. Decidir razonadamente
+si existe una fbf $F$ tal que $\sigma (F) = 1$.
+
+Decidir razonadamente
 qu\'e ocurre si la cardinalidad de $A$ es 2015 en vez de 3.
 \solution
 
+Por supuesto que existe la FBF definida: $(p \Or ( \neg p ))$
+
+Para comprobarlos basta con ver que:
+\[σ(p \Or ( \neg p )) = \max\{σ(p), 1 + σ(p)\} = \left\{ \begin{array}{lcc}
+            \max\{0,1\} = 1 &   si  & σ(p) = 0 \\
+            \max\{1,0\} = 1 &  si  & σ(p)=1
+             \end{array}
+   \right.\]
+
+El problema no cambiar al variar la cardinalidad de $A$ de modo que cuando la cardinalidad de $A$ sea 2015 seguimos teniendo la misma FBF.
+
+\textcolor{red}{Deduzco que está mal mi razonamiento pero no se por qué. Debe haber alguna definición que no estoy entendiendo bien pero no se cual.}
 \end{problem}
 
-\begin{problem}
+\begin{problem}[3]
 Sea $\sigma$ una valoraci\'on Booleana, y sea $T :=\{p\in FBF(L) : \sigma(p) = 1\}$.
 Demostrar que $T$ es una teor\'{\i}a completa.
 \solution
 
+Una teoría será completa si dada una FBF cualquiera $q$ se tiene que $T \vdash q$ o $T \nvdash q$
+
+Si tenemos que $σ(q)=1$ entonces $q \in T$, por definición de $T$, y por tanto, $q \vdash T$.
+
+Por otro lado, si $σ(q)=0$ es claro que no puede deducirse $q$ a partir de $T$. Vamos a demostrarlo.
+
+Toda FBF que pueda deducirse de $T$ es una tautología (puesto que en clase hemos visto que $T \vdash x \implies T \vDash x$).
+
+Por la definición de tautología vista en clase, sabemos que todo modelo de $T$ tendrá evaluación verdadera sobre la tautología. Es decir:
+
+\[T \vdash x \implies σ(x) = 1 \ \forall x\in FBF(L)\]
+
+con lo que queda claro que si $σ(x)=0 \implies T \nvdash x$
 \end{problem}
 
-\begin{problem}
+\begin{problem}[4]
 Sea $G$ un grafo infinito, tal que todos sus subgrafos finitos pueden colorearse con cuatro colores.
 Decidir razonadamente si $G$ puede colorearse con cuatro colores.
 \solution
 
+%La solución a este ejercicio puede encontrarse en el libro de la asignatura
+Sea $G=(V,E)$ un grafo infinito, definimos $A=V \times \{1,2,3,4\}$ como un conjunto de átomos, donde cada átomo $(v,i)$ indica que el nodo $v$ tiene color $i$.
+
+Así, para el grafo $G=(V,E)$, poder colorearlo con 4 colores implica que el siguiente conjunto $\sum \subset \text{ Prop} A$ tiene un modelo:
+\[\sum = \{(v,1)\Or (v,2) \Or (v,3) \Or (v,4) \ : \ v \in V\} \cup \{\neg((v,i)\y(v,j)) \ : v \in V, \ 1 \leq i < j \leq 4\}\atop \cup \{\neg((v,i)\y (w,i)) \ : \ (v,w) \in E,  1 \leq i \leq 4\}\]
+
+Puesto que todo subgrafo finito de $G=(V,E)$ es coloreable con 4 colores, tenemos que todo subconjunto finito de $\sum$ tiene un modelo y, por compacidad, $\sum$ tiene un modelo.
+
 \end{problem}
 
-\begin{problem}
+\begin{problem}[5]
 Sea $X$ un conjunto parcialmente ordenado. Decidir razonadamente si el orden parcial puede
 extenderse a un orden lineal, o total.
 \solution
 
+
 \end{problem}
 
-\begin{problem}
+\begin{problem}[6]
 Expresar ``$f$ es una funci\'on inyectiva"  en un lenguaje de primer orden.
 \solution
 
+Siendo la función $f$ de la forma $\appl{f}{A}{B}$
+
+\[\forall x,y \in A \ f(x)=f(y) \iff x=y \]
+
 \end{problem}
 
-\begin{problem}
+\begin{problem}[7]
 Expresar ``$f$ es una funci\'on sobreyectiva"  en un lenguaje de primer orden.
 \solution
 
+
+Siendo la función $f$ de la forma $\appl{f}{A}{B}$
+
+\[\forall y \in B \ \exists x \in A \ f(x)=y\]
+
 \end{problem}
 
-\begin{problem}
+\begin{problem}[8]
 Una forma de decir que un conjunto $X$ es finito consiste en afirmar que toda funci\'on inyectiva de $X$ en $X$
 es sobreyectiva. Usar cuantificaci\'on sobre todas las funciones para probar que la noci\'on ``$X$ es finito"
 puede expresarse en una l\'ogica de segundo orden.
@@ -73,25 +151,43 @@ puede expresarse en una l\'ogica de segundo orden.
 
 \end{problem}
 
-\begin{problem}
+\begin{problem}[9]
 Expresar la definici\'on habitual de  ``$f$ es continua"  en un lenguaje de primer orden (usando epsilones y deltas;
 interpretamos que el dominio y el rango de $f$ son los reales, con todas sus funciones habituales, valor absoluto, suma, etc.).
 \solution
 
 \end{problem}
 
-\begin{problem}
+\begin{problem}[10]
 Expresar la definici\'on habitual de  ``$f$ es uniformemente continua"  en un lenguaje de primer orden (usando epsilones y deltas).
 
 
 \solution
 
+Siendo la función $f$ de la forma $\appl{f}{A}{B}$
+
+\[\forall ε \exists δ (ε>0)\y(δ>0) \forall x_1,x_2 \in A D(x_1,x_2,δ) \implies D(f(x_1),f(x_2),ε)\]
+
+Siendo el predicado $D$:
+\[D(a,b,d) = \norm{a-b} < d\]
+es decir, tomará el valor 1 cuando la distancia entre los puntos $a$, $b$ sea menor que $d$ y 0 en caso contrario.
+
+
 \end{problem}
 
-\begin{problem}
+\begin{problem}[11]
 Buscar los axiomas de la Aritm\'etica de Peano, entender lo que dicen, y entregarlos escritos.
 
 \solution
+
+Los 5 Axiomas de Peano son:
+\begin{enumerate}
+\item Existe un número natural 1. En otros términos,1 está en N, el conjunto de los números naturales.
+\item Todo número natural n tiene un sucesor n* (este axioma es usado para definir posteriormente la suma).
+\item 1 no es el sucesor de algún número natural.
+\item Si hay dos números naturales n y m con el mismo sucesor, entonces n y m son el mismo número natural.
+\item Si 1 pertenece a un conjunto K de números naturales, y dado un elemento cualquiera n, el sucesor n* también pertenece al conjunto K, entonces el conjunto K debe ser el conjunto de todos los números naturales.2 Este último axioma es el principio de inducción matemática.
+\end{enumerate}
 \end{problem}
 
 
