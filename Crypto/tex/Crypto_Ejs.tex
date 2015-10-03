@@ -1380,3 +1380,119 @@ Por último, debemos expresar esos números en base $N$ para poder tener el mens
 
 Poderosa magia hombre blanco, obtuvimos un resultado razonable.
 \end{problem}
+
+\section{Control 2 (13-10-2014) Modelo A}
+
+Los dos ejercicios siguientes se desarrollan en el mismo contexto:
+
+\begin{enumerate}
+\item Los mensajes (en claro y cifrados) se escriben con un alfabeto de 28 letras, las 27 del castellano y un punto.
+
+\item Los mensajes se cifran utilizando funciones lineales $\appl{f_A}{\ent_{28}^2}{\ent_{28}^2}$ de la forma $f_A(x) = Ax$
+\end{enumerate}
+
+\begin{problem}[1]
+Demuestra que hay exactamente 193536 funciones $f_A$ como las indicadas que puedan usarse para cifrar
+
+\solution
+\doneby{Pedro}
+
+El objetivo es contar el número de matrices de orden 2 invertibles en $M_2(\ent_{28})$.
+
+Con las fórmulas vistas en clase tenemos que:
+\[GL_2(\ent_{28})=GL_2(\ent_{7})\cdot GL_2(\ent_{2^2})\]
+siendo $GL_2(\ent_x)$ el número de matrices invertibles de orden 2 con coeficientes ent $\ent_x$
+
+El caso $GL_2(\ent_7)$ es sencillo por ser 7 un número primo. La forma de razonarlo consiste en tomar el total de matrices de orden 2 en con coeficientes en $\ent_7$ y restar aquellas no invertibles (con columnas proporcionales). Así tenemos:
+
+\[GL_2(\ent_7) = 7^4 -((7^2 -1)*7+7^2) = 7^4 -7^3-7^2+7 = 2016\]
+
+En el casto de $GL_2(\ent_4)$, por ser $4$ potencia de un primo, tenemos que reducir las matrices a $\ent_2$, contar cuántas hay con esos coeficientes y luego deshacer la reducción, sabiendo que hay 2 números en $\ent_4$ que puedan dar lugar al mismo elemento en $\ent_2$ (mirar los apuntes para una explicación más detallada).
+
+Así nos queda:
+\[GL_2(\ent_4) = 2^4 \cdot GL_2(\ent_2)=16 \cdot 6 = 96\]
+
+Por último, tenemos:
+\[GL_2(\ent_{28}) = 96 \cdot 2016 = 193536\]
+
+
+
+\end{problem}
+
+\begin{problem}[2]
+Usando la función $f_A$, resulta que al texto en claro ``HABLAR'' le corresponde el texto cifrado ``HHFEER''. Encuentra la matriz $A$ (que es única)
+
+\solution
+
+\doneby{Pedro}
+
+Con la relación que tenemos entre el texto original y el texto cifrado podemos plantear la siguiente ecuación matricial:
+
+\[A\left( \begin{array}{cc}
+  7 & 2 \\
+  0 & 11
+  \end{array} \right) = \left( \begin{array}{cc}
+  7 & 5 \\
+  7 & 4
+  \end{array} \right)\]
+
+Pero no podemos despejar la matriz $A$ puesto que el determinante de la matriz que la acompaña no es coprimo con 28 y, por tanto, no tiene inversa.
+
+Podemos observar que no hay forma de plantear una ecuación, con los datos que tenemos, tal que podamos despejar la matriz $A$. Por tanto tendremos que trabajar un poco más duro.
+
+Tomamos la ecuación:
+\[A\left( \begin{array}{cc}
+  2  & 0\\
+  11 & 18
+  \end{array} \right) = \left( \begin{array}{cc}
+  5 & 4\\
+  4 & 18
+  \end{array} \right) \mod 28\]
+
+y podemos reducirla módulo 7, manteniendo la igualdad, con lo que tenemos:
+
+\[A =  \left( \begin{array}{cc}
+  5 & 4\\
+  4 & 4
+  \end{array} \right) \left( \begin{array}{cc}
+  2  & 0\\
+  4 & 4
+  \end{array} \right)^{-1} = \left( \begin{array}{cc}
+  5 & 4\\
+  4 & 4
+  \end{array} \right) \cdot \left(\frac{1}{8}=1\right) \cdot \left( \begin{array}{cc}
+  4  & -4\\
+  0 & 2
+  \end{array} \right) = \left( \begin{array}{cc}
+  6 & 2\\
+  2 & 6
+  \end{array} \right) \mod 7\]
+
+ Ahora ya sabemos cómo es la matriz $A \mod 7$
+
+ Con un razonamiento similar, partiendo de la ecuación primera que planteamos, podemos ver cómo es la matriz $A$ módulo 4:
+
+ \[A = \left( \begin{array}{cc}
+  3 & 1 \\
+  3 & 0
+  \end{array} \right) \left( \begin{array}{cc}
+  3 & 2 \\
+  0 & 3
+  \end{array} \right)^{-1} = \left( \begin{array}{cc}
+  3 & 1 \\
+  3 & 0
+  \end{array} \right) \left( \begin{array}{cc}
+  3 & 0 \\
+  -2 & 3
+  \end{array} \right) = \left( \begin{array}{cc}
+  3 & 3 \\
+  1 & 0
+  \end{array} \right) \mod 4\]
+
+ Conociendo la matriz módulo 4 y módulo 7, podemos deducir sus coeficientes módulo 28:
+
+ \[A = \left( \begin{array}{cc}
+  27 & 23\\
+  9 & 20
+  \end{array} \right) \mod 28\]
+\end{problem}
