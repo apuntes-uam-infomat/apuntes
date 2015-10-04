@@ -127,6 +127,7 @@ P(t|c) = \frac{P(c|t)·P(j)}{P(c)} = \frac{0.75·0.5}{P(c)}
 
 Como $P(j|c) + P(t|c) = 1$, tenemos que $P(c) = 0.5·0.5 + 0.75·0.5 = 0.625$, entonces:
 
+\label{calculadoAnteriomente1}
 \[P(j|c) = 0.4\]
 \[P(t|c) = 0.6\]
 
@@ -134,19 +135,26 @@ Según el criterio MAP diríamos que es más probable que la moneda esté trucad
 
 Por algún motivo, calculamos:
 
-\[P(j|x) = ... = \frac{2}{3}\]
-\[P(j|x) = ... = \frac{1}{3}\]
+\[P(j|x) = \frac{P(x|j)·P(j)}{P(x)} = \frac{0.5·0.5}{P(x)} = \frac{0.25}{P(x)}\]
+\[P(t|x) = \frac{P(x|t)·P(t)}{P(x)} = \frac{0.25·0.5}{P(x)} = \frac{0.125}{P(x)}\]
 
+Normalizando obtenemos:
+\label{calculadoAnteriomente2}
+\[P(j|x) = \frac{2}{3}\]
+\[P(t|x) = \frac{1}{3}\]
 
+\subsection{Tasas de error}
+
+Vamos a estudiar las tasas de error siguiendo con el ejemplo de las monedas.
 
 \paragraph{Existen 4 modelos posibles:}
 Tenemos:
 \begin{itemize}
-\item Espacio de atributos = $\{c,x\}$ 
-\item Clase = $H\in\{j,t\}$
+\item Espacio de atributos = $\{c,x\}$\footnote{cara o cruz}
+\item Clases posibles\footnote{Clases que puede asignar nuestra hipótesis H} = $H\in\{j,t\}$
 \end{itemize}
 
-Vamos a construir los 4 modelos:
+Vamos a construir los 4 modelos posibles:
 
 \begin{itemize}
 	\item $h_1(c) = j$ y $h_1(x) = t$ 
@@ -155,26 +163,78 @@ Vamos a construir los 4 modelos:
 	\item $h_4(c) = t$ y $h_4(x) = t$ 
 \end{itemize}
 
-Con lo calculado anteriormente, observamos que el modelo $h_1$ es elegido según el criterio MAP.
+Con lo calculado anteriormente (\ref{calculadoAnteriomente1} y \ref{calculadoAnteriomente2}), observamos que el modelo $h_2$ es elegido según el criterio MAP. 
 
 Pero podemos plantearnos, ¿qué modelo es mejor? Pues el que menos se equivoque. Vamos entonces a calcular las probabilidades de error de los modelos.
 
-\subparagraph{$h_1$:} $P(error) = p(j,c) + p(t,x) = P(j|c)·P(c) + P(x|t)·P(t) = ... = 37.5\%$
-\subparagraph{$h_2$:} $P(error) = p(j,x) + p(t,c) = P(j|x)·P(x) + P(c|t)·P(t) = ... = 62.5\%$
-\subparagraph{$h_3$:} $P(error) = p(j,x) + p(t,x) = P(j|x)·P(x) + P(x|t)·P(t) = ... = 50\%$
-\subparagraph{$h_4$:} $P(error) = p(j,c) + p(t,c) = P(j|c)·P(c) + P(c|t)·P(t) = ... = 50\%$
+\textcolor{red}{Dejuan ha hecho a mano estos cálculos porque no tenía ni pies ni cabeza lo que había copiado.}
+
+\paragraph{Cálculo de errores}
+\subparagraph{$h_1$:} $P(error) = p(t,c) + p(j,x) = P(j|c)·P(c) + P(j|x)·P(x) = ... = 50\% $
+También podíamos haber calculado (como estaba mal escrito en la versión anterior de los apuntes). A gusto del consumidor un método o el otro.
+\[P(error) = 1-P(acierto) = 1 - (p(j,c) + p(t,x)) = ...\]
+
+\subparagraph{$h_2$:} 
+$P(error) = p(j,c) + p(t,x) = P(j|c)·P(c) + P(t|x)·P(x) = ... = 50\%$
+\subparagraph{$h_3$:} 
+$P(error) = p(t,c) + p(t,x) = P(t|c)·P(c) + P(t|x)·P(x) = ... = 62.5\%$
+\subparagraph{$h_4$:} 
+$P(error) = p(j,c) + p(j,x) = P(j|c)·P(c) + P(j|x)·P(x) = ... = 37.5\%$
 \end{example}
 
 
  \begin{defn}[Matriz de confusión]
- 	Tabla para visualizar el error de un clasificador. Con el ejemplo de la moneda,
-
- 	% % % Real
- 	% % % justa -- trucada
- 	% % j  25%      12.5
-   	% % t  25%      37.5
-
+ 	Tabla para visualizar el error de un clasificador. En la diagonal encontramos las tasas de acierto, y fuera de la diagonal, las tasas de error.
  \end{defn}
+
+
+Para el caso anterior de las monedas, vamos a calcular las matrices de confusión  \textcolor{según dejuan (que no lo tiene nada claro y mañana lo completa)}.
+
+
+
+\subparagraph{$h_1$:}
+\begin{center}
+\begin{tabular}{cc|cc}
+ && ES justa & ES trucada \\\hline
+ Hipótesis =& justa & \% & \%\\
+ Hipótesis =& trucada & \% & \%
+\end{tabular}
+\end{center}
+
+
+\subparagraph{$h_2$:}
+\begin{center}
+\begin{tabular}{cc|cc}
+ && ES justa & ES trucada \\\hline
+ Hipótesis =& justa & \% & \%\\
+ Hipótesis =& trucada &\% & \%
+\end{tabular}
+\end{center}
+
+
+\subparagraph{$h_3$:}
+\begin{center}
+\begin{tabular}{cc|cc}
+ && ES justa & ES trucada \\\hline
+ Hipótesis =& justa & \% & \%\\
+ Hipótesis =& trucada & \% & \%
+\end{tabular}
+\end{center}
+
+
+\subparagraph{$h_4$:}
+\begin{center}
+\begin{tabular}{cc|cc}
+ && ES justa & ES trucada \\\hline
+ Hipótesis =& justa & \% & \%\\
+ Hipótesis =& trucada & \% & \%
+\end{tabular}
+\end{center}
+
+En esta matriz, la diagonal son las tasas de acierto y lo que está fuera de la diagonal las tasas de fallo. Con este criterio, comprobamos entonces que efectivamente la tasa de error es $25+12.5 = 37.5$, como habíamos calculado anteriormente.
+
+
+
 
 Pensemos en el caso de una enfermedad y queremos, a partir de unos datos predecir si va a tener la enfermedad o no. Tenemos una enfermedad muy grave que padecen $10$ personas en una muestra de $15000$. Un modelo que diga que nadie la tiene, sólo falla en un $\frac{10}{150000} \sim 0$, un error muy bajo. ¿Es este modelo bueno? En casos como este, interesa saber detectar la enfermedad cuando se da y es un error mucho más grave no diagnosticar la enfermedad cuando sí la tiene, que diagnosticarla cuando no la tiene, con lo que, la matriz de confusión ya no es una buena manera de valorar modelos. Por ello construimos la matriz de coste o riesgo.
 
