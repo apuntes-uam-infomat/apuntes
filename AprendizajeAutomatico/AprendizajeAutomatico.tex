@@ -188,48 +188,30 @@ $P(error) = p(j,c) + p(j,x) = P(j|c)·P(c) + P(j|x)·P(x) = ... = 37.5\%$
  \end{defn}
 
 
-Para el caso anterior de las monedas, vamos a calcular la matriz de confusión. Para ello, consideramos 100 lanzamientos. ¿Cuántas justas y cuantas trucadas? 50 de cada una. ¿Cuántas caras/cruces en monedas justas? 25 de cada. ¿Cuántas caras/cruces de monedas trucadas? 12.5 cruces y 37.5 caras. La matriz de confusión es:
-
-\begin{center}
-\begin{tabular}{cc|cc}
- && ES justa & ES trucada \\\hline
- Cruz & 25\% & 12.5\%\\
- Cara & 25\% & 37.5\%
-\end{tabular}
-\end{center}
-
-Esta matriz así escrita no corresponde a ningún clasificador. Tomemos $h_2$,
-
-\begin{center}
-\begin{tabular}{c|cc}
- & ES justa & ES trucada \\\hline
- h(x) = j & 25\% & 12.5\%\\
- h(c) = t & 25\% & 37.5\%
-\end{tabular}
-\end{center}
-
 En esta matriz, la diagonal son las tasas de acierto y lo que está fuera de la diagonal las tasas de fallo. Con este criterio, comprobamos entonces que efectivamente la tasa de error es $25+12.5 = 37.5$, como habíamos calculado anteriormente erróneamente.
 
 
-Si tomamos $h_1$, la matriz de confusión sería:
+Si tomamos $h_2$, la matriz de confusión sería (tomando la parte real arriba y las predicciones a la izquierda):
+\[
+\begin{pmatrix}{ccc}
+& justa & trucada \\\hline
+j&A_{11}&A_{12}\\
+t& A_{21}&A_{22}
+\end{pmatrix}
+\]
+Y vamos a ir calculando cada $A_{ij}$.
 
-\begin{center}
-\begin{tabular}{c|cc}
- & ES justa & ES trucada \\\hline
- h(x) = t & 25\% & 12.5\%\\
- h(c) = j & 25\% & 37.5\%
-\end{tabular}
-\end{center}
+¿CUál es la probabilidad de que digamos justa siendo la moneda justa? Para ello pensamos ¿Cuándo decimos nosotros justa? Cuando ha salido una cruz, entonces $A_{11}$ es la probabilidad de que sea justa y de que haya salido cruz, es decir $A_{11} = P(x,j) = P(x|j)·P(j) = P(j|x)·P(x)$. Entonces:
 
-En esta matriz, los aciertos no están en la diagonal, sino en la diagonal cruzada. Podríamos escribirla de la siguiente manera para tener los aciertos en la diagonal.
+\[
+\begin{pmatrix}{ccc}
+& justa & trucada \\\hline
+j& P(x,j) & P(x,t)\\
+t& P(c,j) & P(c,t)
+\end{pmatrix}
+\]
 
-\begin{center}
-\begin{tabular}{c|cc}
- & ES trucada & ES justa \\\hline
- h(x) = t & 12.5\% & 25\%\\
- h(c) = j & 37.5\% & 25\%
-\end{tabular}
-\end{center}
+
 
 
 \paragraph{Pero...}
@@ -516,13 +498,14 @@ En casos en que aparecen valores nulos en las tablas se suma  1 a toda la tabla.
 \paragraph{Interpretación: } La idea intuitiva es que pueden faltarnos datos y que tal vez no es categórico ese $0$. Supongamos que tiro una moneda 3 veces y salen 3 caras. Sólo debería aparecer un $0$ si la moneda tuviera 2 caras. Si no, simplemente nos falta información. Como sólo tener 2 caras en una moneda es absurdo, nos inventamos un experimento positivo y otro negativo para compensar esa posible falta de información.
 
 Con esta modificación, reescribimos la tabla de producción de lágrimas:
-
+\begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
 prod & n&b&d\\\hline
 reducida & 13 & 1 & 1\\\hline
 normal &4&6&5\\\hline
 \end{tabular}
+\end{center}
 
 Y recalculamos las probabilidades de diagnóstico con esta corrección:
 
@@ -543,23 +526,24 @@ En este caso, vamos a estudiar un problema de clasificación de plantas en funci
 Estos son los datos:
 
 \begin{center}
+\label{iris::datos}
 \begin{tabular}{|c|c|c|c|}\hline
-Anchura de pétalos & setosa & vesicolor & virginica \\[5pt]\hline\hline
-0-0.2 & 	$\frac{1}{10}$ & & \\[5pt]\hline
-0.2-0.4 & 	$\frac{18}{25}$ & & \\[5pt]\hline
-0.4-0.6 & 	$\frac{4}{25}$ & & \\[5pt]\hline
-0.6-0.8 & 	$\frac{4}{50}$ & & \\[5pt]\hline
-0.8-1.0 & & &\\[5pt]\hline
-1-1.2 &  & $\frac{1}{5}$ & \\[5pt]\hline
-1.2-1.4 & 				 & $\frac{18}{50}$ & \\[5pt]\hline
-1.4-1.6 & 				 & $\frac{17}{50}$ & $\frac{3}{50}$ \\[5pt]\hline
-1.6-1.8 & 				 & $\frac{4}{50}$ &  $\frac{1}{25}$\\[5pt]\hline
-1.8-2.0 & 				 & $\frac{1}{50}$ & $\frac{8}{25}$\\[5pt]\hline
-2.0-2.2 & 				 & & $\frac{6}{25}$\\[5pt]\hline
-2.2-2.4 & 				 & & $\frac{11}{50}$\\[5pt]\hline
-2.4-2.6 & 				 & & $\frac{3}{25}$\\[5pt]\hline
-2.6-2.8 & 				 & & \\[5pt]\hline
-2.8-3.0 & 				 & & \\[5pt]\hline
+Anchura de pétalos & setosa & vesicolor & virginica \\[8pt]\hline\hline
+0-0.2 & 	$\displaystyle\frac{1}{10}$ & & \\[8pt]\hline
+0.2-0.4 & 	$\displaystyle\frac{18}{25}$ & & \\[8pt]\hline
+0.4-0.6 & 	$\displaystyle\frac{4}{25}$ & & \\[8pt]\hline
+0.6-0.8 & 	$\displaystyle\frac{4}{50}$ & & \\[8pt]\hline
+0.8-1.0 & & &\\[8pt]\hline
+1-1.2 &  & $\displaystyle\frac{1}{5}$ & \\[8pt]\hline
+1.2-1.4 & 				 & $\displaystyle\frac{18}{50}$ & \\[8pt]\hline
+1.4-1.6 & 				 & $\displaystyle\frac{17}{50}$ & $\displaystyle\frac{3}{50}$ \\[8pt]\hline
+1.6-1.8 & 				 & $\displaystyle\frac{4}{50}$ &  $\displaystyle\frac{1}{25}$\\[8pt]\hline
+1.8-2.0 & 				 & $\displaystyle\frac{1}{50}$ & $\displaystyle\frac{8}{25}$\\[8pt]\hline
+2.0-2.2 & 				 & & $\displaystyle\frac{6}{25}$\\[8pt]\hline
+2.2-2.4 & 				 & & $\displaystyle\frac{11}{50}$\\[8pt]\hline
+2.4-2.6 & 				 & & $\displaystyle\frac{3}{25}$\\[8pt]\hline
+2.6-2.8 & 				 & & \\[8pt]\hline
+2.8-3.0 & 				 & & \\[8pt]\hline
 \end{tabular}
 \end{center}
 
@@ -567,9 +551,159 @@ La solución es suponer que la variable sigue una distribución normal dada la c
 
 \end{example}
 
+Estudiamos $p(v_1,...,v_n | µσ^2)$ suponiendo que su distribución es una normal.
+
+¿Qué valores de $µ$ y σ maximizan la verosimilitud de la muestra? Para ello derivamos respecto a $µ$ y $σ$ e igualamos a 0.
+
+Tras muchas cuentas que no van a ser reflejadas aquí, obtenemos que 
+\[µ = \frac{1}{N}\sum_{i=1}^N v_i\]
+\[σ^2 = \frac{1}{N}\sum_{i=1}^N (x_i- v_i)^2\]
+
+ \textcolor{red}{Ha caido en un examen esas cuentas largas}.
+
+
+Volviendo al problema de las plantas, tenemos la siguiente tabla con la información sobre la anchura de los pétalos:
+
+\begin{center}
+\begin{tabular}{c|ccc}
+& set & ver & vir \\\hline
+µ&0.246&1.326&2.026\\
+$σ^2$&0.0111&0.0391&0.0754
+\end{tabular}
+\end{center}
+
+
+El objetivo es poder clasificar una nueva planta que nos venga de acuerdo a esa información, suponiendo normalidad dada la clase. 
+
+\begin{example}
+Tenemos: $p(set) = p(vir) = p(ver) = \frac{1}{3}$
+
+Suponemos $D\equiv ap=1.5$ ¿A qué clase pertenece?¿Qué tipo de planta es?
+
+Vamos  a clacular las probabilidades \[p(set|ap=1.5)\]
+
+Si recurriéramos a la tabla de los datos \ref{iris::datos}, diríamos que $p(set|ap=1.5)=0$ ya que no tenemos ninguna planta con esas características. Pero como estamos suponiendo normalidad:
+
+\[p(set|ap=1.5) = \frac{P(ap=1.5|set)P(set)}{P(ap=1.5)} = \]
+Y aquí entra en juego la normalidad (dada la calse)
+\[
+= p(ap=1.5|set) = \frac{1}{\sqrt{2πσ^2}}\exp\left\{\frac{-(x-µ)^2}{2σ^2} \right\}= \frac{1}{2·π·0.0111}·e^{\left(\frac{-(1.5-0.246)^2}{2·0.0111}\right)} \simeq 10^{-31}
+\]
+
+\end{example}
+
+\begin{example}
+Vamos a utilizar Naive-Bayes con 2 atributos, uno discreto (longitud de sépalos) y otro continuo (anchura de pétalos).
+
+
+
+\begin{center}
+\paragraph{Anchura de pétalos}
+\begin{tabular}{c|ccc}
+& set & ver & vir \\\hline
+µ&0.246&1.326&2.026\\
+$σ^2$&0.0111&0.0391&0.0754
+\end{tabular}
+\end{center}
+
+\begin{center}
+\paragraph{Longitud de sépalos}
+\begin{tabular}{c|ccc}
+& set & ver & vir \\\hline
+pequeño ($\leq$5) & 20 & 1 & 1\\
+mediano (5<...<6) & 30 & 25 & 7\\
+grande (6<...<7) & 0 & 23 & 30\\
+muy grande ($\geq$ 7) & 0 & 1 & 12
+\end{tabular}
+\end{center}
+
+Nos piden calcular $P(set|ls=m,ap=1.9)$. Vamos a suponer independencia ya que aplicamos Naive-Bayes
+
+\[
+P(set|ls=m,ap=1.9) = \frac{P(ap=1.9|set)·P(ls=m|set)·P(set)}{P(...)} = \frac{1.23·10^{-53}·\frac{30}{50}·\frac{1}{3}}{P(...)} \simeq 0
+\]
+\[
+P(ver|ls=m,ap=1.9) = \frac{2.99·10^{-2}\frac{25}{50}\frac{1}{3}}{P(...)} = \frac{4.98·10^{-3}}{P(...)}
+\]
+\[
+P(vir|ls=m,ap=1.9) = \frac{1.3·\frac{7}{50}\frac{1}{3}}{P(...)} = \frac{6.1·10^{-2}}{P(...)}
+\]
+
+Sin necesidad de normalizar, elegiremos la clase $vir$. 
+
+\end{example}
+
+En el ejemplo anterior suponíamos independencia entre la longitud del sépalo y la anchura del pétalo, pero esta suposición no es muy acertada, ya que no sabemos (y es digno de suponer que sí) que haya una correlación entre los 2 atributos.
+
+
+\section{Modelos Gráficos (Redes de Bayes)}
+
+En esta sección vamos a ver cómo saber si las variables son independientes (y entonces Naive-Bayes mola) o si son dependientes y no deberíamos utilizarlo. La clave es la 
+
+\begin{defn}[Regla de la cadena]
+Aplicación de la regla del producto múltiples veces.
+\end{defn}
+
+Consideramos las variables aleatorioas $x_1,x_2,x_3,x_4$:
+
+\[P(x_1,x-2,x_3,x_4) = P(x_1|x_2,x_3,x_4)P(x_2,x_3,x_4) = ... = P(x_1|x_2,x_3,x_4) P(x_2|x_3,x_4) P(x_3|x_4) P(x_4)\]
+
+
+Vamos a representar gráficamente la regla de la cadena mediante un grafo \textbf{acíclico} dirigido que representa las relaciones entre las variables.
+
+\textcolor{red}{Grafo 1 de Pablo explicativos}
+
+\begin{defn}[Red de Bayes]
+\[P(x_1,...,x_n) = \prod_{i=1}^N p(x_i | pa_1)\]
+
+donde $pa_i$ es el conjunto de padres de la variable $x_i$, con $P(x_1|pa_i) = p(x_i)$ en caso de no tener padres la variables $x_i$.
+
+\end{defn}
+\obs En caso de ser independientes, las variables no tendrían padres , debido a que el grafo no tendría aristas.
+
+
+\subsection{Modelo gráfico para Naive-Bayes}
+Recordando el problema de las lentillas:
+\[P(d|e,l,p) = \frac{P(e,l,p|d)·P(d)}{P(e,l,p)}\]
+
+Con la regla de la cadena:
+
+\[
+P(e,l,p|d)·P(d) = P(e,l,p,d) = P(e,l,p|d)·P(d) = P(e|d)P(l|d)P(p|d)P(d)
+\]
+
+El grafo correspondiente a este caso:
+
+\textcolor{red}{Grafo 2 de Pablo}
+
+¿Y si este grafo nos parece muy sencillo? Podemos suponer que la edad influye en el astigmatismo, asique añadimos una arista al grafo, y escribimos la fórmula:
+
+\textcolor{red}{Grafo 3 de Pablo}
+
+\[
+P(d|a,e,p) = \frac{P(d,a,e,p)}{P(a,e,p)} = 
+\]
+
+Vamos a descomponer $P(d,a,e,p)$ utilizando el grafo. 
+
+\begin{itemize}
+	\item $d$ no depende de nadie, es huérfano sin padres.
+	\item $e$ depende de $d$.
+	\item $a$ depende de 2 cosas, con lo que $P(a|e,d)$.
+	\item ...
+\end{itemize}
+
+Con esta información, obtenemos:
+
+\[
+P(d|a,e,p) = \frac{P(d,a,e,p)}{P(a,e,p)} =  \frac{P(a|e,d)P(e|d)P(p|d)P(d)}{P(e,a,p)}
+\]
+
+Seguimos el próximo día.
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
+
 
 \chapter{Ejercicios}
 \input{tex/AA_ejs.tex}
