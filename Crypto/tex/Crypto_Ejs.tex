@@ -1137,8 +1137,83 @@ SOL:
 (11, 29, 15, 24, 0, 19), (11, 29, 25, 24, 0, 19), (11, 29, 5, 24, 0, 19)]
 \end{verbatim}
 
+\textbf{A continuación mostramos la solución del profesor}
+
+Empezamos planteando la ecuación:
+\[A \left( \begin{array}{cccc}
+		27 & 0 & 15 & 0\\
+		1 & 18 & 9 & 28
+	\end{array} \right) + \underbrace{[B,B,B,B,B,B]}_{\tilde{B}} = \left( \begin{array}{cccc}
+		26 & 12 & 6 & 2\\
+		28 & 1 & 16 & 1
+	\end{array} \right)\]
+
+El problema es que no hay forma de trabajar con estos datos en módulo 30. Lo que vamos a hacer es transformar este problema\footnote{Nos apoyamos en el teorema chino del resto que nos permite conocer la solución módulo 30 si la conocemos módulo los primos en que factoriza 30} en tres problemas que si podremos resolver: módulo 3, 5 y 2.
+
+Si reducimos la ecuación a \textbf{módulo 5} tenemos:
+\[A \left( \begin{array}{cccc}
+		2 & 0 & 0 & 0\\
+		1 & 3 & 4 & 3
+	\end{array} \right) + \tilde{B} = \left( \begin{array}{cccc}
+		1 & 2 & 1 & 2\\
+		3 & 1 & 1 & 1
+	\end{array} \right)\]
 
 
+Si extraemos ecuaciones tomando sólo dos columnas de las matrices que hemos escrito podemos llegar al sistema matricial:
+\[\left\{ A \left( 0 \atop 3\right) + B = \left(  2 \atop 1\right) \atop
+A \left(  0 \atop 4\right) + B = \left( 1 \atop 1\right) \right. \implies A\left( 0 \atop 1\right) = \left( 4 \atop 0\right)\]
+
+Con lo que ya conocemos la segunda columna de $A \mod 5$.
+
+Llevando a cabo un procedimiento que me he perdido llegamos a calcular la primera columna de la matriz $A \mod 5$ con lo que nos queda:
+\[A = \left( \begin{array}{cc} 1 & 4 \\ 1 & 0 \end{array}\right) \mod 5 , \ \ \ B={0 \choose 1} \mod 5\]
+
+Si trabajamos \textbf{módulo 3} llegamos al sistema:
+\[A \left( \begin{array}{cccc}
+		0 & 0 & 0 & 0\\
+		1 & 0 & 0 & 1
+	\end{array} \right) + \tilde{B} = \left( \begin{array}{cccc}
+		2 & 0 & 0 & 2\\
+		1 & 1 & 1 & 1
+	\end{array} \right)\]
+
+Atendiendo a la segunda y tercera columnas de la matriz del texto descifrado podemos ver fácilmente que
+\[A \left(0 \atop 0 \right) + B = \left(1 \atop 0\right)\implies B = \left(0 \atop 1  \right) \mod 3\]
+
+De forma similar podemos encontrar la segunda columna de $A \mod 3$
+
+\[A \left(0 \atop 1 \right) + \left(1 \atop 0 \right) = \left(2 \atop 1\right)\implies A \left(0 \atop 1 \right) = \left( 2 \atop 0 \right) \mod 3\]
+
+Sabiendo que la primera columna de $A \mod 3$ no puede ser múltiplo de su segunda columna vemos que tenemos un total de 6 posibilidades para $A \mod 3$.
+
+Por último, si trabajamos \textbf{módulo 2} llegamos al sistema:
+
+\[A \left( \begin{array}{cccc}
+		1 & 0 & 1 & 0\\
+		1 & 0 & 1 & 0
+	\end{array} \right) + \tilde{B} = \left( \begin{array}{cccc}
+		0 & 0 & 0 & 0\\
+		0 & 1 & 0 & 1
+	\end{array} \right)\]
+
+Igual que cuando trabajamos en módulo 3, podemos ver fácilmente que:
+\[B = \left( 0 \atop 1\right) , \ \ A \left( 1 \atop 1 \right) = \left( 0 \atop 1 \right)\]
+
+El vector columna $(1,1)$ puede considerarse un elemento de una base. Si llevásemos la matriz a esa base, tendríamos una de las columnas determinada y sólo tendríamos dos opciones para la otra columna. Por tanto, ya tenemos la matriz $A \mod 2$ reducida a dos posibilidades:
+
+\[A = \left( \begin{array}{cc}1 & 1 \\ 0 & 1 \end{array}\right) \text{ ó } \left( \begin{array}{cc}1 & 1 \\ 1 & 0 \end{array}\right)\]
+
+Procedemos ahora a \textbf{combinar todos los datos recogidos hasta ahora}.
+
+Tenemos un total de 12 posibles combinaciones de valores de $A$ en diferentes módulos, por lo que tendríamos un total de 12 posibles formas de calcular $A \mod 30$ empleando el teorema chino del resto.
+
+Como lo que nos queda por hacer es sólo cuestión de cuentas, vamos a calcular sólo una de esas doce matrices.
+
+\[A =  \left( \begin{array}{cc}1 & 1 \\ 1 & 0 \end{array}\right) \mod 5 , \ \  \left( \begin{array}{cc}0 & 2 \\ 2 & 0 \end{array}\right) \mod 3, \ \  \left( \begin{array}{cc}1 & 1 \\ 0 & 1 \end{array}\right) \mod 2\]
+
+Por la cuenta de la vieja llegamos a que:
+\[ A = \left( \begin{array}{cc}21 & 29 \\ 26 & 15 \end{array}\right) \mod 30\]
 \end{problem}
 
 \begin{problem}[7]
@@ -1246,6 +1321,8 @@ La función de cifrado será de la forma $f(m)=Am$ donde $m$ es un vector y $A$ 
 Los vectores digrafos fijos son aquellos tales que $Am=m \implies (A-I)m = 0 \implies m \in Ker(A-I)$.
 
 Es decir, habrá más puntos fijos a parte del trivial si y sólo si la matriz tiene un autovalor 1.
+
+\textcolor{blue}{El profesor hizo esto mismo en clase considerando que la condición buscada (que es equivalente al hecho de que $A$ no tenga autovalor 1) es que la matriz $A-I$ sea inyectiva. \\Además, por estar en un cuerpo finito, $A-I$ inyectiva $\iff$ $A-I$ biyectiva $\iff$ $A-I$ invertible}
 
 \spart
 
