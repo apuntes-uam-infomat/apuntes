@@ -180,3 +180,135 @@ t = chisq.test(obs,p=prob)$statistic
 pvalor = 1 - pchisq(t,3)
 \end{lstlisting}
 
+
+
+\begin{defn}[Contraste de Bondad de Ajuste de Kolmogorov-Smirnov]
+
+$X_1,...,X_n \overset{iid}{\sim} F$ y $H_0 : F=F_0$, con $F_0$ totalmente especificada.
+
+Se define la función de distribución empírica correspondiente a $X_i$ como \[F_n(x) = \frac{1}{n}\#\{ i : X_i\leq x\}\]
+
+\end{defn}
+
+\begin{example}
+$X_1 = 1$, $X_2 = 6$, $X_3 = 4$
+
+Recordamos los \concept{estadísticos de orden: } $X_{(i)}$ significa el $X_j$ que ocupa la posición $i-esima$ cuando ordenamos de menor a mayor. Es decir, $X_{(1)} = \min\{X_j\}$ y $X_{(n)} = \max\{X_j\}$ 
+
+Es una función de distribución constante a trozos con saltos de magnitud $\frac{1}{n}$ en cada valor muestral $X_i$ (si no hay empates). En este caso, la función de distribución es $f(a) = \frac{1}{3}, a=\{1,4,6\}$
+
+$F_n$ es un estimador de la verdadera distrubición de $F$ \[F(x)) = P(X\leq x)\]
+\end{example}
+
+\obs \[\# \{i: X_i \leq x\}\] ¿Qué distribución tiene esta variable aleatoria? Es una binomial con parámetros: $B(n,F(x))$ 
+
+\[ \esp{F_n(x)} = \frac{1}{n}nF(x) = F(x)\] INSESGADO ¿Por qué?
+
+\[\var{F_n(x)} = \frac{1}{n^2}nF(x)(1-F(x)) \convs[] 0\]
+
+Como consecuencia, $F_n \convs[P] F(x)$ y decimos que es \concept{consistente}\footnote{El estimador converge en probabilidad a la función}
+
+¿Esto a qué viene? A entender la función de distribución empírica.
+
+Además de la convergencia en probabilidad tenemos un resultado más potente:
+
+\begin{theorem}[Glivenco-Cantelli]
+\[ ||F_n-F||_α = \sup_{x\inℝ} |F_n(x) - F(x)| \convs[c.s.] 0\]
+
+Es decir, la función de distribución empírica converge en distribución a la real y además esa convergencia es uniforme.
+\end{theorem}
+
+\begin{proof}
+La demostración se sale del temario de este curso.
+\end{proof}
+
+\paragraph{¿Cómo se hace realmente el contraste?} Si $H_0$ fuese cierta, se espera que $D_n = ||F_n - F_0||$ sea ``pequeño''. La idea es rechazar en la región crítica $R = \{D_n > c\}$ para un valor $c$ tal que $P_{H_0}(D_n > c) = α$, siendo $α$ un nivel de significación predeterminado.
+
+Para poder calcular $P_{H_0}(D_n > c)$ necesitamos cálculos algo chungos, pero hay un resultado que nos puede ayudar mucho a resolver este problema.
+
+\begin{lemma}
+La distribución bajo $H_0$ de $D_n$ es la misma para cualquier distribución continua $F_0$
+
+Por tanto el valor de $c$ en la región crítica es el mismo para cualquier distribución continua $F_0$ y está tabulado.
+\end{lemma}
+
+
+\begin{proof}
+Para poder probar este lemma, necesitamos una proposición:
+
+\begin{prop}
+Si una $v.a.$ tiene distribución continua $F_0$, entonces la variable aleatoria $F_0(X)\sim \mathbb{U}(0,1)$\label{prop::funcionsobredistribucioncontinua}
+\end{prop}
+\begin{proof}
+\[
+P\{F_0(x) \leq u\} \overset{?}{=} u 
+\]
+Hemos tomado distribuciones continuas para evitar saltos. Entonces:
+
+$F_0 \text{ continua} \implies \exists x \tq F_0(x) = u, P\{F_0(X)\leq F_0(x)\}$
+
+Donde:
+\[
+\{F_0(X)\leq F_0(x)\} = \underbrace{\{F_0(X)\leq F_0(x), X\leq x\}}_{\{X\leq x\}} \cup \{F_0(X)\leq F_0(x), X\ge x\}
+\]
+
+Vamos a estudiar cada uno de los términos:
+
+\[\{F_0(X)\leq F_0(x), X\leq x\} = \{X\leq x\}\]
+Se debe a que $X\leq x \implies F_0(X)\leq F_0(x)$
+
+Por otro lado, el otro término:
+\[\{F_0(X)\leq F_0(x), X\ge x\} = P\{F_0(X)\leq F_0(x), X>x\} = 0\]
+Ya que $F_0$ es necesariamente constante entre $x$ y $X$.
+
+
+\textbf{Entonces:}
+
+\[
+\{F_0(X)\leq F_0(x)\} = Ṕ\{X\leq x\} = F(x) = u
+\]
+\end{proof}
+\obs Existe un recíproco que permite calcular otras distribuciones a partir de uniformes invirtiendo la función de distribución.
+
+
+Ahora que ya tenemos esa propiedad demostrada podemos seguir con la demostración del lema.
+
+Vamos a demostrar que $D_n = \max\{\sup_{x\in ℝ} (F_n(x) - F_0(x)),\sup_{x\in ℝ} (F_0(x) - F_n(x)) \}$
+
+Lo hemos separado en 2 para quitarnos el valor absoluto. Aquí solo estudiaremos uno de los términos, y el otro se deja como ejercicio para el lector.
+
+Por definición de la distribución empírica, tenemos: $x\in [X_{(i)},x_{(i+1)}), F_n(x) = \frac{i}{n}$
+
+\textbf{Entonces:}
+
+\[
+\sup_{x\in ℝ} (F_n(x) - F_0(x)) = \max_{i=0,...,n} \sup_{x\in [X_{(i)},X_{(i+1)})} (F_n(x) - F_0(x))
+\]
+
+
+Ahora podemos sustituir $F_n(x)$, obteniendo
+\[
+ = \max_{i=0,...,n} \left( \frac{i}{n} - F_0(x_{(i)})\right) = \max \left\{0,\max_{i=0,...,n} \left( \frac{i}{n} - F_0(x_{(i)})\right)\right\}
+\]
+
+Por el otro lado obtendríamos:
+
+\[
+\sup_{x\in ℝ} (F_0(x) - F_n(x)) = ... = \max \left\{0,\max_{i=0,...,n} \left\{0, \left(F_0(X_{(i)}) - \frac{i-1}{n}\right)\right\}\right\}
+\]
+
+\textbf{Conclusión:}
+\[D_n = ||F_n - F_0||_{\infty} = \max \left\{ 0, \max_{i=0,...,n} \left( \frac{i}{n} - F_0(x_{(i)})\right), \max_{i=0,...,n} \left\{0, \left(F_0(X_{(i)}) - \frac{i-1}{n}\right)\right\}\right\}\]
+
+Es decir, $D_n$ depende de $F_0$ a través $F_0(X_{(i)})$ y, aplicando la proposición \ref{prop::funcionsobredistribucioncontinua} en $X_1,...,X_n \overset{iid}{\sim} F_0 \to X_{(1)} \leq ... \leq X_{(n)}$
+
+Entonces: 
+\[
+F_0(X_1),...,F_0(X_n) \overset{iid}{\sim} \mathbb{U}(0,1) \to F_0(X_{(1)})\leq ... \leq F_0(X_{(n)})
+\]
+
+
+Son los estadísticos de de orden de una muestra de tamaño $n$ de v.a.i.i.d $\mathbb{U}(0,1)$ para cualquier $F_0$ continua.
+
+\end{proof}
+
