@@ -148,7 +148,7 @@ La idea del contraste es: la Poisson que más se puede parecer es la que tenga d
 \end{example}
 
 
-\subsection{Contrastes con $R$}
+\subsubsection{Contrastes con $R$}
 \paragraph{Hipótesis simple}
 Con el siguiente código de $R$, podemos hacer el contraste de bondad de ajuste de una $\chi^2$ fácilmente.
 
@@ -181,6 +181,7 @@ pvalor = 1 - pchisq(t,3)
 \end{lstlisting}
 
 
+\subsection{Kolmogorov-Smirnov}
 
 \begin{defn}[Contraste de Bondad de Ajuste de Kolmogorov-Smirnov]
 
@@ -311,4 +312,93 @@ F_0(X_1),...,F_0(X_n) \overset{iid}{\sim} \mathbb{U}(0,1) \to F_0(X_{(1)})\leq .
 Son los estadísticos de de orden de una muestra de tamaño $n$ de v.a.i.i.d $\mathbb{U}(0,1)$ para cualquier $F_0$ continua.
 
 \end{proof}
+
+\begin{example}
+Contrastar a nivel α=0.01 si la muestra $16,8,10,12,6$ procede de una exponencial de media $λ=11.5$
+
+Recordamos que la media de una exponencial: $µ = \frac{1}{λ}$.
+
+%esto está bien seguro
+En este caso, $F_0(x) = 1-e^{-\frac{x}{11.5}}$.
+
+
+Vamos a construir una tabla para resolverlo, llamando $D_n^+ = \{\frac{i}{n} - F_0(X_{(i)})\}$ y $D_n^+ = \{F_0(X_{(i)}) - \frac{i-1}{n} \}$
+\[
+\begin{array}{cccccc}
+X_{(i)} & \frac{i}{n} & F_0(X_{(i)}) & D_n^+ & D_n^-\\\hline
+6&0.2&0.41&-0.21&0.41\\
+8&0.4&0.5&-0.1&0.3 \\
+10&0.6&0.58&0.02&0.18 \\
+12&0.8&0.65&0.15&0.05 \\
+16&1&0.75&0.25&-0.05
+\end{array}\]
+
+
+En esta caso, $D_n = \max\{0,D_n^+,D_n^-\} = 0.41$. Ahora, como el contraste no depende de la $F_0$ (mientras que esta sea continua), consultamos la tabla y vemos que para $n=6$ y $α=0.01$ obtenemos $c=0.669$.
+
+\[c>D_n \dimplies 0.669 > 0.41\]
+
+Con lo que no podemos rechazar la hipótesis.
+
+\end{example}
+
+\subsubsection{Contrastes Kolmogorov-Smirnov con R}
+ Para el ejemplo anterior,  el código de $R$ tendríamos algo que aparecerá más adelante:
+
+\begin{lstlisting}[style=mystyle,escapeinside={(*}{*)}]
+
+n = 100
+x = rnorm(n)
+plot(ecdf(x),vertical=TRUE, do.points=FALSE)
+curve(pnorm(x),-4,4add=TRUE,col=blue)
+
+Dn= ks.test(x,pnorm)$statistic
+# En esta gráfica, (*$D_n$*) es la mayor distancia vertical entre la negra (empírica) y la azul (real).
+
+(*\begin{center}
+\includegraphics[scale=0.6]{img/KSR.png}
+\end{center}*)
+
+
+
+ks.test(x,pnorm) # Cierta. Obtenemos un p-valor grande (del orden de 0.7)
+ks.test(x,pexp) # Falsa. Obtenemos un p-valor casi 0 (del orden de (*$10^{-16}$*))
+
+\end{lstlisting}
+
+
+\paragraph{Iteración del contraste} Es bueno repetir el contraste varias veces, ya que la generación de los datos es aleatoria. Para ello,  hay un fichero en moodle de $R$ con el proceso. En las transparencias además, está el otro ejemplo.
+
+\subsection{Gráficos de probabilidad}
+
+Este es otro tipo de contraste. Hemos visto cómo contrastar utilizando \_\_\_ que nos da una $\chi^2$. También hemos utilizado la distribución empírica.
+
+Ahora vamos a ver cómo contrastar utilizando los cuantiles.
+
+Tenemos:
+\[
+X_1,...,X_n \overset{iid}{\sim} F \implies F(X_n) \overset{iid}{\sim}\mathcal{U}(0,1) \implies F(X_{(i)}) < F(X_{(i+1)})
+\]
+Podemos calcular:
+\[\esp{F(X_{(i)})} = \frac{i}{n+1}\]
+
+
+Utilizando esta información, podemos dibujar en el eje $x$ de una gráfica los estadísticos de orden $X_{(i)}$ y en el eje $y$, ponemos: $F^{-1}\left(\frac{i}{n+1}\right)$, ya que, en media $F(X_{(i)}) \sim \frac{i}{n+1}$
+
+Lo que esperaríamos si nuestra hipótesis de $F$ fuera cierta, es que los puntos de esa gráfica estén sobre una recta.
+
+
+\begin{example}
+Sea $X_1,...,X_n \overset{iid}{\sim} \underbrace{N(µ,σ^2)}_{F}$. Tomamos $\Phi \sim N(0,1)$
+
+
+\[X_{(i)} \sim F^{-1}\left(\frac{i}{n+1}\right) = ... = σ\Phi^{-1}\left(\frac{i}{n+1}\right) + µ\]
+
+Si los datos son normales, los puntos $\left( X_{(i)},\Phi^{-1}\left(\frac{i}{n+1}\right)\right)$ estarán alineados.
+
+\end{example}
+
+\obs Este es el tipo de contraste que se utiliza en la realidad para saber si unos datos se distribuyen normalmente o no. Hay una manera de medir esta diferencia y no hacerlo a ojo. Este test se denomina \concept{Shapiro-wilks}
+
+
 
