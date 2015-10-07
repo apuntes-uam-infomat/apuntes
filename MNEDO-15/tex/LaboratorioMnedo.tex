@@ -75,6 +75,7 @@ Por tanto, esa pendiente que hemos calculado en el código, nos permite conocer 
 
 \section{Sesión 2}
 \subsection{Método Runge Kutta de orden 4}
+\subsubsection{Explícito}
 En esta sesión vamos a implementar un método Runge Kutta explícito. Para ello, recordemos que el método Runge Kutta se basaba en el empleo de las funciones:
 \[K_i = f(x_n+c_ih,y_n+\sum_j A_{ij}K_j)\]
 
@@ -121,6 +122,45 @@ Y tal y como hemos visto en clase, obtenemos que el método RK4 tiene orden 4.
 
 \obs La diferencia observada entre esta función y la obtenida en la sesión anterior radica en el intervalo sobre el que estamos trabajando. En la ocasión anterior trabajamos en [0,1]; esta vez, en [0,10].
 
+\subsubsection{Implícito}
+Respecto a la sección anterior solo debemos modificar dos ficheros.
+
+El fichero en que se define el problema de valor inicial pasara de llamarse \textit{PVI\_RK4\_explicito.m} a \textit{PVI\_RK4\_implicito.m}. Por otor lado, el fichero que contiene el propio método pasará a llamarse \textit{RK4implicito.m}. 
+
+Veamos ahora cómo quedan estos dos nuevos ficheros.
+
+La implementación del PVI queda igual salvo que modificamos la matriz A, para que tenga una diagonal no nula (en nuestro caso hemos puesto la diagonal llena de 1s), y modificamos las llamadas al método. 
+
+La idea del método es que no conocemos las $K_i$ en un principio pero todas son, o pueden ser, necesarias para cada una de las demás $K_i$. 
+
+Por tanto, lo que haremos será tratar de resolver un sistema de ecuaciones con el método del punto fijo. Así definimos para todos los $K_i$ un valor inicial, que será $f(x_n,y_n)$, y a partir de ahí iteramos encontrando en cada iteración toda una nueva serie de valores de los $K_i$.
+
+En cada iteración empleamos todos los valores de $K_i$ de la iteración anterior y los actualizamos \textbf{todos ellos} al finalizar la iteración.
+
+En algún momento esta iteración convergerá y tendremos los $K_i$ buscados.
+Este fichero nos queda:
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/PVI_RK4_implicito.png}
+\end{center}
+
+Y el propio método queda como sigue:
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/RK4_implicito.png}
+\end{center}
+
+Finalmente, las gráficas obtenidas, que dibujan la función resultado y la obtenida con RK4 por un lado y la relación entre el erro y $h$ en escala logarítmica por otro, son:
+\begin{center}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/RK4_implicito_grafica.png}
+    \end{minipage}
+    \begin{minipage}{.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/RK4_implicito_pendiente.png}
+    \end{minipage}
+\end{center}
+
 
 \subsection{Método del trapecio}
 Vamos a resolver una vez más el mismo PVI pero empleando esta vez el método del trapecio.
@@ -152,3 +192,4 @@ Nuevamente, pintamos las gráficas de las funciones (la solución y la obtenida 
         \includegraphics[width=\textwidth]{img/trapecio_pendiente.png}
     \end{minipage}
 \end{center}
+
