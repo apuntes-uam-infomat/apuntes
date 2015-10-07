@@ -597,16 +597,13 @@ Vamos a utilizar Naive-Bayes con 2 atributos, uno discreto (longitud de sépalos
 
 
 
-\begin{center}
 \paragraph{Anchura de pétalos}
 \begin{tabular}{c|ccc}
 & set & ver & vir \\\hline
-µ&0.246&1.326&2.026\\
-$σ^2$&0.0111&0.0391&0.0754
+µ & 0.246 & 1.326 & 2.026\\
+$σ^2$ & 0.0111 & 0.0391 & 0.0754
 \end{tabular}
-\end{center}
 
-\begin{center}
 \paragraph{Longitud de sépalos}
 \begin{tabular}{c|ccc}
 & set & ver & vir \\\hline
@@ -615,7 +612,6 @@ mediano (5<...<6) & 30 & 25 & 7\\
 grande (6<...<7) & 0 & 23 & 30\\
 muy grande ($\geq$ 7) & 0 & 1 & 12
 \end{tabular}
-\end{center}
 
 Nos piden calcular $P(set|ls=m,ap=1.9)$. Vamos a suponer independencia ya que aplicamos Naive-Bayes
 
@@ -651,7 +647,7 @@ Consideramos las variables aleatorioas $x_1,x_2,x_3,x_4$:
 
 Vamos a representar gráficamente la regla de la cadena mediante un grafo \textbf{acíclico} dirigido que representa las relaciones entre las variables.
 
-\textcolor{red}{Grafo 1 de Pablo explicativos}
+\includegraphics[scale=0.5]{img/grafo1.jpg}
 
 \begin{defn}[Red de Bayes]
 \[P(x_1,...,x_n) = \prod_{i=1}^N p(x_i | pa_1)\]
@@ -674,11 +670,12 @@ P(e,l,p|d)·P(d) = P(e,l,p,d) = P(e,l,p|d)·P(d) = P(e|d)P(l|d)P(p|d)P(d)
 
 El grafo correspondiente a este caso:
 
-\textcolor{red}{Grafo 2 de Pablo}
+
+\includegraphics[scale=0.5]{img/grafo2.jpg}
 
 ¿Y si este grafo nos parece muy sencillo? Podemos suponer que la edad influye en el astigmatismo, asique añadimos una arista al grafo, y escribimos la fórmula:
 
-\textcolor{red}{Grafo 3 de Pablo}
+\includegraphics[scale=0.5]{img/grafo3.jpg}
 
 \[
 P(d|a,e,p) = \frac{P(d,a,e,p)}{P(a,e,p)} = 
@@ -700,6 +697,49 @@ P(d|a,e,p) = \frac{P(d,a,e,p)}{P(a,e,p)} =  \frac{P(a|e,d)P(e|d)P(p|d)P(d)}{P(e,
 \]
 
 Seguimos el próximo día.
+
+
+Vamos a ver los posibles diagnósticos:
+
+\[
+P(d=n|e=j,p=na=s) = \frac{P(a=s|d=n,e=j)P(e=j|d=n)P(p=n|d=n)P(d=n)}{P(...)} = 
+\]
+\[
+= \frac{\frac{2}{4}\frac{4}{15}\frac{3}{15}\frac{15}{24}}{P(...)} = ... = 17\%
+\]
+\[
+P(d=d|e=j,p=na=s) = \frac{\frac{2}{2}\frac{2}{4}\frac{4}{4}\frac{4}{24}}{P(...))} = ... = 83\%
+\]
+\[
+P(d=b|e=j,p=na=s) = ... = 0
+\]
+
+
+\section{Vecinos próximos}
+
+\subsection{Introducción y motivación del método}
+Hasta ahora la verosimilitud la hemos calculado de diferentes maneras:
+
+\begin{itemize}
+ 	\item[Discretos] Con frecuencias 
+ 	\item[Continuos]  Discretizando y usando frecuencias (histograma). Esta estimación es no paramétrica y la probabilidad de que un punto caiga en una caja es el número de puntos en esa caja dividido del total.
+ 	\item[] Estimando la densidad de probabilidad con una normal. La estimación es paramétrica y se calcula utilizando la integral de la función de densidad, es decir:
+ 	\[P(1.4 \leq x < 1.5) = \int_{1.4}^{1.5}P df(x)dx\]
+ \end{itemize} 
+
+ ¿Qué podemos hacer para estimar paramétricamente una muestra como la siguiente?
+
+\begin{center}
+ \includegraphics[scale=0.4]{img/histogramaCenas.jpeg}
+\end{center}
+Aquí vemos claramente que no podemos estimar utilizando una normal, ya que ni se le parece. Podríamos tomar 2 normales, o tendríamos que intentar generalizar la estimación por histograma a $D$ dimensiones.
+
+Si intentamos exportar este modelo a más dimensiones, generalizar la estimación por histograma, necesitamos muchos más datos de los que podemos obtener para estimar así, debido a la \textbf{MALDICIÓN DE LA DIMENSIONALIDAD}. 
+
+Para que la estimación generalizada por histograma sea una buena estimación, tenemos que tener el espacio suficientemente cubierto de puntos, es decir $n$ tiene que ser más grande cuanto mayor es la dimensión.
+
+
+
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
