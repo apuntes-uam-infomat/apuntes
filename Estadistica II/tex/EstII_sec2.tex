@@ -1,5 +1,5 @@
 % -*- root: ../EstadisticaII.tex -*-
-\section{Contrastes no paramétricos}
+\chapter{Contrastes no paramétricos}
 
 Hipótesis no paramétrica: hipótesis que no se formula en términos de un número finito de parámetros.
 
@@ -12,6 +12,7 @@ Hipótesis no paramétrica: hipótesis que no se formula en términos de un núm
 \item Homogeneidad: Dados $X_1,...,X_n \equiv F$ y $Y_1,...,Y_n \equiv G$ de variables aleatorias independientes idénticamente distribuidas. Contrastar $H_0: F=G$.
 \item Hipótesis de independencia: Dada $(X_1,Y_1),...,(X_n,Y_n) \equiv F$ de variables aleatorias independientes idénticamente distribuidas. Contrastar $H_0: X$ e $Y$ son independientes.
 \end{enumerate}
+\section{Contrastes de bondad de ajuste}
 
 \subsection{Contraste $\chi^2$ de bondad de ajuste}
 Consideramos una distribución totalmente especificada bajo $H_0: X_1,...,X_n \equiv F$ de variables i.i.d.
@@ -402,3 +403,161 @@ Si los datos son normales, los puntos $\left( X_{(i)},\Phi^{-1}\left(\frac{i}{n+
 
 
 
+
+\section{Contrastes de homogeneidad}
+\subsection{$\chi^2$ }
+Tenemos \[
+\left.
+\begin{array}{cc}
+µ_{1} \equiv X_{11} ,...,X_{1n_1} &\overset{iid}{\sim} F_1\\ 
+\vdots & \vdots \\
+µ_{p} \equiv X_{p1} ,...,X_{pn_p} &\overset{iid}{\sim} F_p
+\end{array} \right\} H_0 : F_1 = F_2 = ... = F_p 
+\]
+
+Con $µ_1,...,µ_p$ \textbf{independientes}.
+
+\paragraph{Proceso para el contraste}
+\begin{enumerate}
+
+\label{contraste::homogeneidad::chicuadrado}
+
+\item Dividimos los datos en clases $A_i$ y consideramos las frecuencias observadas $O_{ij} = \{\#\text{ datos } µ_j \text{ en } A_i \}$
+
+\item Al considerar número de $µ_j$, tenemos, bajo la hipótesis, que $O_{ij} \equiv B(n_j,p_i)$, con $p_i = P_{H_0}(A_i)$.
+
+\begin{defn}[Tabla de ¿cerdingencia?]
+\[
+\begin{array}{c|ccc}
+&µ_1&\cdots & µ_p \\\hline
+A_1 & O_{11} & \cdots & O_{1p}\\
+\vdots & \vdots & \ddots & \vdots \\
+A_k & O_{k1} & \cdots & O_{kp} 
+\end{array}
+\]
+\end{defn}
+
+\item Las \textbf{frecuencias esperadas} bajo $H_0 \to E_{ij} = n_jp_i$.
+
+\item Construimos el estadístico del contraste. \[\sum_j \sum_i \frac{(O_{ij} - E_{ij})^2}{E_{ij}} \convs[d] \chi^2_{p(k-1)}\]
+\subitem \textit{La independencia de las $µ_i$ es la que da la convergencia a la $\chi^2$.}
+
+\subitem Dado que no conocemos $p_i$, tenemos que estimarlos a partir de los datos. ¿Cuál es el estimador? Al suponer $F_i = F_j$ podemos utilizar:
+
+\[ \hat{p_i} = \frac{\sum_j O_ij}{\sum_j n_j} \implies \hat{E_{ij}} = n_j·p_i = \frac{O_{i·}}{n}O_{·j}\]
+
+\item \textbf{Conclusión} El estadístico es: \[T = \sum_i \sum_j \frac{(O_{ij} - \hat{E_{ij}})^2}{\hat{E_{ij}}} \convs[d] \chi^2_{(p-1)(k-1)} \] 
+
+\subitem ¿Porqué los grados de libertad? Porque al estimar perdemos un grado de libertad por cada estmación, y como aquí estamos estimando $k$ cosas, perderíamos $k$ grados de libertad. El $-1$ aparece porque no hace falta estimar $k$ sino $k-1$ ya que $\sum_i \hat{p_i} = 1$. Entonces $p(k-1) - (k-1) = (p-1)(k-1)$
+
+Y la región de rechazo \[R = \{T>\chi^2_{(k-1)(p-1),α}\}\]
+
+\obs También podemos construir el estadístico como:
+
+\[
+T = \sum_{i}\sum_j \frac{O_{ij}}{\hat{E_{ij}}} - n
+\]
+
+\begin{proof}
+Se deja como ejercicio para el lector la afirmación de que el estadístico también se puede construir así.
+\end{proof}
+\end{enumerate}
+
+
+\begin{example}
+
+Tenemos 100 observaciones de 3 países (ESP, ITA, FRA) sobre fumadores y queremos saber si las distribuciones que siguen cada tipo de fumador son iguales.
+
+\begin{center}
+
+
+\begin{tabular}{c|ccc|c}
+ & E & I & F & \#\\\hline
+NF&30&15&20&65\\
+FO&50&40&50&140\\
+FH&20&45&30&95\\\hline
+&100 & 100 & 100 & 300
+\end{tabular}
+¿Qué esperamos? $\to$
+\begin{tabular}{c|ccc|c}
+ & E & I & F & \#\\\hline
+NF & 21.6 & 21.6 & 21.6 & 65 \\
+FO & 46.6 & 46.6 & 46.6 & 140 \\
+FH & 31.6 & 31.6 & 31.3 & 95 \\
+\hline
+&100 & 100 & 100 & 300
+\end{tabular}
+\end{center}
+
+Ahora podemos calcular el estadístico y la región de rechazo para $α=0.05$:
+
+\[ T = \sum_{i=1}^k \sum_{j=1}^p \frac{O_{ij}^2}{E_{ij}} -n = ... \sim 16.8\]
+\[ c = \chi^2_{4,0.05} = 9.48\]
+
+Como $T > c \implies $ Rechazamos la hipótesis.
+
+\end{example}
+
+\subsection{KS de homogeneidad}
+
+Es importante destacar e este tipo de contraste que sólo es válido para \textbf{dos muestras} y sólo para \textbf{distribuciones continuas}.
+
+Tenemos \[
+\left.
+\begin{array}{cc}
+X_{1} ,...,X_{n} &\overset{iid}{\sim} G\\ 
+Y_{1} ,...,Y_m &\overset{iid}{\sim}G
+\end{array} \right\} H_0 : F = G
+\]
+
+Sean $F_n$ y $G_m$ las funciones de distribución empíricas respectivas.
+
+Calculamos el estadístico de KS oara 2 muestras:
+
+\[
+D_{n,m} = ||F_n - G_m ||_{\infty} = \sup_{a∈ℝ} | F_n(a) - G_m(a)|
+\]
+Bajo $H_0$, la distribución de $D_{n,m}$ no depende de $F=G$ y está tabulada (igual que en los contrastes de bondad de ajuste).
+
+Entonces: \[R = \{ D_{n,m} > C_α\}\]
+\begin{defn}[Diferencias estandarizadas al cuadrado]
+\[
+\frac{(O_{ij}-\hat{E_{ij}})}{\sqrt{\hat{E_{ij}}}}
+\]
+\end{defn} 
+
+\section{Contrastes de independencia}
+
+\subsection{$\chi^2$}
+
+Sean $(X_1,Y_1),...,(X_n,Y_n) \overset{iid}{\sim} F$ con $H_0 : X,Y$ son independientes.
+
+Los datos se suelen dar en tablas por clases, es decir: 
+
+\[
+\begin{array}{c|ccc}
+&B_1&\cdots & B_p \\\hline
+A_1 & O_{11} & \cdots & O_{1p}\\
+\vdots & \vdots & \ddots & \vdots \\
+A_k & O_{k1} & \cdots & O_{kp} 
+\end{array}
+\]
+
+Una diferencia con el anterior es que que los totales no están fijados, ya que son variables.
+
+Vamos a ver la estimación de las frecuencias esperadas $\hat{E_{ij}}$ y $E_{ij}$
+
+\begin{align*}
+E_{ij} &= n·p_{ij} = n·P(x∈A_i,Y∈B_j) \overset{H_0}{=} n·P(x∈A_i)(Y∈B_j)\\
+\hat{E_{ij}} &= n \frac{O_i}{n}\frac{O_j}{n} = \frac{O_i·O_j}{n} \text{ igual que en el anterior}
+\end{align*}
+
+Ahora, calculamos $T$ y $R$ exactamente igual que en el contraste de homogeneidad $\chi^2$ \ref{contraste::homogeneidad::chicuadrado}, es decir:
+
+\[T = \sum_i \sum_j \frac{(O_{ij} - \hat{E_{ij}})^2}{\hat{E_{ij}}} \convs[d] \chi^2_{(p-1)(k-1)} \] 
+
+Recordamos que también podemos construir el estadístico como:
+
+\[T = \sum_{i}\sum_j \frac{O_{ij}}{\hat{E_{ij}}} - n\]
+
+Y la región de rechazo \[R = \{T>\chi^2_{(k-1)(p-1),α}\}\]
