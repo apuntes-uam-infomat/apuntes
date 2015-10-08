@@ -604,14 +604,14 @@ Hipótesis no paramétrica: hipótesis que no se formula en términos de un núm
 \item Bondad de ajuste: A partir de una muestra $X_1,...,X_n \stackrel{iid}{\sim} F$ de observaciones \textcolor{red}{(son muestras o variables aleatorias o es simple notación?)} ($\stackrel{iid}{\sim}$ significa que son muestras aleatorias independientes idénticamente distribuidas que siguen una distribución F en este caso), contrastar:
 \begin{itemize}
 \item $H_0: F=F_0$ donde $F_0$ es una distribución prefijada.
-\item $H_0: F \in \{F_O : O\in H\}$ H es el espacio paramétrico.
+\item $H_0: F \in \{F_{\theta} : \theta\in H\}$ H es el espacio paramétrico.
 \end{itemize}
 \item Homogeneidad: Dados $X_1,...,X_n \stackrel{iid}{\sim} F$ y $Y_1,...,Y_n \equiv G$ de observaciones. Contrastar $H_0: F=G$.
 \item Hipótesis de independencia: Dada $(X_1,Y_1),...,(X_n,Y_n) \stackrel{iid}{\sim} F$ de observaciones. Contrastar $H_0: X$ e $Y$ son independientes.
 \end{enumerate}
 
 \section{Contraste $\chi^2$ de bondad de ajuste}
-Consideramos una distribución totalmente especificada bajo $H_0: X_1,...,X_n \stackrel{iid}{\sim} F$.
+Consideramos una distribución totalmente especificada bajo $F_0$. Y consideramos una muestra empírica $X_1,...,X_n \stackrel{iid}{\sim} F$.
 
 $H_0: F=F_0$ es la hipótesis nula y queremos ver que F, que es la distribución obtenida con los datos verdaderos (las muestras $X_i$ obtenidas empíricamente) es igual a $F_0$ que es la distribución teórica.
 
@@ -623,7 +623,7 @@ Vamos a definir los pasos que tenemos que seguir para comprobar si $H_0$ es cier
 
 \item Se cuentan cuántos datos caen en cada clase (frecuencias observadas). Cada clase la llamaremos $O_i=\#\{j:X_j\in A_i\}$.
 
-\item Se calculan las frecuencias esperadas si $H_0$ fuese cierta. A este dato lo llamaremos $\mathbb{E}_i$ o $\mathbb{E}_{H_0}(O_i)$: 
+\item Se calculan las frecuencias esperadas para cada clase si $H_0$ fuese cierta. A este dato lo llamaremos $\mathbb{E}_i$ o $\mathbb{E}_{H_0}(O_i)$: 
 \[
 \mathbb{E}_{H_0}(O_i) = np_i
 \]
@@ -824,6 +824,10 @@ Problema: $X_1,...,X_n \stackrel{iid}{\sim} F$. Suponemos como hipótesis nula:
 H_0 : F \in \{F_{\theta}: \theta \in H \subset \mathbb{R}^r\}
 \]
 
+\textcolor{red}{La diferencia es que ahora la hipótesis nula que consideramos es que los datos van a seguir una distribución teórica $F_0$ que no está totalmente especificada, ya que va a depender de un parámetro. Por ello, decimos con palabras que:}
+
+\textcolor{red}{La hipótesis nula es que los datos muestrales van a tener una función de distribución $F$, que va a ser igual a $F_{\theta}$, siendo $\theta$ el parámetro del que dependerá, el cual pertenece a un espacio paramétrico $H$}
+
 Pasos:
 \begin{enumerate}
 \item Se definen k clases $A_1,...,A_k$. 
@@ -834,16 +838,18 @@ Pasos:
 
 Se estima $\theta$ por el método de máximo verosimilutd. Sea $\hat{\theta}$ el EMV.
 
-\item Se calculan las frecuencias esperadas $\hat{E}_i n\hat{p}_i$ con $i=1,...,k$ donde $\hat{p}_i = p_{\hat{\theta}}(A_i)$.
+\textcolor{red}{explicar bien esto}
 
-\item Calculamos:
+\item Se calculan las frecuencias esperadas estimadas bajo $H_0$: $\hat{E}_i=n\hat{p}_i$ con $i=1,...,k$ donde $\hat{p}_i = p_{\hat{\theta}}(A_i)$.
+
+\item Calculamos el estadístico $\chi^2$ de Pearson:
 \[
 T=\sum_{i=1}^k \frac{(O_i-\hat{E}_i)^2}{\hat{E}_i}
 \]
 
-Ahora puedo elegir de todas las posibles distribuciones, aquella que más se parece. De modo que cabe esperar que T tienda a tomar valores menores que en el casos simple.
+Ahora puedo elegir de todas las posibles distribuciones, aquella que más se parece. De modo que cabe esperar que T tienda a tomar valores menores que en el caso simple.
 
-Además, al estimar r parámetros se introducen r nuevas restricciones sobre el vector $O_1,O_2,...,O_r$.
+Además, al estimar r (\textcolor{red}{¿De dónde sale r? Es la dimensión del parámetro estimado??}) parámetros se introducen r nuevas restricciones sobre el vector $O_1,O_2,...,O_r$.
 
 Se puede probar bajo condiciones de regularidad:
 \[
@@ -854,8 +860,64 @@ Se puede probar bajo condiciones de regularidad:
 
 Tal y como se ha hecho en el caso anterior.
 
-
 \end{enumerate}
+
+\begin{example}
+Los bombardeos de Londres. El problema trata de estudiar los bombardeos que sufrío Londres entre 1944 y 1945. Se quería saber si los impactos sobre la ciudad de Londres eran en lugares aleatorios o estaban dirigidos a lugares concretos.
+
+La fórmula de Poisson se ajusta bastante a un modelo de distribución aleatoria de impactos. Por tanto, tendríamos que estimar el parámetro $\lambda$ de la distribución de Poisson, que tiene por función de densidad:
+
+$$ f(k,\lambda)=\frac{e^{-\lambda}\lambda^k}{k!} $$
+
+Donde:
+\begin{itemize}
+\item k es el número de ocurrencias del evento o fenómeno (la función nos da la probabilidad de que el evento suceda precisamente k veces).
+
+\item λ es un parámetro positivo que representa el número de veces que se espera que ocurra el fenómeno durante un intervalo dado. Por ejemplo, si el suceso estudiado tiene lugar en promedio 4 veces por minuto y estamos interesados en la probabilidad de que ocurra k veces dentro de un intervalo de 10 minutos, usaremos un modelo de distribución de Poisson con λ = 10×4 = 40.
+\end{itemize} 
+Dicho esto, vamos a seguir los pasos anteriormente detallados:
+
+
+
+\begin{enumerate}
+\item Se definen k clases $A_1,...,A_k$. En nuestro caso, las clases van a ser el número de impactos que ha habido en un cuadrado. Por tanto los cuadrados que pertenezcan a $A_1$ serán aquellos que han sufrido un único impacto.
+
+\item Se cuentan cuántos datos caen en cada clase (frecuencias observadas). Cada clase la llamaremos $O_i=\#\{j:X_j\in A_i\}$. En nuestro caso tenemos: $O_0=229$, $O_1=211$, $O_2=93$, $O_3=35$, $O_4=8$ ($O_4$ es 4 o más impactos).
+
+
+\item Para estimar/calcular las frecuencias esperadas se estima $\theta$ por el método de máximo verosimilutd. Sea $\hat{\theta}$ el EMV. En este caso, nuestro $\theta$ sera $\lambda$ y nuestro $\hat{\theta}$ será $\hat{\lambda}$, que será el parámetro de la distribución de Poisson:
+
+$$ \hat{\lambda} = \frac{0\cdot229 + 1\cdot211+2\cdot93+3\cdot35+4\cdot7+5\cdot1}{576}=0.9323$$
+
+\textcolor{red}{explicar por qué esto es el EMV, ya que en estadistica 1 hacíamos u lio increible pa sacarlo}
+
+\item Se calculan las frecuencias esperadas $\hat{E}_i=n\hat{p}_i$ con $i=1,...,k$ donde $\hat{p}_i = p_{\hat{\theta}}(A_i)$. En nuestro caso:
+
+$$\hat{E}_k = n\hat{p}_k = 576\cdot e^{-\hat{\lambda}\frac{\hat{\lambda}^k}{k!}}$$
+
+Sustituimos $\lambda = 0.9323$ y $k=0,...,5$ y nos queda: $\hat{E}_0 = 226.74 $, $\hat{E}_1 = 211.34 $, $\hat{E}_2 = 98.54$, $\hat{E}_3 = 30.62$, $\hat{E}_4 = 8.71$.
+
+\item Calculamos el estadístico $\chi^2$ de Pearson:
+\[
+T=\sum_{i=1}^k \frac{(O_i-\hat{E}_i)^2}{\hat{E}_i} = 1.0176
+\]
+
+Bajo $H_0$ tenemos que $T \equiv \chi^2_3$. El 3 sale de k=5 clases menos 1 parámetro estimado menos 1 como hacíamos antes.
+
+\item Se rechaza $H_0$ en la región crítica: $R=\{T>\chi^2_{k-1-r;\alpha}  \}$
+
+En nuestro caso, tomando $\alpha = 0.05$, tenemos: $$R=\{T>\chi^2_{3;\alpha} \} \rightarrow \{1.0176>7.815 \} \rightarrow \text{No se puede rechazar } H_0$$
+
+Podemos calcular el p-valor mirando:
+$$P\{\chi^2_3 > 1.0176\} = 0.797$$
+
+Efectivamente, si miramos la tabla de la $\chi^2_3$, con $\alpha =0.797$, T valdría aproximadamente 1.
+\end{enumerate}
+
+\end{example}
+
+
+
 
 
 
