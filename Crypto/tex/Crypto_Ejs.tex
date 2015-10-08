@@ -1905,21 +1905,283 @@ Con toda esta información, y mirando componente a componente A\footnote{por el 
 
 \section{Hoja 3}
 \begin{problem}[1]
-1. Se propone el siguiente sistema para jugar al poker por correo postal (el problema es como repartir las cartas sin que ninguno de los dos jugadores sepa las cartas que tiene el otro).
+Se propone el siguiente sistema para jugar al poker por correo postal (el
+problema es como repartir las cartas sin que ninguno de los dos jugadores sepa
+las cartas que tiene el otro).
 
+i) El jugador $A$ pone cada una de las 52 cartas en una caja
+(todas las cajas son idénticas) y las cierra con candados para los
+que solo él tiene las llaves. Envía las 52 cajas al jugador $B$.
+
+ii) El jugador $B$ selecciona 5 de las cajas, que formarán la mano
+de $A$. Selecciona otras 5 cajas, que formarán su propia mano, y a
+estas 5 les pone candados para los que solo él tiene la llave.
+Envía las 10 cajas seleccionadas a $A$.
+
+iii) $A$ retira sus candados de las 10 cajas. Se queda con las 5
+cartas que forman su mano y envía las otras 5 cajas a $B$.
+
+iv) $B$ abre las 5 cajas y ya tiene sus cartas. Pueden empezar a jugar.
+
+v) En caso de disputa $B$ envía sus 5 cartas y las 42 cajas sin
+abrir a un arbitro neutral, al que $A$ le envía las llaves.
+
+EJERCICIO: Convencerse de que no se pueden hacer trampas y dar un
+método para jugar al poker utilizando el correo electrónico.
+\solution
+\end{problem}
+
+\begin{problem}[2]
+En una red de comunicaciones cada usuario $U$ tiene
+su función para cifrar $C_U$, que hace pública, y su función para
+descifrar $D_U$, que mantiene secreta. Un mensaje $m$ del usuario
+$A$ al usuario $B$ se enviará siempre en el siguiente formato:
+$(C_B(m),A)$. La dirección $A$ le indica a $B$ quién ha enviado el
+mensaje. El receptor $B$ recuperará $m$ a partir de $(C_B(m),A)$,
+y también, de manera automática, contestará  $(C_A(m),B)$ a $A$
+(obsérvese que $(C_A(m),B)$ tiene el formato adecuado). De esta
+manera $A$ sabe que $B$ ha recibido correctamente el mensaje.
+
+a) Prueba que un tercer usuario $C$ puede tambien leer el mensaje
+$m$ que $A$ envió a $B$. Podemos asumir que $C$ puede interceptar
+todos los mensajes transmitidos por la red (ya que una de las
+ventajas de la clave pública es que elimina la necesidad de que el
+canal sea seguro), y que $C$ puede enviar sus propios mensajes,
+siempre que utilice el formato correcto.
+
+b) Demuestra que las comunicaciones utilizando esta red siguen sin
+ser seguras si el protocolo es que $A$ envía $C_B((C_B(m),A))$ a
+$B$ y $B$ automaticamente responde  $C_A((C_A(m),B))$ a $A$.
+\solution
+\end{problem}
+
+\begin{problem}[3]
+
+Al pagar con una tarjeta de crédito los usuarios (compradores y
+vendedores)
+ deben comprobar una serie de cosas: el vendedor debe asegurarse de que
+la tarjeta es auténtica y tiene fondos, de que la tarjeta no es
+robada, de que el comprador no va a negar haber hecho la
+compra,...; por su parte el comprador debe asegurarse de que el
+vendedor no va a intentar cobrar de más o antes de tiempo, de que
+no va a utilizar posteriormente los datos de su tarjeta para hacer
+compras por su cuenta.... Para evitar todo esto se propone el
+siguiente sistema.
+
+La autoridad emisora de las tarjetas (que llamaremos AE) elige una
+función de un sólo sentido, $f$ que hace pública, manteniendo
+secreta la función inversa $f^{-1}$. Por su parte cada usuario $i$
+del sistema (comprador o vendedor) elige una serie de datos de
+identificación $I_i$ y una función de un sólo sentido $f_i$ (puede
+elegirla cada usuario por su cuenta siguiendo las instrucciones de
+la AE). El usuario $i$ envía $I_i$ a la AE, y ésta le devuelve
+$s_i=f^{-1}(I_i)$. Con estos datos $i$ construye su credencial:
+$(I_i, s_i,f_i)$, que hace pública, manteniendo secreta
+$f_i^{-1}$. Con todos estos datos, cuando el comprador $i$ quiere
+pagar al vendedor $j$, siguen el siguiente protocolo:
+
+i) {\it Presentación de credenciales:} El comprador entrega al
+vendedor $(I_i, s_i,f_i)$ junto con una descripción de la
+transacción (pago, fecha de cobro,...) desde su punto de vista:
+$u_i$. El vendedor comprueba si $f(s_i)=I_i$, y acepta o no la
+tarjeta. Se procede de manera simétrica entregando el vendedor sus
+datos,  $(I_j, s_j,f_j,u_j)$, al comprador.
+
+ii) {\it Autentificación:} El comprador y el vendedor unen (de
+modo adecuado dependiendo del tipo de funciones que se use) $u_i$
+y $u_j$, creando un $u=u_iu_j$. El comprador calcula
+$t_i=f_i^{-1}(u)$ y se lo da al vendedor, quién comprueba si
+$f_i(t_i)=u$. Se realiza la operación simétrica intercambiando los
+papeles de comprador y vendedor.
+
+iii) {\it Recibos:} el comprador guarda $(I_j,
+s_j,f_j,u_i,u_j,t_i,t_j)$ y el vendedor guarda $(I_i,
+s_i,f_i,u_i,u_j,t_i,t_j)$.
+
+EJERCICIO: Discute la utilidad de este sistema para resolver los
+problemas planteados en el primer parrafo, y cualquier otro que se
+te ocurra relacionado con los pagos con tarjeta de crédito.
+\solution
+\end{problem}
+
+\begin{problem}[4] Supongamos que una red de inversores y agentes de bolsa utiliza criptografía de clave pública.
+  Los inversores temen que sus agentes compren acciones sin
+  su autorización (para cobrar comisiones) y luego, si pierden dinero, digan que recibieron instrucciones de hacerlo
+  (mostrando un mensaje cifrado con una indicación en ese sentido y pretendiendo que venía del inversor).
+  Los agentes, por su parte, temen que, si compran acciones siguiendo las instrucciones del inversor y éstas pierden valor,
+   el inversor pretenda que nunca dio la orden de compra y que el mensaje está falsificado por un tercero o por el propio agente.
+
+Explica cómo puede la criptografía de clave pública resolver estos
+problemas de modo que cuando todos estos indeseables acaben ante
+los tribunales demandándose unos a otros, haya una prueba de quién
+es el culpable de las malas inversiones y consecuente pérdida de
+dinero. Puedes suponer que, en caso de una demanda entre el
+inversor $A$ y el agente $B$, se pone a disposición del juez toda
+la información para cifrar/descifrar, es decir, las claves $e_A,
+d_A, e_B, d_B$ y el software necesario para cifrar y descifrar.
+[PISTA: hace falta un ``acuse de recibo" de los mensajes.]
+
+\solution
+\end{problem}
+
+
+\begin{problem}[5] Ana y Beatriz cifran sus mensajes con el criptosistema de Cesar
+sobre el alfabeto castellano de 27 letras. Para poder cambiar de
+clave con frecuencia, deciden emplear el intercambio de claves de
+Diffie-Hellman. Para implementar el intercambio acuerdan que verán
+las 27 claves, $\{A,\dots,Z\}$ como las clases
+$\{1,\dots,27\}\subset(\ent_{29})^*$, y que utilizarán el logaritmo
+discreto en $\mathbb{F}_{29}^*=(\ent_{29})^*$ con base $g=2$.
+
+\ppart Supón que Ana elige como exponente en el intercambio $a=5$ y
+Beatriz $b=8$. ¿Cómo cifrarán el mensaje {\it HOLA} con la clave
+resultante?
+
+%b) Supón ahora que Ana elige $a=6$ y Beatriz $b=7$. ¿Hay algún
+%problema? ¿Puedes sugerir como resolverlo? (Intenta que tu
+%solución funcione en situaciones similares que puedan plantearse
+%%en otros casos.)
+
+%c) ¿Hay algún problema si Ana elige $a=4$ y Beatriz $b=7$? ¿Es del
+%mismo estilo que el problema anterior? ¿Puedes resolverlo?
+%(Intenta de nuevo que tu solución funcione en situaciones
+%similares que puedan plantearse en otros casos.)
+
+\ppart Cristina intercepta un mensaje ``18"\ que Ana la envía a Beatriz
+y un mensaje ``8"\ enviado por Beatriz a Ana. A continuación
+intercepta el mensaje {\it ELHQKHFKR} de Ana a Beatriz. ¿Qué le ha
+dicho Ana a Beatriz?
+
+\solution
+\end{problem}
+
+El objetivo de los tres siguientes problemas es dar un método para lanzar una moneda al aire ``a
+ distancia"\
+ usando una función 2-a-1 de un sólo sentido. Por ejemplo, para que dos personas que juegan al ajedrez por internet
+ puedan acordar quién lleva las blancas.
+
+{\vskip0.2cm}
+
+\begin{problem}[6]
+Un sistema de funciones 2-a-1 de un sólo sentido es un algoritmo
+que, dada una clave $e$, construye una función $f:\mathcal
+M\longrightarrow\mathcal C$ tal que cada elemento $c\in Im(f)$
+tiene exactamente dos preimágenes $m_1,m_2$ tales que $f(m_i)=c$;
+junto a a otro algoritmo que, dada una clave $d$ que ``invierte
+$e$", puede encontrar las dos preimágenes de cualquier $c\in
+Im(f)$. Suponemos ademas que es computacionalmente imposible
+encontrar $d$ conociendo sólo $e$. Observa que, dado
+$m_i\in\mathcal M$, podemos encontrar el otro elemento $m_2$ tal
+que $f(m_1)=f(m_2)$ si conocemos tanto $e$ como $d$; pero estamos
+asumiendo que, conociendo sólo $e$, es computacionalmente
+imposible calcular el compañero $m_2$ de \underbar{ningún} $m_1$.
+
+Supongamos que Ana y Beatriz quieren utilizar esto para ``lanzar
+una moneda al aire". Ana genera un par de claves $(e,d)$ y envía
+$e$, \underbar{pero no $d$}, a Beatriz. Encuentra un procedimiento
+en el que cada jugadora tenga una probabilidad del 50\% de
+``ganar" (empieza por dar una definición adecuada de ``ganar") y
+que incluya garantías de que no se puede hacer trampas.
+\solution
+\end{problem}
+
+
+\begin{problem}[7]
+
+\ppart Sea $R$ un dominio de integridad [es decir, $ab=0\Rightarrow
+a=0 \text{ ó } b=0$] y consideremos soluciones de ecuaciones en
+$R$. Demuestraque la ecuación $X^2=0$ tiene exactamente una
+solución. Ver que si $a\ne0$, la ecuación $X^2=a$ tiene a lo sumo
+dos soluciones. Si además suponemos que $2\ne 0$ en $R$, demostrar
+que, si  $X^2=a$ con $a\ne 0$ tiene solución, entonces tiene
+exactamente dos soluciones.
+
+\ppart Sea $N$ un número impar. Demuestra que en el anillo  $\ent_N\ent$
+existe algún $a$ tal que la ecuación  $X^2\equiv a \mod N$ no
+tiene ninguna solución. (Sugerencia: ?`Cardinal del conjunto de
+cuadrados?)
+
+\ppart Demuestra que en el anillo $\ent_{p^2}\ent$ con $p$ primo impar la
+ecuación
+ $X^2\equiv 0 \mod p^2$ tiene exactamente $p$ soluciones, mientras que si una
+ecuación $X^2\equiv a \mod p^2$ con $a\not\equiv 0$ tiene
+solución, entonces tiene exactamente dos soluciones.
+
+\ppart Sean $p$ y $q$ primos impares distintos. Trabajaremos ahora en
+el anillo $\ent_{pq}\ent$.
 \begin{itemize}
-\item El jugador A pone cada una de las 52 cartas en una caja (todas las cajas son identicas) y las cierra con candados para los que solo él tiene las llaves. Envía las 52 cajas al jugador B.
-
-\item El jugador B selecciona 5 de las cajas, que formaran la mano de A. Selecciona otras 5 cajas, que formaran su propia mano, y a estas 5 les pone candados para los que solo el tiene la llave. Envıa las 10 cajas seleccionadas a A.
-
-\item A retira sus candados de las 10 cajas. Se queda con las 5 cartas que forman su mano y envıa las otras 5 cajas a B.
-
-\item B abre las 5 cajas y ya tiene sus cartas. Pueden empezar a jugar.
-
-\item En caso de disputa B envıa sus 5 cartas y las 42 cajas sin abrir a un arbitro neutral, al que A le envıa las llaves.
-
+\item[$d_1$)] Demuestra que, dado $x\in\ent_{pq}\ent$, existen $a,b\in\ent,\quad
+0\le a<q,\quad 0\le b<p$ tales que $x\equiv ap+bq \mod pq$, y que
+además $a$ y $b$ en estas condiciones son únicos.
+\item[$d_2)$] Dados $x\equiv ap+bq, x'\equiv a'p+b'q \in\ent_{pq}\ent$, da
+condiciones sobre $a,b,a',b'$ que sean equivalentes a $x^2\equiv
+{x'}^2 \mod pq$.
+\item[$d_3)$] Lo mismo que en $d_2)$, pero exigiendo además que $x\not\equiv
+x'\mod pq$.
+\item[$d_4)$] Demuestra que la ecuación $X^2\equiv\alpha^2 \mod pq$ tiene:
+1 solución si $\alpha\equiv0\mod pq$; 4 soluciones si $\alpha$ es
+una unidad en $\ent_{pq}\ent$;
+ 2 soluciones si $\alpha\not\equiv 0$ y $\alpha$ no es una unidad en
+$\ent_{pq}\ent$.
 \end{itemize}
-EJERCICIO: Convencerse de que no se pueden hacer trampas y dar un metodo para jugar al poker utilizando el correo electronico.
+\solution
+\end{problem}
 
+\begin{problem}[8]
+Supongamos que tenemos un método rápido [existen algunos
+probabilísticos] para resolver la ecuación   $X^2\equiv a \mod p$
+cuando $p$ es primo y existe solución [esto es, $a$ es un {\it
+residuo cuadrático} módulo $p$]. Supongamos también que si $n$ es
+compuesto y producto de dos primos distintos, $n=pq$, no hay forma
+razonable de resolver   $X^2\equiv a \mod n$ que no pase por
+factorizar $n$ (en cuyo caso podemos resolver $X^2\equiv a \mod p$
+y $X^2\equiv a \mod q$ y utilizar el Teorema Chino del Resto).
+Supongamos por último que $p$ y $q$ no son ambos $\equiv 1 \mod
+4$. [RECUERDA: $p\equiv 1 \mod
+4$ $\iff$ existe $a\in \ent_p$ tal que $a^2\equiv 1 \mod p$.]
+
+Sea $K_e=n$ y sea $K_d=\{p,q\}$ su factorización. Pongamos $
+\mathcal{P}= \mathcal{ C}=(\ent_n)^*/\{\pm 1\}$, esto es
+identificamos cada clase inversible $x$ con su opuesta $-x$, y
+consideremos la función $f:  \mathcal{P}\to  \mathcal{C}$ definida
+por $f(x)=x^2$. Demuestra que todo esto es un ejemplo de la
+situación descrita  en el problema 6 y que por tanto acabamos de
+dar una forma explícita de lanzar monedas al aire ``a distancia".
+\solution
+\end{problem}
+
+\vspace{0.2cm}
+
+Vamos a hacer  ahora algunas estimaciones sencillas de tiempos. Utiliza siempre la
+notación $O$.
+
+\vspace{0.2cm}
+
+\begin{problem}[9]
+La siguiente fórmula es bien conocida:
+$$\sum_{j=1}^n j^2=\frac{n(n+1)(2n+1)}{6}.$$
+Estima en función de $n$ el número de bit-operaciones necesarias para
+calcular tanto el término de la izquierda como el de la derecha (¡sin usar la igualdad!).
+\solution
+\end{problem}
+
+\begin{problem}[10]
+Se trata de estimar en función de $n$ el número de bit-operaciones
+necesarias para calcular el producto de todos los números primos menores que
+$n$. Suponemos que hemos calculado con anterioridad una lista muy larga que
+contiene todos los primos menores que $n$
+
+\ppart Si definimos 
+\[\pi(n)=Card\{p\in\bold N\mid p<n, p \text{ es primo}\}\]
+el Teorema del Número Primo nos dice que \linebreak $\lim_{n \to \infty}\frac{\pi(n)}{n/\log
+n}=1$. Utiliza este resultado para estimar el número de dígitos en el producto
+de todos los números primos menores que $n$.
+
+\ppart Da una cota para el número de bit-operaciones necesarias para hacer una de
+las multiplicaciones que intervienen en dicho producto.
+
+\ppart Estima  el número total de bit-operaciones
+necesarias para calcular el producto de todos los números primos menores que
+$n$.
 \solution
 \end{problem}
