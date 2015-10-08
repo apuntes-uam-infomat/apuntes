@@ -185,6 +185,7 @@ Una posible ``solución'' sería escribir una tabla en la que asociamos cada ent
 \section{Usos criptográficos de las funciones de un sólo sentido}
 \begin{enumerate}
 \item \textbf{Compartición de clave privada}
+
 El problema es sencillo: Tenemos dos usuarios que quieren comunicarse de manera secreta pero, previamente, deben establecer una clave empleando para ello un canal no seguro.
 
 El procedimiento es el siguiente (Suponemos que los dos usuarios que quieren comunicarse son A y B):
@@ -251,6 +252,7 @@ Lo que se puede hacer para proteger al usuario es que el sistema almacene la rel
 \end{enumerate}
 
 \item \textbf{Tarjeta de crédito}
+
 Hay diferentes opciones a la hora de reconocer la tarjeta de crédito y validar que el PIN introducido es el correcto:
 
 \begin{itemize}
@@ -278,6 +280,85 @@ Más adelante veremos cómo se lucha contra estos ataques.
 
 \item Empleamos dos funciones de un sólo sentido y grabamos en la tarjeta $f_2^{-1}(f_1(PIN))$.
 
+Así, una vez que el usuario introduzca su PIN, el cajero calculará $f_2$ de lo que hay guardado en la tarjeta y lo compará con $f(PIN)$.
+
+Así será difícil emplear una tarjeta robada puesto que encontrar el PIN implica encontrar $f_1^{-1}$ de $G$. Por otro lado, tampoco será posible falsificar una tarjet pues sería necesario conocer $f_2^{-1}$.
+
+\textbf{Deventaja}: Puesto que el PIN es pequeño sigue siendo asequible que un ladrón realice todas las pruebas necesarias en su casa, llegando a descubrir el PIN por fuerza bruta.
+\end{itemize}
+\end{enumerate}
+Como el lector puede observar ninguno de estos mecanismos es perfecto y siempre queda esperanza para el atacante, que podría usar una tarjeta de crédito de forma ilícita sin excesivas complicaciones.
+
+\newpage
+\subsection{El gran cambio de la tecnología moderna}
+
+La idea es que no es necesario que la tarjeta tenga grabado el PIN, ni ninguna transformación del mismo.
+
+Para hacer esto, el cajero enviaría a la central un identificador de transacción, recibiendo como respuesta desde la central un nuevo valor $G=f(ID,PIN)$.
+
+Así, una vez el usuario introduce su PIN, el cajero calcular $f(ID,PIN)$ y comprueba si coincide el valor.
+
+Con esta técnica, conseguimos que cada transacción funcione de forma ligeramente distinta y, además, no hay ninguna información grabada en la tarjeta.
+
+Otra posibilidad es el empleo de una tarjeta de chip, en ocasiones conocida como \textbf{tarjeta inteligente}. 
+
+Estas tarjetas permiten hacer que la función $f$ dependa del usuario. Veamos cómo funciona:
+
+\begin{itemize}
+\item Cada usuario tiene una clave pública $e$, a partir de la cual se genera una función de un sólo uso $f_e$ y una clave secreta $d$ a partir de la cual se tiene $f_d$.
+
+\item La tarjeta contiene $f^{-1}_d$ 
+
+\item La central conoce la tupla $(ID,PIN,e)$.
+
+\item La tarjeta envía a la central $(ID,ID\_TRANSACCION)$, es decir, envía un identificador del usuario que está accediendo al cajero y un código ``aleatorio'' que identifica la transacción.
+
+\item La central responde con $f_e(ID.PIN)=G$
+
+\item El usuario teclea el PIN y la tarjeta comprueba si $f^{-1}_d(G)=TRANSACCION.PIN$
+
+\item Una vez el PIN introducido ha sido validado, la tarjeta envía de nuevo a la central $f^{-1}_e(TRANSACCION.OK)$
 \end{itemize}
 
+Además de todo lo que hemos explicado, las comunicaciones tarjeta-banco podrían (y deberán) ir cifradas de modo que la comunicación no pueda ser interceptada por un atacante.
+
+No obstante, el método que acabamos de explicar, aún tiene un fallo: \textbf{un atacante podría hacerse pasar por el banco}. 
+
+Para evitarlo, el banco puede responder enviando $f_{BANCO}(f_e^{-1}(ID.PIN))=G$, es decir, cifrando el mensaje con su clave privada. De este modo, todo el mundo que tenga acceso a la clave pública del banco (todo el mundo, por eso es pública), podrá verificar que el mensaje ha sido escrito por el banco, puesto que nadie más conocerá $f_{BANCO}$.
+
+\section{Modos de ataque}
+
+Es importante conocer, además de los algoritmos de seguridad empleados, los ataques más habituales que pueden llevarse a cabo contra estos algoritmos, de modo que podamos anticiparnos a las carencias del sistema de seguridad.
+
+\begin{enumerate}
+\item \textbf{Con texto cifrado conocido}
+
+El atacante tiene acceso a una parte (sino el total) del texto cifrado.
+
+Puesto que esto ocurre siempre, todo sistema de seguridad que se precie debe ser capaz de defenderse de este tipo de ataques.
+
+\item \textbf{Con texto en claro conocido}
+
+El atacante tiene acceso a algunos pares de texto en claro con su correspondiente texto cifrado.
+
+Todos los sistemas clásicos tienen problemas ante este tipo de ataque, tal y como hemos visto en las primeras dos hojas de ejercicios.
+
+\item \textbf{Con texto en claro elegido}
+
+El atacante tiene acceso a pares de texto en claro con su correspondiente texto cifrado siendo el texto en claro elegido por él mismo, es decir, es capaz de cifrar todos los textos que desee (como ocurrió en la lucha contra Enigma, al hacerse con una máquina).
+
+Así el atacante puede tomar textos en claro pequeños y hacer un ataque por fuerza bruta.
+
+Siempre que empleemos un sistema de clave pública podemos ser víctimas de este tipo de ataques. 
+
+\section{Criptosistema de clave pública-privada}
+
+\begin{defn}[Función trampa]
+También conocida como función ratonera, se trata de una función $f_e$ de un sólo sentido que depende de un parámetro $e$ conocido como \textbf{clave pública}, tal que su inversa $f^{-1}_d$ depende de un parámetro $d$ conocido como \textbf{clave privada} y $d$ sólo se puede calcular a partir de $e$ con ayuda de información adicional.
+\end{defn}
+
+
+La idea del \textbf{RSA}, criptosistema que estudiaremos a continuación, consiste en el uso de este tipo de funciones apoyándose en la idea de que encontrar primos es \textbf{fácil} pero factorizar un número grande en primos es \textbf{difícil}
 \end{enumerate}
+
+
