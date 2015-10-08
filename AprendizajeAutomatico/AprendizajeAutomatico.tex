@@ -127,6 +127,7 @@ P(t|c) = \frac{P(c|t)·P(j)}{P(c)} = \frac{0.75·0.5}{P(c)}
 
 Como $P(j|c) + P(t|c) = 1$, tenemos que $P(c) = 0.5·0.5 + 0.75·0.5 = 0.625$, entonces:
 
+\label{calculadoAnteriomente1}
 \[P(j|c) = 0.4\]
 \[P(t|c) = 0.6\]
 
@@ -134,19 +135,26 @@ Según el criterio MAP diríamos que es más probable que la moneda esté trucad
 
 Por algún motivo, calculamos:
 
-\[P(j|x) = ... = \frac{2}{3}\]
-\[P(j|x) = ... = \frac{1}{3}\]
+\[P(j|x) = \frac{P(x|j)·P(j)}{P(x)} = \frac{0.5·0.5}{P(x)} = \frac{0.25}{P(x)}\]
+\[P(t|x) = \frac{P(x|t)·P(t)}{P(x)} = \frac{0.25·0.5}{P(x)} = \frac{0.125}{P(x)}\]
 
+Normalizando obtenemos:
+\label{calculadoAnteriomente2}
+\[P(j|x) = \frac{2}{3}\]
+\[P(t|x) = \frac{1}{3}\]
 
+\subsection{Tasas de error}
+
+Vamos a estudiar las tasas de error siguiendo con el ejemplo de las monedas.
 
 \paragraph{Existen 4 modelos posibles:}
 Tenemos:
 \begin{itemize}
-\item Espacio de atributos = $\{c,x\}$ 
-\item Clase = $H\in\{j,t\}$
+\item Espacio de atributos = $\{c,x\}$\footnote{cara o cruz}
+\item Clases posibles\footnote{Clases que puede asignar nuestra hipótesis H} = $H\in\{j,t\}$
 \end{itemize}
 
-Vamos a construir los 4 modelos:
+Vamos a construir los 4 modelos posibles:
 
 \begin{itemize}
 	\item $h_1(c) = j$ y $h_1(x) = t$ 
@@ -155,26 +163,58 @@ Vamos a construir los 4 modelos:
 	\item $h_4(c) = t$ y $h_4(x) = t$ 
 \end{itemize}
 
-Con lo calculado anteriormente, observamos que el modelo $h_1$ es elegido según el criterio MAP.
+Con lo calculado anteriormente (\ref{calculadoAnteriomente1} y \ref{calculadoAnteriomente2}), observamos que el modelo $h_2$ es elegido según el criterio MAP. 
 
 Pero podemos plantearnos, ¿qué modelo es mejor? Pues el que menos se equivoque. Vamos entonces a calcular las probabilidades de error de los modelos.
 
-\subparagraph{$h_1$:} $P(error) = p(j,c) + p(t,x) = P(j|c)·P(c) + P(x|t)·P(t) = ... = 37.5\%$
-\subparagraph{$h_2$:} $P(error) = p(j,x) + p(t,c) = P(j|x)·P(x) + P(c|t)·P(t) = ... = 62.5\%$
-\subparagraph{$h_3$:} $P(error) = p(j,x) + p(t,x) = P(j|x)·P(x) + P(x|t)·P(t) = ... = 50\%$
-\subparagraph{$h_4$:} $P(error) = p(j,c) + p(t,c) = P(j|c)·P(c) + P(c|t)·P(t) = ... = 50\%$
+\textcolor{red}{Dejuan ha hecho a mano estos cálculos porque no tenía ni pies ni cabeza lo que había copiado.}
+
+\paragraph{Cálculo de errores}
+\subparagraph{$h_1$:} $P(error) = p(t,c) + p(j,x) = P(j|c)·P(c) + P(j|x)·P(x) = ... = 50\% $
+También podíamos haber calculado (como estaba mal escrito en la versión anterior de los apuntes). A gusto del consumidor un método o el otro.
+\[P(error) = 1-P(acierto) = 1 - (p(j,c) + p(t,x)) = ...\]
+
+\subparagraph{$h_2$:} 
+$P(error) = p(j,c) + p(t,x) = P(j|c)·P(c) + P(t|x)·P(x) = ... = 50\%$
+\subparagraph{$h_3$:} 
+$P(error) = p(t,c) + p(t,x) = P(t|c)·P(c) + P(t|x)·P(x) = ... = 62.5\%$
+\subparagraph{$h_4$:} 
+$P(error) = p(j,c) + p(j,x) = P(j|c)·P(c) + P(j|x)·P(x) = ... = 37.5\%$
 \end{example}
 
 
  \begin{defn}[Matriz de confusión]
- 	Tabla para visualizar el error de un clasificador. Con el ejemplo de la moneda,
-
- 	% % % Real
- 	% % % justa -- trucada
- 	% % j  25%      12.5
-   	% % t  25%      37.5
-
+ 	Tabla para visualizar el error de un clasificador. En la diagonal encontramos las tasas de acierto, y fuera de la diagonal, las tasas de error.
  \end{defn}
+
+
+En esta matriz, la diagonal son las tasas de acierto y lo que está fuera de la diagonal las tasas de fallo. Con este criterio, comprobamos entonces que efectivamente la tasa de error es $25+12.5 = 37.5$, como habíamos calculado anteriormente erróneamente.
+
+
+Si tomamos $h_2$, la matriz de confusión sería (tomando la parte real arriba y las predicciones a la izquierda):
+\[
+\begin{pmatrix}{ccc}
+& justa & trucada \\\hline
+j&A_{11}&A_{12}\\
+t& A_{21}&A_{22}
+\end{pmatrix}
+\]
+Y vamos a ir calculando cada $A_{ij}$.
+
+¿CUál es la probabilidad de que digamos justa siendo la moneda justa? Para ello pensamos ¿Cuándo decimos nosotros justa? Cuando ha salido una cruz, entonces $A_{11}$ es la probabilidad de que sea justa y de que haya salido cruz, es decir $A_{11} = P(x,j) = P(x|j)·P(j) = P(j|x)·P(x)$. Entonces:
+
+\[
+\begin{pmatrix}{ccc}
+& justa & trucada \\\hline
+j& P(x,j) & P(x,t)\\
+t& P(c,j) & P(c,t)
+\end{pmatrix}
+\]
+
+
+
+
+\paragraph{Pero...}
 
 Pensemos en el caso de una enfermedad y queremos, a partir de unos datos predecir si va a tener la enfermedad o no. Tenemos una enfermedad muy grave que padecen $10$ personas en una muestra de $15000$. Un modelo que diga que nadie la tiene, sólo falla en un $\frac{10}{150000} \sim 0$, un error muy bajo. ¿Es este modelo bueno? En casos como este, interesa saber detectar la enfermedad cuando se da y es un error mucho más grave no diagnosticar la enfermedad cuando sí la tiene, que diagnosticarla cuando no la tiene, con lo que, la matriz de confusión ya no es una buena manera de valorar modelos. Por ello construimos la matriz de coste o riesgo.
 
@@ -191,7 +231,7 @@ Pensemos en el caso de una enfermedad y queremos, a partir de unos datos predeci
  \begin{example}
 Vamos a ver un ejemplo de costes con el caso de las monedas. 
 
-Sea $R$ el error cometido por $H_1$ y $R'$ el error cometido por $H_2$. 
+Sea $R$ el coste si pasamos una trucada por justa y $R'$ el coste si pasamos una justa por trucada.
 
 En el caso de las monedas, suponemos $R = 3R'$, con lo que el cálculo de los costes quedaría así:
 
@@ -201,8 +241,7 @@ En el caso de las monedas, suponemos $R = 3R'$, con lo que el cálculo de los co
 \subparagraph{$h_3$:} $P(error) = R' · P(j,x) + R · P(t,x) = ... = R' · 1.5$
 \subparagraph{$h_4$:} $P(error) = R' · P(j,c) + R · P(t,c) = ... = R' · 0.5$
 
-Entonces, es $h_4$ la hipótesis que minimiza el coste, aunque no es la que minimiza el error.
-
+Entonces, es $h_4$ la hipótesis que minimiza el coste (con la ponderación elegida), aunque no es la que minimiza el error en términos generales (como hemos visto antes).
 
  \end{example}
 
@@ -459,13 +498,14 @@ En casos en que aparecen valores nulos en las tablas se suma  1 a toda la tabla.
 \paragraph{Interpretación: } La idea intuitiva es que pueden faltarnos datos y que tal vez no es categórico ese $0$. Supongamos que tiro una moneda 3 veces y salen 3 caras. Sólo debería aparecer un $0$ si la moneda tuviera 2 caras. Si no, simplemente nos falta información. Como sólo tener 2 caras en una moneda es absurdo, nos inventamos un experimento positivo y otro negativo para compensar esa posible falta de información.
 
 Con esta modificación, reescribimos la tabla de producción de lágrimas:
-
+\begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
 prod & n&b&d\\\hline
 reducida & 13 & 1 & 1\\\hline
 normal &4&6&5\\\hline
 \end{tabular}
+\end{center}
 
 Y recalculamos las probabilidades de diagnóstico con esta corrección:
 
@@ -486,23 +526,24 @@ En este caso, vamos a estudiar un problema de clasificación de plantas en funci
 Estos son los datos:
 
 \begin{center}
+\label{iris::datos}
 \begin{tabular}{|c|c|c|c|}\hline
-Anchura de pétalos & setosa & vesicolor & virginica \\[5pt]\hline\hline
-0-0.2 & 	$\frac{1}{10}$ & & \\[5pt]\hline
-0.2-0.4 & 	$\frac{18}{25}$ & & \\[5pt]\hline
-0.4-0.6 & 	$\frac{4}{25}$ & & \\[5pt]\hline
-0.6-0.8 & 	$\frac{4}{50}$ & & \\[5pt]\hline
-0.8-1.0 & & &\\[5pt]\hline
-1-1.2 &  & $\frac{1}{5}$ & \\[5pt]\hline
-1.2-1.4 & 				 & $\frac{18}{50}$ & \\[5pt]\hline
-1.4-1.6 & 				 & $\frac{17}{50}$ & $\frac{3}{50}$ \\[5pt]\hline
-1.6-1.8 & 				 & $\frac{4}{50}$ &  $\frac{1}{25}$\\[5pt]\hline
-1.8-2.0 & 				 & $\frac{1}{50}$ & $\frac{8}{25}$\\[5pt]\hline
-2.0-2.2 & 				 & & $\frac{6}{25}$\\[5pt]\hline
-2.2-2.4 & 				 & & $\frac{11}{50}$\\[5pt]\hline
-2.4-2.6 & 				 & & $\frac{3}{25}$\\[5pt]\hline
-2.6-2.8 & 				 & & \\[5pt]\hline
-2.8-3.0 & 				 & & \\[5pt]\hline
+Anchura de pétalos & setosa & vesicolor & virginica \\[8pt]\hline\hline
+0-0.2 & 	$\displaystyle\frac{1}{10}$ & & \\[8pt]\hline
+0.2-0.4 & 	$\displaystyle\frac{18}{25}$ & & \\[8pt]\hline
+0.4-0.6 & 	$\displaystyle\frac{4}{25}$ & & \\[8pt]\hline
+0.6-0.8 & 	$\displaystyle\frac{4}{50}$ & & \\[8pt]\hline
+0.8-1.0 & & &\\[8pt]\hline
+1-1.2 &  & $\displaystyle\frac{1}{5}$ & \\[8pt]\hline
+1.2-1.4 & 				 & $\displaystyle\frac{18}{50}$ & \\[8pt]\hline
+1.4-1.6 & 				 & $\displaystyle\frac{17}{50}$ & $\displaystyle\frac{3}{50}$ \\[8pt]\hline
+1.6-1.8 & 				 & $\displaystyle\frac{4}{50}$ &  $\displaystyle\frac{1}{25}$\\[8pt]\hline
+1.8-2.0 & 				 & $\displaystyle\frac{1}{50}$ & $\displaystyle\frac{8}{25}$\\[8pt]\hline
+2.0-2.2 & 				 & & $\displaystyle\frac{6}{25}$\\[8pt]\hline
+2.2-2.4 & 				 & & $\displaystyle\frac{11}{50}$\\[8pt]\hline
+2.4-2.6 & 				 & & $\displaystyle\frac{3}{25}$\\[8pt]\hline
+2.6-2.8 & 				 & & \\[8pt]\hline
+2.8-3.0 & 				 & & \\[8pt]\hline
 \end{tabular}
 \end{center}
 
@@ -510,9 +551,219 @@ La solución es suponer que la variable sigue una distribución normal dada la c
 
 \end{example}
 
+Estudiamos $p(v_1,...,v_n | µσ^2)$ suponiendo que su distribución es una normal.
+
+¿Qué valores de $µ$ y σ maximizan la verosimilitud de la muestra? Para ello derivamos respecto a $µ$ y $σ$ e igualamos a 0.
+
+Tras muchas cuentas que no van a ser reflejadas aquí, obtenemos que 
+\[µ = \frac{1}{N}\sum_{i=1}^N v_i\]
+\[σ^2 = \frac{1}{N}\sum_{i=1}^N (x_i- v_i)^2\]
+
+ \textcolor{red}{Ha caido en un examen esas cuentas largas}.
+
+
+Volviendo al problema de las plantas, tenemos la siguiente tabla con la información sobre la anchura de los pétalos:
+
+\begin{center}
+\begin{tabular}{c|ccc}
+& set & ver & vir \\\hline
+µ&0.246&1.326&2.026\\
+$σ^2$&0.0111&0.0391&0.0754
+\end{tabular}
+\end{center}
+
+
+El objetivo es poder clasificar una nueva planta que nos venga de acuerdo a esa información, suponiendo normalidad dada la clase. 
+
+\begin{example}
+Tenemos: $p(set) = p(vir) = p(ver) = \frac{1}{3}$
+
+Suponemos $D\equiv ap=1.5$ ¿A qué clase pertenece?¿Qué tipo de planta es?
+
+Vamos  a clacular las probabilidades \[p(set|ap=1.5)\]
+
+Si recurriéramos a la tabla de los datos \ref{iris::datos}, diríamos que $p(set|ap=1.5)=0$ ya que no tenemos ninguna planta con esas características. Pero como estamos suponiendo normalidad:
+
+\[p(set|ap=1.5) = \frac{P(ap=1.5|set)P(set)}{P(ap=1.5)} = \]
+Y aquí entra en juego la normalidad (dada la calse)
+\[
+= p(ap=1.5|set) = \frac{1}{\sqrt{2πσ^2}}\exp\left\{\frac{-(x-µ)^2}{2σ^2} \right\}= \frac{1}{2·π·0.0111}·e^{\left(\frac{-(1.5-0.246)^2}{2·0.0111}\right)} \simeq 10^{-31}
+\]
+
+\end{example}
+
+\begin{example}
+Vamos a utilizar Naive-Bayes con 2 atributos, uno discreto (longitud de sépalos) y otro continuo (anchura de pétalos).
+
+
+
+\paragraph{Anchura de pétalos}
+\begin{tabular}{c|ccc}
+& set & ver & vir \\\hline
+µ & 0.246 & 1.326 & 2.026\\
+$σ^2$ & 0.0111 & 0.0391 & 0.0754
+\end{tabular}
+
+\paragraph{Longitud de sépalos}
+\begin{tabular}{c|ccc}
+& set & ver & vir \\\hline
+pequeño ($\leq$5) & 20 & 1 & 1\\
+mediano (5<...<6) & 30 & 25 & 7\\
+grande (6<...<7) & 0 & 23 & 30\\
+muy grande ($\geq$ 7) & 0 & 1 & 12
+\end{tabular}
+
+Nos piden calcular $P(set|ls=m,ap=1.9)$. Vamos a suponer independencia ya que aplicamos Naive-Bayes
+
+\[
+P(set|ls=m,ap=1.9) = \frac{P(ap=1.9|set)·P(ls=m|set)·P(set)}{P(...)} = \frac{1.23·10^{-53}·\frac{30}{50}·\frac{1}{3}}{P(...)} \simeq 0
+\]
+\[
+P(ver|ls=m,ap=1.9) = \frac{2.99·10^{-2}\frac{25}{50}\frac{1}{3}}{P(...)} = \frac{4.98·10^{-3}}{P(...)}
+\]
+\[
+P(vir|ls=m,ap=1.9) = \frac{1.3·\frac{7}{50}\frac{1}{3}}{P(...)} = \frac{6.1·10^{-2}}{P(...)}
+\]
+
+Sin necesidad de normalizar, elegiremos la clase $vir$. 
+
+\end{example}
+
+En el ejemplo anterior suponíamos independencia entre la longitud del sépalo y la anchura del pétalo, pero esta suposición no es muy acertada, ya que no sabemos (y es digno de suponer que sí) que haya una correlación entre los 2 atributos.
+
+
+\section{Modelos Gráficos (Redes de Bayes)}
+
+En esta sección vamos a ver cómo saber si las variables son independientes (y entonces Naive-Bayes mola) o si son dependientes y no deberíamos utilizarlo. La clave es la 
+
+\begin{defn}[Regla de la cadena]
+Aplicación de la regla del producto múltiples veces.
+\end{defn}
+
+Consideramos las variables aleatorioas $x_1,x_2,x_3,x_4$:
+
+\[P(x_1,x-2,x_3,x_4) = P(x_1|x_2,x_3,x_4)P(x_2,x_3,x_4) = ... = P(x_1|x_2,x_3,x_4) P(x_2|x_3,x_4) P(x_3|x_4) P(x_4)\]
+
+
+Vamos a representar gráficamente la regla de la cadena mediante un grafo \textbf{acíclico} dirigido que representa las relaciones entre las variables.
+
+\includegraphics[scale=0.5]{img/grafo1.jpg}
+
+\begin{defn}[Red de Bayes]
+\[P(x_1,...,x_n) = \prod_{i=1}^N p(x_i | pa_1)\]
+
+donde $pa_i$ es el conjunto de padres de la variable $x_i$, con $P(x_1|pa_i) = p(x_i)$ en caso de no tener padres la variables $x_i$.
+
+\end{defn}
+\obs En caso de ser independientes, las variables no tendrían padres , debido a que el grafo no tendría aristas.
+
+
+\subsection{Modelo gráfico para Naive-Bayes}
+Recordando el problema de las lentillas:
+\[P(d|e,l,p) = \frac{P(e,l,p|d)·P(d)}{P(e,l,p)}\]
+
+Con la regla de la cadena:
+
+\[
+P(e,l,p|d)·P(d) = P(e,l,p,d) = P(e,l,p|d)·P(d) = P(e|d)P(l|d)P(p|d)P(d)
+\]
+
+El grafo correspondiente a este caso:
+
+
+\includegraphics[scale=0.5]{img/grafo2.jpg}
+
+¿Y si este grafo nos parece muy sencillo? Podemos suponer que la edad influye en el astigmatismo, asique añadimos una arista al grafo, y escribimos la fórmula:
+
+\includegraphics[scale=0.5]{img/grafo3.jpg}
+
+\[
+P(d|a,e,p) = \frac{P(d,a,e,p)}{P(a,e,p)} = 
+\]
+
+Vamos a descomponer $P(d,a,e,p)$ utilizando el grafo. 
+
+\begin{itemize}
+	\item $d$ no depende de nadie, es huérfano sin padres.
+	\item $e$ depende de $d$.
+	\item $a$ depende de 2 cosas, con lo que $P(a|e,d)$.
+	\item ...
+\end{itemize}
+
+Con esta información, obtenemos:
+
+\[
+P(d|a,e,p) = \frac{P(d,a,e,p)}{P(a,e,p)} =  \frac{P(a|e,d)P(e|d)P(p|d)P(d)}{P(e,a,p)}
+\]
+
+Seguimos el próximo día.
+
+
+Vamos a ver los posibles diagnósticos:
+
+\[
+P(d=n|e=j,p=na=s) = \frac{P(a=s|d=n,e=j)P(e=j|d=n)P(p=n|d=n)P(d=n)}{P(...)} = 
+\]
+\[
+= \frac{\frac{2}{4}\frac{4}{15}\frac{3}{15}\frac{15}{24}}{P(...)} = ... = 17\%
+\]
+\[
+P(d=d|e=j,p=na=s) = \frac{\frac{2}{2}\frac{2}{4}\frac{4}{4}\frac{4}{24}}{P(...))} = ... = 83\%
+\]
+\[
+P(d=b|e=j,p=na=s) = ... = 0
+\]
+
+
+\section{Vecinos próximos}
+
+\subsection{Introducción y motivación del método}
+Hasta ahora la verosimilitud la hemos calculado de diferentes maneras:
+
+\begin{itemize}
+ 	\item[Discretos] Con frecuencias 
+ 	\item[Continuos]  Discretizando y usando frecuencias (histograma). Esta estimación es no paramétrica y la probabilidad de que un punto caiga en una caja es el número de puntos en esa caja dividido del total.
+ 	\item[] Estimando la densidad de probabilidad con una normal. La estimación es paramétrica y se calcula utilizando la integral de la función de densidad, es decir:
+ 	\[P(1.4 \leq x < 1.5) = \int_{1.4}^{1.5}P df(x)dx\]
+ \end{itemize} 
+
+ ¿Qué podemos hacer para estimar paramétricamente una muestra como la siguiente?
+
+\begin{center}
+ \includegraphics[scale=0.4]{img/histogramaCenas.jpeg}
+\end{center}
+Aquí vemos claramente que no podemos estimar utilizando una normal, ya que ni se le parece. Podríamos tomar 2 normales, o tendríamos que intentar generalizar la estimación por histograma a $D$ dimensiones.
+
+
+En el caso de estimar generalizando el histograma, tendríamos $P(x∈R) = \frac{K}{N}$, donde $K$ es el número de puntos en la región y $N$ es el número total de datos.
+
+
+Si intentamos exportar este modelo a más dimensiones, generalizar la estimación por histograma, necesitamos muchos más datos de los que podemos obtener para estimar así, debido a la \textbf{MALDICIÓN DE LA DIMENSIONALIDAD}. 
+
+Para que la estimación generalizada por histograma sea una buena estimación, tenemos que tener el espacio suficientemente cubierto de puntos, es decir $n$ tiene que ser más grande cuanto mayor es la dimensión.
+
+Si tenemos $R$ suficientemente pequeña, podemos intentar estimarlo con integrales: \[P(\bar{x}∈R) = \int_R Pdf(\bar{x})d\bar{x} \simeq pdf(\bar{x})·V\]
+Donde $V$ es el volumen de $R$.
+
+Igualando, obtenemos 
+
+\[
+P(\bar{x}∈R) = \frac{K}{N} = pdf(\bar{x})·V \implies pdf(\bar{x}) = \frac{K}{NV}
+\]
+
+Esta última fórmula se puede usar de 2 formas:
+
+\begin{itemize}
+	\item Si fijamos $K$ y obtenemos el $V$ necesario paar incluir $K$ puntos, clasificamos por el algoritmo de vecinos próximos.
+	\item Si fijamos $V$ y calculamos $K$ obtenemos métodos de núcleos (SVM) que son los más eficientes que hay y que no vamos a ver.
+\end{itemize}
+
+
+
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
+
 
 \chapter{Ejercicios}
 \input{tex/AA_ejs.tex}

@@ -587,6 +587,7 @@ VQKCAVICN MIQM
 \end{center}
 
 \doneby{Jorge}
+
 Si la función de descifrado del aptdo. (a) es:
 \[f(c) = α·c + β = m\]
 Tendremos que la de cifrado será:
@@ -632,8 +633,12 @@ Puesto que estamos en $ℤ_{N^n}$ tendremos (escribiendo también la secuencia c
 Expresando $β$ en forma de suma $β = \sum_{i=0}^n N^{-i}β_i$ :
 \[\sum_{i=0}^n N^{-i}(α m_i + β_i) = \sum_{i=0}^n N^{-i}c_i\]
 
-Para el caso particular $n=1$ se tiene que $αm_1 + β_1 = c_1$, y se ve que $c_1$ es función afín de $m_1$. Procediendo por \textbf{inducción} llegamos a que cada $c_i$ es función afín del $m_i$ correspondiente.
+Para el caso particular $n=0$ se tiene que $αm_0 + β_0 = c_0$, y se ve que $c_0$ es función afín de $m_0$. Procediendo por \textbf{inducción} llegamos a que cada $c_i$ es función afín del $m_i$ correspondiente. Es decir, para $n=1$:
 
+\[ N^{-1}(αm_1+β_1) + (αm_0+β_0) =\]
+\[= N^{-1}(αm_1 +β_1) + c_0 \underbrace{=}_{\text{por como está definifa} f} N^{-1}c_1+c_0\]
+
+Volvemos a ver que $c_1$ es función afín de $m_1$, y a medida que pongamos $n$s mayores obtenemos lo mismo (inducción).\textbf{Demostración del profesor}
 
 \spart
 Puesto que cada letra depende únicamente de la letra que ocupa su misma posición en el menaje original, nos encontramos ante la misma situación que en \textbf{Criptosistema de Vigenère} visto en clase y, de la misma forma, podríamos apoyarnos en el \textbf{índice de coincidencia} para encontrar $N$.
@@ -901,7 +906,7 @@ Interceptamos el mensaje, escrito en inglés, ``S GNLIKD?KOZQLIOMKUL.VY'' que se
 \solution
 \doneby{Jorge}
 
-El procedimiento a seguir será el mismo del apartado anterior así que ahorraremos dar demasiadas explicaciones.
+El procedimiento a seguir será el mismo del ejercicio anterior así que ahorraremos dar demasiadas explicaciones.
 
 Planteamos el sistema matricial:
 
@@ -1082,13 +1087,13 @@ Esta matriz parece ser la buena, pues satisface los 3 sistemas propuestos al pri
 \end{center}
 
 
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[width=0.5\textwidth]{img/4chan_frog.jpg}
-		\caption{$>$ MFW ha salido con la primera que hemos probado}
-	\end{center}
-\end{figure}
 
+\begin{center}
+	\includegraphics[width=0.5\textwidth]{img/4chan_frog.jpg}
+\end{center}
+
+
+\obs Nos habríamos ahorrado el probar con todas las matrices buscando un sistema en el que la matriz fuera invertible $\mod 3$.
 
 \end{problem}
 
@@ -1096,6 +1101,123 @@ Esta matriz parece ser la buena, pues satisface los 3 sistemas propuestos al pri
 Interceptamos el mensaje, escrito en castellano, que se ha cifrado usando una transformación afín sobre vectores de $\ent_{30}^2$, donde 0,...,26 equivalen a las letras A,...,Z, 27 es el espacio en blanco, 28=., 29=?, y para el que sabes que el mensaje original está firmado por `` BAROJA.'' (con espacio al principio y punto al final). Encuentra las posibles funciones para cifrar, $f_{A,B}$ si el mensaje cifrado termina con ``Z.MBGPCB''
 
 \solution
+
+\doneby{Pedro}
+
+La función buscada será de la forma $f(m)=Am+B$ siendo $m,B$ vectores columna de dos coordenadas y $A$ una matriz de orden dos.
+
+Con los datos que tenemos vamos a tratar de plantear un sistema de ecuaciones matriciales con el que podamos trabajar:
+
+\[\left\{A \left( \begin{array}{cc}
+		27 & 0 \\
+		1 & 18
+	\end{array} \right) + B = \left( \begin{array}{cc}
+		26 & 12 \\
+		28 & 1
+	\end{array} \right) \atop A \left( \begin{array}{cc}
+		15 & 0 \\
+		9 & 28
+	\end{array} \right) + B = \left( \begin{array}{cc}
+		6 & 2 \\
+		16 & 1
+	\end{array} \right)\right.\]
+
+Para resolver este choricito tiramos de Sage:
+
+\begin{verbatim}
+var('a1,a2,a3,a4,b1,b2')
+
+solve_mod([a1*27+a2+b1 == 26, a2*18+b1==12, a3*27+a4+b2==28, a4*18+b2==1,
+a1*15+a2*9+b1 == 6, a2*28 + b1 == 2, a3*9+a4*28 +b2 == 16, a4*28+b2 == 1],
+30)
+
+SOL:
+
+[(6, 14, 15, 24, 0, 19), (6, 14, 25, 24, 0, 19), (6, 14, 5, 24, 0, 19),
+(16, 14, 15, 24, 0, 19), (16, 14, 25, 24, 0, 19), (16, 14, 5, 24, 0, 19),
+(26, 14, 15, 24, 0, 19), (26, 14, 25, 24, 0, 19), (26, 14, 5, 24, 0, 19),
+(21, 29, 15, 24, 0, 19), (21, 29, 25, 24, 0, 19), (21, 29, 5, 24, 0, 19),
+(1, 29, 15, 24, 0, 19), (1, 29, 25, 24, 0, 19), (1, 29, 5, 24, 0, 19),
+(11, 29, 15, 24, 0, 19), (11, 29, 25, 24, 0, 19), (11, 29, 5, 24, 0, 19)]
+\end{verbatim}
+
+\textbf{A continuación mostramos la solución del profesor}
+
+Empezamos planteando la ecuación:
+\[A \left( \begin{array}{cccc}
+		27 & 0 & 15 & 0\\
+		1 & 18 & 9 & 28
+	\end{array} \right) + \underbrace{[B,B,B,B,B,B]}_{\tilde{B}} = \left( \begin{array}{cccc}
+		26 & 12 & 6 & 2\\
+		28 & 1 & 16 & 1
+	\end{array} \right)\]
+
+El problema es que no hay forma de trabajar con estos datos en módulo 30. Lo que vamos a hacer es transformar este problema\footnote{Nos apoyamos en el teorema chino del resto que nos permite conocer la solución módulo 30 si la conocemos módulo los primos en que factoriza 30} en tres problemas que si podremos resolver: módulo 3, 5 y 2.
+
+Si reducimos la ecuación a \textbf{módulo 5} tenemos:
+\[A \left( \begin{array}{cccc}
+		2 & 0 & 0 & 0\\
+		1 & 3 & 4 & 3
+	\end{array} \right) + \tilde{B} = \left( \begin{array}{cccc}
+		1 & 2 & 1 & 2\\
+		3 & 1 & 1 & 1
+	\end{array} \right)\]
+
+
+Si extraemos ecuaciones tomando sólo dos columnas de las matrices que hemos escrito podemos llegar al sistema matricial:
+\[\left\{ A \left( 0 \atop 3\right) + B = \left(  2 \atop 1\right) \atop
+A \left(  0 \atop 4\right) + B = \left( 1 \atop 1\right) \right. \implies A\left( 0 \atop 1\right) = \left( 4 \atop 0\right)\]
+
+Con lo que ya conocemos la segunda columna de $A \mod 5$.
+
+Llevando a cabo un procedimiento que me he perdido llegamos a calcular la primera columna de la matriz $A \mod 5$ con lo que nos queda:
+\[A = \left( \begin{array}{cc} 1 & 4 \\ 1 & 0 \end{array}\right) \mod 5 , \ \ \ B={0 \choose 1} \mod 5\]
+
+Si trabajamos \textbf{módulo 3} llegamos al sistema:
+\[A \left( \begin{array}{cccc}
+		0 & 0 & 0 & 0\\
+		1 & 0 & 0 & 1
+	\end{array} \right) + \tilde{B} = \left( \begin{array}{cccc}
+		2 & 0 & 0 & 2\\
+		1 & 1 & 1 & 1
+	\end{array} \right)\]
+
+Atendiendo a la segunda y tercera columnas de la matriz del texto descifrado podemos ver fácilmente que
+\[A \left(0 \atop 0 \right) + B = \left(1 \atop 0\right)\implies B = \left(0 \atop 1  \right) \mod 3\]
+
+De forma similar podemos encontrar la segunda columna de $A \mod 3$
+
+\[A \left(0 \atop 1 \right) + \left(1 \atop 0 \right) = \left(2 \atop 1\right)\implies A \left(0 \atop 1 \right) = \left( 2 \atop 0 \right) \mod 3\]
+
+Sabiendo que la primera columna de $A \mod 3$ no puede ser múltiplo de su segunda columna vemos que tenemos un total de 6 posibilidades para $A \mod 3$.
+
+Por último, si trabajamos \textbf{módulo 2} llegamos al sistema:
+
+\[A \left( \begin{array}{cccc}
+		1 & 0 & 1 & 0\\
+		1 & 0 & 1 & 0
+	\end{array} \right) + \tilde{B} = \left( \begin{array}{cccc}
+		0 & 0 & 0 & 0\\
+		0 & 1 & 0 & 1
+	\end{array} \right)\]
+
+Igual que cuando trabajamos en módulo 3, podemos ver fácilmente que:
+\[B = \left( 0 \atop 1\right) , \ \ A \left( 1 \atop 1 \right) = \left( 0 \atop 1 \right)\]
+
+El vector columna $(1,1)$ puede considerarse un elemento de una base. Si llevásemos la matriz a esa base, tendríamos una de las columnas determinada y sólo tendríamos dos opciones para la otra columna. Por tanto, ya tenemos la matriz $A \mod 2$ reducida a dos posibilidades:
+
+\[A = \left( \begin{array}{cc}1 & 1 \\ 0 & 1 \end{array}\right) \text{ ó } \left( \begin{array}{cc}1 & 1 \\ 1 & 0 \end{array}\right)\]
+
+Procedemos ahora a \textbf{combinar todos los datos recogidos hasta ahora}.
+
+Tenemos un total de 12 posibles combinaciones de valores de $A$ en diferentes módulos, por lo que tendríamos un total de 12 posibles formas de calcular $A \mod 30$ empleando el teorema chino del resto.
+
+Como lo que nos queda por hacer es sólo cuestión de cuentas, vamos a calcular sólo una de esas doce matrices.
+
+\[A =  \left( \begin{array}{cc}1 & 1 \\ 1 & 0 \end{array}\right) \mod 5 , \ \  \left( \begin{array}{cc}0 & 2 \\ 2 & 0 \end{array}\right) \mod 3, \ \  \left( \begin{array}{cc}1 & 1 \\ 0 & 1 \end{array}\right) \mod 2\]
+
+Por la cuenta de la vieja llegamos a que:
+\[ A = \left( \begin{array}{cc}21 & 29 \\ 26 & 15 \end{array}\right) \mod 30\]
 \end{problem}
 
 \begin{problem}[7]
@@ -1204,6 +1326,8 @@ Los vectores digrafos fijos son aquellos tales que $Am=m \implies (A-I)m = 0 \im
 
 Es decir, habrá más puntos fijos a parte del trivial si y sólo si la matriz tiene un autovalor 1.
 
+\textcolor{blue}{El profesor hizo esto mismo en clase considerando que la condición buscada (que es equivalente al hecho de que $A$ no tenga autovalor 1) es que la matriz $A-I$ sea inyectiva. \\Además, por estar en un cuerpo finito, $A-I$ inyectiva $\iff$ $A-I$ biyectiva $\iff$ $A-I$ invertible}
+
 \spart
 
 Si tenemos que $AA$ no es el único digrafo fijo tenemos que existe un digrafo $m={m_1 \choose m_2}$ tal que $Am=m$.
@@ -1261,6 +1385,7 @@ El producto de dos funciones de Hill es una función de Hill
 El producto de dos funciones afines cualesquiera es una función afín
 
 \solution
+\doneby{Pedro}
 
 \spart
 Si tenemos dos traslaciones $f_i(m)=m+b_i$ y estudiamos su composición tenemos:
@@ -1501,10 +1626,12 @@ Usando la función $f_A$, resulta que al texto en claro ``HABLAR'' le correspond
 
 \doneby{Pedro}
 
+\approvedby{Carolina}
+
 Con la relación que tenemos entre el texto original y el texto cifrado podemos plantear la siguiente ecuación matricial:
 
 \[A\left( \begin{array}{cc}
-  7 & 2 \\
+  7 & 1 \\
   0 & 11
   \end{array} \right) = \left( \begin{array}{cc}
   7 & 5 \\
@@ -1517,7 +1644,7 @@ Podemos observar que no hay forma de plantear una ecuación, con los datos que t
 
 Tomamos la ecuación:
 \[A\left( \begin{array}{cc}
-  2  & 0\\
+  1  & 0\\
   11 & 18
   \end{array} \right) = \left( \begin{array}{cc}
   5 & 4\\
@@ -1530,17 +1657,17 @@ y podemos reducirla módulo 7, manteniendo la igualdad, con lo que tenemos:
   5 & 4\\
   4 & 4
   \end{array} \right) \left( \begin{array}{cc}
-  2  & 0\\
+  1  & 0\\
   4 & 4
   \end{array} \right)^{-1} = \left( \begin{array}{cc}
   5 & 4\\
   4 & 4
-  \end{array} \right) \cdot \left(\frac{1}{8}=1\right) \cdot \left( \begin{array}{cc}
-  4  & -4\\
-  0 & 2
+  \end{array} \right) \cdot \left(\frac{1}{4}=2\right) \cdot \left( \begin{array}{cc}
+  4  & 0\\
+  -4 & 1
   \end{array} \right) = \left( \begin{array}{cc}
-  6 & 2\\
-  2 & 6
+  1 & 1\\
+  0 & 1
   \end{array} \right) \mod 7\]
 
  Ahora ya sabemos cómo es la matriz $A \mod 7$
@@ -1551,24 +1678,24 @@ y podemos reducirla módulo 7, manteniendo la igualdad, con lo que tenemos:
   3 & 1 \\
   3 & 0
   \end{array} \right) \left( \begin{array}{cc}
-  3 & 2 \\
+  3 & 1 \\
   0 & 3
   \end{array} \right)^{-1} = \left( \begin{array}{cc}
   3 & 1 \\
   3 & 0
   \end{array} \right) \left( \begin{array}{cc}
-  3 & 0 \\
-  -2 & 3
+  3 & -1 \\
+  0 & 3
   \end{array} \right) = \left( \begin{array}{cc}
-  3 & 3 \\
-  1 & 0
+  1 & 0 \\
+  1 & 1
   \end{array} \right) \mod 4\]
 
  Conociendo la matriz módulo 4 y módulo 7, podemos deducir sus coeficientes módulo 28:
 
  \[A = \left( \begin{array}{cc}
-  27 & 23\\
-  9 & 20
+  1 & 8\\
+  21 & 1
   \end{array} \right) \mod 28\]
 \end{problem}
 
@@ -1774,4 +1901,287 @@ Con toda esta información, y mirando componente a componente A\footnote{por el 
   8 & 1
   \end{array} \right)
 \end{align*}
+\end{problem}
+
+\section{Hoja 3}
+\begin{problem}[1]
+Se propone el siguiente sistema para jugar al poker por correo postal (el
+problema es como repartir las cartas sin que ninguno de los dos jugadores sepa
+las cartas que tiene el otro).
+
+i) El jugador $A$ pone cada una de las 52 cartas en una caja
+(todas las cajas son idénticas) y las cierra con candados para los
+que solo él tiene las llaves. Envía las 52 cajas al jugador $B$.
+
+ii) El jugador $B$ selecciona 5 de las cajas, que formarán la mano
+de $A$. Selecciona otras 5 cajas, que formarán su propia mano, y a
+estas 5 les pone candados para los que solo él tiene la llave.
+Envía las 10 cajas seleccionadas a $A$.
+
+iii) $A$ retira sus candados de las 10 cajas. Se queda con las 5
+cartas que forman su mano y envía las otras 5 cajas a $B$.
+
+iv) $B$ abre las 5 cajas y ya tiene sus cartas. Pueden empezar a jugar.
+
+v) En caso de disputa $B$ envía sus 5 cartas y las 42 cajas sin
+abrir a un arbitro neutral, al que $A$ le envía las llaves.
+
+EJERCICIO: Convencerse de que no se pueden hacer trampas y dar un
+método para jugar al poker utilizando el correo electrónico.
+\solution
+\end{problem}
+
+\begin{problem}[2]
+En una red de comunicaciones cada usuario $U$ tiene
+su función para cifrar $C_U$, que hace pública, y su función para
+descifrar $D_U$, que mantiene secreta. Un mensaje $m$ del usuario
+$A$ al usuario $B$ se enviará siempre en el siguiente formato:
+$(C_B(m),A)$. La dirección $A$ le indica a $B$ quién ha enviado el
+mensaje. El receptor $B$ recuperará $m$ a partir de $(C_B(m),A)$,
+y también, de manera automática, contestará  $(C_A(m),B)$ a $A$
+(obsérvese que $(C_A(m),B)$ tiene el formato adecuado). De esta
+manera $A$ sabe que $B$ ha recibido correctamente el mensaje.
+
+a) Prueba que un tercer usuario $C$ puede tambien leer el mensaje
+$m$ que $A$ envió a $B$. Podemos asumir que $C$ puede interceptar
+todos los mensajes transmitidos por la red (ya que una de las
+ventajas de la clave pública es que elimina la necesidad de que el
+canal sea seguro), y que $C$ puede enviar sus propios mensajes,
+siempre que utilice el formato correcto.
+
+b) Demuestra que las comunicaciones utilizando esta red siguen sin
+ser seguras si el protocolo es que $A$ envía $C_B((C_B(m),A))$ a
+$B$ y $B$ automaticamente responde  $C_A((C_A(m),B))$ a $A$.
+\solution
+\end{problem}
+
+\begin{problem}[3]
+
+Al pagar con una tarjeta de crédito los usuarios (compradores y
+vendedores)
+ deben comprobar una serie de cosas: el vendedor debe asegurarse de que
+la tarjeta es auténtica y tiene fondos, de que la tarjeta no es
+robada, de que el comprador no va a negar haber hecho la
+compra,...; por su parte el comprador debe asegurarse de que el
+vendedor no va a intentar cobrar de más o antes de tiempo, de que
+no va a utilizar posteriormente los datos de su tarjeta para hacer
+compras por su cuenta.... Para evitar todo esto se propone el
+siguiente sistema.
+
+La autoridad emisora de las tarjetas (que llamaremos AE) elige una
+función de un sólo sentido, $f$ que hace pública, manteniendo
+secreta la función inversa $f^{-1}$. Por su parte cada usuario $i$
+del sistema (comprador o vendedor) elige una serie de datos de
+identificación $I_i$ y una función de un sólo sentido $f_i$ (puede
+elegirla cada usuario por su cuenta siguiendo las instrucciones de
+la AE). El usuario $i$ envía $I_i$ a la AE, y ésta le devuelve
+$s_i=f^{-1}(I_i)$. Con estos datos $i$ construye su credencial:
+$(I_i, s_i,f_i)$, que hace pública, manteniendo secreta
+$f_i^{-1}$. Con todos estos datos, cuando el comprador $i$ quiere
+pagar al vendedor $j$, siguen el siguiente protocolo:
+
+i) {\it Presentación de credenciales:} El comprador entrega al
+vendedor $(I_i, s_i,f_i)$ junto con una descripción de la
+transacción (pago, fecha de cobro,...) desde su punto de vista:
+$u_i$. El vendedor comprueba si $f(s_i)=I_i$, y acepta o no la
+tarjeta. Se procede de manera simétrica entregando el vendedor sus
+datos,  $(I_j, s_j,f_j,u_j)$, al comprador.
+
+ii) {\it Autentificación:} El comprador y el vendedor unen (de
+modo adecuado dependiendo del tipo de funciones que se use) $u_i$
+y $u_j$, creando un $u=u_iu_j$. El comprador calcula
+$t_i=f_i^{-1}(u)$ y se lo da al vendedor, quién comprueba si
+$f_i(t_i)=u$. Se realiza la operación simétrica intercambiando los
+papeles de comprador y vendedor.
+
+iii) {\it Recibos:} el comprador guarda $(I_j,
+s_j,f_j,u_i,u_j,t_i,t_j)$ y el vendedor guarda $(I_i,
+s_i,f_i,u_i,u_j,t_i,t_j)$.
+
+EJERCICIO: Discute la utilidad de este sistema para resolver los
+problemas planteados en el primer parrafo, y cualquier otro que se
+te ocurra relacionado con los pagos con tarjeta de crédito.
+\solution
+\end{problem}
+
+\begin{problem}[4] Supongamos que una red de inversores y agentes de bolsa utiliza criptografía de clave pública.
+  Los inversores temen que sus agentes compren acciones sin
+  su autorización (para cobrar comisiones) y luego, si pierden dinero, digan que recibieron instrucciones de hacerlo
+  (mostrando un mensaje cifrado con una indicación en ese sentido y pretendiendo que venía del inversor).
+  Los agentes, por su parte, temen que, si compran acciones siguiendo las instrucciones del inversor y éstas pierden valor,
+   el inversor pretenda que nunca dio la orden de compra y que el mensaje está falsificado por un tercero o por el propio agente.
+
+Explica cómo puede la criptografía de clave pública resolver estos
+problemas de modo que cuando todos estos indeseables acaben ante
+los tribunales demandándose unos a otros, haya una prueba de quién
+es el culpable de las malas inversiones y consecuente pérdida de
+dinero. Puedes suponer que, en caso de una demanda entre el
+inversor $A$ y el agente $B$, se pone a disposición del juez toda
+la información para cifrar/descifrar, es decir, las claves $e_A,
+d_A, e_B, d_B$ y el software necesario para cifrar y descifrar.
+[PISTA: hace falta un ``acuse de recibo" de los mensajes.]
+
+\solution
+\end{problem}
+
+
+\begin{problem}[5] Ana y Beatriz cifran sus mensajes con el criptosistema de Cesar
+sobre el alfabeto castellano de 27 letras. Para poder cambiar de
+clave con frecuencia, deciden emplear el intercambio de claves de
+Diffie-Hellman. Para implementar el intercambio acuerdan que verán
+las 27 claves, $\{A,\dots,Z\}$ como las clases
+$\{1,\dots,27\}\subset(\ent_{29})^*$, y que utilizarán el logaritmo
+discreto en $\mathbb{F}_{29}^*=(\ent_{29})^*$ con base $g=2$.
+
+\ppart Supón que Ana elige como exponente en el intercambio $a=5$ y
+Beatriz $b=8$. ¿Cómo cifrarán el mensaje {\it HOLA} con la clave
+resultante?
+
+%b) Supón ahora que Ana elige $a=6$ y Beatriz $b=7$. ¿Hay algún
+%problema? ¿Puedes sugerir como resolverlo? (Intenta que tu
+%solución funcione en situaciones similares que puedan plantearse
+%%en otros casos.)
+
+%c) ¿Hay algún problema si Ana elige $a=4$ y Beatriz $b=7$? ¿Es del
+%mismo estilo que el problema anterior? ¿Puedes resolverlo?
+%(Intenta de nuevo que tu solución funcione en situaciones
+%similares que puedan plantearse en otros casos.)
+
+\ppart Cristina intercepta un mensaje ``18"\ que Ana la envía a Beatriz
+y un mensaje ``8"\ enviado por Beatriz a Ana. A continuación
+intercepta el mensaje {\it ELHQKHFKR} de Ana a Beatriz. ¿Qué le ha
+dicho Ana a Beatriz?
+
+\solution
+\end{problem}
+
+El objetivo de los tres siguientes problemas es dar un método para lanzar una moneda al aire ``a
+ distancia"\
+ usando una función 2-a-1 de un sólo sentido. Por ejemplo, para que dos personas que juegan al ajedrez por internet
+ puedan acordar quién lleva las blancas.
+
+{\vskip0.2cm}
+
+\begin{problem}[6]
+Un sistema de funciones 2-a-1 de un sólo sentido es un algoritmo
+que, dada una clave $e$, construye una función $f:\mathcal
+M\longrightarrow\mathcal C$ tal que cada elemento $c\in Im(f)$
+tiene exactamente dos preimágenes $m_1,m_2$ tales que $f(m_i)=c$;
+junto a a otro algoritmo que, dada una clave $d$ que ``invierte
+$e$", puede encontrar las dos preimágenes de cualquier $c\in
+Im(f)$. Suponemos ademas que es computacionalmente imposible
+encontrar $d$ conociendo sólo $e$. Observa que, dado
+$m_i\in\mathcal M$, podemos encontrar el otro elemento $m_2$ tal
+que $f(m_1)=f(m_2)$ si conocemos tanto $e$ como $d$; pero estamos
+asumiendo que, conociendo sólo $e$, es computacionalmente
+imposible calcular el compañero $m_2$ de \underbar{ningún} $m_1$.
+
+Supongamos que Ana y Beatriz quieren utilizar esto para ``lanzar
+una moneda al aire". Ana genera un par de claves $(e,d)$ y envía
+$e$, \underbar{pero no $d$}, a Beatriz. Encuentra un procedimiento
+en el que cada jugadora tenga una probabilidad del 50\% de
+``ganar" (empieza por dar una definición adecuada de ``ganar") y
+que incluya garantías de que no se puede hacer trampas.
+\solution
+\end{problem}
+
+
+\begin{problem}[7]
+
+\ppart Sea $R$ un dominio de integridad [es decir, $ab=0\Rightarrow
+a=0 \text{ ó } b=0$] y consideremos soluciones de ecuaciones en
+$R$. Demuestraque la ecuación $X^2=0$ tiene exactamente una
+solución. Ver que si $a\ne0$, la ecuación $X^2=a$ tiene a lo sumo
+dos soluciones. Si además suponemos que $2\ne 0$ en $R$, demostrar
+que, si  $X^2=a$ con $a\ne 0$ tiene solución, entonces tiene
+exactamente dos soluciones.
+
+\ppart Sea $N$ un número impar. Demuestra que en el anillo  $\ent_N\ent$
+existe algún $a$ tal que la ecuación  $X^2\equiv a \mod N$ no
+tiene ninguna solución. (Sugerencia: ?`Cardinal del conjunto de
+cuadrados?)
+
+\ppart Demuestra que en el anillo $\ent_{p^2}\ent$ con $p$ primo impar la
+ecuación
+ $X^2\equiv 0 \mod p^2$ tiene exactamente $p$ soluciones, mientras que si una
+ecuación $X^2\equiv a \mod p^2$ con $a\not\equiv 0$ tiene
+solución, entonces tiene exactamente dos soluciones.
+
+\ppart Sean $p$ y $q$ primos impares distintos. Trabajaremos ahora en
+el anillo $\ent_{pq}\ent$.
+\begin{itemize}
+\item[$d_1$)] Demuestra que, dado $x\in\ent_{pq}\ent$, existen $a,b\in\ent,\quad
+0\le a<q,\quad 0\le b<p$ tales que $x\equiv ap+bq \mod pq$, y que
+además $a$ y $b$ en estas condiciones son únicos.
+\item[$d_2)$] Dados $x\equiv ap+bq, x'\equiv a'p+b'q \in\ent_{pq}\ent$, da
+condiciones sobre $a,b,a',b'$ que sean equivalentes a $x^2\equiv
+{x'}^2 \mod pq$.
+\item[$d_3)$] Lo mismo que en $d_2)$, pero exigiendo además que $x\not\equiv
+x'\mod pq$.
+\item[$d_4)$] Demuestra que la ecuación $X^2\equiv\alpha^2 \mod pq$ tiene:
+1 solución si $\alpha\equiv0\mod pq$; 4 soluciones si $\alpha$ es
+una unidad en $\ent_{pq}\ent$;
+ 2 soluciones si $\alpha\not\equiv 0$ y $\alpha$ no es una unidad en
+$\ent_{pq}\ent$.
+\end{itemize}
+\solution
+\end{problem}
+
+\begin{problem}[8]
+Supongamos que tenemos un método rápido [existen algunos
+probabilísticos] para resolver la ecuación   $X^2\equiv a \mod p$
+cuando $p$ es primo y existe solución [esto es, $a$ es un {\it
+residuo cuadrático} módulo $p$]. Supongamos también que si $n$ es
+compuesto y producto de dos primos distintos, $n=pq$, no hay forma
+razonable de resolver   $X^2\equiv a \mod n$ que no pase por
+factorizar $n$ (en cuyo caso podemos resolver $X^2\equiv a \mod p$
+y $X^2\equiv a \mod q$ y utilizar el Teorema Chino del Resto).
+Supongamos por último que $p$ y $q$ no son ambos $\equiv 1 \mod
+4$. [RECUERDA: $p\equiv 1 \mod
+4$ $\iff$ existe $a\in \ent_p$ tal que $a^2\equiv 1 \mod p$.]
+
+Sea $K_e=n$ y sea $K_d=\{p,q\}$ su factorización. Pongamos $
+\mathcal{P}= \mathcal{ C}=(\ent_n)^*/\{\pm 1\}$, esto es
+identificamos cada clase inversible $x$ con su opuesta $-x$, y
+consideremos la función $f:  \mathcal{P}\to  \mathcal{C}$ definida
+por $f(x)=x^2$. Demuestra que todo esto es un ejemplo de la
+situación descrita  en el problema 6 y que por tanto acabamos de
+dar una forma explícita de lanzar monedas al aire ``a distancia".
+\solution
+\end{problem}
+
+\vspace{0.2cm}
+
+Vamos a hacer  ahora algunas estimaciones sencillas de tiempos. Utiliza siempre la
+notación $O$.
+
+\vspace{0.2cm}
+
+\begin{problem}[9]
+La siguiente fórmula es bien conocida:
+$$\sum_{j=1}^n j^2=\frac{n(n+1)(2n+1)}{6}.$$
+Estima en función de $n$ el número de bit-operaciones necesarias para
+calcular tanto el término de la izquierda como el de la derecha (¡sin usar la igualdad!).
+\solution
+\end{problem}
+
+\begin{problem}[10]
+Se trata de estimar en función de $n$ el número de bit-operaciones
+necesarias para calcular el producto de todos los números primos menores que
+$n$. Suponemos que hemos calculado con anterioridad una lista muy larga que
+contiene todos los primos menores que $n$
+
+\ppart Si definimos 
+\[\pi(n)=Card\{p\in\bold N\mid p<n, p \text{ es primo}\}\]
+el Teorema del Número Primo nos dice que \linebreak $\lim_{n \to \infty}\frac{\pi(n)}{n/\log
+n}=1$. Utiliza este resultado para estimar el número de dígitos en el producto
+de todos los números primos menores que $n$.
+
+\ppart Da una cota para el número de bit-operaciones necesarias para hacer una de
+las multiplicaciones que intervienen en dicho producto.
+
+\ppart Estima  el número total de bit-operaciones
+necesarias para calcular el producto de todos los números primos menores que
+$n$.
+\solution
 \end{problem}

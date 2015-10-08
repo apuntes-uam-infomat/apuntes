@@ -36,12 +36,15 @@ Siempre que tengamos una FBF de la forma: $(A \to B)$ lo transformamos en la rep
 
 \[((\neg A) \Or B)\]
 
-\item \textbf{Desplazar los $\not$ hacia el interior}
+\item \textbf{Desplazar los $\neg$ hacia el interior}
 
-Empleamos las leyes de Morgan para transformar FBFs de la forma $\neg(A \Or B)$ y $\neg(A \y B)$ en:
-\[((\neg A) \y (\neg B)) \text{ y } ((\neg A) \Or (\neg B)) \text{ respectivamente}\]
+Empleamos las leyes de De Morgan para transformar FBFs de la forma $\neg(A \Or B)$ y $\neg(A \y B)$ en:
+\begin{gather*}
+\neg(A \Or B) \equiv ((\neg A) \y (\neg B))\\
+\neg(A \y B) \equiv ((\neg A) \Or (\neg B))
+\end{gather*}
 
-\item \textbf{Distribuir ANDs hacia dentro sobre ORs}
+\item \textbf{Distribuir conjuncioness hacia dentro sobre disyunciones}
 
 Todas las FBFs de la forma $(A \y (B \Or C))$ las convertiremos en su representación equivalente:
 
@@ -51,7 +54,7 @@ obteniendo una FBF en FND.
 
 \end{enumerate}
 
-Por tanto, queda claro que dada cualquier FBF, si le aplicamos el algoritmo que acabamos de definir, queda convertida a una FBD equivalente.
+Por tanto, queda claro que dada cualquier FBF, si le aplicamos el algoritmo que acabamos de definir, queda convertida a una FND equivalente.
 
 \end{problem}
 
@@ -67,7 +70,7 @@ qu\'e ocurre si la cardinalidad de $A$ es 2015 en vez de 3.
 
 Por supuesto que existe la FBF definida: $(p \Or ( \neg p ))$
 
-Para comprobarlos basta con ver que:
+Para comprobarlo basta con ver que:
 \[σ(p \Or ( \neg p )) = \max\{σ(p), 1 + σ(p)\} = \left\{ \begin{array}{lcc}
             \max\{0,1\} = 1 &   si  & σ(p) = 0 \\
             \max\{1,0\} = 1 &  si  & σ(p)=1
@@ -86,7 +89,7 @@ Demostrar que $T$ es una teor\'{\i}a completa.
 
 Una teoría será completa si dada una FBF cualquiera $q$ se tiene que $T \vdash q$ o $T \nvdash q$
 
-Si tenemos que $σ(q)=1$ entonces $q \in T$, por definición de $T$, y por tanto, $q \vdash T$.
+Si tenemos que $σ(q)=1$ entonces $q \in T$, por definición de $T$, y por tanto, $T \vdash q$.
 
 Por otro lado, si $σ(q)=0$ es claro que no puede deducirse $q$ a partir de $T$. Vamos a demostrarlo.
 
@@ -119,16 +122,29 @@ Sea $X$ un conjunto parcialmente ordenado. Decidir razonadamente si el orden par
 extenderse a un orden lineal, o total.
 \solution
 
+%Solución obtenida de: http://math.stackexchange.com/questions/271003/every-partial-order-can-be-extended-to-a-linear-ordering
 
+Sea $(P,R)$ la representación de un conjunto (P) parcialmente ordenado (dada la relación R).
+
+Vamos a denominar como $C$ el conjunto de todos los ordenes parciales $(P,\leq)$ que extienden $R$, es decir, $R \subset \leq$.
+
+Podemos ver que los elementos de $C$ satisfacen el lema de Zorn respecto a la relación $\subset$ puesto que si tenemos una cadena:
+\[\leq_1 \subset \leq_2 \subset ... \subset \leq_n\]
+entonces el orden parcial $(P,\leq_n)$ será una cota superior.
+
+% ¡Prueba por Zornicación!
+Por tanto, podemos aplicar el lema de Zorn y sabemos que hay un elemento maximal en $C$.
+
+Este elemento maximal, será tal que dados dos elementos cualesquiera de $P$, véase $p_1$ y $p_2$, si hay un order parcial $\leq_i$ que los relaciona ($p_1 \leq p_2$, por ejemplo), entonces también están relacionados en el orden maximal.
+
+Puesto que $C$ es el conjunto de todos los ordenes parciales existentes sobre los elementos de $P$, dos elementos cualesquiera de $P$ estarán relacionados por algún order parcial y por tanto estarán relacionados en el orden maximal. Es decir, el orden maximal es un orden total.
 \end{problem}
 
 \begin{problem}[6]
 Expresar ``$f$ es una funci\'on inyectiva"  en un lenguaje de primer orden.
 \solution
 
-Siendo la función $f$ de la forma $\appl{f}{A}{B}$
-
-\[\forall x,y \in A \ f(x)=f(y) \iff x=y \]
+\[ \forall x \forall y (f(x)=f(y)) \implies (x = y) \]
 
 \end{problem}
 
@@ -140,6 +156,9 @@ Expresar ``$f$ es una funci\'on sobreyectiva"  en un lenguaje de primer orden.
 Siendo la función $f$ de la forma $\appl{f}{A}{B}$
 
 \[\forall y \in B \ \exists x \in A \ f(x)=y\]
+
+\doneby{Edu}
+\[ \forall y \ \exists x \ f(x) = y \]
 
 \end{problem}
 
@@ -163,6 +182,9 @@ interpretamos que el dominio y el rango de $f$ son los reales, con todas sus fun
 Una función $f$ será continua si y sólo si:
 \[\forall ε \in \real \  \exists δ \in \real \ \forall x_1,x_2 \in \real \  \norm{x_1,x_2} < δ \implies \norm{f(x_1),f(x_2)} < ε \]
 
+\doneby{Edu}
+\[\forall x_0 \forall \epsilon (\epsilon > 0 \y (\exists \delta (\delta > 0 \y (\forall x ((\norm{x,x_0} < \delta) \implies (\norm{f(x),f(x_0)} < \epsilon) ))))) \]
+
 \end{problem}
 
 \begin{problem}[10]
@@ -173,12 +195,11 @@ Expresar la definici\'on habitual de  ``$f$ es uniformemente continua"  en un le
 
 Siendo la función $f$ de la forma $\appl{f}{A}{B}$
 
-\[\forall ε \in \real \ \exists δ \in \real \ (ε>0)\y(δ>0) \forall x_1,x_2 \in A D(x_1,x_2,δ) \implies D(f(x_1),f(x_2),ε)\]
+\[\forall ε \in \real \ \exists δ \in \real \ (ε>0)\y(δ>0)\y \forall x_1,x_2 \in A \  \left(\norm{x_1,x_2}<δ \right)\implies \left( \norm{f(x_1),f(x_2)} < ε\right)\]
 
-Siendo el predicado $D$:
-\[D(a,b,d) = \norm{a-b} < d\]
-es decir, tomará el valor 1 cuando la distancia entre los puntos $a$, $b$ sea menor que $d$ y 0 en caso contrario.
 
+\doneby{Edu}
+\[\forall \epsilon (\epsilon > 0 \y (\exists \delta (\delta > 0 \y (\forall x_1 \forall x_2 ((\norm{x_1,x_2} < \delta) \implies (\norm{f(x_1),f(x_2)} < \epsilon) ))))) \]
 
 \end{problem}
 

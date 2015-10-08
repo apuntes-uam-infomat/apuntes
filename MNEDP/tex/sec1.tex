@@ -1381,3 +1381,153 @@ En conclusión
 \end{example}
 
 
+\subsubsection{Problemas no lineales}
+Consideramos la ecuación 
+$$u_t = a(u)u_{xx}$$
+
+El problema no es lineal porque la función $a$ depende de $u$. Vamos a ver un método explícito para hallar la solución:
+$$\frac{U_j^{n+1}-U_j^n}{\Delta x} = a(U_j^n) \frac{U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}}{(\Delta x)^2}$$
+
+O, escrito explícitamente
+$$U_{j}^{n+1}=U_{j}^{n}+a(U_{j}^{n})\nu \left[U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}\right]$$
+
+Vamos a hallar el error del método:
+$$u_{j}^{n+1}=u_{j}^{n}+a(u_{j}^{n})\nu \left[u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}\right] + \Delta t T_j^n$$
+
+$$e_j^n = U_j^n - u_j^n$$
+
+$$a(u_j^n) = a(U_j^n) - e_j^n\frac{\partial a}{\partial u}(\eta)$$
+
+para $\eta$ un punto intermedio entre $u_j^n$ y $U_j^n$.
+
+Tenemos, llamando $q_j^n=\frac{\partial a}{\partial u}(\eta)$
+$$u_j^{n+1} = u_j + a(U_j^n)\nu \left[u_{j+1}^n-2u_j^n+u_{j-1}^n\right] -\Delta t T_j^n - e_j^nq_j^n\nu \left[u_{j+1}^n-2u_j^n+u_{j-1}^n\right]$$
+
+Restando este valor a 
+$$u_{j}^{n+1}=u_{j}^{n}+a(u_{j}^{n})\nu \left[u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}\right] + \Delta t T_j^n$$
+
+obtenemos
+$$e_j^{n+1} = e_j^n + a(U_j^n) \nu\left[e_{j+1}^{n}-2e_{j}^{n}+e_{j-1}^{n}\right] + \Delta tT_j^n + e_j^nq_j^n\nu\left[u_{j+1}^{n}-2u_{j}^{n}+u_{j-1}^{n}\right]$$
+
+Suponemos que
+$$|u_{j+1}^n - 2u_j^n + u_{j-1}^n| \le M_{xx}(\Delta x)^2$$
+
+y
+$$|q_j^n|\le K$$
+
+para $K$ una constante y $M_{xx}$ una constante.
+
+Vamos a tratar de aplicar el principio del máximo, suponemos además que
+$$\frac{\Delta t}{\Delta x^2}\left[\max a(U_j^n)\right] \le \frac{1}{2}$$
+
+para estabilidad.
+
+Llamamos $E^n=\max |e_j^n|$
+$$|e_j^{n+1}| \le \underbrace{(1-2\nu a(U_j^n))}_{\ge 0} E^n + \nu a(U_j^n) E^n + \nu a(U_j^n)E^n + \Delta t T + E^n k \frac{\Delta t}{\Delta x^2}M_{xx}(\Delta x)^2$$
+
+con $T=\max |T_j^n|$.
+
+Obtenemos
+$$E^{n+1} \le (1+k\Delta tM_{xx})E^n + \Delta t T$$
+
+Luego $E^0 = 0$.
+
+$$E^n \le \Delta t T\sum_{j=0}^n\left[1+k\Delta t M_{xx}\right]^j$$
+
+Obtenemos la cota de error
+$$(1+x)^j\le e^{jx}$$
+$$(1+k\Delta tM_{xx})^j \le e^{k\Delta t jM_{xx}}\le e^{kt_FM_{xx}}$$
+
+Obteniendo
+$$E^n \le e^{kt_F M_{xx}}t_FT$$
+
+\subsection{Ecuaciones hiperbólicas}
+Las ecuaciones hiperbólicas tienen la forma
+$$u_t + a(x,t)u_x = 0$$
+
+Las curvas características son curvas de la ecuación 
+$$\frac{\partial x}{\partial t} = a(x,t)$$
+
+Si $a$ es lipschitziana, entonces las características no se cortan.
+
+Sabiendo que $u$ es solución de la ecuación hiperbólica, vamos a calcular la derivada de $u$ a lo largo de una curva característica, tomando entonces $u(x(t), t)$
+$$\frac{\partial u}{\partial t} = \frac{\partial u}{\partial t} + \frac{\partial u}{\partial x}\frac{\partial x}{\partial t} = u_t+u_xa(x,t) = 0$$
+
+Es decir, que las soluciones son constantes a lo largo de las características. El método de las características consiste en utilizar que a lo largo de toda una curva característica, la solución toma el mismo valor.
+
+\begin{example}
+	Suponemos $a$ constante, la solución de $u_t +au_x = 0$ con $u(x, 0) = u_0(x)$ es $u(x,t) = u_0(x-at)$.
+	
+	Tenemos que $\frac{\partial x}{\partial t} = a$ y $x(t) = at+c$.
+	
+	Si queremos hallar el valor de la función $u(x^*,t^*)$, hallamos su característica $x^* - at^* = C$ y en $t=0$, tenemos que $u^0 = x^*-at^* = C$.
+\end{example}
+
+
+\paragraph{Condición CFL (Courant-Friedrich-Levy)}
+Un esquema explícito de orden 1 para la ecuación
+$$\frac{U_{j}^{n+1}-U_{j}^{n}}{\Delta t} + a \frac{U_{j}^{n}-U_{j-1}^{n}}{\Delta x} = 0$$
+
+Tomando ahora $\nu =\frac{a\Delta t}{\Delta x}$ lo escribimos de la forma
+$$U_{j}^{n+1} = (1-\nu)U_{j}^{n}+\nu U_{j-1}^{n}$$
+
+Sobre el eje $x$ $(t=0)$, el valor de $U_{j}^{n+1}$ depende de los valores de la condición inicial en $\{x_{j-n-1},\hdots,x_{j-1},x_j\}$.
+
+Lo que importa para que el método tenga sentido es que el punto $Q=(x_j-at_{n+1}, 0)$ esté en el intervalo $\left[x_{j-n-1},\hdots,x_j\right]$. Imaginemos que no es así (ver el dibujo).
+
+\subparagraph*{La condición CFL} Es una condición necesaria para la convergencia del esquema numérico que dice que el dominio de dependencia teórico ($Q$) esté contenido en el dominio de dependencia numérico $\left[x_{j-n-1},\hdots,x_j\right]$.
+
+La recta $\overline{PQ}$ tiene que quedar dentro del triángulo. $\overline{PQ}$ tiene pendiente $\frac{1}{a}$. La recta que define el dominio de dependencia numérico tiene pendiente $\frac{\Delta t}{\Delta x}\le \frac{1}{a}$.
+
+Para este esquema, la condición \textbf{CFL} es $\nu\le1$.
+
+Vamos a probar que la condición \textbf{CFL} es necesaria para la convergencia pero no suficiente.
+
+Usamos el esquema:
+$$\frac{U_{j}^{n+1}-U_{j}^{n}}{\Delta t} + \frac{a(U_{j+1}^{n}-U_{j-1}^{n})}{2\Delta x} = 0$$
+
+Llamando $nu=\frac{a\Delta t}{\Delta x}$:
+$$U_{j}^{n+1}=U_{j}^{n}-\frac{\nu}{2}U_{j+1}^{n}+\frac{\nu}{2}U_{j-1}^{n}$$
+
+Como $a>0$, igual que antes, la condición \textbf{CFL} es $\nu\le1$. Si $a<0$, la \textbf{CFL} nos queda $-\frac{-\Delta t}{\Delta x} \ge \frac{1}{a}$,es decir, $|\nu| \le 1$. Luego la \textbf{CFL} que sigue vale para cualquier valor de $a$:
+$$|\nu|\le 1$$
+
+Vamos a ver que el método no puede converger.
+$$u_0(x) = \sum_{m=-\infty}^\infty a_m e^{im\pi x}$$
+$$u(x,t) = u_0(x-at) =  \sum_{m=-\infty}^\infty a_m e^{im\pi (x-at)}$$
+
+Vamos a hacer el análisis de Fourier del método.
+$$u(x_j,t_n) = \sum_{m=-\infty}^\infty a_me^{-im\pi a n \Delta t}e^{im\pi j\Delta x}$$
+
+Planteamos
+$$U_j^n = \lambda^n e^{im\pi j\Delta x}$$
+
+El factor de amplificación $\lambda$ es ahora una aproximación a $e^{-im\pi a\Delta t}$, para la estabilidad es necesario que $|\lambda| \le 1$.
+
+Tomamos $k=m\pi$ y 
+$$U_j^n = \lambda^n e^{ikj\Delta x}$$ 
+
+Sustituyendo el método
+$$\frac{\lambda^{n+1}e^{ikj\Delta x}-\lambda^ne^{ikj\Delta x}}{\Delta t} + a\lambda^n \frac{e^{ik(j+1)\Delta x}-e^{ik(j-1)\Delta x}}{2\Delta x} = 0$$
+
+Dividiendo por $\lambda^ne^{ikj\Delta x}$
+$$\frac{\lambda -1}{\Delta t} + a \frac{e^{ik\Delta x}-e^{-ik\Delta x}}{2\Delta x} = 0$$
+
+Sabemos que $e^{ik\Delta x}-e^{-ik\Delta x} = 2isen(k\Delta x)$, luego
+$$\lambda -1 +\nu 2isin(k\Delta x) = 0$$
+$$\lambda 1-i\nu sin(k\Delta x)$$
+$$|\lambda|^2 = 1+\nu^2sin^2(k\Delta x)$$
+
+Tenemos que si la \textbf{CFL} es $|\nu|\le 1$, entonces $|\lambda|>1$ luego el método no es estable.
+
+\begin{example}
+	\begin{equation*}
+		\left\{
+		\begin{array}{l}
+			u_t + au_x = 0\\
+			u(x,0) = u_0(x)\\
+			u(0,t) = 0
+		\end{array}
+		\right.
+	\end{equation*}
+\end{example}
