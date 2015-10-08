@@ -58,7 +58,7 @@ A la hora de descifrar, el mecanismo es sencillo. La forma en que funciona \text
 
 Por tanto, una vez recibido el mensaje lo único que hay que hacer es introducir el mensaje cifrado en la máquina y como salida obtendremos el texto original.
 
-Veamos por qué estos es cierto:
+Veamos por qué esto es cierto:
 \begin{proof}
 Para comprobar que la función de cifrado y su inversa son la misma, vamos a ver cómo funcionaba \textbf{enigma} sobre cada letra.
 
@@ -183,8 +183,8 @@ Una posible ``solución'' sería escribir una tabla en la que asociamos cada ent
 
 
 \section{Usos criptográficos de las funciones de un sólo sentido}
-\begin{enumerate}
-\item \textbf{Compartición de clave privada}
+
+\subsection{Compartición de clave privada}
 
 El problema es sencillo: Tenemos dos usuarios que quieren comunicarse de manera secreta pero, previamente, deben establecer una clave empleando para ello un canal no seguro.
 
@@ -209,21 +209,21 @@ La seguridad del sistema radica en que no hay forma de resolver rápidamente el 
 Este procedimiento sólo nos explica como llegar a compartir una clave privada. Una vez tenemos esta clave, podríamos emplear cualquier método para cifrar, incluído cualquiera de los métodos clásicos vistos hasta ahora
 
 
-\item \textbf{Recibir mensajes cifrados sin necesidad de acordar claves a priori}
+\subsection{Recibir mensajes cifrados sin necesidad de acordar claves a priori}
 
 Para hacer esto, $A$ hace pública una función de un sólo sentido que sólo $A$ sabe invertir. Si $B$ quiere envía un mensaje a $A$, sólo tiene que cifrarlos empleando esta función, obteniendo un mensaje que sólo $A$ es capaz de descifrar, pues solo ella conoce la función de descifrado.
 
-\item \textbf{Firmas}
+\subsection{Firmas}
 
 La idea de la \textbf{firma} es crear algo que no puedan imitar los demás. Así, el emisor puede emplear como firma el mensaje $m$ cifrado con la inversa de la función pública que él mismo presenta a los demás.
 
 Supongamos que queremos firmar con nuestro nombre. Evidentemente, no lo vamos a enviar tal cual, puesto que cualquiera podría copiarlo.
 
-Para evitarlo, tomamos nuestra función $f$ y enviamos $f^{-1}(firma)$ con lo que seremos los únicos capaces de escribir un mensaje $m$ tal que $f(m)=firma$, puesto que nadie más conocer $f^{-1}$.
+Para evitarlo, tomamos nuestra función $f$ y enviamos $f^{-1}(firma)$ con lo que seremos los únicos capaces de escribir un mensaje $m$ tal que $f(m)=firma$, puesto que nadie más conoce $f^{-1}$.
 
 Sin embargo, tenemos un problema. Una vez que enviemos la firma, cualquiera puede copiarla y reutilizarla, aún sin concoer $f^{-1}$. Copia y reenvía $f^{-1}(firma)$ y puede suplantar al original.
 
-Por tanto, lo que se hace es emplear como firma $f^{-1}($mensaje enviado $)$.
+Por tanto, lo que se hace es emplear como firma $f^{-1}($mensaje enviados$)$.
 
 Pero nuevamente tenemos un problema y es que si cada vez que enviamos un mensaje tenemos que emplear una firma tan larga como el mensaje, la eficiencia se ve drásticamente reducida.
 
@@ -232,10 +232,10 @@ Para solventar este problema existe una amplia variedad de opciones. Una de ella
 Esto consiste en emplear funciones resistentes a colisiones, es decir, funciones HASH tales que en la práctica resulta prácticamente imposible que se produzcan colisiones.
 
 \begin{remark}
-El receptor calculara la imagen por $f$ de la firma y la función $hash$ del mensaje. Si obtenemos el mismo resultado, podemos confiar en la autoría del mensaje.
+El receptor calculará la imagen por $f$ de la firma y la función $hash$ del mensaje. Si obtenemos el mismo resultado, podemos confiar en la autoría del mensaje.
 \end{remark}
 
-\item \textbf{Identificación}
+\subsection{Identificación}
 
 Supongamos que queremos acceder a un sistema que requiere una clave.
 
@@ -243,7 +243,7 @@ En esta ocasión la relación clave-usuario estará almacenada en el sistema lo 
 
 Lo que se puede hacer para proteger al usuario es que el sistema almacene la relación usuario-$f(\text{clave})$. Así a la hora de autentificarnos el sistema recibe la clave, \textbf{no la guarda}, calcula su imagen a por nuestra $f$ y compara.
 
-\item \textbf{Challenge: Identificación a partir de otro}
+\subsection{Challenge: Identificación a partir de otro}
 
 \begin{enumerate}
 \item Suponemos que el usuario $A$ quiere que el usuario $B$ se identifique.
@@ -251,12 +251,14 @@ Lo que se puede hacer para proteger al usuario es que el sistema almacene la rel
 \item Si el usuario $B$ es capaz de responder con $f_A(m)$ es que es quien dice ser.
 \end{enumerate}
 
-\item \textbf{Tarjeta de crédito}
+La idea subyacente es sencilla. Puesto que sólo $B$ conoce $f_B^{-1}$, sólo él podrá encontrar $m$ y así enviar $f_A(m)$.
+
+\subsection{Tarjeta de crédito}
 
 Hay diferentes opciones a la hora de reconocer la tarjeta de crédito y validar que el PIN introducido es el correcto:
 
 \begin{itemize}
-\item La tarjeta contiene el PIN secreto grabado y el cajero sólo tiene que comprobar que el PIN introducid coincide con el grabado en la tarjeta.
+\item La tarjeta contiene el PIN secreto grabado y el cajero sólo tiene que comprobar que el PIN introducido coincide con el grabado en la tarjeta.
 
 \textbf{Desventaja:} Una banda magnética es fácil de leer y si te roban la tarjeta estás jodido.
 
@@ -286,17 +288,16 @@ Así será difícil emplear una tarjeta robada puesto que encontrar el PIN impli
 
 \textbf{Deventaja}: Puesto que el PIN es pequeño sigue siendo asequible que un ladrón realice todas las pruebas necesarias en su casa, llegando a descubrir el PIN por fuerza bruta.
 \end{itemize}
-\end{enumerate}
+
 Como el lector puede observar ninguno de estos mecanismos es perfecto y siempre queda esperanza para el atacante, que podría usar una tarjeta de crédito de forma ilícita sin excesivas complicaciones.
 
-\newpage
 \subsection{El gran cambio de la tecnología moderna}
 
 La idea es que no es necesario que la tarjeta tenga grabado el PIN, ni ninguna transformación del mismo.
 
 Para hacer esto, el cajero enviaría a la central un identificador de transacción, recibiendo como respuesta desde la central un nuevo valor $G=f(ID,PIN)$.
 
-Así, una vez el usuario introduce su PIN, el cajero calcular $f(ID,PIN)$ y comprueba si coincide el valor.
+Así, una vez el usuario introduce su PIN, el cajero calcula $f(ID,PIN)$ y comprueba si coincide el valor.
 
 Con esta técnica, conseguimos que cada transacción funcione de forma ligeramente distinta y, además, no hay ninguna información grabada en la tarjeta.
 
@@ -311,9 +312,9 @@ Estas tarjetas permiten hacer que la función $f$ dependa del usuario. Veamos c�
 
 \item La central conoce la tupla $(ID,PIN,e)$.
 
-\item La tarjeta envía a la central $(ID,ID\_TRANSACCION)$, es decir, envía un identificador del usuario que está accediendo al cajero y un código ``aleatorio'' que identifica la transacción.
+\item La tarjeta envía a la central $(ID,TRANSACCION)$, es decir, envía un identificador del usuario que está accediendo al cajero y un código ``aleatorio'' que identifica la transacción.
 
-\item La central responde con $f_e(ID.PIN)=G$
+\item La central responde con $f_e(TRANSACCION.PIN)=G$
 
 \item El usuario teclea el PIN y la tarjeta comprueba si $f^{-1}_d(G)=TRANSACCION.PIN$
 
