@@ -1,0 +1,255 @@
+% Autor: Pedro Valero
+%
+% Este documento no es más que un resumen que he decidido hacer por mi cuenta
+% y riesgo. 
+%
+% No sustituye los apuntes de curso y en un principio no voy a subirlo a dropbox, es un resumen
+% hecho por mi para mi, sin preocuparme de que vaya siendo claro para todos.
+%
+% Lo tengo en esta carpeta porque es la forma más cómoda de tenerlo a mano y guardado en git.
+
+\documentclass{apuntes}
+
+\title{Resumen de Lógica Matemática}
+\author{Pedro Valero}
+\date{15/15 C1}
+% Paquetes adicionales
+\usepackage{tikztools}
+\usepackage{fastbuild}
+\usepackage{tikz-3dplot}
+\usepackage{fancysprefs}
+
+\bibliographystyle{plainnat}
+
+\usetikzlibrary{arrows}
+% --------------------
+
+\precompileTikz
+
+\begin{document}
+\pagestyle{plain}
+\maketitle
+
+\tableofcontents
+
+\chapter{Lógica proposicional}
+
+\section{Repaso de conceptos básicos de EDyL}
+Siempre que que trabajemos con predicados de lógica proposicional empezaremos definiendo un lenguaje, que estará compuesto por un alfabeto y un conjunto de símbolos (conectores). 
+
+\[L \equiv A\cup\{\neg,\implies, \wedge, \vee, \iff, \perp, \top, ), ( \}\]
+
+\begin{defn}[Proposición o fórmula bien formada]
+	Palabra (concatenación de símbolos) que pertenece a la clase más pequeña cerrada bajo las siguientes propiedades:
+	\begin{itemize}
+		\item Los elementos de $A$, $\perp$ y $\top$ son fórmulas atómicas (no se pueden dividir).
+		\item Si $F_1$ y $F_2$ son fórmulas, también lo son
+		\begin{itemize}
+			\item $(\neg F_1)$
+			\item $(F_1\implies F_2)$
+			\item $(F_1\iff F_2)$
+			\item $(F_1\wedge F_2)$
+			\item $(F_1\vee F_2)$
+		\end{itemize}
+	\end{itemize}
+\end{defn}
+
+Las fórmulas bien formadas pueden definirse de manera inductiva:
+\begin{equation*}
+\begin{array}{l l l}
+	\textbf{FBF}_\textbf{0} &=& A\cup\{\top, \perp \}\\
+	\textbf{FBF}_\textbf{n+1} &=& FBF_n \cup \{(\neg F_1), (F_1\implies F_2),(F_1\iff F_2),(F_1\wedge F_2),(F_1\vee F_2)\}\\ &&\text{con } F_1,F_2\in \textbf{FBF}_\textbf{n}.
+\end{array}
+\end{equation*}
+
+\begin{lemma}[Legibilidad única]
+Las fórmulas nunca son ambiguas, sólo pueden leerse o construirse de una forma, cualidad que conseguimos mediante el empleo de paréntesis.
+\end{lemma}
+
+Existe una serie de \concept{axiomas proposicionales}. Estos axiomas son FBF que son ciertas para cualquier interpretación de los elementos que las constituyen. Una \concept{Interpretación} es una función que dada una FBF nos devuelve un valor de verdad (Verdadero o Falso). De forma más fórmal, una interpretación es una valoración booleana 
+\[\appl{\sigma}{FBF(L)}{\mathbb{Z}_2, +, \cdot)} \text{ que satisface } \]
+
+\begin{itemize}
+	\item $\sigma(\top) = 1$, $\sigma(\perp) = 0$
+	\item $\sigma(\neg p) = 1+\sigma(p)$,  siendo $p$ una FBF.
+	\item $\sigma (p\vee q) = \sigma(p) \vee \sigma (q) = \max\left\{\sigma(p), \sigma(q)\right\}$
+	\item $\sigma (p\wedge q) = \sigma(p) \wedge \sigma (q) = \min\left\{\sigma(p), \sigma(q)\right\}$
+\end{itemize}
+
+Estos axiomas son empleados junto con la regla \textbf{modus ponens} para lograr demostrar la verdacidad de otras FBFs
+
+\begin{mdframed}
+\textbf{Notación}
+\begin{itemize}
+	\vspace{-3mm}
+	\item Escribimos $\vdash p$ para denotar que existe una demostración de $p$.
+	\item Escribimos $\vDash p$ para denotar que $p$ es verdad.
+\end{itemize}
+\end{mdframed}
+
+Todo conjunto de FBFs se considera una \concet{Teoría}, independientemente de que sea una tautología o no.
+
+\begin{defn}[Demostración o prueba (II)]
+	Una demostración a partir de los axiomas y una teoría $T$ es una sucesión finita $p_1, \hdots, p_n$, donde cada $p_i$ es o un axioma, o $p_i\in T$ o se obtiene de dos $p_j,p_k$ anteriores mediante modus ponens.
+
+	$T \vdash p$ indica que existe una demostración o prueba de $p$ a partir de $T$
+\end{defn}
+
+\begin{theorem}
+	Sea $\appl{\sigma}{A}{\{0, 1\}}$ una función arbitraria. Entonces $\sigma$ se extiende, de modo único, a una valoración booleana $$\hat{\sigma}:FBF(L) \to \mathbb{Z}_2$$
+\end{theorem}
+
+\begin{defn}[Sistema completo]
+Un sistema de conectivas es completo si a partir de ellas pueden deducirse las demás
+\end{defn}
+
+\begin{defn}[Modelo]
+Una interpretación σ es un modelo de una teoria $T$ si y sólo si
+\[\forall p \in T \ \ \ σ(p)=\top=1\]
+\end{defn}
+
+\begin{defn}[Consecuencia tautológica]
+	Decimos que $p$ es una consecuencia tautológica de $T$, y escribimos $T\vDash p$, si para todo modelo $\sigma$ de $T$, $\sigma(p) = 1$. En este contexto, decimos que $p$ es una \textbf{tautología} y escribimos  $\vDash p$.
+\end{defn}
+
+\begin{defn}[Teoría consistente]
+Decimos que una teoría $T$ es consistente si $T\nvdash \perp$. La consistencia o coherencia puede caracterizarse de forma sencilla:
+ $$T\nvdash\perp \iff \exists p\in FBF(L) \tq  T\nvdash p$$
+ Equivalentemente, una teoría $T$ es inconsistente si $T\vdash \perp$.
+ $$T\vdash\perp \iff T\vdash p\ \forall p\in FBF(L)$$
+\end{defn}
+
+\begin{theorem}[Teorema de la deducción]
+	Si $T\cup\{p\}\vdash q$, entonces $$T\vdash p\implies q$$
+\end{theorem}
+
+\section{Problemas TAUT y SAT}
+\begin{defn}[Problema de las tautologías]
+El \textbf{problema de la tautología} consiste en determinar si una FBF es una tautología, para lo que basta con calcular la tabla de verdad, labor que toma un tiempo exponencial en el tamaño del lenguaje empleado.
+\end{defn}
+
+\paragraph{Clases de complejidad}
+\begin{itemize}
+	\item \textbf{P:} clase de problemas para los que existe un algoritmo que los resuelve en tiempo polinómico en función del número de datos de entrada, es decir, $\exists K\ge 0$ (dependiendo el problema pero no del número de datos $n$) tal que si tenemos $n$ datos de entrada, el algoritmo requiere menos de $O(n^K)$ operaciones.
+	\item \textbf{NP:} tiempo polinómico no determinista. La solución la proporciona un oráculo (\ref{fig:oraculo}), que podemos comprobar que es correcta (o no) en tiempo polinómico. Obviamente P$\subset$NP.
+		\item La clase de problemas \textbf{NP-difícil} se define como aquella que contiene a los problemas que son como mínimo tan difíciles como un problema de NP. Alternativamente, se define como la clase de problemas H tal que todo problema en NP puede ser transformado polinomialmente en H.
+	\item La clase de problemas \textbf{NP-completo} se define como la intersección entre la clase de problemas NP y la clase de problemas NP-difícil.
+	\item No se sabe si P$=$NP. Clay Mathematics Institute ha ofrecido un premio de un millón de dólares estadounidenses para quién desarrolle la primera demostración correcta (el profesor no tiene tanto dinero, el te ofrece una matrícula).
+\end{itemize}
+Se sabe que \textbf{TAUT} es NP-difícil.
+
+\begin{defn}[Problema de la satisfacción]
+Este problema consiste en determinar si existe una interpretación que satisfaga una FBF dada. Se trata de un problema \textbf{NP-completo}
+\end{defn}
+
+\section{Completitud}
+\begin{theorem}[Teorema de completitud]
+Sea una teoría no vacía se tiene que:
+\[T \vdash p \iff T \vDash p\]
+\end{theorem}
+
+Una teoría es \concept{consistente} si nunca prueba $p$ y $\neg p$. En general, una teoría $T$ será \textbf{consistente} si existe alguna $p$ tal que $T \nvdash p$. 
+
+\begin{defn}[Teorería completa]
+Una teoría es completa si es consistente y para toda FBF $p$, se cumple que $T \vdash p$ o $T \nvdash p$
+\end{defn}
+
+\begin{theorem}
+	Si $T \nvdash p$, entonces $T\cup \{\neg p\}$ es consistente. Por tanto $T$ es consistente.
+	\label{thm:pconsnegp}
+\end{theorem}
+
+\begin{theorem}[Teorema de Lindenbaum]
+	Toda teoría consistente puede extenderse a una teoría completa.
+	\label{thm:lindenbaum}
+\end{theorem}
+\begin{proof}
+	en esta demostración nos apoyaremos en el Lemma de Zorn. 
+
+	Sea $T$ una teoría consisten consistente y sea $P$ el conjunto de todas las teorías consistentes que extienden a $T$, definimos un orden parcial en $P$ mediante inclusión:
+	\[T_1\le T_2 \iff T_1\subset T_2\]
+
+	Sea $\{T_\alpha\}_{\alpha\in\Lambda}$ una cadena en $P$.
+
+	Si $\cup_{\alpha\in\Lambda} T_\alpha$ es consistente, entonces es una cota superior de la cadena. 
+
+	Puesto que todas las $T_\alpha$ son consistentes, la unión será consistente.
+	\begin{proof}
+	Para demostrar la afirmación anterior lo que haremos será emplear una formulación equivalente: Si la unión no es consistente, entonces hay una $T_α$ que no es consistente.
+
+	Es decir, vamos a probar que:
+	\[\bigcup_α T_α \vdash \perp \implies \exists α \ T_α \vdash \perp \equiv \forall α \ T_α \nvdash \perp \implies \bigcup_αT_α \nvdash \perp\]
+
+	Sea $p_1,\hdots,p_n = \perp$ una prueba formal de $\perp$. Entonces, $\exists T_{\alpha_1}\vdash p_1$, $T_{\alpha_2} \supset T_{\alpha_1}$ tal que $T_{\alpha_2}\vdash p_2, \hdots, T_{\alpha_n}\supset T_{\alpha_{n-1}}$ tal que $T_{\alpha_n}\vdash \perp, T_\beta = T_{\alpha_n}$.
+
+	\obs Una vez tenemos $T_{α_1}$, cuya existencia es obvia, puesto que estamos considerando la unión de todas las teorías consistentes que extienden $T$, si $T_{α_1}$ extiende a $T$ y nos permite deducir $p_1$ tenemos que existirá $T_{α_2} \supset T_{α_1} \cup p_1$ puesto que también extiende $T$.
+	\end{proof}
+
+	Por el lema de Zorn sabemos que $P=\bigcup_αT_α$ tiene un elemento maximal $M$, que contiene a $T$. Por tanto $M\in P$, lo que implica que $M$ es consistente.
+
+	Además, por ser $M$ maximal tenemos que $\forall p \ M \vdash p \Or M \vdash \neg p$ puesto que de no ser así, tanto $M\cup\{p\}$ como $M\cup\{\neg p\}$ serían consistentes, por el teorema \ref{thm:pconsnegp}, y contendrían a $M$ con lo que $M$ no sería maximal y tendríamos una contradicción.
+\end{proof}
+
+
+\begin{theorem}[Teorema de completitud II]
+	$T$ es consistente $\iff$ $T$ tiene un modelo.
+	\label{thm:comp2}
+\end{theorem}
+
+\begin{proof}
+	\begin{itemize}
+		\item $\Longleftarrow$: 
+
+		Vamos a demostrar la implicación por reducción al absurdo.
+
+		Supongamos que $T$ es inconsistente, entonces $T\vdash \perp$, luego $T\vDash\perp$.
+
+		Como para toda valoración booleana, $\sigma(\perp) = 0$, ninguna $\sigma$ satisface a $T$, es decir, no tendríamos ningún modelo de $T$
+		\item $\Longrightarrow$: 
+
+		Sea $T$ consistente, queremos probar que tiene un modelo. 
+
+		Por el teorema de Lindenbaum (\ref{thm:lindenbaum}) podemos extender $T$ a una teoría completa, es decir, existe una $M\supset T \tq M$ es completa y por tanto $M$ es consistente y $\forall p \in FBF(L)$, o $M\vdash p$ o $M\vdash \neg p$.
+
+		Si definimos $\sigma(p) = 1 \iff M\vdash p$, y $\sigma(p) = 0 \iff M\nvdash p$, vemos que σ está definida sobre el conjunto $FBF(L)$, y $\sigma(p) = 1$ $\forall p \in M$, y por tanto $\forall p\in T$.
+
+		Así ya hemos localizado el modelo cuya existencia queríamos probar. Ahora tenemos que garantizar que σ es una interpretación (o valoración booleana) correcta. Vamos a ello.
+
+		Como $\{\neg, \vee\}$ es un sistema completo de conectivas, podemos suponer que $L=A\cup\{\neg\vee\}$. Para ver que $\sigma$ es una valoración booleana, hay que comprobar
+		\begin{enumerate}
+			\item $\sigma(\neg p) = 1+\sigma(p)$ (mod $2$).
+
+			Si $M \vdash \neg p$, entonces $M\nvdash p$ (por consistencia), luego
+			$$1 = \sigma(\neg p) = 1+\sigma(p) = 1 + 0$$
+
+			Si $M \nvdash \neg p$, entonces $M\vdash p$, y
+			$$0=\sigma(\neg p) = 1+\sigma(p) \text{ (mod 2)} = 1+1 \text{ (mod 2)}$$
+
+			\item $\sigma(p\vee q) = \sigma(p)\vee\sigma(q)$.
+			
+			Si $M\vdash p$ o $M\vdash q$, entonces, por $p\implies (p\vee q)$ o $q\implies (p\vee q)$, que es el axioma 2, y modus ponens, obtenemos
+			$$M\vdash p \vee q$$
+
+			Por definición de $\sigma$,
+			$$\sigma(p\vee q) = 1 = \max\{\sigma(p), \sigma(q)\} = \sigma(p)\vee\sigma(q)$$
+
+			Si $M\vdash \neg p$ y $M\vdash \neg q$, entonces, usando el axioma 3: $\neg p \implies (\neg q \implies \neg(p\vee q))$ y modus ponens dos veces, obtenemos:
+			$$M\vdash \neg(p\vee q)$$
+
+			En este caso, $\sigma(p\vee q) = 0 = \sigma(p) \vee \sigma(q)$.
+		\end{enumerate}
+	\end{itemize}
+\end{proof}
+
+\begin{theorem}[Teorema de compacidad]
+	Si todo subconjunto finito de una teoría $T$ tiene un modelo, entonces $T$ tiene un modelo.
+\end{theorem}
+\begin{proof}
+	Como todo subconjunto finito de $T$ tiene un modelo, todo subconjunto finito es consistente, luego $T$ es consistente y por \ref{thm:comp2}, $T$ tiene un modelo.
+\end{proof}
+
+\printindex
+\end{document}
+
+
+
