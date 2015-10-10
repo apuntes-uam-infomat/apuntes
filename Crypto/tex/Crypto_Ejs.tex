@@ -2026,28 +2026,53 @@ $(I_i, s_i,f_i)$, que hace pública, manteniendo secreta
 $f_i^{-1}$. Con todos estos datos, cuando el comprador $i$ quiere
 pagar al vendedor $j$, siguen el siguiente protocolo:
 
-i) {\it Presentación de credenciales:} El comprador entrega al
+\begin{enumerate}
+\item {\it Presentación de credenciales:} El comprador entrega al
 vendedor $(I_i, s_i,f_i)$ junto con una descripción de la
 transacción (pago, fecha de cobro,...) desde su punto de vista:
 $u_i$. El vendedor comprueba si $f(s_i)=I_i$, y acepta o no la
 tarjeta. Se procede de manera simétrica entregando el vendedor sus
 datos,  $(I_j, s_j,f_j,u_j)$, al comprador.
 
-ii) {\it Autentificación:} El comprador y el vendedor unen (de
+\item {\it Autentificación:} El comprador y el vendedor unen (de
 modo adecuado dependiendo del tipo de funciones que se use) $u_i$
 y $u_j$, creando un $u=u_iu_j$. El comprador calcula
 $t_i=f_i^{-1}(u)$ y se lo da al vendedor, quién comprueba si
 $f_i(t_i)=u$. Se realiza la operación simétrica intercambiando los
 papeles de comprador y vendedor.
 
-iii) {\it Recibos:} el comprador guarda $(I_j,
+\item {\it Recibos:} el comprador guarda $(I_j,
 s_j,f_j,u_i,u_j,t_i,t_j)$ y el vendedor guarda $(I_i,
 s_i,f_i,u_i,u_j,t_i,t_j)$.
+\end{enumerate}
 
 EJERCICIO: Discute la utilidad de este sistema para resolver los
 problemas planteados en el primer parrafo, y cualquier otro que se
 te ocurra relacionado con los pagos con tarjeta de crédito.
 \solution
+
+\doneby{Pedro}
+
+En la explicación hablaremos de cómo el vendedor se cerciona de que el cliente es confiable. Puesto que el protocolo es simétrico, lo que se haga en un sentido se está haciendo también en el contrario
+
+En el primer paso, cualquier usuario podría haber enviado $f(s_i)$, puesto que tanto $f$ como $s_i$ son datos públicos.
+
+Con esta primera comprobación nos aseguramos de que se está empleando la tarjeta asociada al usuario que dice estar haciendo la compra. Es decir, no puedo decir que soy el usuario $I_{i_1}$ y enviar $I_{i_2}$.
+
+A partir de este punto, si el usuario dice ser $I_i$ con una $i$ fija, nos restringimos a ese dato. Ya comprobaremos más tarde si es él de verdad o no.
+
+Aún no hemos ganado prácticamente nada de seguridad puesto que basta con falsificar la tarjeta introduciendo los datos públicos y con ello ya habríamos pasado esta primera fase.
+
+En el segundo paso nos podemos asegurar de que el cliente es de verdad quien dice ser, puesto que sólo él conoce $f^{-1}_i$, necesaria para realizar esta comprobación.
+
+Ninguna persona que intercepte estos mensajes será capaz de obtener $u$ puesto que no conocerá ninguna de las funciones inversas empleadas.
+
+Del mismo modo, si el vendedor ha llegado a obtener $u_i$ es porque el cliente, el único que conocía $f_i^{-1}$ se lo ha enviado. Así queda constancia de que la compra se ha realizado satisfactoriamente.
+
+Toda la seguridad del sistema radica en que las $f_x^{-1}$ son secretas. Así, si el vendedor conocer $t_j$ es porque de verdad el comprador hizo la compra y viceversa.
+
+Además, aunque alguien se haga con el recibo (compuesto por datos públicos), es sencillo comprobar si de verdad es él pidiéndole que envía $f_i^{-1}(u)$ una vez más.
+
 \end{problem}
 
 \begin{problem}[4] Supongamos que una red de inversores y agentes de bolsa utiliza criptografía de clave pública.
