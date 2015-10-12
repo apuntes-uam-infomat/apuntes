@@ -1,0 +1,82 @@
+% Fancysprefs.sty: Permite el uso de referencias "fancy" en español
+% En otras palabras, nos permite usar comandos que escriben automáticamente
+% el número de página en las referencias (ver la documentación de fancyref y varioref)
+% y también comandos que nos permiten referencias elementos por su nombre, como
+% por ejemplo \nref{thm:Pepe} -> "Teorema de Pepe (1.25)".
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fancysprefs}[2015/05/21 Fancy english references]
+
+\DeclareOption{plain}{
+	\def\@loadfancyref{\RequirePackage[plain]{fancyref}}
+	\newcommand{\fancyspInnerref}[1]{\ref{#1}}
+}
+\DeclareOption{vario}{
+	\def\@loadfancyref{\RequirePackage[vario]{fancyref}}
+	\newcommand{\fancyspInnerref}[1]{\vref*{#1}}
+}
+
+\ExecuteOptions{plain}
+\ProcessOptions
+
+\RequirePackage[english]{varioref}
+\RequirePackage{textcase}
+\@loadfancyref
+
+\makeatletter
+% Infierno para poder añadir fácilmente nuevos prefijos a fancyref.
+% Sintaxis: \mkfancyprefix{prefijo}{Nombre}.
+\def\mkfancyprefix#1#2{%
+  \@namedef{fancyref#1labelprefix}{#1}%
+  \begingroup\def\x{\endgroup\frefformat{vario}}%
+    \expandafter\x\csname fancyref#1labelprefix\endcsname
+      {\MakeLowercase{#2}\fancyrefdefaultspacing##1##3}%
+  \begingroup\def\x{\endgroup\Frefformat{vario}}%
+    \expandafter\x\csname fancyref#1labelprefix\endcsname
+      {#2\fancyrefdefaultspacing##1##3}%
+       \begingroup\def\x{\endgroup\frefformat{plain}}%
+    \expandafter\x\csname fancyref#1labelprefix\endcsname
+      {\MakeLowercase{#2}\fancyrefdefaultspacing##1}%
+  \begingroup\def\x{\endgroup\Frefformat{plain}}%
+    \expandafter\x\csname fancyref#1labelprefix\endcsname
+      {#2\fancyrefdefaultspacing##1}%
+}
+\makeatother
+
+\mkfancyprefix{thm}{Teorema}
+\mkfancyprefix{def}{Definici\'on}
+\mkfancyprefix{ej}{Ejercicio}
+\mkfancyprefix{prop}{Proposici\'on}
+\mkfancyprefix{lem}{Lema}
+\mkfancyprefix{crl}{Corolario}
+
+\providecommand*{\namerefl}[1]{%
+\refused{#1}%
+\MakeTextLowercase{%
+\getrefbykeydefault{#1}{name}{??}%
+}%
+}
+
+\newcommand{\nref}[1]{\nameref{#1} (\fancyspInnerref{#1})}
+\newcommand{\nlref}[1]{\namerefl{#1} (\fancyspInnerref{#1})}
+
+%\fancyrefaddcaptions{english}{
+%	\renewcommand*{\chaptername}{Cap\'itulo}%
+%	\renewcommand*{\figurename}{Figura}%
+%	\renewcommand*{\pagename}{P\'agina}%
+%	\renewcommand*{\tablename}{Tabla}%
+%	\renewcommand*{\Frefchapname}{\chaptername}%
+%	\renewcommand*{\Frefenumname}{Elemento}%
+%	\renewcommand*{\Frefeqname}{Ecuaci\'on}%
+%	\renewcommand*{\Freffigname}{\figurename}
+%	\renewcommand*{\Freffnname}{Nota al pie}%
+%	\renewcommand*{\Frefonname}{En}%
+%	\renewcommand*{\Frefpgname}{\pagename}%
+%	\renewcommand*{\Frefsecname}{Secci\'on}%
+%	\renewcommand*{\Frefseename}{Ver}%
+%	\renewcommand*{\Freftabname}{\tablename}%
+%	\renewcommand*{\Freffigshortname}{Fig.}%
+%	\renewcommand*{\Frefpgshortname}{P.}%
+%	\renewcommand*{\Freftabshortname}{Tab.}
+%}
+
+\selectlanguage{english}
