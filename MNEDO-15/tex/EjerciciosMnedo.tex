@@ -252,3 +252,98 @@ Ahora tenemos dos casos posibles, y sabiendo que el orden de un método es $\fra
 	Por tanto
 	\[y(x_{n+2})-y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} p(x) dx = h \left( \frac{23}{12} f(t_{n+2},y_{n+2}) - \frac{4}{3} f(t_{n+1}, y_{n+1}) + \frac{5}{12}f(t_n,y_n) \right)\]
 \end{problem}
+
+\begin{problem}[7]
+La regla de integración del trapecio se define por:
+
+\[y_{n+1} = y_n + \frac{h}{2}\left( f(t_{n+1},y_{n+1})+f(t_n,y_n)\right)\]
+
+Probar que la regla del trapecio es 0-estable. Nótese que basta con demostrar que la función incremento asociada a esta regla, $\phi(t,y;h)$ cumple:
+\begin{enumerate}
+\item Es continua con respecto a las variables $t,y,h$
+\item Es Lipschitz con respecto a la variable $y$
+\item Si $f=0$, entonces $\phi_f=0$
+\end{enumerate}
+\solution
+
+\doneby{Pedro}
+
+Técnicamente el ejercicio está hecho en clase pero yo me preocupé de copiarlo aquí de nuevo.
+
+\begin{itemize}
+\item Es continua con respecto a las variables $t,y,h$
+Definimos la aplicación global contractiva
+\[F(\phi) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_n+h\phi) \right]\]
+
+Y tomamos $\phi_f = \lim_{j\to∞} \phi_f^{[j]}$, donde $\phi_f^{[j]}$ viene dada por la sucesión $\phi_f^{[j]} = F\left(\phi_f^{[j-1]}\right)$ y $\phi^0 = 0$.
+
+\obs El método del trapecio es de 1 paso ($k=1$) y por tanto la función incremento solo depende de $x_n$, $y_n$ y $h$, es decir $\phi_f(x_n,y_n;h)$.
+
+Dado que $f$ es una función continua, tendremos que la función:
+\[\phi_f^{[1]}(x_n,y_n;h) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_{n+1} + 0) \right]\]
+será continua. Como la composición de funciones continuas da como resultado otra función continua, tendremos que $\phi_f^{[2]}=F\left( \phi_f^{[1]} \right)$ es continua, y por tanto todas las $\phi_f^{[k]}(x_n,y_n;h)$ son continuas.
+
+Si logramos probar que la convergencia de las $\phi_f^{[j]}$ sea uniforme, tendremos que la sucesión convergería a una función $\phi_f$ continua.
+
+Expresamos $\phi_f^{[k]}$ como una suma telescópica:
+\begin{equation}
+	\label{eq:suma_telesc_pto_fijo}
+	\phi_f^{[k]} = \sum_{j=1}^k \phi_f^{[j]} - \phi_f^{[j-1]} + \phi_f^{[0]},\quad \phi_f^{[0]}=0
+\end{equation}
+Tomando la norma $L^∞$:
+\begin{equation*}
+	\begin{multlined}[0.7\textwidth]
+		\md{\phi_f^{[j]} - \phi_f^{[j-1]} }_{L^∞} = \md{F\left[\phi_f^{[j-1]}\right] - F\left[\phi_f^{[j-2]}\right] }_{L^∞}\\[1em]
+		\shoveleft{\qquad \qquad \qquad \underbrace{≤}_{F\text{ contractiva}} \frac{Lh}{2} \md{\phi_f^{[j-1]} - \phi_f^{[j-2]}}_{L^∞}}\\
+	\end{multlined}
+\end{equation*}
+Aplicando la desigualdad sucesivamente:
+\[\md{\phi_f^{[j]} - \phi_f^{[j-1]}}_{L^∞} ≤ \left(\frac{Lh}{2}\right)^{j-1} \md{\phi^{[1]}}_{L^∞}\]
+
+Puesto que $K = [a,b]×ℝ×(0,∞)$ es compacto:
+\[\md{\phi_f^{[j]} - \phi_f^{[j-1]}}_{L^∞} ≤ M_k\left(\frac{Lh}{2}\right)^{j-1}\]
+
+De modo que aplicando el test $M$ de Weierstrass, la convergencia de \ref{eq:suma_telesc_pto_fijo} es uniforme, y por tanto $\phi_f$ es continua.
+
+\item Es Lipschitz con respecto a la variable $y$
+
+En el apartado anterior hemos visto que podemos construir una sucesión de funciones que converge uniformemente a $\phi_f$. Todas estas funciones seran funciones Lipschitz con respecto a la $y$ (que es la segunda variable de $\phi_f$) y por tanto todas las $\phi_f^{[j]}$ son Lipschitz.
+
+Puesto que la convergencia es uniforme, el límite también es una función Lipschitz. 
+
+Vamos a demostrar esta afirmación para los lectores incrédulos.
+\begin{proof}
+De forma general vamos a considerar una sucesión de funciones $f_x(x,y)$ que converge uniformemente a $f(x,y)$. 
+
+Por definición de convergencia uniforme, tenemos:
+\[\forall ε > 0 \exists n \tq \forall N > n \ \ \norm{f(x,y)-f_n(x,y)} \leq ε\]
+
+Vamos a estudiar ahora la ``Lipschitzialidad'' de la función $f$ sabiendo que todas las $f_n$ son Lipschitz.
+
+\[\norm{f(x,y)-f(x,y')} = \norm{f(x,y)\pm f_n(x,y)\pm f_n(x,y')+f(x,y')} \leq \]
+por la desigualdad triangular
+\[\leq \norm{f(x,y)-f_n(x,y)}+\norm{f(x,y')-f_n(x,y')}+\norm{f_n(x,y)-f_n(x,y')} = \atop 2ε +\norm{f_n(x,y)-f_n(x,y')}\]
+
+Finalmente, puesto que las $f_n$ son Lipschitz tenemos que:
+\[2ε +\norm{f_n(x,y)-f_n(x,y')} \leq 2ε + \norm{y-y'}\]
+
+Puesto que $\forall ε > 0$ podemos encontrar un $n$ que nos permita llevar a cabo estas operaciones, podemos hacer ε tan pequeño como queramos y llegar a:
+\[\norm{f(x,y)-f(x,y')} \leq \norm{y-y'}\]
+\end{proof}
+\item Si $f=0$, entonces $\phi_f=0$
+
+Puesto que en el método del trapecio $\phi_f$ se define como el punto fijo de
+\[F(\phi) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_n+h\phi) \right]\]
+
+si $f=0$ tendremos que $\phi_f$ será el punto fijo de la función nula y, por tanto, será 0
+
+\end{itemize}
+
+
+
+
+
+
+\end{problem}
+
+
