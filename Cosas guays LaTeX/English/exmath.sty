@@ -1,0 +1,576 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{exmath}[2013/04/21 Extended math commands]
+
+% ----------------------------------------------------------
+% Formato para generación del archivo de autocompletado (.cwl) para TexStudio
+% 	Después de la declaración del comando, ponemos un comentario con la siguiente sintaxis
+%	\newcommand... % 1: descripción argumento 1; 2O: descripción argumento 2; ... | Comentarios adicionales (no se incluyen)
+%	La "O" (una "o", no un 0) después del número de argumento indica que es opcional.
+% ----------------------------------------------------------a
+
+
+\def\@setframeconfig{}
+
+% Tenemos que retrasar la ejecución del \toggletrue/\togglefalse hasta que tengamos
+% 	el paquete cargado, así que lo que hacemos es guardarnos el comando.
+\DeclareOption{problemframes}{\def\@setframeconfig{\toggletrue{probframes}}}
+\DeclareOption{noproblemframes}{\def\@setframeconfig{\togglefalse{probframes}}}
+
+\ExecuteOptions{problemframes}
+\ProcessOptions
+
+% Paquetes requeridos
+\RequirePackage{amsmath} % Matemáticas
+\RequirePackage{amsfonts} % Más matemáticas
+\RequirePackage{amssymb} % Más matemáticas
+\RequirePackage{graphicx} % Gráficos e imágenes
+\RequirePackage{amsthm} % Otro paquete de matemáticas
+\RequirePackage{framed} % Marcos
+\RequirePackage{mdframed} % Marcos
+\RequirePackage{xargs} % Argumentos variables
+\RequirePackage{ifthen} % Para poner if-then-else
+\RequirePackage{tocloft} % Tablas de contenidos
+\RequirePackage{bbm} % Para poner más caracteres con el bb
+\RequirePackage[shadow]{todonotes} % Marcas To Do (a hacer)
+\RequirePackage{etoolbox} % Comandos guays.
+\RequirePackage{commath} % Varios comandos matemáticos (especialmente derivadas)
+\RequirePackage{mfirstuc} % Poner en mayúsculas primera letra de una palabra
+\RequirePackage{xspace} % Espaciado correcto detrás de comandos.
+\RequirePackage{subcaption} % Subfiguras
+\RequirePackage{etoolbox} % Para poner ganchos de ejecución al final/principio de entornos.
+\RequirePackage{tablefootnote} % Permite poner notas al pie en más entornos
+\RequirePackage{xstring} % Para trabajar con cadenas.
+\RequirePackage{mathtools} % Arregla bastantes cosas de los entornos matemáticos por defecto.
+\RequirePackage{nameref}
+
+\newtoggle{probframes} % Controla si los problemas tienen marcos o no
+\@setframeconfig
+
+% Para evitar que el \md de nuestro paquete tenga conflictos con el de commath
+\let\mder\md
+
+% Los párrafos al margen, en el lado izquierdo de la página.
+\reversemarginpar
+
+\newcommand{\elst}[3]{ \, % Listas de elementos. IGN
+  \def\nextitem{\def\nextitem{#1}}% Separator
+  \renewcommand*{\do}[1]{\nextitem #2 ##1}% How to process each item. IGN
+  \docsvlist{#3}% Process list
+}
+
+% Varios ganchos para poder poner notas al pie en zonas con marcos.
+\AtBeginEnvironment{proof}{%
+	\let\oldfootnote\footnote%
+	\let\footnote\tablefootnote%
+}
+
+\AfterEndEnvironment{proof}{%
+	\tfn@tablefootnoteprintout%
+ 	\gdef\tfn@fnt{0}%
+}
+
+\AtBeginEnvironment{framed}{%
+	\let\oldfootnote\footnote%
+	\let\footnote\tablefootnote%
+}
+
+\AfterEndEnvironment{framed}{%
+	\tfn@tablefootnoteprintout%
+ 	\gdef\tfn@fnt{0}%
+}
+
+\newcommand{\pbreak}{\mbox{} \\} % Salto de párrafo forzado.
+
+% Comandos para marcar quién ha hecho qué en los ejercicios
+\newcommand\yoP{% IGN
+  \doneby{Pedro}
+}
+\newcommand\yo{% IGN
+  \textcolor{blue}{Hecho por mí. No fiarse al 100\%}%
+}
+
+% Se puede definir de forma genérica con \doneby{Quién}.
+\newcommand{\doneby}[1]{\textcolor{\@nameuse{probcolor-#1}}{\itshape Hecho por #1. Se aceptan correcciones.}} % 1: Autor | Muestra el texto "Hecho por..."
+\newcommand{\approvedby}[1]{\textcolor{\@nameuse{probcolor-#1}}{\itshape Revisado por #1. Se siguen aceptando correcciones}} % 1: Autor | Muestra el texto "Revisado por..."
+
+% Colores para el \doneby
+\@namedef{probcolor-Guille}{OliveGreen}
+\@namedef{probcolor-Dejuan}{JungleGreen}
+\@namedef{probcolor-Pedro}{blue}
+\@namedef{probcolor-Edu}{Bittersweet}
+\@namedef{probcolor-Jorge}{Orange}
+\@namedef{probcolor-Carolina}{VioletRed}
+
+% Para evitar que desaparezcan caracteres en ciertas fuentes.
+\DeclareSymbolFont{bbold}{U}{bbold}{m}{n}
+\DeclareSymbolFontAlphabet{\mathbbold}{bbold}
+
+% BEGIN CMDDEF
+
+\newcommand{\mop}[1]{\mathrm{#1}\,} % 1: operacion;
+\newcommand{\imgref}[1]{(figura \ref{#1})} % 1: referencia; Referencia a imagen.
+
+% Comandos de lógica
+\newcommand{\dimplies}{\iff}
+\newcommand{\nimplies}{\nRightarrow}
+\newcommand{\Or}{\vee}
+\newcommand{\y}{\wedge}
+\newcommand{\tq}{\;\diagup\;}
+\newcommand{\tlq}{\text{ tal que }}
+\newcommand{\wtf}{(?)}
+
+% Cálculo
+\newcommand{\deriv}[2]{\frac{\dif #1}{\dif #2}} % 1: f; 2: var
+\let\iod\od
+\let\od\dod
+\newcommand{\dpa}[2]{\frac{\partial\,#1}{\partial\, #2}}
+\DeclareMathOperator{\rot}{rot} % Rotacional
+\DeclareMathOperator{\dv}{div}  % Divergencia
+\newcommand{\grad}{\nabla}
+\DeclareMathOperator{\img}{img} % Imagen
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\bigzero}{\text{\Large 0}}
+\newcommand{\tlps}{\tilde{\Psi}}
+
+\newcommand{\invers}[1]{#1 ^ {-1}} % 1: f
+\newcommand{\f}{\invers{f}}
+\newcommand{\F}{\invers{F}}
+\newcommand{\Rnxm}{\real^M\times\real^N}
+\newcommand{\acum}[1]{\#1 \subset(#1) }
+\newcommand{\rnk}{\real^{N+K}}
+\newcommand{\rk}{\real^{N+K}}
+\newcommand{\ncl}[1]{\ker #1} % 1: f; | Sólo por no romper EA.
+
+% Análisis matemático
+
+
+\newcommand{\normp}[2]{\norm{\gor{#1}}_{#2}} % 1: vector; 2: norma-n; | Normas-p
+\newcommand{\liminft}[1]{\lim_{{#1}\rightarrow \infty}} % 1: variable;
+\newcommand{\mylim}[3]{\lim_{\gor{#1} \rightarrow \gor{#2}} F({#3})} % 1: vector; 2: tiende-a; 3: variable;
+\newcommand{\df}[1]{\elst{\wedge\,}{\dif}{#1}} % 1: x,y,z; | Lista de variables para formas diferenciales
+\newcommand{\dfl}[2]{\dif #1 \wedge \dotsc \wedge \dif #2} % 1: comienzo; 2: fin; | Lista de la forma dv1 Λ ... Λ dvn
+\newcommand{\id}[1]{\elst{}{\dif}{#1}} % 1: x,y,z; | Lista de variables para integrales
+\newcommandx{\pb}[1][1=T]{{#1}^{\ast}} % | Pullback
+
+% Galois
+\newcommand{\units}[1]{\left(\mathbb{Z}/{#1}\mathbb{Z}\right)^*}
+
+% Para mejorar después. IGN
+\newcommand{\app}{\paragraph{Aplicaci\'{o}n:}} %IGN
+\newcommand{\obs}{\vspace{10pt}\par \noindent \textbf{Observaci\'{o}n}: } %IGN
+
+
+% Notación de puntos de $R^N$
+\newcommand{\gx}{\overline{x}}
+\newcommand{\gs}{\overline{s}}
+\newcommand{\gy}{\overline{y}}
+\newcommand{\gz}{\overline{z}}
+\newcommand{\ga}{\overline{a}}
+\newcommand{\gb}{\overline{b}}
+\newcommand{\gv}{\overline{v}}
+\newcommand{\gu}{\overline{u}}
+\newcommand{\gw}{\overline{w}}
+
+% Caracteres
+\newcommand{\qeq}{\overset{?}{=}} % Un igual con una interrogación encima.
+\renewcommand{\r}[1]{\overset{\circ}{#1}} % 1: A; |Un circulito encima de una letra-
+\newcommand{\intr}[1]{\overset{\circ}{#1}} % 1: A; |Un circulito encima de una letra-
+\newcommand{\gradc}{\hspace{-2mm}$\phantom{a}^{\circ}$} %símbolo grado para poner grados centígrados. IGN.
+
+
+% Operadores
+\newcommand{\comb}[2]{\left( \begin{matrix} #1 \\ #2 \end{matrix} \right)} % Número combinatorio
+\renewcommand{\abs}[1]{\left\vert #1 \right\vert} % Valor aboluto
+\newcommand{\inv}[1]{{#1}^{-1}} % Inversa
+\newcommand{\conj}[1]{\overline{#1}} % Conjugado
+\newcommand{\avg}[1]{\overline{#1}}
+\newcommand{\card}[1]{\abs{#1}} % Cardinal
+\newcommand{\no}[1]{\overline{#1}} % Negación
+\newcommand{\gor}[1]{\overline{#1}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\sign}{sign}
+\newcommand*{\eq}{=}
+\DeclareMathOperator{\rango}{rango}
+\newcommand{\eqexpl}[2][=]{\overset{\raisebox{1pt}{\scriptsize #2}}{#1}}
+\newcommand{\wrapreasontext}[1]{\makebox[10pt]{\text{\scriptsize \hspace{-1em}#1}}} % IGN
+\newcommand{\eqreason}[2][=]{\underset{%
+	\substack{
+		\vspace{6pt} \uparrow  \\
+		\mathrlap{\wrapreasontext{#2}}
+	}
+}{#1}}
+\newcommand{\eqreasonup}[2][=]{\overset{%
+	\substack{
+		\mathrlap{\wrapreasontext{#2}} \\
+		\vspace{4pt} \downarrow
+	}
+}{#1}}
+
+% Comandos para conjuntos y relaciones
+\newcommand{\x}{\times} % una x superguay.
+\newcommand{\appl}[3]{#1 : #2\longmapsto #3} % 1: f; 2: dominio; 3: imagen; | Aplicación
+\newcommand{\uexists}{\exists\, !\;} % Existe y es único
+\newcommand{\sint}{\int_b^a\;}
+\newcommand{\stdf}{\ensuremath{\appl{f}{X}{Y}}} % Típica función f:X -> Y
+\newcommand{\rel}{\mathcal{R}} % Símbolo de relación
+\newcommand{\parts}[1]{\mathcal{P}\left(#1\right)} % Partes de un conjunto
+\newcommand{\ind}{\mathbbm{1}}
+
+% Estadística
+\newcommand{\esp}[2][]{ % 1O: parametro; 2: variable
+\ifthenelse{\equal{#1}{}}
+		{\mathbb{E}}
+		{\mathbb{E}_{#1}}\left(#2\right)}
+\newcommand{\prob}[2][]{  % 1O: parametro; 2: variable
+\ifthenelse{\equal{#1}{}}
+		{\mathbb{P}}
+		{\mathbb{P}_{#1}}\left\lbrace #2 \right\rbrace}
+\newcommand{\var}[2][]{  % 1O: parametro; 2: variable
+\ifthenelse{\equal{#1}{}}
+		{\mathbb{V}}
+		{\mathbb{V}_{#1}}\left(#2\right)}
+\newcommand{\fd}{\mathbb{F}}
+\newcommandx{\convs}[3][1=,2=n,3=\infty]{\xrightarrow[#2\to #3]{#1}} % 1O: texto superior; 2O: variable; 3O: converge a;
+\newcommandx{\convdist}[1][1=n]{\convs[d][#1]} % 1O: variable;
+\newcommandx{\convprob}[1][1=n]{\convs[P][#1]} % 1O: variable;
+\newcommandx{\convcs}[1][1=n]{\convs[c.s][#1]} % 1O: variable;
+\newcommandx{\sample}[2][1=X,2=n]{\ensuremath{{#1}_1,\dotsc , {#1}_#2}} % 1O: variable; 2O: indice;
+\DeclareMathOperator{\sesgo}{sesgo}
+\DeclareMathOperator{\ECM}{ECM}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\emv}{emv}
+
+% Abreviaciones para conjuntos usuales
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\ent}{\mathbb{Z}}
+\newcommand{\rac}{\mathbb{Q}}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\cplex}{\mathbb{C}}
+
+\renewcommand{\vec}[1]{\bold{#1}}
+
+% Vectores
+\newcommand{\pesc}[1]{\langle #1 \rangle} % Producto escalar
+\renewcommand{\md}[1]{\| #1 \|} % Módulo
+
+% Vectores usuales, para no tener que andar escribiendo
+\newcommand{\vx}{\vec{x}}
+\newcommand{\vy}{\vec{y}}
+\newcommand{\vf}{\vec{F}}
+\newcommand{\vg}{\vec{G}}
+\newcommand{\va}{\vec{a}}
+\newcommand{\vb}{\vec{b}}
+\newcommand{\vu}{\vec{u}}
+\newcommand{\vn}{\vec{n}}
+\newcommand{\vv}{\vec{v}}
+\newcommand{\ve}{\vec{e}}
+\newcommand{\vr}{\vec{r}}
+
+% Teoremas. IGN
+\newcounter{thm}[section]
+%\numberwithin{equation}{section}
+\renewcommand{\thethm}{\thesection.\arabic{thm}} % IGN
+
+\newtheorem{ilemma}[thm]{Lema}
+\newtheorem{itheorem}[thm]{Teorema}
+\newtheorem{corol}[thm]{Corolario}
+\newtheorem{iprop}[thm]{Proposici\'{o}n}
+\newtheorem{axiom}[thm]{Axioma}
+
+\newenvironment{remark}{\vspace{10pt}\par \noindent \textbf{Observaci\'{o}n}: }{}
+\newtheorem*{props}{Propiedades}
+
+\newcommand{\IS}{} % IGN
+\def\toggle@IS@print{\renewcommand{\IS}{ }}
+\def\toggle@IS@index{\renewcommand{\IS}{!}}
+
+\newenvironment{op}[1]{\indent \\ \noindent\textsc{#1}\\\[}{\]}
+
+
+\renewcommand{\(}[1][]{\begin{equation}\ifthenelse{\equal{#1}{}}{}{\label{#1}}} % 1O: etiqueta; | IGN
+\renewcommand{\)}{\end{equation}} % IGN
+
+
+\newenvironment{rightbar}{\begin{mdframed}[topline=false, leftline=false, bottomline=false,%
+  linewidth=2pt, innerleftmargin=0pt, rightmargin=0pt,%
+  innerrightmargin=10pt, skipabove=0pt, skipbelow=0pt]}{\end{mdframed}}
+
+\newenvironmentx{example}[1][1=] % 1O: titulo;
+{\paragraph{Ejemplo: #1} \itshape}
+{}
+
+% Entornos y código para problemas. IGN
+
+\newcommand*{\IsInteger}[3]{% %IGN
+    \IfStrEq{#1}{ }{%
+        #3% is a blank string
+    }{%
+        \IfInteger{#1}{#2}{#3}%
+    }%
+}%
+
+\newcounter{ejr}[section]
+\newcounter{apr}[ejr]
+
+\renewcommand{\theejr}{\arabic{section}.\arabic{ejr}} % IGN
+\renewcommand{\theapr}{\alph{apr}} % IGN
+
+\newcommand{\iPartSpaceSkip}{} %IGN
+\newcommandx{\ppart}[1][1=\theapr]{\par \indent \stepcounter{apr}\textbf{#1)} } % 1O: apartado; | Marca nuevo apartado del problema
+\newcommandx{\spart}[1][1=\theapr]{ % 1O: apartado; | Marca de apartado para la solución
+	\iPartSpaceSkip
+	\renewcommand{\iPartSpaceSkip}{\vspace{10pt}}
+	\indent \refstepcounter{apr}\textsc{Apartado #1)} \par
+}
+
+\newcommand{\solution}{  %IGN
+	\iftoggle{probframes}
+		{\end{framed}}
+		{\normalfont\textcolor{gray}{\hrulefill} \\}
+		\setcounter{apr}{0}
+}
+
+\newcommand{\ejrheader}{\theejr} % IGN
+
+\newenvironmentx{problem}[1][1=] % 1O: N. ejercicio;
+{
+	\vspace{1 pt}
+	\renewcommand{\ejrheader}{\theejr}
+	\ifthenelse{\equal{#1}{}}{}{
+		\IsInteger{#1}{
+			\setcounter{ejr}{#1}
+			\addtocounter{ejr}{-1}
+		}{
+			\renewcommand{\ejrheader}{\arabic{section}.{#1}}
+		}
+	}
+	\refstepcounter{ejr}
+	\renewcommand{\iPartSpaceSkip}{}
+	\iftoggle{probframes}{\begin{framed}}{}
+	%\textbf{Ejercicio \ejrheader}:
+	\textbf{Problem \ejrheader}:
+	\iftoggle{probframes}{}{\itshape}
+	\setcounter{apr}{0}
+}{\vspace{10 pt}}
+
+% Problemas sin numeración por secciones.
+\newenvironmentx{problemS}[1][1=] % 1O: N. ejercicio;
+{
+	\vspace{1 pt}
+	\renewcommand{\ejrheader}{\arabic{ejr}}
+	\ifthenelse{\equal{#1}{}}{}{
+		\IsInteger{#1}{
+			\setcounter{ejr}{#1}
+			\addtocounter{ejr}{-1}
+		}{
+			\renewcommand{\ejrheader}{#1}
+		}
+	}
+	\refstepcounter{ejr}
+	\renewcommand{\iPartSpaceSkip}{}
+	\iftoggle{probframes}{\begin{framed}}{}
+	%\textbf{Ejercicio \ejrheader}:
+	\textbf{Problem \ejrheader}:
+	\iftoggle{probframes}{}{\itshape}
+	\setcounter{apr}{0}
+}{\vspace{10 pt}}
+
+% Teoremas y otros entornos. IGN
+
+\newcommand{\listtheoremname}{Teoremas} %IGN
+\newlistof[section]{ithm}{ithmc}{\listtheoremname}
+
+\newcommand{\ithm}[1]{%IGN
+\refstepcounter{ithm}
+\addcontentsline{ithmc}{ithm}{\protect\numberline{\theithm}#1}\par}
+
+% Esta cosa permite el uso de referencias con nombre
+% con comandos como \nref{ref}, que escribirá en el
+% documento algo como "Teorema nombre del teorema (1.25)".
+% Ver el paquete fancyspfrefs.sty
+\newcommand{\set@labelname}[1]{%IGN
+	\ifthenelse{\equal{#1}{}}
+		{}
+		{\toggle@IS@print\protected@edef\@currentlabelname{#1}%
+		\renewcommand{\label@hook}{}}
+}
+
+\newenvironmentx{defn}[2][1=, 2=None]{  % 1O: titulo; 2O: indice;
+	\vspace{15 pt}
+	\set@labelname{#1}
+	\noindent \refstepcounter{thm} \textit{Definici\'{o}n \thethm}
+	\concept[#2]{#1}.\itshape}
+	{\vspace{2 pt}}
+
+\newenvironmentx{prop}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
+	\vspace{2pt}
+	\toggle@IS@index %IGN
+	\ifthenelse{\equal{#2}{None}}
+		{\index{#1}}
+		{\index{#2}}
+	\set@labelname{#1}
+	\ifthenelse{\equal{#1}{}}
+		{}
+		{\ithm{#1}}
+	\toggle@IS@print %IGN
+
+	\begin{iprop}[#1]}
+	{\end{iprop}}
+
+\newenvironmentx{theorem}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
+	\vspace{2pt}
+	\toggle@IS@index %IGN
+	\ifthenelse{\equal{#2}{None}}
+		{\index{#1}}
+		{\index{#2}}
+	\set@labelname{#1}
+	\ifthenelse{\equal{#1}{}}
+		{}
+		{\ithm{#1}}
+	\toggle@IS@print %IGN
+	\begin{framed}
+
+	\begin{itheorem}[#1]}
+	{\end{itheorem}\end{framed}}
+
+
+\newenvironmentx{lemma}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
+	\vspace{2pt}
+	\set@labelname{#1}
+	\toggle@IS@index %IGN
+	\ifthenelse{\equal{#2}{None}}
+		{\index{#1}}
+		{\index{#2}}
+	\ifthenelse{\equal{#1}{}}
+		{}
+		{\ithm{#1}}
+	\toggle@IS@print %IGN
+	\begin{ilemma}[#1]}
+	{\end{ilemma}}
+
+
+\newcommand{\concept}[2][None]{\toggle@IS@print\textbf{#2}% IGN
+	\marginpar{\footnotesize \textit{\makefirstuc{#2}}}%
+	\renewcommand{\IS}{!}%
+	\ifthenelse{\equal{#1}{None}}{\index{#2}}{\index{#1}}}
+
+\newcommand{\printtheorems}{\listofithm} %IGN
+
+\renewenvironment{proof}{\begin{leftbar}\noindent \textit{Demostraci\'{o}n.} }{\qed\end{leftbar}}
+\newenvironment{expla}{\begin{leftbar}\noindent \textit{Explicaci\'{o}n:} }{\end{leftbar}} %explicación de un ejercicio o ejemplo, previo a la solución.
+
+% Complejos
+\newcommand{\ctrig}[1]{\cos \left(#1\right) + i \sin \left(#1\right)} % 1: angulo;
+\newcommand{\ceul}[2]{#1 e^{i #2}} % 1: modulo; 2: angulo;
+\renewcommand{\i}{\imath}
+
+% Matrices
+\newcommand{\trans}[1]{{#1}^{T}}
+\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}} % 1: num; 2: den; | fracción con barra diagonal.
+
+% Probabilidad
+\DeclareMathOperator{\bin}{Bin}
+\DeclareMathOperator{\geom}{Geom}
+
+% Imágenes IGN
+\newcommand{\easyimgw}[4]{\begin{figure}[htbp]\begin{centering}\includegraphics[width=#4\textwidth]{#1}\caption{#2}\label{#3}\end{centering}\end{figure}} % 1: ruta; 2: caption; 3: label; 4: width; | IGN
+\newcommand{\easyimg}[3]{\easyimgw{#1}{#2}{#3}{0.8}} % 1: ruta; 2: caption; 3: label; | IGN
+
+% Estructuras algebraicas
+\newcommand{\gen}[1]{\mathopen{<} #1 \mathclose{>}} % 1: genlist; | Grupo generado por...
+\DeclareMathOperator{\ord}{ord} % Orden de un grupo
+\DeclareMathOperator{\gr}{gr}	% Grado de un polinomio
+\newcommand{\kbb}{\ensuremath{\mathbb{K}}} % Cuerpo K
+
+% Geometría de curvas y superficies
+\newcommand{\mv}[1]{\ensuremath{\mathbf{#1}}} % 1: vector; | Vector en negrita
+\newcommand{\cv}[1][\alpha]{k_{#1}}
+\newcommand{\cvv}[1][\alpha]{\mv{k}_{#1}}
+\newcommand{\cn}[1][\alpha]{\mv{n}_{#1}}
+\newcommand{\ct}[1][\alpha]{\mv{t}_{#1}}
+\newcommand{\cb}[1][\alpha]{\mv{b}_{#1}}
+\newcommand{\ctr}[1][\alpha]{\mv{\tau}_{#1}}
+\newcommand{\wein}{\ensuremath{\mathcal{W}}}
+\newcommand{\lfi}{\ensuremath{\mathcal{L}}}
+\newcommand{\vV}{\mathbf{V}}
+
+
+% Topología
+\DeclareMathOperator{\dst}{d}
+\newcommand{\bola}{\mathbb{B}}
+\newcommand{\sdst}{\ensuremath{(X,\dst)}\xspace}
+\newcommand{\topl}{\ensuremath{\mathcal{T}}\xspace}
+\newcommand{\stopl}{\ensuremath{(X, \topl)}\xspace}
+\newcommand{\base}{\mathcal{B}}
+\newcommand{\toplb}{\ensuremath{\topl_\base}\xspace}
+\newcommand{\adh}[1]{\overline{#1}}
+\newcommand{\iffdef}{\overset{\mathrm{def}}{\iff}}
+\newcommand{\bolac}{\overset{\bullet}{\bola}}
+\newcommand{\tops}{\ensuremath{(X, \topl)}\xspace}
+\newcommand{\topu}{\ensuremath{\topl_{usual}}\xspace}
+\newcommand{\quot}[2]{{\raisebox{.2em}{$#1$}\left/\raisebox{-.2em}{$#2$}\right.}}
+\newcommand{\dfm}{\simeq_p}
+\newcommand{\restr}[2]{{#1}|_{#2}}
+\newcommand{\bbs}{\mathbb{S}}
+\newcommand{\crc}{\ensuremath{\mathbb{S}^1}\xspace}
+\newcommand{\torus}{\ensuremath{\mathbb{T}^2}\xspace}
+\newcommand{\disc}{\ensuremath{\overline{\mathbb{D}}}\xspace}
+
+% TIM
+\newcommand{\algb}[1]{\mathcal{#1}}
+\newcommand{\algbA}{\mathcal{A}}
+\newcommand{\algbM}{\mathcal{M}}
+\newcommand{\algbC}{\mathcal{C}}
+\newcommand{\algbB}{\mathcal{B}}
+\newcommand{\algbT}{\mathcal{T}}
+\newcommand{\algbP}{\mathcal{P}}
+\newcommand{\salgb}{\sigma \textit{-\'{a}lgebra}}
+\newcommand{\sfin}{\sigma \textit{-finita}}
+
+% Galois
+\newcommand{\gal}{\mop{Gal}}
+
+% Geometría
+\newcommand{\tens}{\mathcal{T}}
+\renewcommand{\dif}{\operatorname{d\!}{}}
+\renewcommand{\Dif}{\operatorname{D\!}{}}
+\newcommandx{\tc}[4][1=i, 2=j, 3=b, 4=a]{T^{{#1}_1, \dotsc, {#1}_{#3}}_{{#2}_1, \dotsc, {#2}_{#4}}} % 1O: Id. superior; 2O: Id. inferior; 3O: máx superior; 4O: Máx inferior. IGN
+\newcommand{\AlignFootnote}[1]{% IGN
+  \ifmeasuring@
+  \else
+    \iffirstchoice@
+      \footnote{#1}%
+    \fi
+  \fi}
+
+\newcommand{\projp}{\mathbb{RP}}
+\newcommand{\lie}[1]{\left[#1\right]}
+\newcommand{\tgs}{\mathbb{T}}
+\newcommand{\tgsd}{\mathbb{T}^*}
+\newcommand{\inmr}[3]{#1 : #2 \hookrightarrow #3}
+\newcommand{\halfp}{\mathbb{H}}
+
+% Variable Compleja
+\DeclareMathOperator{\cind}{\acute{I}nd}
+\let\Re\relax
+\let\Im\relax
+\DeclareMathOperator{\Re}{Re}
+\DeclareMathOperator{\Im}{Im}
+\DeclareMathOperator{\Res}{Res}
+
+% Modelización
+\newcommand{\fe}[1]{e\left(#1\right)}
+
+% Variable real
+\newcommand{\lebg}{\ensuremath{\mathcal{L}}\xspace}
+\newcommand{\borel}{\ensuremath{\mathcal{B}}\xspace}
+\newcommand{\meds}[1][X]{\ensuremath{(#1,\mathcal{#1})}\xspace}
+\newcommandx{\meas}[2][1=X,2=\mu]{\ensuremath{(#1,\mathcal{#1},#2)}\xspace}
+\newcommand{\minuszero}{\setminus\set{0}}
+\DeclareMathOperator*{\essup}{essup}
+\newcommand{\convsmed}{\xrightarrow[m]{}}
+\newcommand{\mpos}{\ensuremath{\mathcal{M}_{+}}}
+\newcommand{\msgn}{\ensuremath{\mathcal{M}}}
+\newcommand{\mfin}{\ensuremath{\mathcal{M}_{F}}}
