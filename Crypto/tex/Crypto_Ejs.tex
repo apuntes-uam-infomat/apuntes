@@ -1909,26 +1909,60 @@ Se propone el siguiente sistema para jugar al poker por correo postal (el
 problema es como repartir las cartas sin que ninguno de los dos jugadores sepa
 las cartas que tiene el otro).
 
-i) El jugador $A$ pone cada una de las 52 cartas en una caja
+\begin{enumerate}
+\item El jugador $A$ pone cada una de las 52 cartas en una caja
 (todas las cajas son idénticas) y las cierra con candados para los
 que solo él tiene las llaves. Envía las 52 cajas al jugador $B$.
 
-ii) El jugador $B$ selecciona 5 de las cajas, que formarán la mano
+\item El jugador $B$ selecciona 5 de las cajas, que formarán la mano
 de $A$. Selecciona otras 5 cajas, que formarán su propia mano, y a
 estas 5 les pone candados para los que solo él tiene la llave.
 Envía las 10 cajas seleccionadas a $A$.
 
-iii) $A$ retira sus candados de las 10 cajas. Se queda con las 5
+\item $A$ retira sus candados de las 10 cajas. Se queda con las 5
 cartas que forman su mano y envía las otras 5 cajas a $B$.
 
-iv) $B$ abre las 5 cajas y ya tiene sus cartas. Pueden empezar a jugar.
+\item $B$ abre las 5 cajas y ya tiene sus cartas. Pueden empezar a jugar.
 
-v) En caso de disputa $B$ envía sus 5 cartas y las 42 cajas sin
+\item En caso de disputa $B$ envía sus 5 cartas y las 42 cajas sin
 abrir a un arbitro neutral, al que $A$ le envía las llaves.
+\end{enumerate}
 
 EJERCICIO: Convencerse de que no se pueden hacer trampas y dar un
 método para jugar al poker utilizando el correo electrónico.
 \solution
+
+\doneby{Pedro}
+
+Hacer trampas sería lograr que, de alguna forma, el un jugador pudiese ver cartas que no estarán en su mano.
+
+Para empezar, si las cajas son idénticas, el jugador A envía las 52 cartas sin ningún conocimiento acerca de las relaciones carta-mano y, obviamente, sin saber cuáles serán las cajas que acabarán formando su mano.
+
+El jugador B no puede abrir ninguna de las cajas puesto que no tiene la llave de A. Escoge 10 cajas al azar (puesto que todas son iguales) y pone su propio candado a 5 de ellas.
+
+Ahora envía a A sólo esas 10 cajas. Ahora A quitará todos los candados pero con ello sólo conseguirá ver sus 5 cartas, ni hablar de las que pertenecen a B, que tienen otro candado diferente.
+
+Finalmente enviará 5 cajas a B que sólo él podrá abrir puesto que es el único poseedor de la llave.
+
+Este sistema, de cuya seguridad acabamos de autoconvencernos, puede emplearse para jugar al poker online usando funciones de un sólo sentido $f_a$ y $f_b$.
+
+El procedimiento a seguir sería:
+
+\begin{enumerate}
+\item El jugador $A$ calcula $f_a$ de cada una de las 52 cartas y envía los 52 valores calculados al jugador $B$.
+
+\item El jugador $B$ selecciona 5 de las cajas, que formarán la mano
+de $A$. Selecciona otras 5 cajas, que formarán su propia mano, y a
+estas 5 y calcula $f_b$ de los 5 valores esogidos. Envía los 10 números a $A$.
+
+\item $A$ calcula $f^{-1}_a$ de los 10 datos recibidos. 5 de ellos le darán una carta y los otros 5 le darán números sin ningún significado para él. Envía los 5 últimos a $B$.
+
+\item $B$ calcula $f^{-1}_b$ de los cinco valores recibidos y ya tiene sus cartas. Pueden empezar a jugar.
+
+\item En caso de disputa $B$ envía sus 5 cartas y las 42 números sin descibrar a un arbitro neutral, al que $A$ le envía $f_a$.
+\end{enumerate}
+
+La dificultad de este método es que necesitaríamos funciones que conmuten. Esto es sencillo de hacer si trabajamos con funciones $f_x(m)_m^x$
 \end{problem}
 
 \begin{problem}[2]
@@ -1942,17 +1976,29 @@ y también, de manera automática, contestará  $(C_A(m),B)$ a $A$
 (obsérvese que $(C_A(m),B)$ tiene el formato adecuado). De esta
 manera $A$ sabe que $B$ ha recibido correctamente el mensaje.
 
-a) Prueba que un tercer usuario $C$ puede tambien leer el mensaje
+\ppart Prueba que un tercer usuario $C$ puede tambien leer el mensaje
 $m$ que $A$ envió a $B$. Podemos asumir que $C$ puede interceptar
 todos los mensajes transmitidos por la red (ya que una de las
 ventajas de la clave pública es que elimina la necesidad de que el
 canal sea seguro), y que $C$ puede enviar sus propios mensajes,
 siempre que utilice el formato correcto.
 
-b) Demuestra que las comunicaciones utilizando esta red siguen sin
+\ppart Demuestra que las comunicaciones utilizando esta red siguen sin
 ser seguras si el protocolo es que $A$ envía $C_B((C_B(m),A))$ a
 $B$ y $B$ automaticamente responde  $C_A((C_A(m),B))$ a $A$.
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Es sencillo, basta con que $C$ se interponga en la comunicación y envíe a $B$ $(C_B(m),C)$ y así $C$ le responderá con $(C_C(m),B)$ y listo.
+
+\spart
+
+El hombre $C$ intercepta el mensaje de $A$ y envía él mismo a $B$ el mensaje $(C_B(C_B((C_B(m),A)),C)$. Ahora $B$ descifrara dos veces el mensaje y enviará a $C$ el mensaje: $(C_C(C_C((C_B(m),A)),B)$.
+
+Gracias a esto $C$ ya conoce $(C_B(m),A)$ y ahora sólo tiene que enviar a $B$ el mensaje $C_B((C_B(m),C))$ y esperar la respuesta que sólo él sabrá descifrar.
 \end{problem}
 
 \begin{problem}[3]
@@ -1980,28 +2026,53 @@ $(I_i, s_i,f_i)$, que hace pública, manteniendo secreta
 $f_i^{-1}$. Con todos estos datos, cuando el comprador $i$ quiere
 pagar al vendedor $j$, siguen el siguiente protocolo:
 
-i) {\it Presentación de credenciales:} El comprador entrega al
+\begin{enumerate}
+\item {\it Presentación de credenciales:} El comprador entrega al
 vendedor $(I_i, s_i,f_i)$ junto con una descripción de la
 transacción (pago, fecha de cobro,...) desde su punto de vista:
 $u_i$. El vendedor comprueba si $f(s_i)=I_i$, y acepta o no la
 tarjeta. Se procede de manera simétrica entregando el vendedor sus
 datos,  $(I_j, s_j,f_j,u_j)$, al comprador.
 
-ii) {\it Autentificación:} El comprador y el vendedor unen (de
+\item {\it Autentificación:} El comprador y el vendedor unen (de
 modo adecuado dependiendo del tipo de funciones que se use) $u_i$
 y $u_j$, creando un $u=u_iu_j$. El comprador calcula
 $t_i=f_i^{-1}(u)$ y se lo da al vendedor, quién comprueba si
 $f_i(t_i)=u$. Se realiza la operación simétrica intercambiando los
 papeles de comprador y vendedor.
 
-iii) {\it Recibos:} el comprador guarda $(I_j,
+\item {\it Recibos:} el comprador guarda $(I_j,
 s_j,f_j,u_i,u_j,t_i,t_j)$ y el vendedor guarda $(I_i,
 s_i,f_i,u_i,u_j,t_i,t_j)$.
+\end{enumerate}
 
 EJERCICIO: Discute la utilidad de este sistema para resolver los
 problemas planteados en el primer parrafo, y cualquier otro que se
 te ocurra relacionado con los pagos con tarjeta de crédito.
 \solution
+
+\doneby{Pedro}
+
+En la explicación hablaremos de cómo el vendedor se cerciona de que el cliente es confiable. Puesto que el protocolo es simétrico, lo que se haga en un sentido se está haciendo también en el contrario
+
+En el primer paso, cualquier usuario podría haber enviado $f(s_i)$, puesto que tanto $f$ como $s_i$ son datos públicos.
+
+Con esta primera comprobación nos aseguramos de que se está empleando la tarjeta asociada al usuario que dice estar haciendo la compra. Es decir, no puedo decir que soy el usuario $I_{i_1}$ y enviar $I_{i_2}$.
+
+A partir de este punto, si el usuario dice ser $I_i$ con una $i$ fija, nos restringimos a ese dato. Ya comprobaremos más tarde si es él de verdad o no.
+
+Aún no hemos ganado prácticamente nada de seguridad puesto que basta con falsificar la tarjeta introduciendo los datos públicos y con ello ya habríamos pasado esta primera fase.
+
+En el segundo paso nos podemos asegurar de que el cliente es de verdad quien dice ser, puesto que sólo él conoce $f^{-1}_i$, necesaria para realizar esta comprobación.
+
+Ninguna persona que intercepte estos mensajes será capaz de obtener $u$ puesto que no conocerá ninguna de las funciones inversas empleadas.
+
+Del mismo modo, si el vendedor ha llegado a obtener $u_i$ es porque el cliente, el único que conocía $f_i^{-1}$ se lo ha enviado. Así queda constancia de que la compra se ha realizado satisfactoriamente.
+
+Toda la seguridad del sistema radica en que las $f_x^{-1}$ son secretas. Así, si el vendedor conocer $t_j$ es porque de verdad el comprador hizo la compra y viceversa.
+
+Además, aunque alguien se haga con el recibo (compuesto por datos públicos), es sencillo comprobar si de verdad es él pidiéndole que envía $f_i^{-1}(u)$ una vez más.
+
 \end{problem}
 
 \begin{problem}[4] Supongamos que una red de inversores y agentes de bolsa utiliza criptografía de clave pública.
@@ -2022,6 +2093,20 @@ d_A, e_B, d_B$ y el software necesario para cifrar y descifrar.
 [PISTA: hace falta un ``acuse de recibo" de los mensajes.]
 
 \solution
+\doneby{Pedro}
+
+La base de la criptografía de clave pública es que cada usuario del sistema tenga una clave privada y una pública.
+
+Si simplemente enviamos las órdenes cifrando el mensaje con la clave pública del destino, conseguiremos confidencialidad, pero al final cualquiera podría fingir que ha recibido un mensaje de una cierta persona.
+
+Por ello lo que se debe hacer es enviar el mensaje $m$ de $A$ a $B$ mediante el envío de $f_B(m,f_A^{-1}(m))$.
+
+Así el usuario $B$, tiene una ``prueba'' de que recibió una orden puesto que es la única forma de que $B$ se haga con $f^{-1}_A(m)$.
+
+Con esto ya hemos solventado el problema de que el inversor se desentienda de la orden y que el agente actúe por su cuenta ya que la acción habrá sido ordenada por el inversor si y sólo si el agente tenga $f^{-1}(m)$.
+
+Además evitamos problemas posibles de suplantación de identidad.
+
 \end{problem}
 
 
@@ -2053,6 +2138,29 @@ intercepta el mensaje {\it ELHQKHFKR} de Ana a Beatriz. ¿Qué le ha
 dicho Ana a Beatriz?
 
 \solution
+\doneby{Pedro}
+
+\spart
+
+Ana enviará a Beatriz $g^5 \mod 29 = 2^5 \mod 29 = 3$ de forma que nadie que intercepte el mensaje será capaz de desucubrir el valor del exponente. Beatriz responderá enviando $g^{8} \mod 29 = 24$ con lo que ya tienen ambas la nueva clave: $e=(g^5)^8=(g^8)^5 \mod 29$.
+
+A partir de aquí emplearan el cifrado de cesar empleando como clave del cifrado de César el valor $g^{40}=2^{40}+7 \mod 29$
+
+Así el mensaje ``HOLA'' quedará convertido en ``ÑVRH''
+
+\spart
+
+Puesto que son números pequeños podemos ser capaces de vulnerar la seguridad del sistema por la cuenta de la vieja.
+
+Para empezar podemos ver fácilmente que el número escogido por Beatriz es un $3$ y podemos para conocer $a$ podemos plantear la ecuación: $2^a \mod 29=18$
+
+Puesto que 2 es un generador del grupo $\ent_{29}^*$ basta con que hagamos un total de 28 pruebas para encontrar el valor de $a$. 
+
+Haciendo un pequeño script en python en seguida encontramos que $a=11$ es la solución que buscamos. 
+
+Ahora Cristina ya sabe que la clave del cifrado de César que se ha empleado es $2^{33} \mod 29 =3$, por lo que el mensaje cifrado quería decir: ``BIEÑHECHO''
+
+Podemos deducir que el profesor metió la pata al escribir el mensaje cifrado y cifró sin tener en cuenta la $Ñ$ al preparar el ejercicio.
 \end{problem}
 
 El objetivo de los tres siguientes problemas es dar un método para lanzar una moneda al aire ``a
@@ -2083,6 +2191,15 @@ en el que cada jugadora tenga una probabilidad del 50\% de
 ``ganar" (empieza por dar una definición adecuada de ``ganar") y
 que incluya garantías de que no se puede hacer trampas.
 \solution
+
+\doneby{Pedro}
+
+
+La idea es sencilla, Beatriz escoge un número $a$ y le envía a Ana $f(a)=c$. Ahora Ana, conociendo $d$ calcula las dos preimágenes de $c$ obteniendo $a,b$. 
+
+La idea es sencilla, en este momento Ana no tiene ni idea de cuál de las dos opciones es la que escogió Beatriz, supongamos que si escoge $a$, acierta y entonces gana Ana y consideramos la derrota en caso contrario.
+
+El truco es sencillo, aquí Beatriz puede contestar que no es el número adecuado diga lo que diga Ana y así Ana nunca ganaría. Por ello lo que hacemos es que Beatriz tenga que aceptar que Ana ha acertado o enviar ella su número para demostrar que es otro número, que ella no puede haber calculado a posteriori, el que empleó para obtener $c$.
 \end{problem}
 
 
@@ -2096,35 +2213,125 @@ dos soluciones. Si además suponemos que $2\ne 0$ en $R$, demostrar
 que, si  $X^2=a$ con $a\ne 0$ tiene solución, entonces tiene
 exactamente dos soluciones.
 
-\ppart Sea $N$ un número impar. Demuestra que en el anillo  $\ent_N\ent$
+\ppart Sea $N$ un número impar. Demuestra que en el anillo  $\ent_N$
 existe algún $a$ tal que la ecuación  $X^2\equiv a \mod N$ no
 tiene ninguna solución. (Sugerencia: ?`Cardinal del conjunto de
 cuadrados?)
 
-\ppart Demuestra que en el anillo $\ent_{p^2}\ent$ con $p$ primo impar la
+\ppart Demuestra que en el anillo $\ent_{p^2}$ con $p$ primo impar la
 ecuación
  $X^2\equiv 0 \mod p^2$ tiene exactamente $p$ soluciones, mientras que si una
 ecuación $X^2\equiv a \mod p^2$ con $a\not\equiv 0$ tiene
 solución, entonces tiene exactamente dos soluciones.
 
 \ppart Sean $p$ y $q$ primos impares distintos. Trabajaremos ahora en
-el anillo $\ent_{pq}\ent$.
+el anillo $\ent_{pq}$.
 \begin{itemize}
-\item[$d_1$)] Demuestra que, dado $x\in\ent_{pq}\ent$, existen $a,b\in\ent,\quad
+\item[$d_1$)] Demuestra que, dado $x\in\ent_{pq}$, existen $a,b\in\ent,\quad
 0\le a<q,\quad 0\le b<p$ tales que $x\equiv ap+bq \mod pq$, y que
 además $a$ y $b$ en estas condiciones son únicos.
-\item[$d_2)$] Dados $x\equiv ap+bq, x'\equiv a'p+b'q \in\ent_{pq}\ent$, da
+\item[$d_2)$] Dados $x\equiv ap+bq, x'\equiv a'p+b'q \in\ent_{pq}$, da
 condiciones sobre $a,b,a',b'$ que sean equivalentes a $x^2\equiv
 {x'}^2 \mod pq$.
 \item[$d_3)$] Lo mismo que en $d_2)$, pero exigiendo además que $x\not\equiv
 x'\mod pq$.
 \item[$d_4)$] Demuestra que la ecuación $X^2\equiv\alpha^2 \mod pq$ tiene:
 1 solución si $\alpha\equiv0\mod pq$; 4 soluciones si $\alpha$ es
-una unidad en $\ent_{pq}\ent$;
+una unidad en $\ent_{pq}$;
  2 soluciones si $\alpha\not\equiv 0$ y $\alpha$ no es una unidad en
-$\ent_{pq}\ent$.
+$\ent_{pq}$.
 \end{itemize}
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Vamos a empezar probando que la ecuación tiene una única solución. Para ello basta con ver que cualquier solución cumplirá
+\[x\cdot x = 0 \implies x=0 \text{ por ser un dominio de integridad}\]
+
+Para trabajar con la ecuación $x^2=a$ con $a\neq 0$ podemos escribir:
+\[x^2=a\iff x^2-a=0 \iff (x-\sqrt{a})(x+\sqrt{a})=0 \implies x-\sqrt{a}=0 \text{ ó } x+\sqrt{a}=0\]
+donde la última implicación se deduce del hecho de que trabajamos en un dominio de integridad.
+
+Así llegamos a que las dos únicas posibles soluciones de la ecuación $x^2=a$ son $x=\sqrt{a}$ y $x=-\sqrt{a}$.
+
+El número de soluciones de la ecuación será exactamente dos y $\sqrt{a}\neq - \sqrt{a}$. Esto ocurre siempre que el exponente al que estamos elevando no sea $0$ puesto que entonces la ecuación $x^0=a$ tendría tantas soluciones como elementos en el dominio si $a=1$ y ninguna en caso contrario.
+
+Por tanto, queda claro que siempre que el exponente no sea nulo, es decir, siempre que $2\neq 0$ en el dominio de integridad, tendremos dos soluciones.
+
+\spart
+
+Supongamos que vamos tomando elementos de $\ent_N$, calculando su cuadrado y resulta que siempre obtenemos un número dentro de $\ent_N$. Es decir, en $\ent_N$ todos los elementos son cuadrados perfectos módulo $N$.
+
+En ese caso podemos ir tomando pares de elementos de la forma:
+\[\{a_i,i\} \text{ con } i = 1...N \text{ donde } a_i^2=i\]
+
+Debemos observar que, de forma evidente, no hay dos valores $i\neq j \in \ent_N$ tales que $a_i = a_j$.
+
+Cada uno de estos conjuntos serían grupos cíclicos de orden 2 de la forma: $\{a_i,i\} = <a_i>$.
+
+Recordando lo que sabemos de teoría de grupos, tenemos que el orden de un subgrupo debe dividir al orden del total, con lo que en esta ocasión tendríamos que 2 divide a $N$, pero dijimos que $N$ es impar con lo que es imposible.
+
+Por tanto no podemos formar los $N$ pares de la forma $ \{a_i,i\}$ y por tanto habrá algún $i$ que no quede asociado a ningún $a_i$, es decir, habrá algún elemento en $\ent_N$ que no es cuadrado perfecto de ningún elemento.
+
+\spart
+
+Todas las soluciones de la ecuación $x^2=0$ serán múltiplos de $p$, que al elevarlos al cuadrado nos darán $p^2=0$, menores que $p^2$ puesto que si fuesen mayores no estarían en el anillo.
+
+Una vez visto esto es sencillo ver que tendremos como soluciones los números $i\cdot p$ con $i=0,1,...p-1$, es decir, tendremos $p$ soluciones.
+
+Si suponemos ahora que la ecuación $x^2=a$ tiene una solución α, entonces sabemos que $α^2=a$ con lo que podemos escribir la ecuación
+\[(x-α)(x+α)=0 \iff x^2+xα-xα-α^2=0 \iff x^2=α^2 \iff x^2=a\]
+que tiene exactamente dos soluciones $x=\pm α$.
+
+Si no tuviese al menos una solución, α no sería un cuadrado perfecto y no podríamos aplicar este procedimiento puesto que al usar α nos estaríamos saliendo del anillo en el que estamos trabajando.
+
+\spart
+
+\spart[$d_1$]
+
+Puesto que $p,q$ son primos distintos de 2, es claro que $x=m.c.d.(px,qx)$ y, por el teorema de Bezout sabemos que existirán dos números α,β (que incluso sabemos calcular con el algoritmo de Euclides) tales que
+\[x = αpx + βqx \implies x = ax+bq \text{ siendo } a = αx \ \ b=βx\]
+
+Tenemos $x$ escrito como $x=ap+bq$, supongamos que ahora podemos cambiar las cantidades de $p$ y $q$ que estamos sumando, llegando a otro valor posible. Sea $c \in \ent$ debemos escribir:
+\[x=ap+bq = (a-c)p+bq+\frac{cp}{q}q = (a-c)p+\left( b+\frac{cp}{q}\right)q\]
+
+La idea es que si solo tengo dos posibles números que sumar y quito unos pocos de uno de esos números, tengo que ver cuánto tengo que añadir del otro.
+
+El problema que se nos plantea es que este razonamiento (con independencia del signo de $c$) sólo tiene sentido si la fracción es un entero, cosa que es imposible puesto que $p$ y $q$ son primos (salvo que $c=q$ cosa que no tiene sentido puesto que estamos trabajando en $\ent_{pq}$). 
+
+\spart[$d_2$]
+
+Vamos a operar:
+\[\left\{ \begin{array}{l}x^2=a^2p^2+b^2q^2+2abpq \\  x'^2=a'^2p^2+b'^2q^2+2a'b'pq\end{array}\right.\]
+
+
+Como vamos a igualar los cuadrados en módulo $pq$ podemos (y debemos) ignorar el último sumando de cada ecuación con lo que llegamos a:
+\[a^2p^2+b^2q^2 = a'^2p^2+b'^2q^2\]
+
+Sin pérdida de generalidad podemos suponer que $a^2=a'^2+c$ con lo que tenemos que $b'^2=\frac{cp^2}{q^2}b^2$
+
+No obstante, como vimos en el apartado anterior, puesto que $b'^2$ es un entero, esto sólo tiene sentido si $c=αq^2$.
+
+Es decir, llegamos a la relación:
+\[a^2 = a'^2 \mod q^2 \text{ y } b'^2=αp^2b^2 \equiv b'^2 = b^2 \mod p^2\]
+
+\spart[$d_3$]
+
+Puesto que en el apartado $d_1$ vimos que $x=x'$ sólo si los coeficientes coincidían, lo único que tenemos que hacer es añadir la condición $a\neq a'$ y $b\neq b'$ a la relación obtenida en el apartado anterior.
+
+\spart[$d_4$]
+
+La ecuación $x^2=0 \mod pq$ tiene la solución trivial únicamente puesto que, en caso de haber otra, tendríamos $α^2 = 0 \mod pq$ pero esto es imposible puesto que $p$ y $q$ son primos.
+
+Por otro lado, si α es distinto de 0, la ecuación $x^2=α^2$ puede escribirse como 
+
+\[x^2-α^2 = 0 \iff (x-α)(a+α) = 0 \implies x=\pm α\]
+
+Por lo que tendríamos dos soluciones posibles.
+
+Sin embargo, en caso de que α fuese una unidad,... ni idea de lo que pasa
 \end{problem}
 
 \begin{problem}[8]
@@ -2137,7 +2344,9 @@ razonable de resolver   $X^2\equiv a \mod n$ que no pase por
 factorizar $n$ (en cuyo caso podemos resolver $X^2\equiv a \mod p$
 y $X^2\equiv a \mod q$ y utilizar el Teorema Chino del Resto).
 Supongamos por último que $p$ y $q$ no son ambos $\equiv 1 \mod
-4$. [RECUERDA: $p\equiv 1 \mod
+4$. 
+
+[RECUERDA: $p\equiv 1 \mod
 4$ $\iff$ existe $a\in \ent_p$ tal que $a^2\equiv 1 \mod p$.]
 
 Sea $K_e=n$ y sea $K_d=\{p,q\}$ su factorización. Pongamos $
@@ -2148,6 +2357,19 @@ por $f(x)=x^2$. Demuestra que todo esto es un ejemplo de la
 situación descrita  en el problema 6 y que por tanto acabamos de
 dar una forma explícita de lanzar monedas al aire ``a distancia".
 \solution
+
+\doneby{Pedro}
+
+En el problema 6 teníamos una función de un sólo sentido tal que todo elemento tiene exactamente dos preimágenes. Esta función sería $f(x)=x^2 \mod n$ siendo $n$ la clave pública que todo el mundo puede conocer.
+
+A partir de este valor nadie puede encontrar $x$.
+
+En esta versión del problema, el usuario $A$ conoce $n$ y la función $f$. Este usuario escoge un número y envía a B $f(x)\mod n$.
+
+El jugador B, conocerá $p$ tal que $pq=n$ y, puesto que también conoce $n$, tendrá $q$ y podrá conocer los posibles $x_1,x_2$ que dan lugar al valor de $f$ que ha recibido. 
+
+Selecciona uno al azar y pregunta a A si ha acertado a lo que ha debe responder afirmando que B acertó (con lo que ganaría B) o diciendo cuál es su número, número que no puede haber calculado a posteriori puesto que A no sabe invertir la función $f$.
+
 \end{problem}
 
 \vspace{0.2cm}
@@ -2163,6 +2385,29 @@ $$\sum_{j=1}^n j^2=\frac{n(n+1)(2n+1)}{6}.$$
 Estima en función de $n$ el número de bit-operaciones necesarias para
 calcular tanto el término de la izquierda como el de la derecha (¡sin usar la igualdad!).
 \solution
+
+\doneby{Pedro}
+
+Siguiendo el tipo de cuentas que hemos hecho en clase, estaremos trabajando con $l=\log(n)$ bits.
+
+Cada vez que elevamos al cuadrado tendremos que hacer $l-1$ sumas de $2l-1$ elementos.
+
+\obs Para verlo basta con recordar la forma en que multiplicábamos en el colegio y tener en cuenta que debemos considerar todos los sumandos de igual longitud a fin de poder hacer las sumas adecuadamente.
+
+Así, el lado de la izquierda de la igualdad requerirá 
+\[n(l-1)O(2l-1)=nO(\log(n))O(\log(n))=O(n\log(n)^2) \text{ operaciones}\]
+
+Por otro lado, la parte de la derecha de la igualdad requiere:
+\begin{enumerate}
+\item Multiplicar $n$ por dos, lo cual no consume operaciones puesto que se hace desplazando los bits y listo.
+\item Sumar 1 para calcular $2n+1$. Esto requiere un total de $O(l)$ operaciones.
+\item Sumar 1 para calcular $n+1$. Esto requiere un total de $O(l)$ operaciones.
+\item Multiplicar $n(n+1)$. Esto requiere $O(n\log(n)^2)$ operaciones.
+\item Multiplicar $n(n+1)(2n+1)$. Esto requiere $O(n^2\log(n)^2)$ operaciones.
+\end{enumerate}
+
+Finalmente, sumamos todas estas operaciones que, como estamos trabajando con estimaciones de tipo O, nos da un total de $O(n^2\log(n)^2)$ operaciones.
+
 \end{problem}
 
 \begin{problem}[10]
@@ -2184,4 +2429,25 @@ las multiplicaciones que intervienen en dicho producto.
 necesarias para calcular el producto de todos los números primos menores que
 $n$.
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+El Teorema del Número Primo nos viene a decir que 
+\[\lim_{n\to \infty} π(n) = \frac{n}{\log(n)}\]
+
+Puesto que cada vez que multiplicamos dos números obtenemos un número que ocupa lo mismo que los dos factores juntos -1 bit, podemos estimar el número de bits necesarios para almacenar el producto de todos los números primos como:
+\[\sum_{i=1}^{n/\log(n)}i - (n\log(n)-1) = \frac{\frac{n}{\log(n)}\frac{n+\log(n)}{\log(n)}}{2} -n\log(n)+1 = O\left(\frac{n^2}{\log^2(n)}\right)\]
+
+\spart
+
+Basta con considerar el producto de los dos números más grandes posibles. Así nos quedaría una cota de $O(n\log(n)^2)$ que se obtiene al calcular el número de bit operaciones necesarias para elevar $n$ al cuadrado.
+
+\spart
+
+\textcolor{blue}{No tengo claro como se haría este de forma cómoda y sencilla y tampoco se si nada de lo anterior está bien.}
+
+TO BE CONTINUED...
+
 \end{problem}

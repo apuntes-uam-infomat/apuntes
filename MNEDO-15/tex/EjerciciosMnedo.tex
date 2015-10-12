@@ -2,8 +2,8 @@
 \section{Hoja 1}
 \begin{problem}[1]
 Considerar el PVI:
-\[\left\{ y'=f(t) \ t \in [t_0,T] \atop
-y(t_0)=0
+\[\left\{ \begin{array}{l}y'=f(t) \ t \in [t_0,T] \\
+y(t_0)=0\end{array}
 \right.\]
 
 Probar que utilizando el método de Euler:
@@ -23,12 +23,123 @@ Por inducción podemos resolverlo:
 	\end{multlined}
 \end{equation*}
 
-La hipótesis de inducción es para $N-1$: $y_N = \sum_{k=0}^{N-1} f(t_k)h$. Así que solo nos falta demostrar que se cumple en $N$:
-\begin{equation*}
-	\begin{multlined}[0.8\textwidth]
-		\underline{n=N}: \quad y_{N+1} = y_N + hf(t_N) = \sum_{k=0}^{N-1} f(t_k)h + hf(t_N) = \sum_{k=0}^N f(t_k)h
-	\end{multlined}
-\end{equation*}
+La hipótesis de inducción es que: $y_N = \sum_{k=0}^{N-1} f(t_k)h$. Así que solo nos falta demostrar que se cumple en $N+1$:
+\[y_{N+1} = y_N + hf(t_N) = \sum_{k=0}^{N-1} f(t_k)h + hf(t_N) = \sum_{k=0}^N f(t_k)h\]
+
+\end{problem}
+
+
+\begin{problem}[2]
+Ver que el método de Euler falla cuando queremos aproximar la solución
+\[y(t) = t^{\frac{3}{2}}\]
+del PVI
+\[\left\{ \begin{array}{l}y'=\frac{3}{2}y^{\frac{1}{3}} \\
+y(0)=0\end{array}
+\right.\]
+
+Justifica cuál es el problema.
+
+\solution
+\doneby{Pedro}
+
+Recordamos que el método de Euler consiste en emplear
+\[y_{n+1} = y_n + h f(y_n)\]
+
+Puesto que el dato inicial es 0 y no hay ninguna constante positiva sumando en la $f(t_n,y_n)$, todas las $y_n$ que calculemos tendrán valor 0 con lo que el método no nos llevará a ningún sitio.
+
+Si el método de Euler no nos lleva a ningún sitio, parece lógico pensar que la función debe tener algún problema que la hace salir del conjunto de funciones sobre las que se puede emplear este método.
+
+Así podemos comprobar que la función $f(t_n,y_n)=\frac{3}{2}y^{\frac{1}{3}}$ no es lipschitz en la segunda variable. Vamos a comprobarlo.
+
+Sea $L$ la constante que define la condición de Lipchitz, siendo el intervalo en el que estamos trabajando el intervalo $[0, \infty)$. 
+
+Tomamos en concreto $y_1=0$. En estas condiciones, si la función fuese Lipchitz tendríamos que 
+\[\frac{\frac{3}{2}(y_2^{1/3})}{y_2} = \frac{3}{2}\frac{1}{y^{2/3}}\leq L \ \ \ \forall y_2 \in [0,\infty)\]
+
+Llegados a este punto es sencillo ver que la parte de la izquierda tiende a infinito cuando $y_2$ tienda a 0 y por tanto no puede existir la constante $L$ que lo acote. Por tanto la función no es Lipchitz y no podemos aplicar el método de Euler.
+\end{problem}
+
+\begin{problem}[3]
+Sea el PVI
+\[\left\{ \begin{array}{l}y'=1+y^2 \ t \in [0,2] \\
+y(0)=0\end{array}
+\right.\]
+
+¿Podemos usar el método de Euler para aproximar la solución $y(t)=\tan(t)$?
+
+\solution
+
+\doneby{Pedro}
+
+Para empezar debemos de comprobar si la función que queremos aproximar satisface la ecuación planteada en el PVI.
+
+\[\tan(x)' = \sec(x)^2 = 1 + \tan(x)^2, \ \ \tan(0)=0\]
+
+Queda claro que el PVI planteado tiene como solución la función tangente. Ahora tenemos que ver si el problema planteado puede resolverse por el método de Euler.
+
+Para verlo debemos comprobar si la función $f(t_n,y_n)=1+y^2$ es lipschitz en la segunda variable. Sólo en caso de serlo podríamos aplicar el método de Euler para obtener la solución. Vamos a ello.
+
+\[\forall y_1<y_2 \in [0,2] \ \ \frac{\abs{y_2^2 - y_1^2}}{y_2-y_1}=\frac{(y_2-y_1)(y_2+y_1)}{y_2-y_1} = (y_2+y_1) \leq 4\]
+
+Por tanto, como la función es Lipschitz en la segunda variable, podremos aplicar le método de Euler para resolver el PVI planteado.
+\end{problem}
+
+
+\begin{problem}[4]
+Calcular el residuo de los siguientes métodos:
+
+\ppart Regla del trapecio:
+\[y_{n+1} = y_n + \frac{h}{2}\left( f(t_{n+1},y_{n+1})+f(t_n,y_n)\right)\]
+
+\ppart Euler modificado:
+\[y_{n+1} = y_n +hf\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}f(t_n,y_n)\right)\]
+
+\ppart Leap-frog
+\[y_{n+2}=y_n+2hf(t_{n+1},y_{n+1})\]
+\solution
+
+\doneby{Pedro}
+
+El residuo no es más que la diferencia entre el valor real de la función en $x_n$ y su valor aproximado a partir del método, es decir:
+\[R_n = y(x_{n+1})-y_{n+1}\]
+
+\spart
+\[R_n = y(x_{n+1})-y(x_{n+1}) = y(x_{n+1})-y(x_n) - \frac{h}{2}\left( y'(x_{n+1})+y'(x_n)\right)\]
+
+Por Taylor podemos ver que:
+\[\left\{\begin{array}{l}
+y(x_{n+1}) = y(x_n)+hy'(x_n)+\frac{h^2}{2}y''(x_n)+O(h^3) \\
+y'(x_{n+1}) = y'(x_n)+hy''(x_n) +O(h^2)
+\end{array}\right.\]
+
+Sustituyendo estos datos en la fórmula del residuo llegamos a:
+\[R_n = O(h^3)\]
+
+\spart
+
+En esta ocasión
+\[R_n = y(x_{n+1})-y(x_n)-hf\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}y'(x_n)\right)\]
+
+Calculando el desarrollo de Taylor de la $f$ llegamos a:
+\[f\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}y'(x_n)\right) = f(x_n,y_n)+\frac{h}{2}f_x(x_n,y_n)+\frac{h}{2}y'(x_n)f_y(x_n,y_n)= \atop y'(x_n)+\frac{h}{2}y''(x_n)\]
+
+Sustituyendo en la fórmula del residuo llegamos a:
+\[R_n = O(h^3)\]
+
+\spart
+
+En esta ocasión
+\[R_n = y(x_{n+2})-y(x_n)-2hy'(x_{n+1})\]
+
+Desarrollando por Taylor el primer sumando tenemos 
+\[\left\{ \begin{array}{l}
+y(x_{n+2}) = y(x_n) + 2hy'(x_n)+2h^2y''(x_n)+O(h^3) \\
+y'(x_{n+1}) = y'(x_n)+hy''(x_n) + O(h^2)
+\end{array}\right.\]
+
+Y sustituyendo en la fórmula del residuo llegamos a:
+\[R_n=O(h^3)\]
+
 
 \end{problem}
 
@@ -81,5 +192,156 @@ Ahora tenemos dos casos posibles, y sabiendo que el orden de un método es $\fra
 \item α$\neq$1/2
 \[R_n = y''(t_n)h^2 \left(\frac{1}{2}-(1-α) \right) + O(h^3) \implies \text{ orden } 1\]
 \end{itemize}
+
+\end{problem}
+
+
+\begin{problem}
+	\ppart Sea un PVI. Utilizando los polinomios de interpolación de Lagrange obtener el método de Adams-Bashforth de dos pasos
+	\[y_{n+2} = y_{n+1} + h \left( \frac{3}{2}f(t_{n+1}, y_{n+1}) + \frac{1}{2}f(t_n,y_n) \right),\]
+	
+	\ppart y el de tres pasos
+	\[y_{n+3} = y_{n+2} + h \left( \frac{23}{12} f(t_{n+2},y_{n+2}) - \frac{4}{3} f(t_{n+1}, y_{n+1}) + \frac{5}{12}f(t_n,y_n) \right)\]
+	
+	\solution
+	\begin{defn}{\textbf{Polinomio de interpolación de Lagrange}}
+
+		Recordemos (de cálculo numérico) que el polinomio de interpolación de Lagrange tenía la forma:
+		\[P(x) = f(x_0)l_0(x) + f(x_1)l_1(x) + … + f(x_N)l_N(x)\]
+		donde $f$ es la función que queremos aproximar en los $x_i,\ i=0,…,N$ puntos, y
+		\[l_i(x) = \frac{(x-x_0) … (x-x_{i-1}) (x-x_{i+1}) … (x-x_N)}{(x_i-x_0) … (x_i-x_{i-1}) (x_i-x_{i+1}) … (x_i-x_N)}\]
+	\end{defn}
+
+	\spart
+	En el método de Adams Bashforth tenemos que
+	\[y(x_{n+2})-y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) dx\]
+	y el valor de $f$ entre los puntos $x_{n+1}, x_{n+2}$ se aproximama mediante la recta que pasa por los puntos $(x_{n+1},f(x_{n+1},y_{n+1}), (x_{n+2}, f(x_{n+2},y_{n+2})))$. Para obtener dicha recta usamos el polinomio de interpolação de Lagrange:
+	\[f(x,y) = f(x_n,y_n)\frac{x-x_{n+1}}{x_n-x_{n+1}} + f(x_{n+1},y_{n+1}) \frac{x-x_n}{x_{n+1}-x_n}\]
+
+	Si integramos entre $\int_{x_{n+1}}^{x_{n+2}}$
+	\[\int_{x_{n+1}}^{x_{n+2}} \left[ f(x_n,y_n)\frac{x_{n+1}-x}{h} + f(x_{n+1},y_{n+1})\frac{x-x_n}{h}) \right]dx =\]
+	\[= \left[ f(x_{n+1},y_{n+1}) \frac{(x-x_n)^2}{2h} - f(x_n,y_n)\frac{(x_{n+1}-x)^2}{2h} \right]_{x_{n+1}}^{x_{n+2}}  =\]
+	\[= \frac{1}{2h}f(x_{n+1},y_{n+1}) \left[ (x_{n+2}-x_n)^2 - (x_{n+1}-x_n)^2 \right] - \frac{1}{2h} \left[ (x_{n+1} - x_{n+2})^2 - (x_{n+1} - x_{n+1})^2 \right] =\]
+	\[= \frac{h}{2} \left( 3f(x_{n+1},y_{n+1}) - f(x_n,y_n) \right)\]
+
+
+	\spart
+	En este caso tendremos que:
+	\[y_{n+1} - y_n = \int_{x_n}^{x_{n+1}} f(x,y(x)) dx\]
+	Con la particularidad de que ahora la aproximación de $f$ en el intervalo $[x_n,x_{n+1}]$ la realizaremos interpolando la $f$ en los puntos $x_{n-2},x_{n-1},x_n$ con el polinomio de Lagrange $p$.
+
+	Sabemos por tanto que $p$ interpola $f$ en $x_{n-2},x_{n-1},x_n$:
+
+	{\inputtikz{EJRC_interpolar}}
+
+	Para simplificar los cálculos vamos a tomar el cambio de variable $u=\frac{x_{n+1}-x}{h}$ para que así el polinomio interpole $f(u,y(u))$ en los puntos $3,2,1$. ($u(x_{n-2})=3, u(x_{n-1})=2, u(x_n)=1$).
+
+	{\inputtikz{EJRC_interpolar_transformed}}
+
+
+	Es decir, tras el cambio de variable el polinomio interpolador queda como
+
+	\[\tilde{p}(u) = f(x_n,y_n) \frac{(u-2)(u-3)}{(1-2)(1-3)} + f(x_{n-1},y_{n-1}) \frac{(u-1)(u-3)}{(2-1)(2-3)}+f(x_{n-2},y_{n-2}) \frac{(u-1)(u-2)}{(3-1)(3-2)}\]
+
+	De modo que tras el cambio de variable tendremos:
+	\[\int_{x_n}^{x_{n+1}}p(x)dx \underbrace{=}_{t_{n+1}-hu=x} h\int_0^1 p(t_{n+1}-hu) du = h\int_0^1 \tilde{p}(u)du =\]
+	\[= h\int_0^1 \left[ f(x_n,y_n) \frac{(u-2)(u-3)}{(1-2)(1-3)} + f(x_{n-1},y_{n-1}) \frac{(u-1)(u-3)}{(2-1)(2-3)}+f(x_{n-2},y_{n-2}) \frac{(u-1)(u-2)}{(3-1)(3-2)} \right] =\]
+	\[= h\int_0^1 \left[ f(x_n,y_n)\frac{u^2-5u+6}{2} - f(x_{n-1},y_{n-1})(u^2-4u+3) + f(x_{n-2},y_{n-2})\frac{u^2-3u+2}{2} \right] =\]
+	\[=  h \left( \frac{23}{12} f(t_{n+2},y_{n+2}) - \frac{4}{3} f(t_{n+1}, y_{n+1}) + \frac{5}{12}f(t_n,y_n) \right)\]
+
+	Por tanto
+	\[y(x_{n+2})-y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} p(x) dx = h \left( \frac{23}{12} f(t_{n+2},y_{n+2}) - \frac{4}{3} f(t_{n+1}, y_{n+1}) + \frac{5}{12}f(t_n,y_n) \right)\]
+\end{problem}
+
+\begin{problem}[7]
+La regla de integración del trapecio se define por:
+
+\[y_{n+1} = y_n + \frac{h}{2}\left( f(t_{n+1},y_{n+1})+f(t_n,y_n)\right)\]
+
+Probar que la regla del trapecio es 0-estable. Nótese que basta con demostrar que la función incremento asociada a esta regla, $\phi(t,y;h)$ cumple:
+\begin{enumerate}
+\item Es continua con respecto a las variables $t,y,h$
+\item Es Lipschitz con respecto a la variable $y$
+\item Si $f=0$, entonces $\phi_f=0$
+\end{enumerate}
+\solution
+
+\doneby{Pedro}
+
+Técnicamente el ejercicio está hecho en clase pero yo me preocupé de copiarlo aquí de nuevo.
+
+\begin{itemize}
+\item Es continua con respecto a las variables $t,y,h$
+Definimos la aplicación global contractiva
+\[F(\phi) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_n+h\phi) \right]\]
+
+Y tomamos $\phi_f = \lim_{j\to∞} \phi_f^{[j]}$, donde $\phi_f^{[j]}$ viene dada por la sucesión $\phi_f^{[j]} = F\left(\phi_f^{[j-1]}\right)$ y $\phi^0 = 0$.
+
+\obs El método del trapecio es de 1 paso ($k=1$) y por tanto la función incremento solo depende de $x_n$, $y_n$ y $h$, es decir $\phi_f(x_n,y_n;h)$.
+
+Dado que $f$ es una función continua, tendremos que la función:
+\[\phi_f^{[1]}(x_n,y_n;h) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_{n+1} + 0) \right]\]
+será continua. Como la composición de funciones continuas da como resultado otra función continua, tendremos que $\phi_f^{[2]}=F\left( \phi_f^{[1]} \right)$ es continua, y por tanto todas las $\phi_f^{[k]}(x_n,y_n;h)$ son continuas.
+
+Si logramos probar que la convergencia de las $\phi_f^{[j]}$ sea uniforme, tendremos que la sucesión convergería a una función $\phi_f$ continua.
+
+Expresamos $\phi_f^{[k]}$ como una suma telescópica:
+\begin{equation}
+	\label{eq:suma_telesc_pto_fijo}
+	\phi_f^{[k]} = \sum_{j=1}^k \phi_f^{[j]} - \phi_f^{[j-1]} + \phi_f^{[0]},\quad \phi_f^{[0]}=0
+\end{equation}
+Tomando la norma $L^∞$:
+\begin{equation*}
+	\begin{multlined}[0.7\textwidth]
+		\md{\phi_f^{[j]} - \phi_f^{[j-1]} }_{L^∞} = \md{F\left[\phi_f^{[j-1]}\right] - F\left[\phi_f^{[j-2]}\right] }_{L^∞}\\[1em]
+		\shoveleft{\qquad \qquad \qquad \underbrace{≤}_{F\text{ contractiva}} \frac{Lh}{2} \md{\phi_f^{[j-1]} - \phi_f^{[j-2]}}_{L^∞}}\\
+	\end{multlined}
+\end{equation*}
+Aplicando la desigualdad sucesivamente:
+\[\md{\phi_f^{[j]} - \phi_f^{[j-1]}}_{L^∞} ≤ \left(\frac{Lh}{2}\right)^{j-1} \md{\phi^{[1]}}_{L^∞}\]
+
+Puesto que $K = [a,b]×ℝ×(0,∞)$ es compacto:
+\[\md{\phi_f^{[j]} - \phi_f^{[j-1]}}_{L^∞} ≤ M_k\left(\frac{Lh}{2}\right)^{j-1}\]
+
+De modo que aplicando el test $M$ de Weierstrass, la convergencia de \ref{eq:suma_telesc_pto_fijo} es uniforme, y por tanto $\phi_f$ es continua.
+
+\item Es Lipschitz con respecto a la variable $y$
+
+En el apartado anterior hemos visto que podemos construir una sucesión de funciones que converge uniformemente a $\phi_f$. Todas estas funciones seran funciones Lipschitz con respecto a la $y$ (que es la segunda variable de $\phi_f$) y por tanto todas las $\phi_f^{[j]}$ son Lipschitz.
+
+Puesto que la convergencia es uniforme, el límite también es una función Lipschitz. 
+
+Vamos a demostrar esta afirmación para los lectores incrédulos.
+\begin{proof}
+De forma general vamos a considerar una sucesión de funciones $f_x(x,y)$ que converge uniformemente a $f(x,y)$. 
+
+Por definición de convergencia uniforme, tenemos:
+\[\forall ε > 0 \exists n \tq \forall N > n \ \ \norm{f(x,y)-f_n(x,y)} \leq ε\]
+
+Vamos a estudiar ahora la ``Lipschitzialidad'' de la función $f$ sabiendo que todas las $f_n$ son Lipschitz.
+
+\[\norm{f(x,y)-f(x,y')} = \norm{f(x,y)\pm f_n(x,y)\pm f_n(x,y')+f(x,y')} \leq \]
+por la desigualdad triangular
+\[\leq \norm{f(x,y)-f_n(x,y)}+\norm{f(x,y')-f_n(x,y')}+\norm{f_n(x,y)-f_n(x,y')} = \atop 2ε +\norm{f_n(x,y)-f_n(x,y')}\]
+
+Finalmente, puesto que las $f_n$ son Lipschitz tenemos que:
+\[2ε +\norm{f_n(x,y)-f_n(x,y')} \leq 2ε + \norm{y-y'}\]
+
+Puesto que $\forall ε > 0$ podemos encontrar un $n$ que nos permita llevar a cabo estas operaciones, podemos hacer ε tan pequeño como queramos y llegar a:
+\[\norm{f(x,y)-f(x,y')} \leq \norm{y-y'}\]
+\end{proof}
+\item Si $f=0$, entonces $\phi_f=0$
+
+Puesto que en el método del trapecio $\phi_f$ se define como el punto fijo de
+\[F(\phi) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_n+h\phi) \right]\]
+
+si $f=0$ tendremos que $\phi_f$ será el punto fijo de la función nula y, por tanto, será 0
+
+\end{itemize}
+\end{problem}
+
+\begin{problem}[8]
+Probar que los métodos de Adams-Bashforth de dos pasos y de tres pasos, definidos en el ejercicio 6, son convergentes.
+\solution
 
 \end{problem}
