@@ -1246,7 +1246,7 @@ M_p \equiv & X_{p1} .... X_{p\cap p} \stackrel{iid}{\sim} F_p
 
 \textcolor{red}{lo de la intersección en $X_{p\cap p}$ que es??}
 
-Consideraremos como hipótesis nula: $H_0: F_1=...=F_p$
+Consideraremos como hipótesis nula: $H_0: F_1=...=F_p$. Es decir, queremos ver si las muestras tomadas de diferentes lugares siguen la misma distribución.
 
 Dividimos los datos de cada conjunto de muestras en clases $A_1,...,A_k$, todos los conjuntos $M_1,...,M_p$ tendrán los mismos tipos de clases. Y consideramos las frecuencias observadas: $O_{ij}=$ nº de datos de $M_j$ en $A_i$.
 
@@ -1295,7 +1295,7 @@ $A_k$ & $\hat{E}_{k1}$ &  & $\hat{E}_{kp}$ \\
 \end{tabular}
 
 Ahora con los estimadores obtenidos:
-$$ \sum_i \sum_j \frac{(O_{ij}-\hat{E}_{ij})^{\textcolor{red}{2}}{\hat{E}_{ij}} \stackrel{d}{\rightarrow} \chi^2_{(p-1)(k-1)} $$
+$$ \sum_i \sum_j \frac{(O_{ij}-\hat{E}_{ij})^{\textcolor{red}{2}}}{\hat{E}_{ij}} \stackrel{d}{\rightarrow} \chi^2_{(p-1)(k-1)} $$
 
 Como podemos observar, la $\chi^2$ no es de $p(k-1)$ como antes sino que es de $p(k-1)-(k-1)$, los últimos $k-1$ son el nº de parámetros estimados. Ya que estimamos $\hat{p}_1,...,\hat{p}_k$, pero con la condición $\hat{p}_1+...+\hat{p}_k  1$.
 
@@ -1310,8 +1310,56 @@ $$ T = \sum_{i=1}^k \sum_{j=1}^p \frac{O_{ij}}{E_{ij}}-n$$
 \end{obs}
 
 \begin{example}
-Tenemos 3 muestras, una de España (E), otra de Italia (I) y otra de Francia (F), todas de tamaño $n=100$.
+Tenemos 3 muestras, una de España, otra de Italia y otra de Francia, todas de tamaño $n=100$.Las clases son 'no fumadores' (NF), 'fumadores ocasionales' (FO) y 'fumadores habituales' (FH).
+
+Tenemos la siguiente tabla de contingencia:
+
+\begin{tabular}{ccccc}
+& $M_1=$España & $M_2=$Italia & $M_3=$Francia & \\
+$A_1=$NF & $O_{11}=30$ & $O_{12}=15$ & $O_{13}=20$ & $O_{1\cdot}=65$ \\
+$A_2=$FO & $O_{21}=50$ & $O_{22}=40$ & $O_{23}=50$ & $O_{2\cdot}=140$ \\
+$A_3=$FH & $O_{31}=20$ & $O_{32}=45$ & $O_{33}=30$ & $O_{3\cdot}=95$ \\
+& $O_{\cdot1}=n_1=100$ & $O_{\cdot2}=n_2=100$ & $O_{\cdot3}=n_3=100$ & 300 \\
+\end{tabular}
+
+Recordamos la fórmula de la esperanza estimada:
+$$\hat{E}_{ij} = n_j \cdot \frac{\sum_j O_{ij}}{n} = \frac{O_{i\cdot} O_{\cdot j}}{n}$$
+
+Vamos a calcular la esperanza estimada $\hat{E}_{12}$ es decir, la de Italia y no fumadores:
+
+$$\hat{E}_{12} = n_2 \hat{p}_1 = n_2 \cdot \frac{\sum_{j=1}^3 O_{1j}}{n} = 100 \cdot \frac{30+15+20}{300} = 21,\stackrel{\frown}{6}$$
+
+Así, la tabla de esperanzas quedaría:
+
+\begin{tabular}{ccccc}
+& España & Italia & Francia & \\
+NF & $\hat{E}_{11}=21,\stackrel{\frown}{6}$ & $\hat{E}_{12}=21,\stackrel{\frown}{6}$ & $\hat{E}_{13}=21,\stackrel{\frown}{6}$ & 65 \\
+FO & $\hat{E}_{21}=46,\stackrel{\frown}{6}$ & $\hat{E}_{22}=46,\stackrel{\frown}{6}$ & $\hat{E}_{23}=46,\stackrel{\frown}{6}$ & 140 \\
+FH & $\hat{E}_{31}=31,\stackrel{\frown}{6}$ & $\hat{E}_{32}=31,\stackrel{\frown}{6}$ & $3\hat{E}_{33}=31,\stackrel{\frown}{6}$ & 95 \\
+& 100 & 100 & 100 & 300 \\
+\end{tabular}
+
+Ahora calculamos el estadístico T:
+$$ T = \sum_{i=1}^k \sum_{j=1}^p \frac{O_{ij}}{E_{ij}}-n = $$
+$$\frac{30}{21,\stackrel{\frown}{6}} + \frac{15}{21,\stackrel{\frown}{6}} + \frac{20}{21,\stackrel{\frown}{6}} + \frac{50}{46,\stackrel{\frown}{6}} + \frac{40}{46,\stackrel{\frown}{6}} +
+\frac{50}{46,\stackrel{\frown}{6}} +
+\frac{20}{31,\stackrel{\frown}{6}} +
+\frac{45}{31,\stackrel{\frown}{6}} +
+\frac{30}{31,\stackrel{\frown}{6}} = 9$$
+
+\textcolor{red}{No sale lo esperado, revisar y terminar}
+
+La región de rechazo es:
+$$ R=\{T > \chi^2_{(k-1)(p-1),\alpha}\}$$
+
+En nuestro caso, suponiendo un nivel de significación $\alpha=0.05$:
+$$ R=\{T > \chi^2_{(3-1)(3-1),0.05}\} \Rightarrow R=\{T > \chi^2_{4,0.05}\} \Rightarrow  R=\{T > 9.488\}$$
 \end{example}
+
+\section{Contraste Kolmogorov-Smirnov de homogeneidad}
+Este contraste sólo es válido para dos muestras, y para distribuciones continuas. Al igual que antes queremos ver que las dos muestras tienen la misma distribución.
+
+Así, tenemos $X_1,...,X_n \stackrel{iid}{\sim} F$ y $Y_1,...,Y_n \stackrel{iid}{\sim} G$, con F y G continuas. La hipótesis nula será $H_0: F=G$, es decir, los datos de la primera muestra están distribuidos con la misma función de distribución que los datos de la segunda muestra.
 
 \appendix
 \chapter{Ejercicios}
