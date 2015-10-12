@@ -641,10 +641,11 @@ La notación puede resultar liosa, a grades rasgos:
 \item $\mathbb{E}_{H_0}(O_i)$ será el valor esperado de $O_i$ considerando la hipótesis nula como cierta. La esperanza de una $B(n,p)$ es igual a $np$.
 \end{itemize}
 
-\item Se comparan las frecuencias observadas y esperadas mediante el estadístico de Pearson:
-\[
-T = \sum_{i=1}^n \frac{(O_i-E_i)^2}{E_i}
-\]
+\item Se comparan las frecuencias observadas y esperadas mediante el:
+
+\begin{defn}[estadístico de Pearson]
+\[T = \sum_{i=1}^n \frac{(O_i-E_i)^2}{E_i}\]
+\end{defn}
 
 Se divide entre $E_i$ para darle más importancia a la diferencia si el valor es pequeño, Por ejemplo, si E=100 y O=101, no es lo mismo que si E=1 y O=2. Sin embargo, si no dividiéramos por $E_i$ nos daría el mismo resultado.
 
@@ -1064,7 +1065,7 @@ $$ F_n(X) \stackrel{P}{\rightarrow} F(X)$$
 Convergencia en probabilidad o en medida: Si $\forall \epsilon >0$, $\lim_{n \rightarrow \infty}P(\abs{X-X_n}\geq \epsilon)=0$.
 \end{enumerate}
 \end{obs}
-De hecho, se cumple que:
+De hecho, se cumple que (lema de Glivenko-Cantelli):
 $$\norm{F_n-F}_{\infty} = \sup\abs{(F_n(X)-F(x)} \stackrel{c.s.}{\rightarrow} 0$$
 
 Si $H_0: F=F_0$ fuese cierta, se espera que $D_n = \norm{F_n-F_0}_{\textcolor{red}{\infty}}$ sea pequeño ($D_n$ es el estadístico de Kolmogorov-Smirnov). La idea es rechazar en la región $R=\{D_n > C\}$, para un valor c tal que $P_{H_0}(D_n > c)=\alpha$, donde $\alpha$ es el nivel de significación.
@@ -1091,32 +1092,41 @@ $$P(F_0(X)\leq F_0(x)) = P(X \leq x) + P(F_0(X) = F_0(x), X \geq x) = F_0(X) + 0
 \begin{obs}
 Existe un recíproco de la proposición: Si $U \sim U(0,1) \Rightarrow F^{-1}(U) \sim F$. \textcolor{red}{Explicar mejor este recíproco}
 \end{obs}
+
+La $D_n$ de la que estábamos hablando antes de meternos en la proposición se conoce como:
+
+\begin{defn}[Estadístico Kolmogorov-Smirnov]
+	\[D_n = \max \left\{ 0, \max_{i=1,…,n} \left( \frac{i}{n} - F_0(x_{(i)}) \right), \max_{i=1,…,n} \left(F_0(x_{(i)}) - \frac{i-1}{n})\right) \right\}\]
+\end{defn}
+
+Y a continuación vamos a demostrar por qué tiene la expresión que aparece en la definición.
 \begin{proof}
 
-Vamos a probar que:
-
-$$ D_n = \max \Big\{ \sup_{x\in\mathbb{R}} \Big( F_n(x)-F_0(x)\Big), \sup_{x\in\mathbb{R}} \Big( F_0(x)-F_n(x)\Big) \Big\} $$
+$$ D_n = \max \left\{ \sup_{x\in\mathbb{R}} \Big( F_n(x)-F_0(x)\Big), \sup_{x\in\mathbb{R}} \left( F_0(x)-F_n(x)\right) \right\} $$
 
 Si representamos los estadísticos de orden de la muestra en una recta, y llamamos a $X_{(0)}=-\infty$ y $X_{(n+1)}=\infty$:
 
 \includegraphics[scale=0.5]{img/contrasteks2.png}
 
-Nos queda que si x está entre $X_{(i)}$ y $X_{(i+1)}$, entonces $F_n(x)=\frac{1}{n}$.
+Nos queda que si x está entre $X_{(i)}$ y $X_{(i+1)}$, entonces $F_n(x)=\frac{i}{n}$.
 
 Desarrollando el primer término de $D_n$ nos queda:
 $$ \sup_{x\in\mathbb{R}} \Big( F_n(x)-F_0(x)\Big) = \max_{i=0,...,n} \Bigg(\sup_{x\in(X_{(i)},X_{(i+1)})} \Big( F_n(x)-F_0(x)\Big) \Bigg) = $$
 
-$$ = \max_{i=0,...,n} \Big( \frac{i}{n} - F_0(X_{(i)}) \Big) = \max\Big\{ 0, \max_{i=0,...,n} \Big( \frac{i}{n} - F_0(X_{(i)}) \Big) \Big\}$$
+$$ = \max_{i=0,...,n} \Big( \frac{i}{n} - F_0(X_{(i)}) \Big) = \max\Big\{ 0, \max_{i=1,...,n} \Big( \frac{i}{n} - F_0(X_{(i)}) \Big) \Big\}$$
 
-\textcolor{red}{Explicar por qué es $\frac{i}{n}$}
+\textcolor{red}{Explicar por qué es $\frac{i}{n}$} % Jorge: Es por definición de la función de distrib. empírica.
 
 Desarrollando el segundo término nos queda:
-$$ \sup_{x\in\mathbb{R}} \Big( F_0(x)-F_n(x)\Big) = \max\Big\{ 0, \max_{i=0,...,n} \Big( F_0(X_{(i)}) - \frac{i-1}{n} \Big) $$
+\[\sup_{x∈ℝ}\left( F_0(x) - F_n(x) \right) = \max_{j=0,…,n} \left( \sup_{x∈(x_{(j)},x_{(j+1)})} \left( F_0(x) - F_n(x) \right) \right) =\]
+
+\[= \max_{j=0,…,n} \left( F_0(x_{(j+1)}) - \frac{j}{n} \right) \underbrace{=}_{i=j+1} \max_{i=1,…,n+1} \left( F_0(x_{(i)}) - \frac{i-1}{n} \right) =  \]
+$$ = \left\{ 0, \max_{i=1,...,n} \left( F_0(X_{(i)}) - \frac{i-1}{n} \right) \right\} $$
 
 \textcolor{red}{Explicar por qué es $\frac{i-1}{n}$}
 
 Por tanto, finalmente nos queda:
-$$ D_n =  \norm{F_n-F_0}_{\infty} = \max\Big\{ 0, \max_{i=0,...,n} \Big( \frac{i}{n} - F_0(X_{(i)}) \Big) , \max_{i=0,...,n} \Big( F_0(X_{(i)}) - \frac{i-1}{n} \Big)$$
+$$ D_n =  \norm{F_n-F_0}_{\infty} = \max\Big\{ 0, \max_{i=1,...,n} \Big( \frac{i}{n} - F_0(X_{(i)}) \Big) , \max_{i=1,...,n} \Big( F_0(X_{(i)}) - \frac{i-1}{n} \Big)$$
 
 Por tanto concluimos que $D_n$ depende de $F_0$ a través de los valores de $F_0(X_{(1)}), F_0(X_{(2)}),...,F_0(X_{(n)})$. Si tengo una muestra de $X_1,...,X_n \stackrel{iid}{\sim}F_0$, entonces $F_0(X_1),...,F_0(X_1) \stackrel{iid}{\sim} U(0,1)$. Ordenándolos los elementos: $X_{(1)}\leq...\leq X_{(n)}$, entonces $F_0(X_{(1)})\leq...\leq F_0(X_\textbf{{(n)}}) \stackrel{iid}{\sim} U(0,1)$. Que son los estadísticos de orden de una muestra de tamaño n, de variables aleatorias iid, que siempre van a seguir una distribución de una $U(0,1)$ para toda $F_0$ continua.
 
