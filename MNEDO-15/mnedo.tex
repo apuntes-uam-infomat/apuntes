@@ -773,7 +773,7 @@ En esta ocasión tenemos
 \[y_{n+1}-y_n = \frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right)\]
 
 Así tendríamos:
-\[\phi_n (x_n,y_n) = \frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right) = \frac{1}{2}\left( f(x_n,y_n) + f(x_{n+1},y_n+h\phi_f(x_n,y_n)\right)\]
+\[\phi_f (x_n,y_n) = \frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right) = \frac{1}{2}\left( f(x_n,y_n) + f(x_{n+1},y_n+h\phi_f(x_n,y_n)\right)\]
 
 Donde el $\phi_f$ que buscamos sería la solución de esta ecuación.
 
@@ -816,6 +816,9 @@ Existen una serie de hipótesis que tomaremos de forma general sobre los método
 \item $f= 0 \implies \phi_f=0$
 
 
+\end{enumerate}
+\end{prop}
+
 \begin{example}
 	Veamos a continuación que la \textbf{primera hipótesis} ($\phi_f$ continua) se cumple para el \textbf{método del trapecio}:
 
@@ -856,9 +859,46 @@ Existen una serie de hipótesis que tomaremos de forma general sobre los método
 	De modo que aplicando el test $M$ de Weierstrass, la convergencia de \ref{eq:suma_telesc_pto_fijo} es uniforme, y por tanto $\phi_f$ es continua.
 \end{example}
 
+\begin{example}
+Veamos ahora que la \textbf{segunda hipótesis} se cumple para el \textbf{método del trapecio}.
 
-\end{enumerate}
-\end{prop}
+Esta segunda hipótesis nos dice que existen constantes $h_0,L$ que pueden depender de $f$ tales que:
+\[\norm{\phi_f(x_n,y_n,...,y_{n+k-1},h) - \phi_f(x_n,\tilde{y}_n,...,\tilde{y}_{n+k-1},h)}\leq L \sum_{j=0}^k \norm{y_{n+j}-\tilde{y_{n+j}}} \text{ si } 0 < h < h_0\]
+
+Por definición, para el método del trapecio tenemos que $\phi_f$ es la solución de
+\[\phi_f (x_n,y_n) = \frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right) = \frac{1}{2}\left( f(x_n,y_n) + f(x_{n+1},y_n+h\phi_f(x_n,y_n)\right)\]
+
+Con la definición de $\phi_f$ podemos escribir
+\[\norm{\phi_f(x_n,y_n,h)-\phi_f(x_n,\tilde{y}_n,h)}  \leq \]
+\[\leq \frac{1}{2}\norm{f(x_n,y_n)-f(x_n,\tilde{y}_n)}+\frac{1}{2}\norm{f(x_{n+1},y_n+h\phi_f(x_n,y_n))-f(x_{n+1},\tilde{y}_n+h\phi_f(x_n,\tilde{y}_n))} \leq\footnote{por ser $f$ Lipschitz}\]
+\[\leq L\norm{y_n-\tilde{y}_n}+\frac{Lh}{2}\norm{\phi_f(x_n,y_n,h)-\phi_f(x_n,\tilde{y}_n,h)}\]
+
+Reordenando los términos de la inecuación podemos escribir:
+\[\left(1-\frac{Lh}{2} \right)\norm{\phi_f(x_n,y_n,h)-\phi_f(x_n,\tilde{y}_n,h)} \leq L\norm{y_n-\tilde{y}_n}\]
+\end{example}
+
+Ahora que nos hemos familiarizado con el concepto de la función incremento, podemos ver la \textbf{definición formal de residuo}:
+
+\begin{defn}[Residuo]
+Dada la solución $y(x)$ del P.V.I. 
+\[\left\{ \begin{array}{l} y'=f(x,y) \\ y(a)=y_a \end{array}\right.\]
+llamamos residuo del método numérico a:
+\[R_n = \sum_{j=0}^Rα_jy(x_{n+1})-h\phi_f(x_n,y(x_n),h)\]
+\end{defn}
+
+
+Una vez que tenemos una definición formal del residuo, podemos definir la consistencia de un método:
+
+\begin{defn}[Consistencia]
+Decimos que un método numérico es \textbf{consistente} si
+\[\lim_{h \to 0} \max_{0 \leq n \leq Nk} \frac{\norm{R_n}}{h}=0\]
+\end{defn}
+
+\begin{defn}[Orden de consistencia]
+Decimos que un método numérico es \textbf{consistente de orden p} si para $f \in C^p$ se tiene que
+\[\max_{0 \leq n \leq Nk} \frac{\norm{R_n}}{h} = O(h^p)\]
+\end{defn}
+
 
 \chapter{Laboratorio}
 \input{tex/LaboratorioMnedo.tex}
