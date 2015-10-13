@@ -1531,3 +1531,139 @@ Tenemos que si la \textbf{CFL} es $|\nu|\le 1$, entonces $|\lambda|>1$ luego el 
 		\right.
 	\end{equation*}
 \end{example}
+
+\subsubsection{Esquema upwind}
+El método upwind tiene la siguiente expresión,con $\nu = \frac{a\Delta t}{\Delta x}$:
+
+Para $a < 0$ (hacia la izquierda):
+$$\frac{U_{j}^{n+1}-U_{j}^{n}}{\Delta t} + a\frac{U_{j+1}^{n}-U_{j}^{n}}{\Delta x} = 0$$
+
+Para $a > 0$ (hacia la derecha):
+$$\frac{U_{j}^{n+1}-U_{j}^{n}}{\Delta t} + a\frac{U_{j}^{n}-U_{j-1}^{n}}{\Delta x} = 0$$
+
+\paragraph{Análisis de Fourier (upwind)}
+$$u_0(x) = \sum_{m=-\infty}^{\infty}a_m e^{im\pi x}$$
+$$u(x,t) = u_0(x-at) = \sum_{m=-\infty}^\infty a_m e^{-im\pi a t}e^{im\pi x}$$
+$$u(x_j, t_n) = \sum_{m=-\infty}^\infty a_m\left[e^{-im\pi a \Delta t}\right]^ne^{im\pi j \Delta x}$$
+
+Suponemos $a>0$ ($a<0$ es análogo).
+$$U_{j}^{n+1} = (1-\nu)U_{j}^{n}+\nu U_{j-1}^{n}$$
+
+Tomando $k=m\pi$
+$$U_{j}^{n}=\lambda ^n e^{ikj\Delta x}$$ 
+
+$$\lambda{n+1}e^{ikj\Delta x} = (1-\nu) \lambda ^n e^{ikj\Delta x}+\nu \lambda^ne^{ik(j.1)\Delta x}$$
+
+Obteniendo 
+$$\lambda = (1-\nu) + \nu e^{-ik\Delta x} = \left[(1-\nu)+\nu cos(k\Delta x)\right] + i\nu sin(k\Delta x)$$
+
+Como siempre, tenemos estabilidad si y solo si $|\lambda|\le 1$:
+
+\begin{align*}
+|\lambda|^2 &= \left[(1-\nu)+\nu cos(k\Delta x)\right]^2 +\nu^2sin^2(k\Delta x)\\
+&= (1-\nu)^2+\nu^2cos^2(k\Delta x) + 2\nu(1-\nu)cos(k\Delta x)+\nu^2 sin^2(k\Delta x)\\
+&= (1-\nu)^2 + \nu^2 + 2\nu(1-\nu)cos(k\Delta x)\\
+&= 1-2\nu(1-\nu)(1-cos(k\Delta x))\\
+&= 1-4\nu (1-\nu)sin^2\left(\frac{k}{2}\Delta x\right)\\
+\end{align*}
+
+Eneste ejemplo coinciden la condición de estabiidad y la condición \textbf{CFL}.
+$$|\lambda| \le 1 \iff 1-4\nu(1-\nu) \le 1 \iff \nu \le 1$$
+
+\paragraph{Análisis de consistencia (upwind)}
+Seguimos considerando que $a > 0$, luego el esquema es 
+$$\frac{U_{j}^{n+1}-U_{j}^{n}}{\Delta t} + a_j^n\frac{U_{j}^{n}-U_{j-1}^{n}}{\Delta x} = 0$$
+
+El error de truncación tiene la forma
+$$T_j^n = \frac{u_{j}^{n+1}-u_{j}^{n}}{\Delta t} + a_j^n\frac{u_{j}^{n}-u_{j-1}^{n}}{\Delta x}$$
+
+Realizamos los desarrollos de Taylor.
+$$\frac{u_{j}^{n+1}-u_{j}^{n}}{\Delta t} = (u_t + \frac{1}{2}\Delta t u_{tt}+\hdots)_j^n$$
+$$\frac{u_{j}^{n}-u_{j-1}^{n}}{\Delta x} = (u_x - \frac{1}{2}\Delta x u_{xx}+\hdots)_j^n$$
+
+Nos queda que
+$$T_j^n = (u_t+\frac{1}{2}\Delta t u_{tt}+ a \left[u_{xx}-\frac{1}{2}\Delta x u_{xx}\right]+\hdots)_j^n$$
+$$T_j^n = \underbrace{u_t+au_x}_{0}+\frac{1}{2}\Delta t u_{tt}-\frac{1}{2}\Delta x a u_{xx}$$
+
+Podemos simplificar la expresión utilizando que
+\begin{align*}
+	u_t & = -au_x\\
+	u_{tt} &= (au_x)_t\\
+	&= a(u_x)_t\\
+	&= a(u_t)_x\\
+	&= a(au_x)_x\\
+	&= a^2u_{xx}
+\end{align*}
+
+Simplificando la expresión para el error de truncación
+\begin{align*}
+	T_j^n &= a^2\frac{\Delta t}{2}u_{xx} - \frac{1}{2}a \Delta x u_{xx} + \hdots \\
+	&= -\frac{1}{2}au_{xx}\left[-a\Delta t + \Delta x\right] + \hdots \\
+	&= -\frac{1}{2}au_{xx}\Delta x(1-\nu)+\hdots
+\end{align*}
+
+El esquema es de orden 1 en $\Delta x$.
+
+\paragraph{Análisis de consistencia utilizando el principio del máximo}
+Llamamos $|T|$ a una cota para el error de truncación.
+$$T = \frac{1}{2}(1-\nu)|a|M_{xx}$$
+donde $M_{xx}$ es una cota para $u_{xx}$.
+
+Llamamos $e_j^n = U_j^n - u_j^n$
+
+Restándole
+$$u_{j}^{n+1} = (1-\nu)u_{j}^{n}+\nu u_{j-1}^{n}+\Delta tT_j^n$$
+
+a
+$$U_j^{n+1} = (1-\nu)U_j^n+\nu U_{j-1}^n$$
+
+tenemos
+$$e_j^{n+1} = (1-\nu)e_j^n +\nu e_{j-1}-\Delta t T_j^n$$
+
+Tenemos que comprobar
+\begin{itemize}
+	\item Coeficientes de la derecha positivos: $1-\nu, \nu$.
+	\item Suma de coeficiente menor o igual que $1$, $(1-\nu)+\nu = 1$.
+\end{itemize}
+
+$$E^n = \max_j |e_j^n|$$
+$$|e_j^{n+1}| \le (1-\nu)E^n + \nu E^n + \Delta t T = E^n + \Delta t T \ \forall j$$
+
+$$E^{n+1} \le E^n + \Delta t T$$
+
+Luego tenemos que, cuando $\Delta x\to 0$
+$$E^n \le n\Delta t T \le t_F T = t_F \frac{1}{2}|a|M_{xx}\Delta x \to 0$$
+
+Hemos probado la convergencia suponiendo que $u$ es de clase $C^2$. Esto es pedir mucha regularidad para la solución.
+
+En el caso parabólico, aunque la condición inicial tenga poca regularidad, en cualquier tiempo positivo la solución se regulariza. Sin embargo, en el caso hiperbólico, en tiempo positivo, la solución hallada es la misma que la inicial desplazada, luego si la condición inicial no es regular, tampoco lo será la solución.
+
+\paragraph{El método upwind visto como interpolación lineal}
+Seguimos considerando que $a > 0$, luego el esquema es 
+$$U_j^{n+1} = (1-\nu) U_j^n+\nu U_{j-1}^n$$
+
+Consideramos los puntos $P = (x_j, t_{n+1})$, $A = (x_j, t_n)$, $C = (x_{j-1}, t_n)$
+
+El esquema upwind nos da como aproximación al valor de la solución en el punto $P$
+$$U_j^{n+1} \equiv u(P) \equiv (1-\nu)u(A)  + \nu u(C)$$
+
+La recta característica es la recta que pasa por $P$ y tiene pendiente $\frac{1}{a}$.
+
+Por un lado sabemos que $u(P) = U(Q)$ donde $Q$ es el punto de corte de la recta característica con la recta que pasa por $A$ y $C$, ya que el valor de la solución es constante en toda la recta característica.
+
+Vamos a comprobar que el valor que nos da el esquema upwind se obtiene calculando el interpolante lineal de la función $u$ en los nodos $A$ y $C$ y evaluándolo en $Q$.
+
+El interpolante lo podemos escribir como
+$$p(x) = u(A) \frac{(x-x_{j-1})}{\Delta x}+u(C) \frac{(x_j-x)}{\Delta x}$$
+
+Ahora lo evaluamos en $Q$:
+$$P(Q) = u(A)\frac{\overline{QC}}{\Delta x} + u(C)\frac{\overline{AQ}}{\Delta x}$$
+
+Sabemos que $\overline{CA} = \Delta x$ y $\overline{AP} = \Delta t$. Luego $\frac{1}{a} = \frac{\Delta t}{\overline{AQ}}$.
+
+Tenemos entonces
+$$\overline{AQ} = a\Delta t$$
+$$\overline{QC} = \Delta x - \overline{AQ} = \Delta x -\nu\Delta x = (1-\nu)\Delta x$$
+
+Luego, finalmente
+$$p(Q) = u(A)(1-\nu)\frac{\Delta x}{\Delta x} + u(X) \nu\frac{\Delta x}{\Delta x} = u(A) (1-\nu)+u(C)\nu$$
