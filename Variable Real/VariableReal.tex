@@ -543,7 +543,21 @@ Ahora bien, a pesar de eso no debemos pensar que el espacio de medidas (que deno
 
 \textit{TODO: aquí faltan dos clases.}
 
-\begin{defn}[Medida\IS singular] Se dice que dos medidas $μ,ν$ son singulares una respecto de la otra (denotado por $μ\perp ν$) si y sólo si\footnote{Por si no nos acordamos, $\mop{sop} μ = \set{E ∈ \algb{X} \tq μ(E) ≠ 0}$.} $\mop{sop} μ ∩ \mop{sop} ν = ∅$. Equivalentemente, esto ocurre si y sólo si $\restr{μ}{\mop{sop} ν}(E) = 0$ para todo $E$.
+\begin{defn}[Soporte\IS esencial] Dada una función $\appl{f}{X}{Y}$, se define el soporte esencial (o soporte de una función definida en casi todo punto) como  \[ \mop{esssop} f = X - \bigcup \set{N ∈ \topl \tq f(x) = 0 \text{ para c.t.p de } N} \] donde $\topl$ son los abiertos de $X$.
+\end{defn}
+
+Por ejemplo, si tomamos la función característica de los racionales $\ind_{ℚ}$, que vale $0$ en casi todo punto, su soporte esencial es \[ \mop{essop} \ind_{ℚ} = ℝ - \bigcup\set{\text{abiertos de } ℝ} = ∅ \]. En otras palabras, a nivel de soporte, $\ind_{ℚ}$ es ``equivalente'' a la función 0.
+
+Ahora bien, con medidas el soporte se complica algo más.
+
+\begin{defn}[Soporte\IS de una medida] Dada una medida $\appl{μ}{\algb{X}}{ℝ}$ donde $\algb{X}$ es la σ-álgebra de un espacio $X$ y $\topl$ el conjunto de abiertos de $X$, se define el soporte de una medida como \[ \sop μ ≝ \set{x ∈ X \tq ∀N_x ∈ \topl \; x ∈ N_x,\, μ(N_x) > 0} \]
+
+Es decir, el soporte de una medida es el conjunto de puntos para los que todo entorno suyo (abiertos que contienen a ese punto) tiene medida positiva.
+\end{defn}
+
+Por ejemplo, el soporte de la medida dada por la delta de Dirac $δ_0$ es $\sop δ_0 = \set{0}$. El soporte de la medida de Lebesgue es $\sop \lebg_{ℝ} = ℝ$.
+
+\begin{defn}[Medida\IS singular] Se dice que dos medidas $μ,ν$ son singulares una respecto de la otra (denotado por $μ\perp ν$) si y sólo si\footnote{Por si no nos acordamos, $\sop μ = \set{E ∈ \algb{X} \tq μ(E) ≠ 0}$.} $m\left(\sop μ ∩ \sop ν\right) = 0$, donde $m$ es la medida de referencia. Equivalentemente, esto ocurre si y sólo si $\restr{μ}{\sop ν}(E) = 0$ para todo $E$.
 \end{defn}
 
 \begin{theorem}[Teorema\IS de Lebesgue-Radon-Nikodin] Sea $μ ∈ \msgn\meas[X][m]$ medida con signo. Entonces existe una \textbf{única} descomposición \[ μ = m_f + μ_s \] donde $f ∈ L^1\meas[X][m]$ (esto es, $f$ es absolutamente integrable respecto a $m$) y $m_s \perp m$. Si μ es positiva no negativa, entonces $m_f$ y $μ_s$ lo son.
@@ -576,18 +590,28 @@ Esta definición nos da un corolario que no es más que una reformulación de lo
 
 Aquí se cumple de nuevo que si $μ$ es positiva ($μ ≥ 0$) entonces $μ_{AC}$ y $μ_S$ también lo son. Sólo hay que ver que como $μ_S \perp μ_{AC}$, entonces tienen soportes disjuntos. Si existiese un conjunto $E$ tal que $μ_S(E) < 0$, entonces $μ_{AC}(E) = 0$ por tener soportes disjuntos, por lo que tendríamos $μ < 0$, contradicción.
 
-Una cosa que hemos pasado por encima en ese ejemplo es que el teorema sólo nos dice que $μ_S \perp m$, no que $μ_S \perp μ_{AC}$. La cuestión es que si tenemos $E ∈ \algb{X}$, con $E ⊆ \mop{sop}(μ_{AC})$, entonces pasa algo. % TODO: Algo qué?
+Una cosa que hemos pasado por encima en ese ejemplo es que el teorema sólo nos dice que $μ_S \perp m$, no que $μ_S \perp μ_{AC}$. La cuestión es que si tenemos $E ∈ \algb{X}$, con $E ⊆ \sop(μ_{AC})$, entonces pasa algo. % TODO: Algo qué?
 
 Si trabajamos con medidas continuas, podemos refinar la descomposición:
 
 \begin{defn}[Medida\IS continua] Dada una medida $μ$ con cada punto $x ∈ X$ medible, se dice que μ es continua si y sólo si $μ(\set{x}) = 0$.
 \end{defn}
 
-\begin{prop} En las mismas condiciones del \nref{thm:DescLebesgue} y además con $μ$ continua, existe una única descomposición \[ μ = μ_{AC} + \underbracket{μ_{SC} + μ_{PP}}_{μ_S} \], donde $μ_{SC}$ es una medida singular continua y $μ_{PP}$ es una \concept{Medida\IS pure-point}, esto es, suma de deltas de Dirac.
+\begin{prop} En las mismas condiciones del \nref{thm:DescLebesgue} y además con $μ$ continua, existe una única descomposición \[ μ = μ_{AC} + \underbrace{μ_{SC} + μ_{PP}}_{μ_S} \], donde $μ_{SC}$ es una medida singular continua y $μ_{PP}$ es una \concept{Medida\IS pure-point}, esto es, suma numerable de deltas de Dirac.
 \end{prop}
 
-Para verlo bien, podríamos definir una medida \[ μ = \lebg_{ℝ^2} + \lebg_{ℝ} + δ_{0} \], de tal forma que tendríamos que la dimensión del soporte de $\lebg_{ℝ^2}$ es mayor que al de $\lebg_{ℝ}$.
+Las medidas singulares continuas nos aparecerán en dimensiones\footnote{Dimensiones según nuestro concepto habitual de dimensiones. Si tomamos un concepto extraño de dimensiones según el cual conjuntos como el de Cantor tienen dimensión $N < 1$, entonces estas medidas aparecen para dimensiones $N > 0$.} $N ≥ 2$.
 
+Para verlo bien, podríamos definir una medida en $ℝ^2$ \[ μ = \lebg_{ℝ^2} + \lebg_{ℝ} + δ_{0} \], de tal forma que tendríamos que la dimensión del soporte de $\lebg_{ℝ^2}$ es mayor que el de $\lebg_{ℝ}$. Tendremos que $\lebg_{ℝ^2} \perp \lebg_{ℝ}$, ya que el soporte de $\lebg_{ℝ}$, $ℝ$, tiene medida cero con respecto a $\lebg_{ℝ^2}$.
+
+En otras palabras, tenemos que la parte absolutamente continua es una medida asociada a una función $f$ soportada en $ℝ^2$ con medida del soporte positiva (no nula). La medida singular continua está asociada a una función $g$ soportada en un subconjunto de $ℝ^2$ con medida 2-dimensional nula. Por último, la parte pure-point está soportada en un conjunto de puntos como mucho numerable.
+
+\seprule
+
+Una cosa que no sé muy bien dónde meter. Una función para la que el teorema fundamental del cálculo no derivada clásica e integral de Lebesgue no se cumple (en la definición de \nref{def:FuncAbsCont} veíamos cuál es la clase más grande de funciones para las que si se cumple).
+
+\begin{defn}[Escalera\IS del diablo] Se construye el conjunto de Cantor y una función que va incrementando en cada ``tercio'' de ese conjunto. Sobre el conjunto de Cantor, $f$ es constante, luego $f' = 0$. Sin embargo, la medida del conjunto de Cantor es 1 y por lo tanto la integral no es cero. % Función de Cantor-Vitali. TODO. Mejorar.
+\end{defn}
 
 \section{Espacios de Banach y Hilbert. Espacios $L^p$}
 
