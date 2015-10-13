@@ -67,7 +67,7 @@ Las fórmulas nunca son ambiguas, sólo pueden leerse o construirse de una forma
 \end{lemma}
 
 Existe una serie de \concept{axiomas proposicionales}. Estos axiomas son FBF que son ciertas para cualquier interpretación de los elementos que las constituyen. Una \concept{Interpretación} es una función que dada una FBF nos devuelve un valor de verdad (Verdadero o Falso). De forma más fórmal, una interpretación es una valoración booleana 
-\[\appl{\sigma}{FBF(L)}{\mathbb{Z}_2, +, \cdot)} \text{ que satisface } \]
+\[\appl{\sigma}{FBF(L)}{(\mathbb{Z}_2, +, \cdot)} \text{ que satisface } \]
 
 \begin{itemize}
 	\item $\sigma(\top) = 1$, $\sigma(\perp) = 0$
@@ -131,12 +131,11 @@ El \textbf{problema de la tautología} consiste en determinar si una FBF es una 
 \paragraph{Clases de complejidad}
 \begin{itemize}
 	\item \textbf{P:} clase de problemas para los que existe un algoritmo que los resuelve en tiempo polinómico en función del número de datos de entrada, es decir, $\exists K\ge 0$ (dependiendo el problema pero no del número de datos $n$) tal que si tenemos $n$ datos de entrada, el algoritmo requiere menos de $O(n^K)$ operaciones.
-	\item \textbf{NP:} tiempo polinómico no determinista. La solución la proporciona un oráculo (\ref{fig:oraculo}), que podemos comprobar que es correcta (o no) en tiempo polinómico. Obviamente P$\subset$NP.
-		\item La clase de problemas \textbf{NP-difícil} se define como aquella que contiene a los problemas que son como mínimo tan difíciles como un problema de NP. Alternativamente, se define como la clase de problemas H tal que todo problema en NP puede ser transformado polinomialmente en H.
+	\item \textbf{NP:} tiempo polinómico no determinista. Si tenemos una solución, podemos comprobar si es correcta (o no) en tiempo polinómico, pero no podemos generar la solución. Obviamente P$\subset$NP.
+	\item La clase de problemas \textbf{NP-difícil} se define como aquella que contiene a los problemas que son como mínimo tan difíciles como un problema de NP. Alternativamente, se define como la clase de problemas H tal que todo problema en NP puede ser transformado polinomialmente en H.
 	\item La clase de problemas \textbf{NP-completo} se define como la intersección entre la clase de problemas NP y la clase de problemas NP-difícil.
-	\item No se sabe si P$=$NP. Clay Mathematics Institute ha ofrecido un premio de un millón de dólares estadounidenses para quién desarrolle la primera demostración correcta (el profesor no tiene tanto dinero, el te ofrece una matrícula).
 \end{itemize}
-Se sabe que \textbf{TAUT} es NP-difícil.
+Se sabe que \textbf{TAUT} es NP-difícil, pero no se sabe si P$=$NP.
 
 \begin{defn}[Problema de la satisfacción]
 Este problema consiste en determinar si existe una interpretación que satisfaga una FBF dada. Se trata de un problema \textbf{NP-completo}
@@ -196,56 +195,13 @@ Una teoría es completa si es consistente y para toda FBF $p$, se cumple que $T 
 	\label{thm:comp2}
 \end{theorem}
 
-\begin{proof}
-	\begin{itemize}
-		\item $\Longleftarrow$: 
-
-		Vamos a demostrar la implicación por reducción al absurdo.
-
-		Supongamos que $T$ es inconsistente, entonces $T\vdash \perp$, luego $T\vDash\perp$.
-
-		Como para toda valoración booleana, $\sigma(\perp) = 0$, ninguna $\sigma$ satisface a $T$, es decir, no tendríamos ningún modelo de $T$
-		\item $\Longrightarrow$: 
-
-		Sea $T$ consistente, queremos probar que tiene un modelo. 
-
-		Por el teorema de Lindenbaum (\ref{thm:lindenbaum}) podemos extender $T$ a una teoría completa, es decir, existe una $M\supset T \tq M$ es completa y por tanto $M$ es consistente y $\forall p \in FBF(L)$, o $M\vdash p$ o $M\vdash \neg p$.
-
-		Si definimos $\sigma(p) = 1 \iff M\vdash p$, y $\sigma(p) = 0 \iff M\nvdash p$, vemos que σ está definida sobre el conjunto $FBF(L)$, y $\sigma(p) = 1$ $\forall p \in M$, y por tanto $\forall p\in T$.
-
-		Así ya hemos localizado el modelo cuya existencia queríamos probar. Ahora tenemos que garantizar que σ es una interpretación (o valoración booleana) correcta. Vamos a ello.
-
-		Como $\{\neg, \vee\}$ es un sistema completo de conectivas, podemos suponer que $L=A\cup\{\neg\vee\}$. Para ver que $\sigma$ es una valoración booleana, hay que comprobar
-		\begin{enumerate}
-			\item $\sigma(\neg p) = 1+\sigma(p)$ (mod $2$).
-
-			Si $M \vdash \neg p$, entonces $M\nvdash p$ (por consistencia), luego
-			$$1 = \sigma(\neg p) = 1+\sigma(p) = 1 + 0$$
-
-			Si $M \nvdash \neg p$, entonces $M\vdash p$, y
-			$$0=\sigma(\neg p) = 1+\sigma(p) \text{ (mod 2)} = 1+1 \text{ (mod 2)}$$
-
-			\item $\sigma(p\vee q) = \sigma(p)\vee\sigma(q)$.
-			
-			Si $M\vdash p$ o $M\vdash q$, entonces, por $p\implies (p\vee q)$ o $q\implies (p\vee q)$, que es el axioma 2, y modus ponens, obtenemos
-			$$M\vdash p \vee q$$
-
-			Por definición de $\sigma$,
-			$$\sigma(p\vee q) = 1 = \max\{\sigma(p), \sigma(q)\} = \sigma(p)\vee\sigma(q)$$
-
-			Si $M\vdash \neg p$ y $M\vdash \neg q$, entonces, usando el axioma 3: $\neg p \implies (\neg q \implies \neg(p\vee q))$ y modus ponens dos veces, obtenemos:
-			$$M\vdash \neg(p\vee q)$$
-
-			En este caso, $\sigma(p\vee q) = 0 = \sigma(p) \vee \sigma(q)$.
-		\end{enumerate}
-	\end{itemize}
-\end{proof}
-
 \begin{theorem}[Teorema de compacidad]
 	Si todo subconjunto finito de una teoría $T$ tiene un modelo, entonces $T$ tiene un modelo.
 \end{theorem}
 \begin{proof}
 	Como todo subconjunto finito de $T$ tiene un modelo, todo subconjunto finito es consistente, luego $T$ es consistente y por \ref{thm:comp2}, $T$ tiene un modelo.
+
+	Para ver que $T$ es consistente sabiendo que todo subconjunto finito es consistente nos basta con ver que si $T\vdash \perp$, existe una demostración $p_1, \hdots, p_n = \perp$ usando las premisas en $T$. Pero $T\cap\{p_1,\hdots,p_{n-1}\}\vdash \perp$, por lo que no es consistente, y es finito, por lo que llegamos a una contradicción.
 \end{proof}
 
 \printindex
