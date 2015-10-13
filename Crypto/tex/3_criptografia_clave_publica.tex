@@ -351,15 +351,76 @@ El atacante tiene acceso a pares de texto en claro con su correspondiente texto 
 Así el atacante puede tomar textos en claro pequeños y hacer un ataque por fuerza bruta.
 
 Siempre que empleemos un sistema de clave pública podemos ser víctimas de este tipo de ataques. 
+\end{enumerate}
 
-\section{Criptosistema de clave pública-privada}
+\section{Criptosistema de clave pública-privada (RSA)}
 
 \begin{defn}[Función trampa]
 También conocida como función ratonera, se trata de una función $f_e$ de un sólo sentido que depende de un parámetro $e$ conocido como \textbf{clave pública}, tal que su inversa $f^{-1}_d$ depende de un parámetro $d$ conocido como \textbf{clave privada} y $d$ sólo se puede calcular a partir de $e$ con ayuda de información adicional.
 \end{defn}
 
-
 La idea del \textbf{RSA}, criptosistema que estudiaremos a continuación, consiste en el uso de este tipo de funciones apoyándose en la idea de que encontrar primos es \textbf{fácil} pero factorizar un número grande en primos es \textbf{difícil}
+
+\section{Inicialización del algoritmo RSA}
+Los pasos a seguir son:
+\begin{enumerate}
+\item Generamos dos números primos $p,q$ grandes que, como nos ha mostrado el profesor en clase, es algo fácil de realizar.
+
+Más adelante veremos cómo se generan estos primos.
+
+\item Encontramos un número $e$ coprimo con $(p-1)(q-1)$.
+
+Para hacerlo empleamos el algoritmo de Euclides, empezando con un número cualquiera $e\in [1, (p-1)(q-1)]$ y le aplicamos el algoritmo de Euclides para obtener el máximo común divisor.
+
+En caso de que este máximo común divisor no sea 1, simplemente probamos con otro número hasta dar con la clave.
+
+\item Encontramos el número $d$ inverso de $e$
+
+Cuando tenemos el número $e$, podremos apoyarnos en la identidad de Bezout para obtener su inverso.
+
+\item Calculamos $n=p\cdot q$
+
+\item Publicamos la clave pública $[n,e]$ y mantenemos oculta la clave para descifrar $d$.
 \end{enumerate}
 
+Hay un punto importante de este procedimiento que puede hacernos dudar: la búsqueda del número $e$, puesto que el algoritmo de Euclides podría llevarnos mucho tiempo.
 
+No obstante el algoritmo de Euclides es muy rápido, cosa que podemos comprobar basándonos en el siguiente lema:
+\begin{lemma}
+Al aplicar el algoritmo de Euclides, siendo $r_n$ el resto obtenido en la iteración $n$, se cumple que:
+\[r_{n+2} < \frac{1}{2}r_n\]
+\end{lemma}
+\begin{corol}
+El número de pasos necesarios hasta completar el algoritmo de Euclides es $2\log(N)=O(\log(N))$.
+
+Por tanto, el tiempo necesario para completar el algoritmo es $O(\log(N)^3)$
+\end{corol}
+
+Veamos ahora la demostración del lema:
+\begin{proof}
+Para empezar, observamos que si $r_{n+1} \leq \frac{1}{2}r_n$ no tenemos nada más que hacer, puesto que los restos van decreciendo siempre.
+
+Por otro lado, si 
+\[r_{n+1} > \frac{1}{2} r_n \implies 2r_{n+1} > r_n\]
+
+Pero sabemos que 
+\[r_n = r_{n+1} + r_{n+2} \implies r_{n+2} = r_n-r_{n+1} < r_n-\frac{1}{2}r_n = \frac{1}{2}r_n\] 
+\end{proof}
+
+Queda claro por tanto, que el la aplicación del algoritmo es posible, al menos en cuanto al cumplimiento de los requisitos previos. Veamos ahora cómo funciona el algoritmo.
+
+\section{Funcionamiento de RSA}
+Los pasos a seguir en la aplicación del algoritmo son:
+\begin{enumerate}
+\item Para escribirle, se transforman los mensajes en enteros $m$ tales que $0 \leq m \leq n-1$, es decir, elementos de $\ent_N$
+
+\item La función para cifrar es $f_e(m)=m^e \mod n$, fácil de aplicar y de conocer, pues $d$ y $n$ son públicos.
+
+\item La función para descifrar es $f_d^{-1}(c)=c^d \mod n$, fácil de aplicar pero no de conocer, pues $d$ es secreto.
+
+\item Gracias al \textbf{Pequeño Teorema de Fermat}:
+\[f_d^{-1}(f_e(m)) = m^{ed} = m^{1+k(p-1)(q-1) = m \mod n}\]
+
+\item Para romper el algoritmo (es decir, para encontrar la clave $d$ a partir de $(n,e)$) hay que calcular $(p-1)(q-1)$, lo que requiere factorizar $n=pq$, lo cual es imposible.
+
+\end{enumerate}
