@@ -258,3 +258,4 @@
 \mpos#m
 \msgn#m
 \mfin#m
+\sop#m
