@@ -758,7 +758,76 @@ Esta última fórmula se puede usar de 2 formas:
 	\item Si fijamos $V$ y calculamos $K$ obtenemos métodos de núcleos (SVM) que son los más eficientes que hay y que no vamos a ver.
 \end{itemize}
 
+\begin{defn}[Vecinos próximos]
+Fijamos K (el número de vecinos)
 
+Se calcula una esfera alrededor del punto de interés hasta que incluya $K$ puntos.
+\end{defn}
+
+\begin{example}
+Tenemos 2 clases, cuadrados azules y triángulos verdes. La línea continua corresponde a $K=3$, ya que hemos agrandado la esfera hasta incluir 3 puntos.
+
+\begin{center}
+\includegraphics[scale=0.7]{img/VecinosProximos.png}
+\end{center}
+
+¿Y cómo asignar la clase? Vamos a ir poco a poco:
+
+\begin{itemize}
+	\item \textbf{Verosimilitud} $P(\gor{x} | Clase) = \frac{K_c}{N_cV}$
+	\item \textbf{Priori} $P(Clase) = \frac{N_c}{N}$
+	\item \textbf{Evidencia} $P(\gor{x}) = \frac{K}{NV}$
+\end{itemize}
+
+Con estos datos podemos calcular la probabilidad a posteriori:
+
+\[
+P(Clase | \gor{x}) = \frac{...}{...} = \text{ se cancela todo ... } = \frac{K_c}{K}
+\]
+
+Con $K=3$ puntos, la clase asignada (a priori) sería ``triángulo rojo'', ya que es la clase con mayor probabilidad a posteriori $\left( \frac{2}{3} \right)$. 
+
+En cambio, si tomamos $K=5$ (la linea discontinua), asignaríamos (a priori) la clase ``cuadrado azul'', ya que es la clase mayoritaria e la esfera.
+
+\end{example}
+
+\subsection{Regla de clasificación $K-NN$}
+
+\paragraph{Algoritmo}
+\subparagraph*{Entrenamiento:} Guardar los datos de entrenamiento.
+\subparagraph*{Clasificar:} 
+\begin{enumerate}
+	\item Por cada ejemplo $\gor{z}$ en entrenamiento se calcula la distancia de $\gor{z}$ a $\gor{x}$ usando la métrica.
+	\item Se seleccionan los $K$ más cercanos.
+	\item Se devuelve la clase más común en esos $K$
+\end{enumerate}
+\paragraph{Complejidad: } $O(N·\#\{\text{ atributos }\})$
+
+\subsection{Problemas de K-NN}
+
+\subsubsection{Normalizar}
+Los cambios de unidades pueden afectar a la clasificación, con lo que necesitamos \textbf{normalizar los datos}. Normalizamos los datos normalizando, es decir, $ y = \frac{x - µ}{σ} ∀x$ y trabajamos con los $y$.
+
+
+\begin{defn}[Poligonos de Thiessen]
+Tomamos un punto y haciendo mediatrices con los $K$ vecinos cercanos, creamos los polígonos.
+\begin{center}
+\includegraphics[scale=0.5]{img/Voronoi_cell.png}
+\end{center}
+
+A la hora de clasificar, comprobamos a qué polígono pertenece.
+\end{defn}
+
+\subsubsection{Elección de $K$}
+
+\paragraph{Selección de $K$ óptimo:}
+\begin{itemize}
+	\item Calcular distancias entre todos los pares de puntos.
+	\item Para cada ejemplo:
+		\subitem Se ordena el resto de ejemplos por distancias.
+		\subitem Se hacen tantas clasificaciones como valores de  $K$ estemos evaluando.
+	\item Se calcula el error y nos quedamos con el que menor error tenga.
+\end{itemize}
 
 
 %% Apéndices (ejercicios, exámenes)
