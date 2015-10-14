@@ -1667,3 +1667,136 @@ $$\overline{QC} = \Delta x - \overline{AQ} = \Delta x -\nu\Delta x = (1-\nu)\Del
 
 Luego, finalmente
 $$p(Q) = u(A)(1-\nu)\frac{\Delta x}{\Delta x} + u(X) \nu\frac{\Delta x}{\Delta x} = u(A) (1-\nu)+u(C)\nu$$
+
+\paragraph{Análisis de Fourier del esquema upwind}
+
+El análisis de Fourier de los distintos esquemas se centra en ver cual es el módulo de $\lambda$ y la fase de $\lambda$ y el error en ambos.
+
+El error en módulo en $\lambda$ nos da un error en la amplitud de las ondas y el error en la fase es un error en la velocidad de las ondas.
+
+En el esquema upwind la onda se disipa mucho pero se sigue a velocidad correcta. Esperamos por tanto un error grande en amplitud y un error más pequeño en la fase.
+
+El modo teórico es $e^{-ika\Delta t}$.
+
+\subparagraph{Error en el módulo}
+Hemos visto que $\lambda(k) = 1-\nu (1-e^{-ik\Delta x})$. Llamamos $k = m\pi$ y $\xi = k\Delta x$.
+
+Analizamos el módulo de $\lambda$:
+$$|\lambda(k)|^2 = 1-4\nu(1-\nu)sin^2\left(\frac{k\Delta x}{2}\right)$$
+$$|\lambda(k)|^2 \equiv 1-4\nu(1-\nu)\frac{\xi}{4} = 1-\nu(1-\nu)\xi^2$$
+
+Luego el error en $|\lambda|^2$ es de orden $\xi^2$.
+
+En el caso particular $\nu=1$ el error es cero porque es ir a través de la característica.
+
+\subparagraph{Error en la fase}
+$$\lambda(k) = \left[(1-\nu)+\nu cos(k\Delta x)\right]-\nu i sin(k\Delta x)$$
+
+La fase de $\lambda$ es:
+$$Fase(\lambda) = -atan\left[\frac{\nu sin(k\Delta x)}{(1-\nu)+\nu cos(k\Delta x)}\right]$$
+
+Vamos a comparar la fase de $\lambda$ con la fase teórica, pero primero vamos a enunciar un lema.
+
+\begin{lemma}
+	Si $q\equiv c_1 p + c_2 p^2 + c_3 p^3 + \hdots$ entonces
+	$$atan(q) = c_1p+ c_2p^2 + (c_3-\frac{1}{3}c_1^3)p^3 + \hdots$$
+\end{lemma}
+
+Vamos a desarrollar la fase de $\lambda$ en potencias de $\xi$.
+
+\begin{align*}
+Fase(\lambda) &=  -atan\left[\nu(\xi-\frac{\xi^3}{6}+\hdots)(1-\frac{\nu}{2}\xi^2+\hdots)^{-1}\right]\\
+&= -atan\left[\nu \xi -\frac{1}{6}\nu(1-3\nu)\xi^3+\hdots\right]
+\end{align*}
+
+Ahora aplicamos el lema con estas condiciones
+\begin{equation*}
+	\left\{
+	\begin{array}{l}
+		p = \xi\\
+		c_1 = -\nu\\
+		c_2 = 0\\
+		c_3 = \frac{1}{6}\nu(1-3\nu)
+	\end{array}
+	\right.
+\end{equation*}
+
+y obtenemos 
+$$atan(\lambda) = -\nu \xi\left[1-\frac{1}{6}(1-\nu)(1-2\nu)\xi^2+\hdots\right]$$
+
+Recordamos que la fase real es
+$$-ka\Delta t$$
+
+Y observamos que
+$$\nu\xi = \frac{a\Delta t}{\Delta x}k\Delta x = a\Delta t$$
+
+El error relativo en fase
+$$\frac{(-ka\Delta t)-Fase(\lambda)}{(-ka\Delta t} = \frac{-1}{6}(1-\nu(1-2\nu)\xi^2+\hdots$$
+
+El error relativo en fase es del orden de $\xi^2$, es decir de orden 2. Vamos a tratar de buscar un segundo método que tenga menor error en amplitud.
+
+Dados los puntos
+\begin{equation*}
+	\left\{
+	\begin{array}{l}
+		P = (x_j, t_{n+1})\\
+		A = (x_j, t_n)\\
+		B = (x_{j-1}, t_n)\\
+		C = (x_{j+1}, t_n)
+	\end{array}
+	\right.
+\end{equation*}
+
+Sabemos que $u(P) = u(Q)$ donde $Q$ es el punto de corte de la recta de pendiente $\frac{1}{a}$ que pasa por $P$ y $\overline{AB}$. La idea es interpolar con los puntos $A$, $B$ y $C$ para obttener un interpolante cuadrático, en lugar de un interpolante lineal como ya hemos visto.
+
+\begin{align*}
+	p(x) &= u(B)\frac{(x_j-x)(x_{j+1}-x)}{(x_j-x_{j-1})(x_{j+1}-x_{j-1})}\\
+	&= u(A)\frac{(x-x_{j-1})(x-x_{j+1})}{(x_j-x_{j-1})(x_{j}-x_{j+1})}\\
+	&= u(C)\frac{(x-x_{j-1})(x-x_{j})}{(x_{j+1}-x_{j-1})(x_{j+1}-x_{j})}
+\end{align*}
+
+\begin{align*}
+	p(Q) &= u(B)\frac{\overline{AQ}\overline{CQ}}{\Delta x2\Delta x}\\
+	&= u(A)\frac{\overline{QB}(\overline{-CQ})}{\Delta x(-\Delta x)}\\
+	&= u(C)\frac{\overline{QB}(\overline{-AQ})}{2\Delta x\Delta x}
+\end{align*}
+
+\paragraph{Esquema Lax-Wendroff}
+$$U_j^{n+1}=U_{j-1}^n\frac{\nu(1+\nu)}{2}+U_j^n (1-\nu)(1+\nu)+U_{j+1}^n\frac{(1-\nu)}{2}(-\nu)$$
+
+$$U_j^{n+1} = U_j^n - \frac{\nu}{2}\left[U_{j+1}^n-U_{j-1}^n\right] + \frac{\nu^2}{2}\left[U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}\right]$$
+
+Si tomamos $U_j^n = \lambda ^n e^{ikj\Delta x}$
+$$\lambda = 1 - \frac{\nu}{2}\left[e^{ik\Delta x}-e^{-ik\Delta x}\right]+\frac{\nu^2}{2}\left[e^{ik\Delta x}-2+e^{-ik\Delta x}\right]$$
+
+$$\lambda = 1-i\nu sin(k\Delta x) - 2\nu ^2sin^2(\frac{k}{2}\Delta x)$$
+
+$$\lambda = (1-2\nu^2sin^2(\frac{k}{2}\Delta x)-i\nu sin(k\Delta x)$$
+
+$$|\lambda|^2 = 1-4\nu^2(1-\nu^2)sin^4(\frac{k}{2}\Delta x)$$
+
+La estabilidad la tenemos si 
+$$|\lambda|\le 1 \iff |\nu| \le 1$$
+
+que coincide con la condición CFL.
+
+Tenemos un error en $\lambda^2$ del orden de $\xi^4$.
+
+Vamos a ver el error en fase.
+$$Fase(\lambda) = -atan\left[\frac{\nu sin(\xi)}{1-2\nu^2sin^2(\frac{\xi}{2}}\right] = -tan\left[\nu(\xi-\frac{\xi^3}{6}+\hdots)(1-2\nu^2\frac{\xi^2}{4}+\hdots )^{-1}\right]$$
+
+Aplicando el lema
+$$Fase(\lambda) = -\nu\xi\left[1-\frac{1}{6}(1-\nu^2)\xi^2+\hdots\right]$$
+
+El error relativo en fase es
+$$-\frac{1}{6}(1-\nu^2)\xi^2+\hdots$$
+
+Tenemos un error en fase del orden de $\xi^2$. Este esquema presenta un error en fase del mismo orden que el esquema upwind y en módulo de orden 4, al contrario que upwind que es de orden 2. Sin embargo, al aumentar la precisión en el módulo, el método se comporta mal en la práctica porque no cumple el principio del máximo.
+
+\begin{theorem}[Teorema de Godunov]
+	Si un esquema lineal para $$u_t+au_x = 0$$
+	cumple el principio del máximo, entonces no puede tener orden mayor que uno.
+\end{theorem}
+
+
+
