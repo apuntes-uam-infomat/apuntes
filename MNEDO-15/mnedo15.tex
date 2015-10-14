@@ -748,7 +748,7 @@ Y tomando máximos a ambos lados, demostramos la desigualdad del enunciado:
 \end{problem}
 
 \chapter{Consistencia y estabilidad}
-
+\section{La función incremento}
 En este capítulo explicaremos conceptos como la consistencia, la estabilidad o el residuo, útiles a la hora de valorar la calidad de un método numérico.
 
 A partir de ahora vamos a trabajar con métodos numéricos que se pueden escribir de la forma:
@@ -878,6 +878,7 @@ Reordenando los términos de la inecuación podemos escribir:
 \[\left(1-\frac{Lh}{2} \right)\norm{\phi_f(x_n,y_n,h)-\phi_f(x_n,\tilde{y}_n,h)} \leq L\norm{y_n-\tilde{y}_n}\]
 \end{example}
 
+\section{Consistencia}
 Ahora que nos hemos familiarizado con el concepto de la función incremento, podemos ver la \textbf{definición formal de residuo}:
 
 \begin{defn}[Residuo]
@@ -886,7 +887,6 @@ Dada la solución $y(x)$ del P.V.I.
 llamamos residuo del método numérico a:
 \[R_n = \sum_{j=0}^Rα_jy(x_{n+1})-h\phi_f(x_n,y(x_n),h)\]
 \end{defn}
-
 
 Una vez que tenemos una definición formal del residuo, podemos definir la consistencia de un método:
 
@@ -900,6 +900,123 @@ Decimos que un método numérico es \textbf{consistente de orden p} si para $f \
 \[\max_{0 \leq n \leq Nk} \frac{\norm{R_n}}{h} = O(h^p)\]
 \end{defn}
 
+\begin{example}
+\textbf{Consistencia del método del trapecio}
+
+Para estudiar la consistencia lo primero que tenemos que hacer es calcular el residuo;
+
+Hasta ahora habíamos considerado el residuo como:
+\[Q_n = y(x_{n+1})-y(x_n)-\frac{h}{2}\left(  f(x_n,y(x_n)) +  f(x_{n+1},y(x_{n+1}))\right)\]
+y con esto comprobábamos que $Q_n = O(h^3)$ con lo que tendríamos consistencia de orden 2.
+
+Sin embargo, con la definición formal de residuo que acabamos de ver, tenemos:
+\[R_n = y(x_{n+1})-y(x_n)-h\phi_f(x_n,y_n,h)\text{ donde } \phi_f(x_n,y_n,h) \text{ satisface }\]
+\[\phi_f(x_n,y_n,h) = \frac{1}{2}\left( f(x_n,y(x_n))+f(x_{n+1},y(x_n)+h\phi_f(x_n,y(x_n))\right)\]
+
+Vamos a comprobar que ambas definiciones son ``equivalentes'' en tanto en cuanto nos dan el mismo orden de consistencia. Para ello estudiaremos la diferencia entre ambas definiciones.
+
+\[Q_n-R_n = h\left(\phi_f(x_n,y_n,h) -\frac{1}{2}\left(  f(x_n,y(x_n)) +  f(x_{n+1},y(x_{n+1}))\right) \right) =\]
+sustituyendo $\phi_f(x_n,y_n,h)$ por la ecuación que lo define y simplificando nos queda:
+\[=\frac{h}{2} \left(f(x_{n+1},y(x_n)+h\phi_f(x_n,y_n,h))-f(x_{n+1},y_{n+1}) \right)\]
+
+Tomando valores absolutos y recordando que $f$ es Lipschitz llegamos a:
+\[|Q_n-R_n| \leq \frac{h}{2}L|y(x_{n+1})-y(x_n)-h\phi_f(x_n,y_n,h)| = \frac{hL}{2}|R_n|\]
+de donde podemos deducir que $Q_n$ y $R_n$ tienen el mismo orden de convergencia.
+\end{example}
+
+\section{Estabilidad}
+\begin{defn}[0-estabilidad]
+Un método numérico es 0-estable si para cada PVI existe una constante $C>0$ tal que para cada dos sucesiones $u_n,v_n$ que satisfacen\footnote{Es decir, que no satisfacen la descipción del método como función incremento pero casi}
+\[\sum_{j=0}^kα_ju_{n+j} = h\phi_f(x_n,u_n,...,u_{n+k-1},h)+hδ_n\]
+\[\sum_{j=0}^kα_jv_{n+j} = h\phi_f(x_n,v_n,...,v_{n+k-1},h)+hγ_n\]
+
+se verifica que:
+\[\max_{k \leq n \leq N}\norm{u_n,v_n} \leq C\left( \max_{0 \leq n \leq k-1}\norm{v_n,u_n}+\max_{0 \leq n \leq N-k}\norm{δ_n,γ_n}\right)\]
+\end{defn}
+
+\begin{prop}
+Todos los métodos numéricos de un solo paso con $α_0=-1$ son 0-estables
+\end{prop}
+\begin{proof}
+Si tenemos dos sucesiones:
+\[u_{n+1}=u_n+h\phi_f(x_,y_n,h)+hδ_n\]
+\[v_{n+1}=v_n+h\phi_f(x_,y_n,h)+hγ_n\]
+
+Podemos restarlas y tomar valres absolutos obteniendo:
+\[|u_{n+1}-v_{n+1}|\leq |u_n-v_n| + h |\phi_f(x_n,u_n,h)-\phi_f(x_n,v_n,h)|+h|δ_n-γ_n|\]
+
+Y apoyándonos en que la función $\phi_f$ es Lipschitz en la segunda variable tenemos:
+\[\underbrace{|u_{n+1}-v_{n+1}|}_{e_{n+1}}\leq \underbrace{|u_n-v_n| + hL|u_n-v_n|}_{(1+Lh)e_n}+hK \text{ siendo } K=\max_{0 \leq n \leq N-1}|δ_n-γ_n|\]
+
+Ahora debemos acotar la recurrencia sobre las $e_n$ que acabamos de obtener. Podemos ver fácilmente que, de forma general:
+\[e_n \leq (1+Lh)^ne_0+Kh\left( (1+Lh)^{n-1}+(1+Lh)^{n-2}+...+1\right)=\atop (1+Lh)^ne_0+Kh\frac{(1+Lh)^n-1}{Lh}=(1+Lh)^ne_0+\frac{K}{L}((1+Lh)^n-1)\]
+
+\obs Hasta aquí, esta demostración no es del todo formal puesto que hemos sacado ``a ojo'' el término general de la recurrencia. La forma de demostrarlo correctamente pasa por aplicar inducción.
+
+Nuetro objetivo, recordemos, era acotar el máximo de los $e_n$ para comprobar si se cumple la condición de 0-estabilidad. Vamos a ello:
+\[\max_{1\leq k \leq N}e_n \leq (1+Lh)^{(b-a)h}e_0 + \frac{K}{L}(b-a)e^{L(b-a)}\]
+
+Con esto podemos concluir la demostación puesto que $e_n=|u_n-v_n|$ es el término general de la diferencia de las sucesiones, $e_0=|u_0-v_0|$ es la diferencia entre los valores de arranque en un método de un sólo paso, y la constante $C$ sería $C=(b-a)e^{L(b-a)}$\footnote{Para poder deducir esta $C$ tenemos en cuenta que $(1+Lh)^{(b-a)h}$ es de la forma $e^{L(b-a)}$}
+\end{proof}
+
+\section{Relaciones entre consistencia, estabilidad y convergencia}
+\begin{theorem}
+Si un método numérico es 0-estable y consistente entonces es convergente.
+\end{theorem}
+\begin{proof}
+Escribimos el método de la forma:
+\[\sum_{j=0}^kα_jy_{n+j} = h \phi_f(x_n,y_n,...,y_{n+k-1},h)\]
+
+Por otro lado podemos escribir:
+\[\sum_{j=0}^kα_jy(x_{n+j}) = h \phi_f(x_n,y(x_n),...,y(x_{n+k-1}),h) + R_n\]
+
+Ahora, con las dos sucesiones que tenemos, $y_n, y(x_n)$, sabiendo que el método es 0-estable, entonces tenemos que $R_n=hδ_n$ y podemos escribir:
+\[\max_{k\leq n \leq N}\norm{(y_n-y(x_n)} \leq C\left( \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)} + \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h}\right)\]
+
+Para demostrar la convergencia tenemos que ver que 
+\[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)}= 0 \implies \lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n)} \]
+que queda trivialmente demostrada apoyándonos en la desigualdad deducida a partir de la 0-estabilidad.
+\end{proof}
+
+\begin{theorem}
+Si un método numérico es 0-estable y el residuo es de orden $p$, entonces el método numérico es convergente a orden $p$.
+
+Es decir, consistencia a orden $p$ y 0-estabilidad garantizan convergencia a orden $p$
+\end{theorem}
+
+\begin{theorem}
+Un método numérico es consistente si y sólo si $\sum_{j=0}^kα_j=0$ y, además,
+\[\phi_f(x,y(x),...,y(x),0)=\left( \sum_{j=0}^kjα_j\right)f(x,y(x))\]
+\end{theorem}
+\begin{proof}
+Llevaremos a cabo la demostración viendo los dos sentidos de la implicación:
+\begin{itemize}
+\item $\implies$
+Supongamos que el método es consistente. Consideramos el PVI trivial $y(x)=1$.
+
+Puesto que $y'=f=0$, la tercera hipótesis de los métodos numéricos nos garantiza que $\phi_f=0$ por lo que podemos escribir el residuo como:
+\[R_n = \sum_{j=0}^kα_jy(x_{n+j})\]
+Pyesto que $y(x)=1$ tenemos
+\[ \frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_j\]
+
+Pero, puesto que el método es consistente sabemos que el límite de $\frac{R_n}{h}$ tiende a 0, por tanto, tenemos que 
+\[\lim_{h\to 0} \frac{1}{h}\sum_{j=0}^kα_j=0 \implies \sum_{j=0}^kα_j=0\]
+
+Consideramos ahora un método numérico general, nos olvidamos del caso concreto anterior. Ahora tendríamos que el residuo queda:
+\[\frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_jy(x_{n+j})-\phi_f(x_n,y(x_n),...,y(x_{n+k-1}),h)\]
+
+Por el teorema del valor medio tenemos:
+\[y(x_{n+j})-y(x_n)=y'(ε_{n,j})(x_{n+j}-x_n) = y'(ε_{n,j})jh\]
+
+Sustituyendo esto en la ecuación anterior tenemos:
+\[\frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_j(y(x_n)+jhy'(ε_{j,n}))-\phi_f(x_n,y(x_n),...,y(x_{n+k-1}),h) = \]
+
+Y AQUI ENTRA EN ACCION EL GRAN MALVADO COMPLETANDO LA DEMOSTRACION
+
+\item 
+\end{itemize}
+\end{proof}
+
 
 \chapter{Laboratorio}
 \input{tex/LaboratorioMnedo.tex}
@@ -909,6 +1026,8 @@ Decimos que un método numérico es \textbf{consistente de orden p} si para $f \
 \input{tex/EjerciciosMnedo.tex}
 \printindex
 \end{document}
+
+
 
 
 
