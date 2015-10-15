@@ -488,7 +488,7 @@ Pero tranquilos que todavía no nos hemos convertido en físicos pervirtiendo de
 
 Una pequeña definición antes de seguir:
 
-\begin{defn}[Medida\IS σ-finita] Dado un espacio medible \meds y una medida μ, se dice que μ es σ-finita si y sólo si existe un conjunto numerable $\algb{U} ⊆ \algb{X}$ tal que su unión recubre todo $X$ y $μ(U) < ∞$ para todo $U ∈ \algb{U}$. \end{defn}
+\begin{defn}[Medida\IS σ-finita] \label{def:MedidaSFinita} Dado un espacio medible \meds y una medida μ, se dice que μ es σ-finita si y sólo si existe un conjunto numerable $\algb{U} ⊆ \algb{X}$ tal que su unión recubre todo $X$ y $μ(U) < ∞$ para todo $U ∈ \algb{U}$. \end{defn}
 
 Ahora, un teorema-ejercicio.
 
@@ -612,6 +612,59 @@ Una cosa que no sé muy bien dónde meter. Una función para la que el teorema f
 
 \begin{defn}[Escalera\IS del diablo] Se construye el conjunto de Cantor y una función que va incrementando en cada ``tercio'' de ese conjunto. Sobre el conjunto de Cantor, $f$ es constante, luego $f' = 0$. Sin embargo, la medida del conjunto de Cantor es 1 y por lo tanto la integral no es cero. % Función de Cantor-Vitali. TODO. Mejorar.
 \end{defn}
+
+\subsection{Medidas de Radon}
+
+Última cosa de medidas. Una cosa que está muy bien contada en \citep[Capítulo 7]{folland99}.
+
+A lo largo de lo que llevamos de curso, hemos visto que hay una cierta dualidad entre medir un conjunto e integrar funciones: si tenemos una medida de referencia $m$ y una medida asociada a una función $m_f$, entonces la medida de un conjunto $E$ es \[ m_f(E) = \int_X \ind_E \dif m_f = \int_X \ind_E f \dif m = \int_E f \dif m\]
+
+Para explicarlo, vamos a ver un lema topológico.
+
+\begin{lemma}[Lema\IS de Urysohn] \label{lem:Urysohn} Sea $X$ un espacio topológico LHC\footnote{Locally Hausdorff Compact, espacio de Hausdorff localmente compactos. Por ejemplo, $ℝ^N$ es LHC.}. Dado un $K ⊂ X$ con $\adh{K} ⊂ X$ y $\adh{K}$ compacto, entonces existe una función $\appl{φ_K}{X}{ℝ}$ tal que $0≤φ_k(x)≤1\;∀x∈X$ y $φ_K(x) = 1\;∀x∈K$.
+
+Además, y esta es la parte interesante, el soporte de $φ_K$ es compacto, $\adh{K} ⊂ \sop φ_K$ y $φ_K$ es continua en todo $X$.
+
+En otras palabras, tendremos una función ``meseta'' continua para $K$.
+\end{lemma}
+
+¿Por qué este lema es tan importante cuando parece que dice tan poco? La cuestión es que nos va a permitir explicar la relación entre medidas y topología.
+
+Recordemos qué es el espacio dual de un espacio vectorial $X$, que tomaremos como $ℝ^N$. Es el espacio formado por los funcionales $\appl{l}{X}{ℝ}$. Los funcionales, en estos casos, son los hiperplanos de $ℝ^N$. Estamos acostumbrados a que son espacios isomorfos, esto es, $X \simeq X^*$. La cuestión es que esto ocurre sólo en espacios con dimensión finita.
+
+Por ejemplo, consideremos el espacio vectorial de funciones $C^1(ℝ)$, funciones $\appl{f}{ℝ}{ℝ}$ continuas y con derivada continua. Por ejemplo, un funcional podría ser la derivada en un punto:
+\begin{align*}
+\appl{l}{C^1(ℝ)&}{ℝ} \\
+f &\longmapsto l_{x_0}(f) = f'(x_0)
+\end{align*}
+
+Otro funcional también podría ser la integral, pero en ese caso podríamos tener valores infinitos (la integral de $x^2$ sobre $ℝ$ es ∞, por ejemplo).
+
+Antes de seguir, recordamos la definición de \nref{def:MedidaSFinita}: las medidas para las que podemos encontrar una unión numerable de conjuntos de medida finita que recubran todo el espacio. También necesitaremos la definición de medida de Borel y de medida regular:
+
+\begin{defn}[Medida\IS Borel] Se dice que una medida μ es de Borel si $μ(A)$ está definido (puede ser $∞$) para todo $A ∈ \borel(X)$, donde $\borel(X)$ son los borelianos, la σ-álgebra más pequeña que contiene a los abiertos de $X$.
+\end{defn}
+
+\begin{defn}[Medida\IS regular-Borel interna/externa] Se dice que una medida μ es regular externa si \[ μ(E) = \inf \set{μ(U) \tq U ⊃ E, U \text{ abierto}} \], y análogamente se dice que es una medida regular externa si \[ μ(E) = \sup\set{μ(K) \tq K ⊂ E, K \text{ compacto} }\]
+\end{defn}
+
+\begin{defn}[Medida\IS Borel-regular] Decimos que una medida $μ$ es regular si es medida regular-Borel interna y externa.
+\end{defn}
+
+Y ahora vamos, no sé por qué, a la medida de Radon.
+
+\begin{defn}[Medida\IS de Radon] Se dice que μ es una medida de Radon si es Borel-regular y finita en compactos.
+\end{defn}
+
+A modo de ejemplo, una medida no finita en compactos podría ser la asociada a la función $f(x) = \frac{1}{x}$, que nos da medida infinita en la bola de radio 1, por ejemplo.
+
+Para caracterizar las medidas de Radon (que en el fondo son las medidas de Borel que no son raras), tenemos el siguiente teorema, y recuperamos lo de los funcionales de antes.
+
+\begin{theorem}[Teorema\IS de representación de Riesz] Si $l$ es un funcional lineal y positivo\footnote{$l(φ) ≥ 0$ para toda función $φ≥0$, esto es, mantiene la positividad.} sobre el espacio de funciones continuas en $X$ con soporte compacto, denotado por $C_c(X)$, entonces existe una \textbf{única} medida de Radon $μ_l$ tal que \[ l(φ) = \int_X φ\dif μ_l \]
+\end{theorem}
+
+Es decir, que cualquier funcional lineal es en realidad la integral de esa misma función con una medida concreta. Tomemos una medida $m_f$ asociada a una función. Entonces \[ m_f(K) = \int_X \underbrace{\ind_K}_φ \overbrace{f \dif x}^{\dif μ} \], salvo por una cosa: $\ind_K$ no es continua. Para logarlo lo que usaremos será el \nref{lem:Urysohn}, y cuando integremos funciones $φ$ peores (no continuas) necesitaremos medidas mejores\footnote{No tengo muy claro qué significa ``mejor''.}.
+
 
 \section{Espacios de Banach y Hilbert. Espacios $L^p$}
 
