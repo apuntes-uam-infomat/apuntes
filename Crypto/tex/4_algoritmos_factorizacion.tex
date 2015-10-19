@@ -1,1 +1,111 @@
 \chapter{Algoritmos de factorización y tests de primalidad}
+
+La base de la seguridad del sistema RSA es el hecho de que es fácil generar números primos grandes (por eso podemos usar el algoritmo) pero factorizar números grandes en factores primos es muy difícil.
+
+A día de hoy, los ordenadores cuánticos serían capaces de factorizar primos a gran velocidad. En el momento en que estos ordenadores sean bastante grandes (con suficiente memoria) para operar con grandes números, el proceso de factorización será muy rápido, con lo que el algoritmo RSA dejará de ser seguro.
+
+No obstante, vamos a seguir estudiando los procesos de factorización y primalidad desde el punto de vista de los ordenadores y los medios actuales.
+
+Si quisiésemos factorizar un número, empleamos el algoritmo que usábamos en el colegio en el que vamos probando con todos los números primos. Es decir, empleamos la \textbf{criba de Eratóstenes}.
+
+Para hacer esto, necesitamos tener una lista de todos los primos hasta $\sqrt{n}$ con los que ir probando. 
+
+\begin{theorem}[Teorema del número primo]
+El número de primos menores que un número $x$ es:
+\[π(x) = O\left( \frac{x}{\log(x)}\right)\]
+\end{theorem}
+
+Una vez tenemos el número de primos existentes (cosa que en una situación real no se tiene pues $n$ es enorme), tendríamos que hacer un total $π(x)$ divisiones y, puesto que cada divisón nos supone $O(\log^3(n))$ bit-operaciones, tenemos que el total del algoritmo nos supone:
+\[O(\log^3(n))\cdot O\left(\frac{\sqrt{n}}{\log(\sqrt{n})}\right) = O\left( e^{\frac{1}{2}\log(n)}\log^2(n)\right)\]
+
+\begin{example}
+Supongamos que queremos factorizar un número del orden de $10^{75}$ empleando el ordenador mas rápido del punto.
+
+El ordenador mas rápido del punto es capaz de realizar 33,86 PETAFLOPS, es decir, realizar un total de $33.86 \cdot 10^{15}$ operaciones por segundo.
+
+Puesto que un año tiene $3,1537 \cdot 10^{7}$ segundos, tenemos que en un año podemos realizar, \textbf{con el ordenador más potente del mundo} un total de $10^{24}$ operaciones.
+
+Suponiendo que cada división es una operación (que no es así), necesitaremos $10^{50}$ años para poder factorizar el número $10^75$.
+\end{example}
+
+\section{Test de primalidad}
+
+Si queremos comprobar si un número es primo, no podemos necesitar factorizar el número, puesto que entonces no podríamos comprobar la primalidad de números grandes. Para ello nos apoyamos en el siguiente teorema.
+
+\begin{theorem}[Teorema de Wilson (1770)]
+\[n \text{ es primo } \iff (n-1)! = -1 \mod n\]
+\end{theorem}
+\begin{proof}
+\begin{itemize}
+\item $\Longleftarrow$
+
+Supongamos que $n$ no es primo. Entonces tenemos difernetes casos: 
+\begin{enumerate}
+\item $n=n_1n_2$ con $1<n_1<n_2<n$
+
+En este caso tenemos 
+\[(n-1)!=1\cdot 2 ... \cdot n_1 \cdot ... n_2 \cdot ... = 0 \mod n\]
+
+\item $n=p^2$ siendo $p$ primo impar
+
+En este caso tenemos
+\[(n-1)! = 1 \cdot 2 ... \cdot p ... \cdot 2p ... \cdot (n-1) = 0 \mod n\]
+
+\item $n=4=2^2$
+
+En esta ocasión
+\[3! = 6 = 2 \mod 4\]
+\end{enumerate}
+
+\item $\implies$
+
+Dado un elemento $a\in \ent_n$ tenemos:
+\[a=a^{-1} \mod \iff a^2 = 1 \mod n \iff a^2-1 = m \mod n\]
+
+y la ecuación $a^2-1=0\mod n$ tiene, como mucho, dos raíces en un cuerpo. 
+
+En este caso, estas raíces serían $a=1$, $a=(n-1)$.
+
+Por tanto, puesto que estamos en $\ent_p$, todo elemento tiene su inverso por lo que al escribir $(n-1)!$ estamos multiplicando todos los elementos del cuerpo, por lo que cada factor tendrá estará multiplicado por su inverso y se cancelará, excepto $1$ y $(n-1)$ que son sus propios inversos.
+
+Así nos queda:
+\[(n-1)! \mod n = 1 \cdot (n-1) \mod n = n-1 \mod n = -1 \mod n \implies (n-1)! \text{ es primo }\]
+\end{itemize}
+\end{proof}
+
+Este algoritmo, aunque parece ``muy bonito'' no vale para nada, puesto que no factoriza (por tanto aporta menos información que la criba de Eratóstenes) y requiere calcular factoriales, lo que es muy costoso.
+
+Sin embargo, en 2002 se desarrolló un algoritmo (AKS) capaz de comprobar si un número es primo en tiempo $O\left( \log^{12}(\log\log(n)^2\right)= \tilde{O}(\log^7(n))$.
+
+Años más tarde, en 2006, se desarrolló un algoritmo capaz de hacer esto mismo en tiempo $\tilde{O}\left( \log^6(n)\right)$
+
+Sin embargo, con el tamaño de números que trabajamos, el algoritmo AKS no es rentable, puesto que las constantes asociadas a la $O$ son demasiado elevadas.
+
+\subsection{Tests probabilísticos}
+
+Estos tests se basan en la afirmación filosófica de E. GJorel, que dice: ``Un suceso cuya probabilidad es de $10^{-50}$ o bien es imposible o nunca será observado''
+
+Así estos test buscarán números que serán primos con probabilidad $1-10^{-50}$. Para esto necesitamos observar alguna propiedad de los números primos que sea fácilmente comprobable, para lo que emplearemos el pequeño teorema de Fermat.
+
+\begin{theorem}[Pequeño teorema de Fermat]
+Existen dos versiones de este teorema:
+\begin{enumerate}
+\item 
+\[p \text{ primo } \implies \forall a \in \ent_p \ a^p=a \mod p\]
+
+\item
+\[p \text{ primo } \implies \forall a \in \ent_p \ a^{p-1}=1 \mod p\]
+\end{enumerate}
+\end{theorem}
+
+\begin{defn}[Número pseudoprimo en base $a$]
+Decimos que un número $p$ es pseudoprimo en base $a$ si se cumple que
+\[a^{p-1}=1 \mod p \]
+\end{defn}
+
+Una vez visto esto podemos ver el lema en que se basan los test probabilísticos.
+\begin{lemma}
+Si existe $b_0$ coprimo con $n$ tal que $b_0^{n-1}\neq 1 \mod n$, entonces $b^{n-1} \neq 1 \mod n$ para, \textbf{al menos la mitad} de los $b$ posibles en $[1,n-1]$ coprimos con $n$.
+\end{lemma}
+
+Con este lemma, si $n$ no es primo, entonces $b^{n-1} \neq 1 \mod n$ con probabilidad mayor que $\frac{1}{2}$. Por tanto, si tomo al azar 200 valores $b$ y todos pasan el test, la probabilidad de que el número sea compuesto es menor que $\left( \frac{1}{2}\right)^{200} \approx \left(\frac{1}{10}\right)^{60}$
