@@ -56,6 +56,14 @@
 
 \if@removechapters
 	\def\thesection{\arabic{section}}
+
+	% El marcador de capítulo sí que va en los apéndices
+	\let\oldappendix\appendix
+	\renewcommand{\appendix}{
+		\renewcommand{\thesection}{\thechapter.\arabic{section}}
+		\oldappendix
+	}
+
 \fi
 
 % Números en las subsecciones
