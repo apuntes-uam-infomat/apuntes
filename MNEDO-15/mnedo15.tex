@@ -892,12 +892,12 @@ Una vez que tenemos una definición formal del residuo, podemos definir la consi
 
 \begin{defn}[Consistencia]
 Decimos que un método numérico es \textbf{consistente} si
-\[\lim_{h \to 0} \max_{0 \leq n \leq Nk} \frac{\norm{R_n}}{h}=0\]
+\[\lim_{h \to 0} \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h}=0\]
 \end{defn}
 
 \begin{defn}[Orden de consistencia]
 Decimos que un método numérico es \textbf{consistente de orden p} si para $f \in C^p$ se tiene que
-\[\max_{0 \leq n \leq Nk} \frac{\norm{R_n}}{h} = O(h^p)\]
+\[\lim_{h \to 0} \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h} = O(h^p)\]
 \end{defn}
 
 \begin{example}
@@ -926,12 +926,14 @@ de donde podemos deducir que $Q_n$ y $R_n$ tienen el mismo orden de convergencia
 
 \section{Estabilidad}
 \begin{defn}[0-estabilidad]
-Un método numérico es 0-estable si para cada PVI existe una constante $C>0$ tal que para cada dos sucesiones $u_n,v_n$ que satisfacen\footnote{Es decir, que no satisfacen la descipción del método como función incremento pero casi}
+Un método numérico es 0-estable si para cada PVI existe una constante $C>0$ tal que para cada dos sucesiones $u_n,v_n$ que satisfacen\footnote{Es decir, que no satisfacen la descripción del método como función incremento pero casi}
 \[\sum_{j=0}^kα_ju_{n+j} = h\phi_f(x_n,u_n,...,u_{n+k-1},h)+hδ_n\]
 \[\sum_{j=0}^kα_jv_{n+j} = h\phi_f(x_n,v_n,...,v_{n+k-1},h)+hγ_n\]
 
-se verifica que:
-\[\max_{k \leq n \leq N}\norm{u_n,v_n} \leq C\left( \max_{0 \leq n \leq k-1}\norm{v_n,u_n}+\max_{0 \leq n \leq N-k}\norm{δ_n,γ_n}\right)\]
+con $0≤n≤N-k$, se verifica que:
+\[\max_{k \leq n \leq N}\norm{u_n - v_n} \leq C\left( \max_{0 \leq n \leq k-1}\norm{v_n - u_n}+\max_{0 \leq n \leq N-k}\norm{δ_n - γ_n}\right)\]
+
+O lo que es lo mismo, la diferencia está acotada por la suma de la diferencia entre los valores de arranque y los errores.
 \end{defn}
 
 \begin{prop}
@@ -954,13 +956,13 @@ Ahora debemos acotar la recurrencia sobre las $e_n$ que acabamos de obtener. Pod
 \obs Hasta aquí, esta demostración no es del todo formal puesto que hemos sacado ``a ojo'' el término general de la recurrencia. La forma de demostrarlo correctamente pasa por aplicar inducción.
 
 Nuetro objetivo, recordemos, era acotar el máximo de los $e_n$ para comprobar si se cumple la condición de 0-estabilidad. Vamos a ello:
-\[\max_{1\leq k \leq N}e_n \leq (1+Lh)^{(b-a)h}e_0 + \frac{K}{L}(b-a)e^{L(b-a)}\]
+\[\max_{1\leq k \leq N}e_n \leq (1+Lh)^{\frac{(b-a)}{h}}e_0 + K(b-a)e^{L(b-a)}\]
 
-Con esto podemos concluir la demostación puesto que $e_n=|u_n-v_n|$ es el término general de la diferencia de las sucesiones, $e_0=|u_0-v_0|$ es la diferencia entre los valores de arranque en un método de un sólo paso, y la constante $C$ sería $C=(b-a)e^{L(b-a)}$\footnote{Para poder deducir esta $C$ tenemos en cuenta que $(1+Lh)^{(b-a)h}$ es de la forma $e^{L(b-a)}$}
+Con esto podemos concluir la demostación puesto que $e_n=|u_n-v_n|$ es el término general de la diferencia de las sucesiones, $e_0=|u_0-v_0|$ es la diferencia entre los valores de arranque en un método de un sólo paso, y la constante $C$ sería el máximo de $C_1=(b-a)e^{L(b-a)}$ y $C_2=e^{L(b-a)}$\footnote{Para poder deducir esta $C$ tenemos en cuenta que $(1+Lh)^{(b-a)h}$ es de la forma $e^{L(b-a)}$}
 \end{proof}
 
 \section{Relaciones entre consistencia, estabilidad y convergencia}
-\begin{theorem}
+\begin{theorem}\label{theorem:consist_y_0estable_converge}
 Si un método numérico es 0-estable y consistente entonces es convergente.
 \end{theorem}
 \begin{proof}
@@ -970,7 +972,7 @@ Escribimos el método de la forma:
 Por otro lado podemos escribir:
 \[\sum_{j=0}^kα_jy(x_{n+j}) = h \phi_f(x_n,y(x_n),...,y(x_{n+k-1}),h) + R_n\]
 
-Ahora, con las dos sucesiones que tenemos, $y_n, y(x_n)$, sabiendo que el método es 0-estable, entonces tenemos que $R_n=hδ_n$ y podemos escribir:
+Ahora, con las dos sucesiones que tenemos, $\left\{y_n\right\}_{n=0}^∞, \left\{y(x_n)\right\}_{n=0}^N$, sabiendo que el método es 0-estable, entonces tenemos que $R_n=hδ_n$ y podemos escribir:
 \[\max_{k\leq n \leq N}\norm{(y_n-y(x_n)} \leq C\left( \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)} + \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h}\right)\]
 
 Para demostrar la convergencia tenemos que ver que 
@@ -984,7 +986,7 @@ Si un método numérico es 0-estable y el residuo es de orden $p$, entonces el m
 Es decir, consistencia a orden $p$ y 0-estabilidad garantizan convergencia a orden $p$
 \end{theorem}
 
-\begin{theorem}
+\begin{theorem}\label{theorem:consist_iif_relaciones}
 Un método numérico es consistente si y sólo si $\sum_{j=0}^kα_j=0$ y, además,
 \[\phi_f(x,y(x),...,y(x),0)=\left( \sum_{j=0}^kjα_j\right)f(x,y(x))\]
 \end{theorem}
@@ -1002,20 +1004,51 @@ Pyesto que $y(x)=1$ tenemos
 Pero, puesto que el método es consistente sabemos que el límite de $\frac{R_n}{h}$ tiende a 0, por tanto, tenemos que 
 \[\lim_{h\to 0} \frac{1}{h}\sum_{j=0}^kα_j=0 \implies \sum_{j=0}^kα_j=0\]
 
-Consideramos ahora un método numérico general, nos olvidamos del caso concreto anterior. Ahora tendríamos que el residuo queda:
-\[\frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_jy(x_{n+j})-\phi_f(x_n,y(x_n),...,y(x_{n+k-1}),h)\]
+\textbf{Demostremos ahora la segunda afirmación} del lado derecho de la equivalencia del teorema:
 
-Por el teorema del valor medio tenemos:
+Consideramos ahora un método numérico general, nos olvidamos del caso concreto anterior. Ahora tendríamos que el residuo queda:
+\[\frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_jy(x_{n+j})-\phi_f(x_n,y(x_n),…,y(x_{n+k-1}),h)\]
+
+Por el teorema del valor medio tenemos que con $x_n ≤ ε_{n,j} ≤ x_{n+j}$:
 \[y(x_{n+j})-y(x_n)=y'(ε_{n,j})(x_{n+j}-x_n) = y'(ε_{n,j})jh\]
 
 Sustituyendo esto en la ecuación anterior tenemos:
-\[\frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_j(y(x_n)+jhy'(ε_{j,n}))-\phi_f(x_n,y(x_n),...,y(x_{n+k-1}),h) = \]
+\[\frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_j(y(x_n)+jhy'(ε_{j,n}))-\phi_f(x_n,y(x_n),…,y(x_{n+k-1}),h) = \]
+\[ = \sum_{j=0}^k jα_jy'(ε_{n,j}) - \phi_f\left(x_n,y(x_n), y(x_n+h) , …, y(x_n + h(k-1)), h\right) = \]
+\[ = \sum_{j=0}^k jα_jf(ε_{n,j}, y(ε_{n,j})) - \phi_f\left(x_n,y(x_n), y(x_n+h) , …, y(x_n + h(k-1)), h\right)\]
 
-Y AQUI ENTRA EN ACCION EL GRAN MALVADO COMPLETANDO LA DEMOSTRACION
+Tomando \underline{$n=0$}:
+
+\[\frac{R_0}{h} = \sum_{j=0}^k jα_jf(ε_{0,j}, y(ε_{0,j})) - \phi_f\left(x_0,y(x_0), y(x_0+h) , …, y(x_0 + h(k-1)), h\right)\]
+
+Usando la hipótesis de que nuestro MN es consistente:
+\[\lim_{h\to0} \frac{R_0}{h} = 0 = f(x_0, y(x_0)) \sum_{j=0}^k jα_j - \phi_f\left(x_0,y(x_0), y(x_0) , …, y(x_0), 0\right) \]
+
+Acabamos de demostrar que la segunda afirmación del teorema es cierta para $x=x_0$. Tomemos ahora $n=N-k$:
+\[\sum_{j=0}^k jα_jf(ε_{N-k,j}, y(ε_{N-k,j})) - \phi_f\left(x_{N-k},y(x_{N-k}), y(x_{N-k}+h) , …, y(x_{N-k} + h(k-1)), h\right)\]
+
+Procediendo igual que antes:
+\[\lim_{h\to0} \frac{R_{N-k}}{h} = 0 = f(x_N, y(x_N)) \sum_{j=0}^k jα_j - \phi_f\left(x_N,y(x_N), y(x_N) , …, y(x_N), 0\right)\]
+
+Como hemos probado que la igualdad es cierta para $N$ podemos alcanzar todo $x$, y por tanto la segunda afirmación del teorema quedaría demostrada.
 
 \item 
 \end{itemize}
 \end{proof}
+
+\begin{example}
+	Veamos si el \textbf{método leap-frog es consistente} utilizando \ref{theorem:consist_iif_relaciones}:
+
+	\[y_{n+2} = y_n + 2h f(x_{n+1},y_{n+1})\]
+	\[α_0=-1, α_1=0, α_2=1 \implies \sum_{j=0}^2 α_j = 0\]
+	Acabamos de ver que cumple la primera afirmación del lado derecho del teorema.
+	\[\sum_{j=0}^2 jα_j = 2\]
+	\[\phi_f(x_n,y_n,y_{n+1},h) = 2f(x_{n+1},y_{n+1}) = 2f(x_n+h, y_{n+1})\]
+	Por tanto:
+	\[\phi_f\left( x, y(x), y(x), h \right) = 2f(x+h,y(x)) \underset{h\to0}{\longrightarrow} \overbrace{2}^{\sum_{j=0}^2 jα_j}f(x,y(x))\]
+	el método cumple con la segunda afirmación del lado derecho del teorema, y podemos afirmar que leap-frog es consistente.
+
+\end{example}
 
 
 \chapter{Laboratorio}

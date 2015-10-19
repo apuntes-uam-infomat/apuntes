@@ -9,6 +9,8 @@
 % --------------------
 
 
+
+
 \begin{document}
 \pagestyle{plain}
 \maketitle
@@ -824,11 +826,103 @@ A la hora de clasificar, comprobamos a qué polígono pertenece.
 \begin{itemize}
 	\item Calcular distancias entre todos los pares de puntos.
 	\item Para cada ejemplo:
-		\subitem Se ordena el resto de ejemplos por distancias.
+		\subitem Se ordena el resto de eemplos por distancias.p
 		\subitem Se hacen tantas clasificaciones como valores de  $K$ estemos evaluando.
 	\item Se calcula el error y nos quedamos con el que menor error tenga.
 \end{itemize}
 
+\section{Clasificadores lineales}
+
+Son aquellos que dan lugar a fronteras de decisión lineales. En 2 dimensíones es una recta, en $n$ dimensiones es un hiperplano.
+
+\begin{defn}[Clasificador lineal]
+Sea $h$ un clasificador lineal:
+
+\[h(\bar{x}) = \left\{ \begin{array}{cc}
+ c_1 & \pesc{\bar{ω},\bar{x}} + ω_0 > 0\\ 
+ c_2 & \pesc{\bar{ω},\bar{x}} + ω_0 < 0\\ 
+ \end{array} \right.\]
+
+Llamamos \concept{Frontera} al hiperplano $\pesc{\bar{ω},\bar{x}} + ω_0$.
+
+\end{defn}
+
+\begin{example}
+Vamos a construir la frontera de manera genérica. Para ello, tenemos:
+
+\[
+\pesc{\bar{ω}\bar{x}} + ω_0 = 0 \to |\bar{x}|\cos(α) = \frac{-ω_0}{|\bar{ω}|}
+\]
+
+\begin{center}
+\includegraphics[scale=1.4]{img/ClasificadorLineal.png}
+\end{center}
+\end{example}
+
+Veamos como surgen las fronteras lineales de forma ``natural'' haciendo suposiciones sencillas sobre la forma funcional de los datos.
+
+\begin{defn}[Función sigmoidal]
+
+Consideramos un problema de dos clases $C_1,C_2$. Podemos escribir la probabilidad a posterior:
+
+\[
+P(C_1 | \bar{x}) = \frac{P(\bar{x}|C_1)P(C_1)}{P(\bar{x})} = \frac{P(\bar{x}|C_1)P(C_1)}{\sum P(\bar{x}|C_i)P(C_i)}\]
+Dividimos numerador y denoiador por $P(\bar{x}|C_1)(C_1)$
+\[
+\frac{1}{1+c} = \frac{1}{1+e^{-a}} = σ(a)
+\]
+donde $a = ln(c)$ y $c=\displaystyle\frac{P(\bar{x}|C_1)P(C_1)}{P(\bar{x}|C_2)P(C_2)}$
+
+¿Qué hemos ganado con esto? Hemos reescrito Bayes como una \href{https://es.wikipedia.org/wiki/Funci\%C3\%B3n\_sigmoide}{sigmoidal}.
+
+Esto permite clasificar de la siguiente manera:
+
+\[P(\bar{x} | C_1) P (C_1) > P(\bar{x} | C_2) P (C_2) \implies \text{ elegimos } C_1\]
+
+Esto es equivalente a ``si a > 0, entonces elegimos $C_1$, sino, elegimos $C_2$''
+\end{defn}
+
+Suponemos que la veroimilitud sigue una distribución normal en $n$ dimensiones, siendo $\bar{µ_k}$ el vector de medias y $\Sigma$ la matriz de covarianzas. Todos los productos entre vectores son productos escalares. Ante cualquier tipo de duda (de que no cuadran las dimensiones, etc...) aplicar el producto escalar.
+
+\[
+p(\bar{x}|C_{x} = \frac{1}{(2π)^{\frac{n}{2}}}\frac{1}{|\Sigma|^{\frac{1}{2}}} \exp \left\{  \frac{-1}{2} (\bar{x} - \bar{µ_k}) \Sigma_k^{-1} (\bar{x} - \bar{µ_k}) \right\} 
+\]
+
+Además, suponemos 
+\begin{itemize}
+	\item  tenemos 2 clases.
+	\item $\Sigma_1 = \Sigma_2 = I$
+\end{itemize}
+
+\subsubsection{Frontera de decisión con hiperplano (2 clases)}
+
+Vamos a construir la frontera de decisión con hiperplano para 2 clases:
+
+\[
+a = \ln\left( \frac{P(\bar{x}|C_1)P(C_1)}{P(\bar{x}|C_2)P(C_2)}\right) = \ln \left\{ \exp \left\{ \frac{\bar{x}-\bar{µ_1}}{2} - \frac{\bar{x} - \bar{µ_2}}{2} \right\} \frac{P(C_1)}{P(C_2)}\right\} = 
+\]
+\[
+= \left( \frac{(\bar{x} - \bar{µ_2})^2}{2} - \frac{(\bar{x} - \bar{µ_2})^2}{2}\right) + \ln \frac{P(C_1)}{P(C_2)} = 0
+\]
+Si $P(C_1) = P(C_2)$, tenemos:
+\[
+\left( \frac{(\bar{x} - \bar{µ_2})^2}{2} - \frac{(\bar{x} - \bar{µ_2})^2}{2}\right) = 0
+\]
+Si $(\bar{x} - \bar{µ_2})^2 > (\bar{x} - \bar{µ_1})^2 \implies C_1$. ¿Porué $C_1$? Porque estamos más lejos de la media $\bar{µ_2}$ que de la media $\bar{µ_1}$. Es como vecinos próximos si sólo tuvieramos 2 vecinos, la media de 1 y la media del otro.
+
+Si por el contrario, $P(C_1) ≠ P(C_2)$, tenemos: 
+
+\[
+\frac{\bar{x}^2 + \bar{\mu}_2^2 - 2\bar{x}\bar{\mu}_2}{2} - \frac{\bar{x}^2 + \bar{\mu}_1^2 - 2\bar{x}\bar{\mu}_1}{2} + \ln\frac{P(C_1)}{P(C_2)} = 
+\]
+\begin{equation}
+= (\bar{\mu}_1 - \bar{\mu}_2) \bar{x} + \frac{1}{2} (\bar{\mu}_2^2 - \bar{\mu}_1^2) + \ln\frac{P(C_1)}{P(C_2)} = 0
+\end{equation}
+Esto es un hiperplano que utilizaremos como frontera de decisión. 
+
+\begin{framed}
+En este caso, tenemos $\bar{ω} = \bar{µ_1} - \bar{µ_2}$ y $\bar{ω_0} = \frac{1}{2}(µ_2^2 - µ_1^2) + \ln \frac{P(C_1)}{P(C_2)}$
+\end{framed}
 
 %% Apéndices (ejercicios, exámenes)
 \appendix

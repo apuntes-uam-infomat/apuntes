@@ -1,5 +1,7 @@
 \documentclass{apuntes}
 
+\usepackage{tikztools}
+
 \title{HistoriaMatematicas}
 \author{Pedro Valero}
 \date{15/16 C1}
@@ -9,6 +11,8 @@
 % --------------------
 
 \begin{document}
+\setcounter{tocdepth}{4}
+
 \pagestyle{plain}
 \maketitle
 
@@ -174,6 +178,17 @@ Partiendo del siguiente diagrama:
 Podemos encontrar de nuevo una relación entre las áreas de los cuadrados y triángulos pintados:
 \[a^2+b^2 +4\frac{ab}{2} = (a+b)^2 \iff a^2+b^2 +2ab = a^2+b^2+2ab \iff a^2+b^2=c^2\]
 
+\subsubsection{Prueba 3 (Euclides)}
+Partiendo del siguiente diagrama:
+\begin{center}
+\inputtikz{pitagoras_prueba_3}
+\end{center}
+
+Podemos observar que las dos líneas son azules, por triangulación.
+
+TO BE CONTINUED...
+
+
 \subsection{Las distancias}
 A raíz del Teorema de Pitágoras, el ejemplo tan trivial que supone un triángulo rectángulo con los dos catetos de longitud $1$ nos lleva a la aparición de nuevos números que no son racionales y que, ante la visión del mundo de los griegos, no son números.
 
@@ -236,6 +251,25 @@ Los enunciados que se muestran a continuación dependen de los siguientes dibujo
 Es bien conocido por todos que la fórmula para el área del triángulo dice:
 \[A= \frac{\text{base}\cdot\text{altura}}{2}\]
 lo importante son las diferentes demostraciones existentes de esta fórmula, que veremos a lo largo de esta sección.
+
+\begin{lemma}
+El área de un triángulo rectángulo es proporcional al lado y la constante depende del ángulo
+\end{lemma}
+\begin{proof}
+Dado el siguiente dibujo
+\begin{center}
+\inputtikz{thales_triangulo}
+\end{center}
+Sabemos, por el \textbf{teorema de proporcionalidad}, que:
+\[\frac{a'}{a} = \frac{b'}{c} = \frac{b'}{c} = λ\]
+Atendiendo a las áreas de los triángulos representados tenemos:
+\[\left\{ \begin{array}{l} S= \frac{1}{2}ac \\ S' = \frac{1}{2} a'c'\end{array}\right. \implies \frac{S'}{S} =\frac{a'c'}{ac} = λ^2\]
+
+Por otro lado tenemos
+\[S' = S\left( \frac{b'}{b}\right)^2 \iff \frac{S'}{S} = \frac{b'^2}{b^2} \implies \left\{ \begin{array}{l} S' = rb'^2 \\ S= r b^2 \end{array}\right.\]
+donde 
+\[r=\frac{1}{2} \sin(α)\cos(α)\]
+\end{proof}
 
 \section{Euclides}
 Euclides viió en torno al año 300 a.C. en Alejandría, aunque su existencia es dudosa, pues no hay pruebas de la existencia de ninguna persona cuya vida coincida con la conocida de Euclides.
@@ -325,7 +359,7 @@ Es decir, dados $n$ primos siempre podemos encontrar un número primo nuevo. Por
 \end{proof}
 
 No obstante, podemos ver que, aunque haya infinitos números primos, la densidad de los mismos va disminuyendo. Así podemos representar la siguiente funciones.
-\[ρ(n)=\frac{#\{q \ : \ 1 < q < n, \ q \text{ es primo }\}}{n}\]
+\[ρ(n)=\frac{\#\{q \ : \ 1 < q < n, \ q \text{ es primo }\}}{n}\]
 \begin{center}
 \includegraphics[width=0.8\linewidth]{img/density.png}
 \end{center}
@@ -336,7 +370,80 @@ La criba de Eratóstenes es un algoritmo que permite hallar todos los números p
 \end{defn}
 
 \subsubsection{Máximo común divisor}
+Euler nos proporcionó un algoritmo para calcular le máximo común divisor de dos números que aún hoy en día sigue empleándose.
 
+Este método se basa en el siguiente lemma:
+\begin{lemma}
+Un número $c$ es divisor común a dos números $a>b$ si y sólo si $c$ es divisor común de $a$ y de $r=a\mod b$ 
+\end{lemma}
+\begin{proof}
+Trabajando sobre una cuadrícula, dibujamos un rectángulo de $a$ cuadros de longitud por $b$ de altura.
+
+Una vez tenemos el rectángulo, quitamos del mismo tantos \textbf{cuadrados} de lado $b$ como sea posible. 
+
+Tras esto nos quedará un rectángulo de altura $b$ y base $r$.
+
+\begin{center}
+\inputtikz{divisor_comun}
+\end{center}
+
+Si tuviésemos un número $c$ que divide a $a$ y a $b$, podríamos haber cubierto todo el rectángulo inicial con cuadrados de tamaño $c$ y, además, podríamos haber cubierto los cuadrados de lado $b$ con cuadrados de tamaño $c$. 
+
+Por tanto, la región sobrante $r\times b$ también se podría cubrir por cuadrados de tamaño $c$ y, por tanto, $c$ tiene que dividir a $r$ también.
+\end{proof}
+
+Una vez tenemos claro este lema, el algoritmo de Euclides para calcular el máximo común divisor de dos números consiste en iterar sobre el lema reduciendo el problema a algo cada vez más sencillo.
+
+La idea consiste en que, dados dos números $a>b$ tenemos:
+\[c.d.(a,b)=c.d.(b,r_1)=c.d.(r_1,r_2)...\]
+\begin{example}
+Los divisores comunes de 75 y 28 pueden calcularse como:
+\[c.d.(75,28)=c.d.(28,19) = c.d.(19,9)=c.d.(9,1) = c.d.(1,0)\]
+
+Paramos en el momento en que el resto sea 0 con lo que obtenemos que los divisores comunes que estamos buscando son los divisores de 0 y de otro número $c$, es decir, los divisores comunes serán todos los divisores de $c$.
+\end{example}
+
+\obs El número $c$ que obtenemos, tal que todos sus divisores son los divisores comunes de $a$ y $b$, es el máximo común divisor de estos números.
+
+Así, acabamos de encontrar un algoritmo para calcular el máximo común divisor entre dos números, conocido como \concept{Algoritmo de Euclides}
+
+Podemos ver el \textbf{algoritmo} trabajando con $a>b>1 \in \nat^+$:
+\begin{verbatim}
+a = q*b + r;
+
+Mientras r != 0"
+    Si r = 0:
+        mcd(a,b) = b;
+    Si r > 0:
+        a = b;
+        b = r;
+        a = q*b + r;
+\end{verbatim}
+
+\subsubsection{Factorizando irracionales}
+
+Veamos qué ocurre si empezamos a trabajar con los números irracionales.
+
+Si dibujamos un cuadrado de base $\sqrt{2}$ y de altura 1, podemos ver que dentro sólo cabe un cuadrado de lado 1 y nos queda un rectángulo de dimensiones $(\sqrt{2}-1)\times 1$.
+
+Puesto que el divisor común que buscamos debe dividir a $\sqrt{2}-1$, por el lemma anterior, entonces podremos dibujar un rectángulo con este valor como lado, que podrá rellenarse con cuadrados de lado $c = c.d.(\sqrt{2},1)$.
+
+Este rectángulo puede dividirse en un cuadrado de lado $\sqrt{2}-1$ y un rectángulo de dimensiones: $(\sqrt{2}-1) \times (1-(\sqrt{2}-1) ) = (\sqrt{2}-1) \times (2 - \sqrt{2})$ que podemos ver que es proporcional al rectángulo con el que empezamos y que debería poder rellenarse con cuadrados de lado $c$.
+
+Por tanto este procedimiento nunca acabará, ya que siempre obtenemos un subrectángulo proporcional al inicial de modo que nunca encontraremos $c$.
+
+Esto supone \textbf{una prueba más de la irracionalidad de $\sqrt{2}$}.
+
+\subsubsection{Métodos de aproximación}
+El intento de factorización anterior, si bien no nos aportó información nueva a priori, si que nos ha proporcionado un método de aproximación de irracionales, como $\sqrt{2}$.
+
+Si consideramos el mismo dibujo anterior, con $x = \sqrt{2}$ el lado inferior del rectángulo y $y=x+1$, lo que resta de base al quitar un cuadrado unidad del rectángulo inicial, vemos que obtenemos la iteración:
+
+\[x = 1+y \implies x = 1 + \frac{1}{2+y} = 1 + \frac{1}{1 + \frac{1}{2+y}} = ... \]
+
+Esto nos da un método de aproximación de $x=\sqrt{2}$, para lo que basta tomar un $y$ cualquiera (podemos tomar 0 por comodidad) y tomar la fracción que deseemos. 
+
+Estas fracciones que se prolongan infinitamente son conocidas como \concept{fracciones continuas}
 
 \section{Arquímedes}
 \textbf{Arquímedes de Siracusa}, nacido en torno al año 287 a.C. fue un físico, ingeniería|ingeniero, inventor, astrónomo y matemática helénica|matemático griego. Aunque se conocen pocos detalles de su vida, es considerado uno de los científicos más importantes de la Antigüedad clásica. 
