@@ -1798,5 +1798,86 @@ Tenemos un error en fase del orden de $\xi^2$. Este esquema presenta un error en
 	cumple el principio del máximo, entonces no puede tener orden mayor que uno.
 \end{theorem}
 
+Hemos visto la definición del esquema Lax-Wendroff cuando $a$ no es constante. Es decir, para:
+$$u_t+a(x,t)u_x = 0$$
+en lugar de la forma que vimos para el esquema vamos a estudiar otro forma de implementar el esquema.
 
+Se parte del desarrollo de Taylor siguiente:
 
+$$u(x,t+\Delta t) = u(x,t) + \Delta t u_t(x,t) + \frac{1}{2}(\Delta t)^2 u_{tt}(x,t)+O((\Delta t )^3)$$
+Por la ecuación tenemos que
+\begin{align*}
+	u_t &= -au_x\\
+	u_{tt} &= -a_tu_x-au_{xt} \\
+	&= -a_tu_x+a(au_x)_x
+\end{align*}
+
+Sustituyendo en el desarrollo anterior utilizando:
+$$U_{j}^{n+1}-U_{j}^{n} = -a_j^n\Delta t\frac{\Delta_0xU_{j}^{n}}{\Delta x}+\frac{1}{2}(\Delta t)^2\left[-(a_t)_j^n\frac{\Delta_0xU_{j}^{n}}{\Delta x}+\frac{a_j^n\delta_x(a_j^n\delta_x(a_j^n\delta_xU_{j}^{n}))}{(\Delta x)^2}\right]$$
+
+donde
+$$\Delta_0 v(x) = \frac{1}{2}\left[v(x+\Delta x)-v(x-\Delta x)\right]$$
+
+y 
+$$\delta_x v(x) = v(x+\frac{\Delta x}{2})-v(x-\frac{\Delta x}{2})$$
+
+Vamos a desarrollar le método:
+$$\Delta _0 xU_j^n = \frac{1}{2}\left[U_{j+1}^{n}-U_{j-1}^{n}\right]$$
+
+$$a_j^n\delta_xU_j^n = a_j^n\left[U_{j+\frac{1}{2}}^{n}-U_{j-\frac{1}{2}}^{n}\right]$$
+
+$$\delta_x\left[a_j^n \delta_xU_{j}^{n}\right] = a_{j+\frac{1}{2}}^n \left[U_{j+1}^{n}-U_{j}^{n}\right] -  a_{j-\frac{1}{2}}^n \left[U_{j}^{n}-U_{j-1}^{n}\right]$$
+
+Obtenemos
+$$U_{j}^{n+1}-U_{j}^{n} = -a_j^n(\frac{\Delta t}{\Delta x})\left[\frac{U_{j+1}^{n}-U_{j-1}^{n}}{2}\right] + \frac{1}{2}(\Delta t)^2(-(a_t)_j^n\left[\frac{U_{j+1}^n-U_{j-1}^n}{2\Delta x}\right]+a_j^n\frac{1}{(\Delta x)^2}\left[a_{j+\frac{1}{2}}^n\left[U_{j+1}^n-U_j^n\right]-a_{j-\frac{1}{2}}^n\left[U_{j}^{n}-U_{j-1}^{n}\right]\right])$$
+
+\begin{itemize}
+	\item \textbf{Simplificación:}
+	
+	$$a_j^n + \frac{1}{2}\Delta t {a_t}_j^n \approx a_j^{n+\frac{1}{2}}$$
+	
+	\item $\Delta t = \Delta x$
+	
+	$$U_j^{n+1} = U_j^n - a_j^{n+\frac{1}{2}}\left[\frac{U_{j+1}^{n}-U_{j-1}^{n}}{2}\right]+\frac{1}{2}a_j^n\left[a_{j+\frac{1}{2}}(U_{j+1}^{n}-U_{j}^{n})-a_{j-\frac{1}{2}}^n (U_j^n-U_{j-1}^{n})\right]$$
+	
+	Luego finalmente se obtiene
+	\begin{align*}
+	U_j^{n+1} &= \left[\frac{a_j^{n+\frac{1}{2}}}{2}+\frac{1}{2}a_j^na_{j-\frac{1}{2}}^n\right]U_{j-1}^{n}\\
+	&+ \left[1+\frac{1}{2}a_j^n(-a_{j+\frac{1}{2}}^n-a_{j-\frac{1}{2}}^n)\right]U_j^n\\
+	&+ \left[-\frac{a_j^{n+\frac{1}{2}}}{2}+\frac{1}{2}a_j^na_{j+\frac{1}{2}}^n\right]U_{j+1}^n
+	\end{align*}
+\end{itemize}
+
+Ahora el problema es como (si $a > 0$)
+\begin{equation*}
+	\left\{
+	\begin{array}{l}
+		u_t+au_x = 0\\
+		u(x,0) = u_0(x)\\
+		u(0,t) = 0
+	\end{array}
+	\right.
+\end{equation*}
+
+Hay que notar que ahora sólo se tiene una condición de contorno pues el resto viene determinado por el valor en la recta característica.
+
+Si $a<0$, entonces la condición sería $u(1,t) = 0$ puesto que la pendiente de la recta sería negativa y por tanto el valor a la izquierda vendría determinado por el valor en la recta característica.
+
+\subsubsection{Esquema Box}
+Vamos a definir
+$$\delta_x v(x) = v(x+\frac{1}{2}\Delta x) - v(x-\frac{1}{2}\Delta x)$$
+$$\delta_t v(t) = v(t+\frac{1}{2}\Delta t) - v(t-\frac{1}{2}\Delta t)$$
+
+La ecuación es 
+$$u_t+au_x= 0$$
+
+Y el esquema:
+$$\delta_t\left[\frac{U_j^{n+\frac{1}{2}}+U_{j+1}^{n+\frac{1}{2}}}{2\Delta t}\right] + a\delta_x\left[\frac{U_{j+\frac{1}{2}}^{n}+U_{j+\frac{1}{2}}^{n+1}}{2\Delta x}\right] = 0$$
+
+de otro modo
+$$\underbrace{\frac{\left[U_j^{n+1}+U_{j+1}^{n+1}\right]-\left[U_j^{n}+U_{j+1}^{n}\right]}{2\Delta t}}_{\approx u_t(x_{j+\frac{1}{2}}, t_{n+\frac{1}{2}})+O((\Delta x)^2)+O((\Delta t)^2)}+a_{j+\frac{1}{2}}^{n+\frac{1}{2}}\underbrace{\frac{\left[U_{j+1}^{n}+U_{j+1}^{n+1}\right]-\left[U_j^{n}+U_{j}^{n+1}\right]}{2\Delta x}}_{\approx u_x(x_{j+\frac{1}{2}}, t_{n+\frac{1}{2}})+O((\Delta x)^2)+O((\Delta t)^2)} = 0$$
+
+Para el error de truncación del método se realiza el desarrollo de Taylor en el punto $(x_{j+\frac{1}{2}}, t_{n+\frac{1}{2}})$ y se obtiene que
+$$T_j^n = O((\Delta x)^2)+O((\Delta t)^2)$$
+
+El esquema tiene orden de consistencia $2$ en ambas variables.
