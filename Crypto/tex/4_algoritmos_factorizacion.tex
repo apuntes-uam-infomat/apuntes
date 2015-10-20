@@ -109,3 +109,92 @@ Si existe $b_0$ coprimo con $n$ tal que $b_0^{n-1}\neq 1 \mod n$, entonces $b^{n
 \end{lemma}
 
 Con este lemma, si $n$ no es primo, entonces $b^{n-1} \neq 1 \mod n$ con probabilidad mayor que $\frac{1}{2}$. Por tanto, si tomo al azar 200 valores $b$ y todos pasan el test, la probabilidad de que el número sea compuesto es menor que $\left( \frac{1}{2}\right)^{200} \approx \left(\frac{1}{10}\right)^{60}$
+
+Veamos la demostración del lemma
+\begin{proof}
+Consideramos el conjunto de valores $\{a_1,...1_r\} \subset \left(\ent_n\right)^*$ tales que 
+\[a_i^{n-1} = 1 \mod n\]
+
+Entonces $n$ no es pseudoprimo en la bases $\{b_0a_1,...,b_0a_r\}$ ya que 
+\[(b_0a_i)^{n-1} = b_0^{n-1}a_i^{n-1} = b^{n-1} \neq 1 \mod n\]
+\end{proof}
+
+Vamos a ver ahora cómo podríamos construir un test probabilístico de primalidad de manera incremental.
+
+Empezamos considerando una versión \textbf{beta} del test.
+\begin{enumerate}
+\item Considero un número al azar $b \in [2,n-1]\cap \ent$
+\item Compruebo si $b$ es coprimo con $n$ que, como ya vimos, es una tarea \textbf{fácil}
+\begin{itemize}
+\item Si $b$ no es coprimo con $n$ entonces $n$ no es primo, obviamente
+\item Si $b$ es coprimo con $n$ calculo $b^{n-1} \mod n$ que también vimos que era una tarea \textbf{fácil}
+\end{itemize}
+\item Compruebo si $b^{n-1}$ es coprimo con $n$.
+\begin{itemize}
+\item Si $b^{n-1}\neq 1 \mod n$ entonces $n$ no es primo.
+\item Si $b^{n-1} = 1 \mod n$ entonces $n$ podría ser primo. Volvemos al paso 1.
+\end{itemize}
+\end{enumerate}
+
+Tras repetir el procedimiento 200 veces, si resulta que $n$ es pseudoprimo en las 200 bases, concluimos que $n$ es, \textbf{probabilísticamente primo}
+
+Sin embargo, esta versión tiene un problema: \textbf{¿Qué ocurre si $n$ es pseudoprimo en todas las bases?}.
+
+\subsection{Números de Carmichael}
+
+\begin{defn}[Número de Carmichael]
+Un \textbf{número de carmichael} es un número compuesto tal que $b^{n-1}=1 \mod n$ para todo $b$ coprimo con $n$.
+\end{defn}
+
+Lo que nos interesa es comprobar si existen números de Carmichael (evidentemente existen, pues de lo contrario no hablaríamos de ellos), ver cuántos son y si existe alguna forma útil de caracterizarlos.
+
+\begin{theorem}[Teorema de Korset (1899)]
+Sea $n \in \ent$ son equivalentes:
+\begin{enumerate}
+\item \[b^n=b \mod n \ \forall b \in \ent\]
+\item \[b^{n-1} = 1 \mod n \ \forall b \in \ent, \ t.q. \ (b,n)=1 \]
+\item n es libre de cuadrados, es decir:
+\[a^2|n \implies a = \pm 1 \text{ si p es primo } \neg p^2 | n\]
+O lo que es lo mismo, si $p$ es primo y $p$ divide a $n$ entonces $p-1$ divide a $n-1$
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\begin{itemize}
+\item $1 \implies 2$
+
+Sabemos que $(b,n)=1 \iff b \in\left(\ent_n\right)^*$. Por tanto, podemos multiplicar a ambos lados de la ecuación por $b^{-1}$ obteniendo:
+\[b^n = b \mod n \implies b^{n-1}=1 \mod b\]
+
+\item $3 \implies 1$
+
+Sabiendo que $n$ es libre de cuadrados tenemos que:
+\[b^n = b \mod n \iff b^n = b \mod p \ \forall p|n\]
+
+\begin{proof}
+Si $p|n$ entonces 
+\[b^n = b \mod p \iff 0^n=0 \mod p \]
+
+Por otro lado:
+\[(b,p)=1 \implies b^n=bb^{n-1} = bb^{(p-1)k}=b\left(b^{p-1}\right)^k=b\mod p\]
+\end{proof}
+
+\item $2 \implies 3$
+
+Supongamos que $n$ no es libre de cuadrados, es decir, supongamos que existe un primo $p$ tal que $n=p^rn'$ siendo $r>2$ y $(n',p)=1$.
+
+En estas condiciones tenemos
+\[\left| \left(\ent_n\right)^*\right| = \varphi(p^r)=p^{r-1}(p-1) \implies p|\varphi(p^r)\]
+donde la última implicación es válida puesto que $r>2$
+
+Sabemos por tanto que
+\[\exists a \in \left(\ent_{p^r}\right)^* \tq ord(a)=p \text{ es decir } \left\{\begin{array}{l}a\neq 1 \mod p^r \\ a^p=1 \mod p^r \end{array}\right.\]
+
+Por el teorema chino del resto, sabemos que existe un elemento $b \in \ent_n$ tal que:
+\[\left\{\begin{array}{l}b=a\mod p^r \\ b=1 \mod n' \end{array}\right.\]
+
+Por hipótesis teníamos que ...
+
+TO BE CONTINUED...
+\end{itemize}
+\end{proof}

@@ -944,7 +944,7 @@ Si tenemos dos sucesiones:
 \[u_{n+1}=u_n+h\phi_f(x_,y_n,h)+hδ_n\]
 \[v_{n+1}=v_n+h\phi_f(x_,y_n,h)+hγ_n\]
 
-Podemos restarlas y tomar valres absolutos obteniendo:
+Podemos restarlas y tomar valores absolutos obteniendo:
 \[|u_{n+1}-v_{n+1}|\leq |u_n-v_n| + h |\phi_f(x_n,u_n,h)-\phi_f(x_n,v_n,h)|+h|δ_n-γ_n|\]
 
 Y apoyándonos en que la función $\phi_f$ es Lipschitz en la segunda variable tenemos:
@@ -972,8 +972,8 @@ Escribimos el método de la forma:
 Por otro lado podemos escribir:
 \[\sum_{j=0}^kα_jy(x_{n+j}) = h \phi_f(x_n,y(x_n),...,y(x_{n+k-1}),h) + R_n\]
 
-Ahora, con las dos sucesiones que tenemos, $\left\{y_n\right\}_{n=0}^∞, \left\{y(x_n)\right\}_{n=0}^N$, sabiendo que el método es 0-estable, entonces tenemos que $R_n=hδ_n$ y podemos escribir:
-\[\max_{k\leq n \leq N}\norm{(y_n-y(x_n)} \leq C\left( \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)} + \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h}\right)\]
+Ahora, con las dos sucesiones que tenemos, $\left\{y_n\right\}_{n=0}^∞, \left\{y(x_n)\right\}_{n=0}^N$, sabiendo que el método es 0-estable y tomando $R_n=hδ_n$, podemos escribir:
+\[\max_{k\leq n \leq N}\norm{y_n-y(x_n)} \leq C\left( \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)} + \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h}\right)\]
 
 Para demostrar la convergencia tenemos que ver que 
 \[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)}= 0 \implies \lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n)} \]
@@ -986,7 +986,7 @@ Si un método numérico es 0-estable y el residuo es de orden $p$, entonces el m
 Es decir, consistencia a orden $p$ y 0-estabilidad garantizan convergencia a orden $p$
 \end{theorem}
 
-\begin{theorem}\label{theorem:consist_iif_relaciones}
+\begin{theorem}[Criterio de consistencia]\label{theorem:consist_iif_relaciones}
 Un método numérico es consistente si y sólo si $\sum_{j=0}^kα_j=0$ y, además,
 \[\phi_f(x,y(x),...,y(x),0)=\left( \sum_{j=0}^kjα_j\right)f(x,y(x))\]
 \end{theorem}
@@ -998,7 +998,7 @@ Supongamos que el método es consistente. Consideramos el PVI trivial $y(x)=1$.
 
 Puesto que $y'=f=0$, la tercera hipótesis de los métodos numéricos nos garantiza que $\phi_f=0$ por lo que podemos escribir el residuo como:
 \[R_n = \sum_{j=0}^kα_jy(x_{n+j})\]
-Pyesto que $y(x)=1$ tenemos
+Puesto que $y(x)=1$ tenemos
 \[ \frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_j\]
 
 Pero, puesto que el método es consistente sabemos que el límite de $\frac{R_n}{h}$ tiende a 0, por tanto, tenemos que 
@@ -1032,12 +1032,36 @@ Procediendo igual que antes:
 
 Como hemos probado que la igualdad es cierta para $N$ podemos alcanzar todo $x$, y por tanto la segunda afirmación del teorema quedaría demostrada.
 
-\item 
+\item $\Longleftarrow$
+
+Por definición de residuo tenemos que
+\[R_n=\sum_{j=0}^kα_jy(x_{n+j})-\phi_f(x_n,y(x_n),…,y(x_{n+k-1}),h)\]
+
+Por el teorema del valor medio tenemos que con $x_n ≤ ε_{n,j} ≤ x_{n+j}$:
+\[y(x_{n+j})-y(x_n)=y'(ε_{n,j})(x_{n+j}-x_n) = y'(ε_{n,j})jh\]
+
+Sustituyendo el valor de $y(x_{n+j})$ en la fórmula del residuo tenemos:
+\[R_n=\sum_{j=0}^kα_jh(y(x_n)+jhy'(ε_{j,n}))-h\phi_f(x_n,y(x_n),…,y(x_{n+k-1}),h) = \]
+sabiendo que $\sum_{j=0}^kα_j=0$
+\[ = \sum_{j=0}^k jα_jhy'(ε_{n,j}) - h\phi_f\left(x_n,y(x_n), y(x_{n+h}) , …, y(x_{n + h(k-1)}), h\right) \]
+
+Finalmente, podemos escribir
+\[\frac{R_n}{h} = \sum_{j=0}^k jα_jf(ε_{n,j}, y(ε_{n,j})) - \phi_f\left(x_n,y(x_n), y(x_{n+h}) , …, y(x_{n + h(k-1)}), h\right)\]
+
+Ahora, despejamos la función $f$ de la segunda propiedad:
+\[f(ε_{n,j},y(ε_{n,j}) = \frac{1}{\sum_{j=0}^kjα_j}\phi_f(ε_{n,j},y(ε_{n,j}),...,y(ε_{n,j}),h)\]
+
+Si sustituimos en la fórmula del residuo el valor que $f$ que acabamos de calcular llegamos a:
+\[\frac{R_n}{h} = \sum_{j=0}^k jα_j\left(\frac{1}{\sum_{j=0}^kjα_j}\phi_f(ε_{n,j},y(ε_{n,j}),...,y(ε_{n,j}),h)\right) - \atop \phi_f\left(x_n,y(x_n), y(x_{n+h}) , …, y(x_{n + h(k-1)}), h\right)\]
+
+A partir de esta ecuación, podemos ver que si fijamos $x_n$ se cumple:
+\[\lim_{h \to 0} \frac{R_n}{h} = 0 \text{ por continuidad}\]
+por tanto, queda claro que el método es consistente.
 \end{itemize}
 \end{proof}
 
 \begin{example}
-	Veamos si el \textbf{método leap-frog es consistente} utilizando \ref{theorem:consist_iif_relaciones}:
+	Veamos si el \textbf{método del punto medio es consistente} utilizando \ref{theorem:consist_iif_relaciones}:
 
 	\[y_{n+2} = y_n + 2h f(x_{n+1},y_{n+1})\]
 	\[α_0=-1, α_1=0, α_2=1 \implies \sum_{j=0}^2 α_j = 0\]
@@ -1046,9 +1070,41 @@ Como hemos probado que la igualdad es cierta para $N$ podemos alcanzar todo $x$,
 	\[\phi_f(x_n,y_n,y_{n+1},h) = 2f(x_{n+1},y_{n+1}) = 2f(x_n+h, y_{n+1})\]
 	Por tanto:
 	\[\phi_f\left( x, y(x), y(x), h \right) = 2f(x+h,y(x)) \underset{h\to0}{\longrightarrow} \overbrace{2}^{\sum_{j=0}^2 jα_j}f(x,y(x))\]
-	el método cumple con la segunda afirmación del lado derecho del teorema, y podemos afirmar que leap-frog es consistente.
+	el método cumple con la segunda afirmación del lado derecho del teorema, y podemos afirmar que el método del punto meido es consistente.
 
+	También podríamos haber resuelto el problema directamente ``a pelo'' escribiendo
+	\[\frac{R_n}{h} = \frac{y(x_{n+2})-y(x_n)}{h}-2f(x_{n+1},y(x_{n+1})) = 2y'(ε_n)-2y'(x_{n+1})\]
+
+	Y puesto que $y'=f$ y sabemos que $f$ es continua, y tanto $x_{n+1}$ como $ε_n$ tienden a $x_n$ cuando $h$ tiende a 0 por lo que es claro que
+	\[\lim_{h \o 0} \frac{R_n}{h} = 0\]
 \end{example}
+
+\begin{obs}
+\begin{itemize}
+\item ¿Qué regularidad estamos pidiendo a $f(x,y(x))$?
+
+Simplemente exigimos que $f\in \algb{C}$ y sea Lipschitz en la segunda variable
+
+\item ¿Cuál es el orden de consistencia?
+
+El criterio de consistencia que no nos ayuda en este caso. Si consideramos que $f\in \algb{C}^2$ entonces
+\[y(x_{n+2})=y(x_n)+y'(x_n)2h + \frac{y''(x_n)}{2}(2h)^2 + O(h^3)\]
+Por otro lado,
+\[f(x_{n+1},y(x_{n+1}))=y'(x_{n+1}) = y'(x_n) + y''(x_n)2h + O(h^2)\]
+multiplicando por $2h$ a ambos lados en la última ecuación y restándoselo a la primera tenemos:
+\[y(x_{n+2})-y(x_n)-2hf(x_{n+1},y_{n+1})=O(h^3) \implies \frac{R_n}{h}=O(h^2)\]
+
+Con lo que llegamos a que el método será constante, al menos, de orden 2
+\end{itemize}
+\end{obs}
+
+Dado el primer polinomio característico
+\[p(ε) = \sum_{j=0}^kα_jε^j\]
+decimos que un método numérico satisface el \concept{criterio de la raíz} si todas las raíces del primer poliniomio característico tienen módulo menor o igual que 1 y las de módulo 1 son simples.
+
+\begin{theorem}
+Un método numérico es 0-estable si y sólo si el método numérico satisface el criterio de la raíz.
+\end{theorem}
 
 
 \chapter{Laboratorio}
@@ -1059,6 +1115,7 @@ Como hemos probado que la igualdad es cierta para $N$ podemos alcanzar todo $x$,
 \input{tex/EjerciciosMnedo.tex}
 \printindex
 \end{document}
+
 
 
 
