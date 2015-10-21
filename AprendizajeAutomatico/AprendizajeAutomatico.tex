@@ -3,7 +3,7 @@
 \title{Aprendizaje Automático}
 \author{Víctor de Juan}
 \date{15/16 C1}
-
+\usepackage{bm}
 % Paquetes adicionales
 
 % --------------------
@@ -838,12 +838,12 @@ Son aquellos que dan lugar a fronteras de decisión lineales. En 2 dimensíones 
 \begin{defn}[Clasificador lineal]
 Sea $h$ un clasificador lineal:
 
-\[h(\bar{x}) = \left\{ \begin{array}{cc}
- c_1 & \pesc{\bar{ω},\bar{x}} + ω_0 > 0\\ 
- c_2 & \pesc{\bar{ω},\bar{x}} + ω_0 < 0\\ 
+\[h(\vec{x}) = \left\{ \begin{array}{cc}
+ c_1 & \pesc{\vec{ω},\vec{x}} + ω_0 > 0\\ 
+ c_2 & \pesc{\vec{ω},\vec{x}} + ω_0 < 0\\ 
  \end{array} \right.\]
 
-Llamamos \concept{Frontera} al hiperplano $\pesc{\bar{ω},\bar{x}} + ω_0$.
+Llamamos \concept{Frontera} al hiperplano $\pesc{\vec{ω},\vec{x}} + ω_0$.
 
 \end{defn}
 
@@ -851,7 +851,7 @@ Llamamos \concept{Frontera} al hiperplano $\pesc{\bar{ω},\bar{x}} + ω_0$.
 Vamos a construir la frontera de manera genérica. Para ello, tenemos:
 
 \[
-\pesc{\bar{ω}\bar{x}} + ω_0 = 0 \to |\bar{x}|\cos(α) = \frac{-ω_0}{|\bar{ω}|}
+\pesc{\vec{ω}\vec{x}} + ω_0 = 0 \to |\vec{x}|\cos(α) = \frac{-ω_0}{|\vec{ω}|}
 \]
 
 \begin{center}
@@ -866,63 +866,180 @@ Veamos como surgen las fronteras lineales de forma ``natural'' haciendo suposici
 Consideramos un problema de dos clases $C_1,C_2$. Podemos escribir la probabilidad a posterior:
 
 \[
-P(C_1 | \bar{x}) = \frac{P(\bar{x}|C_1)P(C_1)}{P(\bar{x})} = \frac{P(\bar{x}|C_1)P(C_1)}{\sum P(\bar{x}|C_i)P(C_i)}\]
-Dividimos numerador y denoiador por $P(\bar{x}|C_1)(C_1)$
+P(C_1 | \vec{x}) = \frac{P(\vec{x}|C_1)P(C_1)}{P(\vec{x})} = \frac{P(\vec{x}|C_1)P(C_1)}{\sum P(\vec{x}|C_i)P(C_i)}\]
+Dividimos numerador y denoiador por $P(\vec{x}|C_1)(C_1)$
 \[
 \frac{1}{1+c} = \frac{1}{1+e^{-a}} = σ(a)
 \]
-donde $a = ln(c)$ y $c=\displaystyle\frac{P(\bar{x}|C_1)P(C_1)}{P(\bar{x}|C_2)P(C_2)}$
+donde $a = ln(c)$ y $c=\displaystyle\frac{P(\vec{x}|C_1)P(C_1)}{P(\vec{x}|C_2)P(C_2)}$
 
 ¿Qué hemos ganado con esto? Hemos reescrito Bayes como una \href{https://es.wikipedia.org/wiki/Funci\%C3\%B3n\_sigmoide}{sigmoidal}.
 
 Esto permite clasificar de la siguiente manera:
 
-\[P(\bar{x} | C_1) P (C_1) > P(\bar{x} | C_2) P (C_2) \implies \text{ elegimos } C_1\]
+\[P(\vec{x} | C_1) P (C_1) > P(\vec{x} | C_2) P (C_2) \implies \text{ elegimos } C_1\]
 
 Esto es equivalente a ``si a > 0, entonces elegimos $C_1$, sino, elegimos $C_2$''
 \end{defn}
 
-Suponemos que la veroimilitud sigue una distribución normal en $n$ dimensiones, siendo $\bar{µ_k}$ el vector de medias y $\Sigma$ la matriz de covarianzas. Todos los productos entre vectores son productos escalares. Ante cualquier tipo de duda (de que no cuadran las dimensiones, etc...) aplicar el producto escalar.
+Suponemos que la veroimilitud sigue una distribución normal en $n$ dimensiones, siendo $\bm{µ_k}$ el vector de medias y $\Sigma$ la matriz de covarianzas. Todos los productos entre vectores son productos escalares. Ante cualquier tipo de duda (de que no cuadran las dimensiones, etc...) aplicar el producto escalar.
 
 \[
-p(\bar{x}|C_{x} = \frac{1}{(2π)^{\frac{n}{2}}}\frac{1}{|\Sigma|^{\frac{1}{2}}} \exp \left\{  \frac{-1}{2} (\bar{x} - \bar{µ_k}) \Sigma_k^{-1} (\bar{x} - \bar{µ_k}) \right\} 
+p(\vec{x}|C_{x} = \frac{1}{(2π)^{\frac{n}{2}}}\frac{1}{|\Sigma|^{\frac{1}{2}}} \exp \left\{  \frac{-1}{2} (\vec{x} - \bm{µ_k}) \Sigma_k^{-1} (\vec{x} - \bm{µ_k}) \right\} 
 \]
 
-Además, suponemos 
+
+\subsection{Frontera de decisión con hiperplano (2 clases)}
+Suponiendo:
+
 \begin{itemize}
 	\item  tenemos 2 clases.
 	\item $\Sigma_1 = \Sigma_2 = I$
 \end{itemize}
 
-\subsubsection{Frontera de decisión con hiperplano (2 clases)}
-
 Vamos a construir la frontera de decisión con hiperplano para 2 clases:
 
 \[
-a = \ln\left( \frac{P(\bar{x}|C_1)P(C_1)}{P(\bar{x}|C_2)P(C_2)}\right) = \ln \left\{ \exp \left\{ \frac{\bar{x}-\bar{µ_1}}{2} - \frac{\bar{x} - \bar{µ_2}}{2} \right\} \frac{P(C_1)}{P(C_2)}\right\} = 
+a = \ln\left( \frac{P(\vec{x}|C_1)P(C_1)}{P(\vec{x}|C_2)P(C_2)}\right) = \ln \left\{ \exp \left\{ \frac{\vec{x}-\bm{µ_1}}{2} - \frac{\vec{x} - \bm{µ_2}}{2} \right\} \frac{P(C_1)}{P(C_2)}\right\} = 
 \]
 \[
-= \left( \frac{(\bar{x} - \bar{µ_2})^2}{2} - \frac{(\bar{x} - \bar{µ_2})^2}{2}\right) + \ln \frac{P(C_1)}{P(C_2)} = 0
+= \left( \frac{(\vec{x} - \bm{µ_2})^2}{2} - \frac{(\vec{x} - \bm{µ_2})^2}{2}\right) + \ln \frac{P(C_1)}{P(C_2)} = 0
 \]
 Si $P(C_1) = P(C_2)$, tenemos:
 \[
-\left( \frac{(\bar{x} - \bar{µ_2})^2}{2} - \frac{(\bar{x} - \bar{µ_2})^2}{2}\right) = 0
+\left( \frac{(\vec{x} - \bm{µ_2})^2}{2} - \frac{(\vec{x} - \bm{µ_2})^2}{2}\right) = 0
 \]
-Si $(\bar{x} - \bar{µ_2})^2 > (\bar{x} - \bar{µ_1})^2 \implies C_1$. ¿Porué $C_1$? Porque estamos más lejos de la media $\bar{µ_2}$ que de la media $\bar{µ_1}$. Es como vecinos próximos si sólo tuvieramos 2 vecinos, la media de 1 y la media del otro.
+Si $(\vec{x} - \bm{µ_2})^2 > (\vec{x} - \bm{µ_1})^2 \implies C_1$. ¿Porué $C_1$? Porque estamos más lejos de la media $\bm{µ_2}$ que de la media $\bm{µ_1}$. Es como vecinos próximos si sólo tuvieramos 2 vecinos, la media de 1 y la media del otro.
 
 Si por el contrario, $P(C_1) ≠ P(C_2)$, tenemos: 
 
 \[
-\frac{\bar{x}^2 + \bar{\mu}_2^2 - 2\bar{x}\bar{\mu}_2}{2} - \frac{\bar{x}^2 + \bar{\mu}_1^2 - 2\bar{x}\bar{\mu}_1}{2} + \ln\frac{P(C_1)}{P(C_2)} = 
+\frac{\vec{x}^2 + \vec{\mu}_2^2 - 2\vec{x}\vec{\mu}_2}{2} - \frac{\vec{x}^2 + \vec{\mu}_1^2 - 2\vec{x}\vec{\mu}_1}{2} + \ln\frac{P(C_1)}{P(C_2)} = 
 \]
 \begin{equation}
-= (\bar{\mu}_1 - \bar{\mu}_2) \bar{x} + \frac{1}{2} (\bar{\mu}_2^2 - \bar{\mu}_1^2) + \ln\frac{P(C_1)}{P(C_2)} = 0
+= (\vec{\mu}_1 - \vec{\mu}_2) \vec{x} + \frac{1}{2} (\vec{\mu}_2^2 - \vec{\mu}_1^2) + \ln\frac{P(C_1)}{P(C_2)} = 0
 \end{equation}
 Esto es un hiperplano que utilizaremos como frontera de decisión. 
 
 \begin{framed}
-En este caso, tenemos $\bar{ω} = \bar{µ_1} - \bar{µ_2}$ y $\bar{ω_0} = \frac{1}{2}(µ_2^2 - µ_1^2) + \ln \frac{P(C_1)}{P(C_2)}$
+En este caso, tenemos $\vec{ω} = \bm{µ_1} - \bm{µ_2}$ y $\vec{ω_0} = \frac{1}{2}(µ_2^2 - µ_1^2) + \ln \frac{P(C_1)}{P(C_2)}$
+
+Es decir, el hiperplano será:
+
+\[
+\pesc{ω,\vx} + ω_0 = 0 \implies \pesc{(\bm{µ_1} - \bm{µ_2}),\vx} + \frac{1}{2}(µ_2^2 - µ_1^2) + \ln \frac{P(C_1)}{P(C_2)}
+\]
 \end{framed}
+
+
+\subsubsection{Ampliamos las suposiciones I}
+
+\begin{itemize}
+	\item 2 clases
+	\item Verosimilitud normal en $D-$dimension con $Σ_{1} = Σ_2 = Σ$
+\end{itemize}
+
+Entonces, la frontera de decisión:
+
+\[
+a = 0 = \ln\left(\frac{P(\vx|C_1)P(C_1)}{P(\vx|C_2)P(C_2)} \right)
+\]
+
+Desarrollando igual que antes, obtenemos que la frontera de decisión óptima es un hiperplano:
+
+\[ω = Σ^{-1}(\bm{µ_1} - \bm{µ_2})\]
+\[ω_0 = \frac{1}{2} \bm{µ_1}Σ\bm{µ_1} + \frac{1}{2} \bm{µ_2}Σ\bm{µ_2} + \ln \left( \frac{P(C_1)}{P(C_2)}\right)\]
+
+
+Ahora vamos a obtener los parámetros de las gausianas por máxima verosimilitud, es decir: $\max_i\{P(D|H_i)\}$
+
+Tenemos: 
+\begin{align*}
+D &= \{(\vx_i,y_i) i=1,...,N_{train}\}\\
+H &= \{\bm{µ_1},\bm{µ_2},Σ\}
+\end{align*}
+
+Vamos a ello:
+
+\[
+P(D|H) = P(\{\vx_i,y_i\} | \bm{µ}_1\bm{µ_2}Σ) = \prod_i^{N_{train}} P(\vx_iy_i | \bm{µ_1},\bm{µ_2},Σ)
+\]
+
+Ahora aplicamos el logaritmo, derivamos e igualamos a 0.
+
+Este es el enfoque de regresión logística.
+
+\textcolor{blue}{Si te parece que queda colgado este final, a mi no me preguntes porque ha sido así de literal en clase}.
+
+\section{Regresión logística}
+
+Aunque la regresión logística se llame regresión logistica, no es un método de regresión. Es un método de clasificador.
+
+La probabilidad a posteriori de $C_1$ es:
+\[
+P(C_1 | \vx) = σ(a) = σ(\pesc{\bm{ω},\vx} + ω_0)
+\]
+¿Cuántos parámetros habría que estimar en $\bm{µ_1,µ_2},Σ$? Sabiendo que $P(\vx | C_i) = N(\bm{µ_i},Σ) $
+
+Tenemos  $2D$ por $\bm{µ_i}$ más, $\frac{D(DH)}{2}$ por $Σ$ y 2 ($P(C_i)$), es decir demasiados.
+
+En cambio, utilizando la probabilidad a posteriori de $C_i$, sólo hay que estimar $\bm{ω},ω_0$, es decir, $D+1$ parámetro.
+
+\paragraph{Notación:} Para simplificar, vamos a escribir:
+\[\bm{ω}_{new} = (ω_0, \bm{ω})\]
+\[\bm{x}_{new} = (1, \bm{x})\]
+¿Qué hemos ganado con esto? Algo más de compacidad, ya que $P(C_1 | \vx) = σ(\pesc{\bm{ω}_{new},\vx_{new}})$
+
+\begin{example}
+Disponemos de $N$ ejemplos.
+
+\[
+D = \{ (\vx_i,t_i) i=1,...,N\}
+\]
+
+donde $t_i = \left\{ \begin{array}{cc} 1 & x_i ∈ C_1 \\ 0 & x_i ∈ C_2\end{array}\right.$
+
+En regresión logística, 
+\begin{itemize}
+	\item $H = \bm{ω}$
+	\item $D = t_1,...,t_N$
+	\item $I = \bm{x_1},...,\bm{x_N}$
+\end{itemize}
+
+
+\textbf{Objetivo:} maximizar por $MV$ para encontrar los valores de $\bm{ω}$.
+
+La verosimilitud es:
+
+\[
+P(t_1,...,t_N | \bm{ω},\bm{x}_1,...,\vx_N) = \prod^N P(t_i | \bm{ω},\vx_i)
+\]
+
+Con la codificación de $t_i$, podemos escribir:
+
+\[
+P(t_i | \bm{ω},\vx_i) = σ\left(\pesc{\bm{ω},\vx_i}\right)^{t_i}·\left(1-σ(\pesc{\bm{ω},\vx_i})\right)^{(1-t_i)}
+\]
+
+Juntando y llamando a $σ_i = σ(\bm{ω},\vx_i)$:
+
+\[
+= ... = \prod^N σ_i^{t_i} (1-σ_i)^{(1-t_i)}
+\]
+
+Primero aplicamos el $-\ln$ para simplificar el cálculo y derivamos:
+
+...
+...
+...
+
+\paragraph{Conclusión:}
+
+10 minutos después sigue haciendo cuentas.
+
+
+
+\end{example}
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
