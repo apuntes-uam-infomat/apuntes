@@ -976,7 +976,7 @@ Ahora, con las dos sucesiones que tenemos, $\left\{y_n\right\}_{n=0}^∞, \left\
 \[\max_{k\leq n \leq N}\norm{y_n-y(x_n)} \leq C\left( \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)} + \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h}\right)\]
 
 Para demostrar la convergencia tenemos que ver que 
-\[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)}= 0 \implies \lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n)} \]
+\[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)}= 0 \implies \lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n)}=0 \]
 que queda trivialmente demostrada apoyándonos en la desigualdad deducida a partir de la 0-estabilidad.
 \end{proof}
 
@@ -1100,13 +1100,214 @@ Con lo que llegamos a que el método será constante, al menos, de orden 2
 \end{obs}
 
 Dado el primer polinomio característico
-\[p(ε) = \sum_{j=0}^kα_jε^j\]
+\[p(J) = \sum_{j=0}^kα_jJ^j\]
 decimos que un método numérico satisface el \concept{criterio de la raíz} si todas las raíces del primer poliniomio característico tienen módulo menor o igual que 1 y las de módulo 1 son simples.
 
-\begin{theorem}
+\begin{theorem}\label{theorem:criterio_raiz}
 Un método numérico es 0-estable si y sólo si el método numérico satisface el criterio de la raíz.
 \end{theorem}
 
+\begin{example}
+Consideremos el siguiente método numérico:
+\[y_{n+2}+y_{n+1}-2y_n = h\left( 5f(x_{n+1},y_{n+1}) -2f(x_n,y_n)\right)\]
+
+Vamos a estudiar su consistencia, para lo que comprobaremos que se satisfacen las dos propiedades del teorema \ref{theorem:consist_iif_relaciones}:
+\begin{enumerate}
+\item 
+\[\sum_{j=0}^2α_j = 1+1-2 = 0\]
+
+\item 
+\[\phi_f(x_n,y_n,y_{n+1},h) = 5f(x_{n+1},y_{n+1}) -2f(x_n,y_n)\]
+\[\phi_f(x,y(x),y(x),0) = 3f(x,y(x)) = \underbrace{\sum_{j=0}^2jα_j}_3f(x,y(x))\]
+\end{enumerate}
+
+Por tanto, queda claro que el método es consistente.
+
+Consideramos ahora el problema 
+\[y(x)=0 \ (f=0)\]
+
+Recordemos que un método numérico es 0-estable si para cada PVI existe una constante $C>0$ tal que para cada dos sucesiones $u_n,v_n$ que satisfacen:
+\[\sum_{j=0}^kα_ju_{n+j} = h\phi_f(x_n,u_n,...,u_{n+k-1},h)+hδ_n\]
+\[\sum_{j=0}^kα_jv_{n+j} = h\phi_f(x_n,v_n,...,v_{n+k-1},h)+hγ_n\]
+
+con $0≤n≤N-k$, se verifica que:
+\[\max_{k \leq n \leq N}\norm{u_n - v_n} \leq C\left( \max_{0 \leq n \leq k-1}\norm{v_n - u_n}+\max_{0 \leq n \leq N-k}\norm{δ_n - γ_n}\right)\]
+
+Vamos a estudiar el criterio de la raíz sobre sobre este PVI.
+
+El primer polinomio característico nos queda:
+\[P(J) = J^2+J-2 \implies J_+=1 \y J_-=-2\]
+
+También observar que, puesto que nuestro problema tiene $f=0$, se cumple:
+\[\sum_{j=0}^2α_jy_{n+j} = y_{n+2}+y_{n+1}-2y_n = 0\]
+
+Consideramos ahora la sucesión $u_n = J_-^n$ con lo que obtenemos:
+\[\sum_{j=0}^2α_ju_{n+j}=J_-^n\sum_{j=0}^2α_jJ_-^j=0\]
+
+Y definimos la sucesión $v_n=0$. 
+
+Si volvemos a la definición de 0-estabilidad con estas dos sucesiones, vemos que las sucesiones $δ_n$ y $γ_n$ han de ser 0. Por tanto, si queremos que se cumpla la condición de 0-estabilidad necesitamos que:
+\[\max_{k \leq n \leq N}\norm{u_n - v_n} \leq C\left( \max_{0 \leq n \leq k-1}\norm{v_n - u_n}\right)\]
+Pero, puesto que $\norm{u_n,v_n} = 2^n$ tenemos que $\max_{k \leq n \leq N}\norm{u_n - v_n} = 2^N $ y, además $\max_{0 \leq n \leq k-1}\norm{v_n - u_n} = 2$. 
+
+Sustituyendo estos datos, tenemos que para que el método sea 0-estable tiene que cumplirse que:
+\[2^N \leq 2C\]
+Podemos observar que no hay ninguna $C$ que satisfaga esta desigualdad, por lo que podemos concluir que el método no es 0-estable.
+\end{example}
+
+A raíz de este ejemplo podemos extraer dos conclusiones:
+
+\obs Las raíces del primer polinomio característico son importantes a la hora de estudiar la 0-estabilidad
+
+\obs Existen métodos numéricos consistentes que no son 0-estables.
+
+Una vez visto este ejemplo, que nos muestra la necesidad del teorema \ref{theorem:criterio_raiz}, procedemos a demostrarlo.
+\begin{proof}
+Como siempre, vamos a demostrar los dos sentidos de la implicación:
+\begin{itemize}
+\item $\implies$
+
+Vamos a probar esta implicación comprobando que si no se satisface el criterio de la raíz, entonces no podemos tener 0-estabilidad ($a \implies b \equiv \neg b \implies \neg a$)
+
+Consideramos el problema con $y'(x)=0$, lo que nos da $\sum_{j=0}^kα_jy_{n+j}$ = 0.
+
+Tomamos ahora el primer polinomio característico:
+\[\sum_{j=0}^kα_jJ^j\]
+
+Vamos a suponer que no se cumple el criterio de la raíz, lo cual puede ocurrir de dos formas diferentes, y ver que en esos casos no se satisface la condición de 0-estabilidad.
+\begin{enumerate}
+\item Supongamos que existe una solución del polinomio $ε$ tal que $|ε| >1$.
+
+Tomamos ahora las sucesiones:
+\[\left\{ \begin{array}{l}y_n = ε^n \implies \sum_{j=0}^ku_{n+j} = 0 \implies δ_n = 0 \\
+v_n = 0 \implies \sum_{j=1}^kv_{n+j}=0 \implies γ_n=0 \end{array}\right.\]
+
+Si el método fuese 0-estable, debería cumplirse que:
+\[|ε|^N \leq C |ε|^{k-1}\]
+Pero no existe ninguna $C$ que satisfaga la desigualdad, por lo que el método no es 0-estable.
+
+\item Supongamos que existe una solución doble del polinomio $ε$ tal que $|ε|=1$. 
+
+Por ser raíz doble tendremos que $p'(ε)=0$.
+
+Tomamos ahora las sucesiones:
+\[\left\{ \begin{array}{l}y_n = nε^n \implies \sum_{j=0}^ku_{n+j} = nε^n\sum_{j=0}^kα_jε^j = +ε^n\sum_{j=1}^kα_jjε^j = 0 \implies δ_n = 0 \\
+v_n = 0 \implies \sum_{j=1}^kv_{n+j}=0 \implies γ_n=0 \end{array}\right.\]
+
+Nuevamente, vemos que desigualdad tiene que cumplirse para que el método se considere 0-estable:
+\[N \leq C(k-1)\]
+y vemos que, de igual forma que en el apartado anterior, el método no puede ser 0-estable.
+\end{enumerate}
+
+Así queda probado que si el método no satisface el criterio de la raíz, entonces no será 0-estable. Es decir, \textbf{si el método es 0-estable entonces satisface el criterio de la raíz}
+
+\item $\Longleftarrow$
+
+Vamos a demostrar ahora que si se satisface el criterio de la raíz entonces el método será 0-estable.
+
+Para no complicar la notación, vamos a considerar problemas del tipo $y'(x)=f(x,y(x))$ con $\appl{y}{\real}{\real}$ y $\appl{f}{\real\times\real}{\real}$, aunque la demostración puede ser ``fácilmente'' extendida a problemas con $\appl{y}{\real^i}{\real^j}$
+
+Con el problema que estamos considerando, tenemos:
+\[\sum_{j=0}^k α_jy_{n+j} = h\phi_f(x_n,y_x,...,y_{n+k-1},h)\]
+Y vamos a considerar el vector columna $Y_n=(y_{n+k-1},...,y_n)$ y escribimos:
+\[Y_{n+1} = AY_n + h\cdot F(x_n,Y_n)\]
+siendo $A$ una matriz con 1s por debajo de la diagonal y el resto de elementos 0s excepto la primera fila donde tendremos los elementos $(-α_{k-a},...α_0)$ y donde $F$ es un vector columna con $\phi_f(x_n,y_x,...,y_{n+k-1},h)$ en su primera coordenada y el resto 0s.
+
+Podemos comprobar fácilmente que la ecuación matricial que hemos escrito es equivalente al sistema de ecuaciones:
+\[\left\{\begin{array}{l}y_{n+k}=\sum_{j=0}^k α_jy_{n+j} + h\phi_f(x_n,y_x,...,y_{n+k-1},h)\\
+y_{n+k-2} = y_{n+k-2}\\
+...\\
+...\\
+y_n = y_n\end{array}\right.\]
+
+Una vez tenemos el sistema podemos escribir:
+\[Y_{n+1} = A^{n+1}Y_0 + h\sum_{l=0}^nA^{n-l}F(x_l,Y_l) = A\cdot A^nY_0+hF(x_n,Y_n) +h\sum_{l=0}^{n-1}A^{n-1-l}F(x_l,Y_l)=\]
+\[=A\left(A^nY_0+h\sum_{l=0}^{n-1}A^{n-l-1}F(x_l,Y_l)\right)+hF(x_n,Y_n)=AY_n+hF(x_n,Y_n)\]
+
+Consieramos ahora las sucesiones:
+\[U_{n+1}=AU_n + hF(x_n,U_n)+hδ_n\]
+\[V_{n+1}=AV_n + hF(x_n,V_n)+hγ_n\]
+
+Estudiando su diferencia obtenemos:
+\[U_n-V_n = A^n(U_0,V_0)+h\sum_{l=0}^{n-1}A^{n-1-l}\left(F(x_n,U_l)-F(x_n,V_l)\right) + h\sum_{l=0}^{n-1}A^{n-1-l}(δ_n-γ_n)\]
+
+Supongamos que $|A^n|\leq M$. Entonces podremos escribir:
+\[|U_n-V_n| \leq M|U_0-V_0| + hLM\sum_{l=0}^{n-1}|U_l-V_l| + \underbrace{h(n-1)}_{\leq (b-a)}\max_n\norm{δ_n-γ_n} \implies\]
+\[\implies |U_n-V_n| \leq K + hLN \sum_{l=0}^{n-1} |U_l-V_l|\]
+
+Sea $\Psi_n=K + hLN \sum_{l=0}^{n-1} |U_l-V_l|$ podemos reescribir la desigualdad anterior como
+\[|U_n-V_n| \leq \Psi_n\]
+
+y podemos observar que
+\[\Psi_{n+1} - \Psi_n = hLM|U_n-V_n| \leq hLM\Psi_n \implies \Psi_{n+1} \leq (1+hLM)\Psi_n\implies \]
+\[\implies \Psi_{n+1} \leq (1+hLM)^n\Psi_0\]
+
+Finalmente podemos ver que:
+\[|\Psi_n| \leq e^{(b-a)LM}\Psi_0\]
+\[|U_n-V_n| \leq e^{(b-a)LM}\Psi_0\]
+con lo que queda probada la 0-estabilidad.
+
+\obs En la demostración hemos supuesto que $|A^n|\leq M$ sin haberlo demostrado por lo que, hasta que no lo probemos, no estará completada la demostración.
+
+Vamos a probarlo.
+\begin{proof}
+El primer polinomio característico coincide con el polinomio característico de la matriz $A$ y, por tanto, las soluciones de $P(J)$ son los autovalores de $A$.
+
+Por definición, si los autovalores de $A$ tienen módulo menor que 1 y el que tiene módulo 1 es simple, entonces $|A^n| \leq M \ \forall n$
+
+\textbf{Se trata de un resultado algebraico que sale de los contenidos de la asignatura por lo que tampoco le daremos más importancia.}
+\end{proof}
+\end{itemize}
+\end{proof}
+
+\begin{theorem}[Teorema más importante del curso]
+\[\text{ Consistencia } + \text{ 0-estabilidad } \iff \text{ Convergencia }\]
+\end{theorem}
+\begin{proof}
+Como tantas otras veces, habría que demostrar los dos lados de la implicación.
+\begin{itemize}
+\item $\implies$
+
+Ya está probado
+
+\item $\Longleftarrow$
+
+Vamos a hacer esta demostración por pasos.
+\begin{enumerate}
+\item Convergencia $\implies$ criterio de la raíz $\implies$ 0-estabilidad
+
+Vamos a demostrar que si no se cumple el criterio de la raiz entonces no tendríamos convergencia. Como ya hemos visto anteriormente, la negación del criterio de la raíz se divide en dos partes:
+
+\begin{enumerate}
+\item Supongamos que existe una solución del polinomio $ε$ tal que $|ε| >1$.
+
+Consideramos el PVI $y'=0$ con $y(0)=0$, con lo que la solución será $y(x)=0$.
+
+Tomamos ahora las sucesiones:
+\[\left\{ \begin{array}{l}y_n = hε^n \\
+y(x_n) = 0\end{array}\right.\]
+a partir de las cuales podemos escribir:
+
+\[\max_{0\leq n \leq k-1} \norm{y(x_n)-y_n} = h |ε|^{k-1}\]
+\[\max_{k \leq n \leq N} \norm{y(x_n)-y_n} = h|ε|^N=\frac{b-a}{N}|ε|^N\]
+
+Recordemos que para tener convergencia necesitamos 
+\[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)}= 0 \implies \lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n))} = 0\]
+
+Pero en nuestro caso, tenemos la igualdad de la izquierda pero no se cumple la igualdad asociada al límite de la derecha, puesto que $|ε|^N$ crece más rápido que el denominado $N$.
+
+Por tanto, al no satisfacerse el criterio de la raíz, no tenemos convergencia.
+
+\item Supongamos que existe una solución doble del polinomio $ε$ tal que $|ε|=1$. 
+
+Por ser raíz doble tendremos que $p'(ε)=0$.
+\end{enumerate}
+
+\item Convergencia $\implies$ consistencia
+\end{enumerate}
+\end{itemize}
+
+\end{proof}
 
 \chapter{Laboratorio}
 \input{tex/LaboratorioMnedo.tex}
@@ -1116,6 +1317,8 @@ Un método numérico es 0-estable si y sólo si el método numérico satisface e
 \input{tex/EjerciciosMnedo.tex}
 \printindex
 \end{document}
+
+
 
 
 
