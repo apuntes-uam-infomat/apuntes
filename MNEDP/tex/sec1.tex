@@ -1761,7 +1761,7 @@ Sabemos que $u(P) = u(Q)$ donde $Q$ es el punto de corte de la recta de pendient
 	&= u(C)\frac{\overline{QB}(\overline{-AQ})}{2\Delta x\Delta x}
 \end{align*}
 
-\paragraph{Esquema Lax-Wendroff}
+\subsubsection{Esquema Lax-Wendroff}
 $$U_j^{n+1}=U_{j-1}^n\frac{\nu(1+\nu)}{2}+U_j^n (1-\nu)(1+\nu)+U_{j+1}^n\frac{(1-\nu)}{2}(-\nu)$$
 
 $$U_j^{n+1} = U_j^n - \frac{\nu}{2}\left[U_{j+1}^n-U_{j-1}^n\right] + \frac{\nu^2}{2}\left[U_{j+1}^{n}-2U_{j}^{n}+U_{j-1}^{n}\right]$$
@@ -1880,4 +1880,138 @@ $$\underbrace{\frac{\left[U_j^{n+1}+U_{j+1}^{n+1}\right]-\left[U_j^{n}+U_{j+1}^{
 Para el error de truncación del método se realiza el desarrollo de Taylor en el punto $(x_{j+\frac{1}{2}}, t_{n+\frac{1}{2}})$ y se obtiene que
 $$T_j^n = O((\Delta x)^2)+O((\Delta t)^2)$$
 
-El esquema tiene orden de consistencia $2$ en ambas variables.
+El esquema tiene orden de consistencia $2$ en ambas variables, y se puede observar que en la práctica, el esquema es explícito.
+
+\paragraph{Condición CFL}
+La condición \textbf{CLFL} nos dice que la recta característica está dentro del dominio numérico de dependencia.
+
+En este esquema, la condición \textbf{CFL} se cumple siempre porque todas las rectas características entran dentro del dominio de dependencia, al ser este una ´´caja''.
+
+\paragraph{Análisis de Fourier}
+Buscamos $U_j^n = \lambda^ne^{ikj\Delta x}$.
+Si $u_0(x) = \sum_{m=-\infty}^\infty a_m e^{im\pi x}$ y tenemos que $u(x,t) = u_0(x-at)$, entonces
+$$u(x,t) = \sum_{m=-\infty}^\infty a_m e^{-im\pi at}e^{im\pi x}$$
+
+Dado que esto es igual a que
+$$u(x_j,t_n) = \sum_{m=-\infty}^\infty a_m e^{-im\pi an\Delta t}e^{im\pi j\Delta x}$$
+
+Tenemos que el factor de amplificación, tomando $k = m\pi$, será una aproximación a 
+$$\lambda \equiv e^{-ika\Delta xt}$$
+
+El resultado que se obtiene tras la simplificación es que, tomando $\xi = k\Delta x$:
+$$\lambda  = \frac{cos(\frac{\xi}{2})-i\nu sin(\frac{\xi}{2})}{cos(\frac{\xi}{2})+i\nu sin(\frac{\xi}{2})}$$
+
+Vemos que $|\lambda| \le 1$, luego el método es siempre estable y la condición de estabilidad coincide con la \textbf{CFL}. Al tener $\lambda = 1$, decimos que el esquema no tiene amortiguación, lo que quiere decir que la amplitud de la onda se mantiene. Para la velocidad de la onda, nos interesa la fase (o argumento) de $\lambda$.
+
+El argumento de $\lambda$, que se puede calcular haciendo las cuentas correspondientes, queda
+$$\arg(\lambda) = -2atan(\nu\cdot tg(\frac{\xi}{2}))$$
+
+Realizando un desarrollo de Taylor alrededor del punto $\xi$, obtenemos
+
+$$\arg(\lambda) = -\nu\xi\left[1+\frac{1}{12}(1-\nu^2)\xi^2+\hdots\right]$$
+
+La fase teórica es es $-ka\Delta t$, luego como
+$$-\nu\xi = -\frac{a\Delta t}{\Delta x}k\Delta x = -ka\Delta t$$
+
+Obtenemos que el error relativo en la fase es
+$$\frac{\arg(\lambda) - (-\nu \xi)}{-\nu\xi} = \frac{1}{12}(1-\nu^2)\xi^2+\hdots$$
+
+Es decir, de orden $2$.
+
+
+\subsubsection{Esquema Leap-frog}
+Este esquema es para la ecuación 
+$$u_t+au_x = 0$$
+
+El esquema es el siguiente
+$$\frac{U_j^{n+1}-U_j^{n-1}}{2\Delta t} + a_j^n \frac{U_{j+1}^n-U_{j-1}^n}{2\Delta x} = 0 $$
+
+El primer término es una aproximación a $u_t$ de orden $O((\Delta t)^2)$, y el segundo aproxima $u_x$ con un orden de $O((\Delta x)^2)$.
+
+El esquema involucra dos niveles de tiempo, lo que quiere decir que para poder implementarlo, se utiliza otro método de orden $2$ (como LW o Box) para obtener $U_j^1$.
+
+\paragraph{Condición CFL}
+La condición CFL es que $|\nu| \le 1$.
+
+\paragraph{Análisis de Fourier del método}
+
+Sea $\nu = a\frac{\Delta t}{\Delta x}$.
+
+$$U_j^{n+1} = U_{j}^{n-1}-\nu(U_{j+1}^n-U_{j-1}^n)$$
+
+Buscamos $U_j^n = \lambda^n e^{ikj\Delta x}$.
+
+Obtenemos que
+$$\lambda^2 = 1-\nu\lambda \left[e^{ik\Delta x}-e^{-ik\Delta x}\right]$$
+
+Escrito utilizando senos nos queda la ecuación:
+$$\lambda^2+2\nu isin(k\Delta x)\lambda -1 = 0$$
+
+Hallando las soluciones:
+$$\lambda = \frac{-2\nu isin(k\Delta x)\pm\sqrt{-4\nu^2sin^2(k\Delta x)+4}}{2}$$
+
+$$\lambda = -\nu isin(k\Delta x) \pm (1-\nu^2sin^2(k\Delta c))^{\frac{1}{2}}$$
+
+Finalmente
+$$\lambda = \pm c-ib$$
+
+donde
+$$c = (1-\nu^2sin^2(k\Delta x))^\frac{1}{2}$$
+$$b=-\nu sin(k\Delta x)$$
+
+Vamos a ver que módulo tiene:
+$$|\lambda|^2 = c^2+b^2 = 1$$
+
+Luego en este caso tenemos el mismo resultado que en el esquema Box, no tenemos amortiguación.
+
+Vamos a estudiar ahora el argumento de estos números complejos.
+
+Sea $\lambda_1 = c-ib$:
+$$\arg(\lambda_1) = -\nu\xi (1-\frac{1}{6}(1-\nu^2)\xi^2+\hdots)$$
+
+Luego en error en fase para $\lambda_1$ es
+$$\frac{\arg(\lambda_1)-(-\nu\xi)}{-\nu\xi} = -\frac{1}{6}(1-\nu^2)\xi^2$$
+
+Es decir, orden 2 en $\xi$.
+
+$\lambda_2$ va con la fase cambiada de signo y se multiplica por $-1$ a cada paso en tiempo. Esto genera una onda espuria que a cada paso en tiempo va oscilando.
+
+\subsubsection{Ecuación de Burgers}
+Todos los métodos que hemos visto se pueden aplicar también a 
+$$u_t+(f(u))_x = 0$$
+
+Ya que
+$$f(u)_x = \frac{\partial f}{\partial u}\frac{\partial u}{\partial x} = a(u) u_x$$
+
+Obteniendo
+$$u_t+a(u)u_x = 0$$
+
+La ecuación de Burguers tiene la forma
+$$u_t+uu_x = 0$$
+
+Que es equivalente a
+$$u_t+(\frac{1}{2}u^2)_x = 0$$
+
+Las características son las soluciones de
+$$\frac{\partial x}{\partial t} = a$$
+
+Es decir
+$$\frac{\partial t}{\partial x} = \frac{1}{a}$$
+
+Las características son rectas con pendiente $\frac{1}{u_0}$.
+
+En nuestro caso
+$$\frac{\partial t}{\partial x} = \frac{1}{u_0}$$
+
+\subsubsection{Estudio comparativo de los métodos vistos}
+
+\begin{center}
+\begin{tabular}{c|c|c|}
+	\cline{2-3}
+	& Error en $|\lambda|$              & Error en fase                      \\ \hline
+	\multicolumn{1}{|c|}{Upwind}       & $-\nu(1-\nu)\xi^2$                & $-\frac{1}{6}(1-\nu)(1-2\nu)\xi^2$ \\ \hline
+	\multicolumn{1}{|c|}{Lax-Wendroff} & $-\frac{1}{4}\nu^2(1-\nu^2)\xi^4$ & $-\frac{1}{6}(1-\nu^2)\xi^2$       \\ \hline
+	\multicolumn{1}{|c|}{Box}          & 0                                 & $\frac{1}{12}(1-\nu^2)\xi^2$       \\ \hline
+	\multicolumn{1}{|c|}{Leap-frog}    & 0                                 & $-\frac{1}{6}(1-\nu^2)\xi^2$       \\ \hline
+\end{tabular}
+\end{center}
