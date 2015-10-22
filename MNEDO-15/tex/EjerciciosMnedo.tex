@@ -49,7 +49,7 @@ Puesto que el dato inicial es 0 y no hay ninguna constante positiva sumando en l
 
 Si el método de Euler no nos lleva a ningún sitio, parece lógico pensar que la función debe tener algún problema que la hace salir del conjunto de funciones sobre las que se puede emplear este método.
 
-Así podemos comprobar que la función $f(t_n,y_n)=\frac{3}{2}y^{\frac{1}{3}}$ no es lipschitz en la segunda variable. Vamos a comprobarlo.
+Así parece lógico pensar que la función $f(t_n,y_n)=\frac{3}{2}y^{\frac{1}{3}}$ no es lipschitz en la segunda variable. Vamos a comprobarlo.
 
 Sea $L$ la constante que define la condición de Lipchitz, siendo el intervalo en el que estamos trabajando el intervalo $[0, \infty)$. 
 
@@ -104,7 +104,7 @@ El residuo no es más que la diferencia entre el valor real de la función en $x
 \[R_n = y(x_{n+1})-y_{n+1}\]
 
 \spart
-\[R_n = y(x_{n+1})-y(x_{n+1}) = y(x_{n+1})-y(x_n) - \frac{h}{2}\left( y'(x_{n+1})+y'(x_n)\right)\]
+\[R_n = y(x_{n+1})-y_{n+1} = y(x_{n+1})-y(x_n) - \frac{h}{2}\left( y'(x_{n+1})+y'(x_n)\right)\]
 
 Por Taylor podemos ver que:
 \[\left\{\begin{array}{l}
@@ -232,11 +232,15 @@ Ahora tenemos dos casos posibles, y sabiendo que el orden de un método es $\fra
 
 	Sabemos por tanto que $p$ interpola $f$ en $x_{n-2},x_{n-1},x_n$:
 
-	{\inputtikz{EJRC_interpolar}}
+	\begin{center}
+	\inputtikz{EJRC_interpolar}
+	\end{center}
 
 	Para simplificar los cálculos vamos a tomar el cambio de variable $u=\frac{x_{n+1}-x}{h}$ para que así el polinomio interpole $f(u,y(u))$ en los puntos $3,2,1$. ($u(x_{n-2})=3, u(x_{n-1})=2, u(x_n)=1$).
 
-	{\inputtikz{EJRC_interpolar_transformed}}
+	\begin{center}
+	\inputtikz{EJRC_interpolar_transformed}
+	\end{center}
 
 
 	Es decir, tras el cambio de variable el polinomio interpolador queda como
@@ -272,6 +276,7 @@ Técnicamente el ejercicio está hecho en clase pero yo me preocupé de copiarlo
 
 \begin{itemize}
 \item Es continua con respecto a las variables $t,y,h$
+
 Definimos la aplicación global contractiva
 \[F(\phi) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_n+h\phi) \right]\]
 
@@ -361,7 +366,68 @@ En este ejercicio primero probaremos que los métodos son consistentes usando el
 
 {\color{gray} Es exactamente igual que el siguiente apartado y no tengo tiempo para pasarlo a limpio.}
 
+\textcolor{blue}{Tranquilos, en contra de la apretada agenda de SATANÁS, vuestro amado delegado tiene tiempo suficiente y completará el ejercicio.}
+
+El método de Adams-Bashforth de dos pasos se trata de un método basado en cuadratura que emplea la relación
+\[y(x_{n+2}) - y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) \dif x\]
+
+donde $f(x,y(x))$ se aproxima por medio de la recta interpolante entre los puntos $(x_n,y(x_n))$ y $(x_{n+1},y(x_{n+1}))$, es decir:
+\[f(x,y(x)) \approx f(x_n, y(x_n)) \frac{x-x_{n+1}}{x_n-x_{n+1}}+f(x_{n+1},y(x_{n+1}))\frac{x-x_n}{x_{n+1}-x_n}\]
+
+Finalmente, el método queda expresado como:
+\[y_{n+2} = y_{n+1}+\frac{h}{2}\left( 3f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+\textbf{El ejercicio propiamente dicho empieza a partir de esta última igualdad, lo anterior sólo era para entrar en calor}
+
+\begin{enumerate}
+\item \textbf{Consistencia}
+
+Es sencillo ver que \[\sum_{j=0}^{k=2} α_j = 0 - 1 + 1 = 0\]
+
+Para este método, tenemos la función incremento
+\[\phi_f(x_n,y_n,h) = \frac{1}{2}\left(3f(x_n+h,y_n+h\phi_f(x_n,y_n,h))-f(x_n,y_n)\right)\]
+
+De donde podemos ver que:
+\[\phi_f(x,y(x),0) = \frac{1}{2} \left(3f(x,y(x)) - f(x,y(x)) \right) = f(x,y(x)\]
+
+Para poder aplicar el teorema \ref{theorem:consist_iif_relaciones} necesitamos ver que:
+\[\phi_f(x,y(x),0)  = \sum_{j=0}^2jα_jf(x,y(x))=-f(x,y(x)) + 2 f(x,y(x)) = f(x,y(x))\]
+
+Por tanto, podemos aplicar el teorema \ref{theorem:consist_iif_relaciones} y garantizar así que el método es consistente.
+
+\item \textbf{0-estabilidad}
+
+Consideramos dos sucesiones: $\left\{ y_n \right\}_{n=0}^N$, $\left\{ y(x_n) \right\}_{n=0}^N$ y buscamos las sucesiones $δ_n,γ_n$ asociadas, que serán aquellas que satisfagan las ecuaciones:
+
+\[\sum_{j=0}^kα_jy_{n+j} = h\phi_f(x_n,y_n,...,y_{n+j},h)+hδ_n\]
+\[\sum_{j=0}^kα_jy(x_{n+j}) = h\phi_f(x_n,y(x_n),...,y(x_{n+j}),h)+hγ_n\]
+
+Para poder garantizar la 0-estabilidad, por definición, debemos probar que 
+\[\max_{k \leq n \leq N}\norm{y_n - y(x_n)} \leq C\left( \max_{0 \leq n \leq k-1}\norm{y(x_n) - y_n}+\max_{0 \leq n \leq N-k}\norm{δ_n - γ_n}\right)\]
+
+Por la propia definición del método numérico tenemos que $δ_n=0$. Vamos a estudiar la diferencia entre las sucesiones:
+
+\[y(x_{n+2})-y_{n+2} = y(x_{n+2}) - y_{n+1} - \frac{h}{2}\left( 3f(x_{n+1},y_{n+1}) - f(x_n,y_n)\right)\]
+
+Desarrollando con Taylor en torno a $x_n$ tenemos:
+\[y(x_{n+2}) = y(x_n)+2hf(x_n,y(x_n))+O(h^2)\]
+\[y_{n+1} = y_n +hf(x_n,y_n)+O(h^2)\]
+\[f(x_{n+1},y_{n+1}) = y'_{n+1} = f(x_n,y_n) + O(h)\]
+
+Sustituyendo en la diferencia tenemos:
+\[y(x_{n+2})-y_{n+2} = y(x_n)-y_n+ h(2f(x_n,y(x_n))-f(x_n,y_n)) - hf(x_n,y_n)+ O(h^2) =\]
+\[=y(x_n)-y_n+2h(f(x_n,y(x_n))-f(x_n,y_n)) + \underbrace{O(h^2)}_{\text{residuo = }hδ_n}\]
+
+Ahora procedemos a acotar la diferencia:
+\[\underbrace{\norm{y(x_{n+2})-y_{n+2}}}_{\max_{k \leq n \leq N}\norm{y_n - y(x_n)}} \leq \norm{y(x_n)-y_n} + 2hL\norm{y_n-y(x_n)}+hδ_n \leq \underbrace{(Kh)}_C\left(\underbrace{\norm{y_n-y(x_n)}}_{\max_{0 \leq n \leq k-1}\norm{y(x_n) - y_n}}+δ_n\right)\]
+
+Con lo que vemos que, efectivamente, se cumple la condición de 0-estabilidad
+\end{enumerate}
+
 \spart \textbf{Método de 3 pasos}:
+
+\begin{enumerate}
+\item \textbf{Consistencia}
 
 Se cumple la primera afirmación de la parte derecha de \ref{theorem:consist_iif_relaciones}:
 \[\sum_{j=0}^{k=3} α_j = 1 - 1 + 0 + 0 = 0\]
@@ -369,10 +435,12 @@ Se cumple la primera afirmación de la parte derecha de \ref{theorem:consist_iif
 En este caso $\phi_f(x_n,y_n,y_{n+1},y_{n+2}, h) = \frac{23}{12}f(x_n+2h, y_{n+2}) - \frac{16}{12}f(x_n+h,y_{n+1}) + \frac{5}{12}f(x_n,y_n)$, y por tanto se cumple la segunda afirmación de la parte derecha de \ref{theorem:consist_iif_relaciones}:
 \[\phi_f(x,y(x),y(x),y(x), 0) = \frac{23}{12}f(x+2h, y(x)) - \frac{16}{12}f(x,y(x)) + \frac{5}{12}f(x,y(x)) = \overbrace{1}^{\sum_{j=0}^{k=3} jα_j} f(x,y(x))\]
 
+\item \textbf{0-estabilidad}
 Por tanto \textbf{el MN es 0-estable} y por tanto es consistente. Así que solo nos queda ver que el MN es 0-estable:
 
 Tomamos las sucesiones $\left\{ y_n \right\}_{n=0}^N$, $\left\{ y(x_n) \right\}_{n=0}^N$ y las restamos:
 
+\small
 \begin{equation*}
 	\begin{multlined}[\textwidth]
 		y(x_{n+3}) - y_{n+3} = y(x_{n+2}) - y_{n+2} + h\frac{23}{12}\left(f(x_{n+2},y(x_{n+2})) - f(x_{n+2},y_{n+2})\right) + \\[1em]
@@ -380,8 +448,10 @@ Tomamos las sucesiones $\left\{ y_n \right\}_{n=0}^N$, $\left\{ y(x_n) \right\}_
 		\shoveleft{\qquad + h \left\{- \frac{16}{12}\left(f(x_{n+1},y(x_{n+1})) - f(x_{n+1},y_{n+1})\right) + h \frac{5}{12}\left(f(x_n,y(x_n)) - f(x_n,y_n)\right) \right\} + \overbrace{hδ_n}^{R_n}}\\
 	\end{multlined}
 \end{equation*}
+\normalsize
 
 Tomando valores absolutos a ambos lados y usando que $f$ es Lipschitz en la segunda variable:
+\small
 \begin{equation*}
 	\begin{multlined}[\textwidth]
 		\abs{y(x_{n+3}) - y_{n+3}} ≤ \\[1em]
@@ -392,8 +462,9 @@ Tomando valores absolutos a ambos lados y usando que $f$ es Lipschitz en la segu
 		\shoveleft{\qquad ≤ 3\left(1+\frac{23}{12}Lh\right) \left\{\max_{0≤j≤2}\abs{y(x_{n+j})-y_{n+j}} + \abs{δ_n} \right\}}\\
 	\end{multlined}
 \end{equation*}
+\normalsize
 
-Con esto acabamos de demostrar que el método es 0-estable, y como también es consistente podemos decir que es convergente.
-
+Con lo que queda claro que el método es 0-estable
+\end{enumerate}
 
 \end{problem}
