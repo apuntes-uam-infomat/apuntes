@@ -259,3 +259,9 @@
 \msgn#m
 \mfin#m
 \sop#m
+\esplloc#m
+\esplloc[1]#m
+\esplloc[1][\real^N]#m
+\espl#m
+\espl[1]#m
+\espl[1][\real^N]#m
