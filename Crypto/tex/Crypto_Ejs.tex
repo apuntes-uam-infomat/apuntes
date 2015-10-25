@@ -2474,6 +2474,13 @@ Los cajeros de todos los bancos estarán preparados para poder calcular con las 
 
 Explica por qué si una ladrón se hace con una tarjeta, y tiene el equipo para leer y escribir en los chips, le será muy difícil utilizarla, pero podrá con mucha facilidad crear tarjetas falsas utilizables.
 \solution
+\doneby{Pedro}
+
+Para empezar, será muy fácil falsificar la tarjeta puesto que basta con coger una tarjeta cualquiera, tomar su $f$, inventarnos un pin $PIN2$ y grabar en la tarjeta $(f,f(PIN2))$.
+
+Así podremos pagar con esta tarjeta empleando el pin $PIN2$.
+
+Sin embargo, no podrá utilizar la tarjeta tal cual puesto que no hay forma de conocder $PIN$ a partir de $f(PIN)$ puesto que no es posible calcular la inversa de $f$, que sólo es conocida por los bancos.
 
 \end{problem}
 
@@ -2492,5 +2499,27 @@ En la guía de una red de comunicaciones aparece la siguiente información:
 
 Interceptamos un mensaje que el usuario $A$ ha enviado al usuario $B$, y que sabemos que termina con el nombre de $A$. El final del mensaje cifrado es $EOE$. ¿Cómo se llama el usuario $A$?
 \solution
+
+\doneby{Pedro}
+
+% (85,43) -- (69,5)
+Lo que tenemos que hacer es descifrar el mensaje $EOE$ para lo que necesitamos factorizar $n_B$.
+
+Puesto que estamos trabajando con números pequeños es sencillo comprobar que $n_B=69 = 23\times 3$ con lo que tenemos $p=3$, $q = 23$.
+
+A modo de comprobación, podemos ver que $e_B=5$ es coprimo con $(p-1)\cdot (q-1) = 44$.
+
+Ahora calculamos el inverso de $e_B$:
+\[d_B= \frac{1}{5} \mod 44 = 9\]
+
+Este caso difiere un poco del caso habitual del algoritmo RSA visto en clase. Dado un mensaje $m$, el usuario $A$ envía a $B$ el valor
+\[c = (m-e_B)^e_B\]
+Para recuperar el valor de $m$, el usuario $B$ deberá calcular:
+\[c^{d_B}-e_B = m-e_B+e_B = m\]
+
+Una vez conocemos $e_B^{-1}$ podemos descifrar el mensaje:
+\[EOE = 12 \mod 6^3 \]
+
+\[f_{d_B}^{-1}(12) = (12)^9 + 5\mod 69 = 32 \mod 69 = 32 \mod 36 = YO\]
 
 \end{problem}
