@@ -114,7 +114,7 @@ Entonces:
 \end{prop}
 
 \begin{proof}
-\[\sum (e_i - \mue) x_i = \sum (e_i - \mue) (x_i - \vx) \]
+\[\sum (e_i - \vec{µ}) x_i = \sum (e_i - \vec{µ}) (x_i - \vx) \]
 Por otro lado:
 
 \[
@@ -301,13 +301,16 @@ Podemos normalizar y buscar una catidad pivotal (como hacíamos en estadística 
 
 Pero aquí nos encontramos con que necesitamos $σ$, la varianza de los errores. Esta varianza a menudo no es conocida (porque no sabemos con exactitud cuál es la recta verdadera) y tenemos que estimarla. 
 
-Para estimarla, parece razonable usar \[ \hat{σ} =\frac{\sum_{i=1}^n e_i^2}{n-2}\] 
+Para estimarla, parece razonable usar \[ \hat{σ} = S_R =\frac{\sum_{i=1}^n e_i^2}{n-2}\] 
 
 \begin{expla}
 Recordamos que para que estimar la varinza, utilizamos (por el lema de fisher) $n-1$ de denominador para que el estimador sea insesgado. Esto sale de que en la demostración, hay una matriz de rango $n-1$ ya que existe una restricción.
 
-Siguiendo este razonamiento, en este caso tenemos 2 restricciones\footnote{$\sum e_i = 0$ y $\sum e_ix_i = 0$}, por lo que si lo demostráramos rigurosamente, aparecería una matriz de rango $n-2$ y por eso es el denomiador. De esta manera, conseguimos un estimador insesgado
+Siguiendo este razonamiento, en este caso tenemos 2 restricciones\footnote{$\sum e_i = 0$ y $\sum e_ix_i = 0$}, por lo que si lo demostráramos rigurosamente, aparecería una matriz de rango $n-2$ y por eso es el denomiador. De esta manera, conseguimos un estimador insesgado.
+
 \end{expla}
+
+Además, $S_R$ se denomina \concept{varianza residual}
 
 \begin{prop}
 Una pequeña generalización del lema de Fisher:
@@ -317,9 +320,10 @@ Una pequeña generalización del lema de Fisher:
 
 Además, es independiente de $\hat{β_1}$
 
-\textcolor{red}{Revisar: donde no se muy bien qué es $S_R$}
-
 \end{prop}
+
+
+
 \begin{proof}
 Esta proposición es un caso particular de un teorema que veremos más adelante.
 \end{proof}
@@ -339,9 +343,103 @@ Ahora que conocemos la distribución, podemos calcular el intervalo de confianza
 
 \textcolor{red}{No entiendo nada de esto.}
 \[
-IC_{1-α}(β_1) \equiv \left[ \hat{β_1} \pm \mathcal{T}_{n-2,\frac{α}{2}}\frac{S_R}{\sqrt{S_{xx}}}\right] \equiv \left[ \gor{Y} \pm \mathcal{T}_{n-1,\frac{α}{2}}\frac{S}{\sqrt{n}} \right]
+IC_{1-α}(β_1) \equiv \left[ \hat{β_1} \pm \mathcal{T}_{n-2,\frac{α}{2}}\frac{S_R}{\sqrt{S_{xx}}}\right] \equiv \left[ \gor{Y} \pm \mathcal{T}_{n-1,\frac{α}{2}}\frac{S_R}{\sqrt{n}} \right]
 \]
 \end{prop}
+
+\subsubsection{Contraste en R}
+
+
+\begin{lstlisting}
+> # Ajusta el modelo
+> regresion = lm(Fracaso~Renta)
+> summary(regresion)
+
+> lm(formula = Fracaso ~ Renta)
+Residuals:	Min	1Q	Median	3Q	Max
+		-7.8717 -3.7421	0.5878	3.0368	11.5423
+---
+Coefficients:	Estimate Std.	Error 	t-value	Pr(>|t|)
+(Intercept)	38.4944		3.6445	10.562	7.37e-10 ***
+Renta 		-1.3467		0.2659	-5.065	5.14e-05 ***
+---
+Signif. codes: [...]
+Residual standard error: 4.757 on 21 degrees of freedom
+Multiple R-Squared: 0.5499,
+Adjusted R-squared: 0.528
+\end{lstlisting}
+
+
+Aquí, la fila de intercept es el término independiente y renta es la pendiente. Además, los p-valores son para el contraste $\hat{β_i} = 0$, dentro de la hipótesis $β_i \geq 0$. \footnote{Si queremos contrastar si es positivo, nos vamos al caso límite que lo separa y contrastamos eso}.
+
+En este caso, el p-valor para $\hat{β_1} = 7.37e-10$, con lo que no podemos rechazar la hipótesis.
+
+
+\subsubsection{Predicciones}
+
+Sea $(x_1,y_1),...,(x_n,y_n) \to y_i = β_0 + β_1x_i + ε_i$.
+
+Dado una nueva observación $x_0$, tenemos 2 problemas para predecir:
+
+\begin{itemize}
+	\item Inferencia sobre $m_0 \equiv \esp{y_0 | x_0} = β_0 + β_1x_0$
+
+	En este caso, $$\hat{m_0} = \hat{β_0} + \hat{β_1}x_0$$
+
+	¿Cómo es este estimador?
+
+	\[\esp{\hat{m_0}} = β_0 + β_1x_0 = m_0\]
+	\[\var{\hat{m_0}} = ... = σ^2\left[\frac{1}{n} + \frac{(x_0-\bar{x})^2}{S_{xx}} \right] \]
+
+	\subitem Intuitivamente, lo que significa el segundo sumando de la varianza es que ``cuanto más cerca esté $x_0$ de la media, mejor será la estimación''.
+
+	\textbf{Conclusión:}
+
+	\[
+		\hat{m_0} \sim N\left( m_0, σ^2\left[\frac{1}{n} + \frac{(x_0-\bar{x})^2}{S_{xx}} \right]\right)
+	\]
+
+
+
+	\subitem \textbf{Intervalo de confianza} para $m_0$ utilizando la fórmula de intervalos de confianza:
+
+	\[
+IC_{1-α}(m_0) \equiv \left[ \hat{m_0} \pm \mathcal{T}_{n-2,\frac{α}{2}}S_R\sqrt{\frac{1}{n} + \frac{(x - \gor{x})^2}{S_{xx}}}\right] 
+\]
+
+	\item Predecir $Y_0$ usamos de nuevo:
+
+	\[
+\hat{Y_0} = \hat{β_0} + \hat{β_1}x \to Y_0 - Y \equiv N\left( 0, σ^2\left( 1 + \frac{1}{n}+  \frac{(x-\gor{x})^2}{S_{xx}}\right) \right)
+	\]
+
+	Donde la varianza ha sido calculada:
+
+	\[
+	\var{Y_0 - \hat{Y_0}} = \underbrace{\var{Y_0}}_{σ^2} - \var{\hat{Y_0}} + \underbrace{2 \cov{Y_0,\hat{Y_0}}}_{ = 0 \text{ (indep.) }} = σ^2 + σ^2\left( \frac{1}{n}+  \frac{(x-\gor{x})^2}{S_{xx}} \right)
+	\]
+
+
+	Este es un problema más complicado, ya que tenemos que tener en cuenta el término de error $ε_i$ y es por esto que aparece el 1 en la varianza. Tenemos que tener en cuenta la incertidumbre.
+
+	Estandarizando y cambiando $σ$ por $S$, tenemos:
+
+	\[
+	\frac{Y_0 - \hat{Y_0}}{S_r \sqrt{1 + \frac{1}{n} + \frac{(x-\gor{x})^2}{S_{xx}}}} \equiv \mathcal{T}_{n-2} 
+	\]
+
+	Ya que tenemos una normal estandarizada dividida por su .... que por definición, es una $\mathcal{T}$ de student.
+
+	Ahora, vamos a construir el \concept{intervalo de predicción} (cambia ligeramente la interpretación)
+
+	\[
+1 - α = P\left\{ -\mathcal{T}_{n-2;\frac{α}{2}} < \frac{Y_0 - \hat{Y_0}}{...} < \mathcal{T}_{n-2;\frac{α}{2}}    \right\} = P \left\{ Y_0 \in \left[ \hat{Y_0} \pm \mathcal{T}_{n-2;\frac{α}{2}} S_R \sqrt{1+\frac{1}{n}+...} \right]  \right\}
+	\]
+\end{itemize}
+
+Ahora vamos a hacer unos ejemplos numéricos.
+
+
 
 \subsection{Regresión lineal múltiple}
 
