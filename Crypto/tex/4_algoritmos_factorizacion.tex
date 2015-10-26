@@ -198,7 +198,7 @@ Por hipótesis tenemos que $b^{n-1}=1 \mod n$, por tanto:
 \[b^{n-1} = 1 \mod p^r = a^{n-1} = 1 \mod p^r \implies ord(a) =p|n-1\]
 
 \item[b)]
-Tras llegar a la contradicción del apartado anterior sabemos que $n=p_1...p_r$ con $p_i \neq p_j$. Sea $p | n$ entonces $n=pn'$ con $(n',p)=1$.
+Tras llegar a la contradicción del apartado anterior sabemos que $n=p_1...p_r$ con $p_i \neq p_j$. Sea $p | n$ tenemos que $n=pn'$ con $(n',p)=1$.
 
 Sabemos entonces que $(\ent_p)^*=<a>$ es cíclico.
 
@@ -211,3 +211,79 @@ Si $n-1 = q(p-1)+r$ con $0 < r < p-1$ tenemos que $b^{n-1}=1 \mod n$ lo que impl
 \end{itemize}
 \end{itemize}
 \end{proof}
+
+Korset, con su teorema, dió un criterio para detectar números que fuesen primos en todas las bases. Sin embargo, nunca encontró un número que cumpliese estas propiedades y no fué hasta el año 1910 cuando Carmichael encontró que 561 es un número de Carmichael.
+
+Otros ejemplos de números de Carmichael son 1105, 252601, 62745 y 9746347772161.
+
+\begin{prop}
+Todo número de Carmichael tiene, al menos, 3 factores primos distintos.
+\end{prop}
+\begin{proof}
+Supongamos que tenemos un número de Carmichael $n=p\cdot q$, con $p<q$, que sólo tiene dos factores primos.
+
+Entonces $q-1 | n-1$ pero $n-1 =pq-1=p(q-1)+p-1$ lo que implicaría que $q-1|p-1$ pero esto es imposible puesto que $p<q$.
+\end{proof}
+
+Si los números de Carmichael fuesen finitos podríamos hacer una lista con todos ellos de forma que al tratar de encontrar nuevos números primos si obtenemos uno de la lista podemos descartarlo directamente.
+
+No obstante, \textbf{Alford-Gramville-Pomeanle} en 1994 demostraron que 
+\[|\{c \tq \text{ c es de Carmichael y } c < x\}| > x^{2/7}\]
+de donde se extiende que cuando $x$ tiende a infinito, tenemos infinitos números de Carmichael.
+
+Con esto llegamos al gran problema del algoritmo probabilístico de factorización que hemos definido. El test da por válidos los números de Carmichael (que no lo son) y no tenemos forma de comprobar si el número obtenido es o no de Carmichael salvo aplicando el teorema de Korset, pero esto nos requiere factorizar.
+
+\begin{example}
+\textbf{Vamos a comprobar si 21 es un n'umero primo}.
+
+Empezamos a aplicar nuestro algoritmo. Al azar tomamos $b=13$, que es coprimo con 21 y el test nos dice que:
+\[13^{20} \mod 21 = (13^2)^{10} \mod 21 =1^{10} \mod 21 =1 \mod 21\]
+con lo que hemos pasado el test.
+\end{example}
+
+Este ejemplo nos sirve para ilustrar una idea importante, que apareció en los parciales del año pasado. Si $a^2 = 1 \mod n$ sabemos que $n$ no es primo.
+
+Si $n$ fuese primo tendr'iamos que $\ent_{n}$ sería un cuerpo y la ecuación $x^2-1 = 0 $ tendría exactamente dos soluciones en $\ent_{n}$ que son $x=\pm 1 = 1, n-1$.
+
+Y es en esta idea en lo que se basará nuestro nuevo test de primalidad.
+
+\subsection{Test de primalidad de Miller-Marsin (1974)}
+\begin{defn}[Pseudoprimo fuerte en base $b$]
+Sea $n \in \ent$ impar con $n>9$ y $n-1=r2^s$ siendo $r$ impar y $s \geq 1$, diremos que $n$ es \textbf{pseudoprimo fuerte} en base $b$ si $(n,b)=1$ y para algún $0 \leq i \leq s-1$ se cumple
+\[b^{r2^i}=-1\mod n\]
+\end{defn}
+
+La idea de esta definición es que si $n$ es primo, tenemos:
+\[(b^r)^{2^s} \mod n=b^{n-1} = 1 \mod n\]
+y por tanto
+\[(b^r)^{2^{s-1}} \mod n = \pm 1 \mod n\]
+puesto que tiene que ser un número que, en el cuerpo $\ent_n$ tenga cuadrado igual a 1, por lo que sólo podría ser $\pm 1$
+
+Si $(b^r)^{2^{s-1}}=-1$ satisface la condición inicial y lo declaro pseudoprimo fuerte. Si fuese $1$, repetimos el procedimiento.
+
+Es decir, si $n$ es primo, entonces será pseudoprimo fuerte en toda base $b$ tal que $(b,n)=1$.
+Pero esto no es más que una forma de caracterizar primos pero nosotros necesitamos justo lo contrario, a fin de poder determinar cuándo un número es primo o no.
+
+\begin{theorem}
+Si $n$ no es primo entonces no es pseudoprimo fuerte para al menos $\frac{1}{4}$ de los $b\in [1,n]$. Es decir, ``no hay números de Carmichael fuertes"
+\end{theorem}
+
+A partir de este teorema podemos desarrollar el \concept{Test de Miller-Marsin} de primalidad:
+\begin{enumerate}
+\item Elijo $b\in[1,n]$ de forma aleatoria y calculo $(b,n)$. Si el máximo común divisor es distinto de $1$, entonces hemos factorizado $n$ y por tanto $n$ no sería primo.
+\item Si $(b,n)=1$ miro si $n$ es peudoprimo fuerte en base $b$. Si no lo es entonces $n$ no es primo
+\item Si $n$ es pseudoprimo fuerte en base $b$ vuelvo al paso 1.
+\end{enumerate}
+
+Si repetimos el test $x$ veces, la probabilidad de que pasemos el tets todas esas veces es de $\left(\frac{3}{4}\right)^x$. Es decir, la probabilidad de decir que un número $n$ es primo sin serlo es de $\left(\frac{3}{4}\right)^x$.
+
+Podemos ver que este algoritmo nos requiere calcular potencias de la forma $b^r \mod n$, que tiene un coste de $O(\log^4n)$. Tras esto tendremos que elevar al cuadrado estos valores de forma recurrente, necesitando $O(\log n)$ operactiones. 
+
+Esta última potencia deberá calcularse unas $s=O(\log n)$ veces por lo que en total necesitaremos:
+\[d\cdot O(\log^5 n)\text{ operaciones}\]
+donde $d$ es lo bastante grande para que $\left(\frac{3}{4}\right)^d < \frac{1}{10^{50}}$
+
+Si la \textbf{hipótesis de Riemann generalizada} es cierta tenemos que
+\[n \text{ no es primo } \implies \exists b \in [1,n] \text{ t.q.} n \text{ no es pesudo primo fuerte en base } b\]
+
+Entonces puedo probar todas las bases $b=2,3,4,...,2\log^2 n$.
