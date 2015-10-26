@@ -1038,8 +1038,92 @@ Primero aplicamos el $-\ln$ para simplificar el cálculo y derivamos:
 10 minutos después sigue haciendo cuentas.
 
 
+\paragraph{En la clase siguiente} se tomó la decisión de mejor optimizar ejemplo a ejemplo.
 
 \end{example}
+
+
+\begin{example}
+Sea $\vec{ω} = \{ -1,\frac{1}{3},\frac{2}{3} \}$ y queremos clasificar los datos $x_1 = (0,0)$ y $x_2 = (3,1.5)$. Los coeficientes se han calculado tomando como clase de referencia o clase principal $C_1$.
+
+
+\begin{itemize}
+	\item[$x_1$] \[\pesc{\vec{ω},(1,x_1)} = \pesc{\left(-1,\frac{1}{3},\frac{2}{3}\right), (1,0,0)} = -1 \]
+
+	Y ahora aplicamos la sigmoidal:
+
+	\[P(C_1 | x_1) = \frac{1}{1+e^{-(-1)}} = 0.27\]
+
+	\subitem Comentamos que $P(C_2 | x_1) = 1 - P(C_1 | x_1)$
+
+	\item[$x_2$] \[\pesc{\vec{ω} , \left(1,3,1.5\right)} = ... = 1 \]
+
+	 Y ahora aplicamos la sigmoidal:
+
+	\[P(C_1 | x_2) = \frac{1}{1+e^{-1}} = 0.73\]
+\end{itemize}
+
+
+\obs Es interesante ver que son los complementarios. ¿A qué se debe esto? A que están a la misma distancia de la recta frontera.
+
+\end{example}
+
+\subsection{Algoritmo de la regresión logística}
+
+Para aumentar la verosimilitud de $t_i$ del ejemplo $\vec{x_i}$ hay que mover la recta $\vec{ω}$ en sentido opuesto al gradiente $(σ_i - t_i)\vec{x_i}$ y proporcional a una constante de aprendizaje $\eta = \vec{ω} + \vec{ω} - \eta (σ_i - t_i)\vec{x_i}$
+
+\paragraph*{Algoritmo}
+
+Definimos 2 parámetros: $\eta$ y $epocas$ (estos parámetros se darán como argumento)
+
+\begin{itemize}
+	\item[1] Generamos un $\vec{ω}$ aleatorio con componentes entre $-1$ y $1$.
+	\item[2] for (ie=1;ie<epocas;ie++) for(i = 1; i < N; i++)
+	\subitem[2.1] calculamos $σ_i = σ(\pesc{\vec{ω},\vec{x}_i})$
+	\subitem[2.2] Actualizamos $\vec{ω} = \vec{ω} - \eta (σ_i - t_i)\vec{x_i}$
+	\item[3] return $\vec{ω}$
+\end{itemize}
+
+El coste del entrenamiento del algorimo es $O(epocas·N·\#atributos$
+
+
+\begin{example}
+\begin{center}
+\begin{tabular}{cccc}
+$x_1$ & $x_2$ & t & \\
+0&0&0&$C_2$\\
+1&1&0&$C_2$\\
+0&1&0&$C_2$\\
+1&1&1&$C_1$
+\end{tabular}
+\end{center}
+
+Tomamos $\eta = 1$ y arbitrariamente $\vec{ω} = \{ -0.3,0,0.4 \}$
+
+La frontera de decisión entonces es: \[-0.3 + 0x_1 + 0.4x_2 = 0 \to x_w = \frac{0.3}{0.4}\]
+
+Ejemplo: $\vec{x} = (1,0,0)$
+
+\[ \pesc{\vec{ω},\vec{x}} = -0.3 \]
+\[ σ(-0.3) = \frac{1}{1+e^{-(-0.3)}} = 0.43\]
+
+Está bien claisificado, ya que da $C_2$ (la principal es $C_1$).
+
+\[
+\vec{ω} = \vec{ω} - \eta (σ - t)\vec{x} = (-0.3,0,0.4) -1(0.43-0)(1,0,0) = (0.73,0,0.4)
+\]
+
+
+Vamos a hacer otra iteración del bucle. Ahora toca $\vec{x} = (1,1,0)$:
+
+\[\pesc{\vec{ω},\vec{x}} = 0.73\]
+...
+\[
+\vec{ω} = (-1.06,-0.33,-0.4)
+\]
+
+\end{example}
+
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
