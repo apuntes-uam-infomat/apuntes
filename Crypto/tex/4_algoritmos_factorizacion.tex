@@ -39,7 +39,7 @@ Si queremos comprobar si un número es primo, no podemos depender de la factoriz
 \begin{itemize}
 \item $\Longleftarrow$
 
-Supongamos que $n$ no es primo. Entonces tenemos difernetes casos: 
+Supongamos que $n$ no es primo. Entonces tenemos diferentes casos: 
 \begin{enumerate}
 \item $n=n_1n_2$ con $1<n_1<n_2<n$
 
@@ -66,7 +66,7 @@ y la ecuación $a^2-1=0\mod n$ tiene, como mucho, dos raíces en un cuerpo.
 
 En este caso, estas raíces serían $a=1$, $a=(n-1)$.
 
-Por tanto, puesto que estamos en $\ent_p$, todo elemento tiene su inverso por lo que al escribir $(n-1)!$ estamos multiplicando todos los elementos del cuerpo, por lo que cada factor tendrá estará multiplicado por su inverso y se cancelará, excepto $1$ y $(n-1)$ que son sus propios inversos.
+Por tanto, puesto que estamos en $\ent_p$, todo elemento tiene su inverso por lo que al escribir $(n-1)!$ estamos multiplicando todos los elementos del cuerpo, por lo que cada factor estará multiplicado por su inverso y se cancelará, excepto $1$ y $(n-1)$ que son sus propios inversos.
 
 Así nos queda:
 \[(n-1)! \mod n = 1 \cdot (n-1) \mod n = n-1 \mod n = -1 \mod n\]
@@ -105,10 +105,10 @@ Decimos que un número $p$ es pseudoprimo en base $a$ si se cumple que
 
 Una vez visto esto podemos ver el lema en que se basan los test probabilísticos.
 \begin{lemma}
-Si existe $b_0$ coprimo con $n$ tal que $b_0^{n-1}\neq 1 \mod n$ (es decir, tenemos una prueba de que $n$ no es primo), entonces $b^{n-1} \neq 1 \mod n$ para, \textbf{al menos la mitad} de los $b$ posibles en $[1,n-1]$ coprimos con $n$.
+Si existe $b_0$ coprimo con $n$ tal que $b_0^{n-1}\neq 1 \mod n$ (es decir, tenemos un número que no satisface el pequeño teorema de Fermat, por lo que $n$ no ser'ia primo), entonces $b^{n-1} \neq 1 \mod n$ para, \textbf{al menos la mitad} de los $b$ posibles en $[1,n-1]$ coprimos con $n$.
 \end{lemma}
 
-Con este lemma, si $n$ no es primo, entonces $b^{n-1} \neq 1 \mod n$ con probabilidad mayor que $\frac{1}{2}$. Por tanto, si tomo al azar 200 valores $b$ y todos pasan el test, la probabilidad de que el número sea compuesto es menor que $\left( \frac{1}{2}\right)^{200} \approx \left(\frac{1}{10}\right)^{60}$
+Con este lemma, si $n$ no es primo, entonces $b^{n-1} \neq 1 \mod n$ con probabilidad mayor que $\frac{1}{2}$. Por tanto, si tomo al azar 200 valores $b$ y todos pasan el test (todos satisfacen el teorema de Fermat), la probabilidad de que el número sea compuesto es menor que $\left( \frac{1}{2}\right)^{200} \approx \left(\frac{1}{10}\right)^{60}$
 
 Veamos la demostración del lemma
 \begin{proof}
@@ -117,6 +117,8 @@ Consideramos el conjunto de valores $\{a_1,...1_r\} \subset \left(\ent_n\right)^
 
 Entonces $n$ no es pseudoprimo en la bases $\{b_0a_1,...,b_0a_r\}$ ya que 
 \[(b_0a_i)^{n-1} = b_0^{n-1}a_i^{n-1} = b^{n-1} \neq 1 \mod n\]
+
+Es decir, \textbf{Si existe una base en la que no es pesudoprimo} entonces por cada base en la que sea pseudo primo tenemos otra en la que no lo es con lo que queda claro que al menos en la mitad de los casos no será pesudoprimo.
 \end{proof}
 
 Vamos a ver ahora cómo podríamos construir un test probabilístico de primalidad de manera incremental.
@@ -151,8 +153,9 @@ Lo que nos interesa es comprobar si existen números de Carmichael (evidentement
 \begin{theorem}[Teorema de Korset (1899)]
 Sea $n \in \ent$ son equivalentes:
 \begin{enumerate}
-\item \[b^n=b \mod n \ \forall b \in \ent\]
-\item \[b^{n-1} = 1 \mod n \ \forall b \in \ent, \ t.q. \ (b,n)=1 \]
+\item \[b^n=b \mod n \ \forall b \in \ent_n\]
+\item $n$ es un número de Carmichael, es decir:
+\[b^{n-1} = 1 \mod n \ \forall b \in \ent_n, \ t.q. \ (b,n)=1 \]
 \item n es libre de cuadrados, es decir:
 \[a^2|n \implies a = \pm 1 \text{ si p es primo } \neg p^2 | n\]
 O lo que es lo mismo, si $p$ es primo y $p$ divide a $n$ entonces $p-1$ divide a $n-1$
@@ -172,10 +175,10 @@ Sabiendo que $n$ es libre de cuadrados tenemos que:
 \[b^n = b \mod n \iff b^n = b \mod p \ \forall p|n\]
 
 \begin{proof}
-Si $p|n$ entonces 
+Para cualquier primo $p$ que divida a $n$ tenemos 
 \[b^n = b \mod p \iff 0^n=0 \mod p \]
 
-Por otro lado:
+Por otro lado, puesto que estamos considerando que $n$ es libre de cuadrados, sabemos que $p-1$ divide a $n-1$ por lo que podemos escribir:
 \[(b,p)=1 \implies b^n=bb^{n-1} = bb^{(p-1)k}=b\left(b^{p-1}\right)^k=b\mod p\]
 \end{proof}
 
@@ -195,7 +198,9 @@ Por el teorema chino del resto, sabemos que existe un elemento $b \in \ent_n$ ta
 \[\left\{\begin{array}{l}b=a\mod p^r \\ b=1 \mod n' \end{array}\right.\]
 
 Por hipótesis tenemos que $b^{n-1}=1 \mod n$, por tanto:
-\[b^{n-1} = 1 \mod p^r = a^{n-1} = 1 \mod p^r \implies ord(a) =p|n-1\]
+\[b^{n-1} = 1 \mod p^r \implies a^{n-1} = 1 \mod p^r \implies ord(a) =p|n-1\]
+
+Pero entonces tenemos que $p$ divide a $n$ y también a $n-1$ con lo que tenemos que $p$ divide a $1$, que es una contradicción.
 
 \item[b)]
 Tras llegar a la contradicción del apartado anterior sabemos que $n=p_1...p_r$ con $p_i \neq p_j$. Sea $p | n$ tenemos que $n=pn'$ con $(n',p)=1$.
@@ -212,7 +217,7 @@ Si $n-1 = q(p-1)+r$ con $0 < r < p-1$ tenemos que $b^{n-1}=1 \mod n$ lo que impl
 \end{itemize}
 \end{proof}
 
-Korset, con su teorema, dió un criterio para detectar números que fuesen primos en todas las bases. Sin embargo, nunca encontró un número que cumpliese estas propiedades y no fué hasta el año 1910 cuando Carmichael encontró que 561 es un número de Carmichael.
+Korset, con su teorema, dió un criterio para detectar números que fuesen primos en todas las bases. Sin embargo, nunca encontró un número que cumpliese estas propiedades y no fué hasta el año 1910 cuando Carmichael observó que 561 es un número de Carmichael.
 
 Otros ejemplos de números de Carmichael son 1105, 252601, 62745 y 9746347772161.
 
@@ -222,28 +227,36 @@ Todo número de Carmichael tiene, al menos, 3 factores primos distintos.
 \begin{proof}
 Supongamos que tenemos un número de Carmichael $n=p\cdot q$, con $p<q$, que sólo tiene dos factores primos.
 
-Entonces $q-1 | n-1$ pero $n-1 =pq-1=p(q-1)+p-1$ lo que implicaría que $q-1|p-1$ pero esto es imposible puesto que $p<q$.
+Entonces, por el teorema de Korset, sabemos que 
+\[q-1 | n-1\]
+pero sabemos que 
+\[n-1 =pq-1=p(q-1)+p-1\]
+lo que implicaría que $q-1|p-1$ pero esto es imposible puesto que $p<q$.
 \end{proof}
 
-Si los números de Carmichael fuesen finitos podríamos hacer una lista con todos ellos de forma que al tratar de encontrar nuevos números primos si obtenemos uno de la lista podemos descartarlo directamente.
+Si los números de Carmichael fuesen finitos podríamos hacer una lista con todos ellos de forma que al tratar de encontrar nuevos números primos podamos descartar todos los de la lista.
 
-No obstante, \textbf{Alford-Gramville-Pomeanle} en 1994 demostraron que 
+No obstante, el \textbf{resultado de Alford-Granville-Pomeanle} obtenido en 1994 demuestra que 
 \[|\{c \tq \text{ c es de Carmichael y } c < x\}| > x^{2/7}\]
 de donde se extiende que cuando $x$ tiende a infinito, tenemos infinitos números de Carmichael.
 
-Con esto llegamos al gran problema del algoritmo probabilístico de factorización que hemos definido. El test da por válidos los números de Carmichael (que no lo son) y no tenemos forma de comprobar si el número obtenido es o no de Carmichael salvo aplicando el teorema de Korset, pero esto nos requiere factorizar.
+Con esto llegamos al gran problema del algoritmo probabilístico de factorización que hemos definido. El test considera como primos a los números de Carmichael (que no lo son) y no tenemos forma de comprobar si el número obtenido es o no de Carmichael, salvo aplicando el teorema de Korset, pero esto nos requiere factorizar por lo que es inviable.
 
 \begin{example}
-\textbf{Vamos a comprobar si 21 es un n'umero primo}.
+\textbf{Vamos a comprobar si 21 es un número primo}.
 
 Empezamos a aplicar nuestro algoritmo. Al azar tomamos $b=13$, que es coprimo con 21 y el test nos dice que:
 \[13^{20} \mod 21 = (13^2)^{10} \mod 21 =1^{10} \mod 21 =1 \mod 21\]
 con lo que hemos pasado el test.
 \end{example}
 
-Este ejemplo nos sirve para ilustrar una idea importante, que apareció en los parciales del año pasado. Si $a^2 = 1 \mod n$ sabemos que $n$ no es primo.
+Este ejemplo nos sirve para ilustrar una idea importante, \textcolor{blue}{que apareció en los parciales del año pasado\footnote{Estos parciales se encuentran resueltos al final de estos apuntes}}. 
 
-Si $n$ fuese primo tendr'iamos que $\ent_{n}$ sería un cuerpo y la ecuación $x^2-1 = 0 $ tendría exactamente dos soluciones en $\ent_{n}$ que son $x=\pm 1 = 1, n-1$.
+\begin{mdframed}
+Si $a^2 = 1 \mod n$ sabemos que $n$ no es primo.
+\end{mdframed}
+
+Si $n$ fuese primo tendríamos que $\ent_{n}$ sería un cuerpo y la ecuación $x^2-1 = 0 $ tendría exactamente dos soluciones en $\ent_{n}$ que son $x=\pm 1 = 1, n-1$.
 
 Y es en esta idea en lo que se basará nuestro nuevo test de primalidad.
 
@@ -259,7 +272,7 @@ y por tanto
 \[(b^r)^{2^{s-1}} \mod n = \pm 1 \mod n\]
 puesto que tiene que ser un número que, en el cuerpo $\ent_n$ tenga cuadrado igual a 1, por lo que sólo podría ser $\pm 1$
 
-Si $(b^r)^{2^{s-1}}=-1$ satisface la condición inicial y lo declaro pseudoprimo fuerte. Si fuese $1$, repetimos el procedimiento.
+Si $(b^r)^{2^{s-1}}=-1$ satisface la condición inicial por lo que podemos decir que $n$ es pseudoprimo fuerte en base $b$. Si fuese $1$, repetimos el procedimiento.
 
 Es decir, si $n$ es primo, entonces será pseudoprimo fuerte en toda base $b$ tal que $(b,n)=1$.
 Pero esto no es más que una forma de caracterizar primos pero nosotros necesitamos justo lo contrario, a fin de poder determinar cuándo un número es primo o no.
@@ -283,7 +296,9 @@ Esta última potencia deberá calcularse unas $s=O(\log n)$ veces por lo que en 
 \[d\cdot O(\log^5 n)\text{ operaciones}\]
 donde $d$ es lo bastante grande para que $\left(\frac{3}{4}\right)^d < \frac{1}{10^{50}}$
 
-Si la \textbf{hipótesis de Riemann generalizada} es cierta tenemos que
+Al margen de este algoritmo existe otra idea: si la \textbf{hipótesis de Riemann generalizada} es cierta tenemos que
 \[n \text{ no es primo } \implies \exists b \in [1,n] \text{ t.q.} n \text{ no es pesudo primo fuerte en base } b\]
 
 Entonces puedo probar todas las bases $b=2,3,4,...,2\log^2 n$.
+
+No obstante este procedimiento sería muy largo y estaría apoyándose en una hipótesis aún sin demostrar.
