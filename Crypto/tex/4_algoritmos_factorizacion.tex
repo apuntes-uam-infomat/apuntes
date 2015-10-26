@@ -16,7 +16,7 @@ El número de primos menores que un número $x$ es:
 \end{theorem}
 
 Una vez tenemos el número de primos existentes (cosa que en una situación real no se tiene pues $n$ es enorme), tendríamos que hacer un total $π(x)$ divisiones y, puesto que cada divisón nos supone $O(\log^3(n))$ bit-operaciones, tenemos que el total del algoritmo nos supone:
-\[O(\log^3(n))\cdot O\left(\frac{\sqrt{n}}{\log(\sqrt{n})}\right) = O\left( e^{\frac{1}{2}\log(n)}\log^2(n)\right)\]
+\[O(\log^3(n))\cdot O\left(\frac{\sqrt{n}}{\log(\sqrt{n})}\right) = O\left( e^{\frac{1}{2}\log(n)}\log^2(n)\right) \text{ operaciones }\]
 
 \begin{example}
 Supongamos que queremos factorizar un número del orden de $10^{75}$ empleando el ordenador mas rápido del punto.
@@ -25,12 +25,12 @@ El ordenador mas rápido del punto es capaz de realizar 33,86 PETAFLOPS, es deci
 
 Puesto que un año tiene $3,1537 \cdot 10^{7}$ segundos, tenemos que en un año podemos realizar, \textbf{con el ordenador más potente del mundo} un total de $10^{24}$ operaciones.
 
-Suponiendo que cada división es una operación (que no es así), necesitaremos $10^{50}$ años para poder factorizar el número $10^75$.
+Suponiendo que cada división es una operación (que no es así), necesitaremos $10^{50}$ años para poder factorizar el número $10^{75}$.
 \end{example}
 
 \section{Test de primalidad}
 
-Si queremos comprobar si un número es primo, no podemos necesitar factorizar el número, puesto que entonces no podríamos comprobar la primalidad de números grandes. Para ello nos apoyamos en el siguiente teorema.
+Si queremos comprobar si un número es primo, no podemos depender de la factorización del mismo, puesto que entonces no podríamos comprobar la primalidad de números grandes. Para hacerlo nos apoyamos en el siguiente teorema.
 
 \begin{theorem}[Teorema de Wilson (1770)]
 \[n \text{ es primo } \iff (n-1)! = -1 \mod n\]
@@ -60,7 +60,7 @@ En esta ocasión
 \item $\implies$
 
 Dado un elemento $a\in \ent_n$ tenemos:
-\[a=a^{-1} \mod \iff a^2 = 1 \mod n \iff a^2-1 = m \mod n\]
+\[a=a^{-1} \mod n \iff a^2 = 1 \mod n \iff a^2-1 = m \mod n\]
 
 y la ecuación $a^2-1=0\mod n$ tiene, como mucho, dos raíces en un cuerpo. 
 
@@ -69,7 +69,7 @@ En este caso, estas raíces serían $a=1$, $a=(n-1)$.
 Por tanto, puesto que estamos en $\ent_p$, todo elemento tiene su inverso por lo que al escribir $(n-1)!$ estamos multiplicando todos los elementos del cuerpo, por lo que cada factor tendrá estará multiplicado por su inverso y se cancelará, excepto $1$ y $(n-1)$ que son sus propios inversos.
 
 Así nos queda:
-\[(n-1)! \mod n = 1 \cdot (n-1) \mod n = n-1 \mod n = -1 \mod n \implies (n-1)! \text{ es primo }\]
+\[(n-1)! \mod n = 1 \cdot (n-1) \mod n = n-1 \mod n = -1 \mod n\]
 \end{itemize}
 \end{proof}
 
@@ -105,7 +105,7 @@ Decimos que un número $p$ es pseudoprimo en base $a$ si se cumple que
 
 Una vez visto esto podemos ver el lema en que se basan los test probabilísticos.
 \begin{lemma}
-Si existe $b_0$ coprimo con $n$ tal que $b_0^{n-1}\neq 1 \mod n$, entonces $b^{n-1} \neq 1 \mod n$ para, \textbf{al menos la mitad} de los $b$ posibles en $[1,n-1]$ coprimos con $n$.
+Si existe $b_0$ coprimo con $n$ tal que $b_0^{n-1}\neq 1 \mod n$ (es decir, tenemos una prueba de que $n$ no es primo), entonces $b^{n-1} \neq 1 \mod n$ para, \textbf{al menos la mitad} de los $b$ posibles en $[1,n-1]$ coprimos con $n$.
 \end{lemma}
 
 Con este lemma, si $n$ no es primo, entonces $b^{n-1} \neq 1 \mod n$ con probabilidad mayor que $\frac{1}{2}$. Por tanto, si tomo al azar 200 valores $b$ y todos pasan el test, la probabilidad de que el número sea compuesto es menor que $\left( \frac{1}{2}\right)^{200} \approx \left(\frac{1}{10}\right)^{60}$
@@ -143,7 +143,7 @@ Sin embargo, esta versión tiene un problema: \textbf{¿Qué ocurre si $n$ es ps
 \subsection{Números de Carmichael}
 
 \begin{defn}[Número de Carmichael]
-Un \textbf{número de carmichael} es un número compuesto tal que $b^{n-1}=1 \mod n$ para todo $b$ coprimo con $n$.
+Un \textbf{número de Carmichael} es un número compuesto tal que $b^{n-1}=1 \mod n$ para todo $b$ coprimo con $n$.
 \end{defn}
 
 Lo que nos interesa es comprobar si existen números de Carmichael (evidentemente existen, pues de lo contrario no hablaríamos de ellos), ver cuántos son y si existe alguna forma útil de caracterizarlos.
@@ -181,20 +181,33 @@ Por otro lado:
 
 \item $2 \implies 3$
 
-Supongamos que $n$ no es libre de cuadrados, es decir, supongamos que existe un primo $p$ tal que $n=p^rn'$ siendo $r>2$ y $(n',p)=1$.
+\begin{itemize}
+\item[a)] Supongamos que $n$ no es libre de cuadrados, es decir, supongamos que existe un primo $p$ tal que $n=p^rn'$ siendo $r>2$ y $(n',p)=1$.
 
 En estas condiciones tenemos
 \[\left| \left(\ent_n\right)^*\right| = \varphi(p^r)=p^{r-1}(p-1) \implies p|\varphi(p^r)\]
 donde la última implicación es válida puesto que $r>2$
 
-Sabemos por tanto que
+Sabemos, por el teorema de Cauchy, que
 \[\exists a \in \left(\ent_{p^r}\right)^* \tq ord(a)=p \text{ es decir } \left\{\begin{array}{l}a\neq 1 \mod p^r \\ a^p=1 \mod p^r \end{array}\right.\]
 
 Por el teorema chino del resto, sabemos que existe un elemento $b \in \ent_n$ tal que:
 \[\left\{\begin{array}{l}b=a\mod p^r \\ b=1 \mod n' \end{array}\right.\]
 
-Por hipótesis teníamos que ...
+Por hipótesis tenemos que $b^{n-1}=1 \mod n$, por tanto:
+\[b^{n-1} = 1 \mod p^r = a^{n-1} = 1 \mod p^r \implies ord(a) =p|n-1\]
 
-TO BE CONTINUED...
+\item[b)]
+Tras llegar a la contradicción del apartado anterior sabemos que $n=p_1...p_r$ con $p_i \neq p_j$. Sea $p | n$ entonces $n=pn'$ con $(n',p)=1$.
+
+Sabemos entonces que $(\ent_p)^*=<a>$ es cíclico.
+
+Por el teorema chino del resto sabemos que 
+\[\exists b \in (\ent_p)^* \tq \left\{\begin{array}{l}b=a\mod p \\ b=1 \mod n \end{array}\right.\] 
+
+Si $n-1 = q(p-1)+r$ con $0 < r < p-1$ tenemos que $b^{n-1}=1 \mod n$ lo que implica que
+\[b^{n-1}=1 \mod p \implies a^{n-1} = 1 \mod p \implies (a^{p-1})^qa^r = 1 \mod p \implies\]
+\[\implies a^p = 1 \mod p \implies ord(a) = (p-1)|r<p-1 \implies r=0\implies p-1 | n-1\]
+\end{itemize}
 \end{itemize}
 \end{proof}
