@@ -9,8 +9,6 @@
 
 % --------------------
 
-\DeclareMathOperator{\erd}{\Theta}
-
 \begin{document}
 \pagestyle{plain}
 \maketitle
@@ -45,7 +43,7 @@ Un posible puede ocurrir debido a la cuantización: al comprimir ciertos rangos,
 
 \subsubsection{Igualación de histograma}
 
-La igualación de histograma pretende obtener un histograma lo más uniforme posible. La transformación se define como \[ s = T(r) = \sum_{i=0}^r P(I = i) = P(I <= i) \] donde $P(I = i)$ es la probabilidad de que un determinado píxel de la imagen de entrada. En otras palabras, se hace una transformación usando como ``tabla de referencia'' la CDF de luminancia.
+La igualación de histograma pretende obtener un histograma lo más uniforme posible. La transformación se define como \[ s = T(r) = \sum_{i=0}^r P(I = i) = P(I <= r) \] donde $P(I = i)$ es la probabilidad de que un determinado píxel de la imagen de entrada tenga valor $i$. En otras palabras, se hace una transformación usando como ``tabla de referencia'' la CDF de luminancia.
 
 Se pueden usar otras funciones como tabla siempre y cuando sean monótonas crecientes. Además, también se puede realizar la ecualización adaptativa realizando el proceso de ecualización en porciones de la imagen. Se puede usar ventana deslizante o bien considerar ventanas con solapamiento.
 
@@ -134,9 +132,9 @@ El realce de contornos se relaciona con la primera y segunda derivada direcciona
 
 El estudio de la laplaciana (la suma de las derivadas segundas en las dos direcciones) \[ \nabla^2 Ψ = \pd[2]{ψ}{x} + \pd[2]{ψ}{y} \] nos da dos posibles máscaras: la laplaciana $L'$ y la isótropa $I'$, que realzan los bordes:
 \[
-L' = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 4 & 1 \\ 0 & 1 & 0 \end{pmatrix}
+L' = \begin{pmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{pmatrix}
 \qquad
-I' = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 8 & 1 \\ 1 & 1 & 1 \end{pmatrix}
+I' = \begin{pmatrix} 1 & 1 & 1 \\ 1 & -8 & 1 \\ 1 & 1 & 1 \end{pmatrix}
 \]
 
 Normalmente, lo que se quiere hacer es obtener los bordes sin el resto de la imagen, así que las máscaras finales que hacen eso se pueden obtener restando esas máscaras a un único punto obteniendo lo siguiente:
@@ -148,7 +146,7 @@ I = \begin{pmatrix} -1 & -1 & -1 \\ -1 & 9 & -1 \\ -1 & -1 & -1 \end{pmatrix}
 
 La Laplaciana nos da la segunda derivada. Para la primera (el gradiente) tenemos varios operadores posibles: Roberts, Prewitt, Sobel y diagonales:
 \begin{gather*}
-R_1 = \begin{pmatrix} - 1 & 0 \\ 0 & 1 \end{pmatrix} \qquad R_2 = \begin{pmatrix}0 & -1 \\ 1 0 \end{pmatrix} \\
+R_1 = \begin{pmatrix} - 1 & 0 \\ 0 & 1 \end{pmatrix} \qquad R_2 = \begin{pmatrix}0 & -1 \\ 1 & 0 \end{pmatrix} \\
 P_v = \frac{1}{6} \begin{pmatrix} -1 & -1 & -1 \\ 0 & 0 & 0 \\ 1 & 1 & 1 \end{pmatrix};\,P_h = \trans{P_v}
 \qquad
 S_v = \frac{1}{8} \begin{pmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ 1 & 2 & 1 \end{pmatrix};\,S_h = \trans{P_v} \\
@@ -180,9 +178,9 @@ Los operadores morfológicos implican un tipo de selección distinto al que hemo
 
 \subsection{Dilatación y erosión}
 
-Con el supremo y el ínfimo podemos definir dos operaciones similares a la convolución: la dilatación ($\oplus$) y la erosión ($\erd$): dado un elemento estructurante $b$, definimos ambos operadores de la siguiente forma para cada punto $y[n]$: \begin{align*}
+Con el supremo y el ínfimo podemos definir dos operaciones similares a la convolución: la dilatación ($\oplus$) y la erosión ($\ominus$): dado un elemento estructurante $b$, definimos ambos operadores de la siguiente forma para cada punto $y[n]$: \begin{align*}
 y[n] = x[n] \oplus b &= \bigvee_{k=-∞}^∞ (x[k] + b[n-k]) \\
-y[n] = x[n] \erd b &= \bigwedge_{k=-∞}^∞ (x[k] + b[n-k])
+y[n] = x[n] \ominus b &= \bigwedge_{k=-∞}^∞ (x[k] + b[n-k])
 \end{align*}
 
 \begin{figure}[hbtp]
@@ -197,13 +195,13 @@ En la práctica, la dilatación asigna a un píxel el máximo de todos los píxe
 La dilatación y la erosión son distributivas con respecto al ínfimo y al supremo:
 \begin{align*}
 (x \vee y) \oplus b &= (x\oplus b) \vee (y \oplus b) \\
-(x \wedge y) \erd b &= (x\erd b) \wedge (y \erd b)
+(x \wedge y) \ominus b &= (x\ominus b) \wedge (y \ominus b)
 \end{align*}
 
 La composición funciona con la dilatación, pero no del todo bien con la erosión:
 \begin{align*}
 x \oplus a \oplus b &= x \oplus (a \oplus b) \\
-x \erd a \erd b &= x \erd (a \oplus b)
+x \ominus a \ominus b &= x \ominus (a \oplus b)
 \end{align*}
 
 Si el elemento estructurante incluye el origen, la dilatación es extensiva (los píxeles de salida tienen valor mayor o igual que la entrada) y la erosión antiextensiva (los píxeles de salida tienen valor menor o igual que la entrada).
@@ -212,7 +210,7 @@ La dilatación puede reparar objetos, cerrando bordes y quitando imperfecciones 
 
 \subsubsection{Gradientes morfológicos}
 
-Podemos sacar gradientes por dilatación ($x \oplus b - x$), por erosión ($x - x \erd b$) o morfológicos ($x\oplus b - x \erd b$). Si usamos imágenes binarias, deberíamos usar la operación \textit{XOR}.
+Podemos sacar gradientes por dilatación ($x \oplus b - x$), por erosión ($x - x \ominus b$) o morfológicos ($x\oplus b - x \ominus b$). Si usamos imágenes binarias, deberíamos usar la operación \textit{XOR}.
 
 \subsection{Apertura y cierre}
 
@@ -224,8 +222,8 @@ Podemos sacar gradientes por dilatación ($x \oplus b - x$), por erosión ($x - 
 \end{figure}
 
 Podemos componer los dos operadores básicos para obtener la apertura $γ_b$ y el cierre $φ_b$: \begin{align*}
-γ_b &= (x \erd b) \oplus b \\
-φ_b &= (x \oplus b) \erd b
+γ_b &= (x \ominus b) \oplus b \\
+φ_b &= (x \oplus b) \ominus b
 \end{align*}
 
 El efecto de estos operadores se puede ver en la \fref{fig:AperturaCierre}. La apertura ``abre'' los huecos negros y el cierre ``cierra'' esos mismos agujeros. La apertura es antiextensiva y el cierre extensivo, independientemente de $b$. Además, son idempotentes: sucesivas aplicaciones dan el mismo resultado ($γ(γ(x)) = γ(x)$).
@@ -234,7 +232,7 @@ Estos operadores se pueden usar para eliminar objetos de acuerdo a su nivel de g
 
 \subsubsection{Detección de objetos}
 
-Se pueden buscar elementos que aparecen como máximos relativos con $x - γ(x)$  (top-hat) y mínimos relativos como $φ(x) - x$.
+Se pueden buscar elementos que aparecen como máximos relativos con $x - γ(x)$  (top-hat) y mínimos relativos como $φ(x) - x$ (dual top-hat).
 
 \subsubsection{Granulometría}
 
@@ -258,7 +256,7 @@ Aplicando sucesivos bancos de aperturas y cierres (\fref{fig:Granulometria}) con
 
 Se usan para hacer simplificaciones preservando contornos. Se coge la imagen de entrada $x$, un marcador $y$ y un elemento estructurante que definirá la conectividad de los elementos que mantiene. Se define entonces la apertura y cierre por reconstrucción como un prceso iteratico\begin{align*}
 γ^r_i &= (γ^r_{i-1} \otimes b) \wedge x \\
-φ^r_i &= (φ^r_{i-1} \erd b) \vee x
+φ^r_i &= (φ^r_{i-1} \ominus b) \vee x
 \end{align*} con $γ^r_0 = φ^r_0 = y$. Las operaciones completas se hará con $i \to ∞$, pero por comodidad denotaremos los operadores como $γ^r \equiv γ^r_{∞}$ y $φ^r \equiv φ^r_{∞}$
 
 Tanto la apertura como cierre por reconstrucción tienen las mismas propiedades de extensividad e idempotencia que sus versiones sin reconstrucción.
