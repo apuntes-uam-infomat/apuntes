@@ -253,7 +253,7 @@ Este resultado nos permitirá calcular $σ(\bbs^{n-1})$ para todo $n$ en términ
 
 Podemos usar esta proposición para sacar la medida de la esfera unitaria en $n$ dimensiones.
 
-\begin{corol} \label{crl:MedidaBn} Sea $\bola_n = \set{x ∈ ℝ^n \tq \md{x} < 1}$. Entonces \[ μ(\bola_n) = \frac{π^{n/2}}{Γ\left(\frac{n}{2} + 1\right)} \]
+\begin{corol} \label{crl:MedidaBn} Sea $\bola_r^N = \set{x ∈ ℝ^N \tq \md{x} < r}$. Entonces \[ μ(\bola_r^N) = r^N\frac{π^{n/2}}{Γ\left(\frac{n}{2} + 1\right)} = r^N ω_N\]
 \end{corol}
 
 Para practicar la integración en polares, podemos ver algunas integrales. Por ejemplo, veamos \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x \] para $α ∈ ℝ$. Si usamos el \fref{crl:MediblePolares1}, con $f(x) = g(\md{x})$ para $g(r) = \frac{1}{r}$ tenemos que \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ g(r) r^{n-1} \dif r = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ r^{n-1 - α} \dif r\]
@@ -836,18 +836,60 @@ Lo malo es que con la definición que tenemos hasta ahora no tenemos valores abs
 
 Lo que nos interesará probar será el siguiente teorema:
 
-\begin{theorem}[Teorema\IS de los puntos de Lebesgue] Si $f ∈ \esplloc$ entonces \[ m(L_f^c) = m(ℝ^N \setminus L_f) = 0\] o en otras palabras, que casi todos los puntos de una función integrable son puntos de Lebesgue.
+\begin{theorem}[Teorema\IS de los puntos de Lebesgue] \label{thm:PuntosLebesgue} Si $f ∈ \esplloc$ entonces \[ m(L_f^c) = m(ℝ^N \setminus L_f) = 0\] o en otras palabras, que casi todos los puntos de una función integrable son puntos de Lebesgue.
 \end{theorem}
 
-\begin{proof} $∀c ∈ ℂ$ (o en $ℝ$) podemos aplicar el teorema anterior a $g_c(x) = \abs{f(x) - c}$ y obtener \[ \lim_{r \to 0} \fint_{\bola_r(x)} \abs{f(y) -c} \dif y = \abs{f(x) -c} \]
+\begin{proof} $∀c ∈ ℂ$ (o en $ℝ$) podemos aplicar el teorema anterior a $g_c(x) = \abs{f(x) - c}$ y obtener por el \fref{thm:LimiteAr} que en casi todo punto \[ \lim_{r \to 0} \fint_{\bola_r(x)} \abs{f(y) -c} \dif y = \abs{f(x) -c} \]
 
-Sea $\mathcal{R}$ un conjunto denso y numerable de $ℂ$ y sea $E = \bigcup_{C∈\mathcal{R}} E_c$ con $E_c$ siguiendo la notación de ``conjunto de puntos malos'' de otros teoremas. Entonces $m(E) = 0$. Si $x ∉ E$ etncones $∀ε > 0$ puedo elegir $c ∈ \mathcal{R}$ tal que $\abs{f(x) -c} < ε$ tal que $\abs{f(y) - f(x)} < \abs{f(y) - c} + ε$ $∀y ∈ \bola_r(x)$ con $r$ bastante pequeño qué cojones está pasando aquí y obtener \[ \lim_{r\to 0} \underbracket{\abs{f(x) - f(y)}}_{\pm c} ≤ \lim_{r\to 0}\abs{f(y) -c} + \lim_{r\to 0} ε = \abs{f(x) -c} + ε < 2ε \]
+Consideramos entonces $E_c$ el conjunto de puntos para los que la anterior ecuación no se cumple, que sabemos que es un conjunto de medida cero.
 
-% TODO: Qué puñetas es esta mierda
+Sea $\mathcal{R}$ un conjunto denso y numerable de $ℂ$ (por ejemplo, podríamos tomar $ℂ∩ℚ^2$)y sea $E = \bigcup_{c∈\mathcal{R}} E_c$. Por ser unión numerable de conjuntos de medida cero, tenemos que $m(E) = 0$.
+
+Si $x ∉ E$ entonces $∀ε > 0$ puedo elegir $c ∈ \mathcal{R}$ tal que $\abs{f(x) -c} < ε$. En otras palabras, lo aproximamos por los números del conjunto $\mathcal{R}$ (para esto necesitábamos que fuese denso). Por como hemos construido todo, tenemos que $∀y ∈ \bola_r(x)$ con $r$ suficientemente pequeño \[ \abs{f(x) - f(y)} < \underbracket{\abs{f(x) - c}}_{<ε} + \abs{f(y) - c} \]
+
+Integrando y tomando límites, tenemos que \begin{multline*} \lim_{r \to 0} \fint_{\bola_r(x)} \abs{f(x) - f(y)} \dif y ≤ \lim_{r \to 0} \fint_{\bola_r(x)} \abs{f(y) - c} + \lim_{r\to 0} \fint_{\bola_r(x)} ε\dif y = \\
+= \underbracket{\abs{f(x) - c}}_{<ε} + ε < 2ε
+\end{multline*}
 \end{proof}
 
+\begin{defn}[Encoger\IS bien] En inglés, \textit{shrinks nicely} que queda mejor. Se dice que una serie de conjuntos $\set{E_r}_{r>0}$ se encoge bien a $x$ (\textit{shrinks nicely to $x$}) si y sólo si $E_r ⊂ \bola_r(x)$ y además existe una constante $α > 0$ independiente de $r$ tal que $m(E_r) > α m(\bola_r(x))$.
+\end{defn}
 
+La definición no implica que sea necesario tener $x ∈ E_r$. Por ejemplo, en análisis armónico se usan como $E_r$ los anillos, esto es, $E_r = \bola_r(x) \setminus \bola_{\frac{r}{2}}(x)$ % TODO Ver cuál es el α.
 
+Vamos a ir ahora al culmen de toda esta parte de la asignatura: el teorema de diferenciación de Lebesgue.
+
+\begin{theorem}[Teorema\IS de diferenciación de Lebesgue] Sea $f ∈ \esplloc$. Para todo $x ∈ L_f$ tenemos que \[ \lim_{r\to0} \fint_{E_r(x)} \abs{f(x) - f(y)} \dif y = 0\] y \[ \lim_{r\to 0} \fint_{E_r(x)} f(y) \dif y = f(x) \] para toda familia $\set{E_r}$ que se encoge bien a $x$.
+\end{theorem}
+
+\begin{proof}
+Dado que $E_r$ es una familia que se encoge bien, tenemos que $m(E_r) > αm(\bola_r(x))$ y que $E_r ⊆ \bola_r(x)$, podemos reescribir la igualdad del teorema como
+\begin{multline*}\fint_{E_r(x)} \abs{f(x) - f(y)} \dif y = f(x) = \frac{1}{m(E_r)} \int\limits_{E_r(x)} \abs{f(x) - f(y)} \dif y ≤ \\ ≤ \frac{1}{αm(\bola_r(x))} \int\limits_{\bola_r(x)} \abs{f(x) - f(y)} \dif y \convs[\fref{thm:PuntosLebesgue}][r][0] 0
+\end{multline*}
+\end{proof}
+
+Con esto, al final lo que hemos conseguido ha sido sacar un valor puntual para (casi?) todo punto de una función integrable. ¿De qué nos sirve esto?
+
+Por ejemplo, dadas dos funciones $f_1, f_2 ∈ \esplloc$ con $\abs{f_1 - f_2} = 0$ para casi todo punto, podemos preguntarnos si los valores de Lebesgue de ambas funciones son distintas. En otras palabras, queremos ver si fijado un $x ∈ ℝ^N$ se cumple que \[ \lim_{r \to 0} \fint_{\bola_r(x)} f_1(y) \dif y = \lim_{r\to 0} \fint_{\bola_r(x)} f_2(y) \dif y \]
+
+Para demostrarlo (sí, es cierto), consideramos $E$ como el conjunto donde $f_1 ≠ f_2$, que ya hemos dicho que tiene medida $0$. Con eso, descomponemos la integral de la bola como \[ \fint_{\bola_r(x)} f_1(y) \dif y = \fint_{\bola_r(x) \setminus E} + \fint_E f_1(y) \dif y \], de tal forma que la integral sobre $E$ vale cero y nos quedará una igualdad de integrales de funciones iguales en los puntos en los que se integra.
+
+Esto nos sirve como introducción a los espacios $L^p$. Trabajaremos con funciones que son equivalentes si tienen la misma integral. Así, tendremos que \[ \espL = \quot{\espL}{\sim}\] con $\sim$ la relación de equivalencia que nos dirá que dos funciones son iguales.
+
+Más formalmente, diremos que \( f \sim g \iff \abs{f-g} = 0 \label{eq:RelEqLp} \) en μ-CTP\footnote{Esto es, en todos los puntos salvo en un conjunto de medida $μ$ nula.}. Recordamos entonces el espacio $\espl[p]$ como el espacio de funciones $p$-integrables:
+
+\begin{defn}[Espacio\IS de funciones $p$-integrables $\mathcal{L}^p(X,μ)$] Dado un espacio $X$ y una medida $μ$, definimos el espacio de funciones $p$-integrables como \[
+\mathcal{L}^p(X,μ) = \set{\appl{f}{X}{ℝ} \tq f \text{ medible},\; \int_X \abs{f}^p \dif μ < + ∞} \]
+\end{defn}
+
+Con esto podemos definir el espacio $L^p$:
+
+\begin{defn}[Espacio\IS de funciones $L^p(X,μ)$] Definimos el espacio de funciones $L^p(X,μ)$ cono \[ L^p(X,μ) = \quot{\mathcal{L}^p(X,μ)}{\sim} \] con $\sim$ la relación de equivalencia definida en \eqref{eq:RelEqLp}. Es decir, que lo definimos como las clases de funciones $p$-integrables identificadas en casi todo punto.
+\end{defn}
+
+Esta definición nos da una descomposición sencilla para las funciones $\tilde{f} ∈ L^p$: \[ \tilde{f} = f + g\] con $f ∈ \mathcal{L}^p$ y $g$ nula en casi todo punto.
+
+A modo curioso, sí hay funciones continuas en $L^p$: nos basta con que el representante sea continuo, dado que podemos descojonarla en casi todo punto. ¿Y cuál será el representante privilegiado? El construido con los valores de Lebesgue de la función.
 
 \section{Espacios de Banach y Hilbert. Espacios $L^p$}
 
