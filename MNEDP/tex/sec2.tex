@@ -1,1 +1,140 @@
-\section{Método de Elementos Finitos}
+\newpage
+\section{Método de elementos finitos}
+
+\subsection{Espacio de funciones}
+Vamos a trabajar sobre un abierto $\Omega\subset\mathbb{R}^d$, $d=1,2,3$.
+Sea $\alpha = (\alpha_1,\hdots,\alpha_d)\in\mathbb{R}^d$ y denotaremos como $D^\alpha u=\frac{\partial}{\partial x_1}\alpha_1\frac{\partial}{\partial x_2}\alpha_2\hdots\frac{\partial}{\partial x_d}\alpha_d$.
+
+Denotaremos como 
+$$e^k(\Omega) = \{\textbf{Funciones continuas y con } D^\alpha u \textbf{ continua } \forall\alpha\textbf{ con }|\alpha|\le k\}$$
+
+En cuanto a la norma en $e^k(\Omega)$ es
+$$||u||_{e^k(\Omega)} = \sum_{|\alpha|\le k}\sup_{x\in\Omega}|D^\alpha u(x)|$$
+
+El soporte de una función continua en $\Omega$ es la adherencia del conjunto $\{x\in\Omega \tq u(x) \neq 0\}$.
+
+Definimos
+$$e_0^k (\Omega)= \{u\in e^k(\Omega) \textbf{ con soporte compacto}\}$$
+
+Si $u\in e_0^k(\Omega)$, $u=0 en \delta\Omega$.
+
+\subsection{Espacios de funciones integrables}
+$$L^p(\Omega) = \{u\textbf{ definida en }\Omega \textbf{ con }\int_\Omega |u|^p dx < \infty \}$$
+$$L^2(\Omega)=\{\textbf{funciones de cuadrado integrable}\}$$
+$$L^\infty (\Omega) =\{\textbf{funciones acotadas}\}$$
+
+$$||u||_{L^p(\Omega)} = (\int_{\Omega}|u|^p dx)^\frac{1}{p}$$
+$$||u||_{L^2(\Omega)} = (\int_{\Omega}|u|^2 dx)^\frac{1}{2}$$
+$$||u||_{L^\infty(\Omega)} = \sup_{x\in\Omega}|u(x)|$$
+
+$L^2(\Omega)$ es un espacio de Hilbert: un espacio normado completo donde la norma deriva de un producto interno.
+
+\paragraph{Desigualdad de Cauchy-Schwarz}
+Si $u,v\in L^2(\Omega)\implies u,v\in L^1(\Omega)$ y $(\int_\Omega |u|^2dx)^\frac{1}{2} = ||u||_{L^2(\Omega)}$ y $(\int_\Omega|v|^2)^\frac{1}{2} = ||v||_{L^2(\Omega)}$
+
+\paragraph{Desigualdad triangular}
+$$||u+v||\le ||u||_{L^p(\Omega)}+||v||_{L^p(\Omega)}$$
+
+\paragraph{Desigualdad de Holder}
+Sean $p,q$ con $\frac{1}{p}$+$\frac{1}{q} = 1$
+
+Entonces
+$$|\int_{\Omega}u(x)v(x)dx|\le||u||_{L^p(\Omega)}||v||_{L^q(\Omega)}$$
+
+Si tomamos $p=q=2$, entonces tenemos la desigualdad de Cauchy-Schwarz.
+
+\subsection{Espacios de Sobolev}
+\paragraph{Concepto de derivada débil}
+Se dice que $w_\alpha(x)$ es la derivada $D^\alpha u$ en sentido débil si
+$$\int_{\Omega}w_\alpha u(x) v(x)dx = (-1)^{|\alpha|}\int_{\Omega}u(x)D_v^\alpha (x) dx 
+\forall v\in e_0^\infty(\Omega)$$
+
+Si existe $D^\alpha u$ entonces $w_\alpha = D^\alpha u$.
+
+$$\int_\Omega w_\alpha (x)v(x) dx = \int_{\Omega}D^\alpha u(x) v(x)dx = (-1)^|\alpha|\int_{\Omega}u(x)D^\alpha v$$
+
+\begin{example}
+	Sea la función 
+	\begin{equation*}
+		u=\left\{
+		\begin{array}{l l l}
+			2x & x\in[0,\frac{1}{2}]\\
+			2-2x & x\in [\frac{1}{2},1]
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	La función $u$ es continua pero no derivable. Existe la derivada débil de $u$ que es
+	\begin{equation*}
+		\omega_1(x)=\left\{
+		\begin{array}{l l l}
+			2 & x\in[0,\frac{1}{2}]\\
+			-2 & x\in [\frac{1}{2},1]
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	Si $\omega_1$ es la derivada débil se debe cumplir que
+	$$\int_0^1 \omega_1(x)v(x) = -\int_0^1u(x)v'(x) \forall v\in e_0^\infty (0,1)$$
+	
+	\begin{itemize}
+		\item \textbf{Paso 1:}
+		$$\int_0^1\omega_1(x)v(x) = 2\int_0^\frac{1}{2} v(x)dx-2\int_\frac{1}{2}^1v(x)dx$$
+		\item \textbf{Paso 2:}
+		$$-\int_0^1u(x)v'(x)dx = -\int_0^\frac{1}{2}u(x)v'(x)dx -\int_\frac{1}{2}^1 u(x)v'(x)dx$$
+		
+		Si integramos por partes, obtenemos $$2\int_0^\frac{1}{2} v(x)dx-2\int_\frac{1}{2}^1v(x)dx$$
+	\end{itemize}
+\end{example}
+
+\begin{defn}[Espacio de Sobolev $H^k(\Omega)$]
+	$$H^k(\Omega) = \{u \textbf{ definida en }\Omega \textbf{ con } D^\alpha u\in L^2(\Omega)\forall \alpha \textbf{ con }|\alpha|\le k\}$$
+	
+	Nos referimos a funciones en $L^2$ con derivadas hasta orden $k$ en $L^2$. $D^\alpha u$ es la derivada en sentido débil.
+\end{defn}
+
+	Sea $u\in H^1(\Omega)$, si $H^k(\Omega)$ es un espacio de Hilbert.
+	$$||u||_{H^k(\Omega)} = (\sum_{|\alpha|\le k}||D^\alpha u||_{L^2(\Omega)}^2)^\frac{1}{2}$$
+	
+	El producto interno es:
+	$$(u,v)_{H^k(\Omega)} = \sum_{|\alpha|\le k}(D^\alpha u, D^\alpha v)_{L^2(\Omega)}$$
+	
+	con 
+	$$||u||_(H^k(\Omega)) = (u,u)^\frac{1}{2}_{H^k(\Omega)}$$
+	
+	\begin{example}
+		Sea $\Omega\subset\mathbb{R^2}$
+		
+		Definimos
+		$$H^1(\Omega) = \{u\in L^2, u_x\in L^2, u_y\in L^2\}$$
+		
+		$$||u||^2_{H^1(\Omega)} = ||u||^2_{L^2} + ||u_x||^2_{L^2} + ||u_y||^2_{L^2} = 
+		\int_\Omega u^2 + \int_\Omega u_x^2 + \int_\Omega u_y^2$$
+	\end{example}
+	
+	En $H^k(\Omega)$ definimos también una seminorma:
+	$$|u|_{H^k(\Omega)}  = (\sum_{|\alpha|=k}||D^\alpha u||^2_{L^2(\Omega)})^\frac{1}{2}$$
+	
+	\begin{example}
+		$$|u|^2_{H^1(\Omega)} = \int_{\Omega}u_x^2+\int_{\Omega}u_y^2$$
+		
+		Si $|u|_{H^k(\Omega)} = 0 \nimplies u = 0$ en $\Omega$.
+	\end{example}
+	
+	$$H_0^1(\Omega) = \{\textbf{Funciones de } H^1(\Omega)\textbf{ con } u = 0 \textbf{ en } \delta \Omega \}$$
+	
+	\paragraph{Desigualdad de Poincaré}
+	Sea $\Omega\in\mathbb{R}^d$ abierto acotado con frontera suficientemente regular. Sea $u\in H_0^1(\Omega)$, entonces existe una constante $C_*(\Omega)$ independiente de $u$ tal que
+	$$\int_{\Omega}|u|^2 dx \le c_* \sum_{i=1}^n\int_{\Omega}|\frac{\partial u}{\partial x_i}|^2dx$$
+	
+	$$||u||^2_{L^2(\Omega)}\le C_*||\nabla u||^2_{L^2(\Omega)}$$
+	
+	Siendo $\nabla u = (\frac{\partial u}{\partial x_1}\hdots\frac{\partial u}{\partial x_d})$
+	
+	\begin{example}
+		Si $u\in H_0^1(\Omega)\implies$
+		$$\int_{\Omega}u^2 \le C^*\left[\int_{\Omega}u_x^2+\int_{\Omega}u_y^2\right]$$
+	\end{example}
+	
+	En $H_0^1(\Omega)$ son equivalentes la norma y la seminorma.
+
