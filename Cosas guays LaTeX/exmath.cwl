@@ -271,3 +271,5 @@
 \espL#m
 \espL[1]#m
 \espL[1][\real^N]#m
+\espLp#m
+\esplp#m
