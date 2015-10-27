@@ -302,3 +302,95 @@ Al margen de este algoritmo existe otra idea: si la \textbf{hipótesis de Rieman
 Entonces puedo probar todas las bases $b=2,3,4,...,2\log^2 n$.
 
 No obstante este procedimiento sería muy largo y estaría apoyándose en una hipótesis aún sin demostrar.
+
+\begin{example}\textbf{Algoritmo determinista}
+
+Sabemos que el menor pseudoprimo fuerte en bases $2$ y $3$ es el número 1373663 = 850x1657
+
+Por tanto, si tenemos un número menor que un millón podemos comprobar si es primo estudiando si es pesudoprimo fuerte en bases $2$ y $3$. De esta forma tendríamos una forma determinista y no probabilística de ver si un número es primo o no. 
+
+Basándonos en esta idea podemos mejorar el algoritmo con los siguientes datos:
+\begin{enumerate}
+\item El menor número primo en las bases $2,3$ y $5$ es el número 2536001 = 2251x11231.
+
+\item El único número pseudoprimo en las bases $2,3,5,7$ menor que $25 \cdot 10^9$ es 3215031751 = 151z751x28351
+
+\item El menor número pesudoprimo en base $2,3,5,7,11,13,17,19$ y $23$ es del orden de $3 \cdot 10^{18}$
+
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Jim Sinclaire (2011)]
+Empleando la base de 7 elementos:
+\[2,325,9375,28178,450775,9780504,1795265022\]
+podemos decidr con certeza si un número $n<2^{64}\approx 1.89\cdot 10^{19}$ es primo
+\end{theorem}
+
+\section{Algoritmos de Factorización}
+El mejor algoritmo decimal (que no usa propiedades del número) para factorizar números $n>2^{100}$ es la \concept{criva en cuerpos} de números (\textbf{General Number Field Sieve}), que emplea un tiempo $O\left(e^{64/9 (\log n)^{1/3}(\log\log n)^{2/3}} \right)$.
+
+En general, a la hora de factorizar un número los pasos a seguir son:
+\begin{enumerate}
+\item Dividr entre los primos pequeños.
+
+Recordemos que la división no es un problema puesto que es una operación fácil. El problema surgía cuando teníamos que dividir entre diferentes números hasta $\sqrt{n}$.
+
+El concepto de primo pequeño es un poco ambigüo, puesto que depende de la capacidad de la máquina pero suelen considerarse los primos hasta $5\cdot 10^{5}$ (hay 41538)
+
+\item Método ρ de Polland o $ρ-1$ de Polland, que nos permite factorizar hasta números de 15-20 cifras.
+
+\item Método de Curvas elípticas o curvas cuadráticas, que funciona bien para números de hasta 25 cifras.
+
+\item Criba de cuerpos de números $(NFS)$, que resulta especialmente útil si $n=b^a\pm 1$ con $b$ un número pequeño como $b=(2,3)$ y $a$ un número grande.
+
+\begin{example}
+\[F_9 =2^{2^9}+1 = p_7\cdot p_{49} \cdot p_{99}\]
+donde $p_i$ representa un número de $i$ cifras.
+\end{example}
+
+\item $GNFS$
+\end{enumerate}
+
+\obs Si un número tiene propiedades especiales puede haber métodos específicos más rápidos para factorizar.
+
+\begin{prop}
+Si un número primo $p$ divide a un número de la forma $b^n-1$ entonces $p|b^d-1$ siendo $d$ un divisor de $n$ o bien $p=1 \mod n$.
+
+En caso de darse la segunda opción, si $p \neq 2$ y $n$ es impar entonces $p=1 \mod 2n$
+\end{prop}
+\begin{proof}
+Sabemos que
+\[p|b^n-1 \iff b^n =1 \mod p\]
+
+Ahora debemos observar que si $b \in (\ent_p)^*$ y $d=ord(b)$ entonces 
+\[b^d=1 \mod p \implies p|b^d-1 \text{ y } d|n\]
+
+Además, si $d=n$ entonces $n|(\ent_p)^*)|=p-1$, puesto que el orden de cualquier elemento divide al orden del grupo. Por tanto nos queda que $p=1\mod n$
+
+Si $p\neq 2$, entonces $p-1$ es par. Si $n$ es impar entonces 
+\[n|p-1 \implies 2n|p-1 \implies p=1 \mod 2n\]
+
+donde la primera implicación se deduce del hecho de que si $n$ divide a un par y $n$ es impar, sabemos que el $2$ también es un divisor y por tanto $2n$ es divisor.
+
+\end{proof}
+
+\begin{example}
+Supongamos que queremos factorizar $2^{11}-1=2047$.
+
+Si tenemos un primo $p$ que
+\[p|2^11-1\implies \left\{ \begin{array}{l}p|2^1-1 \implies \text{ imposible}\\ p =1 \mod 22 \end{array}\right.\]
+
+Si $2047$ no es primo entonces tiene factores menores que $\sqrt{2045}\approx 45$. Puesto que es un número pequeño procedemos a probar y llegamos a que
+\[2047 = 23 \times 89\]
+\end{example}
+\begin{example}
+Tratamos de factorizar $2^{13}-1=8191$
+
+Si no es primo, entonces existe un factor primo en el intervalo $(22,\sqrt{8191}\approx90))$.
+
+En este caso procedemos a comprobarlo y vemos que ningún primo en el intervalo es un factor, por lo que podemos concluir que $8191$ es primo.
+\end{example}
+
+%3^12 - 1
+
+%2^35 -1
