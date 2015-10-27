@@ -2548,6 +2548,8 @@ rápido para calcular $mcm(a,b)$, y explica por qué es rápido.
 [SUGERENCIA: ¿Cuál es la relación entre $mcm(a,b), mcd(a,b)$ y
 $ab$?] 
 \solution
+
+
 \end{problem}
 
 
@@ -2555,6 +2557,33 @@ $ab$?]
 Encontrar la clave privada de un usuario  de un criptosistema basado en el RSA si su clave p\'ublica   es  $(7519, 35)$.
 
 \solution
+
+\doneby{Pedro}
+
+Sabemos que, por definición del algoritmo RSA tenemos dos primos $p$, $q$ tales que:
+\[\left\{ \begin{array}{l} 7519 = p \cdot q\\
+35 = 1 \mod (p-1)(q-1)\end{array}\right.\]
+
+Por la cuenta de la vieja podemos ver que $7519=73 \times 103$, por lo que ya conocemos $p$ y $q$. 
+
+Ahora sólo tenemos que encontrar el inverso de 35 módulo $72 \cdot 102 = 7344$ para lo que podemos emplear el algoritmo de Euclides.
+
+\[
+\begin{array}{l}
+7344 = 209\cdot 35 +29\\
+35 = 1 \cdot 29 + 6 \\
+29 = 4\cdot 6 + 5 \\
+6 = 5 + 1 
+\end{array} \implies \begin{array}{l}
+1 = 6 - 5 \\
+5 = 29 - 4 \cdot 6 \implies 1 = 5 \cdot 6-29\\
+6 = 35 - 29 \implies 1 = 5\cdot 35 -6 \cdot 29 \\
+29 = 7344 - 209 \cdot 35 \implies 1=1259 \cdot 35 -6\cdot 7344
+\end{array}
+\]
+
+Así tenemos que la clave privada es $d=1259$
+
 \end{problem}
 
 \begin{problem}[3]
@@ -2578,6 +2607,32 @@ etcétera
 
   El usuario B envía el mensaje {\it ASÑAW.} al usuario A.   ¿Qué quiere decirle B a A?
 \solution
+
+\doneby{Pedro}
+
+Lo que debemos hacer es encontrar los primos $p,q$ con los que se diseñó este sistema RSA.
+
+Por la cuenta de la vieja llegamos a que $1711=p\cdot 1 = 29 \cdot 59$.
+
+Una vez tenemos esto podemos conocer $(p-1)\cdot (q-1)=28 \cdot 58 = 1624$ lo que nos permite calcular la clave privada, que, en este caso, es el inverso de 125 módulo $1624$. Vamos a ello
+
+\[
+\begin{array}{l}
+1624 = 12 \cdot 125 + 124\\
+125 = 124 + 1
+\end{array} \implies \begin{array}{l}
+1 = 125 -124 \\
+124 = 1624 - 12 \cdot 125 \implies 1 = 13 \cdot 125 - 1624
+\end{array}
+\]
+
+Así tenemos que la clave privada, empleada para descifrar, será $d=13$. 
+
+Para descifrar el mensaje procedemos por bloques:
+\[19\cdot 30 + 14 = 584 \mod 1711 \to 584^13 \mod 1711 = 225 = 7\cdot 30 + 15 = HO\]
+\[23 \cdot 30 + 27 = 717 \mod 1711 \to 717^13 \mod 1711 = 330 = 11 \cdot 30 + 0 = LA\]
+
+Así tenemos que el mensaje enviado era ``HOLA''
 \end{problem}
 
 \begin{problem}[4]
