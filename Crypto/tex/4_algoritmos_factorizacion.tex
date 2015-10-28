@@ -15,7 +15,7 @@ El número de primos menores que un número $x$ es:
 \[π(x) = O\left( \frac{x}{\log(x)}\right)\]
 \end{theorem}
 
-Una vez tenemos el número de primos existentes (cosa que en una situación real no se tiene pues $n$ es enorme), tendríamos que hacer un total $π(x)$ divisiones y, puesto que cada divisón nos supone $O(\log^3(n))$ bit-operaciones, tenemos que el total del algoritmo nos supone:
+Una vez tenemos la lista de primos existentes menores que $\sqrt{n}$ (cosa que en una situación real no se tiene pues $n$ es enorme), tendríamos que hacer un total $π(x)$ divisiones y, puesto que cada divisón nos supone $O(\log^3(n))$ bit-operaciones, tenemos que el total del algoritmo nos supone:
 \[O(\log^3(n))\cdot O\left(\frac{\sqrt{n}}{\log(\sqrt{n})}\right) = O\left( e^{\frac{1}{2}\log(n)}\log^2(n)\right) \text{ operaciones }\]
 
 \begin{example}
@@ -39,6 +39,8 @@ Si queremos comprobar si un número es primo, no podemos depender de la factoriz
 \begin{itemize}
 \item $\Longleftarrow$
 
+Partiendo de que $a \to b \iff \neg b \to \neg a$, vamos a demostrar que si $n$ no es primo, entonces no es cierto que $(n-1)!=-1 \mod n$.
+
 Supongamos que $n$ no es primo. Entonces tenemos diferentes casos: 
 \begin{enumerate}
 \item $n=n_1n_2$ con $1<n_1<n_2<n$
@@ -59,7 +61,7 @@ En esta ocasión
 
 \item $\implies$
 
-Dado un elemento $a\in \ent_n$ tenemos:
+Sea $n$ primo, dado un elemento $a\in \ent_n$ tenemos:
 \[a=a^{-1} \mod n \iff a^2 = 1 \mod n \iff a^2-1 = m \mod n\]
 
 y la ecuación $a^2-1=0\mod n$ tiene, como mucho, dos raíces en un cuerpo. 
@@ -98,6 +100,7 @@ Existen dos versiones de este teorema:
 \end{enumerate}
 \end{theorem}
 
+\newpage
 \begin{defn}[Número pseudoprimo en base $a$]
 Decimos que un número $p$ es pseudoprimo en base $a$ si se cumple que
 \[a^{p-1}=1 \mod p \]
@@ -105,7 +108,7 @@ Decimos que un número $p$ es pseudoprimo en base $a$ si se cumple que
 
 Una vez visto esto podemos ver el lema en que se basan los test probabilísticos.
 \begin{lemma}
-Si existe $b_0$ coprimo con $n$ tal que $b_0^{n-1}\neq 1 \mod n$ (es decir, tenemos un número que no satisface el pequeño teorema de Fermat, por lo que $n$ no ser'ia primo), entonces $b^{n-1} \neq 1 \mod n$ para, \textbf{al menos la mitad} de los $b$ posibles en $[1,n-1]$ coprimos con $n$.
+Si existe $b_0$ coprimo con $n$ tal que $b_0^{n-1}\neq 1 \mod n$ (es decir, tenemos un número que no satisface el pequeño teorema de Fermat, por lo que $n$ no sería primo), entonces $b^{n-1} \neq 1 \mod n$ para, \textbf{al menos la mitad} de los $b$ posibles en $[1,n-1]$ coprimos con $n$.
 \end{lemma}
 
 Con este lemma, si $n$ no es primo, entonces $b^{n-1} \neq 1 \mod n$ con probabilidad mayor que $\frac{1}{2}$. Por tanto, si tomo al azar 200 valores $b$ y todos pasan el test (todos satisfacen el teorema de Fermat), la probabilidad de que el número sea compuesto es menor que $\left( \frac{1}{2}\right)^{200} \approx \left(\frac{1}{10}\right)^{60}$
@@ -118,7 +121,7 @@ Consideramos el conjunto de valores $\{a_1,...1_r\} \subset \left(\ent_n\right)^
 Entonces $n$ no es pseudoprimo en la bases $\{b_0a_1,...,b_0a_r\}$ ya que 
 \[(b_0a_i)^{n-1} = b_0^{n-1}a_i^{n-1} = b^{n-1} \neq 1 \mod n\]
 
-Es decir, \textbf{Si existe una base en la que no es pesudoprimo} entonces por cada base en la que sea pseudo primo tenemos otra en la que no lo es con lo que queda claro que al menos en la mitad de los casos no será pesudoprimo.
+Es decir, \textbf{si existe una base en la que no es pesudoprimo} entonces por cada base en la que sea pseudo primo tenemos otra en la que no lo es con lo que queda claro que al menos en la mitad de los casos no será pesudoprimo.
 \end{proof}
 
 Vamos a ver ahora cómo podríamos construir un test probabilístico de primalidad de manera incremental.
@@ -365,7 +368,7 @@ Sabemos que
 Ahora debemos observar que si $b \in (\ent_p)^*$ y $d=ord(b)$ entonces 
 \[b^d=1 \mod p \implies p|b^d-1 \text{ y } d|n\]
 
-Además, si $d=n$ entonces $n|(\ent_p)^*)|=p-1$, puesto que el orden de cualquier elemento divide al orden del grupo. Por tanto nos queda que $p=1\mod n$
+Además, si $d=n$ entonces $n||(\ent_p)^*|=p-1$, puesto que el orden de cualquier elemento divide al orden del grupo. Por tanto nos queda que $p=1\mod n$
 
 Si $p\neq 2$, entonces $p-1$ es par. Si $n$ es impar entonces 
 \[n|p-1 \implies 2n|p-1 \implies p=1 \mod 2n\]
@@ -378,19 +381,53 @@ donde la primera implicación se deduce del hecho de que si $n$ divide a un par 
 Supongamos que queremos factorizar $2^{11}-1=2047$.
 
 Si tenemos un primo $p$ que
-\[p|2^11-1\implies \left\{ \begin{array}{l}p|2^1-1 \implies \text{ imposible}\\ p =1 \mod 22 \end{array}\right.\]
+\[p|2^{11}-1\implies \left\{ \begin{array}{l}p|2^1-1 \implies \text{ imposible}\\ p =1 \mod 22 \end{array}\right.\]
 
-Si $2047$ no es primo entonces tiene factores menores que $\sqrt{2045}\approx 45$. Puesto que es un número pequeño procedemos a probar y llegamos a que
+Si $2047$ no es primo entonces tiene factores menores que $\sqrt{2045}\approx 45$. Puesto que es impar, también sabemos que $p=1 \mod 22$. Combinando ambas informaciones tenemos que:
+\[p \in \{23 \}\]
 \[2047 = 23 \times 89\]
 \end{example}
-\begin{example}
-Tratamos de factorizar $2^{13}-1=8191$
 
-Si no es primo, entonces existe un factor primo en el intervalo $(22,\sqrt{8191}\approx90))$.
+\begin{example}
+Tratamos de factorizar $2^{13}-1=8191$. Supongamos que tenemos el factor primo $p$. Entonces:
+
+\[p|2^{13}-1\implies \left\{ \begin{array}{l}p|2^1-1 \implies \text{ imposible}\\ p =1 \mod 13 \end{array}\right.\]
+
+Por ser $13$ un número impar tenemos que $p = 1 \mod 26$. Teniendo en cuenta que debe haber un factor primo menor que $\sqrt{8191}\approx 90$, tenemos que:
+\[p \in \{27,53,79\}\]
 
 En este caso procedemos a comprobarlo y vemos que ningún primo en el intervalo es un factor, por lo que podemos concluir que $8191$ es primo.
 \end{example}
 
-%3^12 - 1
+\begin{example}
+Vamos a tratar de factorizar $3^{12}-1 = 531440$.
+
+Para todo factor primo tenemos que:
+\[p|3^{12}-1 \implies \left\{ \begin{array}{l}p|(3^1-1) \implies p|2 \implies p=2\\ 
+p|3^2-1 \implies p|8 \implies \text{no aporta nada nuevo}\\
+p|3^3-1 \implies p |26 \implies  p=13\\
+p|3^4-1 \implies p |(3^2-1)(3^2+1) \implies p|3^2+1 \implies p|10 \implies p=5\\
+p|3^6-1 \implies p |(3^3-1)(3^3+1) \implies p|3^3+1 \implies p|28 \implies p=7\\
+p =1 \mod 12 \end{array}\right.\]
+
+Donde en todos los apartados hemos desarrollado sólo aquellos datos que aportaban información nueva.
+
+Vamos a empezar a probar con las posibilidades que hemos obtenido hasta ahora. Así obtenemos que:
+\[3^{12}-1 = 2^4\times 13 \times 5 \times 7 \times 73\]
+
+\end{example}
+
+\begin{example}
+Vamos a factorizar ahora el número $2^{35}-1=34359738367$
+
+Para todo factor primo tenemos:
+\[p|2^{35}-1 \implies \left\{ \begin{array}{l}p|(2^1-1)\implies \text{ imposible}\\ 
+p|3^5-1 \implies p|242 \implies p=2 \Or p=11\\
+p|3^7-1 \implies p |2186 \implies  p|1093\\
+p =1 \mod 70 \end{array}\right.\]
+
+Con los datos que tenemos podemos empezar a probar con lo que obtenemos:
+\[34359738367 = 71 \times 483939977\]
+\end{example}
 
 %2^35 -1

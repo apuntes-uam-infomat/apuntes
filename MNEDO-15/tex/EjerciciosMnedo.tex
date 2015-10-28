@@ -115,16 +115,22 @@ y'(x_{n+1}) = y'(x_n)+hy''(x_n) +O(h^2)
 Sustituyendo estos datos en la fórmula del residuo llegamos a:
 \[R_n = O(h^3)\]
 
+Puesto que el orden del método viene dado por $\frac{R_n}{h}$, en esta ocasión tenemos que el método del trapecio tiene un orden de consistencia al menos $2$.
+
+Si realizásemos los desarrollos de Taylor con un orden mayor veríamos que el residuo deja de poder expresarse como $O(h^i)$, es decir, deja de estar controlado por $h$ con lo que podemos confirmar que el orden de consistencia del método es 2.
+
 \spart
 
 En esta ocasión
 \[R_n = y(x_{n+1})-y(x_n)-hf\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}y'(x_n)\right)\]
 
 Calculando el desarrollo de Taylor de la $f$ llegamos a:
-\[f\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}y'(x_n)\right) = f(x_n,y_n)+\frac{h}{2}f_x(x_n,y_n)+\frac{h}{2}y'(x_n)f_y(x_n,y_n)= \atop y'(x_n)+\frac{h}{2}y''(x_n)\]
+\[f\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}y'(x_n)\right) = f(x_n,y_n)+\frac{h}{2}f_x(x_n,y_n)+\frac{h}{2}y'(x_n)f_y(x_n,y_n)= \atop y'(x_n)+\frac{h}{2}y''(x_n)+O(h^2)\]
 
 Sustituyendo en la fórmula del residuo llegamos a:
 \[R_n = O(h^3)\]
+
+Si encomendamos nuestro alma al diablo y tratamos de estudiar si el residuo es de orden 3 vemos que no lo es, con lo que queda claro que el residuo es de orden 3 y por tanto el método es consistente de orden 2.
 
 \spart
 
@@ -467,4 +473,113 @@ Tomando valores absolutos a ambos lados y usando que $f$ es Lipschitz en la segu
 Con lo que queda claro que el método es 0-estable
 \end{enumerate}
 
+\end{problem}
+
+\section{Problemas previos al primer parcial}
+
+En esta sección incluimos todos los problemas realizados en clase a modo de preparación para el primer parcial, que no están incluidos en las hojas de ejercicios.
+
+\begin{problem}[1]
+Probar la convergencia del método de Euler sabiendo que es consistente:
+
+\solution
+
+Recordemos que el método de Euler es un método numérico que permite resolver un problemas de valor inicial mediante la recursión:
+\[y_{n+1} = y_n + hf(x_,y_n)\]
+
+Sabiendo esto, podemos ver que el residuo puede escribirse como:
+\[y(x_{n+1}) = y(x_n) + hf(x_n,y_n) + R_n\]
+que no es más que aplicar la definición de residuo.
+
+Dado el dato inicial $y(0)=y^0$, para poder ver que el método es convergente debemos comprobar que:
+\[\lim_{h \to 0 } \norm{y^0-y_0} \to 0 \implies \lim_{h\to 0} \max_{1 \leq n \leq N}\norm{y(x_n)-y_n} \to 0\]
+
+\obs A lo largo de la teoría hemos realizado esta misma demostración asumiendo que $\norm{y^0-y_0} = 0$, pero esta restricción es demasiado fuerte puesto que en la práctica puede incluso llegar a ser imposible.
+
+Basándonos en la fórmula recursiva del método podemos ver que:
+\[y(x_{n+1}) - y_{n+1} = y(x_n) 0 y_n + f(x_n,y(x_n)) -hf(x_n,y_n) + R_n\]
+puesto que la función $f$ es Lipschitz, tomando módulos a ambos lados tenemos:
+\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n| + K \text{ siendo }K=\max_n|R_n|\]
+Recordando la demostración que realizamos en teoría al probar el teorema \ref{theorem:EulerEsConvergente}
+\[\max_n|y(x_n)-y_n| \leq C(L)|y^0-y_0|+C\frac{K}{h}\]
+
+Así tenemos que 
+\[\lim_{h\to 0} \max_{1 \leq n \leq N}\norm{y(x_n)-y_n} \leq \lim_{h \to 0}\left( C(L)|y^0-y_0|+C\frac{K}{h}\right) \to 0\]
+\end{problem}
+
+
+\section{Hoja 2}
+\begin{problem}[1]
+Sea $A$ una matriz real cuadrad de orden $k$ definida de la siguiente manera:
+\[\begin{array}{ll}
+A(i,i+1) = 1 & \text{ para } i=1,...,k-1\\
+A(k,j)=-\frac{α_{j-1}}{α_k} & \text{ para } j=1,...,k
+\end{array}\]
+
+Demostrar que su polinomio característico es:
+\[ρ(λ) = \sum_{j=0}^kα_jλ^j\]
+\solution
+\end{problem}
+
+\begin{problem}[2]
+Sea $A$ una matriz real cuadrada de orden $k$. Supongamos que todos sus autovalores λ satisfacen que
+\[|λ| < 1\]
+o si $|λ|=1$ entonces su autovalor es simple. Probar que existe $M<\infty$ tal que
+\[\norm{A^n} \leq M, \ \ \ n=1,2,...\]
+\solution
+\end{problem}
+
+\begin{problem}[3]
+Sea el método de dos pasos:
+\[y_{n+2}=y_n+\frac{3}{2}h\left(f(t_{n+2},y_{n+2})+f(t_{n+1},y_{n+1}) + f(t_n,y_n) \right)\]
+
+\ppart Probar que converge
+\ppart Determinar el orden del método
+\solution
+\end{problem}
+
+\begin{problem}[4]
+Dado un PVI, consideramos el siguiente método numérico:
+\[y_{n+2}=y_n+\frac{h}{3}\left(f(t_{n+2},y_{n+2})+4f(t_{n+1},y_{n+1}) + f(t_n,y_n) \right)\]
+
+\ppart Comprobar que la recurrencia se obtiene aproximando $f(t,y(t))$ por el polinomio cuadrático de Lagrange de $f(t,y(t))$ en los puntos $t_n,t_{n+1}$ y $t_{n+2}$.
+
+\ppart Obtener el orden del residuo:
+\[R_n = \int_{t_n}^{t_{n+2}}f(s,y(s))\dif s -\frac{h}{3}\left(f(t_{n+2},y_{n+2})+4f(t_{n+1},y_{n+1}) + f(t_n,y_n) \right)\]
+
+\ppart La función incremento asociada a la fórmula recurrente se define como:
+\[\phi_f(t_n,y_n,y_{n+2};h) = \lim_{k\to \infty}\phi_k^{(k)}(t_n,y_n,y_{n+1};h)\]
+con $\phi_f^{(0)}$. Definir $\phi_f^{(k)}$ en función de $\phi_f^{(k-1)}$ de forma que se satisfaga
+\[y_{n+2}-y_n = h \phi_f(t_n,y_n,y_{n+1};h)\]
+
+¿Bajo qué condiciones existe el límite anterior?
+
+\ppart Probar que $\phi_f$ es una función continua con respecto a todas sus variables
+
+\ppart Probar que 4$\phi_f$ es Lipschitz con respecto a $y_n$ e $y_{n+1}$.
+
+\ppart Probar que el último método mencionado es consistente
+
+\ppart Probar que ese método es convergente
+\solution
+\end{problem}
+
+\begin{problem}[5]
+Sea el método multipaso
+\[y_{n+2} - \frac{4}{3}y_{n+1}+\frac{1}{3}y_b = \frac{2}{3}hf(t_{n+2},y_{n+2})\]
+
+\ppart Definir su función incremento y comprobar que el método está determinado de manera única
+
+\ppart Ver si el método es consistente
+
+\ppart Ver si el métod es convergente
+\solution
+\end{problem}
+
+\begin{problem}[6]
+Considera el método lineal multipaso (leap-frog)
+\[y_{n+2}-y_n = 2hf(t_{n+1},y_{n+1})\]
+
+¿Cuál es el orden del método?
+\solution
 \end{problem}
