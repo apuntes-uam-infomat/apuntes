@@ -94,7 +94,7 @@ Hay dos nombres cocretos que nos interesarán. Si $μ(X) < ∞$, entonces se dic
 
 Un ejemplo de una medida que no es una función es la delta de Dirac que habíamos visto antes, que de hecho es una medida de probabilidad.
 
-\begin{prop}[Propiedades de la medida][Medida!propiedades de] Dado un espacio medible \meas:
+\begin{prop}[Propiedades de la medida][Medida!propiedades de] \label{prop:PropiedadesMedida} Dado un espacio medible \meas:
 
 \begin{enumerate}
 \item \textbf{Monotonía}: Si $E⊂F$, entonces $μ(E) ≤ μ(F)$.
@@ -131,9 +131,9 @@ Con esto, ya podemos dar la definición de función integrable, que es bastante 
 
 \begin{defn}[Función\IS integrable] Se dice que $f$ es integrable si y sólo si $\int f \dif μ < ∞$.\end{defn}
 
-Ahora sólo nos falta aprender a integrar funciones negativas. Para eso definiremos las dos partes de una función: \begin{align*}
+Ahora sólo nos falta aprender a integrar funciones negativas. Para eso definiremos las dos partes de una función: \(\begin{aligned}
 f_+ &= \max\set{f,0} \\
-f_- &= \max\set{-f, 0}\end{align*}, de tal forma que $f = f_+ - f_-$, $\abs{f}= f_+ + f_-$ y entonces su integral es \[ \int_X f \dif μ = \int_X f_+ \dif μ - \int_X f_- \dif μ \]
+f_- &= \max\set{-f, 0}\end{aligned} \label{eq:DescompFunc} \), de tal forma que $f = f_+ - f_-$, $\abs{f}= f_+ + f_-$ y entonces su integral es \[ \int_X f \dif μ = \int_X f_+ \dif μ - \int_X f_- \dif μ \]
 
 Análogamente podemos hacer la integral de funciones complejas descomponiendo \[ f = (\Re f)_+ - (\Re f)_- + \imath (\Im f)_+ - \imath (\Im f)_- \] e integrando igual que antes.
 
@@ -142,7 +142,7 @@ Vamos a ver ahora las propiedades de las integrales.
 \begin{prop} Dada $\appl{f}{X}{[-∞,+∞]}$, entonces
 
 \begin{enumerate}
-\item $f$ es integrable si y sólo si $\abs{f}$ es integrable\footnote{Esto en Riemann no es cierto, ver el contraejemplo de la \fref{eq:IntRiemmanNoLeb}.}, esto es, que $\int_X \abs{f} \dif μ < ∞$. En este caso decimos $f ∈ \lebg^1\meas \equiv \lebg^1 (X) \equiv \lebg_μ^1 (X) \equiv \lebg^1$, según lo que demos por supuesto en cada caso, donde $\lebg^1$ es el espacio vectorial de las funciones absolutamente integrable.
+\item $f$ es integrable si y sólo si $\abs{f}$ es integrable\footnote{Esto en Riemann no es cierto, ver el contraejemplo de la \fref{eq:IntRiemmanNoLeb}.}, esto es, que $\int_X \abs{f} \dif μ < ∞$. En este caso decimos $f ∈ \lebg^1\meas \equiv \lebg^1 (X) \equiv \lebg_μ^1 (X) \equiv \lebg^1$, según lo que demos por supuesto en cada caso, donde $\lebg^1$ es el espacio vectorial de las funciones absolutamente integrables.
 \item La aplicación que lleva cada función a su integral $f\longmapsto \int_X f \dif μ$ es lineal. Es fácil ver que $αf + βg = α \int_X f \dif μ + β \int_X g\dif μ$.
 \item \concept{Desigualdad\IS triangular en $\lebg^1$}. Dada $\appl{f}{X}{ℂ}$ absolutamente integrable, entonces $\abs{\int f \dif μ} ≤ \int \abs{f}\dif μ$.
 \item \textbf{Comparación}. Si $0 ≤ f ≤ g$, entonces $0 ≤ \int f \dif μ ≤ \int g \dif μ$. Además, si $f ≥ 0$ entonces $\int f = 0$ si y sólo si $f = 0$ en casi todo punto\footnote{$f = 0$ en casi todo punto si $∃N ⊂ X$ tal que $μ(N) = 0$ con $f ≠ 0$ en $N$.}. En el otro sentido, si $\int\abs{f} = 0$ entonces $f \equiv 0$ en casi todo punto.
@@ -154,7 +154,19 @@ Vamos a ver ahora las propiedades de las integrales.
 
 \begin{proof}
 \begin{enumerate}
-\item % TODO.
+\item Si $f$ es integrable, entonces podemos descomponerla en $f_+$ y $f_-$, definidas como en \eqref{eq:DescompFunc} e integrables por construcción. En ese caso, $\abs{f} = f_+ + f_-$ es suma de funciones integrables y será también integrable.
+
+Por otra parte, si $\abs{f}$ es integrable, entonces para cualquier posible descomposición $\abs{f} = f_+ + f_-$ tendremos que \[ \int_X f \dif μ = \int_X f_+ \dif μ - \int_X f_- \dif μ \eqreasonup[≤]{$f_- ≥ 0$} \int_X f_+ ≤ \int_X \abs{f} \dif μ < ∞ \]
+
+\item Trivial.
+
+\item Operamos y vemos que \[ \abs{\int f \dif μ} = \abs{\int f_+ \dif μ - \int f_- \dif μ} ≤ \int f_+ \dif μ + \int f_- \dif μ = \int\abs{f} \dif μ\]
+
+\item Bastante trivial también.
+
+\item Igualmente trivial. Medida cero implica que la integral valdrá cero y esa modificación no afectará en nada al valor final.
+
+\item Si hubiese un conjunto de medida no nula en el que la función no es finita, la integral del valor absoluto no daría un valor finito y por lo tanto no sería integrable.
 \end{enumerate}
 \end{proof}
 
@@ -183,14 +195,11 @@ Otro teorema, que se corresponde con el tercer principio de Littlewood.
 
 La prueba de este teorema es sencilla y bonita:
 
-\begin{proof} Podemos asumir que $f_n \convs f$ en todo punto\footnote{TODO: Entender por qué.}. Entonces, para $k,n ∈ ℕ$ definimos \[ E_n(k) = \sum_{m=n}^∞ \set{x∈X \tq \abs{f_m(x) - f(x)} > \frac{1}{k}} \], es decir, el conjunto de puntos en los que la función se aleja del límite.
-Para todo $k$ fijo, es fácil ver que $E_n(k) ⊇ E_{n+1}(k) ⊇ \dotsb $ y además $\bigcap_{n=1}^∞ E_n(k) = ∅$\footnote{Esto también queda TODO.}. Entonces, por convergencia dominada de las medidas, sabemos que $\lim_{n\to \infty} μ(E_n(k)) = μ\left(\bigcap E_n\right) = μ(∅) = 0$.
+\begin{proof} Para $k,n ∈ ℕ$ definimos \[ E_n(k) = \sum_{m=n}^∞ \set{x∈X \tq \abs{f_m(x) - f(x)} > \frac{1}{k}} \] como el conjunto de puntos en los que la función se aleja del límite. Para todo $k$ fijo, es fácil ver que $E_n(k) ⊇ E_{n+1}(k) ⊇ \dotsb $ y además \[ μ\left(\bigcap_{n=1}^∞ E_n(k)\right) = 0 \] (si no fuese así, tendríamos un conjunto de puntos de medida no nula en la que la sucesión no converge, y hemos dicho que convergía en casi todo punto).
 
-Ahora la prueba se acaba de forma bastante sencilla: dado $ε > 0$ y $k∈ℕ$, elegimos $m_k$ tal que $μ(E_n(k)) ≤ \frac{ε}{2^k}$. Entonces, definimos $E = \bigcup_{k=1}^∞ E_{n_k}(k)$, y entonces $μ(E) ≤ \sum_{n≥1} μ(E_{n_k}) ≤ \sum_{k≥1} \frac{ε}{2^k} ≤ ε$.
+Por convergencia dominada de las medidas (ver \fref{prop:PropiedadesMedida}), sabemos que $\lim_{n\to \infty} μ(E_n(k)) = μ\left(\bigcap E_n\right) = 0$.
 
-Así, si $n > n_k$ y $x ∉ E$, tendremos que $\abs{f_n(x) - f(x)} < \frac{1}{k}$.
-
-En definitiva, lo que hemos hecho ha sido coger todos los puntos donde va a converger y hacer algo más que me he perdido completamente.
+Ahora la prueba se acaba de forma bastante sencilla: dado $ε > 0$ y $k∈ℕ$, siempre podremos encontrar un $m_k$ tal que $μ(E_{m_k}(k)) ≤ \frac{ε}{2^k}$. Entonces, definimos $E = \bigcup_{k=1}^∞ E_{m_k}(k)$, que será el conjunto donde la sucesión no se aproxima uniformemente a $f$. Por definición, \[ μ(E) ≤ \sum_{n≥1} μ(E_{n_k}) = \sum_{k≥1} \frac{ε}{2^k} ≤ ε \], esto es, podemos hacer la medida de ese conjunto tan pequeña como queramos, así que tendremos convergencia uniforme salvo en un conjunto de medida cero.
 \end{proof}
 
 \begin{theorem}[Teorema\IS de Lusin] Dada $\appl{f}{X}{ℂ}$ medible con $μ(X) < ∞$, entonces $f$ es casi continua, que como viene siendo hasta ahora significa que $f$ es continua salvo en un conjunto de medida cero. Esto es, que $∀ε>0$ existe un $N_ε⊆X$ tal que $f$ es continua en $X\setminus N_ε$ y $μ(N_ε) < ε$.
@@ -224,9 +233,9 @@ Pero podemos definir esa misma medida de forma constructiva, desde el espacio de
 
 \begin{proof} Es fácil ver que, si $f$ es la función característica de un conjunto (esto es, $f \equiv \ind_E$), entonces \eqref{eq:MedidaPolares} es simplemente otra forma de decir que $μ_\ast = ρ × σ$, y se puede generalizar a $f$ sin mucha dificultad\footnote{TODO: Generalízalo, anda, so vago.}. Entonces, sólo tenemos que construir σ.
 
-Si $E$ es un conjunto de Borel en $\bbs^{n-1}$ y $a > 0$, sea \[ E_a = \inv{Φ}\left((0,a] × E\right) = \set{rθ \tq 0 < r ≤ a, θ ∈ E }\]
+Si $E$ es un conjunto de Borel en $\bbs^{n-1}$ y $a > 0$, sea \[ E_a = \inv{Φ}\left((0,a] × E\right) = \set{rθ \tq 0 < r ≤ a, θ ∈ E } \]
 
-Dado que \eqref{eq:MedidaPolares} se tiene que cumplir cuando en particular $f = \ind_{E_1}$; tenemos que tener que \[ μ(E_1) = \int_0^1\int_E r^{n-1} \dif σ(θ) \dif r = σ(E) \int_0^1 r^{n-1} \dif r = \frac{σ(E)}{n} \]
+Dado que \eqref{eq:MedidaPolares} se tiene que cumplir cuando en particular $f = \ind_{E_1}$; tenemos que tener que \( μ(E_1) = \int_0^1\int_E r^{n-1} \dif σ(θ) \dif r = σ(E) \int_0^1 r^{n-1} \dif r = \frac{σ(E)}{n} \label{eq:MedidaMuSigmaPolares}  \)
 
 Definimos entonces $σ(E) = n · μ(E_1)$. Dado que la aplicación $E\mapsto E_1$ lleva conjuntos de Borel a conjuntos de Borel y conmuta con la unión, intersección y comlemento, está claro\footnote{TODO: Esto debería mirarlo bien.} que σ es una medida de Borel en $\bbs^{n-1}$. Además, dado que $E_a$ es la imagen de $E_a$ por la aplicación $x \mapsto ax$, se sigue de \citep[Teorema 2.44]{folland99} que $μ(E_a) = a^n μ(E_1)$, y por lo tanto si $0 < a < b$, entonces \[ μ_\ast\left((a,b] × E\right) = μ(E_b \setminus E_a) = \frac{b^n-a^n}{n}σ(E) = σ(E) \int_a^b r^{n-1}\dif r = (ρ × σ) \left((a,b]×E\right)\]
 
@@ -234,27 +243,41 @@ Fijado un conjunto de Borel $E$ de $\bbs^{n-1}$, sea $\algbA_E$ la colección de
 
 \end{proof}
 
-\begin{corol} Si $f$ es una función medible en $ℝ^n$ tal que $f(x) = g(\abs{x})$ para alguna función $g$ en $(0,∞)$, entonces \[ f(x) \dif x = σ(S^{n-1}) \int_0^{∞} g(r) r^{n-1}\dif r \]
+\begin{corol} Si $f$ es una función medible en $ℝ^n$ tal que $f(x) = g(\abs{x})$ para alguna función $g$ en $(0,∞)$, entonces \( f(x) \dif x = σ(\bbs^{n-1}) \int_0^{∞} g(r) r^{n-1}\dif r \label{eq:IntegralPolares} \)
 \label{crl:MediblePolares1}
 \end{corol}
 
-\begin{prop} \citep[Proposición 2.53]{folland99} Si $a > 0$, entonces \[ \int_{ℝ^n} e^{-a\md{x}^2} \dif x = \left(\frac{π}{a}\right)^\frac{n}{2} \]
+\begin{prop} \citep[Proposición 2.53]{folland99} Si $a > 0$, entonces \( \int_{ℝ^n} e^{-a\md{x}^2} \dif x = \left(\frac{π}{a}\right)^\frac{n}{2} \label{eq:IntegralExp2} \)
 \end{prop}
 
-\begin{proof} Denotamos la integral por $I_n$. Para $n=2$, por el \fref{crl:MediblePolares1} tenemos que \[ I_2 = 2π\int_0^∞ re^{-ar^2} \dif r = \eval{- \left(\frac{π}{a}\right) e^{-ar^2}}_0^∞ = \frac{π}{a} \]
+\begin{proof} Denotamos la integral por $I_n$. Para dimensión $n=2$ podemos calcular $σ(\bbs^1)$, que es $2π$, así que por el \fref{crl:MediblePolares1} tenemos que \[ I_2 = 2π\int_0^∞ re^{-ar^2} \dif r = \eval{- \left(\frac{π}{a}\right) e^{-ar^2}}_0^∞ = \frac{π}{a} \]
 
 Dado que $e^{-a\md{x}^2} = \prod_{j=1}^n e^{-ax_j^2}$, por el teorema de Tonelli (\ref{thm:FubiniTonelli}) tenemos que $I_n=(I_1) ^ n$. En particular $I_1 = (I_2)^{\frac{1}{2}}$, y la proposición sigue naturalmente.
 \end{proof}
 
 Este resultado nos permitirá calcular $σ(\bbs^{n-1})$ para todo $n$ en términos de la función $Γ$.
 
-\begin{prop} \citep[Proposición 2.54]{folland99} \label{prop:MedidaSn} \[ σ(\bbs^{n-1}) = \frac{2π^\frac{n}{2}}{Γ(n/2)} \]
+\begin{prop} \citep[Proposición 2.54]{folland99} \label{prop:MedidaSn} \( \label{eq:MedidaSn} σ(\bbs^{n-1}) = \frac{2π^\frac{n}{2}}{Γ(n/2)} \)
 \end{prop}
+
+\begin{proof} Combinamos \eqref{eq:IntegralPolares} y \eqref{eq:IntegralExp2}, tomando $a = 1$ por simplificar \[ π^\frac{n}{2} = \int_{ℝ^n} e^{-\md{x}^2} \dif x = σ(\bbs^{n-1}) \int_0^{∞} r^{n-1} e^{-r^2} \dif r \]
+
+Ahora, idea feliz, nos acordamos de la integral de la función Gamma (la que se puede considerar como la extensión del factorial a los reales): \[ Γ(n) = \int_0^∞ x^{n-1} e^{-x} \dif x \] así que podemos hacer la sutitución $s = r^2$ para seguir operando:
+
+\[ π^\frac{n}{2} = σ(\bbs^{n-1}) \int_0^{∞} r^{n-1} e^{-r^2} \dif r = \frac{σ(\bbs^{n-1})}{2} \int_0^∞ s^{\frac{n}{2} - 1} e^{-s} \dif s = \frac{σ(\bbs^{n-1})}{2} Γ\left(\frac{n}{2}\right) \] y despejando ya nos quedaría \eqref{eq:MedidaSn}, lo que queríamos demostrar.
+\end{proof}
 
 Podemos usar esta proposición para sacar la medida de la esfera unitaria en $n$ dimensiones.
 
-\begin{corol} \label{crl:MedidaBn} Sea $\bola_r^N = \set{x ∈ ℝ^N \tq \md{x} < r}$. Entonces \[ μ(\bola_r^N) = r^N\frac{π^{n/2}}{Γ\left(\frac{n}{2} + 1\right)} = r^N ω_N\]
+\begin{corol} \label{crl:MedidaBn} Sea $\bola_r^N = \set{x ∈ ℝ^N \tq \md{x} < r}$. Entonces \( μ(\bola_r^N) = r^N\frac{π^{n/2}}{Γ\left(\frac{n}{2} + 1\right)} = r^N ω_N \label{eq:MedidaBn} \)
 \end{corol}
+
+\begin{proof} Según \eqref{eq:MedidaMuSigmaPolares}, que nos relaciona la medida $σ(E)$ con la de $μ((0,1] × E)$, tenemos que $μ(\bola_1^N) = n^{-1} σ(\bbs^{N -1})$, así que \[ μ(\bola_1^{N}) =  \frac{2π^\frac{n}{2}}{nΓ(n/2)} = \frac{π^\frac{n}{2}}{\frac{1}{2}n Γ\left(\frac{n}{2}\right)} =\frac{π^\frac{n}{2}}{Γ\left(\frac{n}{2} + 1\right)}  \]
+
+Para radios distintos de $1$, sólo tenemos que multiplicar por $r^N$.
+\end{proof}
+
+A modo de curiosidad, podemos ger que $ω_N \convs 0$, esto es, que la medida de la bola se va a cero según aumentan las dimensiones.
 
 Para practicar la integración en polares, podemos ver algunas integrales. Por ejemplo, veamos \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x \] para $α ∈ ℝ$. Si usamos el \fref{crl:MediblePolares1}, con $f(x) = g(\md{x})$ para $g(r) = \frac{1}{r}$ tenemos que \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ g(r) r^{n-1} \dif r = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ r^{n-1 - α} \dif r\]
 
@@ -304,7 +327,7 @@ Para probar este lema, simplemente hay que aplicar el lema de Fatou normal (\ref
 \end{theorem}
 
 \begin{proof}[Esquema]
-Para la prueba del teorema, simplemente usaríamos los dos teoremas \ref{thm:Fatou} y \ref{thm:FatouInverso}. Si existe el límite de las integrales, existen los límites superior e inferior y tenemos las desigualdades. % TODO: Se deja como ejercicio al lector.
+Para la prueba del teorema, simplemente usaríamos los dos teoremas \ref{thm:Fatou} y \ref{thm:FatouInverso}. Si existe el límite de las integrales, existen los límites superior e inferior y tenemos las desigualdades.
 \end{proof}
 
 \begin{theorem}[Teorema\IS de convergencia dominada para series] Dada una sucesión de funciones $f_n$ medibles tal que $f_n \convs f$ en casi todo punto. Entonces si $\sum_n \int \abs{f_n}\dif μ < ∞$, entonces  \[ \int_X \sum_n f_n \dif μ = \sum_n \int f_n \dif μ\]
@@ -314,7 +337,7 @@ Además de los teoremas, nos interesará ver varios ejemplos de series especiale
 
 Uno sencillo para Fatou es \( f_n(x) = \begin{cases} \frac{1}{n} & x ∈ [0,n] \\ 0 & x ∉ [0,n] \end{cases} \label{eq:ContrajemploFatou1} \), que convege puntualmente a 0 uniformemente. Sin embargo, $\int_ℝ f_n \dif x = 1$ para todo $n$. Entonces tenemos un menor estricto en la ecuación del lema de Fatou (\ref{thm:Fatou}).
 
-Como ejercicio, tendríamos que ver qué le ocurre a la función \[ f_n(x) = \begin{cases} \frac{-1}{n} & x ∈ [n, 2n] \\ 0 & x ∉ [n, 2n] \end{cases} \], que converge uniformemente a cero pero la integral es -1 para todo punto. % TODO
+Como ejercicio, podemos ver qué le ocurre a la función \[ f_n(x) = \begin{cases} \frac{-1}{n} & x ∈ [n, 2n] \\ 0 & x ∉ [n, 2n] \end{cases} \], que converge uniformemente a cero pero la integral es -1 para todo $n$. Podríamos tratar de usar el \nlref{thm:ConvDominada}, pero es imposible encontrar una función $g$ que domine a $f_n$ y sea integrable: como el soporte de $f_n$ se mueve hacia infinito con $n$, la $g$ que domine deberá ser distinta de cero en un intervalo $(x_0, ∞)$ y eso no va a ser integrable.
 
 \section{Complementos de teoría de la integral y la medida}
 \label{sec:ComplementosTIM}
@@ -488,7 +511,6 @@ La siguiente ecuación, \eqref{eq:Conv:CE3}, que converge a cero en casi todo pu
 \label{fig:eqMaquinaEscribir}
 \end{figure}
 
-% TODO: Dibujar esta mierda de ecuación.
 El caso de la última ecuación \eqref{eq:Conv:CE4}, que a veces se le llama la ``máquina de escribir'', es más interesante todavía. Empezamos por ver que es convergente a $0$ en $L^1$ (ver \fref{def:ConvLp}). Si integramos, \[ \int_{ℝ} \abs{f_n} \dif x = \int_0^1 \ind_{\left(\frac{j}{2^k}, \frac{j+1}{2^{k+1}}\right)} = \int_{\frac{j}{2^k}}^{\frac{j+1}{2^k}} \dif x = \frac{1}{2^k} \convs 0 \]
 
 En ese caso, la teoría nos dice que existe una subsucesión $f_{n_k} \convs 0$ en CTP. Lo que no existe es convergencia puntual de \textit{toda} la sucesión. Si fijamos $x ∈ [0,1]$, por ejemplo, $x = 0$, tenemos que \[ f_n (0) = \begin{cases} 1 & \text{para ciertos } n\\ 0 &\text{para otros} \end{cases} \], esto es, la sucesión sería $f_n(0) = \{1,0,1,\underbracket{0,0,0}_{2^2 - 1},1,\underbracket{0,0,0,0,0,0,0}_{2^3 - 1},1,\dotsc\}$ y no va converger puntualmente. Ahora, es fácil ver que hay una subsucesión que sí converge a 0 (y otra que sí converge a $1$, que es la formada por los valores de las posiciones $2^k$).
@@ -511,8 +533,7 @@ Ahora, un teorema-ejercicio.
 
 \begin{theorem} \citep[Signed Measures]{terence10} Sea μ una medida σ-finita. Dadas dos funciones $\appl{f,g}{X}{[0,∞]}$, entonces $m_f = m_g \iff f = g$ en casi todo punto.\end{theorem}
 
-\begin{proof}
-% TODO
+\begin{proof} La prueba no es demasiado difícil. Si empezamos suponiendo que $m_f = m_g$, entonces $m_f(E) = m_g(E)$ para todo $E ∈ \algb{X}$, lo que nos dice que \[ \int_E f \dif m = \int_E g \dif m \implies \int_E (f-g)\dif m = 0 \], luego $f = g$ salvo, como mucho, en conjuntos de medida cero. La implicación al otro lado se puede hacer siguiendo los mismos pasos en sentido contrario.
 \end{proof}
 
 Vamos a empezar con la definición esa de derivadas de medidas. De momento, una definición temporal:
@@ -545,20 +566,39 @@ Podemos hacer una primera definición de $σ$ una medida con signo tal que \[ σ
 \end{enumerate}
 \end{defn}
 
-El primer ejemplo de medidas con signo es la resta de dos medidas positivas siendo una finita. Pero podemos preguntarnos si todas las medidas son de esta forma. La respuesta es sí, pero es dificilillo de demostrar así que veremos sólo el teorema.
+\subsubsection{Teoremas de descomposición}
 
-\begin{theorem}[Teorema\IS de descomposición de Hahn] Sea $μ∈ \msgn\meds$. Entonces existe una partición de $X = X_+ ∪ X_-$ tal que $\restr{μ}{X_+} ≥ 0$ y $\restr{μ}{X_-} ≤ 0$, y con $X_+$ conjutno totalmente positivo y $X_-$ conjunto totalmente negativo, únicos salvo conjuntos de medida cero.
+El primer ejemplo de medidas con signo es la resta de dos medidas positivas siendo una finita. De hecho, podemos preguntarnos si todas las medidas que podamos construir son de esta forma. La respuesta es sí, pero es dificilillo de demostrar así que veremos sólo el teorema.
 
-La restricción de una medida la definimos como, dado $A ∈ \algb{X}$, definimos $\restr{\algb{X}}{A} ≝ \set{X ∈ \algb{X} \tq X ⊆ A}$ y $\restr{μ}{A}(E) = μ(E∩A)$.
+\begin{theorem}[Teorema\IS de descomposición de Hahn] \label{thm:DescompHahn} Sea $μ∈ \msgn\meds$. Entonces existe una partición de $X = X_+ ∪ X_-$ tal que $\restr{μ}{X_+} ≥ 0$ y $\restr{μ}{X_-} ≤ 0$, y con $X_+$ conjunto totalmente positivo y $X_-$ conjunto totalmente negativo, únicos salvo conjuntos de medida cero.
+
+La restricción de una medida dado $A ∈ \algb{X}$ se define usando $\restr{\algb{X}}{A} ≝ \set{X ∈ \algb{X} \tq X ⊆ A}$ y entonces $\restr{μ}{A}(E) = μ(E∩A)$.
 \end{theorem}
+
+Antes de seguir, la definición formal de conjuntos totalmente positivos o negativos que hemos mencionado:
 
 \begin{defn}[Conjunto\IS totalmente positivo/negativo] $X_{+/-}$ es un conjunto totalmente positivo/negativo  respecto a $μ$ si $∀E ∈ \algb{X}$ con $E ⊆ X_{+/-}$ se tiene que $μ(E) ≥ 0$ (o $μ(E) ≤ 0$).\end{defn}
 
-El teorema nos demuestra la pregunta de antes: siempre tendremos dos medidas $\restr{μ}{X_+} ≥ 0$ y $-\restr{μ}{X_-} ≥ 0$ que podremos combinar.
+El teorema nos demuestra la pregunta de antes: siempre tendremos dos medidas $\restr{μ}{X_+} ≥ 0$ y $-\restr{μ}{X_-} ≥ 0$ que podremos combinar. De hecho, la descomposición es un teorema separado:
 
-Ahora bien, a pesar de eso no debemos pensar que el espacio de medidas (que denotaremos por $\msgn\meds$) no es un espacio vectorial. Definamos por ejemplo $μ = m_1 - m_2$ y $\bar{μ} = m_2 - m_3$, con $m_1,m_3$ infinitas y $m_2$ finita. Si sumamos $μ + \bar{μ}$, la cosa se nos queda indefinida. ¿Qué podemos hacer si queremos tener un espacio vectorial? Pues usar sólo medidas finitas con signo. Este \concept{Espacio\IS vectorial de medidas finitas} se denotará por $\mfin\meds$.
+\begin{theorem}[Teorema\IS de descomposición de medidas de Jordan] Toda medida con signo $μ ∈ \msgn\meds$ tiene una descomoposición única \[ μ = μ^+ - μ^-\] en dos medidas positivas $μ^+, μ^-$, de las cuales al menos una es finita, y tales que $μ^+(E) = 0$ si $E ⊆ X_-$ y, análogamente, $μ^-(E) = 0$ si $E ⊆ X^+$.
+\end{theorem}
 
-\textit{TODO: aquí faltan dos clases.}
+\begin{proof} La prueba se deriva del teorema de Hahn: teniendo los $X_+$ y $X_-$, entonces se pueden definir ambas medidas como \begin{align*}
+μ^+(E) &≝ μ(E∩X_+) \\
+μ^-(E) &≝ -μ(E∩X_-)
+\end{align*}
+
+Esto nos valdrá para cualquier otro par $X_+, X_-$ que cojamos, ya que según el teorema de Hahn como mucho diferirán en un conjunto de medida cero que no va a afectar a la definición.
+
+Las pruebas de unicidad y minimalidad son algo más avanzadas, aunque en \citep{fischer12} están bien explicadas.
+\end{proof}
+
+Ahora bien, a pesar de tener esta descomposición no debemos dejarnos llevar y pensar que el espacio de medidas (que denotaremos por $\msgn\meds$) no es un espacio vectorial. Definamos por ejemplo $μ = m_1 - m_2$ y $\bar{μ} = m_2 - m_3$, con $m_1,m_3$ infinitas y $m_2$ finita. Si sumamos $μ + \bar{μ}$, la cosa se nos queda indefinida. ¿Qué podemos hacer si queremos tener un espacio vectorial? Pues usar sólo medidas finitas con signo. Este \concept{Espacio\IS vectorial de medidas finitas} se denotará por $\mfin\meds$.
+
+\seprule
+
+La decomposición de medidas no se queda sólo en medidas positivas y negativas. Hay una descomposición en función del ``carácter'' de las medidas, aunque antes de meternos a eso tenemos que definir bien qué es el soporte de una medida. Empezamos definiendo el soporte esencial para funciones, que nos será bastante útil.
 
 \begin{defn}[Soporte\IS esencial] Dada una función $\appl{f}{X}{Y}$, se define el soporte esencial (o soporte de una función definida en casi todo punto) como  \[ \mop{esssop} f = X - \bigcup \set{N ∈ \topl \tq f(x) = 0 \text{ para c.t.p de } N} \] donde $\topl$ son los abiertos de $X$.
 \end{defn}
@@ -576,6 +616,8 @@ Por ejemplo, el soporte de la medida dada por la delta de Dirac $δ_0$ es $\sop 
 
 \begin{defn}[Medida\IS singular] Se dice que dos medidas $μ,ν$ son singulares una respecto de la otra (denotado por $μ\perp ν$) si y sólo si\footnote{Por si no nos acordamos, $\sop μ = \set{E ∈ \algb{X} \tq μ(E) ≠ 0}$.} $m\left(\sop μ ∩ \sop ν\right) = 0$, donde $m$ es la medida de referencia. Equivalentemente, esto ocurre si y sólo si $\restr{μ}{\sop ν}(E) = 0$ para todo $E$.
 \end{defn}
+
+Una vez visto bien el soporte, podemos ir con el siguiente teorema.
 
 \begin{theorem}[Teorema\IS de Lebesgue-Radon-Nikodin] \label{thm:LebesgueRadonNikodin} Sea $μ ∈ \msgn\meas[X][m]$ medida con signo. Entonces existe una \textbf{única} descomposición \[ μ = m_f + μ_s \] donde $f ∈ L^1\meas[X][m]$ (esto es, $f$ es absolutamente integrable respecto a $m$) y $m_s \perp m$. Si μ es positiva no negativa, entonces $m_f$ y $μ_s$ lo son.
 
@@ -596,18 +638,18 @@ Por ejemplo, podemos tomar $μ = \lebg_{ℝ^n} + δ_0$, donde $\lebg_{ℝ^n}$ es
 \begin{defn}[Medida\IS absolutamente continua] \label{def:MedidaAbsCont} Cuando una de las tres condiciones del teorema anterior \eqref{thm:CorolRadonNikodin} se cumple, decimos que μ es absolutamente continua con respecto a $μ$, y se denota por $μ \ll m$.
 \end{defn}
 
-En definitiva, lo que nos dice ese teorema es que las medidas absolutamente continuas cambian la meidad de los conjuntos, pero de una forma regular. Por ejemplo, nos dice algo muy intuitivo que es que, si tenemos $μ$ una medida asociada a una función $f$, entonces si $m(E) = 0$ la medida asociada, que no es más que la integral, tendrá que ser cero igualmente: \[ μ(E) = m_f(E) = \int_E f\dif m = 0 \]
+En definitiva, lo que nos dice ese teorema es que las medidas absolutamente continuas cambian la medida de los conjuntos, pero de una forma regular. Por ejemplo, nos dice algo muy intuitivo que es que, si tenemos $μ$ una medida asociada a una función $f$, entonces si $m(E) = 0$ la medida asociada, que no es más que la integral, tendrá que ser cero igualmente: \[ μ(E) = m_f(E) = \int_E f\dif m = 0 \]
 
 Un ejemplo es que la delta de Dirac no es absolutamente continua con respecto a la medida de Lebesgue $\lebg_{ℝ^n}$. Es obvio que $\lebg_{ℝ^n} (\set{x}) = 0\; ∀x ∈ ℝ^n$, pero $δ_0(\set{0}) = 1$, luego no se cumplen las condiciones.
 
 Esta definición nos da un corolario que no es más que una reformulación de los resultados de Radon-Nikodin, pero que en realidad es un teorema que descubrió Lebesgue independientemente.
 
-\begin{theorem}[Teorema\IS de descomposición de Lebesgue] \label{thm:DescLebesgue} Sea \meas espacio de medida, con $m ≥ 0$. Sea $μ ∈ \msgn\meas$ medida con signo. Entonces, existe una única descomposición \[ μ = μ_{AC} + μ_S \] donde $μ_{AC}$ es absolutamente continua con respecto a $m$ ($μ_{AC} \ll m$) y $μ_s \perp m$.
+\begin{theorem}[Teorema\IS de descomposición de Lebesgue] \label{thm:DescLebesgue} Sea \meas espacio de medida, con $m ≥ 0$. Sea $μ ∈ \msgn\meas$ medida con signo. Entonces, existe una única descomposición \[ μ = μ_{AC} + μ_S \] donde $μ_{AC}$ es absolutamente continua con respecto a $m$ ($μ_{AC} \ll m$) y $μ_S \perp m$.
 \end{theorem}
 
 Aquí se cumple de nuevo que si $μ$ es positiva ($μ ≥ 0$) entonces $μ_{AC}$ y $μ_S$ también lo son. Sólo hay que ver que como $μ_S \perp μ_{AC}$, entonces tienen soportes disjuntos. Si existiese un conjunto $E$ tal que $μ_S(E) < 0$, entonces $μ_{AC}(E) = 0$ por tener soportes disjuntos, por lo que tendríamos $μ < 0$, contradicción.
 
-Una cosa que hemos pasado por encima en ese ejemplo es que el teorema sólo nos dice que $μ_S \perp m$, no que $μ_S \perp μ_{AC}$. La cuestión es que si tenemos $E ∈ \algb{X}$, con $E ⊆ \sop(μ_{AC})$, entonces pasa algo. % TODO: Algo qué?
+Una cosa que hemos pasado por encima en ese ejemplo es que el teorema sólo nos dice que $μ_S \perp m$, no que $μ_S \perp μ_{AC}$. Ahora bien, eso es fácil de probar. Sea $E ⊆ \sop μ_S$, entonces $m(E) = 0$, y por ser $μ_{AC}\ll m$ podemos usar el \nlref{thm:CorolRadonNikodin} y entonces ver que $μ_{AC} = 0$, de tal forma que $E ⊆ \sop \implies E \nsubseteq \sop μ_{AC}$ y por lo tanto $μ_{AC} \perp μ_S$.
 
 Si trabajamos con medidas continuas, podemos refinar la descomposición:
 
@@ -622,13 +664,6 @@ Las medidas singulares continuas nos aparecerán en dimensiones\footnote{Dimensi
 Para verlo bien, podríamos definir una medida en $ℝ^2$ \[ μ = \lebg_{ℝ^2} + \lebg_{ℝ} + δ_{0} \], de tal forma que tendríamos que la dimensión del soporte de $\lebg_{ℝ^2}$ es mayor que el de $\lebg_{ℝ}$. Tendremos que $\lebg_{ℝ^2} \perp \lebg_{ℝ}$, ya que el soporte de $\lebg_{ℝ}$, $ℝ$, tiene medida cero con respecto a $\lebg_{ℝ^2}$.
 
 En otras palabras, tenemos que la parte absolutamente continua es una medida asociada a una función $f$ soportada en $ℝ^2$ con medida del soporte positiva (no nula). La medida singular continua está asociada a una función $g$ soportada en un subconjunto de $ℝ^2$ con medida 2-dimensional nula. Por último, la parte pure-point está soportada en un conjunto de puntos como mucho numerable.
-
-\seprule
-
-Una cosa que no sé muy bien dónde meter. Una función para la que el teorema fundamental del cálculo no derivada clásica e integral de Lebesgue no se cumple (en la definición de \nlref{def:FuncAbsCont} veíamos cuál es la clase más grande de funciones para las que si se cumple).
-
-\begin{defn}[Escalera\IS del diablo] Se construye el conjunto de Cantor y una función que va incrementando en cada ``tercio'' de ese conjunto. Sobre el conjunto de Cantor, $f$ es constante, luego $f' = 0$. Sin embargo, la medida del conjunto de Cantor es 1 y por lo tanto la integral no es cero. % Función de Cantor-Vitali. TODO. Mejorar.
-\end{defn}
 
 \subsection{Medidas de Radon}
 
@@ -874,24 +909,42 @@ Por ejemplo, dadas dos funciones $f_1, f_2 ∈ \esplloc$ con $\abs{f_1 - f_2} = 
 
 Para demostrarlo (sí, es cierto), consideramos $E$ como el conjunto donde $f_1 ≠ f_2$, que ya hemos dicho que tiene medida $0$. Con eso, descomponemos la integral de la bola como \[ \fint_{\bola_r(x)} f_1(y) \dif y = \fint_{\bola_r(x) \setminus E} + \fint_E f_1(y) \dif y \], de tal forma que la integral sobre $E$ vale cero y nos quedará una igualdad de integrales de funciones iguales en los puntos en los que se integra.
 
-Esto nos sirve como introducción a los espacios $L^p$. Trabajaremos con funciones que son equivalentes si tienen la misma integral. Así, tendremos que \[ \espL = \quot{\espL}{\sim}\] con $\sim$ la relación de equivalencia que nos dirá que dos funciones son iguales.
+Esto nos sirve como introducción a los espacios $L^p$. Trabajaremos con funciones que son equivalentes si tienen la misma integral. Así, tendremos que \[ \espL[p] = \quot{\espl[p]}{\sim}\] con $\sim$ la relación de equivalencia que nos dirá que dos funciones son iguales si lo son salvo en un conjunto de medida cero.
 
-Más formalmente, diremos que \( f \sim g \iff \abs{f-g} = 0 \label{eq:RelEqLp} \) en μ-CTP\footnote{Esto es, en todos los puntos salvo en un conjunto de medida $μ$ nula.}. Recordamos entonces el espacio $\espl[p][X,μ]$ como el espacio de funciones $p$-integrables en $X$ según la medida $μ$:
+\section{Espacios de Banach y Hilbert. Espacios $L^p$}
+
+Hasta ahora nos hemos movido en el entorno de espacios de dimensión finita. Ahora iremos un paso más allá y saltaremos a los fascinantes espacios de dimensión infinita.
+
+Unos párrafos más arriba ya hemos visto a grandes rasgos qué son los espacios \espLp. Estos espacios son los prototipos de espacios de Banach\footnote{Matemático polaco, no lo mataron en la guerra pero casi.} y Hilbert\footnote{Matemático inglés, famoso por haber puesto en 1905 (o 1906) los 23 problemas que tendrían a los matemáticos ocupados durante decenas de años. Ahora sobreviven 7 u 8, los que ahora se llaman los \textit{Clay Problems}, que entre otros incluyen las ecuaciones de Navier-Stokes, la hipótesis de Riemann o la ya resuelta conjetura de Poincaré.}, espacios que tratan de responder a una pregunta concreta.
+
+A estas alturas de la carrera ya deberíamos dominar los espacios $ℝ^N$ y $ℂ^N$, que no son más que espacios vectoriales, con una estructura de producto y métrica (o topológica). Esa última estructura no es única: podemos medir distancias habitualmente con la norma habitual, la euclídea, pero también podemos considerar una medida algo menos habitual como \[ \va = \max_{1 ≤ i ≤ N} \abs{a_i} \], lo que se llama la norma $\norm{\cdot}_{∞}$. De hecho, tenemos también las normas $p$, que están dadas por \[ \norm{\va}_p = \sqrt[p]{\sum_{i=1}^N \abs{a_i}^p} \]
+
+Así podemos inventar infinitas normas, pero con una peculiaridad: todas definen la misma convergencia (sucesiones que convergen con una norma convergen con cualquier otra). De hecho, esta es la condición que nos dice que un espacio es de dimensión finita.
+
+Ahora bien, ¿cómo llegamos a espacios de dimensión infinita? El primer ejemplo puede ser $ℝ^∞$, que de hecho denotaremos como $l^2(ℕ)$. Ahí podemos definir la norma y el producto escalar igual, tomando límites.
+
+Las cosas, sin embargo, son algo más curiosas. La medida de una bola infinito-dimensional, si miramos \eqref{eq:MedidaBn}, es cero. Y si en $ℝ^N$ tenemos que un conjunto cerrado y acotado es compacto, en $ℝ^∞$ no lo vamos a tener tan sencillo. Otra cosa antiintuitiva es que aunque en $ℝ^N$ una recta no cabe en una bola, en $ℝ^∞$ eso no es del todo cierto.
+
+Un ejemplo algo más cotidiano que es infinito-dimensional es el espacio de funciones infinitamente derivables $C^∞(ℝ^N)$. Para ver si su dimensión es infinita, deberíamos sacar una base. Pero si nos acordamos del desarrollo de Taylor, sabemos que tenemos infinitos elementos de una base. No vamos a encontrar una base finita, luego la dimensión es infinita.
+
+Vamos a detallar la definición de espacios \espLp que veíamos en la última parte de la sección anterior.
 
 \begin{defn}[Espacio\IS de funciones $p$-integrables $\mathcal{L}^p(X,μ)$] Dado un espacio $X$ y una medida $μ$, definimos el espacio de funciones $p$-integrables como \[
 \espl[p][X,μ] = \set{\appl{f}{X}{ℝ} \tq f \text{ medible},\; \int_X \abs{f}^p \dif μ < + ∞} \]
+
+Equivalemente, son las funciones $f$ tales que \[ \norm{f}_{\espL[p][X,μ]} = \left(\int_X \abs{f}^p \dif μ\right)^\frac{1}{p} \]
 \end{defn}
 
-Con esto podemos definir el espacio \espL[p][X,μ]:
+Con esto, diremos \( f \sim g \iff \abs{f-g} = 0 \label{eq:RelEqLp} \) en μ-CTP\footnote{Esto es, en todos los puntos salvo en un conjunto de medida $μ$ nula.}, y esta relación de equivalencia nos permite definir el espacio \espL[p][X,μ]:
 
-\begin{defn}[Espacio\IS de funciones $L^p(X,μ)$] Definimos el espacio de funciones \espL[p][X,μ] como \[ \espL[p][X,μ] = \quot{\espl[p][X,μ]}{\sim} \] con $\sim$ la relación de equivalencia definida en \eqref{eq:RelEqLp}. Es decir, que lo definimos como las clases de funciones $p$-integrables identificadas en casi todo punto.
+\begin{defn}[Espacio\IS de funciones $L^p(X,μ)$] \label{def:EspLp} Definimos el espacio de funciones \espL[p][X,μ] como \[ \espL[p][X,μ] = \quot{\espl[p][X,μ]}{\sim} \] con $\sim$ la relación de equivalencia definida en \eqref{eq:RelEqLp}. Es decir, que lo definimos como las clases de funciones $p$-integrables identificadas en casi todo punto.
 \end{defn}
 
 Esta definición nos da una descomposición sencilla para las funciones $\tilde{f} ∈ \espLp$: \[ \tilde{f} = f + g\] con $f ∈ \esplp$ y $g$ nula en casi todo punto.
 
-A modo curioso, sí hay funciones continuas en \espLp: nos basta con que el representante sea continuo, dado que podemos descojonarla en casi todo punto. ¿Y cuál será el representante privilegiado? El construido con los valores de Lebesgue de la función.
+A modo de curiosidad, sí hay funciones continuas en \espLp: nos basta con que el representante sea continuo, dado que podemos descojonarla en casi todo punto. ¿Y cuál será el representante privilegiado? El construido con los valores de Lebesgue de la función.
 
-\section{Espacios de Banach y Hilbert. Espacios $L^p$}
+Aunque los elementos de $\espLp$ no son funciones, sí que diremos que cogemos funciones de ese espacio refiriéndonos al representante de una cierta clase de equivalencia, que habitualmente será, como en el anterior párrafo, la función $f^\ast$ que es la construida con los puntos de Lebesgue (\fref{def:PuntoLebesgue}).
 
 \section{SOC en espacio de Hilbert. Series de Fourier}
 
@@ -919,6 +972,22 @@ La demostración es ingeniosa: supongamos $x ∈ ℚ$. Entonces, se puede expres
 Para cualquier otro valor de $x$ ($x ∈ ℝ\setminus ℚ$), tendremos que $\cos (2πxm!) < 1$, y al elevarlo a $n$ con $n \to ∞$, el límite en este caso será 0.
 
 En otras palabras, hemos construido una función no sólo discontinua sino además no integrable Riemann sólo con un límite de funciones $C^∞$. Es una muestra de que la integral de Lebesgue nos servirá más allá que para integrar funciones monstruosas inventadas por algún matemático loco.
+
+\section{Funciones continuas no absolutamente continuas}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/CantorVitaliFunction.png}
+\caption{La función de Cantor-Vitali o escalera del diablo.}
+\label{fig:CantorVitalFunc}
+\end{figure}
+
+Una curiosidad matemática. En la definición de \nlref{def:FuncAbsCont} veíamos que esa era la clase más grande de funciones para las que el teorema fundamental del cálculo con derivada clásica e integral de Lebesgue se cumple. ¿Existe alguna función que sea continua pero no absolutamente continua y que nos sirva de contraejemplo? La respuesta es que sí: es la llamada función de Cantor-Vitali o escalera del diablo.
+
+\begin{defn}[Escalera\IS del diablo] Se construye el conjunto de Cantor y una función que va incrementando en cada ``tercio'' de ese conjunto.
+\end{defn}
+
+Sobre el conjunto de Cantor, $f$ es constante, luego $f' = 0$. Sin embargo, la medida del conjunto de Cantor es 1 y por lo tanto la integral no es cero.
 
 \chapter{Ejercicios}
 \label{chap:Ejercicios}
