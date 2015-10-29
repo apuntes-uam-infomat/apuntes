@@ -438,7 +438,7 @@ Recordemos que la idea de Fermat era considerar que siendo $n$ un número impar 
 Una vez sabemos esto podemos emplear un algoritmo iterativo sobre la función:
 \[Q(x) = x^2 - n\]
 
-para aplicar el algoritmo empezamos probando con $x_0 = [\sqrt{n}]+1$, es decir, el techo de $\sqrt{n}$. En cada iteración comprobamos si $Q(x_i)$ es un cuadrado perfecto y, en caso de no serlo, pasamos a $x_{i+1}=x_i+1$.
+para aplicar el algoritmo empezamos probando con $x_0 = \lceil\sqrt{n}\rceil$, es decir, el techo de $\sqrt{n}$. En cada iteración comprobamos si $Q(x_i)$ es un cuadrado perfecto y, en caso de no serlo, pasamos a $x_{i+1}=x_i+1$.
 
 Este algoritmo siempre nos permite factorizar el número $n$ cualquiera. No obstante, es posible que el tiempo necesario para hacerlo sea demasiado grande.
 
@@ -453,17 +453,82 @@ Si tenemos que $n=p\cdot q$ tenemos diferentes opciones:
 \item 
 \[n|(x-y) \implies x=y \mod n\]
 
+Este caso no tiene sentido puesto que entonces $n=0$
+
 \item 
-\[x|(x+y) \implies x=-y \mod n\]
+\[n|(x+y) \implies x=-y \mod n\]
+
+Esta situación tampoco tiene sentido ya que, igual que en el caso anterior, tendríamos $n=0$
 
 \item
 \[p|(x+y), q|(x-y)\]
 \end{enumerate}
 
 Así, lo que hacemos es calcular el máximo común divisor de $x-y$ y de $n$ para lo que tenemos diferentes opciones:
-\[m.c.d.(x-y,n) = \left\{ \begin{array}{lcc}
-             n &   si  & \text{Estamos en el caso 1} \\
-             1 &  si & \text{Estamos en el caso 2}\\
-             p,q &  si  & \text{Estamos en el caso 3 y por tanto hemos factorizado} 
+\[m.c.d.(x-y,n) = \left\{ \begin{array}{ll}
+             n &   \text{Estamos en el caso 1} \\
+             1 &   \text{Estamos en el caso 2}\\
+             p,q & \text{Estamos en el caso 3 y por tanto hemos factorizado} 
              \end{array}\right.\]
 
+
+Vamos a ver ahora un algoritmo de factorización que se apoya en esta idea:
+\begin{mdframed}
+\begin{enumerate}
+\item Fijamos un conjunto pequeño de primos (pequeños), que denotamos como
+\[\algb{P} = \{p_1,...,p_N\}\]
+
+\item Calculamos $x_0=\lceil\sqrt{n}\rceil$ y comenzamos a iterar con la función $Q(x)=x^2-n$.
+
+\item Calculamos $Q(x_0)$ y factorizamos en base $\algb{P}$, es decir, escribimos:
+\[x_1 = Q(x_0) = \prod_i p_i^{a_{i0}}\]
+
+\item Calculamos $Q(x_1)$ y factorizamos en base $\algb{P}$, es decir, escribimos:
+\[Q(x_1) = \prod_i p_i^{a_{i1}}\]
+
+\item Seguimos hasta que lleguemos a un paso en que $Q(x_i)$ no factoriza en $\algb{P}$
+\end{enumerate}
+
+Al final tendremos todas las factorizaciones posibles en $\algb{P}$ de $x_0,...,x_r$.
+
+Estos números que factorizan en $\algb{P}$ se denominan \textbf{$\algb{P}$-suaves}
+
+\obs Una gran ventaja hasta aquí es que estas factorizaciones pueden hacerse en paralelo, teniendo muchos ordenadores trabajando de forma simultánea.
+
+Una vez tenemos esto, multiplicamos todos estos números en módulo $n$ obteniendo:
+\[\prod_{i=0}^rQ(x_i)=\prod_{i=0}^rx_i^2\]
+puesto que el término $n$ de cada $Q(x_i)$ nos desaparece al hacer el módulo.
+
+Queremos que el número obtenido a la derecha de la igualdad anterior sea un cuadrado perfecto ya que entonces
+\[\prod_i\prod_jp_i^{a_{ij}} = y^2 \implies x^2 = y^2 \mod n\]
+
+Pero, para que esto sea posible, necesitamos que el exponente de cada $p_i$ sea un número par, es decir, necesitamos que
+\[\sum_{ij}a_{ij} \text{ sea par }\]
+
+En lugar de mirar al producto de los $Q(x_i)$ que se factorizan podemos mirar el producto de todos los $Q(x_i)$ que hemos calculado, elevándolos a 1 o 0 según corresponda.
+\[\prod_{j=1}^r Q(x_j)^{δ_j} (\text{ con } δ_j = 1,0)  = \prod_ip_i^{\sum_{ij}a_{ij}} \mod n\]
+
+Finalmente, tenemos que resolver el siguiente sistema de $n$ incógnitas:
+\[\left\{ \begin{array}{l} 
+\sum_{ij}a_{ij}δ_j = 0 \mod 2 \\
+\text{ para } i=1,...,N
+\end{array}\right.\]
+\end{mdframed}
+
+\begin{example}
+Vamos a factorizar el número $n=2041$ tomando como conjunto de primos:
+\[\algb{P} = \{ 2,3,5,7\}\]
+
+Procedemos a aplicar el algoritmo con lo que obtenemos:
+\[\begin{array}{l}
+\lceil\sqrt{2047}\rceil = 46=x_0 \\
+x_1 = Q(46)=168=2^3\cdot 3 \cdot 7 \\
+x_2 = Q(47) = 263 \text{ no es factorizable en }\algb{P}\\
+x_3 = Q(48) = 360 = 2^3\cdot 3^2 \cdot 5 \\
+x_4 = Q(49) = 459 \text{ no es factorizable en }\algb{P}\\
+x_5 = Q(50) = 560 = 2^4\cdot 5 \cdot 7
+\end{array}\]
+
+Ahora multiplicamos estos números módulo $n$ con lo que obtenemos:
+\[(\underbrace{46\cdot 47 \cdot 49 \cdot 50}_{x})^2 = (\underbrace{2^5\cdot 3^2 \cdot 5^2 \cdot 7}_y)^2\]
+\end{example}
