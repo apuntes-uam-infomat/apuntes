@@ -2255,7 +2255,7 @@ Para trabajar con la ecuación $x^2=a$ con $a\neq 0$ podemos escribir:
 \[x^2=a\iff x^2-a=0 \iff (x-\sqrt{a})(x+\sqrt{a})=0 \implies x-\sqrt{a}=0 \text{ ó } x+\sqrt{a}=0\]
 donde la última implicación se deduce del hecho de que trabajamos en un dominio de integridad.
 
-Así llegamos a que las dos únicas posibles soluciones de la ecuación $x^2=a$ son $x=\sqrt{a}$ y $x=-\sqrt{a}$.
+Así llegamos a que las dos únicas posibles soluciones, en caso de haberlas, de la ecuación $x^2=a$ son $x=\sqrt{a}$ y $x=-\sqrt{a}$. No obstante existe la posibilidad de que $\sqrt{a}$ se salga del cuerpo en que nos movemos, de modo que no tendríamos solución.
 
 El número de soluciones de la ecuación será exactamente dos: $\sqrt{a}\neq - \sqrt{a}$. No obstante, es posible que estas dos soluciones acaben siendo la misma. No obstante, un número es igual a su opuesto en $\ent_n$ sólamente si $n$ es par y el número en cuestión es $\frac{n}{2}$ puesto que en ese caso tendríamos $\frac{n}{2} = n -\frac{n}{2}$.
 
@@ -2525,7 +2525,7 @@ Ahora calculamos el inverso de $e_B$:
 Este caso difiere un poco del caso habitual del algoritmo RSA visto en clase. Dado un mensaje $m$, el usuario $A$ envía a $B$ el valor
 \[c = (m-e_B)^e_B\]
 Para recuperar el valor de $m$, el usuario $B$ deberá calcular:
-\[c^{d_B}-e_B = m-e_B+e_B = m\]
+\[c^{d_B}+e_B = m-e_B+e_B = m\]
 
 Una vez conocemos $e_B^{-1}$ podemos descifrar el mensaje:
 \[EOE = 12 \mod 6^3 \]
@@ -2548,6 +2548,8 @@ rápido para calcular $mcm(a,b)$, y explica por qué es rápido.
 [SUGERENCIA: ¿Cuál es la relación entre $mcm(a,b), mcd(a,b)$ y
 $ab$?] 
 \solution
+
+
 \end{problem}
 
 
@@ -2555,6 +2557,33 @@ $ab$?]
 Encontrar la clave privada de un usuario  de un criptosistema basado en el RSA si su clave p\'ublica   es  $(7519, 35)$.
 
 \solution
+
+\doneby{Pedro}
+
+Sabemos que, por definición del algoritmo RSA tenemos dos primos $p$, $q$ tales que:
+\[\left\{ \begin{array}{l} 7519 = p \cdot q\\
+35 = 1 \mod (p-1)(q-1)\end{array}\right.\]
+
+Por la cuenta de la vieja podemos ver que $7519=73 \times 103$, por lo que ya conocemos $p$ y $q$. 
+
+Ahora sólo tenemos que encontrar el inverso de 35 módulo $72 \cdot 102 = 7344$ para lo que podemos emplear el algoritmo de Euclides.
+
+\[
+\begin{array}{l}
+7344 = 209\cdot 35 +29\\
+35 = 1 \cdot 29 + 6 \\
+29 = 4\cdot 6 + 5 \\
+6 = 5 + 1 
+\end{array} \implies \begin{array}{l}
+1 = 6 - 5 \\
+5 = 29 - 4 \cdot 6 \implies 1 = 5 \cdot 6-29\\
+6 = 35 - 29 \implies 1 = 5\cdot 35 -6 \cdot 29 \\
+29 = 7344 - 209 \cdot 35 \implies 1=1259 \cdot 35 -6\cdot 7344
+\end{array}
+\]
+
+Así tenemos que la clave privada es $d=1259$
+
 \end{problem}
 
 \begin{problem}[3]
@@ -2578,6 +2607,32 @@ etcétera
 
   El usuario B envía el mensaje {\it ASÑAW.} al usuario A.   ¿Qué quiere decirle B a A?
 \solution
+
+\doneby{Pedro}
+
+Lo que debemos hacer es encontrar los primos $p,q$ con los que se diseñó este sistema RSA.
+
+Por la cuenta de la vieja llegamos a que $1711=p\cdot 1 = 29 \cdot 59$.
+
+Una vez tenemos esto podemos conocer $(p-1)\cdot (q-1)=28 \cdot 58 = 1624$ lo que nos permite calcular la clave privada, que, en este caso, es el inverso de 125 módulo $1624$. Vamos a ello
+
+\[
+\begin{array}{l}
+1624 = 12 \cdot 125 + 124\\
+125 = 124 + 1
+\end{array} \implies \begin{array}{l}
+1 = 125 -124 \\
+124 = 1624 - 12 \cdot 125 \implies 1 = 13 \cdot 125 - 1624
+\end{array}
+\]
+
+Así tenemos que la clave privada, empleada para descifrar, será $d=13$. 
+
+Para descifrar el mensaje procedemos por bloques:
+\[19\cdot 30 + 14 = 584 \mod 1711 \to 584^{13} \mod 1711 = 225 = 7\cdot 30 + 15 = HO\]
+\[23 \cdot 30 + 27 = 717 \mod 1711 \to 717^{13} \mod 1711 = 330 = 11 \cdot 30 + 0 = LA\]
+
+Así tenemos que el mensaje enviado era ``HOLA''
 \end{problem}
 
 \begin{problem}[4]
@@ -2604,6 +2659,48 @@ etcétera
   El usuario A envía un mensaje al usuario B y lo termina con
 la firma EOBIXD. ?`Cómo se llama el usuario A?
 \solution
+
+\doneby{Pedro}
+
+Para saber cómo se llama el usuario $A$ lo que tenemos que hacer es descifrar el mensaje para lo que debemos atacar al sistema RSA.
+
+Procedemos a factorizar $n_B$ por la cuenta de la vieja obteniendo
+\[n_B= 83 \cdot 103 = p \cdot q\]
+
+A partir de aquí podemos calcular la clave privada calculando:
+\[\frac{1}{e_b} \mod (p-1)(q-1) \equiv \frac{1}{6083} \mod 8364\]
+
+Empleamos el algoritmo de Euclides para calcular este inverso:
+
+\[
+\begin{array}{l}
+8364 = 1 \cdot 6083 + 2281 \\
+6083 = 2\cdot 2281 + 1521 \\
+2281 = 1\cdot 1521 + 760 \\
+1521 = 2 \cdot 760 + 1
+\end{array} \implies \begin{array}{l}
+1 = 1521 -2\cdot 760 \\
+760 = 2281 - 1521 \implies 1 = 3\cdot 1521 -2\cdot 2281 \\
+1521 = 6083 - 2\cdot 2281 \implies 1 = 3 \cdot 6083 -8 \cdot 2281 \\
+2281 = 8364 - 6083 \implies 1 = 11 \cdot 6083 - 8 \cdot 8364
+\end{array}
+\]
+
+Por tanto tenemos que $d_B=11$. 
+
+Puesto que el mensaje ha sido firmado lo que hemos recibido es 
+\[\algb{C}=f_{d_A}(f_{e_B}(\algb{M}))\]
+
+luego para descifrarlo debemos emplear primero la clave pública de $A$ y luego la privada de $B$, que acabamos de descubrir.
+
+Una vez sabemos esto podemos descifrar el mensaje:
+\[\begin{array}{l}
+EOB = 3095 \mod n_A \to 3095^{17} \mod n_A = 1431 \mod n_A \to 1431^{11} \mod n_B = 255\\
+255 = 9 \cdot 26 + 21 = ``JU''\\
+IXD = 6009 \mod n_A \to 6009^{17} \mod n_A = 1954 \mod n_A \to 1954^{11} \mod n_B = 12\\
+12 = 0 \cdot 26 + 12 = ``AN''
+\end{array}\]
+
 
 \end{problem}
 
@@ -2660,6 +2757,7 @@ posibles $n$ de las claves?
 descrito en c), y que quien envió el mensaje de b) fue $A$. ?`Como
 debería enviar ese mismo mensaje con el nuevo protocolo?
 \solution
+
 \end{problem}
 
 
@@ -2679,6 +2777,35 @@ $$f(m):=m^{13}+2 \pmod {851}.$$ (Notar que $(29)^2<851<(30)^2$.)
 \item[b)]  ¿Es posible usar $g(m):=m^{11}+2 \pmod{851}$ para cifrar?
 \end{itemize}
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Para poder descifrar la clave podemos suponer que estamos trabajando con un sistema $RSA$ (una vez le restemos 2 al mensaje cifrado estaremos ante un sistema RSA literalmente) con clave pública $e=13$ y $n=851$.
+
+Procedemos a factorizar $851=p\cdot q = 37 \cdot 23$ por la cuenta de la vieja.
+
+Ahora procedemos a calcular la clave privada:
+\[d=\frac{1}{13} \mod 792 = 61\]
+
+En esta ocasión es fácil ver que si multiplicamos por $13\cdot 60$ andamos cerca de $792$ y probando vemos rápido cuál es el inverso. 
+
+Para quien no lo vea así de rápido siempre puede aplicar el algoritmo de Euclides.
+
+Una vez conocemos la clave de descifrado procedemos a descifrar el mensaje:
+\[\begin{array}{l} 
+LF = 335 \mod 851 \to 335^61 \mod 851 = 37 = ``BI''\\
+N\tilde{N} = 404 \mod 851 \to 404^{61} \mod 851 = 129 = ``EN''
+\end{array}\]
+
+\spart
+
+Podemos ver que no es posible emplear la función $g$ para cifrar puesto que 
+\[(p-1)(q-1) = 792 = 11\cdot 72\]
+
+Por tanto, si tratásemos de emplear esta función para cifrar, al tratar de encontrar la clave privada veríamos que es imposible puesto que $e=11$ no es coprimo con $(p-1)(q-1)$.
+
  \end{problem}
 
 \begin{problem}[7]
