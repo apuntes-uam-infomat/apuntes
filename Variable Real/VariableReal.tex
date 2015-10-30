@@ -121,7 +121,7 @@ Dado \meas un espacio de medida, definiremos la integral de la siguientes formas
 
 Para funciones simples $\appl{f}{X}{[0,+∞)}$ como \[ \int_X f\ \dif μ = \sum_{i=1}^n a_i μ\set{\inv{f}(a_i)} \] Como notación, hay que tener en cuenta que \[ \set{\inv{f}(a_i)} \equiv \set{x∈X\tq f(x)=a_i} \]
 
-Para funciones más complicadas usaremos, como siempre, límites. Dada $\appl{f}{X}{[0, +∞)}$ medible, definiremos su integral como \[\int_X f \dif μ = \sup_{\substack{0≤g≤f \\ g \text{ simple}}} \int_X g \dif μ \]
+Para funciones más complicadas usaremos, como siempre, límites. Dada $\appl{f}{X}{[0, +∞)}$ medible, definiremos su integral como \( \int_X f \dif μ = \sup_{\substack{0≤g≤f \\ g \text{ simple}}} \int_X g \dif μ \label{eq:ApproxIntegralFuncSimples} \)
 
 Una observación que necesitaremos para poder usar esa definición es la siguiente proposición:
 
@@ -188,6 +188,17 @@ Concretamente, Tonelli nos da la medibilidad para funciones no negativas y Fubin
 \label{thm:FubiniTonelli}
 \end{theorem}
 
+Este teorema nos dice cómo integrar en varias coordenadas y además nos da una introducción a lo que deberían de ser las medidas producto. En la primera parte de la ecuación, estamos midiendo el conjunto $X × Y$ con respecto a la medida $μ×ν$, y en las otras dos integrales estamos traduciendo eso al producto de dos medidas. Definamos esto más concretamente.
+
+\begin{defn}[Medida\IS producto] \label{def:MedidaProducto} Dados dos espacios medibles $\meds[X], \meds[Y]$ con medidas μ y ν respectivamente, consideramos $\algb{X} \otimes \algb{Y}$ la σ-álgebra producto en el espacio producto $X × Y$ generada por conjuntos $B_1 × B_2$ con $B_1 ∈ \algb{X}$ y $B_2 ∈ \algb{Y}$.
+
+Entonces, definimos la medida producto $μ×ν$ como la medida en el espacio $(X×Y, \algb{X} \otimes \algb{Y})$ dada por \[ (μ×ν)(B_1×B_2) = μ(B_1) · ν(B_2)\] con $B_1 ∈ \algb{X}$ y $B_2 ∈ \algb{Y}$.
+\end{defn}
+
+Esta definición nos permitirá trabajar bien con integrales múltiples, adaptando las medidas a esas condiciones.
+
+\seprule
+
 Otro teorema, que se corresponde con el tercer principio de Littlewood.
 
 \begin{theorem}[Teorema\IS de Egorov] Dada $\appl{f}{X}{ℂ}$ medible y $f_n \convs f$ en casi todo punto en $A⊆X$, entonces $f_n \convs f$ casi uniformemente en $A$. Esto es, converge uniformemente salvo en un conjunto de medida cero. Más formalmente, $∀ε>0$ existe un $N_ε⊆A$ tal que $f_n \convs f$ en $A\setminus N_ε$ y $0 ≤ μ(N_ε) < ε$.
@@ -207,12 +218,18 @@ Ahora la prueba se acaba de forma bastante sencilla: dado $ε > 0$ y $k∈ℕ$, 
 
 \subsubsection{Integración en coordenadas polares}
 
-Además de las coordenadas lineales, en los reales podemos usar (y lo haremos habitualmente) las coordenadas polares o esféricas, esto es, coordenadas basadas en el uso de una esfera o equivalente en $ℝ^n$ en lugar del cuadrado/cubo/cosa. Veamos cómo generalizar las coordenadas polares sin necesidad de usar cosenos y senos por todas partes.
+Además de las coordenadas lineales, en los reales podemos usar (y lo haremos habitualmente) las coordenadas polares o esféricas, esto es, coordenadas basadas en el uso de una esfera o equivalente en $ℝ^n$ en lugar del cuadrado/cubo/cosa.
+
+En $ℝ^2$, las coordenadas polares nos dan una integral $\dif x \dif y = r \dif r \dif θ$, y en $ℝ^3$ tenemos $\dif x \dif y \dif x = r^2 \sin φ \dif r \dif θ \dif φ$. Esto nos da una intuición que nos dice que la medida en coordenadas esféricas en $ℝ^n$ está relacionada con la medida del radio $r^{n-1}$ y con un ``algo'' que parece estar relacionado con la medida de la superficie de la esfera unidad.
+
+Podríamos tratar de generalizar ese ``algo'' haciendo integrales en más dimensiones, pero hay otra forma más fácil sin necesidad de usar cosenos y senos por todas partes.
+
+Como viene siendo habitual, primero haremos nuestras definiciones formales.
 
 \begin{defn}[Coordenadas\IS polares] Sea $\set{x ∈ ℝ^n \tq \md{x} = 1} = \bbs^{n-1}$ la esfera unidad en $ℝ^n$. Entonces, si $x ∈ ℝ^n \minuszero$ las coordenadas polares de $x$ son
 \begin{align*}
 r  &= \md{x} ∈ (0,∞) \\
-θ &= \frac{x}{\md{x}} ∈ \bbs^{n-1} \\ % TODO: Esta notación es caca.
+θ &= \frac{x}{\md{x}} ∈ \bbs^{n-1} \\
 \end{align*}
 con el cambio de coordenadas dado por la aplicación biyectiva
 \begin{align*}
@@ -221,26 +238,33 @@ x &\longmapsto (r,θ)
 \end{align*} con inversa continua $\inv{Φ}(r,θ) = rθ$.
 \end{defn}
 
-Dadas estas coordenadas, necesitamos definir una medida. Lo fácil será hacerlo usando $ℝ^n$, que para eso sabemos medirlo perfectamente. Denotaremos por $μ_\ast$ la medida de Borel en $(0,∞)×\bbs^{n-1}$ inducida por Φ desde la medida $μ$ de Lebesgue en $ℝ^n$. En otras palabras, \[ μ_\ast (E) = μ(\inv{Φ}(E)) \]
+Dadas estas coordenadas, necesitamos definir una medida. Lo fácil será hacerlo usando $ℝ^n$, que para eso sabemos medirlo perfectamente. Dado que $Φ$ es continua con inversa continua, nos lleva de conjuntos de Borel a conjuntos de Borel\footnote{Ver \href{http://mathoverflow.net/questions/63677/polar-coordinates-and-borel-sets}{MathOverflow} para una explicación algo más detallada de esto, aunque tampoco mucho más.}. Así, podemos definir $μ_\ast$ como la medida de Borel en $(0,∞)×\bbs^{n-1}$ inducida por Φ desde la medida $μ$ de Lebesgue en $ℝ^n$. En otras palabras, \[ μ_\ast (E) = μ(\inv{Φ}(E)) \]
 
-Pero podemos definir esa misma medida de forma constructiva, desde el espacio de las coordenadas polares.
+De momento no hemos hecho nada más que decir algo obvio: que la medida de un conjunto $E$ de coordenadas esféricas debería ser la misma que la medida de ese conjunto de puntos tomados como coordenadas cartesianas. Esto nos da una vía para construir $μ_\ast$.
 
 \begin{theorem} \citep[Teorema 2.49]{folland99} Sea $ρ=ρ_n$ la medida en $(0,∞)$ dada por $ρ(E) = \int_E r^{n-1}\dif r$. Entonces existe una única medida de Borel $σ = σ_{n-1}$ en $\bbs^{n-1}$ tal que $μ_\ast = ρ × σ$. Si $f$ es Borel-medible en $ℝ^n$ y $f ≥ 0$ o $f ∈ \lebg^1(μ)$, entonces
 \(
-\int_{ℝ^n} f(x) \dif x = \int_0^{∞} \int_{\bbs^{n-1}} f(rθ) r^{n-1} \dif σ(θ) \dif r
+\int_{ℝ^n} f(x) \dif x = \int\limits_0^{∞} \int\limits_{\bbs^{n-1}} f(rθ) r^{n-1} \dif σ(θ) \dif r
 \label{eq:MedidaPolares} \)
 \end{theorem}
 
-\begin{proof} Es fácil ver que, si $f$ es la función característica de un conjunto (esto es, $f \equiv \ind_E$), entonces \eqref{eq:MedidaPolares} es simplemente otra forma de decir que $μ_\ast = ρ × σ$, y se puede generalizar a $f$ sin mucha dificultad\footnote{TODO: Generalízalo, anda, so vago.}. Entonces, sólo tenemos que construir σ.
+\begin{proof} Es fácil ver que, si $f$ es la función característica de un conjunto (esto es, $f \equiv \ind_E$), entonces \eqref{eq:MedidaPolares} es simplemente otra forma de decir que $μ_\ast = ρ × σ$ (ver definición de \nlref{def:MedidaProducto}).
 
-Si $E$ es un conjunto de Borel en $\bbs^{n-1}$ y $a > 0$, sea \[ E_a = \inv{Φ}\left((0,a] × E\right) = \set{rθ \tq 0 < r ≤ a, θ ∈ E } \]
+En ese caso, se puede generalizar a funciones genéricas igual que hacíamos en \eqref{eq:ApproxIntegralFuncSimples}, usando aproximación por funciones simples. Así, sólo tenemos que construir σ para que esa definición de integral, que coincide con lo que decíamos al principio de la sección: que la medida en coordenadas esféricas está relacionada con el radio $r^{n-1}$ y un ``algo'' relacionado con la medida de la esfera unidad (la superficie), que será $\difσ(θ)$.
 
-Dado que \eqref{eq:MedidaPolares} se tiene que cumplir cuando en particular $f = \ind_{E_1}$; tenemos que tener que \( μ(E_1) = \int_0^1\int_E r^{n-1} \dif σ(θ) \dif r = σ(E) \int_0^1 r^{n-1} \dif r = \frac{σ(E)}{n} \label{eq:MedidaMuSigmaPolares}  \)
+Si $E$ es un conjunto de Borel en $\bbs^{n-1}$ y $a > 0$, sea \[ E_a = \inv{Φ}\left((0,a] × E\right) = \set{rθ \tq 0 < r ≤ a, θ ∈ E } \], en otras palabras, el conjunto de todos los puntos con ángulos contenidos en $E$ y radios desde $0$ hasta $a$.
 
-Definimos entonces $σ(E) = n · μ(E_1)$. Dado que la aplicación $E\mapsto E_1$ lleva conjuntos de Borel a conjuntos de Borel y conmuta con la unión, intersección y comlemento, está claro\footnote{TODO: Esto debería mirarlo bien.} que σ es una medida de Borel en $\bbs^{n-1}$. Además, dado que $E_a$ es la imagen de $E_a$ por la aplicación $x \mapsto ax$, se sigue de \citep[Teorema 2.44]{folland99} que $μ(E_a) = a^n μ(E_1)$, y por lo tanto si $0 < a < b$, entonces \[ μ_\ast\left((a,b] × E\right) = μ(E_b \setminus E_a) = \frac{b^n-a^n}{n}σ(E) = σ(E) \int_a^b r^{n-1}\dif r = (ρ × σ) \left((a,b]×E\right)\]
+Dado que \eqref{eq:MedidaPolares} se tiene que cumplir cuando en particular $f = \ind_{E_1}$, nuestra medida $σ$ deberá cumplir la relación \( μ(E_1) = \int_0^1\int_E r^{n-1} \dif σ(θ) \dif r = σ(E) \int_0^1 r^{n-1} \dif r = \frac{σ(E)}{n} \label{eq:PrIntPolares:MedMuSigma}  \)
 
-Fijado un conjunto de Borel $E$ de $\bbs^{n-1}$, sea $\algbA_E$ la colección de uniones finitas y disjuntas de conjutnos de la forma $(a,b] × E$, que es un álgebra en $(0,∞)×E$ que genera la σ-álgebra $\mathcal{M}_E = \set{A×E \tq A ∈ \borel_{\bbs^{n-1}}}$. Por el cálculo anterior tenemos que $μ_\ast = ρ × σ$ en $\algbA_E$, y por ser la medida única entonces esta ecuación también se cuple en $\mathcal{M}_E$. Pero\footnote{Se me acaba el tiempo y no me apetece seguir copiando. TODO.}
+Consecuentemente, definimos σ para que sea $σ(E) = n · μ(E_1)$. Dado que la aplicación $E\mapsto E_1$ lleva conjuntos de Borel a conjuntos de Borel y conmuta con la unión, intersección y complemento, entonces esta σ que hemos definido es una medida de Borel en $\bbs^{n-1}$: vamos por el buen camino.
 
+Además, dado que $E_a$ es la imagen de $E_1$ por la aplicación $x \mapsto ax$, se sigue de \citep[Teorema 2.44]{folland99} que \[ μ(E_a) = a^n μ(E_1) \], lo que nos reduce el problema a saber medir $E_1$, ya que la parte del radio se resuelve muy fácilmente: si tomamos $0 < a < b$ y consideramos el conjunto $(a,b] × E$, cuya imagen inversa por $Φ$ es $E_b \setminus E_a$, entonces
+\begin{multline}
+μ_\ast\left((a,b] × E\right) = μ(E_b \setminus E_a) = μ(E_b) - μ(E_A) = \frac{b^n-a^n}{n}σ(E) = \\
+= \left( \int_a^b r^{n-1}\dif r\right) σ(E) = ρ((a,b]) · σ(E) = (ρ × σ) \left((a,b]×E\right)
+\label{eq:PrIntPolares:MedProducto}\end{multline}
+
+Fijado un conjunto de Borel $E$ de $\bbs^{n-1}$, consideramos $\algbA_E$ la colección de uniones finitas y disjuntas de conjuntos de la forma $(a,b] × E$, que es un álgebra en $(0,∞)×E$ que genera la σ-álgebra $\mathcal{M}_E = \set{A×E \tq A ∈ \borel_{(0,∞)}}$. Por el cálculo de \eqref{eq:PrIntPolares:MedProducto} tenemos que $μ_\ast = ρ × σ$ en $\algbA_E$, y por ser la medida única \citep[Teorema 1.14]{folland99} entonces esta ecuación también se cumple en $\mathcal{M}_E$. Como $\bigcup \set{\mathcal{M}_e \tq E ∈ \borel_{\bbs^{n-1}}}$ no es más que los conjuntos de Borel en $(0,∞) × \bbs^{n-1}$, así que por el mismo teorema de unicidad tenemos que $μ_\ast = ρ × σ$ en todos los conjuntos de Borel.\footnote{No es culpa mía, Folland lo explica así de mal.}
 \end{proof}
 
 \begin{corol} Si $f$ es una función medible en $ℝ^n$ tal que $f(x) = g(\abs{x})$ para alguna función $g$ en $(0,∞)$, entonces \( f(x) \dif x = σ(\bbs^{n-1}) \int_0^{∞} g(r) r^{n-1}\dif r \label{eq:IntegralPolares} \)
@@ -272,7 +296,7 @@ Podemos usar esta proposición para sacar la medida de la esfera unitaria en $n$
 \begin{corol} \label{crl:MedidaBn} Sea $\bola_r^N = \set{x ∈ ℝ^N \tq \md{x} < r}$. Entonces \( μ(\bola_r^N) = r^N\frac{π^{n/2}}{Γ\left(\frac{n}{2} + 1\right)} = r^N ω_N \label{eq:MedidaBn} \)
 \end{corol}
 
-\begin{proof} Según \eqref{eq:MedidaMuSigmaPolares}, que nos relaciona la medida $σ(E)$ con la de $μ((0,1] × E)$, tenemos que $μ(\bola_1^N) = n^{-1} σ(\bbs^{N -1})$, así que \[ μ(\bola_1^{N}) =  \frac{2π^\frac{n}{2}}{nΓ(n/2)} = \frac{π^\frac{n}{2}}{\frac{1}{2}n Γ\left(\frac{n}{2}\right)} =\frac{π^\frac{n}{2}}{Γ\left(\frac{n}{2} + 1\right)}  \]
+\begin{proof} Según \eqref{eq:PrIntPolares:MedMuSigma}, que nos relaciona la medida $σ(E)$ con la de $μ((0,1] × E)$, tenemos que $μ(\bola_1^N) = n^{-1} σ(\bbs^{N -1})$, así que \[ μ(\bola_1^{N}) =  \frac{2π^\frac{n}{2}}{nΓ(n/2)} = \frac{π^\frac{n}{2}}{\frac{1}{2}n Γ\left(\frac{n}{2}\right)} =\frac{π^\frac{n}{2}}{Γ\left(\frac{n}{2} + 1\right)}  \]
 
 Para radios distintos de $1$, sólo tenemos que multiplicar por $r^N$.
 \end{proof}
