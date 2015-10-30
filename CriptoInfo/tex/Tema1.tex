@@ -1156,6 +1156,247 @@ Estos fundamentos sirven para reducir la información subyacente en el sistema c
  
  Al final de la ronda se intercambia la mitad derecha del mensaje ($R_i$) con la mitad izquierda ($L_i$) $\rightarrow $ \textbf{transposición}.
  
+ Este proceso (cada ronda) se repite 16 veces y al final hay un swap, el swap sirve para que se pueda utilizar el mismo algoritmo para descifrar.
+ 
+ \subsubsection{Características y dependencias del diseño Feistel}
+ $$\text{Ronda i}\begin{cases}
+ L_i = R_{i-1}\\
+ R_i = L_{i-1} \oplus F(R_{i-1, K_i})
+ \end{cases} $$
+ 
+ \begin{itemize}
+ 	\item Tamaño de bloque $\rightarrow$ 64 bits\\
+ 	\item Tamaño de clave $\rightarrow$ 64 bits $\rightarrow$ sirven de semilla para generar el flujo de claves\\
+ 	\item número de rondas $\rightarrow$ 16 rondas\\
+ 	\item algoritmo de generación de claves\\
+ 	\item Función F $\rightarrow$ $F(x \oplus y) = F(x) \oplus F(y) + cte$
+ \end{itemize}
  
  
+ \newpage
+ \includegraphics{RondasDES1.png}
  
+ \newpage
+ \includegraphics{RondasDES2.png}
+ 
+ \newpage
+
+\subsection{Principios de diseño de las S-Box en DES}
+
+Esta sección también está muy bien explicada en el Stinson, p.79.
+
+\begin{itemize}
+	\item Las S no son lineales.
+	$$f(x \oplus y) = f(x) \oplus f(y) + cte \implies \text{Esa constante es la que rompe la linealidad}$$
+	
+	\begin{example}
+		\begin{center}
+			\begin{tabular}{r  r  r  r  r  r }
+				$b_1$ & $b_2$ & $b_3$ & $b_4$ & $b_5$ & $b_6$
+			\end{tabular}
+		\end{center}
+		$$\downarrow$$
+		$$\fbox{\textbf{     }S\textbf{     }}$$
+		\begin{center}
+			\begin{tabular}{r  r  r  r }
+				$c_1$ & $c_2$ & $c_3$ & $c_4$
+			\end{tabular}
+		\end{center}
+		
+		
+	\end{example}
+	
+	\item \textbf{SAC} (Strict avalanch criterion)
+	
+\end{itemize} 
+ 
+ % % Me faltan infinitas hojas % %
+ 
+ $$D(x) = C(x) \text{ mod M(x)} \begin{cases}
+ d_0 = a_0\cdot b_0 \oplus a_3 \cdot b_1 \oplus a_2 \cdot b_2 \oplus a_1 \cdot b_3 = C_0 \oplus C_4\\
+ d_1 = a_1\cdot b_0 \oplus a_0 \cdot b_1 \oplus a_3 \cdot b_2 \oplus a_2 \cdot b_3 = C_1 \oplus C_5\\
+ d_2 = a_2\cdot b_0 \oplus a_1 \cdot b_1 \oplus a_0 \cdot b_2 \oplus a_3 \cdot b_3 = C_2 \oplus C_6\\
+ d_3 = a_3\cdot b_0 \oplus a_2 \cdot b_1 \oplus a_1 \cdot b_2 \oplus a_0 \cdot b_3 = C_3
+ \end{cases}$$
+ 
+ $$\left(\begin{matrix}
+ d_0\\d_1\\d_2\\d_3
+ \end{matrix} \right) = \left(\begin{matrix}
+ a_0 & a_3 & a_2 & a_1\\
+ a_1 & a_0 & a_3 & a_2\\
+ a_2 & a_1 & a_0 & a_3\\
+ a_3 & a_2 & a_1 & a_0\\
+ \end{matrix}\right) \cdot \left( \begin{matrix}
+ b_0\\
+ b_1\\
+ b_2\\
+ b_3
+ \end{matrix}\right)$$
+ 
+ Esta operación esta definida  anivel de W (palabra).
+ 
+ \section{Multiplicación por X}
+ 
+ $$XTIME = x \cdot b(x) = b_3x^4 + b_2 x^3 + b_1 x^2 + b_0 x \textbf{ mod M(x)} = b_2x^3 +b_1x^2 + b_0x + b_3$$
+ 
+ Vemos que esto lo que hace es un desplazamiento cíclico (rotación).
+ 
+ $$XTIME(b_3 b_2 b_1 b_0) = b_2 b_1 b_0 b_3$$
+ 
+ 
+ $$C(x) = x \cdot b(x) = \left(\begin{matrix}
+ 	C_0\\C_1\\C_2\\C_3
+ \end{matrix} \right) = \left(\begin{matrix}
+ 00 & 00 & 00 & 01\\
+ 01 & 00 & 00 & 00\\
+ 00 & 01 & 00 & 00\\
+ 00 & 00 & 01 & 00\\
+\end{matrix}\right) \cdot \left( \begin{matrix}
+b_0\\
+b_1\\
+b_2\\
+b_3
+\end{matrix}\right)$$
+ 
+ 
+\section{Diseños y criterios para el AES}
+
+\subsubsection{Objetivos}
+
+\begin{itemize}
+	\item Resistente al C.D y C.L (criptoanálisis diferencial y lineal)
+	\item Eficiente en varias plataformas
+	
+	Cumple este objetivo porque las operaciones son sumas, rotaciones y desplazamientos, que son operaciones que soporta cualquier plataforma informática. Y al ser de tan bajo nivel son my rápidas
+	
+	\item Código compacto y sencillo
+	\item Fuerte base matemática
+\end{itemize}
+
+\subsubsection{Elementos de Diseño}
+
+\begin{itemize}
+	\item Capa lineal $\rightarrow$ Difusión
+	\item Capa no lineal $\rightarrow$ Confusión
+	
+	Esto es antes de mezclarse la clave
+	\item Capa de sumas de clave
+	\item Clave variable $\rightarrow$ 128, 192, 256
+	\item Bloque variable $\rightarrow$ 128, 192, 256
+	
+	El tamaño de bloque estándar es 128.
+\end{itemize}
+
+A pesar de utilizar los principios de confusión y difusión no es una esructura Feistel clásica.
+ 
+\subsubsection{Diseño de Rijndael}
+
+STATE (estado)
+
+$$\overrightarrow{X} = x_0 , ...., x_n$$
+
+$$x_i \in GF(2^8)|m(x)$$
+
+Antes de estrar en el algoritmo se coloca este string en bloques para que el algoritmo pueda operar con él.
+
+Se coloca de la siguiente forma:
+
+Se pasa de esta notación:
+
+	\begin{center}
+		\begin{tabular}{l | l | c | r | r | r}
+			$x_0$ & $x_4$ &  &  &  &  \\
+			\hline
+			$x_1$  & $x_5$ &  &  &  &  \\
+			\hline
+			$x_2$  &  &  &  &  &  \\
+			\hline
+			$x_3$ &  &  &  &  & $x_23$ \\
+		\end{tabular}
+	\end{center}
+	
+	$$\begin{cases}
+	N_B = 4 \rightarrow 128\\
+	N_B = 6 \rightarrow 192\\
+	N_B = 8 \rightarrow 256\\
+	\end{cases}$$
+
+A esta notación	
+
+
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r | r | r}
+			$a_{00}$ & $a_{01}$ & $a_{02}$ & $a_{03}$ & $a_{04}$ & $a_{05}$\\
+			\hline
+			$a_{10}$ &   &   &   &   &  \\
+			\hline
+			$a_{20}$ &   &   &   &   &  \\
+			\hline
+			$a_{30}$ &   &   &   &   & $a_{35}$
+			
+		\end{tabular}
+	\end{center}
+
+
+\subsubsection{Tamaño de clave}
+
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r }
+		$K_{00}$ & $K_{01}$ & $K_{02}$ & $K_{03}$\\
+		\hline
+		$K_{10}$ &  &  & \\
+		\hline
+		$K_{20}$ &  &  & \\
+		\hline
+		$K_{30}$ &  &  & $K_{33}$
+		
+		\end{tabular}
+	\end{center}
+	
+		$$\begin{cases}
+		N_K = 4 \rightarrow 128\\
+		N_K = 6 \rightarrow 192\\
+		N_K = 8 \rightarrow 256\\
+		\end{cases}$$
+		
+\subsubsection{Número de rondas}
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r }
+		$N_K$ & $N_B$ = 4 & $N_B$ = 6 & $N_B$ = 8\\
+		\hline
+		$N_K$ =4 &  10 & 12 & 14\\
+		\hline
+		$N_K$ = 6 & 12 & 12 & 14\\
+		\hline
+		$N_K$=8 & 14 & 14 & 14
+		
+		\end{tabular}
+	\end{center}
+
+\subsubsection{Una ronda AES}
+\lstset{language=C, breaklines=true, basicstyle=\footnotesize}
+\begin{lstlisting}[frame=single]
+
+	Round(state , Subkey){
+	
+		ByteSub (STATE) ; //equivalente a S_Box, operaciones $GF(2^8)$, bit a bit
+	
+		ShiftRow(STATE); // desplazamiento de filas del STATE (operaciones W)
+	
+		MIXCOLUMN (STATE); // Operaciones con columnas utilizando W
+	
+		AddRoundKey (STATE, SubKey);
+	} 
+	
+	+
+	 
+	FinalRound(S,SK){
+		ByteSub(S);
+		ShiftRow(S);
+		AddRoundKey(S,SK);
+	}
+		
+\end{lstlisting}
