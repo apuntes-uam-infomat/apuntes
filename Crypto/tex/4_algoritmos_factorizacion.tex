@@ -503,31 +503,34 @@ Vamos a ver ahora un algoritmo de factorización que se apoya en esta idea:
 \item Calculamos $Q(x_1)$ y factorizamos en base $\algb{P}$, es decir, escribimos:
 \[Q(x_1) = \prod_i p_i^{a_{i1}}\]
 
-\item Seguimos hasta que lleguemos a un paso en que $Q(x_i)$ no factoriza en $\algb{P}$
+\item Seguimos factorizando los $Q(x_j=x_0+j)$ (aunque podemos toparnos con alguno que no factorice en $\algb{P}$)
 \end{enumerate}
 
-Al final tendremos todas las factorizaciones posibles en $\algb{P}$ de $x_0,...,x_r$.
+Al final tendremos todas las factorizaciones posibles en $\algb{P}$ para algunos $x_0,...,x_r$.
 
 Estos números que factorizan en $\algb{P}$ se denominan \textbf{$\algb{P}$-suaves}
 
 \obs Una gran ventaja hasta aquí es que estas factorizaciones pueden hacerse en paralelo, teniendo muchos ordenadores trabajando de forma simultánea.
 
 Una vez tenemos esto, multiplicamos todos estos números en módulo $n$ obteniendo:
-\[\prod_{i=0}^rQ(x_i)=\prod_{i=0}^rx_i^2\]
+\[\prod_{j=0}^rQ(x_j)=\prod_{j=0}^rx_j^2 \mod n\]
 puesto que el término $n$ de cada $Q(x_i)$ nos desaparece al hacer el módulo.
 
 Queremos que el número obtenido a la derecha de la igualdad anterior sea un cuadrado perfecto ya que entonces
-\[\prod_i\prod_jp_i^{a_{ij}} = y^2 \implies x^2 = y^2 \mod n\]
+\[\prod_j\prod_ip_i^{a_{ij}} = y^2 \implies x^2 = y^2 \mod n\]
 
 Pero, para que esto sea posible, necesitamos que el exponente de cada $p_i$ sea un número par, es decir, necesitamos que
-\[\sum_{ij}a_{ij} \text{ sea par }\]
+\[\sum_ja_{ij} \text{ sea par para } i={1,…,N}\]
+
+Pues:
+\[\prod_j\prod_ip_i^{a_{ij}} = \prod_i p_i^{\sum_ja_{ij}}\]
 
 En lugar de mirar al producto de los $Q(x_i)$ que se factorizan podemos mirar el producto de todos los $Q(x_i)$ que hemos calculado, elevándolos a 1 o 0 según corresponda.
-\[\prod_{j=1}^r Q(x_j)^{δ_j} (\text{ con } δ_j = 1,0)  = \prod_ip_i^{\sum_{ij}a_{ij}} \mod n\]
+\[\prod_{j=1}^r Q(x_j)^{δ_j} (\text{con } δ_j = 1,0)  = \prod_ip_i^{\sum_jδ_ja_{ij}} \mod n\]
 
 Finalmente, tenemos que resolver el siguiente sistema de $n$ incógnitas:
 \[\left\{ \begin{array}{l}
-\sum_{ij}a_{ij}δ_j = 0 \mod 2 \\
+\sum_j^ra_{ij}δ_j = 0 \mod 2 \\
 \text{ para } i=1,...,N
 \end{array}\right.\]
 \end{mdframed}
@@ -546,6 +549,8 @@ x_4 = Q(49) = 459 \text{ no es factorizable en }\algb{P}\\
 x_5 = Q(50) = 560 = 2^4\cdot 5 \cdot 7
 \end{array}\]
 
-Ahora multiplicamos estos números módulo $n$ con lo que obtenemos:
+Ahora multiplicamos módulo $n$ los números que factorizan en $\algb{P}$, con lo que obtenemos:
 \[(\underbrace{46\cdot 47 \cdot 49 \cdot 50}_{x})^2 = (\underbrace{2^5\cdot 3^2 \cdot 5^2 \cdot 7}_y)^2\]
+
+Lo siguiente es mirar $mcd(x-y, n)=mcd(46\cdot 47 \cdot 49 \cdot 50 - 2^5\cdot 3^2 \cdot 5^2 \cdot 7, 2014)$, y en caso de que sea $2041$ o $1$ tendríamos $x=\pm y \mod n$ y no se satisfaría el criterio de Kraichick (no nos valen $x$ e $y$ para decir que $n=2041=x^2-y^2$).
 \end{example}
