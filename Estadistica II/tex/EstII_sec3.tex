@@ -382,7 +382,7 @@ Sea $(x_1,y_1),...,(x_n,y_n) \to y_i = β_0 + β_1x_i + ε_i$.
 Dado una nueva observación $x_0$, tenemos 2 problemas para predecir:
 
 \begin{itemize}
-	\item Inferencia sobre $m_0 \equiv \esp{y_0 | x_0} = β_0 + β_1x_0$
+	\item \extbf{Inferencia sobre $m_0 \equiv \esp{y_0 | x_0} = β_0 + β_1x_0$}
 
 	En este caso, $$\hat{m_0} = \hat{β_0} + \hat{β_1}x_0$$
 
@@ -407,7 +407,7 @@ Dado una nueva observación $x_0$, tenemos 2 problemas para predecir:
 IC_{1-α}(m_0) \equiv \left[ \hat{m_0} \pm \mathcal{T}_{n-2,\frac{α}{2}}S_R\sqrt{\frac{1}{n} + \frac{(x - \gor{x})^2}{S_{xx}}}\right] 
 \]
 
-	\item Predecir $Y_0$ usamos de nuevo:
+	\item \textbf{Predecir $Y_0$} usamos de nuevo:
 
 	\[
 \hat{Y_0} = \hat{β_0} + \hat{β_1}x \to Y_0 - Y \equiv N\left( 0, σ^2\left( 1 + \frac{1}{n}+  \frac{(x-\gor{x})^2}{S_{xx}}\right) \right)
@@ -439,10 +439,123 @@ IC_{1-α}(m_0) \equiv \left[ \hat{m_0} \pm \mathcal{T}_{n-2,\frac{α}{2}}S_R\sqr
 
 Ahora vamos a hacer unos ejemplos numéricos.
 
+\begin{example}Seguimos con el ejemplo de la renta.
 
+\begin{center}
+\begin{tabular}{c|c|c}
+&media&desviación típica\\\hline
+\% fracaso & 20.73 & 6.927\\
+renta &13.19 $·10^{3}$ & 3.814
+\end{tabular}
+\end{center}
+
+\setcounter{part}{0}
+\ppart IC para $β_1$ de nivel $95\%$.
+\ppart IC para \% de fracaso medio si la renta es de $14.000$ euros.
+
+\spart
+
+\[
+-1.3467 \pm \mathcal{T}_{21;0.025} · (0.2659)
+\]
+
+Donde el $-1.3467$ es el estimador $\gor{m_0}$ que obtenemos de la salida de $R$. Lo mismo el $0.2659$, que es el error típico.
+
+\spart
+\[ \gor{Y_0} = 38.49 - (0.3467) · \underbrace{14}_{x_0} = 19.64\%\]
+
+Siendo este el estimador, vamos a construir el intervalo de confianza. \footnote{Podría ser que nos pidieran el intervalo de predicción, pero en ese caso estarían pidiendo el intervalo de ...... para predecir.}
+
+\[
+IC = 19.64 \pm (2.06)(4.757)\sqrt{\frac{1}{23}+\frac{(14-13.19)^2}{S_{xx}}}
+\]
+Donde $S_{xx} = 320.06$ y podemos calcularlo despejando de cualquiera de las fórmulas:
+
+\[
+E.T.(\gor{β_1}) = \frac{S_R^2}{S_{xx}} 
+\]
+\[
+6. = \frac{S_{xx}}{n-1}
+\]
+
+\end{example}
+
+
+\obs Todos estos cálculos y todas estas fórmulas se basan en muchas hipótesis (como que la distribución del error sigue una distribución normal). Pero podría ser que esto no ocurriera y estuviéramos suponiendo un modelo falso. Para ello, en estadística existe el \concept{Diagnóstico del modelo}. Este diagnóstico, consiste en comprobar si las hipótesis del modelo son \textbf{aceptables} para los datos disponibles. ¡Ojo! Aceptable... Puede haber muchos modelos aceptables para un mismo conjunto de datos.
+
+Este diagnóstico se suele basar en el análisis de los residuos del modelo.
+
+\begin{example}
+Vamos a ver a ojo unos cuantos ejemplos. Vamos a utilizar que $\cor(e,\gor{y}) = 0$ bajo el modelo (como calculamos anteriormente)
+
+\begin{center}
+\includegraphics[scale=0.6]{img/diagmodelo.png}
+\end{center}
+
+De estos 4 gráficos, el bueno es el primero, ya que los demás no complen alguno.
+\end{example}
+
+\begin{example}
+Vamos a ver otro ejemplo, donde arriba están los datos y abajo los residuos. Mirando sólo la fila de arriba podríamos saber si nuestro modelo para la regresión se cumple o sino.
+
+
+\begin{center}
+\includegraphics[scale=0.6]{img/diagmodelo_2.png}
+\end{center}
+
+Vemos que el primero y el último si tienen este modelo como aceptable, ya que en los residuos no hay ningún patrón (y se cumple que la correlación es 0).
+
+En el segundo, podríammos suponer que es bueno, pero al diagnosticar el modelo mirando los residuos, vemos que no. El diagnóstico del model \textbf{magnifica los errores}.
+
+En el cuarto, vemos más claro que es heterocedástico y que no se cumple el modelo supuesto.
+\end{example}
+
+En regresión múltiple veremos que no podemos ver los datos, ya que son demasiadas variables, pero sí podemos estudiar los residuos como acabamos de hacer en los ejemplos anteriores.
 
 \subsection{Regresión lineal múltiple}
 
+El ejemplo que vamos a estudiar en regresión múltiple es el consumo de gasolina en EEUU intentando predecirlo a partir de unas cuantas variables. Las variables regresoras son:
+
+\begin{center}
+\begin{tabular}{ccccccc}
+State&Drivers&FuelC&Income&Miles&MPC&Pop&Tax\\\hline
+AL&3559897&2382507&23471&94440&12737.00&3451586&18.0\\
+AK&472211&235400&30064&13628&7639.16&457728&8.0\\
+AZ&3550367&2428430&25578&55245&9411.55&3907526&18.0
+\end{tabular}
+\end{center}
+
+\subsubsection{Notación}
+
+
+\begin{itemize}
+	\item $n$ es el número de observaciones, en este caso, el número de estados.
+	\item $k$ es el número de atributos. 
+	\item $ε_i \sim N(0,σ^2)$
+	\item $n\geq k+2$: esta hípótesis  es muy necesaria.\footnote{En la estadística, habría que rehacer el modelo para cuando $k>n$. ¿Y cuándo $k>n$? ¿Cuándo puede ocurrir esto? Cada vez más hay más información para cada individuo. En estudios genéticos por ejemplo, que hay millones de genes pero no se pueden hacer el estudio con millones de personas... \textbf{LA MALDICIÓN DE LA DIMENSIONALIDAD} que decimos en Introducción previa a los Fundamentos Básicos del Aprendizaje Automático.\\ Una posible solución al problema es un algoritmo que filtre los atributos que son importantes.}
+\end{itemize}
+
+Regresión simple es un caso particular de múltiple, tomando $k=1$.
+
+\subsubsection{Modelo}
+
+El modelo es:
+
+\textcolor{red}{Completar de las traspas}
+
+Podemos agruparlo en forma matricial:
+
+\textcolor{red}{Completar de las traspas}
+
+\paragraph{Recordamos} que en el tema 1 vimos unas cuantas formas cuadráticas útiles para normales multivariantes con matriz de variazas $σ^2I_n$ y media arbitraria.
+
+\textcolor{red}{Completar de las traspas}
+
+¿Cómo estimarías $β$ a partir de $Y$ y $X$?
+
+Podemos hacer la proyección de $Y$ sobre $\mathcal{V}$ 
+
+Con esto, parece razonable estimar $µ$ mediante la proyección ortogonal de $T$ sobre $\mathcal{V}$ para obtener $\gor{Y} = X\gor{β}$. Equivalentemente: $||Y-X\gor{β}||^2 \leq || Y-Xβ||^2, ∀β\in ℝ^{k+1}$
 
 \subsection{Estimadores de mínimos cuadrados}
 \subsection{Inferencia sobre los parámetros del modelo}
