@@ -1122,8 +1122,138 @@ Vamos a hacer otra iteración del bucle. Ahora toca $\vec{x} = (1,1,0)$:
 \vec{ω} = (-1.06,-0.33,-0.4)
 \]
 
+Aquí dejamos los datos de las siguientes iteraciones:
+
+$\vec{x} = (1,0,1) \to \vec{ω} = (-1.39,-0.33,0.06)$
+$\vec{x} = (1,1,1) \to \vec{ω} = (-0.55,0.51,0.9)$
+
+
 \end{example}
 
+\subsubsection{Regresión logísitca por MAP}
+
+En vez de maximizar la verosimilitud de $t$ dado $\vec{x}$, vamos a maximizar la probabilidad a posteriori. Teníamos:
+
+\[
+P(t_i,...,t_n) | \vec{ω}, \vec{x_1},...,\vec{x_n}) = \prod σ_i^{t_i}(1-σ_i)^{t_i-1}
+\]
+
+Suponiendo un a priori normal para el módulo de $\vec{ω}$ tenemos $p(\vec{ω}) = N(0,σ)$.\footnote{Como $ω$ se calcula con valores iniciales aleatorios entre $-a$ y $a$. Lo que no tengo ni idea es de la varianza...} Entonces, la probabilidad a posteriori queda:
+\[
+P(\vec{ω}, \vec{x_1},...,\vec{x_n}) = α \frac{1}{σ\sqrt{2π}} \exp\left(\frac{-|ω|^2}{2σ^2}\right) \prod σ_i^{t_i}(1-σ_i)^{t_i-1}
+\]
+
+\obs En la fórmula hay 2 $σ$ distintas. $σ_i$ es la sigmoidal y $σ$ es la varianza del módulo de $ω$.
+
+
+
+Aplicamos $-ln$ y derivamos la verosimilitud y la regla de actualización queda:
+
+\[
+\vec{ω} = \vec{ω} - R\left(σ_i - t_i\right)\vec{x_i} + \frac{\vec{ω}}{Nσ^2}
+\]
+
+\paragraph{Algoritmo:}
+
+\textcolor{red}{Completar}
+
+\chapter{Algoritmos genéticos}
+
+\begin{itemize}
+	\item 
+Población de individuos que luchan por recursos del entorno.
+\item Los individuos que mejor se adaptan al entorno son los que sobreviven.
+\item Existen mecanismos de adaptación al entorno: reproduccińo, mutçión.
+\item AG.. utilizan estas ideas para resolver problemas de optimización:
+\subitem Problema $\equiv$ entonro.
+\subitem Función de ajusto o fitness (mide adaptación al entorno).
+\subitem Conjunto de soluciones (Población)
+\subitem Cada individuo codigica una solución (material genético).
+\subitem Mecanismos de adaptación aleatorios (cruce, selección, mutación).
+\end{itemize}
+
+Este es el esquema básico de algorimos genéticos:
+
+\paragraph{Algoritmo}
+\begin{itemize}
+	\item[1] Inicialización aleatoria de la población $P$.
+	\item[2] Mientras no se cumpla la condición de terminación:
+	\subitem $P'=$seleccion\_progenitores(P)
+	\subitem $P'=$recombinación($P'$)
+	\subitem $P'=$mutación($P'$)
+	\subitem $P=$seleccion($P,P'$)
+	return best($P'$)
+\end{itemize}
+
+Pero esto es demasiado vago. ¿Qué es la selección, la recombinación, la mutación...? ¿Cuál es la condición de terminación? Estas son las preguntas que cada algoritmo concreto irá respondiendo.
+
+\paragraph{Notación:} Doficicación de la solución en cromosomas. Un \concept{crommosoma} es una cadena de genes. Los valores que toman los genes se denominan alelos. Por ejemplo: si las soluciones son enteros $[0,31]$, se podrían codificar con 5 bits (genes) cuyos valores son $0$ o $1$. El cromosoma es el array de $5$ genes.
+
+Definir la función de fitnes que diga lo bueno o mala que es una solución. Ha de ser mayor cuanto mejor sea la solución.
+
+Inicialiazción y determinación del tamaño de la población. Mayot cuanto maás complejo es el problema.
+
+Determinar operadores de la evolución:
+\begin{itemize}
+	\item Selección de progenitores: se selecciona aleatoriamente con reemplzado de la población tantos progenitores como individos. Normalmente se hace selección proporcinal a fitness.
+	\item Recombinación: Generalmente se obtienen 2 vástafos de cada 2 progenitores. Se aplica con probabilidad $p_c$. $p_c$ es alta $\sim [0.7,1]$. Importante: los vástagos deben seguir siendo soluciones válidas.
+
+	Algunos operadores de cruce:
+	\subitem Cruce en un punto. A la izquierda los progenitores y a la derecha los vástagos:
+	\[
+	\left.
+	\begin{array}{cc}
+	(1 \; 1 & 0 \; 1 \; 1) \\
+	(0 \; 1 & 1 \; 0 \; 1) \\
+	\end{array}
+	\right\} \to \begin{array}{c}
+	(1 \; 1 \; 1 \; 0 \; 1) \\
+	(0 \; 1 \; 0 \; 1 \; 1) \\
+	\end{array}
+	\]
+	\subitem Cruce en $n$ puntos: el anterior cortamos en un único punto (después del segundo gen). Ahora podemos cortar en $n$ puntos como pueda ser intuitivo.
+
+	\subitem Cruce uniforme: Vamos a torar una moneda por cada gen para determinar a qué vástago va.
+	\item Mutación: Se realizan modificaciones aleatorias de genes en la población con probabilidad $p_m$. 
+	\subitem Flip aleatorio de un bit con $p_m \sim\frac{1}{N}$ siendo $N$ el tamaño de la población por el número de genes.
+	\item Selección: Copia de $P'$ en $P$ a veces con eltismo: copia las 2 mejores a $P$.
+	\item Condición de parada:
+	\subitem Nº máximo de generaciones.
+	\subitem Nº máximo de generaciones sin mejorar.
+\end{itemize}
+
+
+\begin{example}
+
+La función de fitnes es $f(x) = x^2$.
+
+Los datos son:
+
+\begin{center}
+\begin{tabular}{cccc}
+Inicial & x & f & $\frac{f_i}{\sum f_i}$\\
+01101&13&169&0.14\\
+11000&24&576&0.49\\
+01000&8&64&0.06\\
+10011&19&361&0.31
+\end{tabular}
+\end{center}
+
+Ahora seleccionamos proporcional a fitness (la primera columna han sido aleatorios)
+
+\begin{center}
+\begin{tabular}{cccc}
+Selección prob.fitness && Pto cruce & Vástagos & Mutación & x & fitness\\
+1 & 01101 & 4 & 01100 & 01100 & 12 & 144\\
+2 & 11000 &   & 11001 & 11001 & 25 & 625\\
+2 & 11000 & 2 & 11011 & 11011 & 27 & 729\\
+4 & 10011 &   & 10000 & 10100 & 18 & 324
+\end{tabular}
+\end{center}
+
+
+
+\end{example}
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
