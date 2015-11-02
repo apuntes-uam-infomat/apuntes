@@ -963,7 +963,7 @@ Vamos a detallar la definición de espacios \espLp que veíamos en la última pa
 \begin{defn}[Espacio\IS de funciones $p$-integrables $\mathcal{L}^p(X,μ)$] Dado un espacio $X$ y una medida $μ$, definimos el espacio de funciones $p$-integrables como \[
 \espl[p][X,μ] = \set{\appl{f}{X}{ℝ} \tq f \text{ medible},\; \int_X \abs{f}^p \dif μ < + ∞} \]
 
-Equivalemente, son las funciones $f$ tales que \[ \norm{f}_{\espL[p][X,μ]} = \left(\int_X \abs{f}^p \dif μ\right)^\frac{1}{p} \]
+Equivalemente, son las funciones $f$ tales que \( \norm{f}_{\espL[p][X,μ]} = \left(\int_X \abs{f}^p \dif μ\right)^\frac{1}{p} < ∞ \label{eq:NormaLpPrev}\)
 \end{defn}
 
 Con esto, diremos \( f \sim g \iff \abs{f-g} = 0 \label{eq:RelEqLp} \) en μ-CTP\footnote{Esto es, en todos los puntos salvo en un conjunto de medida $μ$ nula.}, y esta relación de equivalencia nos permite definir el espacio \espL[p][X,μ]:
@@ -976,6 +976,63 @@ Esta definición nos da una descomposición sencilla para las funciones $\tilde{
 A modo de curiosidad, sí hay funciones continuas en \espLp: nos basta con que el representante sea continuo, dado que podemos descojonarla en casi todo punto. ¿Y cuál será el representante privilegiado? El construido con los valores de Lebesgue de la función.
 
 Aunque los elementos de $\espLp$ no son funciones, sí que diremos que cogemos funciones de ese espacio refiriéndonos al representante de una cierta clase de equivalencia, que habitualmente será, como en el anterior párrafo, la función $f^\ast$ que es la construida con los puntos de Lebesgue (\fref{def:PuntoLebesgue}).
+
+Algunas convenciones: para nosotros, el valor $p$ será positivo, aunque existen cosas raras. Además, a lo largo del curso, aunque estaremos hablando de un espacio $\espLp \meas$, lo podremos denotar como $\espLp(X)$ o directamente $\espLp$ si ya sabemos a qué espacios nos referimos. Habitualmente, $X$ será $ℝ^N$ o un subconjunto de éste, y μ será la medida de Lebesgue (en general, μ tiene que ser positiva).
+
+La primera propiedad que tenemos que ver es que \espLp es un espacio vectorial. Para ello necesitamos saber si, dados $f,g ∈ \espLp$ y $α,β ∈ ℝ$, se cumple $αf + βg ∈ \espLp$. Operamos y vemos que \[ \left(\abs{αf} + \abs{βg}\right)^p ≤ 2^p \left(\max \set{\abs{α}, \abs{β}}\right)^p · \left(\max \set{\abs{f}, \abs{g}}\right)^p ≤ 2^p \left(\abs{α} + \abs{β}\right)^p \left(\abs{f}^p + \abs{g}^p\right) \] y si integramos eso nos va a quedar finito, por lo que tendremos que $αf + βg ∈ \espLp$.
+
+Además, \espLp es un espacio normado, con una norma $\appl{\norm{\cdot}}{\espLp}{[0,+∞]}$ dada por \( \norm{f}_{\espLp} \equiv \norm{f}_p \equiv \norm{f} ≝ \left(\int_X \abs{f}^p \dif μ \right)^{\frac{1}{p}} \label{eq:NormaLp} \) que cumple las condiciones de norma:
+
+\begin{enumerate}
+\item $\norm{u} = 0 \iff u = 0$. Si tenemos sólo $\norm{u} \implies u = 0$ entonces tenemos una \concept{Seminorma}.
+\item $\norm{λu} = \abs{λ}\norm{u}$.
+\item \concept{Desigualdad\IS triangular}: $\norm{x + y} ≤ \norm{x} + \norm{y}$.
+\item \concept{Desigualdad\IS casi triangular}: $\norm{x + y} ≤ C (\norm{x} + \norm{y})$. Si una norma sólo cumple esta desigualdad entonces es una \concept{Casi-norma}.
+\end{enumerate}
+
+El espacio $(\espLp, \norm{·}_p)$ es un espacio normado. Si tuviésemos un espacio seminormado (por ejemplo, $(\esplp, \norm{·}_p)$) pasaríamos usando la relación de equivalencia usando el espacio cociente $\ker \norm{·}_p$.
+
+Tener una norma (o casi-norma) implica tener una métrica y una topología, con la distancia dada por \[ \dst(f,g) = \norm{f - g} \]
+
+Además, recordemos qué era un \concept{Espacio\IS completo}: era un espacio donde el límite de sucesiones de Cauchy estaba en el espacio. Así, podemos definir qué es un espacio de Banach (que es muy simple).
+
+\begin{defn}[Espacio\IS de Banach] Un espacio de Banach es un espacio normado y completo, con respecto a la topología inducida por la distancia de la norma.
+\end{defn}
+
+Ahora algo que ninguno nos esperábamos: $(\espLp, \norm{·}_p)$ es un espacio normado y completo (esto último es un teorema que ya veremos) y por lo tanto un espacio de Banach.
+
+Para $p ≥ 1$ ya hemos visto que es un espacio normado, y sólo faltaría ver que la desigualdad triangular se cumple cuando $p ∈ (0,1)$. A modo de pista, tendremos que \[ \norm{f + g}_p ≤ C_p \left(\norm{f}_p + \norm{g}_p\right)\] con $C_p = 2^{\frac{1}{p} - 1}$.
+
+Ahora podemos ver una desigualdad muy importante en el análisis:
+
+\begin{prop}[Desigualdad\IS de Hölder] Sea $1 ≤ p ≤ + ∞$ y $q = \frac{p}{p - 1} ≥ 1$ de tal forma que \[ \frac{1}{p} + \frac{1}{q} = 1\]. Entonces \[ \int_X \abs{fg} \dif μ ≤ \norm{f}_p \norm{g}_q= \left(\int_X \abs{f}^p \dif μ\right)^\frac{1}{p} \left(\int_X \abs{g}^{\frac{p}{p-1}}\right)^\frac{p-1}{p} \]
+\end{prop}
+
+En particular, esta desigualdad nos dice que si tenemos $f ∈ \espLp$ y $g ∈ L^q$, entonces $fg ∈ L^1$. Además, si $p = q = 2$, entonces \[ \int fg ≤ \norm{f}_2 \norm{g}_2 \], que es la \concept{Desigualdad\IS de Cauchy-Schwarz}.
+
+La demostración está basada en un lema numérico:
+
+\begin{lemma} Dados $a ≥ 0, b≥0$, entonces $∀λ ∈ [0,1]$ se cumple que \[ a^λ b^{1-λ} ≤ λa + (1-λ)b\] con igualdad si y sólo si $a = b$.
+\end{lemma}
+\begin{proof} Es obvio si $b = 0$. Si no, consideramos $t = \frac{a}{b} > 0$ y observamos que \[ t^λ ≤ λ t + (1 - λ)\] y estudiando esta función sale. % TODO que salga.
+\end{proof}
+
+Ahora ya podemos probar la desigualdad de Hölder:
+
+\begin{proof}
+Aplicamos el lema anterior con \[ a = \abs{\frac{f(x)}{\norm{f}_p}}^p,\quad b = \abs{\frac{g(x)}{\norm{g}_p}}^q,\quad λ = \frac{1}{p} \] y sale. Es un monstruo terrible y no me apetece copiarlo.
+\end{proof}
+
+Esta desigualdad tiene una extensión:
+
+\begin{prop}[Desigualdad\IS de Hölder extendida] Dados $0 <p,q < ∞$ y $r$ tal que \[ \frac{1}{r} = \frac{1}{p} + \frac{1}{q} \] entonces \[ \norm{fg}_r ≤ \norm{f}_p \norm{g}_q \]
+\end{prop}
+
+\begin{proof} Ejercicio para el lector. %TODO.
+
+Como sugerencia, tenemos que ver que la aplicación $φ(t) = \abs{f(x)}^{p(1-t)} \abs{g(x)}^{pt}$ es convexa y entonces veremos que \[ \abs{f(x) g(x)} ≤ \frac{1}{p} \abs{f}^p + \frac{1}{q} \abs{g}^q \]
+\end{proof}
+
 
 \section{SOC en espacio de Hilbert. Series de Fourier}
 
