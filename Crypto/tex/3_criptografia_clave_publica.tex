@@ -476,6 +476,48 @@ Una vez tenemos $d$ podemos proceder a descifrar el mensaje:
 \[f_d^{-1}(ZVQ) = 24077^7 \mod 24613 = 578 \mod 30^2 = 19\cdot 30 +8 = SI\]
 \end{example}
 
+\subsubsection{Ataque de texto en claro elegido}
+Imaginemos que queremos emplear el criptosistema RSA para cifrar los mensajes en una votación.
+
+En este caso es muy sencillo para el atacante hacerse con mensajes de texto en claro elegido (basta con que vote), momento a partir del cual el atacante será capaz de descubrir el sistema de descifrado. 
+
+Esto le permite no sólo conocer la votación de cada usuario, sino que habría descifrado el sistema haciendo que el sistema no vuelva a ser seguro.
+
+Para evitar este tipo de situaciones (que pueden darse en otros contextos, siempre que tengamos mensajes cortos y previsibles) lo que se hace es rellenar los mensajes de cierta forma para que un mensaje corto como ``SI'' sea transformado en una cadena larga de bits que será cifrada posteriormente.
+
+
+A fin de lograr este efecto empleamos el \concept{optimal asymmetric encryption padding}
+
+\begin{itemize}
+\item $n=$ número de bits (longitud) de la clave RSA.
+\item $k_0, k_1=$ parámetros fijosdel sistema.
+\item $m=$ el mensaje, de $n-(k_0+k_1)$ bits, que queremos transmitir.
+\item $r=$ $k_0$ bits aleatorios.
+\item $G:\{0,1\}^{k_0}\longrightarrow \{0,1\}^{n-k_0}$ función hash criptográfica pública.
+\item $G:\{0,1\}^{n-k_0}\longrightarrow \{0,1\}^{k_0}$ función hash criptográfica pública.
+\item $X||Y$ el ``mensaje" de $n$ bits que finalmente se cifra usando RSA.
+\end{itemize}
+
+\begin{center}
+
+\includegraphics[width=0.8\textwidth]{img/Oaep-diagram-20080305.png}
+
+Al final del procedimiento tenemos:
+\[\left\{\begin{array}{l} X = m||0...0 + G(r) \\ Y=r+H(X)\end{array}\right.\]
+
+\end{center}
+
+Con esto podemos ver que los mensajes $m$, por muy pequeños que fuesen, quedarán convertidos en una secuencia aleatoria de caracteres de tamaño $n$.
+
+Una vez tenemos $X||Y$, lo enviamos al destinatario empleando RSA y cifrando $X||Y$ con la clave pública del destino (como hacemos siempre con RSA).
+
+El destinatario puede realizar el descifrado del mensaje como hemos visto siempre y procede a deshacer las operaciones realizadas para recuperar $m$ a partir de $X||Y$.
+
+Para deshacer el \textbf{paddinf} calcula:
+\[\left\{ \begin{array}{l} X \to H(X) \\
+r=Y\oplus H(X) \\
+m||0...0 = X\oplus G(X)\end{array}\right.\]
+
 \subsection{Cifrado y firma con RSA}
 
 Como ya hemos visto anteriormente, si tenemos una serie de usuarios que se comunican empleando un criptosistema de clave pública-privada, como puede ser RSA, la forma de garantizar la autenticidad del mensaje consiste en el empleo de las firmas.
@@ -486,3 +528,57 @@ puesto que sólo $A$ conoce $f^{-1}_A$.
 
 El usuario $B$, para descifrar el mensaje calculará:
 \[m = f_B^{-1}\left(f_A(c)\right)\]
+
+\subsection{Elección de primos para RSA}
+
+Para empezar, y de manera obvia, los primos $p,q$ tales que $n=p\cdot q$ empleados en el criptosistema deben cumplir unas ciertas propiedades, a fin de evitar que sean descubiertos fácilmente:
+\begin{enumerate}
+\item Deben ser escogidos al azar
+\item No pueden ser pequeños, ni primos de Fermat, ni alguno de los primos más grandes conocidos. En general no pueden ser primos presenten en ningún tipo de tabla, puesto que el atacante también tendrá acceso a esa tabla.
+\item No pueden ser de primos cercanos, puesto que la idea de Fermat ayuda a factorizar
+\item Tampoco deben ser primos muy lejanos. Deben tener el mismo número de cifras. El método de Polland de curvas elípticas depende del tamaño del menor factor.
+\item El mínimo común múltiplo de $p-1$ y $q-1$ debe ser grande puesto que, como se puede ver en el primer ejercicio de la hoja 4, calcular un inverso módulo $a\cdot b$ es equivalente a calcular el inverso en módulo $m.c.m.(a,b)$
+\item En resumen hay que evitar cualquier cosa que facilite factorizar $n$ o más exactamente, encontrar el un $d$ que funcione.
+\end{enumerate}
+
+\textbf{El procedimiento habitual para conseguir estas propiedades es el siguiente}:
+\begin{enumerate}
+\item Elijo al azar primos $p',q'$ con los mismos números de dígitos, asegurando que no estarán en ninguna tabla, ni serán demasiado cercanos ni lejanos.
+
+\item Calculo $p=λp'+1$ y $q=μq'+1$ con \textbf{λ,μ pequeños} hasta que $p$ y $q$ sean primos.
+
+Sabemos que este paso funciona por el \textbf{Teorema de Dirichlet} para primos en progresión aritmética, que garantiza que en una progresión aritmética siempre hay infinitos primos, que se equidistribuyen entre todas las progresiones con razones primas menores que $p-1$.
+
+Con esto garantizamos que, puesto que λ y μ son pequeños
+\[m.c.d(p-1,q-1) = m.c.d.(λ,μ) \text{ que es pequeño }\]
+\end{enumerate}
+
+\section{Otros criptosistemas de clave pública}
+
+A partir de la dificultad de factorizar en primos números grandes surge la idea de RSA.
+
+Otro problema que hemos visto hasta ahora es el del logaritmo discreto, que es aprovechado para idear un criptosistema conocido como \concept{ElGammal}, en honor a su creador, un egipcio que inventó el criptosistema en torno a 1984.
+
+Veamos los pasos a seguir para emplear este sistema:
+\begin{enumerate}
+\item Tomamos un grupo cíclico $G=<g>$ con $|G| >> 0$
+
+\item Cada usuario elige al azar su exponente $d_i$ secreto y establece como clave pública $e_i=g^{d_i}$.
+
+Conocer el exponente a partir de la clave pública es un problema de logaritmo discreo que sabemos no puede resolverse en tiempo polinómico.
+
+\item Para cifrar tomamos mensajes en $G$, para lo que seleccionamos un primo $p$ tal que:
+\[\ent_N \subset \mathbb{F}_p^*\]
+siendo $N$ la longitud de los mensajes que cifraremos.
+\end{enumerate}
+
+En el momento de enviar un mensaje al usuario $A$, el procedimiento a seguir es:
+\begin{enumerate}
+\item El usuario $B$ mira $e_A$, elige al azar $1<k<|G|$ y envía:
+\[c=(c_1,c_2)=(g^k,me_A^k)\]
+
+\item El usuario $A$ toma $e_A^k = (g^{d_A})^k = (g^k)^{d_A}=c_1^{d_A}$. Por tanto este usuario es capaz de calcular el opuesto de $d_A$ con lo que puede calcular
+\[m = c_2\cdot c_1^{-d_A}\]
+\end{enumerate}
+
+Para poder atacar a este sistema es necesario conocer $d_A$, que es secreto o $k$ que es secreto y además cambia en cada comunicación.
