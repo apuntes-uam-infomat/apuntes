@@ -2859,6 +2859,94 @@ descrito en c), y que quien envió el mensaje de b) fue $A$. ?`Como
 debería enviar ese mismo mensaje con el nuevo protocolo?
 \solution
 
+\doneby{Pedro}
+
+\spart
+
+La clave $k_1k_2$ se interpretará como un número en $\ent_{27^2}$.
+
+Puesto que para cifrar este dato mediante el algoritmo RSA tendremos que calcular su módulo $n$, necesitaremos que $n>27^2$ pues, de lo contrario, tendríamos dos claves distintas en claro que podrían llevar a la misma clave cifrada.
+
+\spart
+
+Para empezar debemos factorizar el $n_B$.
+
+Para todo factor primo tenemos distinto de $7$, que sabemos que es factor, tenemos:
+\[p|2^{15}-1 \implies \left\{ \begin{array}{l}
+p|(2^1-1)\implies \text{ imposible}\\
+p|2^3-1 \implies p|7 \implies p=7\\
+p|2^5-1 \implies p |31 \implies  p=31\\
+p =1 \mod 30 \end{array}\right.\]
+
+Así tenemos que
+\[\frac{2^{15-1}}{7} = 31\cdot 151 = p\cdot q\]
+
+Ahora, para descifrar el mensaje debemos calcular el inverso de $e_b$ en módulo $(p-1)(q-1)$, es decir, debemos calcular:
+\[\frac{1}{643} \mod 4500\]
+
+Como siempre, empleamos el algoritmo de Euclides
+\[
+\begin{array}{l}
+4500 = 6 \cdot 643 + 642\\
+643 = 642 + 1
+\end{array} \implies \begin{array}{l}
+1 = 643 - 642 \\
+642 = 4500 - 6 \cdot 643 \implies 1 = -4500 + 7\cdot 643 
+\end{array}
+\]
+
+Con esto procedemos a descifrar el mensaje:
+
+\[\begin{array}{l}
+AGR = 180 \mod n_B \to 180^{7} \mod n_B = 643 \mod n_A \\
+639 = 23 \cdot 27 + 18
+\end{array}\]
+
+Una vez tenemos $k_1,k_2=23,18$ procedemos a descifrar el mensaje $m$ obteniendo:
+\[TPXUROXK\_X \to PHSM\tilde{N}GSBV\tilde{N}\]
+
+\textbf{Evidentemente he metido la pata en algún punto pero no se donde}
+
+\spart
+
+El nuevo sistema descrito nos permite garantizar la autoría del mensaje puesto que sólo el usuario $A$ conoce $f_A$.
+
+Puesto que ahora vamos a cifrar con $f_A^{-1}$ el total del mensaje y calcularemos $\mod n$ de ese valor, necesitaremos que $n$ sea mayor que $27^N$ siendo $N$ la longitud máxima de mensaje que vamos a definir.
+
+\spart
+
+Para por ver como se enviaría el mensaje con el nuevo protocolo debemos calcular la clave privada de $A$ y cifrar todo el mensaje con ella.
+
+Procedemos a factorizar $n_A$.
+
+Para todo factor primo tenemos distinto de $2$, que sabemos que es factor, tenemos:
+\[p|3^{9}-1 \implies \left\{ \begin{array}{l}
+p|3^3-1\implies p|26 \implies p =13 \Or p=2\\
+p =1 \mod 18 \end{array}\right.\]
+
+Así tenemos que
+\[\frac{3^9-1}{2} = 13 \cdot 757\]
+
+Llegados a este punto deberíamos intentar factorizar el $757$ pero, puesto que sabemos que estamos trabajando con un algoritmo RSA, sabemos que $\frac{3^9-1}{2}=p\cdot 1$ por lo que $757$ ha de ser primo.
+
+Ahora calculamos el inverso de $e_A \mod n_A$, es decir:
+\[\frac{1}{3629} \mod 9072\]
+
+Vamos a ello
+\[
+\begin{array}{l}
+9072 = 2 \cdot 3629 + 1814\\
+3629 = 2\cdot 1814 + 1
+\end{array} \implies \begin{array}{l}
+1 = 3629 - 2 \cdot 1814 \\
+1814 = 9072 - 2 \cdot 3629 \implies 1 = -2\cdot 9072 + 5\cdot 3629 
+\end{array}
+\]
+
+Con esto procedemos a descifrar el mensaje, puesto que al ser $n=3629$ sabemos que el tamaño máximo del bloque es 2. (Lógicamente no tiene sentido que se usen bloques de una sóla letra, por lo que entendemos que los bloques son de longitud 2)
+
+Puesto que el mensaje tiene un número de letras que no es múltiplo de 2, éste deberá ser completado de alguna forma previamente definida antes de ser cifrado.
+
 \end{problem}
 
 
@@ -2927,6 +3015,7 @@ $$f(m):=m^{31}+2 \pmod {853}.$$ (Notar que $(29)^2<853<(30)^2$.)
 \solution
 \doneby{Edu}
 
+\spart
 En primer lugar observamos que 853 es primo\footnote{No es divisible por ningún primo en $\set{p \tq p \in \set{\text{primes}}, p \leq \sqrt{853} \leq 30} = \set{2,3,5,7,11,13,17,19,23,29}$; y SAGE opina lo mismo.} y podría entrar la duda si podremos resolver el problema. La respuesta es que aunque RSA diga que $n = p \cdot q$ es un requisito, en realidad solo necesitamos que se pueda aplicar el Pequeño Teorema de Fermat (\ref{thm:FermatsLittleTh}) y el Teorema Chino del Resto.
 
 Por tanto, buscamos un $d$ tal que $e \cdot d = 1 \mod \varphi(853)$. Como 853 es primo, $\varphi(853) = 852$.
@@ -2970,6 +3059,9 @@ Y repitiendo el proceso en el otro caso obtenemos $782^{55} \mod 853 = 129 = {4 
 
 Juntándolo todo, el texto en claro es ``BIEN''.
 
+\spart
+
+No será posible emplear la función $g$ puesto que al calcular el inverso de $32$ tendríamos que calcular el inverso de $32$ en $\ent_{852}$ pero $(32,852) \neq 1$ por lo que no tendrá inverso.
 \end{problem}
 
 %\begin{problem}
@@ -2995,7 +3087,7 @@ Vamos a ver que esos números son pseudoprimos para las bases dadas:
 
 En primer lugar, vemos que $(15,4) = 1$.
 
-En segundo lugar, calculamos $4^(15-1) \mod 15$. Como $14 = 1110$ en base 2:
+En segundo lugar, calculamos $4^{(15-1)} \mod 15$. Como $14 = 1110$ en base 2:
 \[
 4^2 = 1 \mod 15, 4^4 = 1 \mod 15, 4^8 = 1 \mod 15
 \]
@@ -3035,6 +3127,22 @@ primo, puede ser un pseudo-primo en bases 2, 3 ni 7.
 \ppart Probar que 91 es el menor pseudo-primo (impar) en base 3.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Si $n$ es pseudoprimo en base $b$ sabemos que
+\[b^{n-1} = 1 \mod n \implies b^{n-1}=1 \mod p \text{ puesto que } p|n\]
+
+Por tanto tenemos que
+\[b^{n'-1} = b^{\frac{n-p}{p}} \mod p =\footnote{Por el pequeño teorema de Fermat $a^p=a \mod p$ siendo $p$ un primo cualquiera} \left(b^{\frac{n-p}{p}}\right)^p \mod p\]
+
+Asi tenemos:
+\[b^{n'-1} \mod p= b^{n-p} \mod \frac{b^n}{b^p} \mod n = \frac{b^n}{b} \mod n = b^{n-1} \mod p = 1\]
+
+\spart
+
 \end{problem}
 
 \begin{problem}[10]
