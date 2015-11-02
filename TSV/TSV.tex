@@ -1,6 +1,6 @@
 \documentclass[nochap,palatino,notitlepage]{apuntes}
 
-\title{Tratamiento de señales visuales - Resumen}
+\title{Tratamiento de señales visuales}
 \author{Guillermo Julián Moreno}
 \date{15/16 C1}
 
@@ -254,7 +254,7 @@ Aplicando sucesivos bancos de aperturas y cierres (\fref{fig:Granulometria}) con
 \label{fig:AperturaReconstruccion}
 \end{figure}
 
-Se usan para hacer simplificaciones preservando contornos. Se coge la imagen de entrada $x$, un marcador $y$ y un elemento estructurante que definirá la conectividad de los elementos que mantiene. Se define entonces la apertura y cierre por reconstrucción como un prceso iteratico\begin{align*}
+Se usan para hacer simplificaciones preservando contornos. Se coge la imagen de entrada $x$, un marcador $y$ y un elemento estructurante que definirá la conectividad de los elementos que mantiene. Se define entonces la apertura y cierre por reconstrucción como un proceso iterativo\begin{align*}
 γ^r_i &= (γ^r_{i-1} \otimes b) \wedge x \\
 φ^r_i &= (φ^r_{i-1} \ominus b) \vee x
 \end{align*} con $γ^r_0 = φ^r_0 = y$. Las operaciones completas se hará con $i \to ∞$, pero por comodidad denotaremos los operadores como $γ^r \equiv γ^r_{∞}$ y $φ^r \equiv φ^r_{∞}$
@@ -266,5 +266,32 @@ Normalmente, para el marcador se usarán versiones modificadas de la imagen de e
 También se puede usar este tipo de filtrado para rellenar agujeros, usando un marcador que sea igual a toda la imagen y un cierre por reconstrucción. Un top-hat con la apertura por reconstrucción ($x - γ^r (x;y)$) nos quitará objetos parcialmente visibles si usamos un marcador que sea 1 únicamente en los bordes.
 
 La apertura por reconstrucción de la erosión facilitará el suavizado sin perder los contornos, y el cierre mediante reconstrucción de la dilatación nos permitirá eliminar ruido o elementos pequeños más oscuros sin perder los contornos originales.
+
+\section{Extracción de características}
+
+% TODO: Aquí falta una hora de clase.
+
+Una ventaja de usar las pirámides es que podemos mandar una imagen en distintas resoluciones sin tener que enviar todos los datos: podemos enviar la imagen original y las diferencias entre niveles, que nos ocuparán menos píxeles.
+
+\subsection{Espacio escala}
+
+En el espacio escala, en lugar de reducir el tamaño de la imagen, lo que haremos será suavizar, y además podremos tomar la variable de suavizado continua. Veremos que usando el kernel gaussiano, tendremos una aproximación perfecta de la LoG. También veremos que es invariante a traslaciones. Por último, el espacio escala no introduce artefactos, estructuras que no existiesen en la imagen.
+
+\begin{defn}[Representación\IS espacio escala] Dada una señal escalar de dimensión $N$ $\appl{Ψ}{ℝ^N}{ℝ}$, su representación\IS espacio escala es una aplicación $\appl{L}{ℝ^N × ℝ^+}{ℝ}$ dada por \begin{align*}
+L(\vx, 0) &= ψ(\vx) \\
+L(\vx, t) &= g(\vx, t) \ast ψ(\vx)
+\end{align*} donde $g(\vx, t)$ es la gaussiana dada por \[ g(\vx, t) = \frac{1}{2πt}e^{-\frac{\norm{\vx}}{2t}}\]
+\end{defn}
+
+El kernel gaussiano es el único que hace que se cumpla, entre otras cosas, la siguiente ecuación: dados $t_2 > t_1$ entonces \( L(\vx, t_2) = g(\vx, t_2 - t_1) \ast L(\vx, t_1) \label{eq:ScaleSpaceGroup} \) ya que se cumple que \[ g(\vx, σ_1^2) \ast g(\vx, σ_2^2) = g(\vx, σ_1^2 + σ_2^2) \]
+
+El tamaño de la gaussiana que se aplica determina el tamaño de muestreo: un tamaño más pequeño nos dará más precisión en la escala pero costará más calcular.
+
+Otra propiedad útil del espacio escala es que, dadas dos imágenes concretas $I_1, I_2$ y dos filtros gausianos $G_1$, $G_2$ con desviaciones típicas $σ_1, σ_2$ respectivamente, entonces las imágenes $L\ast(G_1 \ast I_1)$ (la laplaciana de la gaussiana) se parece más a $G_1 \ast I_1 - G_2 \ast I_2$ cuanto más se parezcan $I_2$ e $I_1$ y más se parezcan las desviaciones típicas $σ_1,σ_2$.
+
+Más concretamente, y con algo un poco más precisión porque lo de antes es lo menos matemático que he visto en años, si tenemos una imagen $I$ y un kernel gaussiano $G_1$; entonces $L\ast(G_1 \ast I) = (G_1 \ast I) - (G_1 \ast (G_1 \ast I))$ o, en otras palabras, la laplaciana de la gaussiana es igual (salvo un factor de escala) a la diferencia entre las imágenes resultantes de aplicar una y dos veces el kernel $G_1$ a la imagen $I$.
+
+A modo de curiosidad, el espacio escala cumple la ecuación del calor, dada por \[ ∂_i L = \frac{\nabla^2 L}{2} = \frac{1}{2} \sum_{i=1}^N \pd[2]{L}{x_i}\]
+
 
 \end{document}
