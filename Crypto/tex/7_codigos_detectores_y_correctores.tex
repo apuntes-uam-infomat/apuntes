@@ -1,1 +1,117 @@
 \chapter{Códigos detectores y correctores de errores}
+\section{Motivación}
+\begin{example}
+Supongamos que tenemos un robot en Marte (o en cualquier lugar muy lejano) y queremos comunicarnos con él, indicándole en cuál de las 4 direcciones naturales queremos que se mueva:
+\[\left\{ \begin{array}{l}
+N = 00 \\ E = 01 \\ O = 10 \\ S = 11
+\end{array}\right.\]
+
+En cualquier momento puede ocurrir un problema que dificulte la recepción del mensje por parte del robot, ya sea el ruido del propio canal de comunicación, o la aparición de un rayo cósmico que modifique algún bit.
+
+El problema de esto es que, en cuanto el robot reciba un par de órdenes perturbadas, habremos perdido el control del mismo, pues no sabremos cuál es su posición.
+
+La \textbf{clave del problema} es que, puesto que todas las palabras de longitud dos son válidas en nuestro código, el robot no puede darse cuenta de si el mensaje ha sido perturbado o no.
+
+Para solventar este problema, una opción es emplear cadenas más largas para codificar cada movimiento, a fin de poder encontrar errores posibles. Por ejemplo, podemos duplicar el código que representa cada posible movimiento.
+
+\[\left\{ \begin{array}{l}
+N = 0000 \\ E = 0101 \\ O = 1010 \\ S = 1111
+\end{array}\right.\]
+
+Si enviamos al robot el mensaje $0101$ y el robot recibe $0111$, el robot detecta que ha habido un error, pero no puede corregirlo con exactitud.
+
+Por tanto, lo que hará el robot será corregir el mensaje minimizando la probabilidad de fallo, es decir, trata de maximizar la probabilidad condicionada:
+\[\mathbb{P} \left(\text{han enviado m} | \text{he recibido }\tilde{m} \right)\]
+
+Esta probabilidad dependerá de las características del canal. De forma general tenemos que un bit muta con probabilidad pequeña $p$ y, consecuentemente, llega de forma adecuada con probabilidad $p-1$. Como hipótesis consideramos que $p$ es pequeño (desde luego $p<\frac{1}{2}$).
+
+Para simplificar el problema supondremos, además, que los errores en los bits son independientes.
+
+Puesto que $p$ es pequeño, es más probable que un bit llegue de forma correcta a que llegue mutado. Por tanto, a la hora de maximizar la probabilidad descrita anteriormente, necesitamos encontrar el mensaje original al que se puede llegar mediante el menor número de cambios posibles.
+
+Así tenemos que, dado $\tilde{m} = 0111$
+\[\left\{ \begin{array}{l}
+m = N= 0000 \text{ con 3 cambios}\\ m= E = 0101 \text{ con 1 cambio }\\ m= O = 1010 \text{ con 3 cambios}\\ m =S = 1111 \text{ con 1 cambio}
+\end{array}\right.\]
+
+Por tanto, lo más probable es que la orden fuese desplazarse hacia el este o el sur, pero no sabemos cuál de las dos es.
+
+\obs Si se produce un sólo error sabemos detectarlo, aunque no corregirlo. No obstante, si se producen dos errores es posible que no seamos capaces ni de detectarlo.
+
+A fin de poder corregir un único error lo que haremos será repetir el código tres veces, de modo que tenemos
+
+\[\left\{ \begin{array}{l}
+N = 000000 \\ E = 010101 \\ O = 101010 \\ S = 111111
+\end{array}\right.\]
+
+Con este método, seremos capaces de detectar la presencia de hasta dos bits erróneos. 
+
+Supongamos que recibimos el mensaje $\tilde{m}=011101$, mirando, como antes, el código original más probable tenemos:
+
+\[\left\{ \begin{array}{l}
+m = N= 000000 \text{ con 4 cambios}\\ m= E = 010101 \text{ con 1 cambio }\\ m= O = 101010 \text{ con 5 cambios}\\ m =S = 111111 \text{ con 2 cambios}
+\end{array}\right.\]
+
+En esta ocasión tenemos un \textbf{vecino más próximo} que será el mensaje $m=E$.
+
+Además, si conseguimos garantizar que sólo habrá un error en el mensaje recibido, podemos estar seguros de que hemos encontrado el mensaje original, pues no hay forma de llegar hasta el mensaje que hemos recibido modificando un único bit de alguno de los otros mensajes posibles.
+
+\obs Si se produce un error podemos corregirlo, dos errores podremos detectarlos, a partir de 3 errores es posible que no los detectemos.
+
+Con este mismo esquema, supongamos que recibimos la palabra $\tilde{m} = 11101$. En este caso, como en el anterior, es sencillo detectar que se ha producido un error.
+
+Si empleamos el mismo método que en el caso anterior, tendríamos que el vecino más cercano es $m=S$ pero estamos restingiéndonos a asumir que sólo hay un error. No obstante, el mensaje podría haber sido $m=E$ y encontrarnos con dos errores.
+
+\obs O asumimos que sólo hay un error y lo corregimos o aceptamos que puede haber dos y no podemos corregirlo
+
+\end{example}
+
+Veamos ahora cómo generalizar este tipo de problemas y la solución al mismo.
+
+\begin{defn}[Código q-nario]
+Dado un alfabeto con $q$ elementos, $F_q$, un código (de bloques) q-nario de longitud $n$ es $\algb{C}\in F_q^n$.
+
+Los números de teléfono de españa, por ejemplo, constituyen un código 10-ario de longitud 9: $F_{10}^9$
+\end{defn}
+
+De manera general, siendo $|\algb{C}\ = M$ querremos encontrar un código con $M$ grande, para tener más ordenes posibles para el robot, con un $n$ pequeño, para que no tenga que enviar demasiada información y que permita corregir muchos errores.
+
+\obs Todo a la vez es imposible. \textbf{La teoría de códigos trata de hacerlo lo mejor posible.} 
+
+\section{Distancia de Hamming}
+\begin{defn}[Distancia de Hamming]
+Dados $x=(x_1,...,x_n)$, $y=(y_1,...,y_n) \in F^n$ se define la \textbf{Distancia de Hamming} como
+\[d(x,y)=\#\{i: x_i \neq y_i\}\] 
+\end{defn}
+
+\begin{prop}[$d$ es una distancia]
+Puesto que somos matemáticos debemos convencernos de la que la función $d$ definida es realmente una distancia. Para ello comprobamos que se cumplen las propiedades de una distancia:
+\begin{enumerate}
+\item 
+\[d(x,y) \leq 0\]
+
+Puesto que estamos mirando el cardinal de un conjunto, trivialmente esta propiedad es cierta
+
+\item
+\[d(x,y)=0 \iff x=y\]
+
+Puesto que estamos contando el número de bits diferentes, si el número es 0, evidentemente las dos cadenas son la misma
+
+\item 
+\[d(x,y)=d(y,x)\]
+
+Esta propiedad es trivial puesto que el operador $\neq$ es conmutativo
+
+\item 
+\[d(x,y) \leq d(x,z)+d(z,y)\]
+
+Tenemos que comprar el número de cambios necesarios para convertir $x$ en $z$ y luego $z$ en $y$. Como $d=d_H$ es la distancia mínima la desigualdad es obvia.
+
+\begin{defn}[Distancia mínima]
+Dado un código $\algb{C}\in F_q^n$, su \textbf{distancia mínima} se define como:
+\[d(\algb{C}) = \min\{d(x,y) \ t.q. \ \ x,y \in \algb{C}, \ x \neq y\}\]
+\end{defn}
+\end{enumerate}
+\end{prop}
+
+Si utilizamos $\algb{C} \subset F_q^n$ con $|G|=M$ para transmitir $M$ mensajes, lo que queremos es que las palabras empleadas esten lo más espaciadas posible, de modo que un pequeño cambio en un elemento de una palabra no nos haga caer en otra palabra válida. Es decir, queremos que la distancia mínima del código, es decir, $d(\algb{C})$ sea grande.
