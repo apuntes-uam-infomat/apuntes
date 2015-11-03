@@ -377,9 +377,167 @@ $$\int_\Omega w_\alpha (x)v(x) dx = \int_{\Omega}D^\alpha u(x) v(x)dx = (-1)^|\a
 		Por Lax-Migram 
 		Tenemos $V = H_0^1(\Gamma_1)$,  $a(u,v) = \int_{\Omega}\nabla u\nabla v$ y $l(v) = \int _\Omega fv + \int _{\Gamma_2} gv\partial \sigma$, es decir, existencia y unicidad de la solución débil.
 	\end{example}
-	
-	
-	
-	
-	
 
+
+    \subsection{Aproximación de problemas elípticos}
+    Buscamos encontrar un $u\in V$ verificando
+    $$a(u,v) = l(v) \ \forall v\in V$$
+    
+    La existencia de unicidad y solución están garantizadas por el teorema de Lax-Milgram. Consideramos $V_h\subset V$ subsespacio finito dimensional de $V$.
+    $$V_h = <\Phi_1, \Phi_2, \hdots, \Phi_{N(h)}>$$
+    
+    \paragraph{Método de elementos finitos}
+    Encontrar $u_h\in V_h$ verificando 
+    $$a(u_h, v_h) = l(v_h) \ \forall v_h \in V_h$$
+    
+    Como $V_h\subset V$ hereda la estructura de espacio de Hilbert, la existencia y unicidad de la solución del problema discreto se deduce de aplicar el teorema de Lax-Milgram.
+    
+    \paragraph{Forma práctica de encontrar la solución}
+    $$u_h(x) = \sum_{i=1}^{N(h)} u_i \Phi_i(x)$$
+    
+    La aproximación es combinación lineal de los elementos de la base.
+    
+    El vector de incógnitas con coeficientes en la base es
+    $$\begin{bmatrix}
+    	u_1\\u_2\\\vdots\\ u_{N(h)}
+    \end{bmatrix}$$
+    
+    con $a(u_h, v_h) = l(v_h) \ \forall v_h\in V_h$. 
+    Podemos imponer que
+    $$a(\sum_{i=1}^{N(h)} u_i \Phi_i(x), \Phi_j(x)) = l(\Phi_j)$$
+    
+    con $j=1,\hdots, N(h)$.
+    
+    Que es lo mismo que 
+	$$\sum_{i=1}^{N(h)} u_i a(\Phi_i, \Phi_j) = l(\Phi_j)$$
+	
+	Sea $A$ la matriz de tamaño $N(h) \times N(h)$ con elemento $(i,j)$ igual a $a(\Phi_i, \Phi_j)$, entonces, encontrar $u_h$ es equivalente a resolver el sistema lienal
+	$$
+	A
+	\begin{bmatrix}
+	u_1\\u_2\\\vdots\\u_{N(h)}
+	\end{bmatrix} = 
+	\begin{bmatrix}
+	l(\Phi_1)\\
+	l(\Phi_2)\\
+	\vdots\\
+	l(\Phi_{N(h)})
+	\end{bmatrix}$$
+	
+	En general $A$ va a ser una matriz definida positiva y dispersa (tiene muchos elementos nulos). Se suelen usar métodos iterativos para resolver el sistema.
+	
+	\subsection{Funciones lineales a trozos en una dimensión espacial}
+	Consideramos el problema: encontrar $u:[0,1]\longrightarrow \mathbb{R}$ verificando 
+	\begin{equation}
+	\left\{
+		\begin{array}{l l}
+		-(p(x)u')'+q(x)u=f(x) & x\in(0,1)\\
+		u(0)=u(1)=0 &\\
+		p,q\in e(0,1) , f\in L^2\\
+		p(x) \ge \tilde{c} > 0 &\\
+		q(x) \ge 0 &
+		\end{array}
+		\right.
+	\end{equation}
+	
+	Tenemos
+	$$a(u,v) = \int_{0}^{1}p(x) u'(x) v'(x) + \int_{0}^{1}q(x)u(x)v(x)$$
+	
+	Siendo $a:H_0^1(0,1)\times H_0^1(0,1) \longrightarrow \mathbb{R}$
+	
+	Y
+	$$H_0^1(0,1) =\{u\in L^2 , u'\in L^2, \text{ y }u(0)=u(1)=0\}$$
+	
+	Siendo $l(v): H_0^1(0,1) \longrightarrow\mathbb{R}$ con $l(v) = \int_{0}^{1}fvdx$
+	
+	La solución en forma débil es $u\in H_0^1(0,1)$ con 
+		$$a(u,v) = l(v) \ \forall v \in H_0^1(0,1)$$
+		
+	Vamos a verificar que se cumplen las hipótesis de Lax-Milgram.
+	\begin{itemize}
+		\item \textbf{$a$ coerciva}
+		$$\exists c_0\tq a(u,u)\ge c_0||u||^2_{H_0^1(0,1)}$$
+		
+		EN $H_0^1(0,1)$ son equivalentes
+		$$(\int u^2 + \int (u')^2)^\frac{1}{2} = (||u||^2_{L^2}+||u'||^2_{L^2})$$
+		
+		y
+		$$||u'||_{L^2} = (\int (u')^2)^\frac{1}{2}$$
+		
+		$$a(u,u) = \int_0^1 p(x) (u')^2 + \int_0^1 qu^2 \ge \tilde{c} \int_0^1 (u')^2 + \int_{0}^{1}qu^2\ge \tilde{c}\int_0^1 (u')^2 dx = \tilde{c}||u||^2_{H_0^1(0,1)}$$
+		
+		\item \textbf{$a$ continua}
+		$\exists c_1$ con $|a(u,v)| \le c_1||u||_{H_0^1}||u||_{H_0^1}$
+		
+		\begin{align*}
+			|a(u,v)| & = |\int_{0}^{1}p(x)u'v'dx + \int_{0}^{1}q(x)uvdx| \\
+			& \le |\int_0^1 p(x) u'v'dx| + |\int_{0}^{1}q(x)uvdx|\\
+			& \le ||p||_\infty ||u'||\\
+			& \textbf{No me da puto tiempo a copiar esta basura}
+		\end{align*}
+		
+		\item \textbf{$l$ continua}
+		\textbf{Ni esta tampoco}
+	\end{itemize}
+	
+	\paragraph{Aproximación por elementos ifnitos lineales}
+	
+	Defino una partición en el intervalo $(0,1)$.
+	$$x_0 = 0< x_1 <\hdots < x_N = 1$$
+	
+	Si son equiespaciados (que no es necesario)
+	$$x_j = jh,\ h=\frac{1}{N}, N>0$$
+	
+	Definimos $h$, que es el diametro de la partición, como
+	$$h=\max |x_i-x_{i-1}|\ (h=\frac{1}{N}\text{ partición uniforme })$$
+	
+	Definimos el espacio de elementos finitos lineales con funciones continuas lineales a trozos y condiciones Dirichlet homogéneas.
+	$$V_h  = \{v_h\text{ continua, } vh(0)=vh(1)\text{ y } v_h/\left[x_{i-1}, x_1\right] = \text{ polinomio lineal } \forall i=1,\hdots, N\}$$
+	
+	Vamos a tener convergencia con $h\to 0$.
+	Vamos a buscar una base de $V_h$ que tiene dimensión $N-1$.
+	
+	Definimos
+	\begin{equation*}
+		\Phi_i(x) = \left\{
+		\begin{array}{l l l}
+			\frac{x-x_{i-1}}{x_i-x_{i-1}}& x\in\left[x_{i-1}, x_i\right]\\
+			\frac{x_{i+1}-x}{x_{i+1}-x_{i}}& x\in\left[x_{i}, x_{i+1}\right]\\
+			0 & \text{ en el resto}\\
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	$$u_h(x) = \sum_{i=1}^N u_i\Phi_i(x)$$
+	
+	\paragraph{Método de elementos finitos}
+	Encontrar $u_h\in V_h$ con 
+	$$a(u_h, v_h) = l(v_h)\ \forall v_h\in V_h$$
+	
+	Encontrar
+	$$u_h(x) = \sum_{i=1}^{N} u_i\Phi _i(x)$$
+	
+	con 
+	$$\sum_{i=1}^{N-1} u_i a(\Phi_i, \Phi_j) = l(\Phi_j)$$
+	
+	o de forma equivalente, resolver el sistema lineal de matriz $A_{(N-1)\times(N-1)}$ siguiente
+	\begin{equation*}
+		A
+		\begin{bmatrix}
+			u_1\\u_2\\\vdots\\u_{N-1}
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+			\int f\Phi_1\\
+			\int f\Phi_2\\
+			\vdots\\
+			\int f\Phi_{N-1}
+		\end{bmatrix}
+	\end{equation*}
+	
+	El elemento $(i,j)$ de la matriz $A$ es
+	$$A_{(i,j)} = \int_0^1 p(x) \Phi_i'\Phi_j' + \int_0^1 q(x)\Phi_i\Phi_j$$
+	
+	Cuando no se puede calcular exactamente se usa una regla de cuadratura.
+	
+	
