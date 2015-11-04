@@ -368,7 +368,7 @@ Probar que los métodos de Adams-Bashforth de dos pasos y de tres pasos, definid
 
 En este ejercicio primero probaremos que los métodos son consistentes usando el teorema \ref{theorem:consist_iif_relaciones}. Después probaremos que son 0-estables, y sirviéndonos del teorema \ref{theorem:consist_y_0estable_converge} podremos decir que el MN es convergente.
 
-Este ejercicio lo hicimos antes de conocer el criterio de la raíz \ref{theorem:criterio_rai}, que simplifica enormemente la demostración de la 0-estabilidad. Al final de cada apartado se encuentra la versión del profesor, que emplea este criterio.
+Este ejercicio lo hicimos antes de conocer el criterio de la raíz \ref{theorem:criterio_raiz}, que simplifica enormemente la demostración de la 0-estabilidad. Al final de cada apartado se encuentra la versión del profesor, que emplea este criterio.
 \textcolor{red}{
 \obs Para poder aplicar los teoremas vistos en clase sobre métodos numéricos, antes debemos comprobar que el método con el que trabajamos satisface las hipótesis de un buen método numérico y, por tanto, los teoremas son válidos.}
 
@@ -734,11 +734,15 @@ Hasta aquí sólo hemos escrito igualdades basándonos en el teorema fundamental
 Esta función sabemos integrarla pues no depende de $f$ ya que todas las apariciones de $f$ están evaluadas en un punto, por lo que son constantes.
 
 Una vez realicemos la integral debemos obtener exactamente el método dado en el enunciado.
+
+\spart
+
+
 \end{problem}
 
 \begin{problem}[5]
 Sea el método multipaso
-\[y_{n+2} - \frac{4}{3}y_{n+1}+\frac{1}{3}y_b = \frac{2}{3}hf(t_{n+2},y_{n+2})\]
+\[y_{n+2} - \frac{4}{3}y_{n+1}+\frac{1}{3}y_n = \frac{2}{3}hf(t_{n+2},y_{n+2})\]
 
 \ppart Definir su función incremento y comprobar que el método está determinado de manera única
 
@@ -746,6 +750,42 @@ Sea el método multipaso
 
 \ppart Ver si el métod es convergente
 \solution
+
+\spart
+Empezamos definiendo la función incremento
+\[\phi_f(t_n,y_n,y_{n+1};h) = \frac{2}{3}f(t_n+2h,y_n+\frac{4}{3}y_{n+1}-\frac{1}{3}y_n+h\phi_f(t_n,y_n,y_{n+1}))\]
+
+
+Para comprobar que el método está definido de manera única ver que la siguiente ecuación nos define $y_{n+1}$ como su solución.
+\[y_{n+2} = \frac{4}{3}y_{n+1}-\frac{1}{3}y_n + \frac{2}{3}hf(t_{n+2},y_{n+2})\]
+
+Para comprobar que existe $y_{n+2}$ debemos comprobar que existe un punto fijo de la aplicación 
+\[T(x) =  \frac{4}{3}y_{n+1}-\frac{1}{3}y_n + \frac{2}{3}hf(t_{n+2},x)\]
+para lo que simplemente debemos comprobar que la aplicación es contractiva, cosa que es elemental puesto que $f$ es Lipschitz en la segunda variable.
+\[\norm{t(y)-T(\tilde{y})} = \norm{\frac{2h}{3} \left( f(t_{n+2},y) - f(t_{n+2},\tilde{y})\right)} \leq \frac{2h}{3}L\norm{y - \tilde{y}}\]
+
+Por tanto, queda claro que el método está bien definido y, por tanto, es único.
+
+\spart
+
+Para estudiar la consistencia del método podemos ver que
+\[\sum_{j=0}^2 α_j = 0\]
+Además
+\[\sum_{j=0}^2jα_j = \frac{2}{3}\]
+\[\phi_f(t,y(t),y(t);0) = \frac{2}{3}f(t,\frac{4}{3}y(t)-\frac{1}{3}y(t)) = \frac{2}{3}f(t,y(t)) = \sum_{j=0}^2 jα_j f(t,y(t))\]
+
+Por tanto, podemos aplicar el teorema \ref{theorem:consist_iif_relaciones} que nos garantiza que si el método es un buen método numérico y cumple las condiciones que acabamos de probar, entonces será \textbf{consistente}
+
+\spart
+
+Para estudiar la convergencia vamos a emplear el teorema \ref{theorem:consist_y_0estable_converge} para lo que necesitamos probar la 0-estabilidad.
+
+Para ver que el método es 0-estable nos apoyamos en el método de la raíz, \ref{theorem:criterio_raiz}. En este caso es sencillo ver que el polinomio característico es
+\[P(x)=x^2-\frac{4}{3}x+\frac{1}{3}\]
+que tiene como soluciones $x=1, \ x=\frac{1}{3}$ por lo que se satisface el criterio y por tanto el método es 0-estable.
+
+\obs Para poder aplicar los teoremas que hemos aplicado, habría que demostrar que el método es un buen método numérico (satisface las hipótesis de los métodos numéricos). Esta demostración se deja como ejercicio para el lector.
+
 \end{problem}
 
 \begin{problem}[6]
