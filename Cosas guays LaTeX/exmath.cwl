@@ -88,6 +88,8 @@
 \prob[parametro]{arg1}#m
 \var{arg1}#m
 \var[parametro]{arg1}#m
+\cov{arg0}#m
+\corr{arg0}#m
 \fd#m
 \convs#m
 \convs[texto superior]#m
@@ -104,7 +106,6 @@
 \sample[variable][indice]#m
 \sesgo#m
 \ECM#m
-\cov#m
 \emv#m
 \nat#m
 \ent#m
