@@ -277,7 +277,7 @@ Una ventaja de usar las pirámides es que podemos mandar una imagen en distintas
 
 En el espacio escala, en lugar de reducir el tamaño de la imagen, lo que haremos será suavizar, y además podremos tomar la variable de suavizado continua. Veremos que usando el kernel gaussiano, tendremos una aproximación perfecta de la LoG. También veremos que es invariante a traslaciones. Por último, el espacio escala no introduce artefactos, estructuras que no existiesen en la imagen.
 
-\begin{defn}[Representación\IS espacio escala] Dada una señal escalar de dimensión $N$ $\appl{Ψ}{ℝ^N}{ℝ}$, su representación\IS espacio escala es una aplicación $\appl{L}{ℝ^N × ℝ^+}{ℝ}$ dada por \begin{align*}
+\begin{defn}[Representación\IS espacio escala] Dada una señal escalar de dimensión $N$ $\appl{Ψ}{ℝ^N}{ℝ}$, su representación espacio escala es una aplicación $\appl{L}{ℝ^N × ℝ^+}{ℝ}$ dada por \begin{align*}
 L(\vx, 0) &= ψ(\vx) \\
 L(\vx, t) &= g(\vx, t) \ast ψ(\vx)
 \end{align*} donde $g(\vx, t)$ es la gaussiana dada por \[ g(\vx, t) = \frac{1}{2πt}e^{-\frac{\norm{\vx}}{2t}}\]
@@ -291,7 +291,17 @@ Otra propiedad útil del espacio escala es que, dadas dos imágenes concretas $I
 
 Más concretamente, y con algo un poco más precisión porque lo de antes es lo menos matemático que he visto en años, si tenemos una imagen $I$ y un kernel gaussiano $G_1$; entonces $L\ast(G_1 \ast I) = (G_1 \ast I) - (G_1 \ast (G_1 \ast I))$ o, en otras palabras, la laplaciana de la gaussiana es igual (salvo un factor de escala) a la diferencia entre las imágenes resultantes de aplicar una y dos veces el kernel $G_1$ a la imagen $I$.
 
-A modo de curiosidad, el espacio escala cumple la ecuación del calor, dada por \[ ∂_i L = \frac{\nabla^2 L}{2} = \frac{1}{2} \sum_{i=1}^N \pd[2]{L}{x_i}\]
+Este hecho nos permitirá obtener la representación en espacio escala de la imagen aplicando iterativamente convoluciones con un kernel fijo, mucho más barato computacionalmente que usando kernels cada vez más grande.
 
+Un hecho importante del espacio escala cumple la ecuación del calor, dada por \[ ∂_t L = \frac{\nabla^2 L}{2} = \frac{1}{2} \sum_{i=1}^N \pd[2]{L}{x_i}\]
+
+Esta propiedad permite inferir que esta representación no realza máximos ni mínimos, y además nos da una pseudodemostración de por qué la LoG y la DoG son equivalentes:
+\[ \nabla^2 L(\vx,t) \simeq L(\vx,t + Δt) - L(\vx, t - Δt) \]
+
+También podremos derivar haciendo una ligera perversión matemática.
+
+\subsubsection{LoG en el espacio escala}
+
+Podemos considerar la laplaciana en las direcciones espaciales. Simplificando y tomando $L_{xx} = \pd[2]{L}{x}$, diremos que  \[ \nabla^2 L = L_{xx} + L_{yy}\], que tomará grandes valores negativos y positivos para bloques claros y oscuros de anchura $2 \sqrt{t}$. La respuesta, eso sí, dependerá de la escala y decrece según esta aumenta, así que para evitarlo se normaliza con respecto de la escala,  de tal forma que nos quedará \[ \nabla^2_{\text{norm}} = t(L_{xx} + L_{yy}) \]
 
 \end{document}
