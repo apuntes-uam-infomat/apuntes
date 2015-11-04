@@ -1251,10 +1251,94 @@ Selección prob.fitness && Pto cruce & Vástagos & Mutación & x & fitness\\
 \end{tabular}
 \end{center}
 
+\end{example}
+
+\section{Teoría de esquemas:}
+
+Los algoritmos genéticos funcionan descubriendo y recombinando buenos bloques de soluciones de forma paralela.
+
+Formalizaremos el concepto de bloque como \underline{esquema}.
+
+Para codificación binaria un esquema va a ser una cadena de $0,1,*$, donde $*$ representa cualquier valor posible.
+
+\begin{example}
+\begin{itemize}
+	\item $H = 1***0$: Todas las cadenas de longitud 6 que empiezan por 1 y terminan por 0.
+\end{itemize}
+
+\paragraph{Definiciones}
+
+
+
+\begin{defn}[Orden de un esquema]
+Número de bits definidos
+\end{defn}
+
+\begin{defn}[Distancia de un esquema]
+Distancia entre los bits definidos más lejanos
+\end{defn}
+\begin{example}
+\begin{itemize}
+	\item[Orden] $O(1***0) = 2$
+	\item[Distancia] $d(*1**0) = 3$
+	\item[Distancia] $d(10) = 1$
+	\item[Distancia] $d(***\underbrace{1*0*1*0}_{}***) = 6$
+\end{itemize}
+\end{example}
+\end{example}
+
+\paragraph{Combinatoria básica:}
+
+\begin{itemize}
+	\item ¿Cuántos cromosomas existen de longitud $l$? $2^l$
+	\item ¿Cuántos esquemas existen de longitud $l$? $(2+1)^l$
+	\subitem ¿Cuántos esquemas cumple el cromosoma: $101$? $2^l$, ya que cada bit puede tomar 2 valores: $*$, o el correspondiente de $101$
+\end{itemize}
+
+
+\begin{prop}
+ Una población de N individuos contiene instancias desde $2^l$, hasta $N2^l$. En este caso, se están evaluando $O(2^l)$ esquemas.
+\end{prop}
+\begin{proof}
+A buen entendedor, pocas palabras bastan.
+\end{proof}
+
+En el algoritmo, la inicialización es aleatoria. Por ello, en promedio habrá $\frac{N}{2}$ esquemas que empiecen por $1$ y $\frac{N}{2}$ esquemas que empiecen por $0$.
+
+
+\begin{defn}[Funciones de $t$]
+\begin{itemize}
+	\item $n_H(t)$ es el número de instancias del esquema H en tiempo $t$.
+	\item $f_i(t)$= fitness del individuo $i$ en tiempo $t$.
+	\item $\bar{f}(t)$ fitness promedio de la población en tiempo $t$.
+	\item $\bar{f}_H(t)$ fitness promedio de las instancias de $H$ en tiempo $t$.
+\end{itemize}
+\end{defn}
+
+Queremos calcular el valor esperado de $n_H(t+1)$. Para ello, vamos a dar 3 pasos:
+
+\begin{enumerate}
+	\item Selección de progenitores proporcional a fitness: \[\frac{f_i(t)}{\sum f_i(t)}\]
+
+	Entonces, el número esperado de veces que se selecciona el individuo $i$ es \[N\frac{f_i(t)}{\sum f_i(t)} = \frac{f_i(t)}{\bar{f}(t)} \]
+
+	Además, el número de individuos del esquema $H$ seleccionados $S_s$ es:
+
+	\[S_s(t) = \sum \frac{f_i(t)}{\bar{f}(t)} = \sum \frac{n_H(t)f_i(t)}{n_H(t)\bar{f}(t)} = \frac{\bar{f}_H(t)}{\bar{f}(t)}n_H(t)\]
+\end{enumerate}
+
+
+\begin{example}
+Cruce en un punto con probabilidad $p_c$.
+
+Un esquema sobrevive si al menos 1 de sus vástagos pertenece al esquema.
+
+ Una cota inferior de supervivencia de cruce es:
+
+ \[ S_i = 1 - p_c\frac{d(H)}{l-1}\]
 
 
 \end{example}
-
 %% Apéndices (ejercicios, exámenes)
 \appendix
 
