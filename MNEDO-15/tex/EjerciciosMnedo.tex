@@ -615,7 +615,7 @@ En esta ocasión el primer polinomio característico es $P(x) = x^2-1$ que tiene
 
 Efectivamente se satisface el criterio de la raíz, pues todas las raices tienen módulo 1 pero son simples.
 
-\item \textbf{Convergencia}
+\item \textbf{Consistencia}
 Para garantizar la consistencia vamos emplear el teorema \ref{theorem:consist_iif_relaciones}. 
 
 Es sencillo comprobar que 
@@ -646,7 +646,54 @@ Si pasamos todas las $\phi_f$ a la izquierda y despejamos de nuevo nos queda
 \[\norm{\phi_f(t_n,y_n,y_{n+1};h) - \phi_f(t_n,\tilde{y}_n,\tilde{y}_{n+1};h)} \leq \frac{C_2L\left(\norm{\tilde{y}_{n+1}-y_{n+1}}+\norm{\tilde{y}_n - y_n}\right)}{1-\frac{2}{3}Lh}\]
 
 Para que la última desigualdad se mantenga necesitamos que $h < \frac{2}{3}L$ a fin de evitar que el denominador se haga negativo.
+
+\item $\phi_f$ es continua
+
+Para ver esto podemos ver que la función $\phi_f$ es el punto fijo de la aplicación
+\[T(\phi_f) = \frac{2}{3}\left(f(t_n+2h,y_n+h\phi_f(t_n,y_n,y_{n+1};h))+f(t_n+h,y_{n+1})+f(t_n,y_n) \right)\]
+
+Y por el teorema de la aplicación contractiva sabemos que este punto fijo existirá si y sólo si la función $T$ es contractiva.
+
+Vamos a comprobarlo
+\[\norm{T(\phi)-T(\tilde{\phi})} \leq \frac{2}{3}L\norm{y_n+h\phi - (y_n+h\tilde{\phi})} \leq \frac{2}{3}hL\norm{\phi-\tilde{\phi}}\]
+
+Sabiendo que la aplicación $T$ es contractiva tenemos que 
+\[\phi_f(x_n,y_n,y_{n+1};h)=\lim_{k \to \infty} T^{[k]}(\phi_f(x_n,y_n,y_{n+1};h)\]
+
+Es decir, ya tenemos una sucesión de funciones continuas que convergen a la función $\phi_f$ cuya existencia ya está garantizada por el teormema de la aplicación contractiva.
+
+Ahora bien, esto aún no nos garantiza que la función $\phi_f$ sea continua, que es justo lo que queremos probar. 
+
+Para poder garantizarlo, necesitamos que la sucesión de $\phi^{k}$ converga de forma uniforme. Para ello podemos emplear el test M de Weierstrass o podemos demostrar que la sucesión es de Cauchy.
+
+Procedemos a demostrar que la sucesión es de Cauchy.
+
+\[\norm{\phi^{[k+1]}-\phi^{[k]}}_{L^{\infty}(K)}=\norm{T(\phi^{[k]}) - T(\phi^{[k-1]})}_{L^{\infty}(K)} \leq \frac{2}{3}hL\norm{\phi^{[k]}-\phi^{[k-1]}} \]
+donde $K$ es un compacto de la forma $[a,b] \times \real \times \real h$
+
+Si continuamos reduciendo los exponentes de $\phi$ llegamos a
+\[\norm{\phi^{[k+1]}-\phi^{[k]}}_{L^{\infty}(K)} \leq \left( \frac{2Lh}{3} \right)^k \norm{\phi^{[1]}-\underbrace{\phi^{[0]}}_{0}} \]
+
+Puesto que estamos calculando la norma en un compacto, la función $\phi^{[1]}$, que será continua, estará acotada con lo que obtenemos:
+\[\norm{\phi^{[k+1]}-\phi^{[k]}}_{L^{\infty}(K)} \leq \left( \frac{2Lh}{3}\right)^kM\]
+
+Recordemos que la sucesión será de Cauchy si 
+\[\forall ε > 0 \exists N \tq \forall n,m >N \ \norm{\phi^{[m]}-\phi^{[n]}} \leq ε\]
+
+Suponiendo que $m = n+p$ escribimos:
+\[\norm{\phi^{[n+p]}-\phi^{[n]}} \leq \norm{\phi^{[n+p]}-\phi^{[n+p-1]}} + \norm{\phi^{[n+p-1]}-\phi^{[n+p-2]}} + ... + \norm{\phi^{[n+1]}-\phi^{[n]}} \leq\]
+\[ \leq M \sum_{j=n}^{n+p-1}  \left( \frac{2Lh}{3}\right)^{k}= M\left( \frac{2Lh}{3}\right)^n\frac{1}{1-\left( \frac{2Lh}{3}\right)}\]
+
+Llegados a este punto vemos que incrementando el valor $n$ podemos hacer que la cosa sea tan pequeña como queramos.
+
+Así queda claro que la sucesión es de Cauchy y sabemos que está formada por funciones continuas, por lo que el límite, que es nuestra función $\phi_f$ es continuo.
 \end{itemize}
+
+\spart
+
+Para encontrar el orden de convergencia lo que debemos hacer es calcular el orden de consistencia y, aplicando el teorema \ref{theorem:convergencia_consistencia_orden}, tendremos directamente que el orden de convergencia es 2.
+
+El cálculo detallado de este orden se deja como ejercicio para el lector.
 
 \end{problem}
 
@@ -674,6 +721,19 @@ con $\phi_f^{(0)}$. Definir $\phi_f^{(k)}$ en función de $\phi_f^{(k-1)}$ de fo
 
 \ppart Probar que ese método es convergente
 \solution
+
+\spart
+
+Si tenemos un problema de valor inicial de forma general con $y'=f(t,y(t))$, podemos ver que
+\[y(t_{n+2}) - y(t_n) = \int_{t_n}^{t_{n+2}}y'(t)\dif t =\int_{t_n}^{t_{n+2}}f(t,y(t))\dif t \]
+
+Hasta aquí sólo hemos escrito igualdades basándonos en el teorema fundamental del cálculo. Ahora, empleamos el polinomio interpolador de Lagrange con lo que podemos escribir:
+\[f(t,y(t))=f(t_n,y(t_n))\frac{(t-t_{n+1})(t-t_{n+2})}{(t_n-t_{n+1})(t_n-t_{n+2})} + f(t_{n+1},y(t_{n+1}))\frac{(t-t_n)(t-t_{n+2})}{(t_{n+1}-t_n)(t_{n+1}-t_{n+2})} +\]
+\[f(t_{n+2},y(t_{n+2})) \frac{(t-t_n)(t-t_{n+1})}{(t_{n+2}-t_n)(t_{n+2}-t_{n+1})}\]
+
+Esta función sabemos integrarla pues no depende de $f$ ya que todas las apariciones de $f$ están evaluadas en un punto, por lo que son constantes.
+
+Una vez realicemos la integral debemos obtener exactamente el método dado en el enunciado.
 \end{problem}
 
 \begin{problem}[5]
