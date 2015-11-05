@@ -303,7 +303,7 @@ Para radios distintos de $1$, sólo tenemos que multiplicar por $r^N$.
 
 A modo de curiosidad, podemos ger que $ω_N \convs 0$, esto es, que la medida de la bola se va a cero según aumentan las dimensiones.
 
-Para practicar la integración en polares, podemos ver algunas integrales. Por ejemplo, veamos \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x \] para $α ∈ ℝ$. Si usamos el \fref{crl:MediblePolares1}, con $f(x) = g(\md{x})$ para $g(r) = \frac{1}{r}$ tenemos que \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ g(r) r^{n-1} \dif r = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ r^{n-1 - α} \dif r\]
+Para practicar la integración en polares, podemos ver algunas integrales. Por ejemplo, veamos \( \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x \label{eq:IntPolaresModAlpha} \) para $α ∈ ℝ$. Si usamos el \fref{crl:MediblePolares1}, con $f(x) = g(\md{x})$ para $g(r) = \frac{1}{r}$ tenemos que \( \label{eq:IntPolaresModAlpha2} \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ g(r) r^{n-1} \dif r = \frac{2π^{n/2}}{Γ(n/2)} \int_0^∞ r^{n-1 - α} \dif r\)
 
 Comprobar que $\int_{ℝ^N} \frac{1}{(1 + \abs{x})^α} < ∞$ para cierto $α$ encontrarlo (pone algo de cambio a polares) y luego que $\int_{B_1(0)} \frac{1}{\abs{x}^{β}} < ∞$ y $\int_{B_1(0)} \frac{1}{(1-\abs{x})^α}$.
 
@@ -1040,12 +1040,13 @@ Esta desigualdad tiene una extensión:
 Como sugerencia, tenemos que ver que la aplicación $φ(t) = \abs{f(x)}^{p(1-t)} \abs{g(x)}^{pt}$ es convexa y entonces veremos que \[ \abs{f(x) g(x)} ≤ \frac{1}{p} \abs{f}^p + \frac{1}{q} \abs{g}^q \]
 \end{proof}
 
-\begin{theorem}[Desigualdad\IS de Jensen] Sea $\appl{φ}{ℝ}{ℝ}$ convexa, y $\appl{f}{X}{ℝ}$ μ-medible. Asumimos que $μ(X) < ∞$ (por comodidad, podemos decir que $μ(X) = 1$). Sea $f ∈ L^1_μ $, y \[ \bar{f} = \fint_X f(x) \dif μ = \frac{1}{μ(x)} \int_X f(x) \dif μ \]. Entonces
+\begin{theorem}[Desigualdad\IS de Jensen] \label{thm:DesigualdadJensen} Sea $\appl{φ}{ℝ}{ℝ}$ convexa, y $\appl{f}{X}{ℝ}$ μ-medible. Asumimos que $μ(X) < ∞$ (por comodidad, podemos decir que $μ(X) = 1$). Sea $f ∈ L^1_μ $, y \[ \bar{f} = \fint_X f(x) \dif μ = \frac{1}{μ(X)} \int_X f(x) \dif μ \]. Entonces
 
 \begin{enumerate}
 \item La parte negativa es integrable: $[φ(x)]_- ∈ L^1$, siempre y cuando $\intφ(x) \dif μ$ esté bien definida.
-\item \[ \fint_X φ(f(x)) \dif μ ≥ φ\left(\fint_X f \dif μ\right)\]
-sSi φ es estrictamente convexa, la desigualdad anterior es una igualdad si y sólo si $f$ es constante.
+\item \( \fint_X φ(f(x)) \dif μ ≥ φ(\bar{f}) = φ\left(\fint_X f(x) \dif μ\right) \label{eq:DesigJensen} \)
+
+Si φ es estrictamente convexa, la desigualdad anterior es una igualdad si y sólo si $f$ es constante.
 \end{enumerate}
 \end{theorem}
 
@@ -1072,12 +1073,46 @@ Otra cosa que no sé para qué queremos.
 \[ \mop{epi} f = \set{(x,y) ∈ ℝ^{N+1} \tq y ≥ f(x) } \]
 \end{defn}
 
-\begin{prop}
-Si $f$ es convexa $∀x ∈ K$ entonces existe un $V_x ∈ ℝ^N$ tal que $f(y) ≥ f(x) + V_x · (y-x)$ donde $V_x$ será el hiperplano de soporte.
+\begin{prop} \label{prop:HiperplanoSoporte}
+Si $f$ es convexa $∀x ∈ K$ entonces existe un $V_x ∈ ℝ^N$ tal que \[ f(y) ≥ f(x) + V_x · (y-x) \] donde $V_x$ será el hiperplano de soporte.
 
 Si además $V_x$ es único y $f$ es convexa, entonces es el plano tangente y $V_x = \grad f(x)$.
 \end{prop}
 
+\begin{proof}[\nref{thm:DesigualdadJensen}] Dado que φ es convexa, tiene hiperplano de soporte en cada punto. Es decir, existe un $V ∈ ℝ$ tal que $∀t ∈ ℝ$ \( φ(t) ≥ φ(\bar{f}) + V·(t - \bar{f}) \label{eq:PrJensen:A} \) según la \fref{prop:HiperplanoSoporte}, y poniendo $t = f(x)$ y tomando valores absolutos tenemos que \[ \left[φ(f(x))\right]_- ≤ \abs{φ(\bar{f})} + \abs{V}\abs{\bar{f}} + \abs{V}\abs{f(x)} \]. Esto nos dice que la parte negativa está acotada y dado que la parte derecha es integrable (todo son números reales salvo $f(x)$, que es integrable por hipótesis) tenemos la primera parte del teorema: $[φ(x)]_- ∈ L^1$.
+
+Para la segunda parte, la desigualdad de \eqref{eq:DesigJensen}, ponemos $t = f(x)$ e integramos en \eqref{eq:PrJensen:A}: \begin{align*}
+\int_X φ(f(x)) \dif μ &≥ φ(\bar{f}) \int_X \difμ + V \int_X f(x) \dif μ - V \bar{f} · \int_X \dif μ \\
+\int_X φ(f(x)) \dif μ &≥ φ(\bar{f}) · μ(X) + V \int_X f(x) \dif μ - V \left( \frac{1}{μ(X)} \int_X f(x) \dif μ \right) · μ(X) \\
+\int_X φ(f(x)) \dif μ &≥ φ(\bar{f}) · μ(X) \\
+\fint_X φ(f(x)) \dif μ &≥ φ(\bar{f})
+\end{align*}
+y ya tenemos la desigualdad.
+
+Sólo nos falta demostrar que si φ es estrictamente convexa, entonces la igualdad ocurre si y sólo si $f$ es constante. Para eso, vemos que en ese caso \eqref{eq:PrJensen:A} es una desigualdad estricta $∀t ≠ \bar{f}$. Si $f$ no fuese constante, $f(x) - \bar{f}$ sería positivo y negativo en conjuntos de medida no nula, por lo que perdemos la igualdad en \eqref{eq:DesigJensen}.
+
+Más formalmente, tenemos que \begin{align*}
+\int\limits_{\set{f > \bar{f}}} φ(f(x)) \dif μ &> φ(\bar{f}) \underbracket{μ\left(\set{f > \bar{f}}\right)}_{> 0} + \overbracket{\int\limits_{\set{f > \bar{f}}} (f - \bar{f}) \dif μ}^{> 0} \\
+\int\limits_{\set{f < \bar{f}}} φ(f(x)) \dif μ &< φ(\bar{f}) \underbracket{μ\left(\set{f < \bar{f}}\right)}_{> 0} + \overbracket{\int\limits_{\set{f < \bar{f}}} (f - \bar{f}) \dif μ}^{> 0}
+\end{align*}
+
+Sumando ambas ecuaciones nos quedará que lo mismo que antes pero con igualadad estricta.
+\end{proof}
+
+Un resultado muy moderno (2002) sobre la desigualdad \eqref{eq:DesigJensen} es que podemos poner ahí un ``resto'' $R$, que se puede ver haciendo Taylor. Suponemos $φ ∈ C^2$, y podemos hacer un desarrollo de Taylor para que nos quede \[ φ(t) = φ(\bar{f}) + φ'(\bar{f})(t - \bar{f}) + \frac{φ''(\tilde{f}_t)}{2}(t-\bar{f})^2 \]. Integrando eso nos queda que \[ \fint φ(f(x)) \dif μ ≥ φ(\bar{φ}) +  φ'(\bar{φ}) \underbracket{\fint f - \bar{f} \dif μ}_{=0} + \fint \frac{φ''(\tilde{f}_t)}{2}(t-\bar{f})^2 \dif μ \] y (y esto es lo difícil) se puede ver que ese último término es mayor o igual que una constante $C_φ$ multiplicada por la varianza de $f$, que es $\mop{var}_μ f = \fint f - \bar{f}$.
+
+Ahora vamos a ver unos ejemplos. Podemos retomar la integral de \eqref{eq:IntPolaresModAlpha} y ver si está en algún espacio $L^p$. Si hacemos la integral tomando $α = αp$, nos queda que \[ \int_{ℝ^n}\frac{1}{\md{x}^α} \dif x = ω_N \int_0^∞ g(r) r^{n-1} \dif r = ω_N \int_0^∞ r^{n-1 - αp} \dif r \]
+
+Podemos separar la integral que nos queda en dos integrales: una en $[0,1]$ y otra en $[1,∞]$. Así, para cualquier $α$, alguna de las dos integrales valdrá infinito y entonces no será integrable \espLp  en $ℝ^N$. Ahora bien, sí puede serlo en $\espL[p][\bola_1(0)]$.
+
+Una observación curiosa es que podemos deducir que, para que una función sea integrable, la cola debe irse a cero más rápido que esa función que hemos probado a integrar con $α > \frac{N}{P}$ (o algo así).
+
+Otra cosa interesante, que dejamos como ejercicio, es ver la diferencia entre $\espL[p][ℝ^N]$ y $\espL[p][Ω]$ con $μ(Ω) < ∞$. Tal y como decíamos antes, se puede ver que $\md{x}^{-α}$ sí puede estar en $\espL[p][Ω]$. Además, tenemos que \[ \espL[p][Ω] ⊆ \espL[p] \], de tal forma que las funciones $f ∈ \espL[p][Ω]$ se pueden extender (esto se llama \concept{Cero-extensión}) a funciones $\tilde{f} ∈ \espL[p]$ fácilmente como \[ \tilde{f}(x) = \begin{cases} f & x ∈ Ω \\ 0 & x ∉ Ω \end{cases} \]
+
+Otra observación simple, que se demuestra mirando el conjunto $E = \set{f > 1}$:
+
+\begin{prop} \citep[Proposición 6.9]{folland99} Dados $p,q$ con $0 < p < q ≤ +∞$, entonces $L^q ⊆ L^p + L^r$ para todo $r > 0$.
+\end{prop}
 
 \section{SOC en espacio de Hilbert. Series de Fourier}
 
