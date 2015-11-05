@@ -676,10 +676,97 @@ Muchas definiciones (y resultados) son enteramente análogos a las de la lógica
 \noindent \textbf{Notación: } $\Sigma \vDash \sigma \iff \sigma $ es consecuencia lógica de $\Sigma$. ``$\vDash$'' es una noción semántica y ``$\vdash$'' es una noción sintáctica. $\Sigma \vdash \sigma$ significa que existe una demostración formal lo cual depende de los axiomas, de las reglas de deducción y de las premisas.
 
 \begin{example}
-	Probar que si $\Sigma\vDash \forall x \varphi(x)$, entonces $\Sigma \vDash \exists x\varphi(x)$ (cuestión semántica). 
+	Vamos a probar que si $\Sigma\vDash \forall x \varphi(x)$, entonces $\Sigma \vDash \exists x\varphi(x)$ (cuestión semántica). 
 
 	Sea $a$ cualquier modelo de $\Sigma$. 
 	\[\forall x\varphi(x) \iff \forall a\in A, a\vDash \varphi(\underline{a})\] Escogemos cualquier $b\in A\neq \emptyset$. Entonces $a\vDash \varphi(\underline{b})$, luego $a\vDash \exists x \varphi(x)$.
-	
-	Probar que $\Sigma\vdash \forall x\varphi(x)$, entonces $\Sigma \vdash \exists x\varphi(x)$ (cuestión sintáctica).
 \end{example}
+
+Trabajando con lógica proposicional vimos que era más sencillo comprobar que una FBF era consecuencia lógica, pues bastaba con construir su tabla de verdad, que construir una demostración o prueba de la fórmula a partir de los axiomas.
+
+Algo similar ocurre en lógica de predicados. 
+\begin{example}
+Demostramos que, siendo $z$ una variable que no aparece en $\phi$ se cumple:
+\[\forall x \varphi(x) \vDash \forall x \varphi(z) \ \left(= \forall z \varphi(z|x)\right)\]
+Sea $a\vDash \forall x \varphi(x)$, es decir
+\[\forall a \in A \ \ \varphi(\underline{a})\left(= \varphi(\underline{a}|x)\right)\]
+es cierto en $a$.
+
+Por tanto, $\forall z \varphi(z)$ es verdad en $a$.
+\end{example}
+
+\begin{example}
+Vamos a probar
+\[\forall x \varphi(x) \vdash \forall x \varphi(z)\]
+Realizaremos la demostración por pasos:
+\begin{enumerate}
+\item Invocamos la premisa de la demostración:
+\[\forall x \varphi(x)\]
+
+\item Invocamos ahora el axioma de cuantificación:
+\[\forall x \varphi(x) \to \varphi(x)\]
+
+\item Aplicamos Modus Ponens con lo que obtenemos:
+\[\varphi(z)\]
+
+\item Apoyándonos en el apartado a) del ejercicio 4 de la hoja 6, invocamos:
+\[\varphi \vdash \forall x \varphi\]
+
+\item Combinando los dos últimos resultados llegamos a:
+\[\varphi(z) \vdash \forall z \varphi(z)\]
+\end{enumerate}
+
+\end{example}
+
+\begin{prop}
+Toda teoría consistente puede extenderse a una teoría $M$ consistente y maximal (con respecto a la inclusión). 
+\end{prop}
+
+La demostración de esta proposición se basa en el empleo del Teorema de Lendenbaum usando zorn.
+
+\begin{prop}
+La teoría $M$ consistente y maximal, mencionada en la proposición anterior, es completa
+\end{prop}
+\begin{proof}
+Sabemos que 
+\[\forall \varphi, \ \varphi \in M \Or \neg \varphi \in M\]
+puesto que la teoría es maximal, si $\varphi, \neg \varphi \notin M$ podríamos añadir una de ellas a $M$ con lo que entonces $M$ no sería maximal. Por tanto no es posible esta situación.
+
+Por tanto, siempre tendremos una de dos:
+\[M \vdash \varphi \Or M \vdash \neg \varphi\]
+siendo la demostración trivial y de una sola línea pues $\varphi $o $\neg \varphi$ deben pertenecer a $M$, como hemos visto en el párrafo anterior.
+\end{proof}
+
+\begin{prop}
+Si $Σ$ es completa, entonces es consistente y $\forall \varphi$ tenemos que
+\[Σ \vdash \varphi \Or Σ \vdash \neg \varphi\]
+Por tanto
+\[M=\{\varphi : Σ \vdash \varphi\}\]
+es una teoría maximal, consistente y contiene a $Σ$
+\end{prop}
+
+De forma general, si queremos demostrar la completitud de una teoría, los pasos a seguir son:
+\begin{itemize}
+\item Demostrar \textbf{validez}, es decir, ver que: 
+\[\vdash \varphi \implies  \vDash \varphi\]
+
+\textit{Razón:} $\varphi$ es un axioma (verdad en todas las interpretaciones) o se deriva de fŕomulas ya probadas mediante las reglas de deducción, luego es verdad en todas las interpretaciones.
+
+\item Demostrar \textbf{suficiencia}, es decir, ver que:
+\[\vDash \varphi \implies \vdash \varphi\] 
+
+\textit{Razón:} La idea es muy similar a la vista en el tema de lógica proposicional.
+
+Si $Σ\cup \{ \neg σ \}$ es inconsistente, entonces los axiomas y las reglas de deducción son suficientemente fuertes para demostrar que $Σ \vdash σ$.
+
+Equivalentemente, si $Σ \nvdash σ$ entones $Σ \cup \{\neg σ\}$ es consistente.
+
+Para cada σ, siempre que $Σ \nvdash σ$, añadimos σ a Σ, con lo que mantenemos siempre la consistencia.
+
+Queremos concluir que 
+\[Σ\nvdash σ \implies Σ \nvDash σ\]
+En cualquier modelo de $Σ\cup \{ \neg σ\}$, σ es falsa luego $Σ\nvDash σ$.
+
+\textbf{Clave de esta demostración:} Las teorías consistentes tienen modelos (por el teorema de completitud, versión 2)
+
+\end{itemize}
