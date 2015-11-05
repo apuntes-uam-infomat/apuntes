@@ -115,3 +115,45 @@ Dado un código $\algb{C}\in F_q^n$, su \textbf{distancia mínima} se define com
 \end{prop}
 
 Si utilizamos $\algb{C} \subset F_q^n$ con $|G|=M$ para transmitir $M$ mensajes, lo que queremos es que las palabras empleadas esten lo más espaciadas posible, de modo que un pequeño cambio en un elemento de una palabra no nos haga caer en otra palabra válida. Es decir, queremos que la distancia mínima del código, es decir, $d(\algb{C})$ sea grande.
+
+\begin{theorem}
+Sea $\algb{C} \subset F_q^n$ un código con $d(\algb{C})=d$, podemos \textbf{detectar} hasta $d-1$ errores 
+\end{theorem}
+\begin{proof}
+El procedimiento estándar para detectar errores es:
+\begin{enumerate}
+\item Recibo $\tilde{x} \in F_1^n$
+
+\item Si $\tilde{x} \in F_q^n \in \algb{C}$ seguimos trabajando. 
+
+\item Si $\tilde{x} \notin F_q^n \in \algb{C}$ el mensaje no es correcto.
+\end{enumerate}
+
+Si el número de errores es menor o igual que $d-1$, es imposible que desde un $x\in \algb{C}$ llegemos a otro $\tilde{x} \in \algb{C}$, puesto que, por definición, $d(x,\tilde{x})\geq d$.
+
+Es decir, el algoritmo descrito nunca podrá confundirse si tenemos un máximo de $d-1$ errores.
+\end{proof}
+
+\begin{theorem}
+Sea $\algb{C} \subset F_q^n$ un código con $d(\algb{C})=d$, podemos \textbf{corregir} hasta $\floor{\frac{d-1}{2}}$
+\end{theorem}
+\begin{proof}
+Desde el punto de vista geométrico (o topológico) podemos ver que, dados dos mensajes $x,y \in \algb{C}$
+\[B\left(x,\floor{\frac{d-1}{2}}\right) \cap B\left(y,\floor{\frac{d-1}{2}}\right) = \emptyset\]
+
+Apoyándonos en esta idea, veamos la demostración del teorema.
+
+El procedimiento para corregir errores es:
+\begin{enumerate}
+\item Dado un mensaje $\tilde{x} \notin \algb{C}$, a fin de corregir el error buscamos $x_0$ tal que
+\[d(\tilde{x},x_0)=\min\{d(x,\tilde{x}: \ x\in \algb{C}\}\]
+
+\item Si tenemos un empate, tomamos uno al azar.
+\end{enumerate}
+
+Este algoritmo podría fallar si y sólo si 
+\[\exists x_0 \in \algb{C} \tq d(x_0,\tilde{x}) \leq d(x,\tilde{x})\]
+Pero en este caso tenemos que
+\[d(x,x_0) \leq d(x,\tilde{x})+d(\tilde{x},x_0) \leq 2d(x,\tilde{x}) \leq 2 \floor{\frac{d-1}{2}} \leq d-1 < d\]
+con lo que llegamos a una contradicción, pues por definición $d(x,x_0)>d$.
+\end{proof}
