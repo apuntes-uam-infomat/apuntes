@@ -1268,7 +1268,57 @@ Hay varias formas de utilizar el DES. Vamos a ver algunas de ellas.
 	\item \textbf{ECB}(Electronic Code Book)
 	El esquema de funcionamiento del ECB es el siguiente:
 	
+	\begin{center}
+		\Tree[.P [.$P_1$ [.K$\rightarrow\fbox{DES}$ [.$C_1$ [.K$\rightarrow$\fbox{$DES^{-1}$} [.$P_1$ ] ] ] ] ] [.$P_2$ [.K$\rightarrow\fbox{DES}$ [.$C_2$ [.K$\rightarrow$\fbox{$DES^{-1}$} [.$P_2$ ] ] ] ] ]
+		[............. ] [.$P_n$ [.K$\rightarrow\fbox{DES}$ [.$C_n$ [.K$\rightarrow$\fbox{$DES^{-1}$} [.$P_n$ ] ] ] ] ] ]
 	
+	\end{center}
+	
+	Analizando el ECB nos damos cuenta de que no funciona bien para encriptar mensajes largos ya que los bloques se encriptan de forma independiente.
+	
+	Esto hace que en lenguajes muy estructurados es muy posible coger bloques iguales que se encriptan igual.
+	
+	% PONER EL EJEMPLO DE LA IMAGEN ENCRIPTADA CON ECB
+	
+	\item \textbf{CBC}
+	\begin{center}
+		\includegraphics[width=400pt]{CBC.png}
+	\end{center}
+	 
+	
+	El IV es el Vector de Inicialización y es secreto.
+	
+	De esta forma nos queda que:
+	$$C_1 = E_K(IV\oplus P_1)$$
+	$$C_i = E_K(C_{i-1} \oplus P_i)$$
+	$$P_1 = IV \oplus D_K(C_1)$$
+	$$P_i = C_{i-1} \oplus D_K(C_i)$$
+	
+	Analizandolo bit a bit, llamamos $P_1[i]$ al bit i del primer bloque de texto plano.
+	
+	$$P_1[i] = IV[i] \oplus D_K(C_i)[i]$$
+	$$\overline{P_1[i]} = \overline{IV[i]} \oplus D_K(C_i)[i]$$
+	
+	Este cifrado no tiene el mismo problema que el ECB ya que encripto $P_i$ en función de lo que me devuelva al encriptar $P_{i-1}$ , es decir, que voy cambiando la semilla.
+	
+	\item \textbf{CFB}
+	\item \textbf{OFB}
+	\item \textbf{CTR}
+	\begin{center}
+		\includegraphics[width=400pt]{CTR.png}
+	\end{center}
+	\textbf{Características del CTR}
+	\begin{itemize}
+		\item No cifra igual trozos iguales
+		\item No utiliza $DES^{-1} \rightarrow$ genial para implementar
+		\item No hace falta hacer las operaciones en cadena ya que ahora dependemos de una clave que va cambiando $\rightarrow $ el contador
+	\end{itemize}
+		\textbf{Ventajas del CTR}
+		\begin{itemize}
+			\item Preproceso $\rightarrow$ puedo calcular todos los contadores + DES antes de leer el texto. 
+			\item Acceso aleatorio
+			\item Simplicidad
+		\end{itemize}
 	
 \end{itemize}
  % % Me faltan infinitas hojas % %
@@ -1464,3 +1514,72 @@ A esta notación
 	}
 		
 \end{lstlisting}
+
+Ahora vamos a analizar cada una de las \textbf{funciones del AES}
+\begin{itemize}
+	\item \textbf{ByteSub}:
+	Supongamos que el STATE ya lo tenemos como:
+	
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r | r | r}
+			$a_{00}$ & $a_{01}$ & $a_{02}$ & $a_{03}$ & $a_{04}$ & $a_{05}$\\
+			\hline
+			$a_{10}$ &   &   &   &   &  \\
+			\hline
+			$a_{20}$ &   &   &   &   &  \\
+			\hline
+			$a_{30}$ &   &   &   &   & $a_{35}$
+			
+		\end{tabular}
+	\end{center}
+	
+	en la función tenemos 3 pasos
+	\begin{enumerate}
+		\item Calculamos el \textbf{inverso multiplicativo de cada cada byte} $a_{ij}$
+		
+		$$a_{ij} \rightarrow a'_{ij}$$
+		
+		Para esto tenemos un convenio que es que el inverso de $00$ es $00$, ya que en realidad el 0 no tiene inverso multiplicativo.
+		
+		\item Se calcula la \textbf{transformación afín} $y = ax +b$ de cada $a'_{ij}$
+		
+		Esta transformación es una especie de difusión, tipo Hill.
+	\end{enumerate}
+	
+	¿Cuantos ByteSub posibles podemos calcular? Vemos que es una función de byte, es decir, el parámetro es un byte , por lo tanto tenemos 256($2^8$) posibilidades.
+	
+	Los resultados de cada byte se guardan en las tablas de sustitución, las cajas-S del AES.
+	$$S-BOX[a_{ij}] = b_{ij}$$
+	
+	Esta cajas S cogen los 4 primeros bits, que le indican la columna, y los 4 últimos bits le indican la fila.
+	
+	¿Cómo funciona la función inversa? \textbf{INVByteSub}:
+	\begin{enumerate}
+		\item Se calcula la\textbf{transformación afín INVERSA}, que viene determinada por (imagen de moodle matriz Y)
+		\item Se calcula el \textbf{inverso multiplicativo del resultado}
+	\end{enumerate}
+	
+	De la función inversa también surge una caja de sustitución. La \textbf{Inverse S-Box}
+	$$S-BOX^{-1}[b_{ij}] = a_{ij}$$
+	\textbf{DISEÑO DE LAS S-BOX DEL AES}
+	\begin{itemize}
+		\item Resistentes al $\begin{cases}
+			\text{C.D Criptoanálisis diferencial}\\
+			\text{C.L Criptoanálisis lineal}
+		\end{cases}$
+		
+		Es decir, que casi no hay correlación entre los bits de entrada y los de salida.
+		
+		\item No existen los puntos fijos. Para esto juegan un papel muy importante las constantes c y d que vemos en las matrices de ejemplo que hemos puesto anteriormente.
+		
+		\item Las S-BOX tienen inversa: 
+		$$IS-BOX[S-BOX(a)] = a$$
+		Además $$S-BOX[a]\neq IS-BOX[a]$$
+		
+		Por ejemplo:
+		 $$S-BOX(95) = 2A$$
+		 $$IS-BOX[95]=  AD$$
+	\end{itemize}
+	Ejercicio para casa: intentar calcular el ByteSub de '95'. Solución= '2A'
+\end{itemize}
