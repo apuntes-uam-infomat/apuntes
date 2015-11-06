@@ -259,3 +259,17 @@
 \msgn#m
 \mfin#m
 \sop#m
+\esplloc#m
+\esplloc[1]#m
+\esplloc[1][\real^N]#m
+\espl#m
+\espl[1]#m
+\espl[1][\real^N]#m
+\espLloc#m
+\espLloc[1]#m
+\espLloc[1][\real^N]#m
+\espL#m
+\espL[1]#m
+\espL[1][\real^N]#m
+\espLp#m
+\esplp#m

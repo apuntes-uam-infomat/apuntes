@@ -650,6 +650,8 @@ Por lo tanto el criptoanálisis se hace en dos pasos:
  
  \textbf{1949}$\rightarrow$ Sientan las bases teóricas del cifrado automático (Claude Shannon).
  
+ \section{Seguridad perfecta}
+ 
  En este capítulo veremos dos temas, siempre basándonos en que nos encontramos en el \textbf{caso A} (solo tenemos el texto cifrado).
  
  \begin{itemize}
@@ -831,15 +833,14 @@ $$|P| , |C| , |K| = m$$
  
  Hay criptosistemas que no cumplen el teorema y son perfectos, como el afin, en el que las cardinalidades no son iguales.
  
- \section{Claves espureas y distancia de unicidad}
+ \section{Claves espúreas y distancia de unicidad}
  
  Ahora vamos a cifrar con una sola clave muchos mensajes.
  
-  ¿Porqué esto es importante? Porque si los bloques son muy pequeños, por probabilidad es posible que aplicando una clave distinta a la que hemos utilizado nos de otro mensaje con sentido.
+  ¿Porqué esto es importante? Porque si los bloques son muy pequeños por probabilidad es posible que, aplicando una clave distinta a la que hemos utilizado, nos de otro mensaje con sentido.
  
  ¿Cual es el tamaño de bloque ideal para solo tener un desencriptado que de un texto con sentido?
  
- Una Llave espurea es una clave que te da un texto con sentido sin ser este el texto original.
  
  \subsection{Términos importantes en teoría de información}
  
@@ -874,14 +875,14 @@ Cuando hagams entropía del inglés vamos a utilizar $H_L = 1.25$
  $$R_L = 1- \frac{H_L}{log |p|}$$
   Siendo $|p|$ el número de elementos del lenguaje.
   
-  Este valor está entre {0,1} , siedo 1 muy redundante y 0 no redundante.
+  Este valor está entre \{0,1\} , siedo 1 muy redundante y 0 no redundante.
 \end{defn}
 
 Por lo tanto en un lenguaje aleatorio $H_L = \log |p| \implies R_L = 0$
 
 \begin{defn}[Claves espúreas]
 	
-	Son todas aquellas claves que aplicandolas al texto cifrado me dan un texto con sentido. Cuanto más pequeño sea el texto más claves espureas ahi.
+	Son todas aquellas claves que aplicandolas al texto cifrado me dan un texto con sentido. Cuanto más pequeño sea el texto más claves espúreas hay.
 	
 	Son aquellas $e_{k_i}$ que cumplen:
 	$$\begin{cases}
@@ -902,12 +903,12 @@ Por lo tanto en un lenguaje aleatorio $H_L = \log |p| \implies R_L = 0$
 	F(=22) $\implies$ arena
 \end{example}
 
-Se puede demostrar que el promedio de claes espúreas $\overrightarrow{S_n}$ (siendo $n$ el tamaño de bloque) cumple que:
+Se puede demostrar que el promedio de claves espúreas, $\overrightarrow{S_n}$ (siendo $n$ el tamaño de bloque), cumple que:
 $$\overrightarrow{S_n} \geq \frac{|k|}{|P|^{n\cdot R_L}} -1 \iff \begin{cases}
 	 |P| = |C|\\P_k(k) = \frac{1}{|k|}
 \end{cases}$$
 
-$$\overrightarrow{S_n} \geq |k| (\frac{|P|^{1-R_L}}{|C|})^n -1 \iff \begin{cases}
+$$\overrightarrow{S_n} \geq |k| \left(\frac{|P|^{1-R_L}}{|C|}\right)^n -1 \iff \begin{cases}
 |P| \neq |C|\\P_k(k) = \frac{1}{|k|}
 \end{cases}$$
 
@@ -918,8 +919,19 @@ Es el valor mínimo de caracteres del texto cifrado que se necesitan para reduci
 $$\overrightarrow{S_n} \rightarrow 0$$
 
 ¿Como calculamos esa $n$?
+\begin{itemize}
+	\item $|P|= |C|$
+		$$0 = \frac{|k|}{|P|^{n \cdot R_L}} -1 \implies n_0 = \frac{log|k|}{R_L\cdot log|P|}$$ 
+	\item $|P| \neq |C|$
+		$$0 =|k| \left(\frac{|P|^{1-R_L}}{|C|}\right)^n -1 \implies n_0 = \frac{log|k|}{log|C| -(1-R_L)\cdot log|P|}$$ 
+\end{itemize}
 
-$$0 = \frac{|k|}{|P|^{n \cdot R_L}} -1 \implies n_0 = \frac{log|k|}{R_L\cdot log|P|}$$ 
+\begin{remark}
+	Para llegar a la fórmula de $n_0$ solo tenemos que pasar $|C|^{n_0}$ multiplicando y tomar logaritmos a ambos lados de la igualdad.
+	
+	Los logaritmos están en base 2.
+\end{remark}
+
 \end{defn}
 
 
@@ -928,8 +940,646 @@ $$0 = \frac{|k|}{|P|^{n \cdot R_L}} -1 \implies n_0 = \frac{log|k|}{R_L\cdot log
 	$$P= Z_m = C$$
 	$$K = \Pi$$
 	$$|P|=|C| \rightarrow |k| = m!$$
-	$$n_0 = \frac{log|k|}{R_L log|P|} = \frac{log 26!}{0.75 log 26} \approx 25$$
+	$$n_0 = \frac{log|k|}{R_L\cdot log|P|} = \frac{log( 26!)}{0.75 \cdot log 26} \approx 25$$
 	Este 25 quiere decir que a partir de 25 ya no tenemos claves espúreas (para este caso).
 \end{example}
 
 ¿De donde sale la fórmula de las claves espúreas? Trabajo para el lector.
+
+\begin{example}
+	Tenemos un lenguaje y un cifrado con los siguientes espacios de clave y lenguaje cifrado:
+	$$P = \{0,1\}$$
+	$$K= \{00,01,10,11\}$$
+	$$C = \{00,01,10,11\}$$
+	Tales que $P_P(0) = P_P(1) = =0.5$ y $P_K(K_i) = 0.25$
+	
+		\begin{center}
+			
+			\begin{tabular}{l | c | r}
+				K & P=0 & P=1\\
+				\hline
+				00 & 00 & 01 \\
+				\hline
+				01 & 10 & 11\\
+				\hline
+				10 & 01 & 00\\
+				\hline
+				11 & 11 & 10
+				
+			\end{tabular}
+		\end{center}
+	
+	\begin{enumerate}
+		\item ¿$P_P(x|y) = P_P(x)$? , es decir, ¿es un \textbf{cifrado perfecto}?
+		
+		Vamo a estimar esto con Bayes:
+		$$P_P(x|y) = \frac{P_c(y|x) \cdot P_P(x)}{P_c(y)} = \frac{P_P(x) \cdot \sum_{\forall K, e_k(x) = y}P_K(K)}{\sum_{\forall x,k ; e_k(y)=y}P_P(x)\cdot P_K(k)}$$
+		
+		Vemos que nos faltan $P_c(y)$ y $P_c(y|x)$. Vamos a calcularlos:
+		
+		$$P_c(y) = \sum_{\forall x,k|e_k(x)=y} P_P(x) \cdot P_K(K)$$
+		
+		$P_c(00) = P_P(0)\cdot P_K(00) + P_P(1)\cdot P_K(10) = \frac{2}{8} = \frac{1}{4}$
+		
+		$P_c(01) = P_P(1)\cdot P_K(00) + P_P(0)\cdot P_K(10) = \frac{2}{8} = \frac{1}{4}$
+		
+		$\cdots$
+		
+		y todos nos dan $\frac{1}{4}$
+		
+		Vamos ahora con $P_c(y|x)$
+		$$P_c(y|x) = \sum_{\forall k |e_k(x)=y} P_k(K)$$
+		
+		$P_c (00|0) = P_k(00) = \frac{1}{4}$
+		
+		$P_c (00|1) = P_k(10) = \frac{1}{4}$
+		
+		$\cdots$
+		
+		Ahora ya podemos calcular Bayes:
+		
+		$$P(0|00) = \frac{P_c(00|0) \cdot P_P(0)}{P_c(00)} = \frac{1}{2} = P_P(0)$$
+		$$\cdots  \text{haciendo esto con todos vemos que}$$
+		$$P_P(x|y) = P_P(x) \implies \textbf{SEGURIDAD PERFECTA}$$
+		
+		
+		\item \textbf{Distancia de Unicidad}
+		
+		Teneos que calcular $n0$ tal que $S_n \rightarrow 0$
+		
+		Vemos que estamos en el caso en el que $|P| \neq |C|$
+		
+		por lo tanto 
+		$$n_0 = \frac{log|k|}{log|C| -(1-R_L)\cdot log|P|}$$
+		
+		Vamos a calcular $R_L$:
+		
+		$$R_L= 1 -\frac{H_L}{log(|P|)}$$
+		
+		Para esto necesitamos $H_L = log(|P|) = 1$, y ya tenemos que
+		
+		$$R_L= 1 -\frac{H_L}{log(|P|)} = 1- \frac{1}{1} = 0$$
+		
+		y ya viendo todos nuestros datos:
+		
+		$$\begin{cases}
+		|K| = 4\\
+		|P| = 2\\
+		|C| = 4\\
+		R_L = 0
+		\end{cases} \implies n_0 = \frac{log|k|}{log|C| -(1-R_L)\cdot log|P|} = 2$$
+	\end{enumerate}
+\end{example}
+
+\begin{example}
+	
+	\textbf{¿Podemos aplicar el Tma del cifrado perfecto al cifrado afín?}
+	
+	Vemos que en el afín
+	$$\begin{cases}
+	P = Z_m\\
+	C= Z_m\\
+	K = Z_m \times Z_m^*
+	\end{cases} \implies|P| = |C| \neq |K| \implies \textbf{No podemos aplicar el Teorema}$$ 
+	
+	Vamos a comprobar si $P_P(x|y) = P_P(x)$, es decir, si cumple el cifrado perfecto.
+	
+	Cogemos $m = 3$, $Z_3 = \{0,1,2\}$ , $Z_3^* = \{1,2\}$
+	
+	\begin{center}
+		$$y = ax + b \text{ mod m}$$
+		\begin{tabular}{l | c | r | r}
+			K(a,b) & x=0 & x=1 & x=2\\
+			\hline
+			10 & 0 & 1 & 2\\
+			\hline
+			20 & 0 & 2 & 1\\
+			\hline
+			11 & 1 & 2 & 0\\
+			\hline
+			21 & 1 & 0 & 2\\
+			\hline
+			12 & 2 & 0 & 1\\
+			\hline
+			22 & 2 & 1 & 0
+			
+		\end{tabular}
+	\end{center}
+	
+	Calculamos $$P_c(y|x) = \sum_{k|y=e_k(x)} P_k(k) = \sum_{a\in Z_m^*}\sum_{b \in Z_m} P_k(k) = \frac{1}{|k|}\cdot \sum_a \sum_b 1 = \frac{1}{|k|}\cdot \sum_a 1 = \frac{\phi(m)}{|K|}$$
+	
+	$$P_c(y) = \sum_{\forall k|y=e_k(x)} P_P(x) \cdot P_K(K) = \frac{1}{|K|} \sum_a \sum_b \sum_x P_P(x) = \frac{1}{|K|} \sum_a \sum_x P_P(x) = \frac{1}{|k|} \sum_a 1 = \frac{\phi(m)}{|K|}$$
+	
+	Y ahora ya podemos hacer Bayes:
+	
+	$$P(x|y) = \frac{\frac{\phi(m)}{|K|}\cdot P_P(x)}{\frac{\phi(m)}{|K|}} = P_P(x)$$
+\end{example}
+
+\chapter{DES}
+Para entender el DES tenemos que empezar estudiando algunos conceptos:
+
+\section{Fundamentos de cifrados simétricos}
+Estos fundamentos sirven para reducir la información subyacente en el sistema cifrado.
+\subsection{Confusión y difusión}
+ La confusión y la difusión fueron introdicidos por Shannon, dificultan el criptoanálisis estadístico ya que  eliminan la redundancia.
+ 
+ Tienen sentido si se utilizan de forma conjunta.
+ 
+ \begin{itemize}
+ 	\item \textbf{Difusión}: Intenta que cada carácter de salida dependa del máximo número de caracteres de entrada. Lo hace a través de permutaciones y transformaciones.
+ 	
+ 	$$y_i = f_i(x_1,...,x_n)$$
+ 	
+ 	\item \textbf{Confusión}: Busca que las dependencias entre la clave y el mensaje sean lo más complejas posible. El método que usa es la sustitución. 
+ 	
+ 	Se hace a través de las llamadas cajas de sustitución o cajas-S
+ \end{itemize}
+ 
+ \subsection{Producto de Criptosistemas}
+ \begin{itemize}
+ 	\item \textbf{Transposición (permutación)}
+ 	
+ 	$P = C = Z_m$
+ 	
+ 	$\Pi \rightarrow $ clave
+ 	
+ 	$e_k(\overrightarrow{x}) = (x_{\Pi_1} , ... , x_{\Pi_n})$
+ 	
+ 	$|K| = n!$
+ 	
+ 	\begin{example}
+ 		Cogemos $n=4$ y la permutación:$$\Pi = \left(2,4,1,3\right)$$
+ 	
+ 		Entonces
+ 		
+ 		\begin{center}
+ 			
+ 			\begin{tabular}{l | c  r  r r}
+ 				X & 1 & 2 & 3 & 4\\
+ 				\hline
+ 				$\Pi(x)$ & 2 & 4 & 1 & 3\\
+ 			\end{tabular}
+ 		\end{center}
+ 		
+ 		\begin{center}
+ 			
+ 			\begin{tabular}{l | c  r  r r}
+ 				Y & 1 & 2 & 3 & 4\\
+ 				\hline
+ 				$\Pi^{-1}(x)$ & 3 & 1 & 4 & 2\\
+ 			\end{tabular}
+ 		\end{center}
+ 	\end{example}
+ 	
+ 	\item \textbf{Sustitución}
+ 	
+ 	$C = P = Z_m^n = Z_m \times Z_m$
+ 	
+ 	$|K| = m^n!$
+ 	
+ 	\begin{example}
+ 		Vamos a ver un ejemplo para $n=2$ , $m=2$
+ 		$$\begin{cases}
+	 		00 \rightarrow 11\\
+	 		01 \rightarrow 01\\
+	 		10 \rightarrow 00\\
+	 		11 \rightarrow 10
+ 		\end{cases}$$
+ 	\end{example}
+ \end{itemize}
+ 
+ \subsection{Cifrado de Feistel}
+ 
+ El cifrado de Feistel utiliza los métodos de transposición y sustitución en una serie de rondas.
+ 
+ Cada ronda utiliza una función F que lleva a cabo una \textbf{sustitución} y utiliza un trozo de la clave (subclave).
+ 
+ Al final de la ronda se intercambia la mitad derecha del mensaje ($R_i$) con la mitad izquierda ($L_i$) $\rightarrow $ \textbf{transposición}.
+ 
+ Este proceso (cada ronda) se repite 16 veces y al final hay un swap, el swap sirve para que se pueda utilizar el mismo algoritmo para descifrar.
+ 
+ \subsubsection{Características y dependencias del diseño Feistel}
+ $$\text{Ronda i}\begin{cases}
+ L_i = R_{i-1}\\
+ R_i = L_{i-1} \oplus F(R_{i-1, K_i})
+ \end{cases} $$
+ 
+ \begin{itemize}
+ 	\item Tamaño de bloque $\rightarrow$ 64 bits\\
+ 	\item Tamaño de clave $\rightarrow$ 64 bits $\rightarrow$ sirven de semilla para generar el flujo de claves\\
+ 	\item número de rondas $\rightarrow$ 16 rondas\\
+ 	\item algoritmo de generación de claves\\
+ 	\item Función F $\rightarrow$ $F(x \oplus y) = F(x) \oplus F(y) + cte$
+ \end{itemize}
+ 
+ 
+ \newpage
+ \includegraphics{RondasDES1.png}
+ 
+ \newpage
+ \includegraphics{RondasDES2.png}
+ 
+ \newpage
+
+\subsection{Principios de diseño de las S-Box en DES}
+
+Esta sección también está muy bien explicada en el Stinson, p.79.
+
+\begin{itemize}
+	\item Las S no son lineales.
+	$$f(x \oplus y) = f(x) \oplus f(y) + cte \implies \text{Esa constante es la que rompe la linealidad}$$
+	
+	\begin{example}
+		\begin{center}
+			\begin{tabular}{r  r  r  r  r  r }
+				$b_1$ & $b_2$ & $b_3$ & $b_4$ & $b_5$ & $b_6$
+			\end{tabular}
+		\end{center}
+		$$\downarrow$$
+		$$\fbox{\textbf{     }S\textbf{     }}$$
+		$$\downarrow$$
+		\begin{center}
+			\begin{tabular}{r  r  r  r }
+				$c_1$ & $c_2$ & $c_3$ & $c_4$
+			\end{tabular}
+		\end{center}
+		
+		
+	\end{example}
+	
+	\item \textbf{SAC} (Strict avalanch criterion)
+	
+	Este principio dice que la probabilidad de cambio debe estar equidistribuida.
+	
+	Esto es, que si cambio un bit de entrada, la probabilidad de que un bit de salida sea 0 o 1 es la misma.
+	$$\forall i,j\text{  }P(c_i=1|\overline{b_j})  P(c_i=0|\overline{b_j}) = \frac{1}{2}$$
+	Siendo $\overline{b_j}$ que he cambiado el bit $b_j$
+	
+	\item \textbf{BIC} (bit independence criterion)
+	
+	Busca que no haya dependencia entre los bits de salida (si cambia $c_3$, no condiciona a que cambie o no $c_2$) 
+	$$\forall i,j,k \text{  } P(c_ic_j|\overline{b_k}) = P(c_i|\overline{b_k})\cdot P(c_j|\overline{b_k})$$
+	
+\end{itemize} 
+
+\subsubsection{Métodos de construcción de las cajas S}
+ \begin{itemize}
+ 	\item \textbf{Aleatorio}
+ 	\begin{itemize}
+ 		\item Aleatorio normal
+ 		\item Con comprobación
+ 	\end{itemize}
+ 	\item \textbf{Manual}: El DES utiliza este método
+ 	\item \textbf{Funciones Matemáticas}: El AES utiliza este método
+ \end{itemize}
+ 
+ \subsubsection{Propiedades del DES}
+ \begin{itemize}
+ 	
+ 
+ \item \textbf{Complementaria}: 
+ 
+ Si $y = e_k(x)$ entonces $\overline{y} = e_{\overline{k}}(\overline{x})$.
+ 
+ De esta forma el problema del ataque por texto escogido se reduce a la mitad.
+ 
+ \item \textbf{Claves débiles}(de punto fijo):
+ 
+  Son las claves que cumplen que: $$e_k(e_k(x))= x$$
+ 
+ El DES tiene 4 claves débiles.
+ 
+ \item \textbf{Claves semi-débiles}: 
+ 
+ Son las claves que cumplen que: $$e_{k_1}(e_{k_2}(x)) = x$$
+ El DES tiene 6 pares de claves semi-débiles.
+ 
+ \item \textbf{Las claves en DES no forman un grupo}
+ 
+ $$\nexists k_3 \text{ tal que } e_{k_3}(x) = e_{k_1}(e_{k_2}(x))$$
+ 
+\end{itemize}
+
+\subsubsection{Modos de operación del DES}
+
+Hay varias formas de utilizar el DES. Vamos a ver algunas de ellas.
+
+\begin{itemize}
+	\item \textbf{ECB}(Electronic Code Book)
+	El esquema de funcionamiento del ECB es el siguiente:
+	
+	\begin{center}
+		\Tree[.P [.$P_1$ [.K$\rightarrow\fbox{DES}$ [.$C_1$ [.K$\rightarrow$\fbox{$DES^{-1}$} [.$P_1$ ] ] ] ] ] [.$P_2$ [.K$\rightarrow\fbox{DES}$ [.$C_2$ [.K$\rightarrow$\fbox{$DES^{-1}$} [.$P_2$ ] ] ] ] ]
+		[............. ] [.$P_n$ [.K$\rightarrow\fbox{DES}$ [.$C_n$ [.K$\rightarrow$\fbox{$DES^{-1}$} [.$P_n$ ] ] ] ] ] ]
+	
+	\end{center}
+	
+	Analizando el ECB nos damos cuenta de que no funciona bien para encriptar mensajes largos ya que los bloques se encriptan de forma independiente.
+	
+	Esto hace que en lenguajes muy estructurados es muy posible coger bloques iguales que se encriptan igual.
+	
+	% PONER EL EJEMPLO DE LA IMAGEN ENCRIPTADA CON ECB
+	
+	\item \textbf{CBC}
+	\begin{center}
+		\includegraphics[width=400pt]{CBC.png}
+	\end{center}
+	 
+	
+	El IV es el Vector de Inicialización y es secreto.
+	
+	De esta forma nos queda que:
+	$$C_1 = E_K(IV\oplus P_1)$$
+	$$C_i = E_K(C_{i-1} \oplus P_i)$$
+	$$P_1 = IV \oplus D_K(C_1)$$
+	$$P_i = C_{i-1} \oplus D_K(C_i)$$
+	
+	Analizandolo bit a bit, llamamos $P_1[i]$ al bit i del primer bloque de texto plano.
+	
+	$$P_1[i] = IV[i] \oplus D_K(C_i)[i]$$
+	$$\overline{P_1[i]} = \overline{IV[i]} \oplus D_K(C_i)[i]$$
+	
+	Este cifrado no tiene el mismo problema que el ECB ya que encripto $P_i$ en función de lo que me devuelva al encriptar $P_{i-1}$ , es decir, que voy cambiando la semilla.
+	
+	\item \textbf{CFB}
+	\item \textbf{OFB}
+	\item \textbf{CTR}
+	\begin{center}
+		\includegraphics[width=400pt]{CTR.png}
+	\end{center}
+	\textbf{Características del CTR}
+	\begin{itemize}
+		\item No cifra igual trozos iguales
+		\item No utiliza $DES^{-1} \rightarrow$ genial para implementar
+		\item No hace falta hacer las operaciones en cadena ya que ahora dependemos de una clave que va cambiando $\rightarrow $ el contador
+	\end{itemize}
+		\textbf{Ventajas del CTR}
+		\begin{itemize}
+			\item Preproceso $\rightarrow$ puedo calcular todos los contadores + DES antes de leer el texto. 
+			\item Acceso aleatorio
+			\item Simplicidad
+		\end{itemize}
+	
+\end{itemize}
+ % % Me faltan infinitas hojas % %
+ \newpage
+ 
+ 
+ 
+ $$D(x) = C(x) \text{ mod M(x)} \begin{cases}
+ d_0 = a_0\cdot b_0 \oplus a_3 \cdot b_1 \oplus a_2 \cdot b_2 \oplus a_1 \cdot b_3 = C_0 \oplus C_4\\
+ d_1 = a_1\cdot b_0 \oplus a_0 \cdot b_1 \oplus a_3 \cdot b_2 \oplus a_2 \cdot b_3 = C_1 \oplus C_5\\
+ d_2 = a_2\cdot b_0 \oplus a_1 \cdot b_1 \oplus a_0 \cdot b_2 \oplus a_3 \cdot b_3 = C_2 \oplus C_6\\
+ d_3 = a_3\cdot b_0 \oplus a_2 \cdot b_1 \oplus a_1 \cdot b_2 \oplus a_0 \cdot b_3 = C_3
+ \end{cases}$$
+ 
+ $$\left(\begin{matrix}
+ d_0\\d_1\\d_2\\d_3
+ \end{matrix} \right) = \left(\begin{matrix}
+ a_0 & a_3 & a_2 & a_1\\
+ a_1 & a_0 & a_3 & a_2\\
+ a_2 & a_1 & a_0 & a_3\\
+ a_3 & a_2 & a_1 & a_0\\
+ \end{matrix}\right) \cdot \left( \begin{matrix}
+ b_0\\
+ b_1\\
+ b_2\\
+ b_3
+ \end{matrix}\right)$$
+ 
+ Esta operación esta definida  anivel de W (palabra).
+ 
+ \section{Multiplicación por X}
+ 
+ $$XTIME = x \cdot b(x) = b_3x^4 + b_2 x^3 + b_1 x^2 + b_0 x \textbf{ mod M(x)} = b_2x^3 +b_1x^2 + b_0x + b_3$$
+ 
+ Vemos que esto lo que hace es un desplazamiento cíclico (rotación).
+ 
+ $$XTIME(b_3 b_2 b_1 b_0) = b_2 b_1 b_0 b_3$$
+ 
+ 
+ $$C(x) = x \cdot b(x) = \left(\begin{matrix}
+ 	C_0\\C_1\\C_2\\C_3
+ \end{matrix} \right) = \left(\begin{matrix}
+ 00 & 00 & 00 & 01\\
+ 01 & 00 & 00 & 00\\
+ 00 & 01 & 00 & 00\\
+ 00 & 00 & 01 & 00\\
+\end{matrix}\right) \cdot \left( \begin{matrix}
+b_0\\
+b_1\\
+b_2\\
+b_3
+\end{matrix}\right)$$
+ 
+ 
+\section{Diseños y criterios para el AES}
+
+\subsubsection{Objetivos}
+
+\begin{itemize}
+	\item Resistente al C.D y C.L (criptoanálisis diferencial y lineal)
+	\item Eficiente en varias plataformas
+	
+	Cumple este objetivo porque las operaciones son sumas, rotaciones y desplazamientos, que son operaciones que soporta cualquier plataforma informática. Y al ser de tan bajo nivel son my rápidas
+	
+	\item Código compacto y sencillo
+	\item Fuerte base matemática
+\end{itemize}
+
+\subsubsection{Elementos de Diseño}
+
+\begin{itemize}
+	\item Capa lineal $\rightarrow$ Difusión
+	\item Capa no lineal $\rightarrow$ Confusión
+	
+	Esto es antes de mezclarse la clave
+	\item Capa de sumas de clave
+	\item Clave variable $\rightarrow$ 128, 192, 256
+	\item Bloque variable $\rightarrow$ 128, 192, 256
+	
+	El tamaño de bloque estándar es 128.
+\end{itemize}
+
+A pesar de utilizar los principios de confusión y difusión no es una esructura Feistel clásica.
+ 
+\subsubsection{Diseño de Rijndael}
+
+STATE (estado)
+
+$$\overrightarrow{X} = x_0 , ...., x_n$$
+
+$$x_i \in GF(2^8)|m(x)$$
+
+Antes de estrar en el algoritmo se coloca este string en bloques para que el algoritmo pueda operar con él.
+
+Se coloca de la siguiente forma:
+
+Se pasa de esta notación:
+
+	\begin{center}
+		\begin{tabular}{l | l | c | r | r | r}
+			$x_0$ & $x_4$ &  &  &  &  \\
+			\hline
+			$x_1$  & $x_5$ &  &  &  &  \\
+			\hline
+			$x_2$  &  &  &  &  &  \\
+			\hline
+			$x_3$ &  &  &  &  & $x_{23}$ \\
+		\end{tabular}
+	\end{center}
+	
+	$$\begin{cases}
+	N_B = 4 \rightarrow 128\\
+	N_B = 6 \rightarrow 192\\
+	N_B = 8 \rightarrow 256\\
+	\end{cases}$$
+
+A esta notación	
+
+
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r | r | r}
+			$a_{00}$ & $a_{01}$ & $a_{02}$ & $a_{03}$ & $a_{04}$ & $a_{05}$\\
+			\hline
+			$a_{10}$ &   &   &   &   &  \\
+			\hline
+			$a_{20}$ &   &   &   &   &  \\
+			\hline
+			$a_{30}$ &   &   &   &   & $a_{35}$
+			
+		\end{tabular}
+	\end{center}
+
+
+\subsubsection{Tamaño de clave}
+
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r }
+		$K_{00}$ & $K_{01}$ & $K_{02}$ & $K_{03}$\\
+		\hline
+		$K_{10}$ &  &  & \\
+		\hline
+		$K_{20}$ &  &  & \\
+		\hline
+		$K_{30}$ &  &  & $K_{33}$
+		
+		\end{tabular}
+	\end{center}
+	
+		$$\begin{cases}
+		N_K = 4 \rightarrow 128\\
+		N_K = 6 \rightarrow 192\\
+		N_K = 8 \rightarrow 256\\
+		\end{cases}$$
+		
+\subsubsection{Número de rondas}
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r }
+		$N_K$ & $N_B$ = 4 & $N_B$ = 6 & $N_B$ = 8\\
+		\hline
+		$N_K$ =4 &  10 & 12 & 14\\
+		\hline
+		$N_K$ = 6 & 12 & 12 & 14\\
+		\hline
+		$N_K$=8 & 14 & 14 & 14
+		
+		\end{tabular}
+	\end{center}
+
+\subsubsection{Una ronda AES}
+\lstset{language=C, breaklines=true, basicstyle=\footnotesize}
+\begin{lstlisting}[frame=single]
+
+	Round(state , Subkey){
+	
+		ByteSub (STATE) ; //equivalente a S_Box, operaciones $GF(2^8)$, bit a bit
+	
+		ShiftRow(STATE); // desplazamiento de filas del STATE (operaciones W)
+	
+		MIXCOLUMN (STATE); // Operaciones con columnas utilizando W
+	
+		AddRoundKey (STATE, SubKey);
+	} 
+	
+	+
+	 
+	FinalRound(S,SK){
+		ByteSub(S);
+		ShiftRow(S);
+		AddRoundKey(S,SK);
+	}
+		
+\end{lstlisting}
+
+Ahora vamos a analizar cada una de las \textbf{funciones del AES}
+\begin{itemize}
+	\item \textbf{ByteSub}:
+	Supongamos que el STATE ya lo tenemos como:
+	
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r | r | r}
+			$a_{00}$ & $a_{01}$ & $a_{02}$ & $a_{03}$ & $a_{04}$ & $a_{05}$\\
+			\hline
+			$a_{10}$ &   &   &   &   &  \\
+			\hline
+			$a_{20}$ &   &   &   &   &  \\
+			\hline
+			$a_{30}$ &   &   &   &   & $a_{35}$
+			
+		\end{tabular}
+	\end{center}
+	
+	en la función tenemos 3 pasos
+	\begin{enumerate}
+		\item Calculamos el \textbf{inverso multiplicativo de cada cada byte} $a_{ij}$
+		
+		$$a_{ij} \rightarrow a'_{ij}$$
+		
+		Para esto tenemos un convenio que es que el inverso de $00$ es $00$, ya que en realidad el 0 no tiene inverso multiplicativo.
+		
+		\item Se calcula la \textbf{transformación afín} $y = ax +b$ de cada $a'_{ij}$
+		
+		Esta transformación es una especie de difusión, tipo Hill.
+	\end{enumerate}
+	
+	¿Cuantos ByteSub posibles podemos calcular? Vemos que es una función de byte, es decir, el parámetro es un byte , por lo tanto tenemos 256($2^8$) posibilidades.
+	
+	Los resultados de cada byte se guardan en las tablas de sustitución, las cajas-S del AES.
+	$$S-BOX[a_{ij}] = b_{ij}$$
+	
+	Esta cajas S cogen los 4 primeros bits, que le indican la columna, y los 4 últimos bits le indican la fila.
+	
+	¿Cómo funciona la función inversa? \textbf{INVByteSub}:
+	\begin{enumerate}
+		\item Se calcula la\textbf{transformación afín INVERSA}, que viene determinada por (imagen de moodle matriz Y)
+		\item Se calcula el \textbf{inverso multiplicativo del resultado}
+	\end{enumerate}
+	
+	De la función inversa también surge una caja de sustitución. La \textbf{Inverse S-Box}
+	$$S-BOX^{-1}[b_{ij}] = a_{ij}$$
+	\textbf{DISEÑO DE LAS S-BOX DEL AES}
+	\begin{itemize}
+		\item Resistentes al $\begin{cases}
+			\text{C.D Criptoanálisis diferencial}\\
+			\text{C.L Criptoanálisis lineal}
+		\end{cases}$
+		
+		Es decir, que casi no hay correlación entre los bits de entrada y los de salida.
+		
+		\item No existen los puntos fijos. Para esto juegan un papel muy importante las constantes c y d que vemos en las matrices de ejemplo que hemos puesto anteriormente.
+		
+		\item Las S-BOX tienen inversa: 
+		$$IS-BOX[S-BOX(a)] = a$$
+		Además $$S-BOX[a]\neq IS-BOX[a]$$
+		
+		Por ejemplo:
+		 $$S-BOX(95) = 2A$$
+		 $$IS-BOX[95]=  AD$$
+	\end{itemize}
+	Ejercicio para casa: intentar calcular el ByteSub de '95'. Solución= '2A'
+\end{itemize}

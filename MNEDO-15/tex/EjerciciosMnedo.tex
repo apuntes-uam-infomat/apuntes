@@ -49,12 +49,12 @@ Puesto que el dato inicial es 0 y no hay ninguna constante positiva sumando en l
 
 Si el método de Euler no nos lleva a ningún sitio, parece lógico pensar que la función debe tener algún problema que la hace salir del conjunto de funciones sobre las que se puede emplear este método.
 
-Así podemos comprobar que la función $f(t_n,y_n)=\frac{3}{2}y^{\frac{1}{3}}$ no es lipschitz en la segunda variable. Vamos a comprobarlo.
+Así parece lógico pensar que la función $f(t_n,y_n)=\frac{3}{2}y^{\frac{1}{3}}$ no es lipschitz en la segunda variable. Vamos a comprobarlo.
 
 Sea $L$ la constante que define la condición de Lipchitz, siendo el intervalo en el que estamos trabajando el intervalo $[0, \infty)$. 
 
 Tomamos en concreto $y_1=0$. En estas condiciones, si la función fuese Lipchitz tendríamos que 
-\[\frac{\frac{3}{2}(y_2^{1/3})}{y_2} = \frac{3}{2}\frac{1}{y^{2/3}}\leq L \ \ \ \forall y_2 \in [0,\infty)\]
+\[\frac{\frac{3}{2}(y_2^{1/3})}{y_2} = \frac{3}{2}\frac{1}{y^{2/3}}\leq L y_2 \ \ \ \forall y_2 \in [0,\infty)\]
 
 Llegados a este punto es sencillo ver que la parte de la izquierda tiende a infinito cuando $y_2$ tienda a 0 y por tanto no puede existir la constante $L$ que lo acote. Por tanto la función no es Lipchitz y no podemos aplicar el método de Euler.
 \end{problem}
@@ -104,7 +104,7 @@ El residuo no es más que la diferencia entre el valor real de la función en $x
 \[R_n = y(x_{n+1})-y_{n+1}\]
 
 \spart
-\[R_n = y(x_{n+1})-y(x_{n+1}) = y(x_{n+1})-y(x_n) - \frac{h}{2}\left( y'(x_{n+1})+y'(x_n)\right)\]
+\[R_n = y(x_{n+1})-y_{n+1} = y(x_{n+1})-y(x_n) - \frac{h}{2}\left( y'(x_{n+1})+y'(x_n)\right)\]
 
 Por Taylor podemos ver que:
 \[\left\{\begin{array}{l}
@@ -115,16 +115,22 @@ y'(x_{n+1}) = y'(x_n)+hy''(x_n) +O(h^2)
 Sustituyendo estos datos en la fórmula del residuo llegamos a:
 \[R_n = O(h^3)\]
 
+Puesto que el orden del método viene dado por $\frac{R_n}{h}$, en esta ocasión tenemos que el método del trapecio tiene un orden de consistencia al menos $2$.
+
+Si realizásemos los desarrollos de Taylor con un orden mayor veríamos que el residuo deja de poder expresarse como $O(h^i)$, es decir, deja de estar controlado por $h$ con lo que podemos confirmar que el orden de consistencia del método es 2.
+
 \spart
 
 En esta ocasión
 \[R_n = y(x_{n+1})-y(x_n)-hf\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}y'(x_n)\right)\]
 
 Calculando el desarrollo de Taylor de la $f$ llegamos a:
-\[f\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}y'(x_n)\right) = f(x_n,y_n)+\frac{h}{2}f_x(x_n,y_n)+\frac{h}{2}y'(x_n)f_y(x_n,y_n)= \atop y'(x_n)+\frac{h}{2}y''(x_n)\]
+\[f\left( t_n+\frac{h}{2}, y_n+\frac{h}{2}y'(x_n)\right) = f(x_n,y_n)+\frac{h}{2}f_x(x_n,y_n)+\frac{h}{2}y'(x_n)f_y(x_n,y_n)= \atop y'(x_n)+\frac{h}{2}y''(x_n)+O(h^2)\]
 
 Sustituyendo en la fórmula del residuo llegamos a:
 \[R_n = O(h^3)\]
+
+Si encomendamos nuestro alma al diablo y tratamos de estudiar si el residuo es de orden 3 vemos que no lo es, con lo que queda claro que el residuo es de orden 3 y por tanto el método es consistente de orden 2.
 
 \spart
 
@@ -196,7 +202,7 @@ Ahora tenemos dos casos posibles, y sabiendo que el orden de un método es $\fra
 \end{problem}
 
 
-\begin{problem}
+\begin{problem}[6]
 	\ppart Sea un PVI. Utilizando los polinomios de interpolación de Lagrange obtener el método de Adams-Bashforth de dos pasos
 	\[y_{n+2} = y_{n+1} + h \left( \frac{3}{2}f(t_{n+1}, y_{n+1}) + \frac{1}{2}f(t_n,y_n) \right),\]
 	
@@ -219,7 +225,7 @@ Ahora tenemos dos casos posibles, y sabiendo que el orden de un método es $\fra
 	\[f(x,y) = f(x_n,y_n)\frac{x-x_{n+1}}{x_n-x_{n+1}} + f(x_{n+1},y_{n+1}) \frac{x-x_n}{x_{n+1}-x_n}\]
 
 	Si integramos entre $\int_{x_{n+1}}^{x_{n+2}}$
-	\[\int_{x_{n+1}}^{x_{n+2}} \left[ f(x_n,y_n)\frac{x_{n+1}-x}{h} + f(x_{n+1},y_{n+1})\frac{x-x_n}{h}) \right]dx =\]
+	\[\int_{x_{n+1}}^{x_{n+2}} \left[ f(x_n,y_n)\frac{x_{n+1}-x}{h} + f(x_{n+1},y_{n+1})\frac{x-x_n}{h} \right]dx =\]
 	\[= \left[ f(x_{n+1},y_{n+1}) \frac{(x-x_n)^2}{2h} - f(x_n,y_n)\frac{(x_{n+1}-x)^2}{2h} \right]_{x_{n+1}}^{x_{n+2}}  =\]
 	\[= \frac{1}{2h}f(x_{n+1},y_{n+1}) \left[ (x_{n+2}-x_n)^2 - (x_{n+1}-x_n)^2 \right] - \frac{1}{2h} \left[ (x_{n+1} - x_{n+2})^2 - (x_{n+1} - x_{n+1})^2 \right] =\]
 	\[= \frac{h}{2} \left( 3f(x_{n+1},y_{n+1}) - f(x_n,y_n) \right)\]
@@ -232,11 +238,15 @@ Ahora tenemos dos casos posibles, y sabiendo que el orden de un método es $\fra
 
 	Sabemos por tanto que $p$ interpola $f$ en $x_{n-2},x_{n-1},x_n$:
 
-	{\inputtikz{EJRC_interpolar}}
+	\begin{center}
+	\inputtikz{EJRC_interpolar}
+	\end{center}
 
 	Para simplificar los cálculos vamos a tomar el cambio de variable $u=\frac{x_{n+1}-x}{h}$ para que así el polinomio interpole $f(u,y(u))$ en los puntos $3,2,1$. ($u(x_{n-2})=3, u(x_{n-1})=2, u(x_n)=1$).
 
-	{\inputtikz{EJRC_interpolar_transformed}}
+	\begin{center}
+	\inputtikz{EJRC_interpolar_transformed}
+	\end{center}
 
 
 	Es decir, tras el cambio de variable el polinomio interpolador queda como
@@ -272,6 +282,7 @@ Técnicamente el ejercicio está hecho en clase pero yo me preocupé de copiarlo
 
 \begin{itemize}
 \item Es continua con respecto a las variables $t,y,h$
+
 Definimos la aplicación global contractiva
 \[F(\phi) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_n+h\phi) \right]\]
 
@@ -287,7 +298,7 @@ Si logramos probar que la convergencia de las $\phi_f^{[j]}$ sea uniforme, tendr
 
 Expresamos $\phi_f^{[k]}$ como una suma telescópica:
 \begin{equation}
-	\label{eq:suma_telesc_pto_fijo}
+	\label{eq:suma_telesc_pto_fijo_ej}
 	\phi_f^{[k]} = \sum_{j=1}^k \phi_f^{[j]} - \phi_f^{[j-1]} + \phi_f^{[0]},\quad \phi_f^{[0]}=0
 \end{equation}
 Tomando la norma $L^∞$:
@@ -303,7 +314,7 @@ Aplicando la desigualdad sucesivamente:
 Puesto que $K = [a,b]×ℝ×(0,∞)$ es compacto:
 \[\md{\phi_f^{[j]} - \phi_f^{[j-1]}}_{L^∞} ≤ M_k\left(\frac{Lh}{2}\right)^{j-1}\]
 
-De modo que aplicando el test $M$ de Weierstrass, la convergencia de \ref{eq:suma_telesc_pto_fijo} es uniforme, y por tanto $\phi_f$ es continua.
+De modo que aplicando el test $M$ de Weierstrass, la convergencia de \ref{eq:suma_telesc_pto_fijo_ej} es uniforme, y por tanto $\phi_f$ es continua.
 
 \item Es Lipschitz con respecto a la variable $y$
 
@@ -357,11 +368,79 @@ Probar que los métodos de Adams-Bashforth de dos pasos y de tres pasos, definid
 
 En este ejercicio primero probaremos que los métodos son consistentes usando el teorema \ref{theorem:consist_iif_relaciones}. Después probaremos que son 0-estables, y sirviéndonos del teorema \ref{theorem:consist_y_0estable_converge} podremos decir que el MN es convergente.
 
+Este ejercicio lo hicimos antes de conocer el criterio de la raíz \ref{theorem:criterio_raiz}, que simplifica enormemente la demostración de la 0-estabilidad. Al final de cada apartado se encuentra la versión del profesor, que emplea este criterio.
+\textcolor{red}{
+\obs Para poder aplicar los teoremas vistos en clase sobre métodos numéricos, antes debemos comprobar que el método con el que trabajamos satisface las hipótesis de un buen método numérico y, por tanto, los teoremas son válidos.}
+
 \spart \textbf{Método de 2 pasos}:
 
-{\color{gray} Es exactamente igual que el siguiente apartado y no tengo tiempo para pasarlo a limpio.}
+El método de Adams-Bashforth de dos pasos se trata de un método basado en cuadratura que emplea la relación
+\[y(x_{n+2}) - y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) \dif x\]
+
+donde $f(x,y(x))$ se aproxima por medio de la recta interpolante entre los puntos $(x_n,y(x_n))$ y $(x_{n+1},y(x_{n+1}))$, es decir:
+\[f(x,y(x)) \approx f(x_n, y(x_n)) \frac{x-x_{n+1}}{x_n-x_{n+1}}+f(x_{n+1},y(x_{n+1}))\frac{x-x_n}{x_{n+1}-x_n}\]
+
+Finalmente, el método queda expresado como:
+\[y_{n+2} = y_{n+1}+\frac{h}{2}\left( 3f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+\textbf{El ejercicio propiamente dicho empieza a partir de esta última igualdad, lo anterior sólo era para entrar en calor}
+
+\begin{enumerate}
+\item \textbf{Consistencia}
+
+Es sencillo ver que \[\sum_{j=0}^{k=2} α_j = 0 - 1 + 1 = 0\]
+
+Para este método, tenemos la función incremento
+\[\phi_f(x_n,y_n,h) = \frac{1}{2}\left(3f(x_n+h,y_n+h\phi_f(x_n,y_n,h))-f(x_n,y_n)\right)\]
+
+De donde podemos ver que:
+\[\phi_f(x,y(x),0) = \frac{1}{2} \left(3f(x,y(x)) - f(x,y(x)) \right) = f(x,y(x))\]
+
+Para poder aplicar el teorema \ref{theorem:consist_iif_relaciones} necesitamos ver que:
+\[\phi_f(x,y(x),0)  = \sum_{j=0}^2jα_jf(x,y(x))=-f(x,y(x)) + 2 f(x,y(x)) = f(x,y(x))\]
+
+Por tanto, podemos aplicar el teorema \ref{theorem:consist_iif_relaciones} y garantizar así que el método es consistente.
+
+\item \textbf{0-estabilidad}
+
+Consideramos dos sucesiones: $\left\{ y_n \right\}_{n=0}^N$, $\left\{ y(x_n) \right\}_{n=0}^N$ y buscamos las sucesiones $δ_n,γ_n$ asociadas, que serán aquellas que satisfagan las ecuaciones:
+
+\[\sum_{j=0}^kα_jy_{n+j} = h\phi_f(x_n,y_n,...,y_{n+j},h)+hδ_n\]
+\[\sum_{j=0}^kα_jy(x_{n+j}) = h\phi_f(x_n,y(x_n),...,y(x_{n+j}),h)+hγ_n\]
+
+Para poder garantizar la 0-estabilidad, por definición, debemos probar que 
+\[\max_{k \leq n \leq N}\norm{y_n - y(x_n)} \leq C\left( \max_{0 \leq n \leq k-1}\norm{y(x_n) - y_n}+\max_{0 \leq n \leq N-k}\norm{δ_n - γ_n}\right)\]
+
+Por la propia definición del método numérico tenemos que $δ_n=0$. Vamos a estudiar la diferencia entre las sucesiones:
+
+\[y(x_{n+2})-y_{n+2} = y(x_{n+2}) - y_{n+1} - \frac{h}{2}\left( 3f(x_{n+1},y_{n+1}) - f(x_n,y_n)\right)\]
+
+Desarrollando con Taylor en torno a $x_n$ tenemos:
+\[y(x_{n+2}) = y(x_n)+2hf(x_n,y(x_n))+O(h^2)\]
+\[y_{n+1} = y_n +hf(x_n,y_n)+O(h^2)\]
+\[f(x_{n+1},y_{n+1}) = y'_{n+1} = f(x_n,y_n) + O(h)\]
+
+Sustituyendo en la diferencia tenemos:
+\[y(x_{n+2})-y_{n+2} = y(x_n)-y_n+ h(2f(x_n,y(x_n))-f(x_n,y_n)) - hf(x_n,y_n)+ O(h^2) =\]
+\[=y(x_n)-y_n+2h(f(x_n,y(x_n))-f(x_n,y_n)) + \underbrace{O(h^2)}_{\text{residuo = }hδ_n}\]
+
+Ahora procedemos a acotar la diferencia:
+\[\underbrace{\norm{y(x_{n+2})-y_{n+2}}}_{\max_{k \leq n \leq N}\norm{y_n - y(x_n)}} \leq \norm{y(x_n)-y_n} + 2hL\norm{y_n-y(x_n)}+hδ_n \leq \underbrace{(Kh)}_C\left(\underbrace{\norm{y_n-y(x_n)}}_{\max_{0 \leq n \leq k-1}\norm{y(x_n) - y_n}}+δ_n\right)\]
+
+Con lo que vemos que, efectivamente, se cumple la condición de 0-estabilidad
+
+\textbf{Versión del profesor}
+
+Para estudiar la 0-estabilidad aplicamos el criterio de la raíz.
+
+En esta ocasión el primer polinomio característico es $P(x)=x^2-x$, cuyas raíces son 0 y 1 con lo que, efectivamente se satisface el criterio de la raíz pues una raíz tiene módulo menor que 1 y la que tiene módulo 1 es simple.
+
+\end{enumerate}
 
 \spart \textbf{Método de 3 pasos}:
+
+\begin{enumerate}
+\item \textbf{Consistencia}
 
 Se cumple la primera afirmación de la parte derecha de \ref{theorem:consist_iif_relaciones}:
 \[\sum_{j=0}^{k=3} α_j = 1 - 1 + 0 + 0 = 0\]
@@ -369,10 +448,12 @@ Se cumple la primera afirmación de la parte derecha de \ref{theorem:consist_iif
 En este caso $\phi_f(x_n,y_n,y_{n+1},y_{n+2}, h) = \frac{23}{12}f(x_n+2h, y_{n+2}) - \frac{16}{12}f(x_n+h,y_{n+1}) + \frac{5}{12}f(x_n,y_n)$, y por tanto se cumple la segunda afirmación de la parte derecha de \ref{theorem:consist_iif_relaciones}:
 \[\phi_f(x,y(x),y(x),y(x), 0) = \frac{23}{12}f(x+2h, y(x)) - \frac{16}{12}f(x,y(x)) + \frac{5}{12}f(x,y(x)) = \overbrace{1}^{\sum_{j=0}^{k=3} jα_j} f(x,y(x))\]
 
+\item \textbf{0-estabilidad}
 Por tanto \textbf{el MN es 0-estable} y por tanto es consistente. Así que solo nos queda ver que el MN es 0-estable:
 
 Tomamos las sucesiones $\left\{ y_n \right\}_{n=0}^N$, $\left\{ y(x_n) \right\}_{n=0}^N$ y las restamos:
 
+\small
 \begin{equation*}
 	\begin{multlined}[\textwidth]
 		y(x_{n+3}) - y_{n+3} = y(x_{n+2}) - y_{n+2} + h\frac{23}{12}\left(f(x_{n+2},y(x_{n+2})) - f(x_{n+2},y_{n+2})\right) + \\[1em]
@@ -380,8 +461,10 @@ Tomamos las sucesiones $\left\{ y_n \right\}_{n=0}^N$, $\left\{ y(x_n) \right\}_
 		\shoveleft{\qquad + h \left\{- \frac{16}{12}\left(f(x_{n+1},y(x_{n+1})) - f(x_{n+1},y_{n+1})\right) + h \frac{5}{12}\left(f(x_n,y(x_n)) - f(x_n,y_n)\right) \right\} + \overbrace{hδ_n}^{R_n}}\\
 	\end{multlined}
 \end{equation*}
+\normalsize
 
 Tomando valores absolutos a ambos lados y usando que $f$ es Lipschitz en la segunda variable:
+\small
 \begin{equation*}
 	\begin{multlined}[\textwidth]
 		\abs{y(x_{n+3}) - y_{n+3}} ≤ \\[1em]
@@ -392,8 +475,323 @@ Tomando valores absolutos a ambos lados y usando que $f$ es Lipschitz en la segu
 		\shoveleft{\qquad ≤ 3\left(1+\frac{23}{12}Lh\right) \left\{\max_{0≤j≤2}\abs{y(x_{n+j})-y_{n+j}} + \abs{δ_n} \right\}}\\
 	\end{multlined}
 \end{equation*}
+\normalsize
 
-Con esto acabamos de demostrar que el método es 0-estable, y como también es consistente podemos decir que es convergente.
+Con lo que queda claro que el método es 0-estable
+
+\textbf{Versión del profesor}
+
+El primer polinomio característico es $P(x) = x^3-x^2$ que tiene como solución doble al 0 y como solución simple al 1, por lo que satisface el criterio de la raíz, lo que nos garantiza que el método es 0-estable.
+\end{enumerate}
+
+\end{problem}
+
+\section{Problemas previos al primer parcial}
+
+En esta sección incluimos todos los problemas realizados en clase a modo de preparación para el primer parcial, que no están incluidos en las hojas de ejercicios.
+
+\begin{problem}[1]
+Probar la convergencia del método de Euler sabiendo que es consistente:
+
+\solution
+
+Recordemos que el método de Euler es un método numérico que permite resolver un problemas de valor inicial mediante la recursión:
+\[y_{n+1} = y_n + hf(x_,y_n)\]
+
+Sabiendo esto, podemos ver que el residuo puede escribirse como:
+\[y(x_{n+1}) = y(x_n) + hf(x_n,y_n) + R_n\]
+que no es más que aplicar la definición de residuo.
+
+Dado el dato inicial $y(0)=y^0$, para poder ver que el método es convergente debemos comprobar que:
+\[\lim_{h \to 0 } \norm{y^0-y_0} \to 0 \implies \lim_{h\to 0} \max_{1 \leq n \leq N}\norm{y(x_n)-y_n} \to 0\]
+
+\obs A lo largo de la teoría hemos realizado esta misma demostración asumiendo que $\norm{y^0-y_0} = 0$, pero esta restricción es demasiado fuerte puesto que en la práctica puede incluso llegar a ser imposible.
+
+Basándonos en la fórmula recursiva del método podemos ver que:
+\[y(x_{n+1}) - y_{n+1} = y(x_n) 0 y_n + f(x_n,y(x_n)) -hf(x_n,y_n) + R_n\]
+puesto que la función $f$ es Lipschitz, tomando módulos a ambos lados tenemos:
+\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n| + K \text{ siendo }K=\max_n|R_n|\]
+Recordando la demostración que realizamos en teoría al probar el teorema \ref{theorem:EulerEsConvergente}
+\[\max_n|y(x_n)-y_n| \leq C(L)|y^0-y_0|+C\frac{K}{h}\]
+
+Así tenemos que 
+\[\lim_{h\to 0} \max_{1 \leq n \leq N}\norm{y(x_n)-y_n} \leq \lim_{h \to 0}\left( C(L)|y^0-y_0|+C\frac{K}{h}\right) \to 0\]
+\end{problem}
+
+\begin{problem}[2]
+Demostrar, a lo bruto, que el método del trapecio es convergente
+
+\solution
+
+Sabemos que el método del trapecio viene definido por la recurrencia:L
+\[y_{n+1} = y_n +\frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right)\]
+
+Para probar que el método es convergente necesitamos ver que:
+\[\lim_{h \to 0 } \norm{y^0-y_0} \to 0 \implies \lim_{h\to 0} \max_{1 \leq n \leq N}\norm{y(x_n)-y_n} \to 0\]
+
+Por definición del residuo podemos escribir:
+\[y(x_{n+1}) = y(x_n) +\frac{h}{2}\left(f(x_n,y(x_n))+f(x_{n+1},y(x_{n+1})) \right) = R_n\]
+
+Combinando esta ecuació con la recurrencia que define el método podemos escribir:
+\[|y(x_{n+1})-y_{n+1}| \leq |y(x_n)-y_n|+\frac{h}{2}|f(x_n,y_n)-f(x_n,y(x_n))|+\frac{h}{2}|f(x_{n+1},y(x_{n+1}))-f(x_{n+1},y_{n+1})+K\]
+
+siendo $K=\max_{0 \leq n \leq k-1} R_n$
+
+Puesto que sabemos que la función $f$ es Lipschitz podemos escribir:
+\[|y(x_{n+1})-y_{n+1}| \leq \left( 1 + \frac{Lh}{2}\right)|y(x_n)-y_n|+\frac{Lh}{2}|y_{n+1}-y(x_{n+1})| + K\]
+Agrupando los términos iguales a ambos lados de la desigualdad lleamos a:
+\[\left(1- \frac{hL}{2}\right)|y(x_{n+1})-y_{n+1}| \leq \left(1+ \frac{hL}{2}\right)|y(x_n)-y_n| + K\]
+
+Vamos ahora a tratar de encontrar la relación entre $|y(x_{n+1})-y_{n+1}|$ y $|y(x_0)-y_0|$ para lo que definimos $e_n=|y(x_{n})-y_{n}|$ lo que nos permite escribir:
+\[e_{n+1} \leq \frac{\left(1+ \frac{hL}{2}\right)}{\left(1- \frac{hL}{2}\right)}e_n + \frac{1}{\left(1- \frac{hL}{2}\right)}K\]
+
+Desarrollando la recurrencia podemos ver que:
+\[e_{n+1} \leq \frac{\left(1+ \frac{hL}{2}\right)^n}{\left(1- \frac{hL}{2}\right)^n}e_0 + \frac{1}{\left(1- \frac{hL}{2}\right)}K\frac{\frac{\left(1+ \frac{hL}{2}\right)^n}{\left(1- \frac{hL}{2}\right)^n}-1}{\frac{\left(1+ \frac{hL}{2}\right)}{\left(1- \frac{hL}{2}\right)}-1}\]
+
+\obs Para llegar a este resultado desarrollamos la recurrencia hasta ver su fórmula general. El coeficiente de $e_0$ es sencillo de obtener. Para el coeficiente de la $K$ necesitamos conocer la fórmula para la suma de los términos de una sucesión geométrica.
+
+Por otro lado, podemos ver que:
+\[\left( 1 + \frac{Lh}{2} \right)^n \leq \left( 1 + \frac{L(b-a)}{2N}\right)^N=\left(1 + \frac{L(b-a)}{2N}\right)^{\frac{2N}{L(b-a)}\frac{L(b-a)}{2N}}\leq e^{\frac{L(b-a)}{2}}\]
+\[\frac{1}{\left( 1-\frac{Lh}{2}\right)^n} \leq .. \leq e^{\frac{L(b-a)}{2}}\]
+\[\frac{\left(1+ \frac{hL}{2}\right)}{\left(1- \frac{hL}{2}\right)}-1 = \frac{Lh}{1-\frac{Lh}{2}}\]
+
+Combinando estos datos podemos escribir:
+\[e_{n+1} \leq e^{L(b-a)}e_0+\frac{2K}{Lh}\left( e^{L(b-a)}-1\right) \leq C(L,b-a)\left( e_0 +\frac{K}{h}\right)\]
+
+Así nos queda:
+\[\max_{1\leq n \leq N} \norm{y(x_n)-y_n} \leq C(L,b-a)\left( \norm{y(x_0)-y_0} +\frac{K}{h}\right)\]
+
+Y, por definición de la $K$ tenemos que:
+\[K = \max_n |R_n|\]
+Pero, sin realizar más asunción sobre la $f$ inicial más que su continuidad y conociendo la definición de residuo, tenemos que:
+\[\lim_{h\to 0} \frac{K}{2} = \lim_{h \to 0} \frac{R_n}{h} = \lim_{h \to 0} y'(ε)-\frac{1}{2}y'(x_{n+1})-\frac{1}{2}y'(x_n) = 0 \text{ por continuidad de } y'=f\]
+
+Finalmente podemos escribir:
+\[\lim_{h\to 0}\max_{1\leq n \leq N} \norm{y(x_n)-y_n} \leq \lim_{h \to 0}C(L,b-a)\left( \norm{y(x_0)-y_0} +\lim_{h \to 0}\frac{K}{h}\right) \equiv\]
+\[\equiv \lim_{h\to 0}\max_{1\leq n \leq N} \norm{y(x_n)-y_n} \leq \lim_{h \to 0}C(L,b-a) \norm{y(x_0)-y_0} \]
+
+Con lo que queda claro que se satisface la condición de convergencia para este método de 1 paso
+\end{problem}
+
+\section{Hoja 2}
+\begin{problem}[1]
+Sea $A$ una matriz real cuadrad de orden $k$ definida de la siguiente manera:
+\[\begin{array}{ll}
+A(i,i+1) = 1 & \text{ para } i=1,...,k-1\\
+A(k,j)=-\frac{α_{j-1}}{α_k} & \text{ para } j=1,...,k
+\end{array}\]
+
+Demostrar que su polinomio característico es:
+\[ρ(λ) = \sum_{j=0}^kα_jλ^j\]
+\solution
+\end{problem}
+
+\begin{problem}[2]
+Sea $A$ una matriz real cuadrada de orden $k$. Supongamos que todos sus autovalores λ satisfacen que
+\[|λ| < 1\]
+o si $|λ|=1$ entonces su autovalor es simple. Probar que existe $M<\infty$ tal que
+\[\norm{A^n} \leq M, \ \ \ n=1,2,...\]
+\solution
+\end{problem}
+
+\begin{problem}[3]
+Sea el método de dos pasos:
+\[y_{n+2}=y_n+\frac{3}{2}h\left(f(t_{n+2},y_{n+2})+f(t_{n+1},y_{n+1}) + f(t_n,y_n) \right)\]
+
+\ppart Probar que converge
+\ppart Determinar el orden del método
+\solution
+
+\spart
+
+Recordemos que para demostrar la convergencia debemos demostrar la 0-estabilidad y consistencia. Vamos a ello
+
+\begin{itemize}
+\item \textbf{0-estabilidad}
+
+Para comprobar que el método es 0-estable vamos a ver que se satisface el criterio de la raíz.
+
+En esta ocasión el primer polinomio característico es $P(x) = x^2-1$ que tiene como raices $x=\pm 1$.
+
+Efectivamente se satisface el criterio de la raíz, pues todas las raices tienen módulo 1 pero son simples.
+
+\item \textbf{Consistencia}
+Para garantizar la consistencia vamos emplear el teorema \ref{theorem:consist_iif_relaciones}. 
+
+Es sencillo comprobar que 
+\[\sum_{j=0}^{k=2}α_j = 1-1 = 0\]
+
+Por otro lado, tenemos que la función incremento para este método es:
+\[\phi_f(t_n,y_n,y_{n+1};h) = \frac{2}{3}\left(f(t_n+2h,y_n+h\phi_f(t_n,y_n,y_{n+1};h))+f(t_n+h,y_{n+1})+f(t_n,y_n) \right)\]
+
+Y podemos ver que
+\[\phi_f(t,y(t),y(t);0) = \frac{2}{3}\left(f(t,y(t))+f(t,y(t))+f(t,y(t)) \right) = 2f(t,y(t)) = \sum_{j=0}^{k=2} jα_j f(t,y(t))\]
+\end{itemize}
+
+Con esto hemos comprobado que, si podemos aplicar los teoremas vistos en clase, el método dado es convergente, pues es consistente y 0-estable. 
+
+Sin embargo, aún tenemos que garantizar que podemos aplicar los teoremas de clase, para lo que necesitamos comprobar que el método satisface las hipótesis de un buen método numérico. Vamos a comprobarlo:
+\begin{itemize}
+\item Si $f=0 $ entonces $\phi_f$ es 0. 
+
+Por definición de $\phi_f$ esto es obvio.
+
+\item $\phi_f$ es Lipschitz en la segunda variable.
+
+\[\norm{\phi_f(t_n,y_n,y_{n+1};h) - \phi_f(t_n,\tilde{y}_n,\tilde{y}_{n+1};h)} \leq \]
+\[\leq\frac{2}{3}L\norm{\tilde{y}_n+h \phi_f(t_n,\tilde{y}_n,\tilde{y}_{n+1};h) - y_n-h \phi_f(t_n,y_n,y_{n+1};h)} + CL\left(\norm{\tilde{y}_{n+1}-y_{n+1}}+\norm{\tilde{y}_n - y_n}\right)\leq\]
+\[\leq \frac{2}{3}L\norm{h \phi_f(t_n,\tilde{y}_n,\tilde{y}_{n+1};h)-h \phi_f(t_n,y_n,y_{n+1};h)} + C_2L\left(\norm{\tilde{y}_{n+1}-y_{n+1}}+\norm{\tilde{y}_n - y_n}\right)\]
+
+Si pasamos todas las $\phi_f$ a la izquierda y despejamos de nuevo nos queda
+\[\norm{\phi_f(t_n,y_n,y_{n+1};h) - \phi_f(t_n,\tilde{y}_n,\tilde{y}_{n+1};h)} \leq \frac{C_2L\left(\norm{\tilde{y}_{n+1}-y_{n+1}}+\norm{\tilde{y}_n - y_n}\right)}{1-\frac{2}{3}Lh}\]
+
+Para que la última desigualdad se mantenga necesitamos que $h < \frac{2}{3}L$ a fin de evitar que el denominador se haga negativo.
+
+\item $\phi_f$ es continua
+
+Para ver esto podemos ver que la función $\phi_f$ es el punto fijo de la aplicación
+\[T(\phi_f) = \frac{2}{3}\left(f(t_n+2h,y_n+h\phi_f(t_n,y_n,y_{n+1};h))+f(t_n+h,y_{n+1})+f(t_n,y_n) \right)\]
+
+Y por el teorema de la aplicación contractiva sabemos que este punto fijo existirá si y sólo si la función $T$ es contractiva.
+
+Vamos a comprobarlo
+\[\norm{T(\phi)-T(\tilde{\phi})} \leq \frac{2}{3}L\norm{y_n+h\phi - (y_n+h\tilde{\phi})} \leq \frac{2}{3}hL\norm{\phi-\tilde{\phi}}\]
+
+Sabiendo que la aplicación $T$ es contractiva tenemos que 
+\[\phi_f(x_n,y_n,y_{n+1};h)=\lim_{k \to \infty} T^{[k]}(\phi_f(x_n,y_n,y_{n+1};h)\]
+
+Es decir, ya tenemos una sucesión de funciones continuas que convergen a la función $\phi_f$ cuya existencia ya está garantizada por el teormema de la aplicación contractiva.
+
+Ahora bien, esto aún no nos garantiza que la función $\phi_f$ sea continua, que es justo lo que queremos probar. 
+
+Para poder garantizarlo, necesitamos que la sucesión de $\phi^{k}$ converga de forma uniforme. Para ello podemos emplear el test M de Weierstrass o podemos demostrar que la sucesión es de Cauchy.
+
+Procedemos a demostrar que la sucesión es de Cauchy.
+
+\[\norm{\phi^{[k+1]}-\phi^{[k]}}_{L^{\infty}(K)}=\norm{T(\phi^{[k]}) - T(\phi^{[k-1]})}_{L^{\infty}(K)} \leq \frac{2}{3}hL\norm{\phi^{[k]}-\phi^{[k-1]}} \]
+donde $K$ es un compacto de la forma $[a,b] \times \real \times \real h$
+
+Si continuamos reduciendo los exponentes de $\phi$ llegamos a
+\[\norm{\phi^{[k+1]}-\phi^{[k]}}_{L^{\infty}(K)} \leq \left( \frac{2Lh}{3} \right)^k \norm{\phi^{[1]}-\underbrace{\phi^{[0]}}_{0}} \]
+
+Puesto que estamos calculando la norma en un compacto, la función $\phi^{[1]}$, que será continua, estará acotada con lo que obtenemos:
+\[\norm{\phi^{[k+1]}-\phi^{[k]}}_{L^{\infty}(K)} \leq \left( \frac{2Lh}{3}\right)^kM\]
+
+Recordemos que la sucesión será de Cauchy si 
+\[\forall ε > 0 \exists N \tq \forall n,m >N \ \norm{\phi^{[m]}-\phi^{[n]}} \leq ε\]
+
+Suponiendo que $m = n+p$ escribimos:
+\[\norm{\phi^{[n+p]}-\phi^{[n]}} \leq \norm{\phi^{[n+p]}-\phi^{[n+p-1]}} + \norm{\phi^{[n+p-1]}-\phi^{[n+p-2]}} + ... + \norm{\phi^{[n+1]}-\phi^{[n]}} \leq\]
+\[ \leq M \sum_{j=n}^{n+p-1}  \left( \frac{2Lh}{3}\right)^{k}= M\left( \frac{2Lh}{3}\right)^n\frac{1}{1-\left( \frac{2Lh}{3}\right)}\]
+
+Llegados a este punto vemos que incrementando el valor $n$ podemos hacer que la cosa sea tan pequeña como queramos.
+
+Así queda claro que la sucesión es de Cauchy y sabemos que está formada por funciones continuas, por lo que el límite, que es nuestra función $\phi_f$ es continuo.
+\end{itemize}
+
+\spart
+
+Para encontrar el orden de convergencia lo que debemos hacer es calcular el orden de consistencia y, aplicando el teorema \ref{theorem:convergencia_consistencia_orden}, tendremos directamente que el orden de convergencia es 2.
+
+El cálculo detallado de este orden se deja como ejercicio para el lector.
+
+\end{problem}
+
+\begin{problem}[4]
+Dado un PVI, consideramos el siguiente método numérico:
+\[y_{n+2}=y_n+\frac{h}{3}\left(f(t_{n+2},y_{n+2})+4f(t_{n+1},y_{n+1}) + f(t_n,y_n) \right)\]
+
+\ppart Comprobar que la recurrencia se obtiene aproximando $f(t,y(t))$ por el polinomio cuadrático de Lagrange de $f(t,y(t))$ en los puntos $t_n,t_{n+1}$ y $t_{n+2}$.
+
+\ppart Obtener el orden del residuo:
+\[R_n = \int_{t_n}^{t_{n+2}}f(s,y(s))\dif s -\frac{h}{3}\left(f(t_{n+2},y_{n+2})+4f(t_{n+1},y_{n+1}) + f(t_n,y_n) \right)\]
+
+\ppart La función incremento asociada a la fórmula recurrente se define como:
+\[\phi_f(t_n,y_n,y_{n+2};h) = \lim_{k\to \infty}\phi_k^{(k)}(t_n,y_n,y_{n+1};h)\]
+con $\phi_f^{(0)}$. Definir $\phi_f^{(k)}$ en función de $\phi_f^{(k-1)}$ de forma que se satisfaga
+\[y_{n+2}-y_n = h \phi_f(t_n,y_n,y_{n+1};h) \]
+
+¿Bajo qué condiciones existe el límite anterior?
+
+\ppart Probar que $\phi_f$ es una función continua con respecto a todas sus variables
+
+\ppart Probar que 4$\phi_f$ es Lipschitz con respecto a $y_n$ e $y_{n+1}$.
+
+\ppart Probar que el último método mencionado es consistente
+
+\ppart Probar que ese método es convergente
+\solution
+
+\spart
+
+Si tenemos un problema de valor inicial de forma general con $y'=f(t,y(t))$, podemos ver que
+\[y(t_{n+2}) - y(t_n) = \int_{t_n}^{t_{n+2}}y'(t)\dif t =\int_{t_n}^{t_{n+2}}f(t,y(t))\dif t \]
+
+Hasta aquí sólo hemos escrito igualdades basándonos en el teorema fundamental del cálculo. Ahora, empleamos el polinomio interpolador de Lagrange con lo que podemos escribir:
+\[f(t,y(t))=f(t_n,y(t_n))\frac{(t-t_{n+1})(t-t_{n+2})}{(t_n-t_{n+1})(t_n-t_{n+2})} + f(t_{n+1},y(t_{n+1}))\frac{(t-t_n)(t-t_{n+2})}{(t_{n+1}-t_n)(t_{n+1}-t_{n+2})} +\]
+\[f(t_{n+2},y(t_{n+2})) \frac{(t-t_n)(t-t_{n+1})}{(t_{n+2}-t_n)(t_{n+2}-t_{n+1})}\]
+
+Esta función sabemos integrarla pues no depende de $f$ ya que todas las apariciones de $f$ están evaluadas en un punto, por lo que son constantes.
+
+Una vez realicemos la integral debemos obtener exactamente el método dado en el enunciado.
+
+\spart
 
 
+\end{problem}
+
+\begin{problem}[5]
+Sea el método multipaso
+\[y_{n+2} - \frac{4}{3}y_{n+1}+\frac{1}{3}y_n = \frac{2}{3}hf(t_{n+2},y_{n+2})\]
+
+\ppart Definir su función incremento y comprobar que el método está determinado de manera única
+
+\ppart Ver si el método es consistente
+
+\ppart Ver si el métod es convergente
+\solution
+
+\spart
+Empezamos definiendo la función incremento
+\[\phi_f(t_n,y_n,y_{n+1};h) = \frac{2}{3}f(t_n+2h,y_n+\frac{4}{3}y_{n+1}-\frac{1}{3}y_n+h\phi_f(t_n,y_n,y_{n+1}))\]
+
+
+Para comprobar que el método está definido de manera única ver que la siguiente ecuación nos define $y_{n+1}$ como su solución.
+\[y_{n+2} = \frac{4}{3}y_{n+1}-\frac{1}{3}y_n + \frac{2}{3}hf(t_{n+2},y_{n+2})\]
+
+Para comprobar que existe $y_{n+2}$ debemos comprobar que existe un punto fijo de la aplicación 
+\[T(x) =  \frac{4}{3}y_{n+1}-\frac{1}{3}y_n + \frac{2}{3}hf(t_{n+2},x)\]
+para lo que simplemente debemos comprobar que la aplicación es contractiva, cosa que es elemental puesto que $f$ es Lipschitz en la segunda variable.
+\[\norm{t(y)-T(\tilde{y})} = \norm{\frac{2h}{3} \left( f(t_{n+2},y) - f(t_{n+2},\tilde{y})\right)} \leq \frac{2h}{3}L\norm{y - \tilde{y}}\]
+
+Por tanto, queda claro que el método está bien definido y, por tanto, es único.
+
+\spart
+
+Para estudiar la consistencia del método podemos ver que
+\[\sum_{j=0}^2 α_j = 0\]
+Además
+\[\sum_{j=0}^2jα_j = \frac{2}{3}\]
+\[\phi_f(t,y(t),y(t);0) = \frac{2}{3}f(t,\frac{4}{3}y(t)-\frac{1}{3}y(t)) = \frac{2}{3}f(t,y(t)) = \sum_{j=0}^2 jα_j f(t,y(t))\]
+
+Por tanto, podemos aplicar el teorema \ref{theorem:consist_iif_relaciones} que nos garantiza que si el método es un buen método numérico y cumple las condiciones que acabamos de probar, entonces será \textbf{consistente}
+
+\spart
+
+Para estudiar la convergencia vamos a emplear el teorema \ref{theorem:consist_y_0estable_converge} para lo que necesitamos probar la 0-estabilidad.
+
+Para ver que el método es 0-estable nos apoyamos en el método de la raíz, \ref{theorem:criterio_raiz}. En este caso es sencillo ver que el polinomio característico es
+\[P(x)=x^2-\frac{4}{3}x+\frac{1}{3}\]
+que tiene como soluciones $x=1, \ x=\frac{1}{3}$ por lo que se satisface el criterio y por tanto el método es 0-estable.
+
+\obs Para poder aplicar los teoremas que hemos aplicado, habría que demostrar que el método es un buen método numérico (satisface las hipótesis de los métodos numéricos). Esta demostración se deja como ejercicio para el lector.
+
+\end{problem}
+
+\begin{problem}[6]
+Considera el método lineal multipaso (leap-frog)
+\[y_{n+2}-y_n = 2hf(t_{n+1},y_{n+1})\]
+
+¿Cuál es el orden del método?
+\solution
 \end{problem}
