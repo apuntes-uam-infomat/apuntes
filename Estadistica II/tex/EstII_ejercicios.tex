@@ -411,6 +411,8 @@ En particular, deduce que si $Σ$ es simétrica e idempotente y $μ = 0$, entonc
 
 \solution
 
+
+
 La hipótesis sería $H_0 : F = F_0$ continua, con $X \sim F$
 
 En este caso,
@@ -419,9 +421,11 @@ En este caso,
 
 $(1)$ hay 2 posibles caminos. Al dibujar lo que nos dicen (una muestra de tamaño 1) podemos sacarlo por intuición. Sino, aplicamos la fórmula de los estadísticos.
 
-Ahora calculamoms:
+Ahora calculamos:
 
 \[ P_{F_0}(D\leq x) = P_{F_0} = \left\{\max \{ ... \}\leq x\right\} = P_{F_0} = P_{F_0}\{ 1-x \leq F_0(x) \leq x \}\]
+
+\textcolor{red}{No entiendo porqué } $P_{F_0} \left\{\max \{ ... \}\leq x\right\} = \{ 1-x \leq F_0(x) \leq x \}$ y no es $\{ x \leq F_0(x) \leq 1-x \}$
 
 Resolvemos la desigualdad, aplicando que $F_0$ es una uniforme.
 
@@ -450,6 +454,9 @@ Consultando las tablas, vemos que $\Phi^{-1}(0.975) = 1.96$ y por simetría, $\P
 \obs Es interesante saber que, al ser simétrica la normal, la interpretación gráfica es muy fácil. Si dividimos la normal en 3 intervalos, $(-∞ , -1.96) , (-1.96,1.96) , (1.96, ∞)$, el área encerrada en las colas es el nivel de significación, en este caso: \[\text{Area }\left((-∞ , -1.96)\cup (1.96, ∞)\right) = 0.05\]
 
 \end{problem}
+
+
+
 \begin{problem}[3] Da una demostración directa para el caso k = 2 de que la distribución del estadístico del contrast $\chi^2$ de bondad de ajuste converge a una distribución $\chi_1^2$ , es decir,
 \[
 T = \frac{(O1 − E1)^2}{E1} +
@@ -486,6 +493,9 @@ Entre ellas, tenemos que $\sqrt{T} \convs[d]N(0.1)$ por el teorema central del l
 Esto responde también al problema 11. 
 
 \end{problem}
+
+
+
 \begin{problem}[4] El número de asesinatos cometidos en Nueva Jersey cada día de la semana durante el año 2003 se muestra en la tabla siguiente:
 
 \begin{center}
@@ -505,9 +515,9 @@ respuesta es afirmativa, explica cómo. Si es negativa, explica la razón.
 
 \solution
 
-\spart $n = 329$, $E_i = \frac{329}{7}$ y $H_0 : p_i = \frac{1}{7}$
+\spart Tenemos $n = 329$, $E_i = \frac{329}{7} = 47$ y $H_0 : p_i = \frac{1}{7}$
 
-Calculamos el estadístico $T = ... = \sum_{i=1}^7 ... = ... = 13.32$
+Calculamos el estadístico \[T = \sum_{i=1}^7 \frac{O_i^2}{E_i} - 329 = \left(\frac{42^2}{47} + \frac{51^2}{47} + \frac{45^2}{47} + ... + \frac{53^2}{47}\right) - 329 = 13.32\]
 
 Por otro lado, $\chi^2_{6;0.05} = 12.59$, con lo que rechazamos la hipótesis.
 
@@ -524,18 +534,34 @@ Frecuencia & p & p & p & p & p & q & q
 \end{tabular}
 \end{center}
 
-Con $5p + 2q = 1 \implies q = \frac{11-5p}{2}$
 
-Entonces, tenemos \[ e.m.v.(p) =L(p)= p^{42+51+...+37} \left( \frac{11-5p}{2} \right)^{65+53} \]
+\obs
+Podríamos plantearnos contrastar que es uniforme de lunes a viernes ($H_1$) y otra uniforme distinta en fines de semana ($H_2$). Entonces tendríamos $H_0 : H_1 \cap H_2$, y construir la región $R = R_1 \cup R_2$. ¿Cuál es el problema de este camino?
 
-Ahora, despejamos tomando $l(p) = ln(L(p)) = 211 ln(p) + 118ln\left(\frac{11-5p}{2}\right)$ y maximizamos:
+El nivel de significación, ya que $P_{H_0}(R_1 \cup R_2) = P_{H_0}(R_1) + P_{H_0}(R_2) - P_{H_0}(R_1\cap R_2) = 2α - α^2 \sim 2α$. 
+
+Podríamos tomar, chapucerillamente $α = \frac{α}{2}$ para que al final, $P_{H_0} ( R_1 \cup R_2) = α$. Aquí surge otro problema, que es que estamos despreciando la probabilidad de la intersección y tomándolo como independiente cuando no tiene porqué serlo. Es una aproximación ``buena'' que a veces se utiliza, pero pudiendo hacerlo bien... \paragraph{Vamos a hacerlo bien:}
+
+
+
+Tenemos que $5p + 2q = 1 \implies q = \frac{1-5p}{2}$. Pero para utilizar el contraste de homogeneidad $\chi^2$ necesitamos tener $p$ (y $q$). Como no disponemos de ellos, vamos a estimarlos. ¿Cómo? Con el estimador de máxima verosimilitud que es el molón. En el apéndice hay un pequeño recordatorio: \fref{sec:estimadorMaximaVerosimilitud}
+
+En este caso, nuestra función de densidad es: \[f(x) = \left\{ \begin{array}{cl} p & x∈[\text{lunes,martes,miércoles,jueves,viernes}]\\\frac{1-5p}{2}&x∈[\text{sábado,domingo}] \end{array}\right.\]
+
+¿Cuál es la probabilidad de 7 asesinatos entre semana? Pues la intersección de los 7 sucesos, es decir $p·p·...·p = p^7$. Razonando así, tenemos \[ e.m.v.(p) =L(p;\text{datos})= p^{42+51+...+37} \left( \frac{1-5p}{2} \right)^{65+53} \]
+
+Ahora, despejamos tomando $l(p) = \ln(L(p)) = 211 \ln(p) + 118\ln\left(\frac{1-5p}{2}\right)$ y maximizamos:
 
 \[
 l'(p) = 0 \implies ... \left\{\begin{array}{c} \gor{p} = 0.128\\ \gor{q} = 0.179 \end{array}\right.
 \]
 
 
-Ahora construimos el estadístico:
+Ahora que ya tenemos $p$ y $q$, las frecuencias esperadas son:
+
+\[E_i = n·\left( p,p,p,p,p,q,q) = (42.2,...,42.2,58.91,58.91)\]
+ 
+Ya estamos en condiciones de construir el estadístico:
 
 \[
 T = \sum_{i=1}^7 \frac{O_i^2}{\gor{E}_i^2} - n = ... = 5.4628
@@ -545,12 +571,7 @@ Y comparamos con la $\chi^2$. ¿Cuántos grados de libertad? Si tenemos $7$ clas
 
 Como $T < c$, no podemos rechazar la hipótesis.
 
-\obs
-Podríamos plantearnos contrastar que es uniforme de lunes a viernes ($H_1$) y otra uniforme distinta en fines de semana ($H_2$). Entonces tendríamos $H_0 : H_1 \cap H_2$, y construir la región $R = R_1 \cup R_2$. ¿Cuál es el problema de este camino?
 
-El nivel de significación, ya que $P_{H_0}(R_1 \cup R_2) = P_{H_0}(R_1) + P_{H_0}(R_2) - P_{H_0}(R_1\cap R_2) = 2α - α^2 \sim 2α$. 
-
-Podríamos tomar, chapucerillamente $α = \frac{α}{2}$ para que al final, $P_{H_0} ( R_1 \cup R_2) = α$. Aquí surge otro problema, que es que estamos despreciando la probabilidad de la intersección y tomándolo como independiente cuando no tiene porqué serlo. Es una aproximación ``buena'' que a veces se utiliza, pero pudiendo hacerlo bien... 
 
 \end{problem}
 
@@ -597,6 +618,8 @@ Hallar la estimación de máxima verosimilitud de p con los datos obtenidos.
 
 \doneby{Jorge}
 
+\approvedby{Dejuan}
+
 \spart
 Primero calculamos la función de verosimilitud para $p$:
 \[L_n(p) = L_n(p) = \prod_{i=0}^n f(x_i;p) = (p^2)^{10} · (q^2)^{50} · (2pq)^{40}\]
@@ -625,6 +648,8 @@ Aplica el test de Kolmogorov-Smirnov, al nivel 0.05, para contrastar la hipótes
 muestra (0, 1.2, 3.6) procede de la distribución $N(µ~=~1;σ~=~5)$.
 \solution
 \doneby{Jorge}
+
+\approvedby{Dejuan}
 
 \spart
 La función de distribución de una $U(3,8)$ es:
