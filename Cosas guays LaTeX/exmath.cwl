@@ -104,9 +104,9 @@
 \sample[variable][indice]#m
 \sesgo#m
 \ECM#m
-\cov#m
-\corr#m
 \emv#m
+\cov{arg0}#m
+\corr{arg0}#m
 \nat#m
 \ent#m
 \rac#m
