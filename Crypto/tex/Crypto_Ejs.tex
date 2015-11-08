@@ -3630,6 +3630,58 @@ cifrar el mensaje $k=8$. ¿Qué debe enviarle a $B$?
 como exponente secreto $d_B$ un número menor que 10. ¿Cómo es
 $d_B$?
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Si $A$ emplea el sistema habitual para enviar un mensaje a $B$, una vez ha seleccionado un $k$ al azar, el procedimiento a seguir será:
+\[XY \to 27\cdot X + Y \to (27X+Y)e_B^k \mod 733\]
+
+Una vez $B$ reciba el mensaje, puesto que conoce $e_B=g^{e_d}$, puede calcular el inverso de $d_B=d'_B$ y calcular
+\[(27\cdot X + Y)(g^k)^{d_B}(g^k)^{d'_B}=(27\cdot X +Y)\]
+
+Puesto que descifrar el mensaje implica resolver el problema del logaritmo discreto (salvo que conozcas $d_B$), el sistema es seguro.
+
+Sin embargo, si tenemos que cifrar el digrafo ``AA'', lo que enviaremos será un 0, lo que aporta bastante información al atacante acerca del mensaje que se está enviando.
+
+Puesto que no se tienen en cuenta los espacios a la hora de cifrar, el digrafo es bastante habitual puesta basta con encontrar una palabra acabada en ``A'' y seguida por la preposici'on ``A''.
+
+``Ataca al norte''.
+
+Esto aporta mucha información al enemigo que puede realizar pruebas buscando las letras más probable que acompañan al digrafo ``AA'' llegando a encontrar la clave para descifrar, pues todo el mensaje está cifrado con la misma clave.
+
+\spart
+Para poder descifrar el mensaje, lo primero que debemos hacer es encontrar el inverso aditivo de $d_A=12 \mod  733 = 720$.
+
+Una vez tenemos este valor, procedemos a descifrar el mensaje:
+\[\begin{array}{l}
+449 \cdot 654^{720} \mod 733 = 205 = 7\cdot 27 + 15 + 1 = HO\\
+549 \cdot 654^{720} \mod 733 = 298 = 11 \cdot 27 + 0 + 1 = LA
+\end{array}\]
+
+\spart
+Procedemos a cifrar el mensaje
+\[\left.\begin{array}{l}
+SI = 19 \cdot 27 + 8 +1 = 522\\
+g^k \mod 733 = 7^8 \mod 733 = 489 \\
+522 \cdot 369^{8} \mod 733 =236 
+\end{array}\right\}\implies \text{ Enviamos: } (489,236) \]
+
+\spart 
+
+Podemos calcular las potencias posibles de $g=7$ y ver qué ocurre:
+\[\begin{array}{lcl}
+d_B=1 & \to & g^{d_b} \mod 733= 7\\
+d_B=2 & \to & g^{d_b} \mod 733= 49\\
+d_B=3 & \to & g^{d_b} \mod 733= 343\\
+d_B=4 & \to & g^{d_b} \mod 733= 202\\
+d_B=5 & \to & g^{d_b} \mod 733= 681\\
+d_B=6 & \to & g^{d_b} \mod 733= 369\\
+\end{array}\]
+
+Ya tenemos que $d_B=6$
+
 \end{problem}
 
 
@@ -3667,6 +3719,37 @@ discreto, y que por tanto Beatriz puede estar segura de que el
 mensaje procede de Ana.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Ana deberá resolver la ecuación:
+\[g^f=e_A^rr^x \mod p\iff g^f = e_A^r(g^k)^x \mod p\iff g^f=g^{d_A\cdot r}g^{k\cdot x} \mod p\iff\]
+\[\iff f = rd_A+kx + h \text{ con } g^h=1 \mod p\]
+
+
+Pero por ser $p$ primo sabemos que 
+\[g^p =1 \mod p \implies h = p\]
+
+Puesto que $A$ conoce $f,r,d_A$ y $k$, sólo tiene que resolver una ecuación lineal para calcular $x$.
+
+\spart
+
+Beatriz, de la misma forma, debe comprobar que 
+\[g^f=e_A^rr^x\]
+
+puesto que conoce $e_A,r,x,g$ sólo tiene que comprobar que la $f$ recibida encaja en la ecuación, de la cual conoce todos los demás valores.
+
+\spart
+
+El atacante, Cristina en este caso, conocerá $f,e_A,g$ tras haber interceptado una comunicación y haber realizado sus deberes de espía.
+
+Es imposible que conozda $d_A$ sin resolver el problema de logaritmo discreto por lo que es imposible que resuleva la ecuación lineal $f = rd_A+kx + p$ y, por tanto, no puede hacerse pasar por Ana, ya que no podrá calcular el valor $x$ necesario.
+
+Otra posible forma de atacar sería calcular la $x$ que empleará el destinatario para descifrar el mensaje. 
+
+El atacante conce $g^f,e_A^r$ y $r$. Aún en esta situación, para poder calcular la $x$ que satisface la ecuación necesitaría resolver un problema de logaritmo discreto, que sabemos no es viable.
 \end{problem}
 
 %  Algunos problemas relacionados con lo que se
@@ -3675,6 +3758,64 @@ mensaje procede de Ana.
 \begin{problem}[4]
  Factorizar los n\'umeros 200819 y 141467 usando el m\'etodo de Fermat.
 \solution
+
+\doneby{Pedro}
+
+El método de Fermat consiste en encontrar dos enteros cercanos tales que la diferencia de sus cuadrados sea el número que queremos factorizar.
+
+\[200819 = x^2 - y^2 \implies x = \sqrt{200819+y^2}\]
+
+Empezamos a probar con enteros $x>\sqrt{200819}=448$:
+\[\begin{array}{lcl}
+x=449 & \to & y=\sqrt{782}\\
+x=450 & \to & y=\sqrt{1681} = 41
+\end{array}\]
+Así llegamos a que 
+\[200819 = (x+y)(x-y) = 409 \cdot 491\]
+
+Vamos a por el otro número:
+\[x>\sqrt{141467} = 376\]
+\[\begin{array}{lcl}
+x= 378  & \to &  y=\sqrt{ 1417 }= 37.6430604494 \\
+x= 379  & \to &  y=\sqrt{ 2174 }= 46.6261729075 \\
+x= 380  & \to &  y=\sqrt{ 2933 }= 54.1571786562 \\
+x= 381  & \to &  y=\sqrt{ 3694 }= 60.7782855961 \\
+x= 382  & \to &  y=\sqrt{ 4457 }= 66.7607669219 \\
+x= 383  & \to &  y=\sqrt{ 5222 }= 72.2634070606 \\
+x= 384  & \to &  y=\sqrt{ 5989 }= 77.3886296558 \\
+x= 385  & \to &  y=\sqrt{ 6758 }= 82.2070556583 \\
+x= 386  & \to &  y=\sqrt{ 7529 }= 86.7698104181 \\
+x= 387  & \to &  y=\sqrt{ 8302 }= 91.1153115563 \\
+x= 388  & \to &  y=\sqrt{ 9077 }= 95.2732911156 \\
+x= 389  & \to &  y=\sqrt{ 9854 }= 99.2673158698 \\
+x= 390  & \to &  y=\sqrt{ 10633 }= 103.116439039 \\
+x= 391  & \to &  y=\sqrt{ 11414 }= 106.836323411 \\
+x= 392  & \to &  y=\sqrt{ 12197 }= 110.440028975 \\
+x= 393  & \to &  y=\sqrt{ 12982 }= 113.938579946 \\
+x= 394  & \to &  y=\sqrt{ 13769 }= 117.3413823 \\
+x= 395  & \to &  y=\sqrt{ 14558 }= 120.656537328 \\
+x= 396  & \to &  y=\sqrt{ 15349 }= 123.891081196 \\
+x= 397  & \to &  y=\sqrt{ 16142 }= 127.051170794 \\
+x= 398  & \to &  y=\sqrt{ 16937 }= 130.142229887 \\
+x= 399  & \to &  y=\sqrt{ 17734 }= 133.169065477 \\
+x= 400  & \to &  y=\sqrt{ 18533 }= 136.13596145 \\
+x= 401  & \to &  y=\sqrt{ 19334 }= 139.046754727 \\
+x= 402  & \to &  y=\sqrt{ 20137 }= 141.904897731 \\
+x= 403  & \to &  y=\sqrt{ 20942 }= 144.713510081 \\
+x= 404  & \to &  y=\sqrt{ 21749 }= 147.475421681 \\
+x= 405  & \to &  y=\sqrt{ 22558 }= 150.193208901 \\
+x= 406  & \to &  y=\sqrt{ 23369 }= 152.869225157 \\
+x= 407  & \to &  y=\sqrt{ 24182 }= 155.505626908 \\
+x= 408  & \to &  y=\sqrt{ 24997 }= 158.104395891 \\
+x= 409  & \to &  y=\sqrt{ 25814 }= 160.667358228 \\
+x= 410  & \to &  y=\sqrt{ 26633 }= 163.196200936 \\
+x= 411  & \to &  y=\sqrt{ 27454 }= 165.692486251 \\
+x= 412  & \to &  y=\sqrt{ 28277 }= 168.157664113 \\
+x= 413  & \to &  y=\sqrt{ 29102 }= 170.593083095 \\
+x= 414  & \to &  y=\sqrt{ 29929 }= 173.0 \\
+\end{array}\]
+Así llegamos a que 
+\[141467 = (x+y)(x-y) = 587 \cdot 241\]
 \end{problem}
 
 
@@ -3682,11 +3823,57 @@ mensaje procede de Ana.
 Los números 85026517 y 85026567 son producto de dos
 primos. Factorizarlos.
 \solution
+
+\doneby{Pedro}
+
+Empleamos de nuevo el método de Fermat, que ya lo tengo implementado para que me escriba el texto en latex y todo y voy a darle uso.
+
+Empezamos con el 85026517, para el que tenemos que $x> \sqrt{85026517}=9220$
+\[\begin{array}{lcl}
+x= 9221 & \to & y=\sqrt{ 324}= 18.0 
+\end{array}\]
+
+Para factorizar el siguiente número, si empleamos el mismo algoritmo no acabamos nunca (lo probe con ordenador con hasta 500 pasos sin lograr nada). Por tanto, nos vemos obligados a pensar.
+
+En este caso es sencillo ver que 85026567 es múltiplo de 3 por lo que tenemos:
+\[85026567 = 3 \cdot 28342189\]
 \end{problem}
 
 \begin{problem}[6]
-Sea $n=4633$. Encontrar el conjunto de primos $\cal P$ tal que los cuadrados de 699, 69 y 70 m\'odulo $n$ son $\cal P$-suaves. Usando esta informaci\'on factorizar $n$ com en el m\'etodo de Kraitchik.
+Sea $n=4633$. Encontrar el conjunto de primos $\cal P$ tal que los cuadrados de 699, 69 y 70 m\'odulo $n$ son $\cal P$-suaves. Usando esta informaci\'on factorizar $n$ con en el m\'etodo de Kraitchik.
 \solution
+
+\doneby{Pedro}
+
+Los números $\algb{P}$-suaves son aquellos que factorizan en $\algb{P}$. 
+
+Por tanto, lo que tenemos que hacer es factorizar los cuadrados de los números que se nos dan y agrupar estos factores formando el conjunto $\algb{P}$.
+
+
+\[\left.\begin{array}{l}
+699^2 \mod n = 2136 = 267 \cdot 2^3 = 89 \cdot 3 \cdot 2^3 \\
+69^2 \mod n = 128 = 2^7 \\
+70^2 \mod n = 267 = 89 \cdot 3
+\end{array}\right\} \implies \algb{P} = \{ 2,3,89\}\]
+
+Para aplicar el método de Kraitchik empezamos calculando $x_0=\lceil \sqrt{n} \rceil=69$ y comenzamos a iterar aplicando la función $Q(x)=x^2-n$.
+
+Así obtenemos los valores:
+\[\begin{array}{l}
+Q(69) = x_1 = 128 = 2^{7}\\
+Q(70) = x_2 = 267 = 89 \cdot 3  \\
+Q(71) = x_3 = 408 \text{ no es factorizable en } \algb{P} \\
+Q(699) = x_{630} = 2136 = 267 \cdot 2^3 = 89 \cdot 3 \cdot 2^3 
+\end{array}\]
+
+Ahora multiplicamos módulo $n$ los números que factorizan en $\algb{P}$ con lo que obtenemos:
+\[(\underbrace{699 \cdot 69 \cdot 70}_{x})^2 = \underbrace{2^{10}\cdot 3^2 \cdot 89^2}_{y^2} \mod n\]
+
+Ahora sólo tenemos que calcular el máximo común divisor:
+\[m.c.d.(x-y,n)= m.c.d.\left(699 \cdot 69 \cdot 70 - 2^{5}\cdot 3 \cdot 89, 4633\right) = m.c.d.(3367626, 4633) = 113\]
+
+Así nos queda que
+\[n = 4633 = 113 \cdot 41\]
 \end{problem}
 
 \begin{problem}[7]
@@ -3695,6 +3882,33 @@ primos. Utiliza el método de Kraitchik para factorizarlo.
 (Nota: al cribar los $Q(x)$ no hace falta que te preocupes de los
 primos $p\ge 17$.)
 \solution
+
+\doneby{Pedro}
+
+Atendiendo a la indicación del enunciado vamos a considerar
+\[\algb{P} = \{2,3,5,7,11,13\}\]
+
+Empezamos considerando $x_0 = \lceil \sqrt{12871} \rceil=114$
+
+Procedemos a iterar:
+\[\begin{array}{l}
+Q(114) = x_1 = 125 = 5^3\\
+Q(115) = x_2 = 354 \text{ no es factorizable en } \algb{P} \\
+Q(116) = x_3 = 585 = 5 \cdot 3^2 \cdot 13 \\
+Q(117) = x_4 = 818 \text{ no es factorizable en } \algb{P} \\
+Q(118) = x_5 = 1053 = 3^4 \cdot 13 \\
+Q(119) = x_6 = 1290 \text{ no es factorizable en } \algb{P}\\
+Q(120) = x_7 = 1529 \text{ no es factorizable en } \algb{P}
+\end{array}\]
+
+Ahora tenemos 
+\[(114 \cdot 116 \cdot 118)^2 = 5^4 \cdot 3^6 \cdot 13^2 \mod n (=12871)\]
+
+Calculamos
+\[m.c.d.(x-y,n) = m.c.d.(1551657,12871)= 61 \]
+
+Finalmente
+\[12871 = 61 \cdot 211 \]
 \end{problem}
 
 %\begin{problem}  Sea $n$ un número natural impar.
@@ -3713,6 +3927,18 @@ Demostrar que si conocemos  $x\in \ent_N$ distinto de $\bar 0$ y
 $\bar 1$ tal que $x^2=x$, entonces podemos factorizar $N$ de forma
 eficiente.
 \solution
+
+\doneby{Pedro}
+
+Si sabemos que $x^2=x \mod n$ sabemos que
+\[x^2-x = kn\]
+
+por tanto, todo factor primo de $n$ cumple
+\[p|n \implies p|(x^2-x) \implies p|x(x-1)\implies p|x \Or p|(x-1)\]
+
+Por tanto, una vez tenemos el $x$ con la condición dada, basta con factorizar $x$ y $x-1$ para tener todos los posibles factores primos de $n$.
+
+Una vez tenemos la lista de candidatos sólo tenemos que probar.
 \end{problem}
 
 %\begin{problem} Al cifrar los mensajes mediante el criptosistema RSA el primer número $n$ de la  clave $(n,e)$ de un usario    se coge igual al producto de 2 primos distintos.
@@ -3757,4 +3983,5 @@ b) Sea $a$ un entero tal que $(a,n)=1$ encontrar una potencia positiva $r$,
 con $r<500$ y tal que $a^r\equiv a^{-1}\mod n$.
 
 \solution
+
 \end{problem}

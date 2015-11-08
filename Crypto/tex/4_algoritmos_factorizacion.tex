@@ -346,7 +346,7 @@ podemos decidr con certeza si un número $n<2^{64}\approx 1.89\cdot 10^{19}$ es 
 \end{theorem}
 
 \section{Algoritmos de Factorización}
-El mejor algoritmo decimal (que no usa propiedades del número) para factorizar números $n>2^{100}$ es la \concept{criva en cuerpos} de números (\textbf{General Number Field Sieve}), que emplea un tiempo $O\left(e^{64/9 (\log n)^{1/3}(\log\log n)^{2/3}} \right)$.
+El mejor algoritmo decimal (que no usa propiedades del número) para factorizar números $n>2^{100}$ es la \concept{criba en cuerpos} de números (\textbf{General Number Field Sieve}), que emplea un tiempo $O\left(e^{64/9 (\log n)^{1/3}(\log\log n)^{2/3}} \right)$.
 
 En general, a la hora de factorizar un número los pasos a seguir son:
 \begin{enumerate}
@@ -447,7 +447,7 @@ Con los datos que tenemos podemos empezar a probar con lo que obtenemos:
 \[34359738367 = 71 \times 483939977\]
 \end{example}
 
-\subsection{Idea detrás de los métodos modernos de criva}
+\subsection{Idea detrás de los métodos modernos de criba}
 
 Recordemos que la idea de Fermat era considerar que siendo $n$ un número impar (si no es impar sabemos que dos es factor y volvemos a esta situación) podemos escribir:
 \[n = x^2-y^2 = (x-y)(x+y)\]
@@ -455,13 +455,13 @@ Recordemos que la idea de Fermat era considerar que siendo $n$ un número impar 
 Una vez sabemos esto podemos factorizar $n$ empleando un algoritmo iterativo sobre la función:
 \[Q(x) = x^2 - n\]
 
-Para aplicar el algoritmo empezamos probando con $x_0 = \lceil\sqrt{n}\rceil$, es decir, el techo de $\sqrt{n}$. En cada iteración comprobamos si $Q(x_i)$ es un cuadrado perfecto y, en caso de no serlo, pasamos a $x_{i+1}=x_i+1$.
+Para aplicar el algoritmo empezamos probando con $x_0 = \lceil\sqrt{n}\rceil$, es decir, el techo de $\sqrt{n}$. En cada iteración comprobamos si $Q(x_i)$ es un cuadrado perfecto y, en caso de no serlo, pasamos a $x_{i+1}=x_0+i$.
 
-Este algoritmo siempre nos permite factorizar el número $n$ cualquiera. No obstante, es posible que el tiempo necesario para hacerlo sea demasiado grande.
+Este algoritmo siempre nos permite factorizar un número $n$ cualquiera. No obstante, es posible que el tiempo necesario para hacerlo sea demasiado grande.
 
-\subsubsection{Idea de Kraichik~1922}
+\subsubsection{Idea de Kraitchik~1922}
 La idea es que no necesitamos que $x^2-y^2 =n$ sino que basta con tener:
-\[x^2 = y^2 \mod n \equiv yx = \pm y \mod n\]
+\[x^2 = y^2 \mod n \text{ y } x \neq \pm y \mod n\]
 puesto que
 \[x^2 = y^2 \mod n \iff n|(x^2-y^2) \equiv n|(x-y)(x+y)\]
 
@@ -484,9 +484,9 @@ Esta situación tampoco tiene sentido ya que, igual que en el caso anterior, ten
 Así, lo que hacemos es calcular el máximo común divisor de $x-y$ y de $n$ para lo que tenemos diferentes opciones:
 \[m.c.d.(x-y,n) = \left\{ \begin{array}{ll}
              n &   \text{Estamos en el caso 1} \\
-             1 &   \text{Estamos en el caso 2}\\
+             1 &   \text{Estamos en el caso 2}\footnotemark\\
              p,q & \text{Estamos en el caso 3 y por tanto hemos factorizado}
-             \end{array}\right.\]
+             \end{array}\right.\]\footnotetext{Si $(x-y,n)=1$, como $n|(x-y)(x+y) \implies n|(x+y)$ }
 
 
 Vamos a ver ahora un algoritmo de factorización que se apoya en esta idea:
@@ -498,12 +498,12 @@ Vamos a ver ahora un algoritmo de factorización que se apoya en esta idea:
 \item Calculamos $x_0=\lceil\sqrt{n}\rceil$ y comenzamos a iterar con la función $Q(x)=x^2-n$.
 
 \item Calculamos $Q(x_0)$ y factorizamos en base $\algb{P}$, es decir, escribimos:
-\[x_1 = Q(x_0) = \prod_i p_i^{a_{i0}}\]
+\[Q(x_0) = \prod_i p_i^{a_{i0}}\]
 
 \item Calculamos $Q(x_1)$ y factorizamos en base $\algb{P}$, es decir, escribimos:
 \[Q(x_1) = \prod_i p_i^{a_{i1}}\]
 
-\item Seguimos factorizando los $Q(x_j=x_0+j)$ (aunque podemos toparnos con alguno que no factorice en $\algb{P}$)
+\item Seguimos factorizando los $Q(x_j=x_0+j)$ en $\algb{P}$. En caso de que no factorice en $\algb{P}$, descartamos ese $Q(x_i)$.
 \end{enumerate}
 
 Al final tendremos todas las factorizaciones posibles en $\algb{P}$ para algunos $x_0,...,x_r$.
@@ -525,14 +525,16 @@ Pero, para que esto sea posible, necesitamos que el exponente de cada $p_i$ sea 
 Pues:
 \[\prod_j\prod_ip_i^{a_{ij}} = \prod_i p_i^{\sum_ja_{ij}}\]
 
-En lugar de mirar al producto de los $Q(x_i)$ que se factorizan podemos mirar el producto de todos los $Q(x_i)$ que hemos calculado, elevándolos a 1 o 0 según corresponda.
+En lugar de mirar el producto de todos los $Q(x_i)$ que se factorizan en $\algb{P}$, podemos mirar el producto de solo algunos de los $Q(x_i)$ que hemos calculado, los necesarios para que su producto sea un cuadrado perfecto. Lo generalizamos elevándolos a una función $\delta_j$ que valga 1 ó 0 según corresponda.
 \[\prod_{j=1}^r Q(x_j)^{δ_j} (\text{con } δ_j = 1,0)  = \prod_ip_i^{\sum_jδ_ja_{ij}} \mod n\]
 
 Finalmente, tenemos que resolver el siguiente sistema de $n$ incógnitas:
 \[\left\{ \begin{array}{l}
-\sum_j^ra_{ij}δ_j = 0 \mod 2 \\
+\sum\limits_{j=1}^{r}a_{ij}δ_j = 0 \mod 2 \\
 \text{ para } i=1,...,N
 \end{array}\right.\]
+
+\obs Con $r >> N$, el sistema tendrá seguro solución.
 \end{mdframed}
 
 \begin{example}
@@ -541,18 +543,19 @@ Vamos a factorizar el número $n=2041$ tomando como conjunto de primos:
 
 Procedemos a aplicar el algoritmo con lo que obtenemos:
 \[\begin{array}{l}
-\lceil\sqrt{2047}\rceil = 46=x_0 \\
-x_1 = Q(46)=168=2^3\cdot 3 \cdot 7 \\
-x_2 = Q(47) = 263 \text{ no es factorizable en }\algb{P}\\
-x_3 = Q(48) = 360 = 2^3\cdot 3^2 \cdot 5 \\
-x_4 = Q(49) = 459 \text{ no es factorizable en }\algb{P}\\
-x_5 = Q(50) = 560 = 2^4\cdot 5 \cdot 7
+\lceil\sqrt{2047}\rceil = 46 = x_0 \\
+y_0 = Q(46) = 75 = 3 \cdot 5^2\\
+y_1 = Q(47) = 168 = 2^3 \cdot 3 \cdot 7\\
+y_2 = Q(48) = 263 \text{ no es factorizable en }\algb{P} \\
+y_3 = Q(49) = 360 = 2^3 \cdot 3^2 \cdot 5\\
+y_4 = Q(50) = 459 \text{ no es factorizable en }\algb{P} \\
+y_5 = Q(51) = 560 = 2^4 \cdot 5 \cdot 7
 \end{array}\]
 
 Ahora multiplicamos módulo $n$ los números que factorizan en $\algb{P}$, con lo que obtenemos:
-\[(\underbrace{46\cdot 47 \cdot 49 \cdot 50}_{x})^2 = (\underbrace{2^5\cdot 3^2 \cdot 5^2 \cdot 7}_y)^2\]
+\[(\underbrace{46\cdot 47 \cdot 49 \cdot 51}_{x})^2 = (\underbrace{2^5\cdot 3^2 \cdot 5^2 \cdot 7}_y)^2\]
 
-Lo siguiente es mirar $mcd(x-y, n)=mcd(46\cdot 47 \cdot 49 \cdot 50 - 2^5\cdot 3^2 \cdot 5^2 \cdot 7, 2041)$, y en caso de que sea $2041$ o $1$ tendríamos $x=\pm y \mod n$ y no se satisfaría el criterio de Kraichick (no nos valen $x$ e $y$ para decir que $n=2041=x^2-y^2$).
+Lo siguiente es mirar $mcd(x-y, n)=mcd(46\cdot 47 \cdot 49 \cdot 51 - 2^5\cdot 3^2 \cdot 5^2 \cdot 7, 2041)$, y en caso de que sea $2041$ o $1$ tendríamos $x=\pm y \mod n$ y no se satisfaría el criterio de Kraitchik (no nos valen $x$ e $y$ para decir que $n=2041=x^2-y^2$).
 \end{example}
 
 
