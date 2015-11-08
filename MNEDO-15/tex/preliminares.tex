@@ -1,0 +1,403 @@
+\chapter{Preliminares}
+
+\section{Problemas de valor inicial. (PVI)}
+
+A lo largo de este curso estudiaremos problemas de valor inicial, que no son más que ecuaciones diferenciales ordinarias (EDOs) junto con un dato inicial, necesario para resolver adecuadamente la ecuación. Se trata de sistemas de la forma:
+\[\begin{cases}
+		y'(x)=f(x,y(x)) & x∈[a,b]\\
+		y(a)=y_a
+\end{cases}\]
+done $y(x)$ es una función del tipo
+\[\appl{y}{ℝ}{ℝ^d}\]
+\[y(x)=(y_1(x), …, y_d(x))\]
+
+Por tanto $f$ quedará definida como:
+\[\appl{f}{ℝ×ℝ}{ℝ^d} \]
+\[f(x,y) = (x,y(x))\]
+
+Como notación muchas veces consideraremos $y(x)=y$, del mismo modo que $y(a)=y_a$ con $a$ un valor dado.
+
+\begin{remark}
+	En el curso trabajaremos con funciones $f∈C\left( [a,b] × ℝ^d \right)$
+\end{remark}
+
+
+\begin{defn}[Función Lipschitz]
+	Una función $f$ será Lipschitz en la segunda variable si existe una constante $L$ tal que:
+	\[∀x ∈ [a,b], ∀y_1,y_2 ∈ℝ^d \ \md{f(x,y_1) - f(x,y_2)} ≤ L\md{y_1-y_2}\]
+\end{defn}
+
+Vamos a ver en qué situaciones este tipo de problemas tienen solución única:
+
+\begin{theorem}[Teorema de Picard]
+	\label{TeoremaPicard}
+	Sea $Ω=[a,b]×ℝ^d$, si $f$ es continua en $Ω$ y Lipschitz en la segunda variable; entonces \textbf{el PVI tiene una única solución} $y∈C'\big([a,b] × ℝ^d\big)$
+\end{theorem}
+
+\begin{proof}
+	\textbf{Vamos a demostrar primero la existencia de la solución}:
+	Para ello haremos uso de las iteradas de Picard, definidas mediante:
+
+	\[y(x)=y_a+\int_a^x f(s,y(s))ds\]
+
+	Si definimos la aplicación $T_y = y_a + \int_a^x f(s,y(s))ds$, encontrar la solución $y$ es equivalente a encontrar un punto fijo de dicha aplicación. Vamos a ello.
+
+	\begin{enumerate}
+		\item \textbf{Construimos la serie de funciones $\{ y_n(x) \}_{n=0}^∞$}:
+		\[y_{n+1}(x) = y_a + \int_a^x f(s,y_n(s)) ds\]
+		\[n=0,1,… \text{\ y \ } y_0(x)=y_a\]
+		Cada función $y_n$ es continua (es una constante más una función continua).
+
+		\item \textbf{Debemos probar que $∃y ∈ C([a,b])$ tal que}:
+		\[y_n \longrightarrow y \text{\ uniformemente}\]
+		Que es equivalente a decir que $\lim_{n \to ∞} \md{y_n - y}_{L^∞[a,b]} = 0$. Donde $\md{f}_{L^∞[a,b]} = \max_{x ∈ [a,b]}\md{f(x)}$, denota la norma infinito de $f$.
+	\end{enumerate}
+
+	Antes de continuar vamos a recordar el Test M de Weierstrass:
+
+	\begin{theorem}[Test M de Weierstrass]
+		\label{TestMWeierstrass}
+		Sea $\{f_n\}_{n=0}^∞$ una sucesión de funciones definidas en un dominio $Ω$ con valores en $ℝ$, si existe una sucesión de números $M_n$ tal que:
+		\begin{enumerate}
+			\item $\abs{f_n} < M_n \text{,\ } ∀x∈Ω$
+			\item $\sum_{n=0}^∞ M_n < ∞$
+		\end{enumerate}
+
+		Entonces existe una función $g$ tal que la sucesión:
+		\[g_n(x) = \sum_{n=1}^N f_n\]
+
+		converge uniformemente a $g$ en $x$
+	\end{theorem}
+
+	¿Cómo vamos a usar esto para conseguir ver que $y_n \rightarrow y$?.
+
+	Primero vamos a reescribir $y_n$ como una suma telescópica, sabiendo que tomamos $y_a=y_0$:
+
+	\[y_{n+1} = y_a + \sum_{k=0}^n y_{k+1} - y_k\]
+	Para el caso $n=1$: $y_2 = y_a + (y_1 - y_0) + (y_2 - y_1) = y_2$.
+
+	Ahora vamos a aplicar el test M de Weierstrass:
+
+	Las $f_k$ que aparecen en el enunciado de \ref{TestMWeierstrass} serán $(y_{k+1} - y_k)$, si demuestro que $∃{M_k}$ tales que:
+
+	\[\abs{y_{k+1}-y_k} < M_k \text{,\ } ∀x∈[a,b]\]
+	\[\text{y que\ } \sum_k M_k < ∞ \text{, entonces } ∃y \text{ tal que:}\]
+	\[y_n \rightarrow y \text{ uniformemente}\]
+
+	Vamos a encontrar dichos $M_k$:
+
+	\begin{lemma}
+		\[\abs{y_{k+1} - y_k} ≤ \frac{C(y_a)}{L}\frac{(L(x-a))^{k+1}}{(k+1)!}\]
+	\end{lemma}
+	\begin{proof}
+		Vamos a proceder a demostrar el lema usando inducción, así que vamos a ver que es cierto para $k=0$:
+
+		\[\abs{y_1-y_0}=\abs{\int_a^x f(s,y_a) ds} ≤ \int_a^x \abs{f(s,y_a)} ds ≤\]
+		\[≤ \md{f(x,y_n)}_{L^∞[a,b]} (x-a) = C(y_n) (x-a)\]
+
+		Ahora supondremos que el lema es cierto para $k-1$ para poder demostrarlo para $k$:
+
+		\[\abs{y_{k+1}-y_k} = \abs{\int_a^x f(s,y_k(s)) - \int_a^x f(s,y_{k-1}(s))} ds ≤\]
+		\[≤ \int_a^x \abs{f(s,y_k(s)) - f(s,y_{k-1}(s))} ds \underbrace{≤}_{\mathclap{f \text{ Lipschitz en 2ª variable}}} L \int_a^x \abs{y_k(s) - y_{k-1}(s)} ds ≤\]
+		\[\underbrace{≤}_{\text{hip. inducción}} L \int_a^x \frac{C(y_a)}{L} \frac{(L(s-a))^k}{k!} ds ≤ C(y_a)\frac{L^k}{k!}\int_a^x (s-a)^k ds ≤\]
+		\[≤ C(y_a) \frac{L^k}{(k+1) k!}(x-a)^{k+1}\]
+	\end{proof}
+
+	Volviendo a la demostración de \ref{TeoremaPicard} recordemos que queríamos encontrar los $M_k$ necesarios para ver la convergencia de nuestras $y_k$. Gracias al lema que acabamos de demostrar y al test M de Weierstrass \ref{TestMWeierstrass} podemos afirmar:
+
+	\[\abs{y_{k+1}-y_k} ≤ \frac{C(y_a)}{L} ≤ \frac{C(y_a)}{L}\frac{(L(x-a))^{k+1}}{(k+1)!} = M_k\]
+
+	El siguiente paso es verificar la segunda hipótesis de \ref{TestMWeierstrass}, es decir, que la suma infinta de las $M_k$ está acotada:
+
+	\[M_k = \frac{C(y_a)}{L}\frac{[L(x-a)]^{k+1}}{(k+1)!} \underbrace{=}_{s=L(x-a)} \frac{C(y_a)}{L}\frac{s^{k+1}}{(k+1)!}\]
+
+	Sabiendo que $e^x = \sum_{k=0}^∞ \frac{x^k}{k!}$:
+
+	\[\sum_{k=0}^∞ M_k = \frac{-C(y_a)}{L} (1 - \frac{C(y_a)}{L} \sum_{k=0}^∞ \frac{s^k}{k!}) = \frac{C(y_a)}{L} (e^s - 1) < ∞\]
+
+	Luego aplicando el test M de Weierstrass \ref{TestMWeierstrass}:
+	\[∃y \text{ tal que: } y_n\rightarrow y \text{ uniformemente en} [a,b]\]
+
+	\begin{enumerate}
+		\setcounter{enumi}{3}
+		\item Por tanto hemos probado que $∃y$ tal que $y_n \rightarrow y$ uniformemente, y por lo tanto $y∈C([a,c])$ (sabemos que la convergencia uniforme de una sucesión de funciones continuas hace que la \textbf{función a la que se converge sea continua}).
+
+		\item
+			\[y_{n+1} = y_a + \int_a^x f(s,y_n(s))ds \underbrace{\longrightarrow}_{n \rightarrow ∞} y = y_a + \int_a^x f(s,y(s))ds\]
+			Como $f∈C([a,b])$ y $y_n$ son continuas, está claro que $y$ es continua. De modo que \textbf{hemos demostrado que existe solución} $y∈C([a,b])$.
+	\end{enumerate}
+
+	Por últimos debemos \textbf{demostrar la unicidad} de la solución. Lo haremos por reducción al absurdo.
+
+	Supongamos que existen dos soluciones distintas $y,\tilde{y} ∈ C([a,b])$:
+	\[y(x) = y_a + \int_a^x f(s,y(s))ds\]
+	\[\tilde{y}(x) = y_a + \int_a^x f(s,\tilde{y}(s))ds\]
+	\[\abs{y(x) - \tilde{y}(x)} = \int_a^x \abs{f(s,y(s)) - f(s,\tilde{y}(s))} ds ≤\]
+	\[≤ L \int_a^x \abs{y(s) - \tilde{y}(s)} ds \]
+
+	Definimos $g(x)=\int_a^x \abs{y(s) - \tilde{y}(s)} ds$:
+
+	\begin{equation}
+		\label{eqDemPicard}
+		g'(x) = |y(x) - \tilde{y}(x)| \leq Lg(x); \ g'(x)e^{-L(x-a)} \leq Lg(x)e^{-L(x-a)}
+	\end{equation}
+
+	Seguimos:
+	\[\left( g(x)e^{-L(x-a)} \right)^{'} = g'(x) e^{-L(x-a)} - Lg(x) e^{-L(x-a)}\]
+	\[g'(x) e^{-L(x-a)} = \left( g(x)e^{-L(x-a)} \right)^{'} + Lg(x) e^{-L(x-a)}\]
+
+	Usando \ref{eqDemPicard}:
+	\[\left( g(x)e^{-L(x-a)} \right)^{'} + Lg(x) e^{-L(x-a)} ≤ Lg(x) e^{-L(x-a)}\]
+	\[\left( g(x)e^{-L(x-a)} \right)^{'} ≤ 0\]
+
+	Si integramos a ambos lados entre $a$ y $X$:
+	\[g(X) e^{-L(x-a)} ≤ g(a) = 0 \text{ por como hemos definido } g\]
+
+	Por tanto:
+	\[g(X) = \int_a^X \abs{\tilde{y}(x) - y(x)} dx = 0 \implies \tilde{y}=y\]
+
+	Y hemos demostrado la unicidad de la solución.
+\end{proof}
+
+Lo siguiente que cabe preguntarse es cómo varía la solución de un problema de valor inicial (PVI) cuando variamos el dato inicial. Y la respuesta es que al variarlo muy poco, la solución también se altera muy poco.
+
+\begin{theorem}[Continuidad con respecto al dato inicial]
+	Sea $y' = f(x,y(x))$ un problema de valor inicial (PVI) con dos datos iniciales distintos $y_a, \tilde{y}_a$, con $f$ Lipschitz en la segunda variable y continua en $Ω=[a,b]×ℝ^d$:
+	\[\md{y(x)-\tilde{y}(x)}_{L^∞[a,b]} ≤ \abs{y_a - \tilde{y}_a} e^{L(b-a)}\]
+\end{theorem}
+\begin{proof}
+	Tomando como soluciones las que se obtienen con la iterada de Picard:
+	\label{ineq:argumento_cont_dato_inicial}
+	\[y(x)-\tilde{y}(x)=y_a-\tilde{y}_a + \int_a^x (f(s,y(s)) - f(s,\tilde{y}(s)))ds\]
+	\[\abs{y - \tilde{y}} ≤ \abs{y_a - \tilde{y}_a} + \int_a^x \abs{f(s,y(s)) - f(s,\tilde{y}(s))} ds ≤\]
+	\[≤ \underbrace{ \abs{y_a - \tilde{y}_a} + L\int_a^x \abs{y(s)-\tilde{y}(s)} ds}_{g(x)} \]
+
+	Por tanto $g'(x) = L\abs{y(x) - \tilde{y}(x)}$. Si sobre esta última igualdad realizamos el procedimiento del factor integrante que hemos llevado a cabo al demostrar la unicidad en el teorema de Picard \ref{TeoremaPicard} llegamos a:
+
+	\[g(x)e^{-L(x-a)} ≤ \abs{\tilde{y}_a - y_a} \implies g(x) ≤ \abs{\tilde{y}_a - y_a}e^{L(x-a)}\]
+
+	Por último:
+	\[\abs{y_(x) - \tilde{y}(x)} ≤ g(x)\]
+	\[y(x) - \tilde{y}(x) ≤ \abs{\tilde{y}_a - y_a}e^{L(x-a)}\]
+	\[\md{y - \tilde{y}}_{L^∞[a,b]} ≤ \abs{y_a - \tilde{y}_a} e^{L(b-a)}\]
+\end{proof}
+
+Vamos ahora a ver ejemplos donde aplicar el teorema de Picard \ref{TeoremaPicard}:
+
+\begin{example}
+	Para el problema de valor inicial (PVI) $y'(x)=\sqrt{x}$, $y(0)=0$; tenemos $f(x,y(x))=\sqrt(y)$. Esta $f$ no es Lipschitz y por tanto no cumple las hipótesis del teorema de Picard \ref{TeoremaPicard}, de hecho existen dos soluciones distintas:
+	\[y_1(x) = 0\]
+	\[y_2(x) = x^2\]
+\end{example}
+
+
+\section{Algunos ejemplos de métodos numéricos para PVI.}
+Recordemos que el objetivo de este curso es encontrar soluciones a problemas de valor inicial (PVI) del tipo:
+
+\[y'(x) = f(x,y(x)) \text{, } x∈[a,b]\]
+\[y(a)=y_a\]
+
+Lo que queremos ver es cómo se comporta y(x) sin saber encontrar su solución. Para ello, como ya hemos visto, podemos usar las iteradas de Picard:
+
+\[y_{n-1}(x) = y_a + \int_a^x f(s,y_n(s)) ds\]
+\[y_0(x) = y_a\]
+
+\begin{remark}
+Durante este curso, al emplear los diferentes métodos numéricos usaremos versiones discretizadas de las funciones, es decir, el conjunto de valores que tomará una función $y(x)$ será sobre una serie de valores ${x_n}_{n=0}^N$ dentro del intervalo $[a,b]$, donde $x_0=a$ y $x_N=b$.
+\end{remark}
+En este curso las sucesivas muestras serán equidistantes, siendo $x_{n+1}-x_n=h=\frac{b-a}{N}$.
+
+A continuación mencionaremos algunos métodos numéricos que estudiaremos más adelante:
+\begin{itemize}
+	\item \textbf{Método de Euler}
+	\[y'(x) = f(x,y(x))\]
+	\[y'(x_n) = f(x_n,y(x_n))\]
+	Pero dado que $x$ toma valores discretos:
+	\[\frac{y(x_{n+1}) - y(x_n)}{h} = \frac{y_{n+1} - y_n}{h} = y'(x_n) = f(x_n,y(x))\]
+	Así la fórmula de recurrencia del método de Euler queda como:
+	\[y_{n+1} = y_n + h·f(x,y_n)\]
+	\[y_0=y_a\]
+
+	\item \textbf{Desarrollo en serie de Taylor}
+	\[y(x_{n+1}) = y(x_n+h) = y(x_n) + h·y'(x_n) + R_n =\]
+	\[= y(x_n) + h·f(x_n,y(x_n)) + R_n\]
+
+	\item \textbf{Método leap-frog}
+	\[y(x_{n+2}) - y(x_n) = \int_{x_n}^{x_{n+2}} y'(x) = \int_{x_n}^{x_{n+2}} f(x,y(x))\dif x \approx (x_{n+2}-x_n)f(x_{n+1},y(x_{n+1}))\]
+	donde la aproximación se ha realizado empleando la regla del punto medio.
+
+	Finalmente nos queda:
+	\[y(x_{n+2}) - y(x_n) = 2h f(x_{n+1},y(x_{n+1}))\]
+\end{itemize}
+
+Antes de continuar, veamos un par de conceptos que serán necesarios a lo largo de este curso.
+
+\begin{defn}[Método numérico de $k$ pasos]
+Se dice que un método numérico es de $k$ pasos si para conocer $y_{n+k}$ necesitamos conocer los $k$ valores: $y_{n}, y_{n+1},... y_{n+k-1}$
+\end{defn}
+
+\begin{defn}[Método numérico convergente]
+Se dice que un método numérico es convergente si para todo problema de valor inicial se tiene que:
+\[\lim_{N \to \infty} \max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n}= 0\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=0\]
+
+$k$ será el número de pasos del método numérico, es decir, para el método de Euler tendremos $k=1$, mientras que para el método leap-frog tendremos $k=2$.
+
+Evidentemente no nos referimos a cualquier problema imaginable sino a todos aquellos problemas de valor inicial en los que la función $f$ sea continua y Lipschitz en la segunda variable, pues esos son los únicos problemas con los que hemos trabajado hasta ahora.
+\end{defn}
+
+\section{Estudio del método de Euler}
+
+Dado un problema de valor inicial del tipo:
+\[y'(x) = f(x,y(x))\]
+\[y'(x_n) = f(x_n,y(x_n))\]
+el método de Euler nos permite aproximarnos a la solución a través de la siguiente relación de recurrencia:
+\[y_{n+1} = y_n + h·f(x,y_n)\]
+\[y_0=y_a\]
+
+\begin{theorem}[El método de Euler es convergente]\label{theorem:EulerEsConvergente}
+
+Sea $y(x)$ la solución de un problema de valor inicial y sean $\{y_n\}$ los valores que vamos aproximando en cada iteración del método de Euler, se cumple que $\{y_n\}$ converge a $y(x)$
+\end{theorem}
+\begin{proof}
+Al trabajar con este método tenemos la relación de recurrencia:
+\[y_{n+1} = y_n + h f(x_n, y_n)\]
+
+Para empezar vamos a definir el residuo que no es más que la diferencia entre el valor aproximado $y_n$ obtenido al aplicar el método en cuestión y el valor real $y(x_n)$. Así, podemos escribir:
+\[y(x_{n+1})=y(x_n)+hf(x_n,y(x_n))+R_n \text{ siendo } R_n \text{ el residuo }\]
+
+Despejando podemos ver que
+\[R_n = \underbrace{y(x_{n+1})-y(x_n)}_{hy'}-h\underbrace{f(x_n,y(x_n))}_{y'} = \frac{h^2}{2}y''(ε)\]
+
+
+Según la definición de convergencia, para demostrar que la sucesión converge basta con ver que:
+\[|y(x_n)-y_n | = 0 \ \implies \lim_{N \to \infty} \max_n |y(x_n)-y_n| = 0\]
+
+
+\begin{itemize}
+\item Basándonos en la condición de Lipschitz:
+\[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n|+K \text{ siendo } e_{n+1} \leq (1+Lh)e_n + K \text{ con } K = \max_n |R_n|\]
+
+\begin{proof}
+\[e_n = |y(x_n)-y_n| \implies e_{n+1} \leq (1+Lh)e_n+K \implies e_n \leq (1+Lh)^n e_0 + K \frac{1-(1+hL)^n}{1-(1+kL)}\]
+que simplificando nos queda:
+\[e_n \leq (1+Lh)^n e_0 + \frac{K}{h}\frac{(1+hL)^n-1}{L}\]
+
+Esta fórmula puede ser deducida de forma sencilla estudiando como se comporta el error en cada iteración, con lo que veremos que no es más que una sucesión geométrica. Otra opción posible es hacer la demostración de la misma por inducción.
+
+Ambos procedimientos son muy sencillos y se dejan como ejercicio para el lector.
+\end{proof}
+
+Gracias a esto tenemos demostrada la \textbf{estabilidad} pues
+\[|y(x_n)-y_n| \leq (1+hL)^n |y(x_0)-y_0| + \frac{(1+hL)^{n+1}-1}{L}\cdot \max_n \frac{|R_n|}{h}\]
+%
+%Por otro lado tenemos que:
+%\[\lim_{h \to 0} \frac{|R_n|}{h} = 0\]
+%con lo que vemos que el residuo lo tenemos controlado
+
+
+%\item Ahora vamos a demostrar que
+%\[|y(x_n) - y_n| \leq (1+Lh)^N |y(x_n)-y_0|+K\frac{(1+Lh)^N-1}{Lh}\]
+%donde $N$ es el número total de $y_n$ que estamos tomando al aplicar el método.
+%
+%Para ello basta con ver que
+%\[\max_n |y(x_n)-y_n| \leq (1+Lh)^N|y(x_n)-y_0| + K\frac{(1+Lh)^N-1}{Lh}\]
+%
+%Por otro lado tenemos que
+%\[h = \frac{b-a}{N}\]
+%con lo que podemos escribir la parte derecha de la desigualdad que queremos probar %como:%
+%\[ \l%eft( 1+\frac{L(b-a)}{N}\right)^N|y(x_n)-y_0| + K \frac{\left(1+\frac{L(b-a)}{N%} %\righ%t)^N-1}{Lh}\]%
+%
+%Además sabemos que
+%\[\lim_{N \to \infty} \max_n |y(x_n)-y_0| \leq e^{L(b-a)} |y(x_n)-y_0| + \frac{e^{L(b-a)}-1}{L}\lim_{h \to 0} \frac{K}{h}\]
+
+\item \textbf{Control del residuo}
+
+El residuo puede escribirse como:
+\[R_n = y(x_{n+1})-y(x_n)-hy'(x_n) = \frac{h^2}{2}y''(ε)\]
+
+Si logramos probar que
+\[\max_n \frac{|R_n|}{h} \leq C h\]
+tendríamos garantizado que el residuo es 0.
+
+Sin embargo esto no es tan sencillo, puesto que para poder acotar el máximo como queremos nos apoyamos en que la derivada segunda, $y''$, está acotada módulo infinito por una constance $C$. Pero nosotros no sabemos nada acerca de nuestra solución y, por tanto, no podemos realizar este tipo de asunciones.
+
+Pero esto puede arreglarse fácilmente. Sabemos que
+\[\frac{R_n}{h} = \frac{y(x_{n+1})-y(x_n)}{h} = y'(x_n) = y'(ε)-y'(x_n) \text{ siendo } x_n \leq ε \leq x_{n+1}\]
+A partir de aquí vemos fácilmente que
+\[\lim_{h\to 0} \frac{|R_n|}{h} = 0\]
+
+Cuando $h \rightarrow 0$ estrechamos las distancias entre los $x_n$ (es decir $x_{n+1} \rightarrow x_n$). De esta forma se acaba consiguiendo que $ε$ (que inicialmente se encontraba en el intervalo $[x_n,x_{n+1}]$) pase a ser $x_n$, y así $y'(ε)-y'(x_n) = y'(x_n)-y'(x_n) = 0$.
+
+\end{itemize}
+\end{proof}
+
+\obs En la prueba hemos evitado apoyarnos en información acerca de la derivada segunda de la solución $y$, pero en realidad sí que podríamos haberlo hecho:
+
+\[
+	\text{PVI} :
+		\begin{cases}
+			y'(x) = f(x,y(x)) \\
+			f ∈ C^1([a,b]×ℝ^d)
+		\end{cases}
+\]
+
+Si aplicamos el teorema de Picard \ref{TeoremaPicard} obtenemos que la solución única $y$ es $C^1$, por tanto $f$ compuesta con $y$ (nuestra $f(x,y(x))$) será también $C^1$; y por tanto $y' ∈ C^1$. Pero si tenemos que $y'$ es $C^1$, $y$ será $C^2$.
+
+De modo que podemos obtener acotaciones para $y''$:
+\[y''(x)=f_x(x,y(x)) + f_y(x,y(x))·y'(x) = f_x(x,y(x)) + f_y(x,y(x))·f(x,y(x))\]
+\[\implies \md{y''}_{L^∞[a,b]} ≤ C_f\]
+
+Con $C_f$ una constante que depende de la norma $C^1 \left( [a,b]×ℝ^d \right)$ de $f$.
+
+\subsection{Orden del método de Euler}
+\begin{defn}[Método numérico de orden p]
+	Se dice que un método numérico es convergente de orden $p$ si $p$ es el mayor de los enteros tales que $f \in C^p$ y
+	\[\max_{0 \leq n \leq k-1}\norm{y(x_n)-y_n)}= O(h^p)\implies \max_{k \leq n \leq N} \norm{y(x_n)-y_n}=O(h^p)\]
+\end{defn}
+
+Recordemos las definiciones de `O' y `o'
+
+\begin{defn}[O grande]
+Decimos que $f= O(g)$ en $x \to x_0$ si
+\[\exists k,r > 0 \tq ∀x,\ 0 < |x-x_0|< r \text{ se tiene } |f(x)| \leq k |g(x)|\]
+\end{defn}
+\newpage
+\begin{defn}[O pequeña]
+Decimos que $f=o(g)$ en $x \to x_0$ si
+
+\[\exists r > 0 \tq ∀x,\ 0 < |x-x_0|<r \text{ tal que, donde } g \text{ no se anule, tenemos} \lim_{x\to x_0} \frac{f(x)}{g(x)}=0\]
+
+\end{defn}
+
+%\obs En la práctica $\max_{k≤n≤N} \md{y(x_n) - y(x_n)} = O(h^p)$ lo tomaremos como:
+%\[ \max_{k≤n≤N} \md{y(x_n) - y(x_n)} ≤ C·h^p \]
+
+\obs En la práctica $\max_{k≤n≤N} \md{y(x_n) - y(x_n)} = o(h^p)$ lo tomaremos como:
+\[ \max_{k≤n≤N} \md{y(x_n) - y(x_n)} ≤ c·h^s,\ s>p,\ s∈ℝ \]
+
+Una vez vistas estas definiciones, supongamos que tenemos $f \in C [\real \times \real^d]$. En este caso ya hemos visto que el orden de convergencia del método de Euler es al menos 1.
+
+Para poder confirmar que el método es de orden 1, sólo nos queda comprobar que el orden no puede ser 2. Para comprobarlo nos basta con ver un ejemplo en el que no se cumpla:
+\begin{example}
+Tomamos el caso $y'(x)=x, \ x \in [0,1]$ con valor inicial $y(0)=0$. En este caso sabemos que la solución es $y(x)=\frac{1}{2}x^2$
+
+Vamos a ver que ocurre si aplicamos el método de Euler. En este caso, tendríamos la relación de recurrencia:
+\[y_{n+1} = y_n + h x_n\]
+con lo que obtendríamos la sucesión de funciones:
+\[y_1 = 0 \; ; \; y_2 = 0 + hx_1 =h^2 \; ; \; y_3 = h^2+2h^2=h^2(1+2+3) \; ; \; ...\]
+
+De donde podemos deducir la fórmula general para $y_n$:
+
+\[y_n = h^2\sum_{i=1}^{n-1} i = h^2\frac{n(n-1)}{2} \underbrace{=}_{x_n=n·h} =\frac{x_n^2-x_n·h}{2}\]
+
+
+Así podemos ver que:
+\[|y(x_n)-y_n| = \left|\frac{x_n^2}{2}-\frac{x_n^2}{2}+\frac{x_nh}{2} \right| = \frac{x_nh}{2} \implies \frac{1}{h}|y(x_n)-y_n|  = \frac{x_n}{2}\]
+
+Por tanto el método de Euler no es convergente de orden 2, pues:
+\[\max_n \md{y(x_n)-x_n} = \frac{1}{2}·h \overbrace{\implies}^{\text{por def.}}\text{es convergente de orden 1}\]
+\end{example}
+
+De aquí en adelante tomaremos $d=1$, es decir:
+\[\appl{y}{ℝ}{ℝ}\]
+\[\appl{f}{ℝ×ℝ}{ℝ}\]

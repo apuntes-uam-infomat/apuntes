@@ -1,0 +1,313 @@
+
+\chapter{Algunos Métodos Numéricos para EDOs}
+
+
+\section{Métodos de Taylor}
+Como siempre, tenemos que $y'(x)=f(x,y(x))$ y debemos buscar una relación entre $y(x_{n+1})$ y los $y(x_m)$ con $m < n+1$.
+
+La idea del método de Taylor es emplear la relación:
+\[y(x_{n+1})=y(x_n)+hf(x_n,y(x_n))+\frac{h^2}{2}y''(x_n)+R_n\]
+
+Pero tenemos el problema de que no conocemos la derivada segudna de $y$ puesto que no conocemos $y$ (es precisamente eso lo que queremos ser capaces de estimar). Pero lo que podemos hacer es definir $y''$ apoyándonos en la regla de la cadena, con lo que obtenemos:
+\[y''(x)=(\partial x f)(x,y(x))+(\partial y f)(x,y(x))y'(x)=f_x(x,y(x))+f_y(x,y(x))f(x,y(x)\]
+
+con lo que el método de Taylor nos queda, finalmente:
+\[y_{n+1} = y_n + hf(x_n,y_n)+\frac{h^2}{2}\left(f_x(x_n,y_n)+f(x_n, y_n)f_y(x_n,y_n)\right)\]
+
+\begin{remark}
+En la práctica estos métodos no se utiliza nunca puesto que no son demasido eficaces.
+\end{remark}
+
+Al hablar de estos métodos en plural hacemos referencia a las diferentes estimaciones posibles, pues podemos usar un desarrollo de Taylor de grado superior, lo que añade complejidad a la fórmula pero aproxima mejor el resultado, pues hace el residuo cada vez más pequeño.
+
+
+\section{Método del trapecio}
+En esta ocasión escribimos:
+\[y(x_{n+1})=y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n)+ h\cdot \frac{f(x_n,y(x_n))+f(x_{n+1},y(x_{n+1}))}{2}  \]
+
+Este método presenta una difernecia radical respecto a los demás, pues el objetivo del método es calcular $y_{x+1}$ en lugar de $y_n$.
+
+Una forma de ver este método es definiendo el operador $T$ de la siguiente forma:
+\[T(y) = y_n + \frac{h}{2} \left(f(x_n,y_n)+f(x_{n+1}, y) \right)\]
+con lo que el problema a resolver se reduce a encontrar un punto fijo de este operador, es decir, una función $y$ tal que
+\[T(y)=y\]
+
+Podemos ver bajo qué condiciones la función es Lipchitz y, y por tanto tiene solución. Para ello vemos que
+\[|T(y) - T(\tilde{y})| \leq \frac{h}{2} \left( |f(x_{n+1}, y) - f(x_{n+1},\tilde{y})|\right) \leq \frac{Lh}{2}\left( |y-\tilde{y}|\right)\]
+
+Por tanto, la recurrencia tendrá solución siempre que $\frac{Lh}{2} \leq 1$
+
+\section{Métodos basados en cuadraturas}
+Ya hemos visto un método de este tipo, \textbf{el método de Euler}, en el que se define:
+\[y(x_{n+1}) -y(x_n) = \int_{x_n}^{x_{n+1}} y'(x)\dif x = \int_{x_n}^{x_{n+1}} f(x_n,y(x_n)) \dif x \approx f(x_n,y(x_n))h \implies \]
+\[\implies y(x_{n+1}) =y(x_n)+f(x_n,y(x_n))h\]
+
+\subsection{Método Predictor Corrector Euler-trapecio}
+En este método partimos de la fórmula del trapecio
+\[y_{n+1} = y_n + \frac{h}{2} \left(f(x_n,y_n)+f(x_{n+1}, y^*_{n+1}) \right)\]
+
+Lo que vamos a hacer ahora es aproximar el $y^*_{n+1}$, empleado a la derecha de la fórmula, por el método de Euler:
+\[y^*_{n+1} = y_n + h f(x_n,y_n)\]
+
+Una vez hemos empleado el método de Euler para hacer una predicción de $y^*_{n+1}$ empleamos el método del trapecio para corregir el valor.
+
+\subsection{Método de Euler modificado}
+Este método emplea la relación:
+\[y(x_{n+1}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n) + h f\left(x+\frac{h}{2},y\left(x+\frac{h}{2}\right)\right)\]
+
+
+El problema que tenemos ahora es que necesitamos aproximar $y(x+\frac{h}{2})$ (ya que $x+\frac{h}{2}$ no pertenece a nuestro mallado $\{x_n\}$), cosa que haremos mediante la ecuación:
+\[y\left(x+\frac{h}{2}\right) = y(x_n)+\frac{h}{2}f(x_n, y(x_n))\]
+
+Este método es realmente importante pues es el padre de una serie de métodos denominados \textbf{Métodos de Runge-Kutta}, que veremos a continuación
+
+\section{Métodos de Runge-Kutta}
+Estos métodos se caracterizan porque vamos a empezar calculando una serie de valores $K_i$ como sigue:
+\[K_i = f\left(x_n+c_ih, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\]
+\[y_{n+1} = y_n+ h \sum_{i=1}^s b_i K_i\]
+
+La idea de este método es que
+\[y(x_{n+1}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n)+h \sum_{j}^{s} b_j f(x_n+hc_j, y(x_n+hc_j))\]
+
+Las diferentes formas de aproximar la función $y(x_n+hc_j)$ nos dan las diferentes $K_i$ empleadas en la definición del método.
+
+De entre los diferentes métodos Runge-Kutta el más empleado, por ser uno de los más eficientes es el método Runge-Kutta de cuarto orden.
+
+\subsection{Método Runge-Kutta de cuarto orden}
+\[y_{n+1} = y_n +\frac{h}{6}(K_1+2K_2+2K_3+K_4)\]
+siendo:
+\[K_1 = f(x_n,y_n)\]
+\[K_2 = f(x_n+\frac{h}{2}, y_n+\frac{h}{2}K_1)\]
+\[K_3 = f(x_n+\frac{h}{2}, y_n + \frac{h}{2}K_2)\]
+\[K_4 = f(x_n+h, y_n + h K_3)\]
+
+\textbf{Ejercicio punto extra: ¿De dónde salen estos números del Runge Kutta de cuarto orden?}
+\textit{Pista: Considerar la $y$ como una función escalar y apoyarnos en los métodos de Taylor}
+
+\section{Método leap-frog}
+En este caso empelamos la relación:
+\[y(x_{n+2}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x)) \dif x \approx y(x_n) + 2h f(x_{n+1},y_{n+1})\]
+
+La diferencia entre este método y los anteriores es que este método consta de dos pasos, pues debemos aproximas $y_1$ ya que para calcular cada $y_n$ necesitamos conocer $y_{n-1}$ e $y_{n-2}$
+
+\section{Método de Adams-Bashforth}
+
+Se trata de un método basado en cuadratura que emplea la relación
+\[y(x_{n+2}) - y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) \dif x\]
+
+\begin{remark}
+Esta relación es sencilla de entender puesto que, por definición del problema original, $f(x,y(x))=y'$. Así, lo única que estamos haciendo es aplicar el Teorema Fundamental del Cálculo, es decir, estamos resolviendo la integral.
+
+El problema, como siempre, es que no se puede hacer esta integral directamente pues la $f$ depende de $y(x)$ que no es conocida.
+\end{remark}
+
+La $f(x,y(x))$ se aproxima por medio de la recta interpolante entre los puntos $(x_n,y(x_n))$ y $(x_{n+1},y(x_{n+1}))$, es decir:
+\[f(x,y(x)) \approx f(x_n, y(x_n)) \frac{x-x_{n+1}}{x_n-x_{n+1}}+f(x_{n+1},y(x_{n+1}))\frac{x-x_n}{x_{n+1}-x_n}\]
+
+Finalmente, el método queda expresado como:
+\[y_{n+2} = y_{n+1}+\frac{h}{2}\left( 3f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+Como podemos ver, se trata de un método de dos pasos, pues necesitamos conocer dos puntos antes de empezar a aplicar el método, y es explícito, pues directamente nos da la función que queremos conocer.
+
+\section{Métodos de Adams-Moulton}
+Se trata de un método muy similar al anterior en el que la función se interpola de otra forma distinta. De nuevo tenemos la relación:
+\[y(x_{n+2}) - y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) \dif x\]
+
+pero en esta ocasión la función $f$ la aproximamos mediante una interpolación con polinomios de orden 2 en lugar de rectas:
+\[f(x,y(x)) \approx f(x_n,y_n) \frac{(x-x_{n+1})(x-x_{n+2})}{(x_n-x_{n+1})(x_{n+1}-x_{n+2})} + f(x_{n+1},y_{n+1})\frac{(x-x_{n+2})(x-x_{n+2})}{(x_{n+1}-x_n)(x_{n+1}-x_{n+2})} \atop+f(x_{n+2},y_{n+2})\frac{(x-x_{n})(x-x_{n+1})}{(x_{n+2}-x_n)(x_{n+2}-x_{n+1})}\]
+
+Ahora introducimos esta aproximación en la integral e integramos, con lo que obtenemos la siguiente fórmula de recurrencia:
+\[y_{n+2} = y_{n+1} + \frac{h}{12}\left( 5f(x_{n+2},y_{n+2})+8f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+En esta ocasión se trata de un método implícito puesto que la misma $y_{n+2}$ que queremos calcular aparece en la propia fórmula.
+
+\section{Método predictor-corrector de Adams-Bashforth / Adamas-Moulton}
+
+El método anterior tiene el problema de ser implícito, es decir, vamos a tener que resolver una complicada ecuación de recurrencia.
+
+Para solucionar esto, la idea es aproximar $y_{n+2}$, calcular $y_{n+2}$ empleando la fórmula y basándonos en la aproximación y posteriormente ir corrigiendo las aproximaciones en cada paso.
+
+Así, tendremos la fórmula de recurrencia:
+\[y_{n+2} = y_{n+1} + \frac{h}{12}\left( 5f(x_{n+2},y_{n+2}^*)+8f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+
+La predicción que haremos para $y^*$ será:
+\[y_{n+2}^* = y_{n+1} + \frac{h}{2} \left( 3f(x_{n+1},y_{n+1})-f(x_n,y_n)\right)\]
+es decir, combinamos los dos métodos vistos anteriormente.
+
+\section{Ejemplos}
+
+\begin{problem}[1]
+Escribir la siguiente ecuación diferencial de grado $n$ como un sistema de ecuaciones diferenciales de primer orden.
+\[y^{n)} + \sum_{i=1}^n a_{n-i}y^{n-i)} = 0\]
+
+\solution
+La idea de este ejercicio es que, a priori, uno puede pensar que todo lo que llevamos visto durante el curso es inútil ante un problema como el aquí mostrado.
+
+Para convertir esta ecuación en un sistema, vamos a definir una serie de nuevas ecuaciones de forma que
+\[y^{i} = y_i \text{ para } i=1...n-1\]
+
+Así el sistema de ecuaciones nos queda de la forma:
+\[\begin{array}{l}
+y' = y_1\\
+y_1' = y_2\\
+y_2' = y_3 \\
+...\\
+y_{n-1}' = -\left( a_{n-1}y_{n-1} + a_{n-2}y_{n-2}+...+a_1y_1 + a_0 y\right)
+\end{array} \]
+
+Como podemos comprobar, en nuestro sistema, todas las ecuaciones son de primer orden.
+
+\end{problem}
+
+\begin{problem}[2]
+Convertir el siguiente sistema de ecuaciones diferenciales en otro donde todas las ecuaciones tengan orden 1.
+\[\begin{array}{l}
+u''' = u''+v'\\
+v''' = u^2+e^xu'v'+\sin(v)
+\end{array} \]
+con $u'(0)=u''(0)=v'(0)=0 \ , \ v(0)=1$
+\solution
+
+Renombrando las variables de la forma: $u' = u_1$, $u''=u_2$, $v'=v_1$, podemos reescribir el sistema como sigue.
+
+\[\begin{array}{l}
+u' = u_1\\
+u_1'=u_2\\
+v'=v_1\\
+u_2' = u_2+v_1\\
+v_1' = u^2+e^xu_1v_1 + \sin(v)
+\end{array} \]
+con $u_1(0)=u_2(0)=v_1(0)=0 \ , \ v(0)=1$
+
+\end{problem}
+
+\begin{problem}[3]
+Comprobar que las siguientes funciones satisfacen la condición de Lipschitz
+
+\ppart
+\[f(x,y)=2yx^{-4} \text{ con } x \in [1,\infty)\]
+
+\ppart
+\[f(x,y)=e^{-x^2}\arctg(y) \text{ con } x \in [1, \infty)\]
+
+\ppart
+\[\appl{f}{\real \times \real^2}{\real} \text{ tal que }f(x,y)=\left(x+\sin(y_2), \frac{x^2}{2}+\cos(y_1)\right)\]
+\solution
+
+\spart
+\[|f(x,y)-f(x,\tilde{y})| = 2x^{-4}|y-\tilde{y}| < 2 |y-\tilde{y}|\]
+
+\spart
+\[|f(x,y)-f(x,\tilde{y})| = e^{-x^2} | \arctg(y)-\arctg(\tilde{y})| = e^{-x^2}\int_{\tilde{y}}^y \frac{\partial}{\partial x}\arctg{x}\dif x = e^{-x^2}\int_{\tilde{y}}^y \frac{1}{|+x^2} \dif x \leq \]
+\[\leq e^{-x^2} \sup \frac{1}{1+x^2}|y-\tilde{y}| \leq \frac{e^{-1}}{2}|y-\tilde{y}|\]
+
+\spart
+Según en qué norma estemos trabajando, el módulo de $y$ se calculará de una forma diferente.
+
+En esta ocasión, por que así lo ha indicado el profesor para este ejercicio, vamos a trabajar con la norma $L1$ de forma que
+\[\norm{y}_{L_1} = |y_1| + |y_2|\]
+
+Con esta medida, nos queda:
+\[\norm{f(x,y)-f(x,\tilde{y})}_{L_1} = |\sin(y_2)-\sin(\tilde{y}_2)| + |\cos(y_1)-\cos(\tilde{y}_2)| \leq |y_2 - \tilde{y}_2|+ |y_1-\tilde{y}_1| \leq \norm{y - \tilde{y}}_{L_1}\]
+
+\end{problem}
+
+
+\begin{problem}[4]
+Dado:
+\[
+	\begin{cases}
+	y'=f(x,y), & y(0)=(0,1) \\
+	\tilde{y'}=f(x,\tilde{y}), & \tilde{y}(0)=(0,1)
+	\end{cases}
+\]
+Acotar $\max_{x∈[0,1]}{\md{y - \tilde{y}}} = \norm{y - \tilde{y}}_{L^∞}$
+
+\solution
+Tomaremos (recordando \hyperref[ineq:argumento_cont_dato_inicial]{el argumento de la demostración de continuidad respecto del dato inicial}):
+\[ \abs{y - \tilde{y}} ≤ \underbrace{\abs{y(0) - \tilde{y}(0)} + L \int_0^x \abs{y - \tilde{y}}(s)\ ds}_{g(x)} \]
+
+Derivando $g$ se obtiene $g'(x)=L\abs{y-\tilde{y}}$. Se ve que:
+\[g'(x)≤Lg(x)\]
+Usando el factor integrante llegamos a:
+\[g'(x)e^{-Lx} ≤ Lg(x)e^{-Lx}\]
+Que si nos fijamos no es más que:
+\[\left( ge^{-Lx} \right)' ≤ 0\]
+Que si además lo integramos en ambas partes por $\int_0^x$:
+\[g(x) ≤ g(0) e^{Lx}\]
+Así llegamos a:
+\[\abs{y - \tilde{y}} ≤ g(x) ≤ g(0)e^{Lx} = \abs{\tilde{y}(0) - y(0)}e^{Lx} = \sqrt{2}e^{Lx}\]
+De modo que tendremos la cota:
+\[\max_{x∈[0,1]} \abs{y - \tilde{y}} ≤ \sqrt{2}e^{Lx}\]
+
+\end{problem}
+
+\begin{problem}[5]
+Dada la función $\appl{f}{\real}{\real}$ tal que $f(x)=\abs{x}^α$
+
+\ppart Demostrar que $f$ no es Lipschitz en ninún intervalo que contenga al origne
+
+\ppart Resolver el PVI:
+\[\left\{ y'(x)=f(y(x)) \atop y(0)=0\right.\]
+
+\solution
+
+\spart
+
+Podemos ver que
+\[\abs{f(x)-f(0)} = \abs{\abs{x}^α - 0} = \frac{\abs{x}^α}{\abs{x}}\abs{x} = \frac{1}{\abs{x}^{1-α}}\abs{x}\]
+
+Pero en cualquier entorno del origen, el denominador podía dispararse de forma que es imposible que $\frac{1}{\abs{x}^{1-α}}$ esté acotdado por alguna $L$.
+
+\spart
+
+Tenemos que $y'(x)=\abs{y(x)}^α$.
+
+Por un, de la propia definición de $y'(x)$ podemos ver que:
+\[\int_0^t \frac{y'(x)}{\abs{y(x)}^α}\dif x = \int_0^t 1 \dif x = t\]
+
+Por otro lado, sabemos calcular la integral de la izquierda con lo que obtenemos:
+
+\[\frac{1}{1-α}\left( y(t)^{1-α}-y(0)^{1-α}\right) = \frac{1}{1-α}y(t)^{1-α} = t \implies y(t) = (t (1-α))^{\frac{1}{1-α}}\]
+
+Como podemos ver, estamos obteniendo dos soluciones, puesto que tenemos una raíz. Esto podría contradecir el Teorema de Picard, que nos garantiza unicidad de la solución. No obstante no se ningún problema puesto que la función no es Lipschitz por lo que el teorema no aplica.
+\end{problem}
+
+\begin{problem}[6]
+Sea $y(x) \in C([a,b])$ solución de $y'(x)=f(x,y(x))$ y sea $\tilde{y}(x) \in C([a,b])$ con $\tilde{y}'(x)=f(x,\tilde{y}(x))+r(x,\tilde{y}(x))$ siendo $||r||_{L^∞×L^∞} \leq M$
+
+Demostrar que
+\[\max_{x \in (a,b)} |y(x)-\tilde{y}(x)| \leq |y(a)-\tilde{y}(a)|e^{L(b-a)}+\frac{M}{L}\left( e^{L(b-a)}-1\right)\]
+
+\solution
+Tomando la resta de $y'$ y $\tilde{y}'$, y sirviéndonos de la iterada de Picard:
+\[\int_a^x y'(t) - \tilde{y}'(t) = \int_a^xf(t,y(t)) - f(t,\tilde{y}(t)) - \int_a^xr(t,\tilde{t}) + \left( y(a) - \tilde{y}(a) \right)\]
+
+Tomando valores absolutos:
+\[\abs{y(x) - \tilde{y}(x)} \overbrace{≤}^{\label{ineq:dif_picard}1} \int_a^x\abs{f(t,y(t)) - f(t,\tilde{y}(t))} dt + \int_a^x \abs{r(t, \tilde{y}(t))} dt + \abs{y(a) - \tilde{y}(a)} ≤\]
+
+\[≤ L\abs{y(t) - \tilde{y}(t)} + \int_0^xM dt + \abs{y(a) - \tilde{y}(a)}\]
+
+Tomaremos $g'(x) = L\abs{y(x) - \tilde{y}(x)} + M$. Y obtenemos:
+
+\[\frac{g'(x) - M}{L} = \abs{y(x) - \tilde{y}(x)} \overbrace{≤}^{\label{ineq:acotar} 2} g(x)\]
+
+\[g'(x) - Lg(x) ≤ M\]
+
+Tirando de factor integrante:
+\[\underbrace{g'(x)e^{-L(x-a)} - Lg(x)e^{-L(x-a)}}_{\left( g(x) e^{-L(x-a)} \right)'} ≤ Me^{-L(x-a)}\]
+
+Integrando entre $a$ y $t$ a ambos lados de la inecuación:
+\[\int_a^b \left(g(x) e^{-L(x-a)} \right)'dx ≤ \int_a^t Me^{-L(x-a)} dx\]
+\[g(t)e^{-L(t-a)} - g(a) ≤ \frac{M}{L} \left(1 - e^{-L(t-a)} \right)\]
+\[g(t) ≤ e^{L(t-a)} \left\{ g(a) + \frac{M}{L} \left(1 - e^{-L(t-a)} \right) \right\}\]
+\[\qquad \quad g(a)e^{L(t-a)} + \frac{M}{L} \left(e^{L(t-a)}-1 \right)\]
+
+Sirviéndonos de las inecuaciones \hyperref[ineq:dif_picard]{1} y \hyperref[ineq:acotar]{2}:
+
+\[\abs{y(x) - \tilde{y}(x)} \overbrace{≤}^{\hyperref[ineq:dif_picard]{1}} g(x) \overbrace{≤}^{\hyperref[ineq:acotar]{2}} g(a) e^{L(x-a)} + \frac{M}{L} \left(e^{L(x-a)}-1 \right) \]
+
+Y tomando máximos a ambos lados, demostramos la desigualdad del enunciado:
+\[\max_{x∈(a,b)} \abs{y(x) -\tilde{y}(x)} ≤ \max_{x∈(a,b)} \left\{ g(a) e^{L(x-a)} + \frac{M}{L} \left(e^{L(x-a)}-1 \right) \right\}\]
+\[\qquad \qquad  \qquad  \qquad= \abs{y(a) - \tilde{y}(a)} e^{L(b-a)} + \frac{M}{L}\left(e^{L(b-a)}-1 \right) \]
+\end{problem}

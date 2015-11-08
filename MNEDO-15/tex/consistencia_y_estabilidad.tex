@@ -1,0 +1,684 @@
+
+\chapter{Consistencia y estabilidad}
+\section{La función incremento}
+En este capítulo explicaremos conceptos como la consistencia, la estabilidad o el residuo, útiles a la hora de valorar la calidad de un método numérico.
+
+A partir de ahora vamos a trabajar con métodos numéricos que se pueden escribir de la forma:
+\[\sum_{j=0}^k α_jy_{n+j} = h \phi_f(x_n,y_n,y_{n+1},y_{n+k-1},h) \text{ con } n=0,...,N - k\]
+donde $\phi_f$ se denomina \concept{función incremento}.
+
+\obs Todos los métodos que hemos visto hasta ahora pueden escribirse de esta forma. Veamos algunos ejemplos,
+
+\begin{example}
+\begin{enumerate}
+\item \textbf{Euler}
+\[y_{n+1} = y_n+hf(x_n,y_n)\]
+
+En este caso podemos pasar $y_n$ restando a la izquierda para que, junto con $y_{n+1}$, nos de el sumatorio, quedando a la derecha del igual $hf()$ con lo que tendríamos que $\phi_f=f$.
+
+\item \textbf{Trapecio}
+
+Con los métodos explícitos (como el de Euler que acabamos de ver) es muy sencilla la comprobación de que el método puede escribirse de la forma comentada anterormente.
+
+No obstante, en métodos implícitos como el del trapecio es algo más complicado de comprobar.
+
+En esta ocasión tenemos
+\[y_{n+1}-y_n = \frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right)\]
+
+Así tendríamos:
+\[\phi_f (x_n,y_n) = \frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right) = \frac{1}{2}\left( f(x_n,y_n) + f(x_{n+1},y_n+h\phi_f(x_n,y_n)\right)\]
+
+Donde el $\phi_f$ que buscamos sería la solución de esta ecuación.
+
+La pregunta que debería surgir ahora en el lector es si esta $\phi_f$ está bien definida. Podemos ver que calcular $\phi_f$ es equivalente a encontrar un punto fijo de la aplicación:
+
+\[F(\phi) = \frac{1}{2} \left(f(x_n,y_n)+f(x_{n+1},y_n+h\phi)\right)\]
+
+que, para $h$ suficientemente pequeño cumple:
+\begin{equation}
+	\label{eq:F_contractiva}
+	\left(\norm{F(\phi)-F(\tilde{\phi})} \leq \frac{Lh}{2}\norm{\phi- \tilde{\phi}}\right)
+\end{equation}
+
+es decir, la aplicación será contractiva y, por tanto, el problema del punto fijo tendrá solución.
+
+\item \textbf{Método de Taylor}
+
+\[y_{n+1}=y_n+hf(x_n,y_n)+\frac{h^2}{2}\left(f_x(x_n,y_n)+f_y(x_n,y_n)f(x_n,y_n)\right)\]
+
+donde obtendríamos:
+\[\phi_f = hf(x_n,y_n)+\frac{h^2}{2}\left(f_x(x_n,y_n)+f_y(x_n,y_n)f(x_n,y_n)\right)\]
+\end{enumerate}
+\end{example}
+
+En general supondremos que $α_k=1$, eliminando así la arbitrariedad que surge del hecho de que podemos multiplicar a ambos lados por un mismo número distinto de 0 sin cambiar el método. Además, siempre tendremos que $α_0 \neq 0$ ó $\phi_f$ depende de forma no trivial\footnote{Es decir, aparece $y_n$ como argumento de $f$} de $y_n$.
+
+La última propiedad nos permite excluir métodos como:
+\[y_{n+2}-y_{n+1}=hf(x_{n+1},y_{n+1})\]
+que es esencialmente de 1 paso y no de 2, y que puede escribirse como:
+\[y_{n+1}-y_n = f(x_n,y_n)\]
+
+Es decir, forzamos que nuestro método juegue con los subíndices más simples posibles de modo que siempre tendrá que haber algún $y_n$ en la ecuación.
+
+\begin{prop}[Hipótesis sobre Métodos Numéricos]
+Existen una serie de hipótesis que tomaremos de forma general sobre los métodos numéricos con los que trabajemos. Estas son:
+
+\begin{enumerate}
+\item $\phi_f$ es continua.
+
+\item Existen constantes $h_0,L$ que pueden depender de $f$ tales que:
+\[\norm{\phi_f(x_n,y_n,...,y_{n+k-1},h) - \phi_f(x_n,\tilde{y}_n,...,\tilde{y}_{n+k-1},h)}\leq L \sum_{j=0}^k \norm{y_{n+j}-\tilde{y_{n+j}}} \text{ si } 0 < h < h_0\]
+
+\item $f= 0 \implies \phi_f=0$
+
+
+\end{enumerate}
+\end{prop}
+
+\begin{example}
+	Veamos a continuación que la \textbf{primera hipótesis} ($\phi_f$ continua) se cumple para el \textbf{método del trapecio}:
+
+	Definimos la aplicación global contractiva (tal y como hemos visto en \ref{eq:F_contractiva}):
+	\[F(\phi) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_n+h\phi) \right]\]
+
+	Y tomemos $\phi_f = \lim_{j\to∞} \phi_f^{[j]}$, donde $\phi_f^{[j]}$ viene dada por la sucesión $\phi_f^{[j]} = F\left(\phi_f^{[j-1]}\right)$ y $\phi^0 = 0$.
+
+	\obs El método del trapecio es de 1 paso ($k=1$) y por tanto la función incremento solo depende de $x_n$, $y_n$ y $h$, es decir $\phi_f(x_n,y_n;h)$.
+
+	Dado que $f$ es una función continua, tendremos que:
+	\[\phi_f^{[1]}(x_n,y_n;h) = \frac{1}{2} \left[ f(x_n,y_n) + f(x_{n+1}, y_{n+1} + 0) \right]\]
+
+	será continua. Como la composición de funciones continuas da como resultado otra función continua, tendremos que $\phi_f^{[2]}=F\left( \phi_f^{[1]} \right)$ es continua, y por tanto todas las $\phi_f^{[k]}(x_n,y_n;h)$ son continuas.
+
+	Si logramos que la convergencia de las $\phi_f^{[j]}$ sea uniforme, tendremos que la sucesión convergería a una función $\phi_f$ continua (que es lo que dice la hipótesis).
+
+	Expresamos $\phi_f^{[k]}$ como una suma telescópica:
+	\begin{equation}
+		\label{eq:suma_telesc_pto_fijo}
+		\phi_f^{[k]} = \sum_{j=1}^k \phi_f^{[j]} - \phi_f^{[j-1]} + \phi_f^{[0]},\quad \phi_f^{[0]}=0
+	\end{equation}
+
+	Tomando la norma $L^∞$:
+	\begin{equation*}
+		\begin{multlined}[0.7\textwidth]
+			\md{\phi_f^{[j]} - \phi_f^{[j-1]} }_{L^∞} = \md{F\left[\phi_f^{[j-1]}\right] - F\left[\phi_f^{[j-2]}\right] }_{L^∞}\\[1em]
+			\shoveleft{\qquad \qquad \qquad \underbrace{≤}_{F\text{ contractiva}} \frac{Lh}{2} \md{\phi_f^{[j-1]} - \phi_f^{[j-2]}}_{L^∞}}\\
+		\end{multlined}
+	\end{equation*}
+
+	Aplicando la desigualdad sucesivamente:
+	\[\md{\phi_f^{[j]} - \phi_f^{[j-1]}}_{L^∞} ≤ \left(\frac{Lh}{2}\right)^{j-1} \md{\phi^{[1]}}_{L^∞}\]
+
+	Puesto que $K = [a,b]×ℝ×(0,∞)$ es compacto:
+	\[\md{\phi_f^{[j]} - \phi_f^{[j-1]}}_{L^∞} ≤ M_k\left(\frac{Lh}{2}\right)^{j-1}\]
+
+	De modo que aplicando el test $M$ de Weierstrass, la convergencia de \ref{eq:suma_telesc_pto_fijo} es uniforme, y por tanto $\phi_f$ es continua.
+\end{example}
+
+\begin{example}
+Veamos ahora que la \textbf{segunda hipótesis} se cumple para el \textbf{método del trapecio}.
+
+Esta segunda hipótesis nos dice que existen constantes $h_0,L$ que pueden depender de $f$ tales que:
+\[\norm{\phi_f(x_n,y_n,...,y_{n+k-1},h) - \phi_f(x_n,\tilde{y}_n,...,\tilde{y}_{n+k-1},h)}\leq L \sum_{j=0}^k \norm{y_{n+j}-\tilde{y_{n+j}}} \text{ si } 0 < h < h_0\]
+
+Por definición, para el método del trapecio tenemos que $\phi_f$ es la solución de
+\[\phi_f (x_n,y_n) = \frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right) = \frac{1}{2}\left( f(x_n,y_n) + f(x_{n+1},y_n+h\phi_f(x_n,y_n)\right)\]
+
+Con la definición de $\phi_f$ podemos escribir
+\[\norm{\phi_f(x_n,y_n,h)-\phi_f(x_n,\tilde{y}_n,h)}  \leq \]
+\[\leq \frac{1}{2}\norm{f(x_n,y_n)-f(x_n,\tilde{y}_n)}+\frac{1}{2}\norm{f(x_{n+1},y_n+h\phi_f(x_n,y_n))-f(x_{n+1},\tilde{y}_n+h\phi_f(x_n,\tilde{y}_n))} \leq\footnote{por ser $f$ Lipschitz}\]
+\[\leq L\norm{y_n-\tilde{y}_n}+\frac{Lh}{2}\norm{\phi_f(x_n,y_n,h)-\phi_f(x_n,\tilde{y}_n,h)}\]
+
+Reordenando los términos de la inecuación podemos escribir:
+\[\left(1-\frac{Lh}{2} \right)\norm{\phi_f(x_n,y_n,h)-\phi_f(x_n,\tilde{y}_n,h)} \leq L\norm{y_n-\tilde{y}_n}\]
+\end{example}
+
+\section{Consistencia}
+Ahora que nos hemos familiarizado con el concepto de la función incremento, podemos ver la \textbf{definición formal de residuo}:
+
+\begin{defn}[Residuo]
+Dada la solución $y(x)$ del P.V.I.
+\[\left\{ \begin{array}{l} y'=f(x,y) \\ y(a)=y_a \end{array}\right.\]
+llamamos residuo del método numérico a:
+\[R_n = \sum_{j=0}^Rα_jy(x_{n+1})-h\phi_f(x_n,y(x_n),h)\]
+\end{defn}
+
+Una vez que tenemos una definición formal del residuo, podemos definir la consistencia de un método:
+
+\begin{defn}[Consistencia]
+Decimos que un método numérico es \textbf{consistente} si
+\[\lim_{h \to 0} \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h}=0\]
+\end{defn}
+
+\begin{defn}[Orden de consistencia]
+Decimos que un método numérico es \textbf{consistente de orden p} si para $f \in C^p$ se tiene que
+\[\lim_{h \to 0} \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h} = O(h^p)\]
+\end{defn}
+
+\begin{example}
+\textbf{Consistencia del método del trapecio}
+
+Para estudiar la consistencia lo primero que tenemos que hacer es calcular el residuo;
+
+Hasta ahora habíamos considerado el residuo como:
+\[Q_n = y(x_{n+1})-y(x_n)-\frac{h}{2}\left(  f(x_n,y(x_n)) +  f(x_{n+1},y(x_{n+1}))\right)\]
+y con esto comprobábamos que $Q_n = O(h^3)$ con lo que tendríamos consistencia de orden 2.
+
+Sin embargo, con la definición formal de residuo que acabamos de ver, tenemos:
+\[R_n = y(x_{n+1})-y(x_n)-h\phi_f(x_n,y_n,h)\text{ donde } \phi_f(x_n,y_n,h) \text{ satisface }\]
+\[\phi_f(x_n,y_n,h) = \frac{1}{2}\left( f(x_n,y(x_n))+f(x_{n+1},y(x_n)+h\phi_f(x_n,y(x_n))\right)\]
+
+Vamos a comprobar que ambas definiciones son ``equivalentes'' en tanto en cuanto nos dan el mismo orden de consistencia. Para ello estudiaremos la diferencia entre ambas definiciones.
+
+\[Q_n-R_n = h\left(\phi_f(x_n,y_n,h) -\frac{1}{2}\left(  f(x_n,y(x_n)) +  f(x_{n+1},y(x_{n+1}))\right) \right) =\]
+sustituyendo $\phi_f(x_n,y_n,h)$ por la ecuación que lo define y simplificando nos queda:
+\[=\frac{h}{2} \left(f(x_{n+1},y(x_n)+h\phi_f(x_n,y_n,h))-f(x_{n+1},y(x_{n+1})) \right)\]
+
+Tomando valores absolutos y recordando que $f$ es Lipschitz llegamos a:
+\[|Q_n-R_n| \leq \frac{h}{2}L|y(x_{n+1})-y(x_n)-h\phi_f(x_n,y_n,h)| = \frac{hL}{2}|R_n|\]
+de donde podemos deducir que $Q_n$ y $R_n$ tienen el mismo orden de convergencia.
+\end{example}
+
+\section{Estabilidad}
+\begin{defn}[0-estabilidad]
+Un método numérico es 0-estable si para cada PVI existe una constante $C>0$ tal que para cada dos sucesiones $u_n,v_n$ que satisfacen\footnote{Es decir, que no satisfacen la descripción del método como función incremento pero casi}
+\[\sum_{j=0}^kα_ju_{n+j} = h\phi_f(x_n,u_n,...,u_{n+k-1},h)+hδ_n\]
+\[\sum_{j=0}^kα_jv_{n+j} = h\phi_f(x_n,v_n,...,v_{n+k-1},h)+hγ_n\]
+
+con $0≤n≤N-k$, se verifica que:
+\[\max_{k \leq n \leq N}\norm{u_n - v_n} \leq C\left( \max_{0 \leq n \leq k-1}\norm{v_n - u_n}+\max_{0 \leq n \leq N-k}\norm{δ_n - γ_n}\right)\]
+
+O lo que es lo mismo, la diferencia está acotada por la suma de la diferencia entre los valores de arranque y los errores.
+\end{defn}
+
+\begin{prop}
+Todos los métodos numéricos de un solo paso con $α_0=-1$ son 0-estables
+\end{prop}
+\begin{proof}
+Si tenemos dos sucesiones:
+\[u_{n+1}=u_n+h\phi_f(x_,y_n,h)+hδ_n\]
+\[v_{n+1}=v_n+h\phi_f(x_,y_n,h)+hγ_n\]
+
+Podemos restarlas y tomar valores absolutos obteniendo:
+\[|u_{n+1}-v_{n+1}|\leq |u_n-v_n| + h |\phi_f(x_n,u_n,h)-\phi_f(x_n,v_n,h)|+h|δ_n-γ_n|\]
+
+Y apoyándonos en que la función $\phi_f$ es Lipschitz en la segunda variable tenemos:
+\[\underbrace{|u_{n+1}-v_{n+1}|}_{e_{n+1}}\leq \underbrace{|u_n-v_n| + hL|u_n-v_n|}_{(1+Lh)e_n}+hK \text{ siendo } K=\max_{0 \leq n \leq N-1}|δ_n-γ_n|\]
+
+Ahora debemos acotar la recurrencia sobre las $e_n$ que acabamos de obtener. Podemos ver fácilmente que, de forma general:
+\[e_n \leq (1+Lh)^ne_0+Kh\left( (1+Lh)^{n-1}+(1+Lh)^{n-2}+...+1\right)=\atop (1+Lh)^ne_0+Kh\frac{(1+Lh)^n-1}{Lh}=(1+Lh)^ne_0+\frac{K}{L}((1+Lh)^n-1)\]
+
+\obs Hasta aquí, esta demostración no es del todo formal puesto que hemos sacado ``a ojo'' el término general de la recurrencia. La forma de demostrarlo correctamente pasa por aplicar inducción.
+
+Nuetro objetivo, recordemos, era acotar el máximo de los $e_n$ para comprobar si se cumple la condición de 0-estabilidad. Vamos a ello:
+\[\max_{1\leq k \leq N}e_n \leq (1+Lh)^{\frac{(b-a)}{h}}e_0 + K(b-a)e^{L(b-a)}\]
+
+Con esto podemos concluir la demostación puesto que $e_n=|u_n-v_n|$ es el término general de la diferencia de las sucesiones, $e_0=|u_0-v_0|$ es la diferencia entre los valores de arranque en un método de un sólo paso, y la constante $C$ sería el máximo de $C_1=(b-a)e^{L(b-a)}$ y $C_2=e^{L(b-a)}$\footnote{Para poder deducir esta $C$ tenemos en cuenta que $(1+Lh)^{(b-a)h}$ es de la forma $e^{L(b-a)}$}
+\end{proof}
+
+\section{Relaciones entre consistencia, estabilidad y convergencia}
+\begin{theorem}\label{theorem:consist_y_0estable_converge}
+Si un método numérico es 0-estable y consistente entonces es convergente.
+\end{theorem}
+\begin{proof}
+Escribimos el método de la forma:
+\[\sum_{j=0}^kα_jy_{n+j} = h \phi_f(x_n,y_n,...,y_{n+k-1},h)\]
+
+Por otro lado podemos escribir:
+\[\sum_{j=0}^kα_jy(x_{n+j}) = h \phi_f(x_n,y(x_n),...,y(x_{n+k-1}),h) + R_n\]
+
+Ahora, con las dos sucesiones que tenemos, $\left\{y_n\right\}_{n=0}^∞, \left\{y(x_n)\right\}_{n=0}^N$, sabiendo que el método es 0-estable y tomando $R_n=hδ_n$, podemos escribir:
+\[\max_{k\leq n \leq N}\norm{y_n-y(x_n)} \leq C\left( \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)} + \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h}\right)\]
+
+Para demostrar la convergencia tenemos que ver que 
+\[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)}= 0 \implies \lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n)}=0 \]
+que queda trivialmente demostrada apoyándonos en la desigualdad deducida a partir de la 0-estabilidad.
+\end{proof}
+
+\begin{theorem}\label{theorem:convergencia_consistencia_orden}
+Si un método numérico es 0-estable y el residuo es de orden $p$, entonces el método numérico es convergente a orden $p$.
+
+Es decir, consistencia a orden $p$ y 0-estabilidad garantizan convergencia a orden $p$
+\end{theorem}
+
+\begin{theorem}[Criterio de consistencia]\label{theorem:consist_iif_relaciones}
+Un método numérico es consistente si y sólo si $\sum_{j=0}^kα_j=0$ y, además,
+\[\phi_f(x,y(x),...,y(x),0)=\left( \sum_{j=0}^kjα_j\right)f(x,y(x))\]
+\end{theorem}
+\begin{proof}
+Llevaremos a cabo la demostración viendo los dos sentidos de la implicación:
+\begin{itemize}
+\item $\implies$
+Supongamos que el método es consistente. Consideramos el PVI trivial $y(x)=1$.
+
+Puesto que $y'=f=0$, la tercera hipótesis de los métodos numéricos nos garantiza que $\phi_f=0$ por lo que podemos escribir el residuo como:
+\[R_n = \sum_{j=0}^kα_jy(x_{n+j})\]
+Puesto que $y(x)=1$ tenemos
+\[ \frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_j\]
+
+Pero, puesto que el método es consistente sabemos que el límite de $\frac{R_n}{h}$ tiende a 0, por tanto, tenemos que 
+\[\lim_{h\to 0} \frac{1}{h}\sum_{j=0}^kα_j=0 \implies \sum_{j=0}^kα_j=0\]
+
+\textbf{Demostremos ahora la segunda afirmación} del lado derecho de la equivalencia del teorema:
+
+Consideramos ahora un método numérico general, nos olvidamos del caso concreto anterior. Ahora tendríamos que el residuo queda:
+\[\frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_jy(x_{n+j})-\phi_f(x_n,y(x_n),…,y(x_{n+k-1}),h)\]
+
+Por el teorema del valor medio tenemos que con $x_n ≤ ε_{n,j} ≤ x_{n+j}$:
+\[y(x_{n+j})-y(x_n)=y'(ε_{n,j})(x_{n+j}-x_n) = y'(ε_{n,j})jh\]
+
+Sustituyendo esto en la ecuación anterior tenemos:
+\[\frac{R_n}{h}=\frac{1}{h}\sum_{j=0}^kα_j(y(x_n)+jhy'(ε_{j,n}))-\phi_f(x_n,y(x_n),…,y(x_{n+k-1}),h) = \]
+\[ = \sum_{j=0}^k jα_jy'(ε_{n,j}) - \phi_f\left(x_n,y(x_n), y(x_n+h) , …, y(x_n + h(k-1)), h\right) = \]
+\[ = \sum_{j=0}^k jα_jf(ε_{n,j}, y(ε_{n,j})) - \phi_f\left(x_n,y(x_n), y(x_n+h) , …, y(x_n + h(k-1)), h\right)\]
+
+Tomando \underline{$n=0$}:
+
+\[\frac{R_0}{h} = \sum_{j=0}^k jα_jf(ε_{0,j}, y(ε_{0,j})) - \phi_f\left(x_0,y(x_0), y(x_0+h) , …, y(x_0 + h(k-1)), h\right)\]
+
+Usando la hipótesis de que nuestro MN es consistente:
+\[\lim_{h\to0} \frac{R_0}{h} = 0 = f(x_0, y(x_0)) \sum_{j=0}^k jα_j - \phi_f\left(x_0,y(x_0), y(x_0) , …, y(x_0), 0\right) \]
+
+Acabamos de demostrar que la segunda afirmación del teorema es cierta para $x=x_0$. Tomemos ahora $n=N-k$:
+\[\sum_{j=0}^k jα_jf(ε_{N-k,j}, y(ε_{N-k,j})) - \phi_f\left(x_{N-k},y(x_{N-k}), y(x_{N-k}+h) , …, y(x_{N-k} + h(k-1)), h\right)\]
+
+Procediendo igual que antes:
+\[\lim_{h\to0} \frac{R_{N-k}}{h} = 0 = f(x_N, y(x_N)) \sum_{j=0}^k jα_j - \phi_f\left(x_N,y(x_N), y(x_N) , …, y(x_N), 0\right)\]
+
+Como hemos probado que la igualdad es cierta para $N$ podemos alcanzar todo $x$, y por tanto la segunda afirmación del teorema quedaría demostrada.
+
+\item $\Longleftarrow$
+
+Por definición de residuo tenemos que
+\[R_n=\sum_{j=0}^kα_jy(x_{n+j})-\phi_f(x_n,y(x_n),…,y(x_{n+k-1}),h)\]
+
+Por el teorema del valor medio tenemos que con $x_n ≤ ε_{n,j} ≤ x_{n+j}$:
+\[y(x_{n+j})-y(x_n)=y'(ε_{n,j})(x_{n+j}-x_n) = y'(ε_{n,j})jh\]
+
+Sustituyendo el valor de $y(x_{n+j})$ en la fórmula del residuo tenemos:
+\[R_n=\sum_{j=0}^k α_jy(x_n) + \sum_{j=0}^k jα_jhy'(ε_{j,n}) -h\phi_f(x_n,y(x_n),…,y(x_{n+k-1}),h) = \]
+sabiendo que $\sum_{j=0}^kα_j=0$
+\[ = \sum_{j=0}^k jα_jhy'(ε_{n,j}) - h\phi_f\left(x_n,y(x_n), y(x_{n+h}) , …, y(x_{n + h(k-1)}), h\right) \]
+
+Finalmente, podemos escribir
+\[\frac{R_n}{h} = \sum_{j=0}^k jα_jf(ε_{n,j}, y(ε_{n,j})) - \phi_f\left(x_n,y(x_n), y(x_{n+h}) , …, y(x_{n + h(k-1)}), h\right)\]
+
+Ahora, despejamos la función $f$ de la segunda propiedad:
+\[f(ε_{n,j},y(ε_{n,j})) = \frac{1}{\sum_{j=0}^kjα_j}\phi_f(ε_{n,j},y(ε_{n,j}),...,y(ε_{n,j}),h)\]
+
+Si sustituimos en la fórmula del residuo el valor que $f$ que acabamos de calcular llegamos a:
+\[\frac{R_n}{h} = \sum_{j=0}^k jα_j\left(\frac{1}{\sum_{j=0}^kjα_j}\phi_f(ε_{n,j},y(ε_{n,j}),...,y(ε_{n,j}),h)\right) - \atop \phi_f\left(x_n,y(x_n), y(x_{n+h}) , …, y(x_{n + h(k-1)}), h\right) =\]
+\[ = \sum_{j=0}^k jα_j\left(\frac{\phi_f(ε_{n,j},y(ε_{n,j}),...,y(ε_{n,j}),h) - \phi_f\left(x_n,y(x_n), y(x_{n+h}) , …, y(x_{n + h(k-1)}), h\right)}{\sum_{j=0}^kjα_j}\right)\]
+
+A partir de esta ecuación, podemos ver que si fijamos $n$ se cumple:
+\[\lim_{h \to 0} \frac{R_n}{h} = 0 \text{ por continuidad de }\phi_f\]
+por tanto, queda claro que el método es consistente.
+\end{itemize}
+\end{proof}
+
+\begin{example}
+	Veamos si el \textbf{método del punto medio es consistente} utilizando \ref{theorem:consist_iif_relaciones}:
+
+	\[y_{n+2} = y_n + 2h f(x_{n+1},y_{n+1})\]
+	\[α_0=-1, α_1=0, α_2=1 \implies \sum_{j=0}^2 α_j = 0\]
+	Acabamos de ver que cumple la primera afirmación del lado derecho del teorema.
+	\[\sum_{j=0}^2 jα_j = 2\]
+	\[\phi_f(x_n,y_n,y_{n+1},h) = 2f(x_{n+1},y_{n+1}) = 2f(x_n+h, y_{n+1})\]
+	Por tanto:
+	\[\phi_f\left( x, y(x), y(x), h \right) = 2f(x+h,y(x)) \underset{h\to0}{\longrightarrow} \overbrace{2}^{\sum_{j=0}^2 jα_j}f(x,y(x))\]
+	el método cumple con la segunda afirmación del lado derecho del teorema, y podemos afirmar que el método del punto medio es consistente.
+
+	También podríamos haber resuelto el problema directamente ``a pelo'' escribiendo
+	\[\frac{R_n}{h} = \frac{y(x_{n+2})-y(x_n)}{h}-2f(x_{n+1},y(x_{n+1})) = 2y'(ε_n)-2y'(x_{n+1})\]
+
+	Y puesto que $y'=f$ y sabemos que $f$ es continua, y tanto $x_{n+1}$ como $ε_n$ tienden a $x_n$ cuando $h$ tiende a 0 por lo que es claro que
+	\[\lim_{h \o 0} \frac{R_n}{h} = 0\]
+\end{example}
+
+\begin{obs}
+\begin{itemize}
+\item ¿Qué regularidad estamos pidiendo a $f(x,y(x))$?
+
+Simplemente exigimos que $f\in \algb{C}$ y sea Lipschitz en la segunda variable
+
+\item ¿Cuál es el orden de consistencia?
+
+El criterio de consistencia que no nos ayuda en este caso. Si consideramos que $f\in \algb{C}^2$ entonces
+\[y(x_{n+2})=y(x_n)+y'(x_n)2h + \frac{y''(x_n)}{2}(2h)^2 + O(h^3)\]
+Por otro lado,
+\[f(x_{n+1},y(x_{n+1}))=y'(x_{n+1}) = y'(x_n) + y''(x_n)2h + O(h^2)\]
+multiplicando por $2h$ a ambos lados en la última ecuación y restándoselo a la primera tenemos:
+\[y(x_{n+2})-y(x_n)-2hf(x_{n+1},y_{n+1})=O(h^3) \implies \frac{R_n}{h}=O(h^2)\]
+
+Con lo que llegamos a que el método será constante, al menos, de orden 2
+\end{itemize}
+\end{obs}
+
+
+Decimos que un método numérico satisface el \concept{criterio de la raíz} si todas las raíces del primer poliniomio característico:
+\[ρ(ζ) = \sum_{j=0}^kα_jζ^j\]
+tienen módulo menor o igual que 1 y las de módulo 1 son simples.
+
+\begin{theorem}\label{theorem:criterio_raiz}
+Un método numérico es 0-estable si y sólo si el método numérico satisface el criterio de la raíz.
+\end{theorem}
+
+\begin{example}
+Consideremos el siguiente método numérico:
+\[y_{n+2}+y_{n+1}-2y_n = h\left( 5f(x_{n+1},y_{n+1}) -2f(x_n,y_n)\right)\]
+
+Vamos a estudiar su consistencia, para lo que comprobaremos que se satisfacen las dos propiedades del teorema \ref{theorem:consist_iif_relaciones}:
+\begin{enumerate}
+\item 
+\[\sum_{j=0}^2α_j = 1+1-2 = 0\]
+
+\item 
+\[\phi_f(x_n,y_n,y_{n+1},h) = 5f(x_{n+1},y_{n+1}) -2f(x_n,y_n)\]
+\[\phi_f(x,y(x),y(x),0) = 3f(x,y(x)) = \underbrace{\sum_{j=0}^2jα_j}_3f(x,y(x))\]
+\end{enumerate}
+
+Por tanto, queda claro que el método es \textbf{consistente}.
+
+Consideramos ahora el problema 
+\[y'(x)=0 \ (f=0)\]
+
+Recordemos que un método numérico es 0-estable si para cada PVI existe una constante $C>0$ tal que para cada dos sucesiones $u_n,v_n$ que satisfacen:
+\[\sum_{j=0}^kα_ju_{n+j} = h\phi_f(x_n,u_n,...,u_{n+k-1},h)+hδ_n\]
+\[\sum_{j=0}^kα_jv_{n+j} = h\phi_f(x_n,v_n,...,v_{n+k-1},h)+hγ_n\]
+
+con $0≤n≤N-k$, se verifica que:
+\[\max_{k \leq n \leq N}\norm{u_n - v_n} \leq C\left( \max_{0 \leq n \leq k-1}\norm{v_n - u_n}+\max_{0 \leq n \leq N-k}\norm{δ_n - γ_n}\right)\]
+
+Vamos a estudiar el criterio de la raíz sobre sobre este PVI.
+
+El primer polinomio característico nos queda:
+\[ρ(ζ) = ζ^2+ζ-2 \implies ζ_+=1 \y ζ_-=-2\]
+
+También observar que, puesto que nuestro problema tiene $f=0$, se cumple:
+\[\sum_{j=0}^2α_jy_{n+j} = y_{n+2}+y_{n+1}-2y_n = 0\]
+
+Consideramos ahora la sucesión $u_n = ζ_-^n$ con lo que obtenemos:
+\[\sum_{j=0}^2α_ju_{n+j}=ζ_-^n\sum_{j=0}^2α_jζ_-^j=0\]
+
+Y definimos la sucesión $v_n=0$. 
+
+Si volvemos a la definición de 0-estabilidad con estas dos sucesiones, vemos que las sucesiones $δ_n$ y $γ_n$ han de ser 0 (pues $u_n$ y $v_n$ satisfacen la relación de recurrencia). Por tanto, si queremos que se cumpla la condición de 0-estabilidad necesitamos que:
+\[\max_{k \leq n \leq N}\norm{u_n - v_n} \leq C\left( \max_{0 \leq n \leq k-1}\norm{v_n - u_n}\right)\]
+Pero, puesto que $\norm{u_n,v_n} = 2^n$ tenemos que $\max_{k \leq n \leq N}\norm{u_n - v_n} = 2^N $ y, además $\max_{0 \leq n \leq k-1}\norm{v_n - u_n} = 2$. 
+
+Sustituyendo estos datos, tenemos que para que el método sea 0-estable tiene que cumplirse que:
+\[2^N \leq 2C\]
+Podemos observar que no hay ninguna $C$ que satisfaga esta desigualdad, por lo que podemos concluir que el método \textbf{no es 0-estable}.
+\end{example}
+
+A raíz de este ejemplo podemos extraer dos conclusiones:
+
+\obs Las raíces del primer polinomio característico son importantes a la hora de estudiar la 0-estabilidad
+
+\obs Existen métodos numéricos consistentes que no son 0-estables.
+
+Una vez visto este ejemplo, que nos muestra la necesidad del teorema \ref{theorem:criterio_raiz}, procedemos a demostrarlo.
+\begin{proof}
+Como siempre, vamos a demostrar los dos sentidos de la implicación:
+\begin{itemize}
+\item $\implies$
+
+Vamos a probar esta implicación comprobando que si no se satisface el criterio de la raíz, entonces no podemos tener 0-estabilidad ($a \implies b \equiv \neg b \implies \neg a$)
+
+Consideramos el problema con $y'(x)=0$, lo que nos da $\sum_{j=0}^kα_jy_{n+j}$ = 0.
+
+Tomamos ahora el primer polinomio característico:
+\[ρ(ζ) = \sum_{j=0}^kα_jζ^j\]
+
+Vamos a suponer que no se cumple el criterio de la raíz, lo cual puede ocurrir de dos formas diferentes, y ver que en esos casos no se satisface la condición de 0-estabilidad.
+\begin{enumerate}
+\item Supongamos que existe una solución del polinomio $ε∈ℂ$ tal que $|ε| >1$.
+
+Tomamos ahora las sucesiones:
+\[\left\{ \begin{array}{l}u_n = ε^n \implies \sum_{j=0}^kα_ju_{n+j} = 0 \implies δ_n = 0 \\
+v_n = 0 \implies \sum_{j=1}^kα_jv_{n+j}=0 \implies γ_n=0 \end{array}\right.\]
+
+Si el método fuese 0-estable, debería cumplirse que:
+\[|ε|^N \leq C |ε|^{k-1}\]
+Pero no existe ninguna $C$ que satisfaga la desigualdad, por lo que el método no es 0-estable.
+
+\item Supongamos que existe una solución doble del polinomio $ε$ tal que $|ε|=1$. 
+
+Por ser raíz doble tendremos que $p'(ε)=0$.
+
+Tomamos ahora las sucesiones:
+\[\left\{ \begin{array}{l}u_n = nε^n \implies \sum_{j=0}^kα_ju_{n+j} = nε^n\sum_{j=0}^kα_jε^j + ε^n\overbrace{\sum_{j=1}^kα_jjε^j}^{ρ'(ε)=0} = 0 \implies δ_n = 0 \\
+v_n = 0 \implies \sum_{j=1}^kα_jv_{n+j}=0 \implies γ_n=0 \end{array}\right.\]
+
+
+Nuevamente, vemos que desigualdad tiene que cumplirse para que el método se considere 0-estable:
+\[N \leq C(k-1)\]
+y vemos que, de igual forma que en el apartado anterior, el método no puede ser 0-estable.
+\end{enumerate}
+
+Así queda probado que si el método no satisface el criterio de la raíz, entonces no será 0-estable. Es decir, \textbf{si el método es 0-estable entonces satisface el criterio de la raíz}
+
+\item $\Longleftarrow$
+
+Vamos a demostrar ahora que si se satisface el criterio de la raíz entonces el método será 0-estable.
+
+Para no complicar la notación, vamos a considerar problemas del tipo $y'(x)=f(x,y(x))$ con $\appl{y}{\real}{\real}$ y $\appl{f}{\real\times\real}{\real}$, aunque la demostración puede ser ``fácilmente'' extendida a problemas con $\appl{y}{\real}{\real^d}$
+
+Con el problema que estamos considerando, tenemos:
+\[\sum_{j=0}^k α_jy_{n+j} = h\phi_f(x_n,y_x,...,y_{n+k-1},h)\]
+Y vamos a considerar el vector columna $Y_n=(y_{n+k-1},...,y_n)$ y escribimos:
+\[Y_{n+1} = AY_n + h\cdot F(x_n,Y_n)\]
+
+\[ A = \left(
+	\begin{array}{c c c c c}
+		-α_{k-1} & -α_{k-2} & … & α_1 & α_0\\
+		1        & 0        & … & …   & …  \\
+		0        & 1        & … & …   & …  \\
+		\vdots   & \vdots   & \vdots & \vdots   & \vdots  \\
+		…        & …        & … & 1   & 0  \\
+	\end{array}
+\right),
+F(X_n,Y_n) = \left(
+	\begin{array}{c}
+		\phi_f(x_n,y_x,...,y_{n+k-1},h)\\
+		0\\
+		0\\
+		\vdots\\
+		0
+	\end{array}
+\right)
+\]
+
+
+Podemos comprobar fácilmente que la ecuación matricial que hemos escrito es equivalente al sistema de ecuaciones:
+\[\left\{\begin{array}{l}y_{n+k}=\sum_{j=0}^k α_jy_{n+j} + h\phi_f(x_n,y_x,...,y_{n+k-1},h)\\
+y_{n+k-2} = y_{n+k-2}\\
+...\\
+...\\
+y_n = y_n\end{array}\right.\]
+
+Una vez tenemos el sistema podemos escribir:
+\[Y_n = A^nY_0 + h\sum_{l=0}^{n-1}A^{n-1-l}F(X_l,Y_l)\]
+\[Y_{n+1} = A^{n+1}Y_0 + h\sum_{l=0}^nA^{n-l}F(x_l,Y_l) = A·A^nY_0+hF(x_n,Y_n) +h\sum_{l=0}^{n-1}A^{n-l}F(x_l,Y_l)=\]
+\[=A\left(A^nY_0+h\sum_{l=0}^{n-1}A^{n-l-1}F(x_l,Y_l)\right)+hF(x_n,Y_n)=AY_n+hF(x_n,Y_n)\]
+
+Consieramos ahora las sucesiones:
+\[U_{n+1}=AU_n + hF(x_n,U_n)+hδ_n\]
+\[V_{n+1}=AV_n + hF(x_n,V_n)+hγ_n\]
+
+Estudiando su diferencia obtenemos:
+\[U_n-V_n = A^n(U_0-V_0)+h\sum_{l=0}^{n-1}A^{n-1-l}\left(F(x_n,U_l)-F(x_n,V_l)\right) + h\sum_{l=0}^{n-1}A^{n-1-l}(δ_n-γ_n)\]
+
+Supongamos que $|A^n|\leq M$. Entonces podremos escribir:
+\[|U_n-V_n| \leq M|U_0-V_0| + hLM\sum_{l=0}^{n-1}|U_l-V_l| + \underbrace{h(n-1)}_{\leq (b-a)}\max_n\norm{δ_n-γ_n} \implies\]
+\[\implies |U_n-V_n| \leq K + hLN \sum_{l=0}^{n-1} |U_l-V_l|\]
+
+Sea $\Psi_n=K + hLN \sum_{l=0}^{n-1} |U_l-V_l|$ podemos reescribir la desigualdad anterior como
+\[|U_n-V_n| \leq \Psi_n\]
+
+y podemos observar que
+\[\Psi_{n+1} - \Psi_n = hLM|U_n-V_n| \leq hLM\Psi_n \implies \Psi_{n+1} \leq (1+hLM)\Psi_n\implies \]
+\[\implies \Psi_{n+1} \leq (1+hLM)^n\Psi_0\]
+
+Finalmente podemos ver que:
+\[|\Psi_n| \leq e^{(b-a)LM}\Psi_0\]
+\[|U_n-V_n| \leq e^{(b-a)LM}\Psi_0\]
+con lo que queda probada la 0-estabilidad.
+
+\obs En la demostración hemos supuesto que $|A^n|\leq M$ sin haberlo demostrado por lo que, hasta que no lo probemos, no estará completada la demostración.
+
+Vamos a probarlo.
+\begin{proof}
+El primer polinomio característico coincide con el polinomio característico de la matriz $A$ y, por tanto, las soluciones de $ρ(ζ)$ son los autovalores de $A$.
+
+Por definición, si los autovalores de $A$ tienen módulo menor que 1 y el que tiene módulo 1 es simple, entonces $|A^n| \leq M \ \forall n$
+
+\textbf{Se trata de un resultado algebraico que sale de los contenidos de la asignatura por lo que tampoco le daremos más importancia.}
+\end{proof}
+\end{itemize}
+\end{proof}
+
+\begin{theorem}[Teorema más importante del curso]
+\[\text{ Consistencia } + \text{ 0-estabilidad } \iff \text{ Convergencia }\]
+\end{theorem}
+\begin{proof}
+Como tantas otras veces, habría que demostrar los dos lados de la implicación.
+\begin{itemize}
+\item $\implies$
+
+Ya está probado en el teorema \ref{theorem:consist_y_0estable_converge}
+
+\item $\Longleftarrow$
+
+Como puede resultar un poco lioso trataremos de recalcar en todo momento qué es lo que se está demostrando.
+
+Queremos probar que:
+
+\textcolor{blue}{\[\text{ Convergencia } \implies \text{ Consistencia } + \text{ 0-estabilidad } \]}
+
+Vamos a hacer esta demostración por pasos. 
+
+\begin{enumerate}
+\item Primero demostraremos que 
+
+\[\text{Convergencia} \implies \text{ criterio de la raíz }\implies \text{0-estabilidad}\]
+
+Vamos a demostrar que si no se cumple el criterio de la raiz entonces no tendríamos convergencia, es decir,
+\textcolor{blue}{\[\text{no criterio de la raiz} \implies \text{no convergencia}\]}
+Como ya hemos visto anteriormente, la negación del criterio de la raíz se divide en dos partes:
+
+\begin{enumerate}
+\item Supongamos que existe una solución del polinomio $ε$ tal que $|ε| >1$.
+
+Consideramos el PVI $y'=0$ con $y(0)=0$, con lo que la solución será $y(x)=0$.
+
+Con este PVI tenemos las sucesiones:
+\[\left\{ \begin{array}{l}y_n = hε^n \\
+y(x_n) = 0\end{array}\right.\]
+a partir de las cuales podemos escribir:
+
+\[\max_{0\leq n \leq k-1} \norm{y(x_n)-y_n} = h |ε|^{k-1}\]
+\[\max_{k \leq n \leq N} \norm{y(x_n)-y_n} = h|ε|^N=\frac{b-a}{N}|ε|^N\]
+
+Recordemos que para tener convergencia necesitamos 
+\[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)}= 0 \implies \lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n))} = 0\]
+
+Pero en nuestro caso, tenemos la igualdad de la izquierda pero no se cumple la igualdad asociada al límite de la derecha, puesto que $|ε|^N$ crece más rápido que el denominador $N$.
+
+Por tanto, al no satisfacerse el criterio de la raíz, no tenemos convergencia.
+
+\item Supongamos que existe una solución doble del polinomio $ε$ tal que $|ε|=1$. 
+
+Por ser raíz doble tendremos que $ρ'(ε)=0$.
+
+Si seguimos trabajando con el mismo PVI del apartado anterior, recordando la definición de función incremento, tenemos que
+\[\sum_{j=0}^kα_jy_{n+j}=\phi_f = 0\]
+de donde podemos obtener que $y_n = \sqrt{h}nε^n$ es raíz.
+
+Para comprobar que es raíz debemos recordar que $ε$ es raíz del polinomio característico y de su derivada.
+
+Teniendo en cuenta que $y(x_n)=0$ podemos ver que:
+\[\max_{0\leq n \leq k-1} \norm{y(x_n)-y_n} = \sqrt{h}(k-1)\]
+\[\max_{k \leq n \leq N} \norm{y(x_n)-y_n} = \sqrt{h}N\]
+
+Recordemos que para tener convergencia necesitamos 
+\[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)}= 0 \implies \lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n))} = 0\]
+
+Es sencillo de comprobar que la parte de la iqzuiqerda se cumple pero en la parte derecha tenemos:
+\[\lim_{h\to 0} \max_{k\leq n \leq N}\norm{(y_n-y(x_n))} = \lim_{h\to 0} \frac{\sqrt{b-a}}{\sqrt{N}} N = \lim_{h\to 0} \sqrt{b-a}\sqrt{N} = \infty\]
+
+Por lo que queda claro que el método no es convergente.
+\end{enumerate}
+
+Hasta aquí ya hemos probado que si el método no satisface el criterio de la raíz entonces tampoco será convergente. Es decir, tenemos que
+
+\textcolor{ForestGreen}{\[\text{convergencia}\implies \text{criterio de la raíz}\]}
+
+Pero el teorema \ref{theorem:criterio_raiz} nos dice que si satisface el criterio de la raíz, entonces será 0-estable, con lo que ya tenemos:
+\textcolor{ForestGreen}{\[\text{convergencia}\implies \text{0-estabilidad}\]}
+
+\item Ahora vamos a demostrar que
+\textcolor{blue}{\[\text{Convergencia} \implies \text{consistencia}\]}
+
+Para llevar a cabo esta demostración lo que haremos será probar las dos condiciones que nos garantizan la consistencia según el teorema \ref{theorem:consist_iif_relaciones}:
+\begin{enumerate}
+\item Probamos que
+\[\sum_{j=0}^kα_j = 0\]
+
+Para ello consideramos el PVI $y'(x)=0$ con dato inicial $y(0)=1$ del que sabemos la solución es $y(x)=1$.
+
+Por definición sabemos que:
+\[\sum_{j=0}^kα_jy_{n+k}=0\]
+si tomo como valores de arranque $y_n=1$ para $n=0,...,k-1$ tenemos
+\[\lim_{h \to 0} \max_{0 \leq n \leq k-1} \norm{y_n-y(x_n)} = 0\]
+y por convergencia esto nos garantiza que 
+\[\lim_{h \to 0} \max_{k \leq n \leq N} \norm{y_n-y(x_n)} = 0 \implies \lim_{h\to 0}y_n = 1\]
+
+Por tanto tendríamos:
+\[0 = \lim_{h \to 0} \sum_{j=0}^kα_jy_{n+j} = \sum_{j=0}^k α_j\lim_{h\to 0} y_{n+j} = \sum_{j=0}^kα_j\]
+
+\item Ahora nos queda probar:
+\[\phi_f(x,y(x),...,y(x),0)=\left( \sum_{j=0}^kjα_j\right)f(x,y(x))\]
+prueba que realizaremos por reducción al absurdo.
+
+Consideramos ahora un PVI general y supongamos que el método numérico no satisface la condición que queremos probar. Entonces
+\[\phi_f(x,y(x),...,y(x),0)-\left( \sum_{j=0}^kjα_j\right)f(x,y(x)) = g(x)\]
+donde $g(x)\neq 0$
+
+Definamos ahora 
+\[\tilde{f}(x,y) = f(x,y)+\frac{g(x)}{\sum_{j=0}^kjα_j}\]
+\obs Sabemos que esta función está bien definida puesto que el denominador no puede ser 0 por el criterio de la raíz.
+
+Ahora definimos:
+\[\tilde{\phi}_{\tilde{f}}(x_n,y_n,...y_{n+k-1},h)=\phi_f(x_n,y_n,...,y_{n+k-1},h)\]
+
+Con lo que podemos escribir:
+\[\sum_{j=0}^kα_jy_{n+k} = h \tilde{\phi}_{\tilde{f}}(x_n,y_n,...y_{n+k-1},h)\]
+que no es más que una ``copia'' de nuestro método numérico inicial:
+\[\sum_{j=0}^kα_jy_{n+k} = h \phi_{f}(x_n,y_n,...y_{n+k-1},h)\]
+del que sabemos es convergente y, por lo probado en el apartado anterior, 0-estable.
+
+A partir de estas ecuaciones podemos escribir:
+\[\tilde{\phi}_{\tilde{f}}(x_n,y(x),...y(x),0) =  \phi_{f}(x_n,y(x),...y(x),0) = g(x)+\sum_{j=0}^kα_{j}jf(x,y(x))=\]
+donde la última igualdad se deriva de la suposición inicial de que el método no es convergente.
+\[=\left( \sum_{j=0}^kjα_j\right)\tilde{f}(x,y(x))\]
+
+Es decir, acabamos de comprobar que el método 
+\[\sum_{j=0}^kα_jy_{n+k} = h \tilde{\phi}_{\tilde{f}}(x_n,y_n,...y_{n+k-1},h)\]
+es convergente.
+
+Puesto que el método es convergente, entonces $y_n$ debe converger a la solución de 
+\[\tilde{y}'=\tilde{f}(x,\tilde{y}(x))\]
+
+Por otro lado, también converge a la solución de
+\[y'(x)=f(x,y(x))\]
+pero $y(x)\neq \tilde{y}(x)$ puesto que las funciones son distintas, lo que supone una contradicción puesto que una sucesión no puede tener dos límites distintos de manera simultánea.
+
+Por tanto tenemos que $g(x)=0$, es decir, el método ha de satisfacer la segunda condición necesaria para la consistentia.
+\end{enumerate}
+Finalmente tenemos que
+\textcolor{ForestGreen}{\[\text{Convergencia} \implies \text{consistencia}\]}
+\end{enumerate}
+\end{itemize}
+
+\end{proof}
