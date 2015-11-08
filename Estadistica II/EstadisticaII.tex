@@ -71,7 +71,7 @@ Notación: como durante el curso vamos a trabajar con vectores aleatorios, vamos
 \item Si A es una matriz, A' es su traspuesta
 \end{itemize}
 
-Por tanto, dado un vector de p variables aleatorias (vector aleatorio p-dimensional), tenemos un resultado parecido.
+Por tanto, dado un vector de p variables aleatorias (vector aleatorio p-dimensional), definimos:
 
 \begin{itemize}
 \item Esperanza. Será un vector columna con las esperanzas de cada variable aleatoria.
@@ -113,7 +113,7 @@ X_3
 Propiedades:
 \begin{enumerate}
 \item $\mathbb{E}(X+c) = \mathbb{E}(X)+c$. Como en el caso de variables aleatorias.
-\item $\mathbb{E}(AX) = A\mathbb{E}(X)$. Donde A es una matriz de dimensión $pxp$ siendo p la dimensión de X.
+\item $\mathbb{E}(AX) = A\mathbb{E}(X)$. Donde A es una matriz de dimensión $p$x$p$ siendo p la dimensión de X.
 
 Lo vemos para p=3:
 
@@ -248,21 +248,40 @@ Var(AX+b) = \mathbb{E}\left[ (AX+b-A\mu-b)(AX+b-A\mu-b)' \right] =
 \section{Función característica}
 La función característica de un vector aleatorio X es:
 \[
-\phi_X(t)=\mathbb{E}(\exp^{it'X})
+\phi_X(t)=\mathbb{E}(e^{it'X})
 \]
 
 Siendo X y t p-dimensionales.
 
-\begin{prop} Mecanismo de Cramer-Wold... \end{prop}
-
-Esta función caracteriza la distribución de X:
+Se llama función característica porque es única para cada distribución de X. Es decir:
 \begin{prop} Sean X e Y dos vectores aleatorios:
 \[
 \phi_X(t)=\phi_Y(t) \Leftrightarrow X \stackrel{d}{=} Y
 \]
-
-\textcolor{red}{Completar este apartado consultando a Elena}
 \end{prop}
+
+\begin{prop} Mecanismo de Cramer-Wold: Dados dos vectores aleatorios X e Y:
+\textcolor{red}{preguntar que es a'X (dos vectores columna multiplicados?)}
+\[
+a'X \stackrel{d}{=} a'Y \text{ } \forall a \in \mathbb{R}^p \Leftrightarrow X \stackrel{D}{=} Y
+\] 
+\begin{proof}
+\begin{itemize}
+\item $\Leftarrow)$ Trivial
+\item $\Rightarrow)$ Aplicamos la función característica y tenemos que:
+$$\phi_{a'X}(t) \phi_{a'Y}(t) \text{ } \forall t \in \mathbb{R}$$
+
+Por tanto, también es cierto para t=1:
+$$\phi_{a'X}(1) = \phi_{a'Y}(1) \Rightarrow \mathbb{E}(e^{ia'X})=\mathbb{E}(e^{ia'Y}) \Rightarrow \phi_{X}(a)=\phi_{Y}(a)$$
+\end{itemize}
+\end{proof}
+\end{prop}
+
+Esta función caracteriza la distribución de X:
+
+
+
+
 \section{Matriz de covarianzas}
 Como ya dijimos anteriormente la matriz de covarianzas $\Sigma$ define la varianza de un vector aleatorio y es simétrica. Por tanto podemos expresar $\Sigma$ de la siguiente forma:
 \[
@@ -271,16 +290,14 @@ Como ya dijimos anteriormente la matriz de covarianzas $\Sigma$ define la varian
 
 Siendo D una matriz diagonal.
 
-\textcolor{red}{$C^{-1}=C'$ ya que las columnas de C son vectores ortogonales. OJO CUIDAO, que tienen que ser ortonormales...
-Una matriz real A es ortogonal si y sólo si sus vectores filas o vectores columna son cada uno un conjunto ortonormal de vectores.}
+$C^{-1}=C'$ ya que las columnas de C son vectores ortonormales.
 Por tanto:
 \[
 \Sigma = CDC'  \text{ y } \Sigma^{-1} = CD^{-1}C'
 \]
 
-\textcolor{blue}{Caso particular:
+Ejemplo p=2:
 \[
-p=2 \text{ , }
 \mu=\left(
 \begin{array}{c}
 0\\
@@ -288,7 +305,7 @@ p=2 \text{ , }
 \end{array}
 \right)
 \text{ , }
-\left(
+\Sigma=\left(
 \begin{array}{cc}
 \lambda_1& 0 \\
 0 & \lambda_2
@@ -313,15 +330,37 @@ X_2
 \Rightarrow
 \frac{X_1^2}{\lambda_1}+\frac{X_2^2}{\lambda_2}=cte
 \]
-}
+Luego:
+\[
+(X-\mu)'\Sigma(X-\mu) = cte \Rightarrow (X-\mu)'CD^{-1}C'(X-\mu) = cte \Rightarrow (\tilde{X}-\tilde{\mu})'CD^{-1}C'(\tilde{X}-\tilde{\mu}) = cte
+\]
 
+\begin{defn}[Correlación]
+La correlación entre dos vectores aleatorios $X_1$ y $X_2$ se define como:
+\[
+cor(X_1,X_2)=\frac{cov(X_1,X_2)}{\sqrt{Var(X_1)Var(X_2)}}
+\]
+
+Es por tanto una matriz, en su diagonal principal esta formada por 1's. \textcolor{red}{Explicar algo más del significado geométrico de la correlación}
+
+
+\end{defn}
 
 \section{Estandarización multivariante}
+\begin{defn}
+Sea X una variable aleatoria. X es normal si tiene densidad dada por:
+\[
+f(x) = \frac{1}{\sigma\sqrt{2 \pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+\]
+
+Además, si cogemos $Y=\frac{X-\mu}{\sigma}$ entonces $Y\equiv N(0,1)$
+\end{defn}
+
 \begin{defn}
 Sea un vector aleatorio X, es normal p-dimensional con vector de medias $\mu$ y matriz de covarianzas $\Sigma$ (notación: $X\equiv N_p(\mu, \Sigma)$) si tiene densidad dada por:
 
 \[
-f(x)=\abs{\Sigma}^{-1/2}(2\pi)^{-p/2} exp \left( -\frac{1}{2}(x-\mu)' \right)
+f(x)=\abs{\Sigma}^{-1/2}(2\pi)^{-p/2} e^{\left( -\frac{1}{2}(x-\mu)'\Sigma^{-1}(x-\mu) \right)}
 \]
 \end{defn}
 
@@ -330,7 +369,7 @@ f(x)=\abs{\Sigma}^{-1/2}(2\pi)^{-p/2} exp \left( -\frac{1}{2}(x-\mu)' \right)
 \begin{proof}
 Sabemos por definición que:
 \[
-f_X(x)=\abs{\Sigma}^{-1/2}(2\pi)^{-p/2} exp \left( -\frac{1}{2}(x-\mu)' \right)
+f_X(x)=\abs{\Sigma}^{-1/2}(2\pi)^{-p/2} \exp \left\{ -\frac{1}{2}(x-\mu)'\Sigma^{-1}(x-\mu) \right\}
 \]
 
 Vamos a aplicar un cambio de variable en la fórmula de la densidad:
@@ -339,25 +378,182 @@ Despejando de $Y = h(X)= \Sigma^{-1/2}(X-\mu)$, obtenemos que $\Sigma^{1/2}Y+\mu
 
 Y ahora cogemos el Jacobiano de $h^{-1}(Y)=X$ que será $\Sigma^{1/2}$ ($\mu$ es una constante e Y es la variable).
 
-También hay que considerar la exponencial de la fórmula de la densidad, ahi hacemos el cambió de variable de:
-
-$$e^X \text{por} e^{h^{-1}(Y)}=e^{\Sigma^{1/2}Y+\mu}$$
-
-Y el Jacobiano sería $e^{\Sigma^{1/2}Y}$:
+\textcolor{red}{Esto de coger el jacobiano a qué se debe? A que luego la función de densidad se integra?}
 
 
 Por tanto nos quedaría:
 \[
-f(X) = f(h^{-1}(Y))*\abs{Jh(x)} = \abs{\Sigma}^{-1/2}(2 \pi)^{-p/2} \exp\left(-\frac{1}{2}(\Sigma^{-1/2}Y+\mu-\mu)'  \right) \exp\left( \Sigma^{1/2}Y \right) \Sigma^{1/2}  =
+f(x) = \abs{\Sigma}^{-1/2}(2\pi)^{-p/2} \exp \left\{ -\frac{1}{2}(x-\mu)'\Sigma^{-1}(x-\mu) \right\} = f(h^{-1}(y))\cdot\abs{Jh(x)} =
+\]
+\[ 
+\abs{\Sigma}^{-1/2}(2 \pi)^{-p/2} \exp\left\{-\frac{1}{2}(\Sigma^{1/2}y+\mu-\mu)'\Sigma^{-1}(\Sigma^{1/2}y+\mu-\mu)  \right\} \abs{\Sigma^{1/2}}  =
 \]
 \[
-= \abs{\Sigma}^{-1/2}(2 \pi)^{-p/2} \exp\left(-\frac{1}{2}(\Sigma^{-1/2}Y)' \right) \exp\left( \Sigma^{1/2}Y \right) \abs{\Sigma}^{1/2} =
+= \abs{\Sigma}^{-1/2}(2 \pi)^{-p/2} \exp\left\{-\frac{1}{2}y'\Sigma'^{1/2}\Sigma^{-1}\Sigma^{1/2}y)  \right\} \abs{\Sigma}^{1/2} =
+\]
+
+Por ser $\Sigma$ simétrica tenemos que: $\Sigma = \Sigma'$
+\[
+= \abs{\Sigma}^{-1/2}(2 \pi)^{-p/2} \exp\left\{-\frac{1}{2}y'\Sigma^{1/2}\Sigma^{-1}\Sigma^{1/2}y)  \right\} \abs{\Sigma}^{1/2} =
 \]
 \[
-\abs{\Sigma}^{-1/2}(2 \pi)^{-p/2} \exp\left(-\frac{1}{2}(Y'\Sigma^{-1/2}\Sigma^{1/2}Y \right) \abs{\Sigma^{1/2}} = (2 \pi)^{-p/2} \exp\left(-\frac{1}{2}(Y'Y) \right)
+= (2 \pi)^{-p/2} \exp\left\{-\frac{1}{2}(y'y) \right\} = \prod_{i=1}^{p} \frac{1}{\sqrt{2\pi}} e^{-\frac{(y_i)^2}{2}} =  \prod_{i=1}^{p} \frac{1}{\sqrt{2\pi}} e^{-\frac{(x_i-\mu)^2}{2\sigma^2}} =\prod_{i=1}^{p} f_{X_{i}}(x)
 \]
+
+\textcolor{red}{Multiplicamos un vector columna por un vector fila, sería al reves no?}
+
+Hemos usado un teorema que dice que n variables aleatorias $X_1,...,X_n$ son independientes si y solo si el $f(x_1,...,x_n)=\prod_{i=1}^{n}f(x_i)$ siendo f la función de densidad.
+
 \end{proof}
 
+\textcolor{blue}{Comprobar esto:}
+\begin{obs}
+Si $X \equiv N_p(\mu, \Sigma)$ y definimos $Y = \Sigma^{-1/2}(X-\mu)$, entonces $Y\equiv N_p(0_p, I_p)$. Siendo $0_p$ un vector de 0's de dimensión p, e I la matriz identidad de rango p:
+\end{obs}
+\[
+\mathbb{E}(Y)=\mathbb{E}\left( \Sigma^{-1/2}(X-\mu) \right) = \Sigma^{-1/2} \mathbb{E}\left( (X-\mu) \right) = \Sigma^{-1/2}(\mu -\mu)=0
+\]
+
+\[
+Var(Y)=Var\left(\Sigma^{-1/2}(X-\mu) \right)=
+\]
+\[
+=\mathbb{E}\left( \left( \Sigma^{-1/2}X-\Sigma^{-1/2}\mu-\Sigma^{-1/2}\mu+\Sigma^{-1/2}\mu \right) \left( \Sigma^{-1/2}X-\Sigma^{-1/2}\mu-\Sigma^{-1/2}\mu+\Sigma^{-1/2}\mu \right)' \right)=
+\]
+Usamos que $\Sigma$ es simétrica:
+\[
+=\mathbb{E}\left( \left( \Sigma^{-1/2}(X-\mu) \right) \left( \Sigma^{-1/2}(X-\mu) \right)' \right) = \mathbb{E}\left( \Sigma^{-1/2}(X-\mu)(X-\mu)'\Sigma^{-1/2}  \right) = \Sigma^{-1/2}\Sigma\Sigma^{-1/2} = I
+\]
+
+
+\textbf{Estandarización paso por paso: }Vamos a ver qué es lo que hacemos con la estandarización paso por paso. Sea X el vector aleatorio:
+\begin{enumerate}
+\item $Y=(X-\mu)$. Aquí lo que hacemos es simplemente una traslación del vector X. 
+\item $Y=C'(X-\mu)$. Aquí giramos los datos. C' es una matriz de giro ya que su determinante es 1 (de hecho es ortonormal). Esta rotación elimina la correlación \textcolor{red}{¿Por qué?}. Calculamos la varianza:
+\[
+Var\left( C'(X-\mu) \right) = \mathbb{E}\left( \left( C'X-C'\mu-C'\mu+C'\mu \right) \left( C'X-C'\mu-C'\mu+C'\mu \right)' \right)
+\]
+\[
+\mathbb{E}\left( \left( C'(X-\mu) \right) \left( C'(X-\mu) \right)' \right) = \mathbb{E}\left( C'(X-\mu)(X-\mu)'C  \right) = C'\Sigma C=C'CDCC'=D
+\]
+\item $Y=D^{-1/2}C'(X-\mu)$. Con esto hacemos un cambio de escala para que las varianzas sean 1. Calculamos la varianza. Usamos que $Var(AX)=AVar(X)A'$ y que $D=D'$:
+\[
+Var\left( D^{-1/2}C'(X-\mu) \right) = D^{-1/2}DD^{-1/2} = I
+\]
+\item $Y=CD^{-1/2}C'(X-\mu)$. Deshacemos el giro de antes. Calculamos la varianza:
+\[
+Var\left( CD^{-1/2}C'(X-\mu) \right)=CIC' = I
+\]
+\end{enumerate}
+\includegraphics[scale=0.75]{img/estandarizacionMultivariante.png}
+
+\textbf{Consecuencias de la estandarización:}
+\begin{enumerate}
+\item Si $X\equiv N_p(\mu, \Sigma)$, entonces $\mathbb{E}(X)=\mu$ y $Var(X)=\Sigma$.
+
+Esto es cierto ya que tal y como hemos visto antes $X=\Sigma{1/2}Y+\mu$ y entonces  (Usando que $C'=C$)$\mathbb{E}(X)=0+\mu$ y $Var(X)=Var(\Sigma{1/2}Y+\mu)=Var(\Sigma{1/2}Y)=\Sigma^{1/2}Var(Y)\Sigma'^{1/2}=CD^{1/2}C'IC'D^{1/2}C=\Sigma$
+
+\item Si $X\equiv N_p(\mu, \Sigma)$, entonces $\phi_X(t)=exp\left\{ it'\mu-\frac{1}{2}t'\Sigma t \right\}$:
+%\[
+%\phi_X(t)=\mathbb{E}\left( exp\left\{ it'(\Sigma^{1/2}Y+\mu) \right\} \right) = exp \left\{ it'\mu  \right\} \mathbb{E}\left( exp\left\{ it'\Sigma^{1/2}Y \right\} \right)
+%\]
+\item La distribución de $(X-\mu)'\Sigma(X-\mu)$ es $\chi^2_p$:
+
+Siendo $X\equiv N_p(\mu,\Sigma)$ con $X=\Sigma^{-1/2}Y+\mu$. Entonces (sabiendo que $\Sigma$ es simétrica):
+\[
+(X-\mu)'\Sigma^{-1}(X-\mu)=Y'\Sigma^{1/2}\Sigma^{-1}\Sigma^{1/2}Y=Y'Y=\sum_{i=1}^{p} Y_i^2
+\]
+\textcolor{red}{Otra vez líos con vector columna o fila}
+Usando que $Y_i\equiv N(0,1)$, entonces:
+\[
+\sum_{i=1}^{p} Y_i^2 = \chi^2_p \text{ chi-cuadrado con p grados de libertad}
+\]
+
+\end{enumerate}
+
+\section{Transformaciones afines de vectores normales}
+\begin{prop}
+Si $X \equiv N_p(\mu, \Sigma)$, A es matriz qxp y $b\in \mathbb{R}^q$, entonces $AX+b \equiv N_q(A\mu +b, A\Sigma A')$
+\end{prop}
+\begin{proof}
+\[
+\phi_[AX+b](t)=\mathbb{E}\left( exp\left\{ it'(AX+b) \right\} \right) = e^{it'b}\mathbb{E}\left( e^{it'AX} \right) = e^{it'b} exp\left\{ it'A\mu-\frac{1}{2}t'A\Sigma A't \right\}
+\]
+\textcolor{blue}{sin terminar...}
+\end{proof}
+
+Una consecuencia de esta proposición es lo siguiente: Si X sigue una distribución normal p-dimensional, y se expresa como $X=(X_1|X_2)$, con $X_1\in \mathbb{R}^q$ y $X_2\in \mathbb{R}^{p-q}$, y consideramos las particiones correspondientes de $\mu$ y $\Sigma$:
+\[
+\mu=(\mu_1 | \mu_2) \text{ , } \Sigma=
+\left(
+\begin{array}{c|c}
+\Sigma_{11}& \Sigma_{12} \\
+\hline
+\Sigma_{21}& \Sigma_{22} 
+\end{array}
+\right)
+\]
+entonces $X_1\equiv N_q(\mu_1, \Sigma_{11})$
+
+\begin{example}
+Sea un vector de variables aleatorias $Y=(Y_1, Y_2,Y_3, Y_4, Y_5)$ tal que $Y\equiv N_5(\mu, \Sigma)$ (Y es normal 5-dimensional) con vector de medias $\mu=(\mu_1, \mu_2, \mu_3, \mu_4, \mu_5)$ y sea $X_1=(Y_1,Y_2,Y_3)$ y $X_2=(Y_4,Y_5)$. 
+
+\[
+\mu=
+\left(
+\begin{array}{c}
+\mu_{X_1}\\
+\hline
+\mu_{X_2}
+\end{array}
+\right)=
+\left(
+\begin{array}{c}
+\mu_{Y_1}\\
+\mu_{Y_2}\\
+\mu_{Y_3}\\
+\hline
+\mu_{Y_4}\\
+\mu_{Y_5}
+\end{array}
+\right)
+\]
+\[
+\Sigma_Y=
+\left(
+\begin{array}{ccc|cc}
+\Sigma_{11}& \Sigma_{12} & \Sigma_{13} & \Sigma_{14} & \Sigma_{15}\\
+\Sigma_{21}& \Sigma_{22} & \Sigma_{23} & \Sigma_{24} & \Sigma_{25}\\
+\Sigma_{31}& \Sigma_{32} & \Sigma_{33} & \Sigma_{34} & \Sigma_{35}\\
+\hline
+\Sigma_{41}& \Sigma_{42} & \Sigma_{43} & \Sigma_{44} & \Sigma_{45}\\
+\Sigma_{51}& \Sigma_{52} & \Sigma_{53} & \Sigma_{54} & \Sigma_{55}
+\end{array}
+\right) \text{ , }
+\Sigma_X=
+\left(
+\begin{array}{c|c}
+\Sigma_{11}& \Sigma_{12} \\
+\hline
+\Sigma_{21}& \Sigma_{22} 
+\end{array}
+\right)
+\]
+
+Entonces $X_1\equiv N_3(\mu_{X_1}, \Sigma_{11})$ para la matriz $\Sigma_X$.
+\end{example}
+
+\begin{prop}
+\textcolor{red}{Si $X=(X_1,X_2)$ es normal n-dimensional siendo n la suma de la dimension de $X_1+X_2$, entonces :}Dado $X_1$ y $X_2$ vectores aleatorios, son independientes si y solo si $\Sigma_{12}=\Sigma_{21}=0$
+\end{prop}
+
+\begin{obs}
+\begin{itemize}
+\item Si dos variables aleatorias tienen distribución normal y además $Cov(X,Y)=0$, esto no implica que X e Y sean independientes. Esto sería cierto si el vector (X,Y) fuera normal bidimensional.
+\item Si dos variables aleatorias X e Y tienen distribución normal y $a,b \in \mathbb{R}$, la combinación linear de $aX+bY$ no tiene necesariamente distribución normal. Esto sería cierto si el vector (X,Y) fuera normal bidimensional.
+\item Aunque todas las marginales de un vector aleatorio p-dimensional X tengan distribución normal, esto no implica que X tenga distribución normal p-dimensional. Esto sería cierto si todas ellas fueran independientes entre si.
+\end{itemize}
+\end{obs}
 
 \section{Ejercicio 1}
 Definimos el siguiente vector aleatorio: $X = (X_1,X_2,X_3)' \equiv N_3(\mu, \Sigma)$ con:
@@ -451,22 +647,56 @@ X_2
 Sí son independientes ya que la covarianza entre ambas variables es 0. La covarianza entre $X_2$ y $X_3$ es el elemento de la fila 3 y la columna 2 de la matriz de covarianzas $\Sigma$, (que al ser $\Sigma$ simétrica coincide con el elemento de la fila 2 y la columna 3).
 
 \ppart ¿Es $X_3$ independiente del vector $(X_1, X_2)'$?
-???
+No, no lo es, tenemos que ver que ciertos elementos de la matriz de covarianzas son 0:
+\[
+\Sigma=
+\left(
+\begin{array}{cc|c}
+7/2& 1/2& -1 \\
+1/2& 1/2& 0 \\
+\hline
+-1& 0& 1/2
+\end{array}
+\right)
+\]
 
-\ppart Calcula la  distribución de la variable aleatoria $(2X_1-X_2+3X_3)$.
+Y vemos que hay un '-1' y un '0', si fueran los dos elementos 0, si serían independientes, pero al haber un elemento distinto de 0, no lo son.
 
-Procedemos de la siguiente manera:
+
+\ppart Calcula la  distribución de la variable aleatoria $(2X_1-X_2+3X_3)$. Utilizando la proposición anterior:
+
+Si $X \equiv N_p(\mu, \Sigma)$, A es matriz qxp y $b\in \mathbb{R}^q$, entonces $AX+b \equiv N_q(A\mu +b, A\Sigma A')$ 
+
+Procedemos de la siguiente manera: $X\equiv N_3(\mu, \Sigma)$, $A=(2,-1,3)$ tiene dimensión 1x3 y b=0. Por tanto:
+\[
+\mu=AX+b = (2,-1,3)\cdot
+\left(
+\begin{array}{c}
+0 \\
+0 \\
+0
+\end{array}
+\right) = 0 
+\]
 
 \[
-(2X_1-X_2+3X_3)=(2,-1,3)\left(
-\begin{array}{c}
-X_1\\
-X_2\\
-X_3
+\Sigma = A\Sigma A'=(2,-1,3)
+\left(
+\begin{array}{ccc}
+7/2& 1/2& -1 \\
+1/2& 1/2& 0 \\
+-1& 0& 1/2
 \end{array}
-\right)\equiv
-N\left( 0,  \right)
+\right) \left(
+\begin{array}{c}
+2 \\
+-1 \\
+3
+\end{array}
+\right)=5
 \]
+
+Por tanto, $(2X_1-X_2+3X_3)\equiv N(0,5)$
 
 
 
@@ -474,127 +704,169 @@ N\left( 0,  \right)
 
 \begin{prop}
 
-Sea $X=(X_1|X_2)$ con $X_1∈ℝ^p$ y $X_2∈ℝ^{p-q}$. Consideramos las particiones correspondientes de $µ$ y de $\Sigma$.
+Sea $X=(X_1|X_2)$ con $X_1∈ℝ^p$ y $X_2∈ℝ^{p-q}$. Consideramos las particiones correspondientes de $µ$ y de $\Sigma$ y suponemos que $\Sigma_{11}^{-1}$ existe. Entonces:
+\[
+X_2|X_1 \equiv N_{p-q}(\mu_{2.1},\Sigma_{2.1})
+\]
+donde:
+\[
+\mu_{2.1}=\mu_2 +\Sigma_{21}\Sigma_{11}^{-1}(X_1-\mu_1)
+\]
+\[
+\Sigma_{2.1}=\Sigma{22}-\Sigma_{21}\Sigma_{11}^{-1}\Sigma_{12}
+\]
+
+\begin{itemize}
+\item $\mu_{2.1}=\mathbb{E}(X_2|X_1)$ es una función lineal (afín) de $X_1$
+\item $\Sigma_{2.1}$ no depende de $X_1$ (homocedasticidad)
+\end{itemize}
 
 \end{prop}
 
-\begin{proof}
-Definimos $X_{2.1} = X_2 - Σ_{21}Σ_{11}^{-1}X_1$.
-
-\[
-\begin{pmatrix}
-X_1\\
-X_{2.1}
-\end{pmatrix} =
-\begin{pmatrix}
-I &| &0\\
-\hline
-- Σ_{21}Σ_{11}^{-1}  &| &I
- \end{pmatrix}
-\]
-
-Como es una combinación lineal de $(X_1,X_{2.1})'$, entonces $X_{2.1}$ es normal multivariante.
-
-Vamos a calcular la media y la matriz de covarianzas de $X_{2.1}$
-
-$X_{2-1} = N\left( µ_2-Σ_{21}Σ_{11}^{-1}µ_1 , \begin{pmatrix} Σ_{11} &|&0\\\hline 0&|&Σ_{2.1} \end{pmatrix} \right)$
-
-Donde las covarianzas se calculan: $AΣA'$, siendo $A$ la matriz de la combinación lineal, es decir:
-
-\[
-A=\begin{pmatrix}
-I &| &0\\
-\hline
-- Σ_{21}Σ_{11}^{-1}  &| &I
- \end{pmatrix}
-\]
-
-
-
-\paragraph{Conclusiones:}
-
-\begin{itemize}
-	\item $X_1$ es independiende de $X_{2.1}$
-	\item $X_{2.1}$ es normal, con media y varianza calculadas anteriormente.
-	\subitem $X_{2.1}|X_1$, al ser independientes, también se distribuye normalmente, con los mismos parámetros.
-	\item Dado $X_1$, los vectores $X_{2.1}$ y $X_2$  difieren en el vector constante $Σ_{21}Σ_{11}^{-1}X_1 \implies X_2|X_1 = N\left( µ_{2.1}, Σ_{2.1} \right)$
-\end{itemize}
-
-\end{proof}
-
 \begin{example}
-Vamos a considerar $X_1, X_2$ como escalares, para entender la proposición. Este ejemplo le surgió a un investigador que quería predecir la estatura de los hijos en función de la de los padres (que no padres y madres, sólo padres).
 
+Sea \[\left(
+\begin{array}{c}
+X \\
+Y
+\end{array}
+\right) \equiv N_2 \left( \left(
+\begin{array}{c}
+0 \\
+0
+\end{array}
+\right), \begin{pmatrix}10&3\\3&1\end{pmatrix} \right)\]
+
+A)Distribución $Y|X$:
+Y hace de $X_2$ en la fórmula vista anteriormente (es el segundo elemento del vector), y X de $X_1$.
 
 \[
-\begin{pmatrix}
-X\\Y
-\end{pmatrix} \equiv N_2\left( \begin{pmatrix} µ_x \\ µ_y \end{pmatrix}, \begin{pmatrix}
-σ_x^2&σ_{xy}\\σ_{xy}&σ_y^2
-\end{pmatrix} \right)
+\mu_{2.1}=E(Y|X)=\mu_2+\Sigma_{21}\Sigma_{11}^{-1}(X-\mu_1)=0+3\cdot \frac{1}{10}\cdot X = \frac{3}{10}X
 \]
-\label{form::EspVarCondicionada}
-Definimos $\gor{Y} = E(Y|X) = µ_y + \frac{σ_{xy}}{σ_x^2}(x-µ_x)$. La esperanza de la altura del hijo condicionada a la altura del padre será la media de las alturas de los hijos corregida por un factor en el que influye la diferencia de altura del padre con respecto a su media. Es de esperar que si Yao Ming tiene un hijo, sea más alto que la media.
+\[
+\Sigma_{2.1}=V(Y|X) = \Sigma_{22}-\Sigma_{21}\Sigma_{11}^{-1}\Sigma_{12} = 1-3\cdot\frac{1}{10}\cdot3 = \frac{1}{10}
+\]
 
-El factor de corrección $\frac{σ_{xy}}{σ_x^2}$ es importante y no me he enerado bien de dónde sale.
+B)Distribución $X|Y$:
+Al hacer la distribución de $X_1|X_2$ cambiamos el orden de los índices en las fórmulas:
 
-Ahora vamos a calcular $V(Y|X) = σ_{y}^2 - \frac{σ_{xy}^2}{σ_x^2} = σ_y^2 \left( 1- \rho^2\right)$ donde $\rho = \frac{σ_{xy}^2}{σ_x^2σ_y^2}$, el coeficiente de correlación.
-
-Ha dicho algo así como \textbf{La única relación que puede existir entre 2 variables normales es una relación lineal.}
-
-
-Este coeficiente de correlación aparece también en la expresión de la esperanza. Vamos a verlo:
-
- \[\gor{Y} = µ_y + \frac{σ_{xy}}{σ_x^2}(x-µ_x) \dimplies \frac{\gor{Y}-µ_y}{σ_y} = \frac{σ_{xy}}{σ_xσ_y}\frac{x-µ_x}{σ_x}\]
-
- Es decir:
-
- \[
-\frac{\gor{Y}-µ_y}{σ_y} = \rho \frac{x-µ_x}{σ_x}
- \]
-
-Aplicado a la estatura de los hijos respecto de los padres, se interpreta como: ``Si un padre es muy alto, su hijo será alto pero no destacará tanto como el padre''. Este fenómeno lo definió como \concept{Regresión a la mediocridad}.
+\[
+\mu_{1.2}=E(X|Y)=\mu_1+\Sigma_{12}\Sigma_{22}^{-1}(Y-\mu_2)=0+3\cdot \frac{1}{1}\cdot Y = 3Y
+\]
+\[
+\Sigma_{1.2}=V(X|Y) = \Sigma_{11}-\Sigma_{12}\Sigma_{22}^{-1}\Sigma_{21} = 10-3\cdot\frac{1}{1}\cdot3 = 1
+\]
 
 \end{example}
 
-\begin{defn}[Homocedástico]
-$Σ_{2.1}$ no depende de $X_1$.
-
-Esto se da cuando $\begin{pmatrix}X_1,X_2\end{pmatrix}$ es normal multivariante. Si no fueran normal multivariante, serían heterocedásticas. \footnote{Un ejemplo sería $X_1$ la renta de una familia y $X_2$ los ahorros de la misma. Los datos no se distribuyen conjuntamente normal, con lo que la $Σ_{2.1}$ si depende de $X_1$. Ya veremos más adelante este concepto con mayor detalle.}
-\end{defn}
-
 
 \begin{example}
 
-Ahora vamos a ver un par de ejemplos numéricos:
+Sea \[\left(
+\begin{array}{c}
+X \\
+Y
+\end{array}
+\right) \equiv N_2 \left( \left(
+\begin{array}{c}
+1 \\
+1
+\end{array}
+\right), \begin{pmatrix}3&1\\1&2\end{pmatrix} \right)\]
 
-Sea \[\begin{pmatrix}X,Y\end{pmatrix} \equiv N_2 \left( \begin{pmatrix}0,0\end{pmatrix}, \begin{pmatrix}10&3\\3&1\end{pmatrix} \right)\]
+Sea $Z_1 = X+Y$ y $Z_2 = X-Y$. Calcula la  distribución condicionada de $Z_1$ a $Z_2=1$
 
-\paragraph{Distribución $Y|X$:}
-
-\[E(Y|X) = \frac{3}{10}x\]
-\[V(Y|X) = \frac{1}{10}\]
-
-\paragraph{Distribución $X|Y$:}
-
-\[E(X|Y) = 3y\]
-\[V(X|Y) = 1\]
-
-Ambas son normales unidimensionales ya que $(X Y)$ es normal multivariante.
-
-Sea \[\begin{pmatrix}X,Y\end{pmatrix} \equiv N_2 ...\]
-
-Sea $Z_1 = X+Y$ y $Z_2 = X-Y$.
-
+Primero vamos a calcular el vector aleatorio $(Z_1,Z_2)$, por la proposición vista anteriormente tenemos que: $Z_1 \equiv N(A\mu+b,A\Sigma A')$ con:
 \[
-\begin{pmatrix}Z_1//Z_2\end{pmatrix} = \begin{pmatrix}1&1\\1&-1\end{pmatrix}\begin{pmatrix}X\\Y\end{pmatrix} \implies \begin{pmatrix}Z_1\\Z_2\end{pmatrix} = N_2\left(\begin{pmatrix}2\\0\end{pmatrix},\begin{pmatrix}7&1\\1&3\end{pmatrix}\right)
+A=
+\left(
+\begin{array}{cc}
+1 & 1 \\
+1 & -1
+\end{array}
+\right)
 \]
 
-Ahora vamos a calcular lo que nos piden: $E(Z_1|Z_2=1)$.
+Nos queda:
+\[
+A\mu =
+\left(
+\begin{array}{cc}
+1 & 1 \\
+1 & -1
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+1 \\
+1
+\end{array}
+\right)
+=
+\left(
+\begin{array}{c}
+2 \\
+0
+\end{array}
+\right)
+\]
 
-\[E(Z_1|Z_2=1) = 2 + \frac{1}{3}(1-0) = \frac{7}{3}\]
+Y por otro lado:
+\[
+A\Sigma A' =
+\left(
+\begin{array}{cc}
+1 & 1 \\
+1 & -1
+\end{array}
+\right)
+\left(
+\begin{array}{cc}
+3& 1 \\
+1& 2 
+\end{array}
+\right)
+\left(
+\begin{array}{cc}
+1 & 1 \\
+1 & -1
+\end{array}
+\right) =
+\left(
+\begin{array}{cc}
+7 & 1 \\
+1 & 3
+\end{array}
+\right)
+\]
 
-Es importante destacar que la distribución no depende del valor concreto por ser homocedásticas .
+Por tanto nos queda:
+\[\left(
+\begin{array}{c}
+Z_1 \\
+Z_2
+\end{array}
+\right) \equiv N_2 \left( \left(
+\begin{array}{c}
+2 \\
+0
+\end{array}
+\right), \begin{pmatrix}7&1\\1&3\end{pmatrix} \right)\]
+
+Ahora vamos a calcular la distribución de $Z_1|Z_2$, otra vez tenemos los subíndices cambiados con respecto a la fórmula general, por tanto:
+\[
+\mu_{1.2}=E(Z_1|Z_2)=2+\frac{1}{3}Z_2 \stackrel{Z_2=1}{\Rightarrow} \frac{7}{3}
+\]
+\[
+\Sigma_{1.2}=V(Z_1|Z_2) = 7-\frac{1}{3} = \frac{20}{3}
+\]
+Por tanto:
+\[
+\left(
+Z_1|Z_2 \\
+\right) \equiv N_2 \left( 
+\frac{7}{3}
+,  \frac{20}{3} \right)\]
 
 \end{example}
 
@@ -1427,6 +1699,621 @@ $$ R=\left\{D_{n,m} > C_{\alpha}\right\} $$
 Sea $(X_1, Y_1),...,(X_n, Y_n) \stackrel{iid}{\sim} F$. Y sea la hipótesis nula $H_0 :$ X e Y son independientes.
 
 \textcolor{red}{terminar esto en otro momento que no lo veo muy claro}
+
+
+\chapter{Regresión}
+El objetivo de la regresión es predecir una/s variable/s en función de la/s otra/s.
+
+
+\section{Regresión lineal}
+
+Observamos dos variables, X e Y , el objetivo es analizar la relación existente entre ambas, de forma que podamos predecir o aproximar el valor de la variable Y a partir del valor de la variable X.
+
+\begin{itemize}
+\item La variable Y se llama variable respuesta.
+\item La variable X se llama variable regresora o explicativa.
+\end{itemize}
+
+Por ejemplo:
+\begin{center}
+\includegraphics[scale=0.5]{img/RentaVsFracaso.png}
+\end{center}
+
+Queremos predecir el fracaso escolar en función de la renta. La variable respuesta es el fracaso escolar, mientras que la variable regresora es la renta.
+
+\subsection{Regresión lineal simple}
+
+Frecuentemente existe una relación lineal entre las variables. En el caso del fracaso escolar,queremos construir una recta $Y_i = β_0 X_i + β_1\; i=1,...,n$ que minimice el error.
+
+El problema es estimar los parámetros $β_0,β_1$. Una manera de hacer esto es:
+
+\subsubsection{Recta de mínimos cuadrados}
+
+\begin{defn}[Recta de mínimos cuadrados]
+Estimando $β_i$ por $\hat{β_i}$ obtenemos: \[\hat{Y_i} = \hat{β}_0 + \hat{β}_1 x_i\]
+
+La reca viene dada por los valores $\hat{β_0}, \hat{β_1}$ para los que se minimiza el error cuadrático, es decir:
+\[\sum_{i=1}^n \left(Y_i - \hat{Y_i}\right)^2 =  \sum_{i=1}^n \left[ Y_i - (\hat{β_0} + \hat{β_1}x_i) \right]^2\]
+\end{defn}
+
+\begin{example}
+\begin{center}
+\includegraphics[scale=0.6]{img/ejemploRectaRegresionLineal.png}
+\end{center}
+\end{example}
+
+\paragraph{Cómo calcular la pendiente} de la recta de mínimos cuadrados.
+
+
+Vamos a ver unas pocas maneras de calcular la recta de mínimos cuadrados.
+
+\begin{itemize}
+
+	\item El sistema habitual:
+
+	\[ \hat{β_1} = \frac{\sum_{i=1}^n(x_i - \bar{x})(Y_i - \bar{Y})}{\sum_{i=1}^n (x_i - \bar{x})^2} = \frac{S_{xy}}{S_{xx}} \]
+	Donde
+		\[S_{xy} = \sum_{i=1}^n(x_i - \bar{x})(Y_i - \bar{Y}) \]
+		\label{Ssubxx}
+		\[S_{xx} = \sum_{i=1}^n (x_i - \bar{x})^2\]
+	\subitem \[β_0 = \bar{Y} - β_1\bar{x}\]
+
+	\textbf{Entonces:}
+	\[\text{recta} \equiv y - \bar{y} = \frac{S_{xy}}{S_{xx}}(x - \bar{x} ) \]
+
+	\item Mínimos cuadrados como promedio de pendientes:
+	\label{rmc::promediopendientes}
+	\[
+	\hat{β_1} = \frac{S_{xy}}{S_{xx}} = \sum_{i=1}^n \frac{(x_i - \bar{x})^2}{S_{xx}} \left( \frac{(Y_i - \bar{Y})}{x_i - \bar{x}} \right) = \sum_{i=1}^n ω_i \left( \frac{(Y_i - \bar{Y})}{x_i - \bar{x}} \right)
+	\]
+
+	Vemos que hemos ponderado la pendiente de cada recta que une cada punto con la media. Este peso es mayor cuanto mayor es la distancia \textbf{horizontal}.
+
+	\item Mínimos cuadrados como promedio de respuestas:
+
+	\[
+	\hat{β_1} = \frac{\sum_{i=1}^n  (x_i - \bar{x}) (Y_i - \bar{Y})}{S_{xx}} = \sum α_i Y_i
+	\]
+	Es interesante ver unas propiedades de estos $α_i$
+	\begin{prop}
+
+
+		\begin{itemize}
+			\item[] $\sum α_i = 0$
+			\item[] $\sum α_ix_i = 1$
+			\item[] $\sum α_i^2 = \frac{1}{S_{xx}}$
+		\end{itemize}
+
+	\end{prop}
+	\begin{proof}
+	\textcolor{red}{Por hacer}
+	\end{proof}
+
+\end{itemize}
+
+
+\begin{defn}[Residuo]
+En una recta de mínimos cuadrados: Sea $y_i = β_1x_i - β_0$ y sea $\hat{y}_i = \hat{β}_1x_i - \hat{β}_0$, llamamos residuo a $$e_i = y_i - \hat{y}_i$$
+
+Los residuos cumplen:
+
+\[
+\sum_{i=1}^n e_i = 0
+\]
+
+Esto es intuitivo, ya que los errores se compensan y además es una buena propiedad.
+\end{defn}
+
+
+
+\begin{prop}
+Sean $\{e_i\}$ una variable aleatoria que cumple \footnote{Se ha utilizado la $e$ porque es útil en cuanto a los residuos de la recta de mínimos cuadrados}:
+\[\sum e_i = 0\]
+
+Entonces:
+\[\sum e_i x_i = 0 \implies \cov(e,x) = 0\]
+\end{prop}
+
+\begin{proof}
+\[\sum (e_i - \vec{µ}) x_i = \sum (e_i - \vec{µ}) (x_i - \vx) \]
+Por otro lado:
+
+\[
+\sum e_ix_i = \sum e_ix_i - \vx \sum e_i = \sum e_i(x_i - \vx)
+\]
+\end{proof}
+
+
+\begin{example}
+\[
+\sum (x_i - \vx)(y_i -\vy) = \sum (x_i - \vx)y_i - \sum \vy\sum(x_i - \vx) \overset{(1)}{=} \sum(x_i - \vx y_i)
+\]
+\[
+(1) \to \sum(x_i - \vx) = 0
+\]
+\end{example}
+
+Esto tiene la siguiente explicación ``intuitiva'': La recta de mínimos cuadrados contiene toda la información lineal que $X$ puede dar sobre $Y$ (debido a que la covarianza entre los residuos y $X$ es 0).
+
+
+\subsubsection{Fallos de la recta de mínimos cuadrados}
+
+Vamos a ver un par de ejemplos ilustrativos:
+
+\begin{example}[Sobre los datos atípicos]
+
+Esta es una recta de mínimos cuadrados calculada para una nube de puntos a la que se ha añadido un punto atípico. Se ve una cierta tendencia de que la pendiente debería ser positiva, pero el dato atípico provoca un cambio brusco.
+\begin{center}
+%\includegraphics[scale=0.9]{img/rmc_atipico1.png}
+\includegraphics[scale=0.9]{img/rmc_atipico2.png}
+\end{center}
+
+\end{example}
+
+\begin{example}[Sobre la distancia horizontal]
+
+¿Y da igual lo atípico que sea un dato? La respuesta es que no. Si el dato es muy atípico en la variable respuesta ($Y$), pero es muy \textit{típico} en la variable regresora, la recta no se devía tanto. Vamos a verlo y después explicamos la razón.
+
+Esta es la recta, en la que hemos ignorado los 3 datos que parecen ``atípicos''.
+\begin{center}
+\includegraphics[scale=0.9]{img/sobredistanciahorizontal1.png}
+\end{center}
+
+Ahora calculamos las rectas teniendo en cuenta sólo uno de los puntos.
+
+\begin{center}
+\includegraphics[scale=0.4]{img/sobredistanciahorizontal1.png}
+\includegraphics[scale=0.4]{img/sobredistanciahorizontal2.png}
+\end{center}
+
+Vemos que la recta azul no se desvía apenas de la original, mientras que la recta verde si se desvía un montón. ¿Esto a qué se debe? A que importa más la distancia horizontal de la media que la distancia vertical. Si vamos a la expresión de la recta de mínimos cuadrados como promedio de las pendientes \label{rmc::promediopendientes} vemos que hay un término $\frac{(x_i - \gor{x})}{S_{xx}}$ que hemos tomado como pesos para ponderar y en este caso, la distancia horizontal $(x_i - \gor{x})$ está multiplicando en el numerador.
+
+
+
+\end{example}
+
+
+
+
+
+\subsubsection{Introduciendo ``aleatoreidad'' para poder hacer IC}
+
+Sea $\{ε_i\}$ siendo $ε_i \sim N(0,σ^2)$. Lo habitual es no saber cómo han sido generados los datos y es probable que no vayamos a conocer con exactitud absoluta la recta de mínimos cuadrados. Es por ello que suponemos el siguiente modelo para la variable respuesta:
+
+\[
+Y_i = β_1 x_i + β_0 + ε_i
+\]
+
+
+Tenemos que $\bar{y}_i \sim N$, ya que es una combinación lineal de variables normales \textbf{independientes} (como vimos en el Tema 1).
+
+
+\begin{example}
+Sea $σ=1, β_0 = 0 y β_1 = 1$.
+
+Entonces el modelo es:
+
+\[
+Y_i = x_i + ε_i
+\]
+
+Fijamos $n=10$ y generamos las respuestas para $x_i = i$. Además, repetimos el experimento 6 veces y calculamos las rectas de mínimos cuadrados, obteniendo:
+
+\begin{center}
+\includegraphics[scale=0.6]{img/6ejemplosRegresion.png}
+\end{center}
+
+Vemos que obviamente las rectas no son las mismas. Esto se debe al $ε_i$ introducido. ¿Cuáles son los valores que toman $β_1$ y $β_0$? Habiendo repetido el experimento 1000 veces, obtenemos los siguientes histogramas:
+
+\begin{center}
+\includegraphics[scale=0.3]{img/1000vecesb0.png}
+\includegraphics[scale=0.3]{img/1000vecesb1.png}
+\end{center}
+
+Vemos que no siempre es el mismo valor. Sabemos (por cómo hemos construido los datos) que $β_0 = 0$ y $β_1 = 1$, pero nuestra manera de calcularos (debido a $ε_i$) no siempre nos da el valor concreto.
+
+
+\end{example}
+
+El ejemplo anterior nos muestra que en realidad, estamos estimando $β_i$, aunque no nos guste y ahora tenemos que planternos ¿cómo de buenos son nuestros estimadores? Tal vez son una mierda, o tal vez son insesgados.
+
+Para ello, vemos que al haber añadido un error $\epsilon_i \sim N(0,σ^2)$, tenemos:
+
+\[
+Y_i = β_0 + β_1x + ε_i \implies Y_i \equiv N(β_0 + β_1X_i, σ^2)
+\]
+
+
+\subsubsection{Estimando $β_1$}
+
+\begin{prop}
+Nuestro estimador ``pendiente de la recta de mínimos cuadrados:'' $\hat{β_1}$  cumple
+
+\[
+\hat{β_1} \equiv N\left(β_1,\frac{σ^2}{S_{xx}} \right)
+\]
+
+\end{prop}
+
+\begin{proof}
+Él en clase lo ha hecho al revés. Muchos cálculos para llegar a la conclusión, pero aquí molamos más. En algún momento \textcolor{red}{revisará} alguien los apuntes y completará.
+
+\begin{itemize}
+	\item $\esp{\hat{β_1}} = β_1$
+	\item $\var{\hat{β_1}} = ... = \displaystyle\frac{σ^2}{S_{xx}}$
+\end{itemize}
+\end{proof}
+
+\subsubsection{Estimando $β_0$}
+
+\begin{prop}
+Nuestro estimador ``término independiente de la recta de mínimos cuadrados:'' $\hat{β_0}$  cumple
+
+\[
+\hat{β_0} = N\left(β_0 , σ^2 \left( \frac{1}{n} + \frac{\gor{x}^2}{S_{xx}}\right)  \right)
+\]
+\end{prop}
+
+\begin{proof}
+\begin{itemize}
+	\item $\esp{\hat{β_0}} = β_0$
+	\item
+	$\var{\hat{β_0}} = \var{\gor{Y}} + \var{\hat{β_1}\gor{X}} - 2 \cov{(\gor{Y},\hat{β_1}\gor{X}}$
+
+ 	\subitem Calculamos: $\cov{(\gor{Y},\hat{β_1}\gor{X}}$ utilizando cosas del tema 1
+
+ 	\[
+		\cov{(\gor{Y},\hat{β_1}\gor{X}} = \cov{(\frac{1'_n \gor{Y}}{n},α\gor{Y}} = \frac{1}{n}1'_nσ^2
+ 	\]
+ 	debido a que $α = 0$.
+
+ 	Ademas de ser incorrelados, son \textbf{independientes}. ¿Porqué? Porque conjutamente son normales, es decir \[
+ 		\begin{pmatrix} \gor{Y} \\ \hat{β_1} \end{pmatrix} \equiv A\gor{Y} \equiv N_2
+ 	\]
+\end{itemize}
+
+\end{proof}
+
+
+\textbf{Conclusiones:}
+\begin{align*}
+\gor{Y} &\text{ es indepediente de } \hat{β_1}\\
+\hat{β_1} &\equiv \left(β_1,\frac{σ^2}{S_{xx}}\right)\\
+\hat{β_0} &\equiv \left(β_0,σ^2 \left( \frac{1}{n} + \frac{\vec{x}^2}{S_{xx}}\right)\right)
+\end{align*}
+
+¿Son estas las variables $\hat{β_1} $ y $\hat{β_2}$ normales una normal conjunta? No, \textbf{no son una normal conjunta} ya que no son independientes. Intuitivamente es fácil de ver. En una recta, si aumentamos la pendiente (y estamos en el primer cuadrante) entonces el término independiente disminuye. Esta dependencia tiene que aparecer. Vamos a estudiar la covarianza entre los estimadores:
+
+\[
+\cov{(β_1,β_2} = \cov{(\gor{Y} - \hat{β_1}\gor{x}, \hat{β_0}} = ... = -\gor{x}\frac{σ^2}{S_{xx}}
+\]
+
+
+
+\subsubsection{IC y Contrastes para $β_1$}
+
+Recordamos que \[ \hat{β}_1 \equiv N\left(β_1,\frac{σ^2}{S_{xx}}\right)\]
+
+Podemos normalizar y buscar una catidad pivotal (como hacíamos en estadística I)
+
+\[
+\frac{\hat{β_1} - β_1}{\frac{σ}{S_{xx}}} \equiv N\left(0,1\right)
+\]
+
+Pero aquí nos encontramos con que necesitamos $σ$, la varianza de los errores. Esta varianza a menudo no es conocida (porque no sabemos con exactitud cuál es la recta verdadera) y tenemos que estimarla.
+
+Para estimarla, parece razonable usar \[ \hat{σ} = S_R =\frac{\sum_{i=1}^n e_i^2}{n-2}\]
+
+\begin{expla}
+Recordamos que para que estimar la varinza, utilizamos (por el lema de fisher) $n-1$ de denominador para que el estimador sea insesgado. Esto sale de que en la demostración, hay una matriz de rango $n-1$ ya que existe una restricción.
+
+Siguiendo este razonamiento, en este caso tenemos 2 restricciones\footnote{$\sum e_i = 0$ y $\sum e_ix_i = 0$}, por lo que si lo demostráramos rigurosamente, aparecería una matriz de rango $n-2$ y por eso es el denomiador. De esta manera, conseguimos un estimador insesgado.
+
+\end{expla}
+
+Además, $S_R$ se denomina \concept{varianza residual}
+
+\begin{prop}
+Una pequeña generalización del lema de Fisher:
+\[
+\frac{(n-2)S_{R}^2}{σ^2} \equiv \chi_{n-2}^2
+\]
+
+Además, es independiente de $\hat{β_1}$
+
+\end{prop}
+
+
+
+\begin{proof}
+Esta proposición es un caso particular de un teorema que veremos más adelante.
+\end{proof}
+
+
+Ahora que ya tenemos estimada la varianza, podemos calcular:
+
+
+\[
+\frac{\hat{β_1}-β_1}{\frac{S_R}{\sqrt{S_{xx}}}} = \frac{\hat{β_1}-β_1}{\displaystyle\frac{\frac{σ}{\sqrt{S_{xx}}}}{\frac{S_R}{σ}}}
+\]
+
+En el numerador tenemos una $N(0,1)$ y en denominador una $\chi^2$ dividida por sus grados de libertad. Esto es por definición de $\mathcal{T}$ \footnote{T de Student} es una $\mathcal{T}$ (T-Student) con $n-2$ grados de libertad.
+
+\begin{prop}
+Ahora que conocemos la distribución, podemos calcular el intervalo de confianza  para la pendiente de la recta.
+
+\textcolor{red}{No entiendo nada de esto.}
+\[
+IC_{1-α}(β_1) \equiv \left[ \hat{β_1} \pm \mathcal{T}_{n-2,\frac{α}{2}}\frac{S_R}{\sqrt{S_{xx}}}\right] \equiv \left[ \gor{Y} \pm \mathcal{T}_{n-1,\frac{α}{2}}\frac{S_R}{\sqrt{n}} \right]
+\]
+\end{prop}
+
+\subsubsection{Contraste en R}
+
+
+\begin{lstlisting}
+> # Ajusta el modelo
+> regresion = lm(Fracaso~Renta)
+> summary(regresion)
+
+> lm(formula = Fracaso ~ Renta)
+Residuals:	Min	1Q	Median	3Q	Max
+		-7.8717 -3.7421	0.5878	3.0368	11.5423
+---
+Coefficients:	Estimate Std.	Error 	t-value	Pr(>|t|)
+(Intercept)	38.4944		3.6445	10.562	7.37e-10 ***
+Renta 		-1.3467		0.2659	-5.065	5.14e-05 ***
+---
+Signif. codes: [...]
+Residual standard error: 4.757 on 21 degrees of freedom
+Multiple R-Squared: 0.5499,
+Adjusted R-squared: 0.528
+\end{lstlisting}
+
+
+Aquí, la fila de intercept es el término independiente y renta es la pendiente. Además, los p-valores son para el contraste $\hat{β_i} = 0$, dentro de la hipótesis $β_i \geq 0$. \footnote{Si queremos contrastar si es positivo, nos vamos al caso límite que lo separa y contrastamos eso}.
+
+En este caso, el p-valor para $\hat{β_1} = 7.37e-10$, con lo que no podemos rechazar la hipótesis.
+
+
+\subsubsection{Predicciones}
+
+Sea $(x_1,y_1),...,(x_n,y_n) \to y_i = β_0 + β_1x_i + ε_i$.
+
+Dado una nueva observación $x_0$, tenemos 2 problemas para predecir:
+
+\begin{itemize}
+	\item \textbf{Inferencia sobre $m_0 \equiv \esp{y_0 | x_0} = β_0 + β_1x_0$}
+
+	En este caso, $$\hat{m_0} = \hat{β_0} + \hat{β_1}x_0$$
+
+	¿Cómo es este estimador?
+
+	\[\esp{\hat{m_0}} = β_0 + β_1x_0 = m_0\]
+	\[\var{\hat{m_0}} = ... = σ^2\left[\frac{1}{n} + \frac{(x_0-\bar{x})^2}{S_{xx}} \right] \]
+
+	\subitem Intuitivamente, lo que significa el segundo sumando de la varianza es que ``cuanto más cerca esté $x_0$ de la media, mejor será la estimación''.
+
+	\textbf{Conclusión:}
+
+	\[
+		\hat{m_0} \sim N\left( m_0, σ^2\left[\frac{1}{n} + \frac{(x_0-\bar{x})^2}{S_{xx}} \right]\right)
+	\]
+
+
+
+	\subitem \textbf{Intervalo de confianza} para $m_0$ utilizando la fórmula de intervalos de confianza:
+
+	\[
+IC_{1-α}(m_0) \equiv \left[ \hat{m_0} \pm \mathcal{T}_{n-2,\frac{α}{2}}S_R\sqrt{\frac{1}{n} + \frac{(x - \gor{x})^2}{S_{xx}}}\right]
+\]
+
+	\item \textbf{Predecir $Y_0$} usamos de nuevo:
+
+	\[
+\hat{Y_0} = \hat{β_0} + \hat{β_1}x \to Y_0 - Y \equiv N\left( 0, σ^2\left( 1 + \frac{1}{n}+  \frac{(x-\gor{x})^2}{S_{xx}}\right) \right)
+	\]
+
+	Donde la varianza ha sido calculada:
+
+	\[
+	\var{Y_0 - \hat{Y_0}} = \underbrace{\var{Y_0}}_{σ^2} - \var{\hat{Y_0}} + \underbrace{2 \cov{Y_0,\hat{Y_0}}}_{ = 0 \text{ (indep.) }} = σ^2 + σ^2\left( \frac{1}{n}+  \frac{(x-\gor{x})^2}{S_{xx}} \right)
+	\]
+
+
+	Este es un problema más complicado, ya que tenemos que tener en cuenta el término de error $ε_i$ y es por esto que aparece el 1 en la varianza. Tenemos que tener en cuenta la incertidumbre.
+
+	Estandarizando y cambiando $σ$ por $S$, tenemos:
+
+	\[
+	\frac{Y_0 - \hat{Y_0}}{S_r \sqrt{1 + \frac{1}{n} + \frac{(x-\gor{x})^2}{S_{xx}}}} \equiv \mathcal{T}_{n-2}
+	\]
+
+	Ya que tenemos una normal estandarizada dividida por su .... que por definición, es una $\mathcal{T}$ de student.
+
+	Ahora, vamos a construir el \concept{intervalo de predicción} (cambia ligeramente la interpretación)
+
+	\[
+1 - α = P\left\{ -\mathcal{T}_{n-2;\frac{α}{2}} < \frac{Y_0 - \hat{Y_0}}{...} < \mathcal{T}_{n-2;\frac{α}{2}}    \right\} = P \left\{ Y_0 \in \left[ \hat{Y_0} \pm \mathcal{T}_{n-2;\frac{α}{2}} S_R \sqrt{1+\frac{1}{n}+...} \right]  \right\}
+	\]
+\end{itemize}
+
+Ahora vamos a hacer unos ejemplos numéricos.
+
+\begin{example}Seguimos con el ejemplo de la renta.
+
+\begin{center}
+\begin{tabular}{c|c|c}
+&media&desviación típica\\\hline
+\% fracaso & 20.73 & 6.927\\
+renta &13.19 $·10^{3}$ & 3.814
+\end{tabular}
+\end{center}
+
+\setcounter{part}{0}
+\ppart IC para $β_1$ de nivel $95\%$.
+\ppart IC para \% de fracaso medio si la renta es de $14.000$ euros.
+
+\spart
+
+\[
+-1.3467 \pm \mathcal{T}_{21;0.025} · (0.2659)
+\]
+
+Donde el $-1.3467$ es el estimador $\gor{m_0}$ que obtenemos de la salida de $R$. Lo mismo el $0.2659$, que es el error típico.
+
+\spart
+\[ \gor{Y_0} = 38.49 - (0.3467) · \underbrace{14}_{x_0} = 19.64\%\]
+
+Siendo este el estimador, vamos a construir el intervalo de confianza. \footnote{Podría ser que nos pidieran el intervalo de predicción, pero en ese caso estarían pidiendo el intervalo de ...... para predecir.}
+
+\[
+IC = 19.64 \pm (2.06)(4.757)\sqrt{\frac{1}{23}+\frac{(14-13.19)^2}{S_{xx}}}
+\]
+Donde $S_{xx} = 320.06$ y podemos calcularlo despejando de cualquiera de las fórmulas:
+
+\[
+E.T.(\gor{β_1}) = \frac{S_R^2}{S_{xx}}
+\]
+\[
+6. = \frac{S_{xx}}{n-1}
+\]
+
+\end{example}
+
+
+\obs Todos estos cálculos y todas estas fórmulas se basan en muchas hipótesis (como que la distribución del error sigue una distribución normal). Pero podría ser que esto no ocurriera y estuviéramos suponiendo un modelo falso. Para ello, en estadística existe el \concept{Diagnóstico del modelo}. Este diagnóstico, consiste en comprobar si las hipótesis del modelo son \textbf{aceptables} para los datos disponibles. ¡Ojo! Aceptable... Puede haber muchos modelos aceptables para un mismo conjunto de datos.
+
+Este diagnóstico se suele basar en el análisis de los residuos del modelo.
+
+\begin{example}
+	Vamos a ver a ojo unos cuantos ejemplos. Vamos a utilizar que $cor{e,\gor{y}} = 0$ bajo el modelo (como calculamos anteriormente)
+
+\begin{center}
+\includegraphics[scale=0.6]{img/diagmodelo.png}
+\end{center}
+
+De estos 4 gráficos, el bueno es el primero, ya que los demás no complen alguno.
+\end{example}
+
+\begin{example}
+Vamos a ver otro ejemplo, donde arriba están los datos y abajo los residuos. Mirando sólo la fila de arriba podríamos saber si nuestro modelo para la regresión se cumple o sino.
+
+
+\begin{center}
+\includegraphics[scale=0.6]{img/diagmodelo_2.png}
+\end{center}
+
+Vemos que el primero y el último si tienen este modelo como aceptable, ya que en los residuos no hay ningún patrón (y se cumple que la correlación es 0).
+
+En el segundo, podríammos suponer que es bueno, pero al diagnosticar el modelo mirando los residuos, vemos que no. El diagnóstico del model \textbf{magnifica los errores}.
+
+En el cuarto, vemos más claro que es heterocedástico y que no se cumple el modelo supuesto.
+\end{example}
+
+En regresión múltiple veremos que no podemos ver los datos, ya que son demasiadas variables, pero sí podemos estudiar los residuos como acabamos de hacer en los ejemplos anteriores.
+
+\subsection{Regresión lineal múltiple}
+
+El ejemplo que vamos a estudiar en regresión múltiple es el consumo de gasolina en EEUU intentando predecirlo a partir de unas cuantas variables. Las variables regresoras son:
+
+\begin{center}
+\begin{tabular}{cccccccc}
+State&Drivers&FuelC&Income&Miles&MPC&Pop&Tax\\\hline
+AL&3559897&2382507&23471&94440&12737.00&3451586&18.0\\
+AK&472211&235400&30064&13628&7639.16&457728&8.0\\
+AZ&3550367&2428430&25578&55245&9411.55&3907526&18.0
+\end{tabular}
+\end{center}
+
+\subsubsection{Notación}
+
+
+\begin{itemize}
+	\item $n$ es el número de observaciones, en este caso, el número de estados.
+	\item $k$ es el número de atributos.
+	\item $ε_i \sim N(0,σ^2)$
+	\item $n\geq k+2$: esta hípótesis  es muy necesaria.\footnote{En la estadística, habría que rehacer el modelo para cuando $k>n$. ¿Y cuándo $k>n$? ¿Cuándo puede ocurrir esto? Cada vez más hay más información para cada individuo. En estudios genéticos por ejemplo, que hay millones de genes pero no se pueden hacer el estudio con millones de personas... \textbf{LA MALDICIÓN DE LA DIMENSIONALIDAD} que decimos en Introducción previa a los Fundamentos Básicos del Aprendizaje Automático.\\ Una posible solución al problema es un algoritmo que filtre los atributos que son importantes.}
+\end{itemize}
+
+Regresión simple es un caso particular de múltiple, tomando $k=1$.
+
+\subsubsection{Modelo}
+
+El modelo es:
+
+\textcolor{red}{Completar de las traspas}
+
+Podemos agruparlo en forma matricial:
+
+\textcolor{red}{Completar de las traspas}
+
+\paragraph{Recordamos} que en el tema 1 vimos unas cuantas formas cuadráticas útiles para normales multivariantes con matriz de variazas $σ^2I_n$ y media arbitraria.
+
+\textcolor{red}{Completar de las traspas}
+
+¿Cómo estimarías $β$ a partir de $Y$ y $X$?
+
+Podemos hacer la proyección de $Y$ sobre $\mathcal{V}$
+
+Con esto, parece razonable estimar $µ$ mediante la proyección ortogonal de $T$ sobre $\mathcal{V}$ para obtener $\gor{Y} = X\gor{β}$. Equivalentemente: $||Y-X\gor{β}||^2 \leq || Y-Xβ||^2, ∀β\in ℝ^{k+1}$
+
+
+\textcolor{red}{completar cosas que faltan}
+
+\paragraph{Resumen}
+Si
+\[ Y \equiv N_n (Xβ,σ^2I_n)\]
+
+entonces, la proyección sobre \_\_\_\_\_\_\_ es:
+\[
+\hat{Y} = X\hat{β} = HY
+\]
+donde $H = X(X'X)^{-1}X^{-1}$. Además, \[\hat{β} = (X'X)^{-1}X'Y\]
+
+
+Esto tiene como consecuencia que el vector de residuos es: $e = Y-\hat{Y} = (I-H) Y$
+
+En cuanto a la interpretación geométrica, los residuos es la recta vertical que une la proyección ($\hat{Y}$) con el vector real ($Y$).
+
+\subsubsection{Distribución de $\hat{β}$}
+\[
+β \equiv N_{k+1}\left(β,σ^2(X'X)^{-1}\right)
+\]
+
+Y la regresión simple, es un caso particular de esta fórmula.
+
+\paragraph{Consecuencias:}
+
+\begin{itemize}
+	\item ¿Cuál es la distribución marginal de $\hat{β_j}$ a partir de la que hemos visto de la conjunta? Como vimos en el tema 1, es también una normal, con el correspondiente valor del vector $β$ como media y el elemento $j,j$ de la diagonal.
+	\[ β_j \equiv N\left(β_j, σ^2q_{jj}\right)\]
+
+	Ahora, podemos estandarizar:
+
+	\[
+	\frac{\hat{β_j}-β_j}{σ\sqrt{q_{jj}}} \equiv N(0,1)
+	\]
+
+	Y utilizando que $S_R$ es independiente de $σ$ y la definición de $t-$student tenemos:
+
+	\[
+	\frac{\hat{β_j}-β_j}{S_R\sqrt{q_{jj}}} \equiv \mathcal{T}_{n-k-1}
+	\]
+
+	¿Cuál es el intervalo de confianza?
+
+	\[
+		IC_{n-α}(β_j) \equiv \left[\hat{β_j}\pm \mathcal{T}_{n-k-1}\underbrace{S_R\sqrt{q_{jj}}}_{\text{Error típico de }β_j} \right]
+	\]
+
+	Y, como en regresión simple, estudiamos $H_0 : β_j = 0$:
+	\[
+		R = \left\{ \frac{|β_j|}{S_R\sqrt{q_{jj}}} > \mathcal{T}_{n-k-1;\frac{α}{2}} \right\}
+	\]
+\end{itemize}
+
+En las traspas encontramos una salida de regresión múltiple de $R$. La columna estimate es el vector $\hat{β}$, el p-valor
 
 \appendix
 \chapter{Ejercicios}
