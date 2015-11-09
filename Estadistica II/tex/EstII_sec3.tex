@@ -52,10 +52,14 @@ Vamos a ver unas pocas maneras de calcular la recta de mínimos cuadrados.
 
 	\[ \hat{β_1} = \frac{\sum_{i=1}^n(x_i - \bar{x})(Y_i - \bar{Y})}{\sum_{i=1}^n (x_i - \bar{x})^2} = \frac{S_{xy}}{S_{xx}} \]
 	Donde
-		\[S_{xy} = \sum_{i=1}^n(x_i - \bar{x})(Y_i - \bar{Y}) \]
+		\[S_{xy} = \frac{\sum_{i=1}^n(x_i - \bar{x})(Y_i - \bar{Y})}_{n} \]
 		\label{Ssubxx}
-		\[S_{xx} = \sum_{i=1}^n (x_i - \bar{x})^2\]
-	\subitem \[β_0 = \bar{Y} - β_1\bar{x}\]
+		Y, consecuentemente, como el avispado lector podrá imaginar
+		\[S_{xx} = \frac{\sum_{i=1}^n (x_i - \bar{x})^2}_{n}\]
+
+		\obs El \concept{Estimador\IS de la covarianza insesgado}  entre 2 variables $X,Y$ es $S_{xy}$. Utilizando $\cov{X,X} = \var{X}$, sabemos que $S_{xx}$ es el estimador insesgado de la varianza. \footnote{Para más información \href{https://es.wikipedia.org/wiki/Covarianza}{Wikipedia}, as usual.}
+
+	\subitem \[β_0 = \bar{Y} - \hat{β_1}\bar{x}\]
 
 	\textbf{Entonces:}
 	\[\text{recta} \equiv y - \bar{y} = \frac{S_{xy}}{S_{xx}}(x - \bar{x} ) \]
@@ -71,24 +75,73 @@ Vamos a ver unas pocas maneras de calcular la recta de mínimos cuadrados.
 	\item Mínimos cuadrados como promedio de respuestas:
 
 	\[
-	\hat{β_1} = \frac{\sum_{i=1}^n  (x_i - \bar{x}) (Y_i - \bar{Y})}{S_{xx}} = \sum α_i Y_i
+	\hat{β_1} = \frac{\sum_{i=1}^n  (x_i - \bar{x}) (Y_i - \bar{Y})}{S_{xx}} \overset{(1)}{=} \sum_{i=1}^n \frac{x_i-\gor{x}}{S_{xx}} Y_i = \sum α_i Y_i
 	\]
-	Es interesante ver unas propiedades de estos $α_i$
+
+	$(1) \impliedby$ hemos utilizado una propiedad básica, importantísima y, a simple vista, poco (o nada) intuitiva:
+
 	\begin{prop}
+	Sea $\{x_i\},\{y_i\}$ datos de variables aleatorias.
+	\[
+		\sum (x_i - \gor{x}) (y_i -\gor{y}) = \sum(x_i -\gor{x})y_i = \sum (y_i - \gor{y})x_i
+	\]
 
-
-		\begin{itemize}
-			\item[] $\sum α_i = 0$
-			\item[] $\sum α_ix_i = 1$
-			\item[] $\sum α_i^2 = \frac{1}{S_{xx}}$
-		\end{itemize}
-
+	\textbf{Importante:} sólo quitamos la media de una de las 2. No podemos hacer $\sum (x_i - \gor{x}) (y_i -\gor{y}) = \sum x_iy_i$, porque esto ya no es verdad.
 	\end{prop}
 	\begin{proof}
-	\textcolor{red}{Por hacer}
-	\end{proof}
+		\[\sum_{i=1}^n (x_i - \gor{x}) (y_i -\gor{y}) = \sum_{i=1}^n (x_i -\gor{x})y_i - \underbrace{\sum_{i=1}^n (x_i-\gor{x})\gor{y}}_{0}\]
 
-\end{itemize}
+		Vamos a ver por qué ese término es 0.
+	\[\sum_{i=1}^n (x_i-\gor{x})\gor{y} \overset{(1)}{=} \left(\left(\sum_{i=1}^n x_i\right) - n\gor{x}\right)\frac{\sum y_i}{n}\]
+
+	$(1)\to$ Estamos restando $n$ veces el  término $\gor{x}$ que no tiene índice del sumatorio, con lo que podemos sacarlo fuera.
+
+
+	Aplicando la propiedad distributiva con el factor $\frac{1}{n}$, obtenemos:
+
+
+	\[
+		\left(\frac{\left(\sum x_i\right)}{n} - \frac{n\gor{x}}{n}\right)\sum_{i=1}^n y_i} = (\gor{x} - \gor{x}) \sum y_i = 0
+	\]
+
+	\obs Pero... ¿y porqué $\sum(x_i -\gor{x})y_i ≠ 0$? ¿Cuál es el fallo de lo siguiente?
+
+	\[
+		\sum(x_i -\gor{x})y_i = \frac{\sum(x_i -\gor{x})y_i}{n}·n
+	\]
+	¿Y aplicamos el mismo razonamiento que antes?
+
+	La respuesta es que, en este caso el factor $(x_i-\gor{x})$ está multiplicado por $y_i$ \textbf{dentro} del sumatorio, es decir:
+
+	\[
+	\sum_{i=1}^n (x_i - \gor{x}) (y_i -\gor{y}) = \sum_{i=1}^n \left[(x_i -\gor{x})y_i\right] - \sum_{i=1}^n \left[(x_i-\gor{x})\gor{y}\right] \]
+	Y podemos sacar $\gor{y}$ del sumatorio, porque está multiplicando y no tiene índice del sumatorio.
+
+	\[ \sum_{i=1}^n \left[(x_i -\gor{x})y_i\right] - \sum_{i=1}^n \left[(x_i-\gor{x})\right]\gor{y}
+	\]
+	\end{proof}
+	
+	\begin{prop}Propiedades de estos $α_i$
+
+		\begin{enumerate}
+			\item $\sum α_i = 0$
+				\begin{proof}
+					\[\sum α_i = \sum \frac{(x_i-\gor{x})}{S_{xx}} = 0 \impliedby \sum (x_i-\gor{x}) = 0\]
+					\[\sum (x_i-\gor{x}) = \left(\sum x_i\right) - n\gor{x} = \left(\sum x_i\right) - n \frac{\sum x_i}{n} = 0\]
+				\end{proof}
+			\item $\sum α_ix_i = 1$
+				\begin{proof} 
+					\[ \sum α_ix_i = \sum\frac{(x_i-\gor{x})x_i}{S_{xx}} = \frac{1}{S_{xx}}\sum (x_i-\gor{x})(x_i-\gor{x}) = \frac{S_{xx}}{S_{xx}} = 1\]
+				\end{proof}
+			\item $\sum α_i^2 = \frac{1}{S_{xx}}$
+				\begin{proof}
+					\[\sum α_i^2 = \sum \frac{(x_i-\gor{x})(x_i-\gor{x})}{S_{xx}^2} = \sum \frac{(x_i-\gor{x})x_i}{S_{xx}^2} = \sum \frac{α_i x_i}{S_{xx}} = \frac{1}{S_{xx}} \sum α_ix_i \]
+					Utilizando el anterior, tenemos $\sum α_i^2= \frac{1}{S_{xx}}$
+				\end{proof}
+
+		\end{enumerate}
+
+	\end{prop}
 
 
 \begin{defn}[Residuo]
@@ -110,30 +163,26 @@ Sean $\{e_i\}$ una variable aleatoria que cumple \footnote{Se ha utilizado la $e
 \[\sum e_i = 0\]
 
 Entonces:
-\[\sum e_i x_i = 0 \implies \cov(e,x) = 0\]
+\[\sum e_i x_i = 0 \implies \cov{e,x} = 0\]
 \end{prop}
 
 \begin{proof}
-\[\sum (e_i - \vec{µ}) x_i = \sum (e_i - \vec{µ}) (x_i - \vx) \]
+\[
+\cov{e,x} = \esp{e}\esp{x} - \esp{e·x}
+\]
+
+Vamos a ver que los 2 sumandos son 0. $\esp{e}\esp{x} = 0 \impliedby \esp{e} \overset{?}{=} \gor{e} = 0$ 
+
+\[ \sum (e_i - \vec{µ}) x_i = \sum (e_i - \vec{µ}) (x_i - \vx) \]
 Por otro lado:
 
 \[
-\sum e_ix_i = \sum e_ix_i - \vx \sum e_i = \sum e_i(x_i - \vx)
+\esp{e·x} = \sum e_ix_i = \sum e_ix_i - \vx \sum e_i = \sum e_i(x_i - \vx)
 \]
 \end{proof}
 
 
-\begin{example}
-\[
-\sum (x_i - \vx)(y_i -\vy) = \sum (x_i - \vx)y_i - \sum \vy\sum(x_i - \vx) \overset{(1)}{=} \sum(x_i - \vx y_i)
-\]
-\[
-(1) \to \sum(x_i - \vx) = 0
-\]
-\end{example}
-
 Esto tiene la siguiente explicación ``intuitiva'': La recta de mínimos cuadrados contiene toda la información lineal que $X$ puede dar sobre $Y$ (debido a que la covarianza entre los residuos y $X$ es 0).
-
 
 \subsubsection{Fallos de la recta de mínimos cuadrados}
 
@@ -310,7 +359,7 @@ Siguiendo este razonamiento, en este caso tenemos 2 restricciones\footnote{$\sum
 
 \end{expla}
 
-Además, $S_R$ se denomina \concept{varianza residual}
+Además, $S_R$ se denomina \concept{Varianza\IS residual}
 
 \begin{prop}
 Una pequeña generalización del lema de Fisher:
