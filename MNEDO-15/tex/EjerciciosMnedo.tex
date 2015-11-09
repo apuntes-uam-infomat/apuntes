@@ -575,7 +575,7 @@ Con lo que queda claro que se satisface la condición de convergencia para este 
 
 \section{Hoja 2}
 \begin{problem}[1]
-Sea $A$ una matriz real cuadrad de orden $k$ definida de la siguiente manera:
+Sea $A$ una matriz real cuadrada de orden $k$ definida de la siguiente manera:
 \[\begin{array}{ll}
 A(i,i+1) = 1 & \text{ para } i=1,...,k-1\\
 A(k,j)=-\frac{α_{j-1}}{α_k} & \text{ para } j=1,...,k
@@ -584,6 +584,45 @@ A(k,j)=-\frac{α_{j-1}}{α_k} & \text{ para } j=1,...,k
 Demostrar que su polinomio característico es:
 \[ρ(λ) = \sum_{j=0}^kα_jλ^j\]
 \solution
+
+\doneby{Pedro}
+
+Atendiendo a la definición dada, la matriz será de la forma:
+\[A=\left(\begin{array}{cccccc}
+0 & 1 & 0 & 0 & ... & 0 \\
+0 & 0 & 1 & 0 & ... & 0 \\
+... & ... & ... & ... & ... & ... \\
+0 & 0 & 0 & 0 & ...& 1 \\
+-\frac{α_0}{α_k} & -\frac{α_1}{α_k} & -\frac{α_2}{α_k} & -\frac{α_3}{α_k} & ... & -\frac{α_{k-1}}{α_k}
+\end{array} \right)\]
+
+Si queremos calcular el prolinomio característico de esta matriz, lo primero que debemos hacer es restarle $λ \cdot Id$ con lo que obtenemos:
+\[A = \left(\begin{array}{cccccc}
+-λ & 1 & 0 & 0 & ... & 0 \\
+0 & -λ & 1 & 0 & ... & 0 \\
+... & ... & ... & ... & ... & ... \\
+0 & 0 & 0 & 0 & ...& 1 \\
+-\frac{α_0}{α_k} & -\frac{α_1}{α_k} & -\frac{α_2}{α_k} & -\frac{α_3}{α_k} & ... & -\frac{α_{k-1}}{α_k} - λ
+\end{array} \right)\]
+
+Vamos a proceder a calcular el determinante por adjuntos, para lo que debemos recordar que el determinante de una matriz triangular es el producto de los elementos de la diagonal. Así nos queda:
+
+\[det(A) = -λA_0 -(-1)^{k+1}\frac{α_0}{α_k}\]
+donde nos hemos basado en que al calcular el adjunto del término $\frac{α_0}{α_k}$ nos encontramos ante una matriz triangular con 1s en la diagonal.
+
+Ahora sólo nos queda calcular el determinante de $A_0$, que es de la misma forma que $A$, por lo que sabemos que
+\[det(A_0) = -λA_1 - (-1)^{k}\frac{α_1}{α_k}\implies\]
+\[\implies -αA_0 = λ^2A_1 -(-1)^{k+1}\frac{α_1}{α_k}λ\]
+
+Iterando acabaremos llegando a que
+\[det(A_{k-2}) = -\frac{α_{k-1}}{α_k}-λ\]
+
+Combinando las fórmulas que acabamos de obtener vemos que
+\[det(A) = -\left((-1)^{k+1}\sum_{i=0}^{k-1}\frac{α_i}{α_k}λ^{i} + λ^k\right)\]
+
+Puesto que el polinomio va a igualarse a 0, podemos multiplicar todos los términos por $-(-1)^{k+1}α_k$ obteniendo:
+\[det(A) = \sum_{i=0}^{k-1}α_iλ^i + α_kλ^k = \sum_{i=0}^k α_iλ^i\]
+
 \end{problem}
 
 \begin{problem}[2]
@@ -592,6 +631,17 @@ Sea $A$ una matriz real cuadrada de orden $k$. Supongamos que todos sus autovalo
 o si $|λ|=1$ entonces su autovalor es simple. Probar que existe $M<\infty$ tal que
 \[\norm{A^n} \leq M, \ \ \ n=1,2,...\]
 \solution
+
+\doneby{Pedro}
+
+Sabemos que el determinante de una matriz es igual al producto de los autovalores.
+
+Además sabemos que el determinante de un producto de matrices es igual al producto de los determinantes.
+
+Por tanto, podemos ver que
+\[det(A^n)=\prod_{i=0}^kλ_i^n \leq \prod_{i=0}^k|λ_i| \text{ puesto que } |λ_i| < 1\]
+
+Así es claro que $det(A^n) \leq \prod_{i=0}^k |λ_i| \ \ \forall n$.
 \end{problem}
 
 \begin{problem}[3]
@@ -794,4 +844,30 @@ Considera el método lineal multipaso (leap-frog)
 
 ¿Cuál es el orden del método?
 \solution
+\doneby{Pedro}
+
+Nos fiamos de que el método de leap-frog satisface las condiciones de un buen método numérico y que es convergente, por lo que será consistente y 0-estable.
+
+Vamos a ver el orden de consitencia, que nos dará inmediatamente el orden de convergencia.
+
+Tenemos que
+\[y(x_{n+2}) = y(x_n)+2hf(x_{n+1},y(x_{n+1})) + R_n\]
+
+Calculamos los desarrollos de Taylor:
+\[y(x_{n+2}) = y(x_n)+2hy'(x_n)+2h^2y''(x_n)+\frac{4h^3}{3}y'''(x_n)+O(h^4)\]
+\[f(x_{n+1},y(x_{n+1})) = y'(x_{n+1}) = y'(x_n)+hy''(x_n)+\frac{h^2}{2}y'''(x_n)+ O(h^3)\]
+
+Sustituyendo vemos que 
+\[R_n = y(x_{n+2})-y(x_n)-2hf(x_{n+1},y(x_{n+1})) =  \frac{3h^3}{3}y'''(x_n)+ ... \]
+con lo que nos quedan términos distintos de $O(h^i)$.
+
+Si realizamos los desarrollos de Taylor de orden menor tenemos
+\[y(x_{n+2}) = y(x_n)+2hy'(x_n)+2h^2y''(x_n)+O(h^3))\]
+\[f(x_{n+1},y(x_{n+1})) = y'(x_{n+1}) = y'(x_n)+hy''(x_n) + O(h^2)\]
+
+lo que nos permite escribir:
+\[R_n = y(x_{n+2})-y(x_n)-2hf(x_{n+1},y(x_{n+1})) = O(h^3)\]
+
+por lo que el residuo es de orden 3 lo que nos da un orden de convergencia:
+\[\lim_{h \to 0} \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h} = O(h^2) \to \text{ Orden 2}\]
 \end{problem}
