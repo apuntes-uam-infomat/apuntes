@@ -757,7 +757,7 @@ Dado un PVI, consideramos el siguiente método numérico:
 \[R_n = \int_{t_n}^{t_{n+2}}f(s,y(s))\dif s -\frac{h}{3}\left(f(t_{n+2},y_{n+2})+4f(t_{n+1},y_{n+1}) + f(t_n,y_n) \right)\]
 
 \ppart La función incremento asociada a la fórmula recurrente se define como:
-\[\phi_f(t_n,y_n,y_{n+2};h) = \lim_{k\to \infty}\phi_k^{(k)}(t_n,y_n,y_{n+1};h)\]
+\[\phi_f(t_n,y_n,y_{n+1};h) = \lim_{k\to \infty}\phi_k^{(k)}(t_n,y_n,y_{n+1};h)\]
 con $\phi_f^{(0)}$. Definir $\phi_f^{(k)}$ en función de $\phi_f^{(k-1)}$ de forma que se satisfaga
 \[y_{n+2}-y_n = h \phi_f(t_n,y_n,y_{n+1};h) \]
 
@@ -765,9 +765,11 @@ con $\phi_f^{(0)}$. Definir $\phi_f^{(k)}$ en función de $\phi_f^{(k-1)}$ de fo
 
 \ppart Probar que $\phi_f$ es una función continua con respecto a todas sus variables
 
-\ppart Probar que 4$\phi_f$ es Lipschitz con respecto a $y_n$ e $y_{n+1}$.
+\ppart Probar que $\phi_f$ es Lipschitz con respecto a $y_n$ e $y_{n+1}$.
 
-\ppart Probar que el último método mencionado es consistente
+\ppart Probar que el método:
+\[y_{n+2}-y_n = h \phi_f(t_n,y_n,y_{n+1};h) \]
+es consistente
 
 \ppart Probar que ese método es convergente
 \solution
@@ -786,7 +788,84 @@ Esta función sabemos integrarla pues no depende de $f$ ya que todas las aparici
 Una vez realicemos la integral debemos obtener exactamente el método dado en el enunciado.
 
 \spart
+\doneby{Pedro}
 
+Calculamos los desarrollos de Taylor:
+\[\int_{t_n}^{t_{n+2}}f(s,y(s))\dif s = \int_{t_n}^{t_{n+1}}y'(s)\dif s = y(t_{n+2})-y(t_n) = 2hy'(t_n)+2h^2y''(t_n) +O(h^3)\]
+\[f(t_{n+2},y(t_{n+2})) = y'(t_{n+2}) = y'(t_n)+2hy''(t_n)+O(h^2)\]
+\[f(t_{n+1},y(t_{n+1})) = y'(t_{n+1}) = y'(t_n)+hy''(t_n)+O(h^2)\]
+\[f(t_n,y(t_n)) = y'(t_n)\]
+
+Combinando estas fórmulas tenemos:
+\[R_n = O(h^3)+O(h^2) = O(h^2)\]
+es decir, el residuo es de orden, al menos, 3.
+
+Si calculásemos los desarrollos de Taylor de un orden superior obtendríamos términos que no se compensarían, es decir, llegaríamos a:
+\[R_n = \frac{4h^3}{3}y'''(t_n) - \frac{5h^3}{6}y'''(t_n)+...\]
+con lo que queda claro que el orden es 3.
+
+\spart
+
+\doneby{Pedro}
+
+\[\phi_f^{(k)}(t_n,y_n,y_{n+1};h) = \frac{1}{3}\left(f(t_{n+2},y_n+h\phi^{(k-1)}_f)+4f(t_{n+1},y_{n+1})+f(t_n,y_n) \right)\]
+
+El límite $\lim_{k\to \infty}\phi_k^{(k)}(t_n,y_n,y_{n+1};h)$ existirá siempre y cuando la función
+\[F(x)=\frac{1}{3}\left(f(t_{n+2},y_n+2hx)+4f(t_{n+1},y_n+x)+f(t_n,y_n) \right)\]
+tenga un punto fijo.
+
+Siempre que las funciones $f$ sean Lipschitz en la segunda variable es sencillo ver que $F$ es contractiva y, por tanto, tendrá un punto fijo.
+
+\spart
+\doneby{Pedro}
+
+Si partimos de $\phi_f^{(0)}$ continua, en cada paso obtenemos una nueva función continua.
+
+Si conseguimos demostrar que la convergencia es uniforme, tendremos directamente que la función $\phi_f$ es continua.
+
+Una forma ``sencilla'' de hacer esta demostración consiste en probar que la sucesión es de Cauchy, pues ello nos garantizaría la convergencia uniforme. Vamos a ello:
+\[\norm{\phi_f^{(k)}-\phi_f^{(k-1)}} \leq \frac{1}{3}\norm{L(2h+1)\norm{\phi_f^{(k-1)}-\phi_f^{(k-2)}}} \leq ... \leq \frac{1}{3}L(2h+1)^{k-1}\norm{\phi_f^{(1)}-\phi_f^{(0)}}\]
+
+Úna vez tenemos esta desigualdad podemos ver que:
+\[\norm{\phi_f^{(n)}-\phi_f^{(m)}} \leq \norm{\phi_f^{(n)}-\phi_f^{(n-1)}} + \norm{\phi_f^{(n-1)}-\phi_f^{(n-2)}} + ... + \norm{\phi_f^{(m+1)}-\phi_f^{(m)}} \leq\]
+\[\leq \frac{L}{3}\left(\norm{\phi_f^{(1)}-\phi_f^{(0)}}\sum_{i=m}^{n-1}h^i \right) = \frac{L}{3}\left(\norm{\phi_f^{(1)}-\phi_f^{(0)}}h\frac{h^{n-m}-1}{h-1} \right)  \]
+
+Puesto que $h$ es pequeño, la fracción quedará acotada y finalmente tendremos que la sucesión es de Cauchy con constante $M=\frac{L}{3}\norm{\phi_f^{(1)}-\phi_f^{(0)}}$
+
+\spart
+\doneby{Pedro}
+
+Puesto que la función $f$ es Lipschitz es sencillo comprobar que la función $\phi_f$ es Lipschitz con rescpecto a las $y_n,y_{n+1}$. 
+
+\[\norm{\phi_f(t_n,y_n,y_{n+1};h)-\phi_f(t_n,\tilde{y}_n,y_{n+1};h)} \leq\frac{1}{3} 2L\norm{y_n-\tilde{y}_n}\]
+\[\norm{\phi_f(t_n,y_n,y_{n+1};h)-\phi_f(t_n,y_n,\tilde{y}_{n+1};h)} \leq\frac{1}{3} 4L\norm{y_n-\tilde{y}_n}\]
+
+Lo único que hemos hecho es escribir la $\phi_f$ como combinación de las $f$ según la definición dada en el apartado \textbf{c)} y aplicar que la función $f$ es Lipschitz en la segunda variable.
+
+\spart
+
+\doneby{Pedro}
+
+Para probar que es consistente nos apoyamos en el teorema \ref{theorem:consist_iif_relaciones}. 
+
+Es sencillo comprobar que 
+\[\sum_{j=0}^{k=2}α_j = 1-1 = 0\]
+
+Por otro lado, tenemos que la función incremento para este método es:
+\[\phi_f^{(k)}(t_n,y_n,y_{n+1};h) = \frac{1}{3}\left(f(t_{n+2},y_n+h\phi^{(k-1)}_f)+4f(t_{n+1},y_{n+1})+f(t_n,y_n) \right)\]
+
+Y podemos ver que
+\[\phi_f(t,y(t),y(t);0) = \frac{1}{2} \left(f(t,y(t))+4f(t,y(t))+f(t,y(t)) \right) = 2f(t,y(t)) = \sum_{j=0}^{k=2}j\cdot α_j f(t,y(t))\]
+
+\spart
+
+Para comprobar que el método es 0-estable vamos a ver que se satisface el criterio de la raíz.
+
+En esta ocasión el primer polinomio característico es $P(x) = x^2-1$ que tiene como raices $x=\pm 1$.
+
+Efectivamente se satisface el criterio de la raíz, pues todas las raices tienen módulo 1 pero son simples.
+
+\doneby{Pedro}
 
 \end{problem}
 
