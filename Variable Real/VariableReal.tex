@@ -996,7 +996,7 @@ Tener una norma (o casi-norma) implica tener una métrica y una topología, con 
 
 Además, recordemos qué era un \concept{Espacio\IS completo}: era un espacio donde el límite de sucesiones de Cauchy estaba en el espacio. Así, podemos definir qué es un espacio de Banach (que es muy simple).
 
-\begin{defn}[Espacio\IS de Banach] Un espacio de Banach es un espacio normado y completo, con respecto a la topología inducida por la distancia de la norma.
+\begin{defn}[Espacio\IS de Banach] \label{def:EspacioBanach} Un espacio de Banach es un espacio normado y completo, con respecto a la topología inducida por la distancia de la norma.
 \end{defn}
 
 Ahora algo que ninguno nos esperábamos: $(\espLp, \norm{·}_p)$ es un espacio normado y completo (esto último es un teorema que ya veremos) y por lo tanto un espacio de Banach.
@@ -1112,7 +1112,46 @@ Extendemos con ceros no porque nos venga bien (que también), sino porque así n
 Otra observación simple, que se demuestra mirando el conjunto $E = \set{f > 1}$:
 
 \begin{prop} \citep[Proposición 6.9]{folland99} Dados $p,q$ con $0 < p < q ≤ +∞$, entonces $L^q ⊆ L^p + L^r$ para todo $r > 0$.
+
+En otras palabras, dada $f ∈ L^q$, podremos descomponerla como $f = f_1 + f_2$ con $f_1 ∈ L^p$ y $f_2 ∈ L^r$.
 \end{prop}
+
+\begin{proof} Vamos a considerar $E = \set{x ∈ ℝ^N \tq \abs{f(x)} > 1}$, y definimos dos funciones \[ g = f \ind_E \qquad h = f \ind_{E^c} \]
+
+Entonces, podemos ver que $\abs{g}^p = \abs{f}^p \ind_E ≤ \abs{f}^q \ind_E$, y análogamente $\abs{h}^r = \abs{f}^r \ind_{E^c} ≤ \abs{f}^q \ind_{E^c}$. Integrando, ya lo tenemos hecho.
+% TODO: Ver por qué r puede ser arbitrario.
+\end{proof}
+
+¿Qué significa la norma $L^0$? Podemos ver qué valen los siguientes límites:
+\begin{align*}
+\lim_{p\to 0} \norm{f}_p &= \exp \int_X \log \abs{f} \dif μ \\
+\lim_{p\to 0} \norm{f}_p^p &= μ\left(\set{x ∈ X \tq f(x) ≠ 0}\right)
+\end{align*}
+
+La primera igualdad se puede ver con la \nlref{thm:DesigualdadJensen}, tomando $φ = \exp$ y $u = \log f$, y la otra se deja como ejercicio. % TODO.
+
+\begin{theorem}[Teorema\IS de Riesz-Frechet-Banach] $\espLp \meas$ es un espacio métrico completo, con la topología dada por su norma. En otras palabras, \espLp es un \nlref{def:EspacioBanach}.
+\end{theorem}
+
+Necesitaremos una caracterización para espacios normados completos.
+
+\begin{prop} \label{prop:CaracEspCompleto} Un espacio $\mathbb{X}$ es completo si y sólo si cada sucesión tal que su serie converge absolutamente es también condicionalmente convergente. Es decir, que si $∀f_n ∈ \mathbb{X}$ tal que \[ \sum_{n ≥ 0} \norm{f_n}_{\mathbb{X}} < ∞ \] entonces $\norm{\sum f_n}_\mathbb{X}$.
+
+De forma más compacta, esto implica que existe una $\bar{f} ∈ \mathbb{X}$ tal que $\sum f_n = \bar{f}$.
+\end{prop}
+
+\begin{proof}
+% TODO: Aviso, estoy medio dormido y esta demostración va a ser un cagarro.
+Vamos a probarlo para $1 ≤ p < ∞$, y trataremos de aplicar la proposición anterior. Tomamos una sucesión $f_n$ de Cauchy, para la que existe una subsucesión $f_{n_i}$ con $n_1 < n_2 < \dotsb$ tal que \[ \norm{f_{n_{i+1}} - f_{n_i}}_p ≤ \frac{1}{2^i} \]
+
+Ponemos entonces \[ g_k = \sum_{i=1}^k \norm{f_{n_{i+1}} - f_{n_i}}_p \], y observamos que \[ \pnorm{g_k} ≤ \sum_{i=1}^k \pnorm{f_{n_{i+1}} - f_{n_i}} ≤ \sum_{i=1}^k \frac{1}{2^i} < 1\], lo que nos permite usar el \nlref{thm:Fatou}, que nos dirá que \[ \int \underbracket{\lim g_k}_{= \abs{g}^p} ≤ \liminf \int \pnorm{g_k}^p ≤ 1 \], luego $g ∈ L^p$ y $g < + ∞$ para CTP. Además, la serie converge absolutamente (sólo hay que ver que estamos sumando $\frac{1}{2^i}$).
+
+Para acabar el teorema, tenemos que \[ f = f_{n_1} + \sum_{i=1}^∞ (f_{n_{i+1}} - f_{n_i})\] converge absolutamente para todo $x ∈ X$, y poniendo $f(x) = 0$ para los que lo anterior no converge.
+
+Ahora tenemos que coger y decir que $f_{n_k} = f_{n_1} + \sum{i=1}^{k-1} (f_{n_{i+1}} - f_{n_i})$ y  $f = \lim_{k\to ∞} f_{n_k}$. Falta probar que $f$ es el límite (\espLp) de $f_{n_k}$. Para ello fijamos $ε > 0$, de tal forma que $∃ N > 0$ tal que $\norm{f_n - f_m} < ε$ para todos $m,n > N$. Por Fatou, \[ \int_X \pnorm{f - f_m}^p \dif μ ≤ \liminf_{i \to ∞} \int_X \pnorm{f_{n_1} - f_m}^p \dif μ < ε^p \], y ahora nosequé de medida cero y que lo malo se nos va así que todo guay.
+
+La prueba ahora se acaba demostrando que $f$ es el límite y yo personalmente desisto aquí.
+\end{proof}
 
 \section{SOC en espacio de Hilbert. Series de Fourier}
 
