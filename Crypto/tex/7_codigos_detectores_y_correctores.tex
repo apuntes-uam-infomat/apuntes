@@ -157,3 +157,89 @@ Pero en este caso tenemos que
 \[d(x,x_0) \leq d(x,\tilde{x})+d(\tilde{x},x_0) \leq 2d(x,\tilde{x}) \leq 2 \floor{\frac{d-1}{2}} \leq d-1 < d\]
 con lo que llegamos a una contradicción, pues por definición $d(x,x_0)\geq d$.
 \end{proof}
+
+\begin{example}
+Sea el lenguaje
+
+\[\left\{ \begin{array}{l}
+N = 000000 \\ E = 010101 \\ O = 101010 \\ S = 111111
+\end{array}\right.\]
+
+Supongamos que se envía ``S=111111'' y recibimos ``010111'' y empleamos un algoritmo de corrección de errores veremos que el mensaje más cercano es ``E=010101'' que implica un único error en el mensaje.
+
+No obstante, en este caso el resultado es incorrecto pues en realidad se produjeron 2 errores.
+\end{example}
+
+Con lo visto hasta ahora, es evidente que la forma de conseguir detectar/corregir más errores pasa por emplear códigos con distancias mínimas grandes.
+
+En general, podemos crear códigos con distancias mínimas tan grandes como queramos.
+
+\begin{defn}[Codigo binario de repetición de longitud n]
+Este código consiste en repetir cada bit n veces.
+\[R_{2,n}=\{\underbrace{111....111}_{n\text{ veces}}, \underbrace{000....000}_{n\text{ veces}}\}\]
+
+Si $F_q=\{a_1,...,a_q\}$ es un alfabeto, el \textbf{código de repetición de longitud n} es:
+\[R_{2,n}=\{\underbrace{a_1a_1a_1....a_1a_1a_1}_{n\text{ veces}}, ... , \underbrace{a_qa_qa_q....a_qa_qa_q}_{n\text{ veces}}\}\]
+\end{defn}
+
+Podemos ver que las distancias mínimas para un código de repetición de longitud n será siempre $d(R_q,n)=n$.
+
+El problema de este método es que acaba siendo muy costoso cuando queramos hacer $n$ grande. 
+
+Para poder clasificar y estudiar la calidad de los diferentes códigos debemos definir algunos términos:
+
+\begin{defn}[Distancia relativa]
+Sea $\algb{C} \subset F_1^n$ con $d(\algb{C})=d$ y $|\algb{C}|=M=q^l$ definimos la \textbf{distancia relativa} como:
+\[δ=\frac{d}{n}\]
+\end{defn}
+
+\begin{defn}[Tasa de transmisión]
+Sea $\algb{C} \subset F_1^n$ con $d(\algb{C})=d$ y $|\algb{C}|=M=q^l$ definimos la \textbf{tasa de transmisión} como:
+\[R=\frac{l}{n}\]
+\end{defn}
+
+\begin{example}
+En un código de repetición siempre tendremos una distancia relativa igual a 1 y una tasa de transmisión inversamente proporcional a $n$. Es decir:
+\[δ=1, \ \ R = \frac{1}{n}\]
+\end{example}
+
+\obs Dado un código con más de una palabra\footnote{Si sólo tenemos una palabra es un caso trivial}, es decir $|\algb{C}|>1$ tenemos:
+\[0 < δ,R \leq 1\]
+
+En general intentaremos que tanto δ cono $R$ sean cercanos a 1. No obstante, es imposible que ambas tiendan a 1 a la vez por lo que se tratará de optimizar, dependiendo de la situación concreta en que vayamos a trabajar.
+
+\begin{defn}[Código lineal]
+Diremos que un código $\algb{C}$ es un \textbf{código lineal} si:
+\begin{enumerate}
+\item $F_q$ es un cuerpo [o un anillo conmutativo si uno sabe lo que es un módulo sobre un anillo]
+
+\item $\algb{C}$ es un espacio vectorial de $F_q^n$ [o es un submódulo si $F_q^n$ es un anillo]
+\end{enumerate}
+\end{defn}
+
+\begin{example}
+Todos los códigos que hemos visto hasta ahora son \textbf{códigos lineales}.
+
+\[\algb{C}_2 = \{\vx\in \mathbb{F}_2^4: x_1-x_3 = 0 , \  x_2-x_3 = 0\}\]
+\[\algb{C}_3 = \{\vx \in \mathbb{F}_3^6: x_1=x_3=x_5, \ x_2=x_4=x_6\}\]
+\end{example}
+
+\obs Sea $|\algb{C}|=M=q^l$ tenemos que $l=k=dim_{F_q}(\algb{C})$
+
+\begin{defn}[Peso]
+Si $F_q$ es un cuerpo tal que $x\in F_q^n$ llamamos \textbf{peso de x} a:
+\[w(x) = \# \{i: \ x_i \neq 0\}\]
+Es decir, dada una palabra nos cuenta la cantidad de 1s.
+\end{defn}
+
+\begin{defn}[Peso mínimo de $\algb{C}$]
+\[w(\algb{C}) = \min \{ w(x) : \ \ x \in \algb{C}, x \neq 0\}\]
+\end{defn}
+
+\begin{lemma}
+Si $\algb{C}$ es un código lineal tenemos que:
+\begin{enumerate}
+\item \[\forall x \neq y \in \algb{C} \ \ d(x,y)=w(x-y)\]
+\item \[d(\algb{C})=w(\algb{C})\]
+\end{enumerate}
+\end{lemma}
