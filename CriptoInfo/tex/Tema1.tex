@@ -1321,7 +1321,103 @@ Hay varias formas de utilizar el DES. Vamos a ver algunas de ellas.
 		\end{itemize}
 	
 \end{itemize}
+
+\chapter{DES DOBLE}
+Debido a lo vulnerable que es el DES se buscaron posibles alternativas. Una de ellas es la encriptación múltiple, en la cual el algoritmo de encriptación se usa varias veces sobre el mismo texto recibiendo como entrada la enciptación aterior.
+
+\section{Funcionamiento DES doble}
+Tenemos un texto plano P y dos claves $K_1$, $K_2$
+$$C= DES_{K_2}(DES_{K_1}(P))$$
+$$P = DES^{-1}_{K_1}(DES^{-1}_{K_2}(C)) \implies DES_{K_1}(P) = DES^{-1}_{K_2}(C)$$
+
+Además tiene la propiedad de que:
+$$DES_{K_3}(x) \neq DES_{K_2}(DES_{K_1}(x))$$
+
+Según esto, como $K_1$ y $K_2$ son de 64 bits , aparentemente la robusted de la clave es $64 \cdot 2 = 128$
+
+\section{Robusted DES DOBLE}
+
+Vamos a ver cómo descubrir las claves utilizadas en el caso de tener un par (P,C) conocido.
+
+Utilizando la igualdad $DES_{K_1}(P) = DES^{-1}_{K_2}(C)$:
+\begin{enumerate}
+	\item Escribimos en una tabla la encriptación de P con los $2^{56}$ posibles valores de $K_1$ (hemos quitado los bits de paridad, por eso no es $2^64$).
+	
+	\item Escribimos en otra tabla la desencriptación de C con los $2^{56}$ posibles valores de $K_2$
+	
+	\item Vemos las claves con las que hay coincidencia
+	
+\end{enumerate} 
+
+El coste de este proceso ha sido ejecutar $2 \cdot 2^{56} = 2^{57}$ veces el DES, más el tiempo en hacer las comparaciones (que es despreciable).
+
+Por lo tanto la robusted del DES doble es aproximadamente $2^{57}$
+
+Pero esto es muy poco, vamos a ver el DES Triple
+
  % % Me faltan infinitas hojas % %
+ 
+ \chapter{Triple DES}
+ El triple DES es otra alternativa de encriptación múltiple.
+ 
+ Hay dos tipos de Triple DES:
+ \begin{enumerate}
+ 	\item Triple DES de \textbf{2 claves}
+ 	\item Triple DES de \textbf{3 claves}
+ \end{enumerate}
+ \section{Funcionamiento Triple DES de 2 claves}
+ Tenemos un texto plano P y dos claves $K_1$ , $K_2$, de 64 bits cada una, es decir 128 bits, que si quitamos los bits de paridad se quedan en 112 bits.
+ 
+ $$C = DES_{K_1}(DES^{-1}_{K_2}(DES_{K_1}(P)))$$
+ 
+ $$P = DES^{-1}_{K_1}(DES_{K_2}(DES^{-1}_{K_1}(P)))$$
+ 
+ Esto hace que no sea posible el ataque que habíamos visto en el DES Doble ya que
+ $$DES_{K_1}(P) = DES_{K_2}(DES^{-1}_{K_1}(C))$$
+ 
+ \section{Funcionamiento Triple DES de 3 claves}
+ 
+ En este caso el algoritmo de encriptación es:
+ $$C = DES_{K_3}(DES^{-1}_{K_2}(DES_{K_1}(P )))$$
+ 
+ \begin{example}
+ 	Queremos demostrar que 
+ 	$$DES_K(x) = \overline{DES_{\overline{K}}(\overline{x})}$$
+ 	
+ 	Para esto complementamos los dos lados e la igualdad de forma que nos queda
+ 	$$\overline{DES_K(x)} = DES_{\overline{K}}(\overline{x})$$
+ 	
+ 	Ahora vamos a desarrollar la parte derecha:
+ 	$$DES_{\overline{K}}(\overline{x}) \implies \begin{cases}
+		L_1 = \overline{R_0}\\
+		R_1 = \overline{L_0} \oplus F(\overline{R_0} , \overline{K_1})
+ 	\end{cases}$$
+ 	
+ 	Sabemos que $F(\overline{R_0} , \overline{K_1}) = E(\overline{R_0}) \oplus \overline{K_1}$
+ 	
+ 	Al ser E $\rightarrow$ expansión, vemos que 
+ 	$$E(\overline{R_0}) = \overline{E(R_0)}$$
+ 	
+ 	Y además una propiedad del XOR es que
+ 	$$a\oplus b = \overline{a} \oplus \overline{b}$$
+ 	
+ 	por tanto
+ 	$$E(\overline{R_0}) \oplus \overline{K_1} = \overline{E(R_0)} \oplus \overline{K_1} = E(R_0) \oplus K_1$$
+ 	
+ 	Según lo que acabamos de calcular
+ 	$$DES_{\overline{K}}(\overline{x})\begin{cases}
+	 	R_1 = \overline{L_0} \oplus F(\overline{R_0} , \overline{K_1}) = \overline{L_0} \oplus F(R_0 , K_1)\\
+	 	\overline{R_0} = L_1
+ 	\end{cases}$$
+ 	
+ 	Si ahora complementamos esto:
+ 	$$\overline{DES_{\overline{K}}(\overline{x})}\begin{cases}
+ 	\overline{R_1} = L_0 \oplus F(\overline{R_0} , \overline{K_1}) = L_0 \oplus F(R_0 , K_1) = R_1\\
+ 	\overline{L_1} = R_0 = L_1
+ 	\end{cases}$$
+ 	
+	Y asi vemos que se cumple la igualdad 	
+ \end{example}
  \newpage
  
  
