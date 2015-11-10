@@ -69,8 +69,6 @@ y(0)=0\end{array}
 
 \solution
 
-\doneby{Pedro}
-
 Para empezar debemos de comprobar si la función que queremos aproximar satisface la ecuación planteada en el PVI.
 
 \[\tan(x)' = \sec(x)^2 = 1 + \tan(x)^2, \ \ \tan(0)=0\]
@@ -79,9 +77,11 @@ Queda claro que el PVI planteado tiene como solución la función tangente. Ahor
 
 Para verlo debemos comprobar si la función $f(t_n,y_n)=1+y^2$ es lipschitz en la segunda variable. Sólo en caso de serlo podríamos aplicar el método de Euler para obtener la solución. Vamos a ello.
 
-\[\forall y_1<y_2 \in [0,2] \ \ \frac{\abs{y_2^2 - y_1^2}}{y_2-y_1}=\frac{(y_2-y_1)(y_2+y_1)}{y_2-y_1} = (y_2+y_1) \leq 4\]
+\[\forall y_1<y_2 \in [0,2] \ \ \frac{\abs{y_2^2 - y_1^2}}{y_2-y_1}=\frac{(y_2-y_1)(y_2+y_1)}{y_2-y_1} = (y_2+y_1)< \infty\]
 
-Por tanto, como la función es Lipschitz en la segunda variable, podremos aplicar le método de Euler para resolver el PVI planteado.
+\obs No podemos acotar la suma $y_1+y_2$ porque no sabemos en que rango se mueve la $y$, puesto que sólo tenemos un dominio de definición para las $t$. Además, conisderando que conocemos la solución del método podemos comprobar que $\tan\left(\frac{π}{2}\right)=\infty$ con lo que la función claramente no es Lipschitz.
+
+Por tanto, no podremos aproximar la función $y(t)=\tan(t)$ en ningún intervalo que contenga múltiplos enteros de $t=\frac{π}{2}$ puesto que en esos valores la función toma un valor infinito que nuestro método numérico no puede obtener.
 \end{problem}
 
 
@@ -221,7 +221,7 @@ Ahora tenemos dos casos posibles, y sabiendo que el orden de un método es $\fra
 	\spart
 	En el método de Adams Bashforth tenemos que
 	\[y(x_{n+2})-y(x_{n+1}) = \int_{x_{n+1}}^{x_{n+2}} f(x,y(x)) dx\]
-	y el valor de $f$ entre los puntos $x_{n+1}, x_{n+2}$ se aproximama mediante la recta que pasa por los puntos $(x_{n+1},f(x_{n+1},y_{n+1}), (x_{n+2}, f(x_{n+2},y_{n+2})))$. Para obtener dicha recta usamos el polinomio de interpolação de Lagrange:
+	y el valor de $f$ entre los puntos $x_{n+1}, x_{n+2}$ se aproximama mediante la recta que pasa por los puntos $((x_{n+1},f(x_{n+1},y_{n+1})), (x_{n+2}, f(x_{n+2},y_{n+2})))$. Para obtener dicha recta usamos el polinomio de interpolação de Lagrange:
 	\[f(x,y) = f(x_n,y_n)\frac{x-x_{n+1}}{x_n-x_{n+1}} + f(x_{n+1},y_{n+1}) \frac{x-x_n}{x_{n+1}-x_n}\]
 
 	Si integramos entre $\int_{x_{n+1}}^{x_{n+2}}$
@@ -524,17 +524,17 @@ Demostrar, a lo bruto, que el método del trapecio es convergente
 
 \solution
 
-Sabemos que el método del trapecio viene definido por la recurrencia:L
+Sabemos que el método del trapecio viene definido por la recurrencia:
 \[y_{n+1} = y_n +\frac{h}{2}\left(f(x_n,y_n)+f(x_{n+1},y_{n+1}) \right)\]
 
 Para probar que el método es convergente necesitamos ver que:
 \[\lim_{h \to 0 } \norm{y^0-y_0} \to 0 \implies \lim_{h\to 0} \max_{1 \leq n \leq N}\norm{y(x_n)-y_n} \to 0\]
 
 Por definición del residuo podemos escribir:
-\[y(x_{n+1}) = y(x_n) +\frac{h}{2}\left(f(x_n,y(x_n))+f(x_{n+1},y(x_{n+1})) \right) = R_n\]
+\[y(x_{n+1}) - y(x_n) +\frac{h}{2}\left(f(x_n,y(x_n))+f(x_{n+1},y(x_{n+1})) \right) = R_n\]
 
-Combinando esta ecuació con la recurrencia que define el método podemos escribir:
-\[|y(x_{n+1})-y_{n+1}| \leq |y(x_n)-y_n|+\frac{h}{2}|f(x_n,y_n)-f(x_n,y(x_n))|+\frac{h}{2}|f(x_{n+1},y(x_{n+1}))-f(x_{n+1},y_{n+1})+K\]
+Combinando esta ecuación con la recurrencia que define el método podemos escribir:
+\[|y(x_{n+1})-y_{n+1}| \leq |y(x_n)-y_n|+\frac{h}{2}|f(x_n,y_n)-f(x_n,y(x_n))|+\frac{h}{2}|f(x_{n+1},y(x_{n+1}))-f(x_{n+1},y_{n+1})|+K\]
 
 siendo $K=\max_{0 \leq n \leq k-1} R_n$
 
@@ -552,7 +552,7 @@ Desarrollando la recurrencia podemos ver que:
 \obs Para llegar a este resultado desarrollamos la recurrencia hasta ver su fórmula general. El coeficiente de $e_0$ es sencillo de obtener. Para el coeficiente de la $K$ necesitamos conocer la fórmula para la suma de los términos de una sucesión geométrica.
 
 Por otro lado, podemos ver que:
-\[\left( 1 + \frac{Lh}{2} \right)^n \leq \left( 1 + \frac{L(b-a)}{2N}\right)^N=\left(1 + \frac{L(b-a)}{2N}\right)^{\frac{2N}{L(b-a)}\frac{L(b-a)}{2N}}\leq e^{\frac{L(b-a)}{2}}\]
+\[\left( 1 + \frac{Lh}{2} \right)^n \leq \left( 1 + \frac{L(b-a)}{2N}\right)^N=\left(1 + \frac{L(b-a)}{2N}\right)^{\frac{2N}{L(b-a)}\frac{L(b-a)}{2}}\leq e^{\frac{L(b-a)}{2}}\]
 \[\frac{1}{\left( 1-\frac{Lh}{2}\right)^n} \leq .. \leq e^{\frac{L(b-a)}{2}}\]
 \[\frac{\left(1+ \frac{hL}{2}\right)}{\left(1- \frac{hL}{2}\right)}-1 = \frac{Lh}{1-\frac{Lh}{2}}\]
 
@@ -883,10 +883,10 @@ Sea el método multipaso
 
 \spart
 Empezamos definiendo la función incremento
-\[\phi_f(t_n,y_n,y_{n+1};h) = \frac{2}{3}f(t_n+2h,y_n+\frac{4}{3}y_{n+1}-\frac{1}{3}y_n+h\phi_f(t_n,y_n,y_{n+1}))\]
+\[\phi_f(t_n,y_n,y_{n+1};h) = \frac{2}{3}f\left(t_n+2h,y_n+\frac{4}{3}y_{n+1}-\frac{1}{3}y_n+h\phi_f(t_n,y_n,y_{n+1})\right)\]
 
 
-Para comprobar que el método está definido de manera única ver que la siguiente ecuación nos define $y_{n+1}$ como su solución.
+Para comprobar que el método está definido de manera única basta con ver que la siguiente ecuación nos define $y_{n+2}$ como su solución.
 \[y_{n+2} = \frac{4}{3}y_{n+1}-\frac{1}{3}y_n + \frac{2}{3}hf(t_{n+2},y_{n+2})\]
 
 Para comprobar que existe $y_{n+2}$ debemos comprobar que existe un punto fijo de la aplicación 
@@ -942,7 +942,7 @@ Sustituyendo vemos que
 con lo que nos quedan términos distintos de $O(h^i)$.
 
 Si realizamos los desarrollos de Taylor de orden menor tenemos
-\[y(x_{n+2}) = y(x_n)+2hy'(x_n)+2h^2y''(x_n)+O(h^3))\]
+\[y(x_{n+2}) = y(x_n)+2hy'(x_n)+2h^2y''(x_n)+O(h^3)\]
 \[f(x_{n+1},y(x_{n+1})) = y'(x_{n+1}) = y'(x_n)+hy''(x_n) + O(h^2)\]
 
 lo que nos permite escribir:
