@@ -17,7 +17,7 @@ Por inducción podemos resolverlo:
 
 \begin{equation*}
 	\begin{multlined}[0.8\textwidth]
-		\underline{n=0}: \quad y_1=y_0+h(t_0) = h(t_0)\\[1em]
+		\underline{n=0}: \quad y_1=y_0+hf(t_0) = h(t_0)\\[1em]
 		\shoveleft{\underline{n=1}: \quad y_2 = y_1 + hf(t_1) = hf(t_0) + hf(t_1)}\\
 		\shoveleft{\qquad \qquad \quad = h\left[ f(t_0) + f(t_1) \right]}\\
 	\end{multlined}
@@ -508,7 +508,7 @@ Dado el dato inicial $y(0)=y^0$, para poder ver que el método es convergente de
 \obs A lo largo de la teoría hemos realizado esta misma demostración asumiendo que $\norm{y^0-y_0} = 0$, pero esta restricción es demasiado fuerte puesto que en la práctica puede incluso llegar a ser imposible.
 
 Basándonos en la fórmula recursiva del método podemos ver que:
-\[y(x_{n+1}) - y_{n+1} = y(x_n) 0 y_n + f(x_n,y(x_n)) -hf(x_n,y_n) + R_n\]
+\[y(x_{n+1}) - y_{n+1} = y(x_n) - y_n + hf(x_n,y(x_n)) -hf(x_n,y_n) + R_n\]
 puesto que la función $f$ es Lipschitz, tomando módulos a ambos lados tenemos:
 \[|y(x_{n+1})-y_{n+1}| \leq (1+Lh)|y(x_n)-y_n| + K \text{ siendo }K=\max_n|R_n|\]
 Recordando la demostración que realizamos en teoría al probar el teorema \ref{theorem:EulerEsConvergente}
@@ -575,7 +575,7 @@ Con lo que queda claro que se satisface la condición de convergencia para este 
 
 \section{Hoja 2}
 \begin{problem}[1]
-Sea $A$ una matriz real cuadrad de orden $k$ definida de la siguiente manera:
+Sea $A$ una matriz real cuadrada de orden $k$ definida de la siguiente manera:
 \[\begin{array}{ll}
 A(i,i+1) = 1 & \text{ para } i=1,...,k-1\\
 A(k,j)=-\frac{α_{j-1}}{α_k} & \text{ para } j=1,...,k
@@ -584,6 +584,45 @@ A(k,j)=-\frac{α_{j-1}}{α_k} & \text{ para } j=1,...,k
 Demostrar que su polinomio característico es:
 \[ρ(λ) = \sum_{j=0}^kα_jλ^j\]
 \solution
+
+\doneby{Pedro}
+
+Atendiendo a la definición dada, la matriz será de la forma:
+\[A=\left(\begin{array}{cccccc}
+0 & 1 & 0 & 0 & ... & 0 \\
+0 & 0 & 1 & 0 & ... & 0 \\
+... & ... & ... & ... & ... & ... \\
+0 & 0 & 0 & 0 & ...& 1 \\
+-\frac{α_0}{α_k} & -\frac{α_1}{α_k} & -\frac{α_2}{α_k} & -\frac{α_3}{α_k} & ... & -\frac{α_{k-1}}{α_k}
+\end{array} \right)\]
+
+Si queremos calcular el prolinomio característico de esta matriz, lo primero que debemos hacer es restarle $λ \cdot Id$ con lo que obtenemos:
+\[A = \left(\begin{array}{cccccc}
+-λ & 1 & 0 & 0 & ... & 0 \\
+0 & -λ & 1 & 0 & ... & 0 \\
+... & ... & ... & ... & ... & ... \\
+0 & 0 & 0 & 0 & ...& 1 \\
+-\frac{α_0}{α_k} & -\frac{α_1}{α_k} & -\frac{α_2}{α_k} & -\frac{α_3}{α_k} & ... & -\frac{α_{k-1}}{α_k} - λ
+\end{array} \right)\]
+
+Vamos a proceder a calcular el determinante por adjuntos, para lo que debemos recordar que el determinante de una matriz triangular es el producto de los elementos de la diagonal. Así nos queda:
+
+\[det(A) = -λA_0 -(-1)^{k+1}\frac{α_0}{α_k}\]
+donde nos hemos basado en que al calcular el adjunto del término $\frac{α_0}{α_k}$ nos encontramos ante una matriz triangular con 1s en la diagonal.
+
+Ahora sólo nos queda calcular el determinante de $A_0$, que es de la misma forma que $A$, por lo que sabemos que
+\[det(A_0) = -λA_1 - (-1)^{k}\frac{α_1}{α_k}\implies\]
+\[\implies -αA_0 = λ^2A_1 -(-1)^{k+1}\frac{α_1}{α_k}λ\]
+
+Iterando acabaremos llegando a que
+\[det(A_{k-2}) = -\frac{α_{k-1}}{α_k}-λ\]
+
+Combinando las fórmulas que acabamos de obtener vemos que
+\[det(A) = -\left((-1)^{k+1}\sum_{i=0}^{k-1}\frac{α_i}{α_k}λ^{i} + λ^k\right)\]
+
+Puesto que el polinomio va a igualarse a 0, podemos multiplicar todos los términos por $-(-1)^{k+1}α_k$ obteniendo:
+\[det(A) = \sum_{i=0}^{k-1}α_iλ^i + α_kλ^k = \sum_{i=0}^k α_iλ^i\]
+
 \end{problem}
 
 \begin{problem}[2]
@@ -592,6 +631,17 @@ Sea $A$ una matriz real cuadrada de orden $k$. Supongamos que todos sus autovalo
 o si $|λ|=1$ entonces su autovalor es simple. Probar que existe $M<\infty$ tal que
 \[\norm{A^n} \leq M, \ \ \ n=1,2,...\]
 \solution
+
+\doneby{Pedro}
+
+Sabemos que el determinante de una matriz es igual al producto de los autovalores.
+
+Además sabemos que el determinante de un producto de matrices es igual al producto de los determinantes.
+
+Por tanto, podemos ver que
+\[det(A^n)=\prod_{i=0}^kλ_i^n \leq \prod_{i=0}^k|λ_i| \text{ puesto que } |λ_i| < 1\]
+
+Así es claro que $det(A^n) \leq \prod_{i=0}^k |λ_i| \ \ \forall n$.
 \end{problem}
 
 \begin{problem}[3]
@@ -704,10 +754,10 @@ Dado un PVI, consideramos el siguiente método numérico:
 \ppart Comprobar que la recurrencia se obtiene aproximando $f(t,y(t))$ por el polinomio cuadrático de Lagrange de $f(t,y(t))$ en los puntos $t_n,t_{n+1}$ y $t_{n+2}$.
 
 \ppart Obtener el orden del residuo:
-\[R_n = \int_{t_n}^{t_{n+2}}f(s,y(s))\dif s -\frac{h}{3}\left(f(t_{n+2},y_{n+2})+4f(t_{n+1},y_{n+1}) + f(t_n,y_n) \right)\]
+\[R_n = \int_{t_n}^{t_{n+2}}f(s,y(s))\dif s -\frac{h}{3}\left(f(t_{n+2},y_(t{n+2}))+4f(t_{n+1},y(t_{n+1})) + f(t_n,y_n) \right)\]
 
 \ppart La función incremento asociada a la fórmula recurrente se define como:
-\[\phi_f(t_n,y_n,y_{n+2};h) = \lim_{k\to \infty}\phi_k^{(k)}(t_n,y_n,y_{n+1};h)\]
+\[\phi_f(t_n,y_n,y_{n+1};h) = \lim_{k\to \infty}\phi_k^{(k)}(t_n,y_n,y_{n+1};h)\]
 con $\phi_f^{(0)}$. Definir $\phi_f^{(k)}$ en función de $\phi_f^{(k-1)}$ de forma que se satisfaga
 \[y_{n+2}-y_n = h \phi_f(t_n,y_n,y_{n+1};h) \]
 
@@ -715,9 +765,11 @@ con $\phi_f^{(0)}$. Definir $\phi_f^{(k)}$ en función de $\phi_f^{(k-1)}$ de fo
 
 \ppart Probar que $\phi_f$ es una función continua con respecto a todas sus variables
 
-\ppart Probar que 4$\phi_f$ es Lipschitz con respecto a $y_n$ e $y_{n+1}$.
+\ppart Probar que $\phi_f$ es Lipschitz con respecto a $y_n$ e $y_{n+1}$.
 
-\ppart Probar que el último método mencionado es consistente
+\ppart Probar que el método:
+\[y_{n+2}-y_n = h \phi_f(t_n,y_n,y_{n+1};h) \]
+es consistente
 
 \ppart Probar que ese método es convergente
 \solution
@@ -736,7 +788,84 @@ Esta función sabemos integrarla pues no depende de $f$ ya que todas las aparici
 Una vez realicemos la integral debemos obtener exactamente el método dado en el enunciado.
 
 \spart
+\doneby{Pedro}
 
+Calculamos los desarrollos de Taylor:
+\[\int_{t_n}^{t_{n+2}}f(s,y(s))\dif s = \int_{t_n}^{t_{n+1}}y'(s)\dif s = y(t_{n+2})-y(t_n) = 2hy'(t_n)+2h^2y''(t_n) +O(h^3)\]
+\[f(t_{n+2},y(t_{n+2})) = y'(t_{n+2}) = y'(t_n)+2hy''(t_n)+O(h^2)\]
+\[f(t_{n+1},y(t_{n+1})) = y'(t_{n+1}) = y'(t_n)+hy''(t_n)+O(h^2)\]
+\[f(t_n,y(t_n)) = y'(t_n)\]
+
+Combinando estas fórmulas tenemos:
+\[R_n = O(h^3)+O(h^2) = O(h^3)\]
+es decir, el residuo es de orden, al menos, 3.
+
+Si calculásemos los desarrollos de Taylor de un orden superior obtendríamos términos que no se compensarían, es decir, llegaríamos a:
+\[R_n = \frac{4h^3}{3}y'''(t_n) - \frac{5h^3}{6}y'''(t_n)+...\]
+con lo que queda claro que el orden es 3.
+
+\spart
+
+\doneby{Pedro}
+
+\[\phi_f^{(k)}(t_n,y_n,y_{n+1};h) = \frac{1}{3}\left(f(t_{n+2},y_n+h\phi^{(k-1)}_f)+4f(t_{n+1},y_{n+1})+f(t_n,y_n) \right)\]
+
+El límite $\lim_{k\to \infty}\phi_k^{(k)}(t_n,y_n,y_{n+1};h)$ existirá siempre y cuando la función
+\[F(x)=\frac{1}{3}\left(f(t_{n+2},y_n+2hx)+4f(t_{n+1},y_n+x)+f(t_n,y_n) \right)\]
+tenga un punto fijo.
+
+Siempre que las funciones $f$ sean Lipschitz en la segunda variable es sencillo ver que $F$ es contractiva y, por tanto, tendrá un punto fijo.
+
+\spart
+\doneby{Pedro}
+
+Si partimos de $\phi_f^{(0)}$ continua, en cada paso obtenemos una nueva función continua.
+
+Si conseguimos demostrar que la convergencia es uniforme, tendremos directamente que la función $\phi_f$ es continua.
+
+Una forma ``sencilla'' de hacer esta demostración consiste en probar que la sucesión es de Cauchy, pues ello nos garantizaría la convergencia uniforme. Vamos a ello:
+\[\norm{\phi_f^{(k)}-\phi_f^{(k-1)}} \leq \frac{1}{3}\norm{L(2h+1)\norm{\phi_f^{(k-1)}-\phi_f^{(k-2)}}} \leq ... \leq \frac{1}{3}L(2h+1)^{k-1}\norm{\phi_f^{(1)}-\phi_f^{(0)}}\]
+
+Úna vez tenemos esta desigualdad podemos ver que:
+\[\norm{\phi_f^{(n)}-\phi_f^{(m)}} \leq \norm{\phi_f^{(n)}-\phi_f^{(n-1)}} + \norm{\phi_f^{(n-1)}-\phi_f^{(n-2)}} + ... + \norm{\phi_f^{(m+1)}-\phi_f^{(m)}} \leq\]
+\[\leq \frac{L}{3}\left(\norm{\phi_f^{(1)}-\phi_f^{(0)}}\sum_{i=m}^{n-1}h^i \right) = \frac{L}{3}\left(\norm{\phi_f^{(1)}-\phi_f^{(0)}}h\frac{h^{n-m}-1}{h-1} \right)  \]
+
+Puesto que $h$ es pequeño, la fracción quedará acotada y finalmente tendremos que la sucesión es de Cauchy con constante $M=\frac{L}{3}\norm{\phi_f^{(1)}-\phi_f^{(0)}}$
+
+\spart
+\doneby{Pedro}
+
+Puesto que la función $f$ es Lipschitz es sencillo comprobar que la función $\phi_f$ es Lipschitz con rescpecto a las $y_n,y_{n+1}$. 
+
+\[\norm{\phi_f(t_n,y_n,y_{n+1};h)-\phi_f(t_n,\tilde{y}_n,y_{n+1};h)} \leq\frac{1}{3} 2L\norm{y_n-\tilde{y}_n}\]
+\[\norm{\phi_f(t_n,y_n,y_{n+1};h)-\phi_f(t_n,y_n,\tilde{y}_{n+1};h)} \leq\frac{1}{3} 4L\norm{y_n-\tilde{y}_n}\]
+
+Lo único que hemos hecho es escribir la $\phi_f$ como combinación de las $f$ según la definición dada en el apartado \textbf{c)} y aplicar que la función $f$ es Lipschitz en la segunda variable.
+
+\spart
+
+\doneby{Pedro}
+
+Para probar que es consistente nos apoyamos en el teorema \ref{theorem:consist_iif_relaciones}. 
+
+Es sencillo comprobar que 
+\[\sum_{j=0}^{k=2}α_j = 1-1 = 0\]
+
+Por otro lado, tenemos que la función incremento para este método es:
+\[\phi_f^{(k)}(t_n,y_n,y_{n+1};h) = \frac{1}{3}\left(f(t_{n+2},y_n+h\phi^{(k-1)}_f)+4f(t_{n+1},y_{n+1})+f(t_n,y_n) \right)\]
+
+Y podemos ver que
+\[\phi_f(t,y(t),y(t);0) = \frac{1}{2} \left(f(t,y(t))+4f(t,y(t))+f(t,y(t)) \right) = 2f(t,y(t)) = \sum_{j=0}^{k=2}j\cdot α_j f(t,y(t))\]
+
+\spart
+
+Para comprobar que el método es 0-estable vamos a ver que se satisface el criterio de la raíz.
+
+En esta ocasión el primer polinomio característico es $P(x) = x^2-1$ que tiene como raices $x=\pm 1$.
+
+Efectivamente se satisface el criterio de la raíz, pues todas las raices tienen módulo 1 pero son simples.
+
+\doneby{Pedro}
 
 \end{problem}
 
@@ -794,4 +923,30 @@ Considera el método lineal multipaso (leap-frog)
 
 ¿Cuál es el orden del método?
 \solution
+\doneby{Pedro}
+
+Nos fiamos de que el método de leap-frog satisface las condiciones de un buen método numérico y que es convergente, por lo que será consistente y 0-estable.
+
+Vamos a ver el orden de consitencia, que nos dará inmediatamente el orden de convergencia.
+
+Tenemos que
+\[y(x_{n+2}) = y(x_n)+2hf(x_{n+1},y(x_{n+1})) + R_n\]
+
+Calculamos los desarrollos de Taylor:
+\[y(x_{n+2}) = y(x_n)+2hy'(x_n)+2h^2y''(x_n)+\frac{4h^3}{3}y'''(x_n)+O(h^4)\]
+\[f(x_{n+1},y(x_{n+1})) = y'(x_{n+1}) = y'(x_n)+hy''(x_n)+\frac{h^2}{2}y'''(x_n)+ O(h^3)\]
+
+Sustituyendo vemos que 
+\[R_n = y(x_{n+2})-y(x_n)-2hf(x_{n+1},y(x_{n+1})) =  \frac{3h^3}{3}y'''(x_n)+ ... \]
+con lo que nos quedan términos distintos de $O(h^i)$.
+
+Si realizamos los desarrollos de Taylor de orden menor tenemos
+\[y(x_{n+2}) = y(x_n)+2hy'(x_n)+2h^2y''(x_n)+O(h^3))\]
+\[f(x_{n+1},y(x_{n+1})) = y'(x_{n+1}) = y'(x_n)+hy''(x_n) + O(h^2)\]
+
+lo que nos permite escribir:
+\[R_n = y(x_{n+2})-y(x_n)-2hf(x_{n+1},y(x_{n+1})) = O(h^3)\]
+
+por lo que el residuo es de orden 3 lo que nos da un orden de convergencia:
+\[\lim_{h \to 0} \max_{0 \leq n \leq N-k} \frac{\norm{R_n}}{h} = O(h^2) \to \text{ Orden 2}\]
 \end{problem}

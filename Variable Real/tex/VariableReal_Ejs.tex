@@ -44,12 +44,67 @@ Lo cierto es que esto es el \nlref{thm:ConvMonotonaSeries}, así que no hay que 
 
 \end{problem}
 
+\begin{problem}[5] Probar la siguiente generalización de la \nref{prop:DesigualdadMarkov}. Sea $\appl{g}{ℝ}{[0, +∞]}$ una función medible y creciente en la imagen de $\appl{f}{\meas}{ℝ}$. Probar que \[ μ\left(\set{x ∈ X \tq f(x) > t}\right) ≤ \frac{1}{g(t)} \int_X g(f(x)) \dif μ(x) \]
+
+Como consecuencia, probar que si $f_n \convs f$ en $\espL$, entonces $f_n \convs f$ en medida.
+\solution
+
+La desigualdad de Markov nos dice que, dada una función medible $f$, entonces \[ μ\left(\set{x∈X \tq \abs{f(x)} > ε }\right) ≤ \frac{1}{ε} \int_X \abs{f} \dif μ \]
+
+Sea $E = \set{x ∈ X \tq f(x) > t}$. Podemos usar esto para descomponer la integral: \[ \frac{1}{g(t)} \int_X g(f(x)) \dif μ = \frac{1}{g(t)} \int_{X \setminus E} g(f(x)) \dif μ + \frac{1}{g(t)} \int_E g(f(x)) \dif μ\]
+
+Como $g$ es creciente en la imagen de $f$, tenemos que $∀a ∈ f(E),\, g(a) > g(t)$, así que podemos simplificar en la segunda integral y nos queda que \begin{multline*}\frac{1}{g(t)} \int_{X \setminus E} g(f(x)) \dif μ + \frac{1}{g(t)} \int_E g(f(x)) \dif μ ≥ \frac{1}{g(t)} \int_{X \setminus E} g(f(x)) \dif μ + \frac{1}{g(t)} \int_E g(t) \dif μ = \\ = \int_{X \setminus E} g(f(x)) \dif μ + μ(E) ≥ μ(E) \end{multline*} y queda probada la desigualdad.
+
+Ahora tenemos que usar esto para demostrar que si $f_n \convs f$ en $\espL$, entonces $f_n \convs f$ en medida o, en otras palabras, que
+\[ \int_X \abs{f_n - f} \dif μ \to 0 \implies ∀ε > 0 \quad μ\left(\set{x∈X \tq \abs{f_n(x) - f(x)} > ε}\right) \to 0 \]
+
+% TODO: Acabar esto.
+
+\end{problem}
+
 \section{Hoja 2}
 
-\begin{problem}[6] Sea $\appl{μ}{\mathcal{B}(ℝ)}{[-∞,+∞]}$ una medida con signo sobre los borelianos de $ℝ$. Definimos la función $f(x) = ([0,x])$. Probar que
+\begin{problem} Sea μ una medida con signo sobre el espacio medible \meds. Definimos \index{Variación!total de una medida}la variación total de una medida como $\abs{μ} = μ_+ + μ_-$, siendo $μ_+, μ_-$ las partes positiva y negativa de una medida respectivamente, dadas por la descomposición de Jordan. Decimos que μ es finita si y sólo si $\abs{μ}$ lo es.
 
-\ppart $μ$ es medida continua si y sólo si $f$ es continua.
-\ppart $μ$ es medida absolutamente continua si y sólo si $f$ es una función absolutamente continua.
+\ppart Probar la siguiente caracterización de la variación total\footnote{En los ejercicios aparece como partición de $X$ pero no le veo mucho sentido a eso.}: \[ \abs{μ} (E) = \sup \set{ \sum_{n=1}^∞ \abs{μ(E_i)} \tq \set{E_n} \text{ es una partición de } E} \]
+
+Demostrar además que \begin{align*} μ_+(E) &= \sup \set{μ(F) \tq F ⊆ E, F ∈ \algb{X}}  \\  μ_-(E) &= - \inf \set{μ(F) \tq F ⊆ E, F ∈ \algb{X}} \end{align*}
+
+Verificar que $μ = μ_+ - μ_-$ y que $\abs{μ} = μ_+ + μ_-$.
+
+\ppart Probar que $\abs{μ}$ es la medida minimal tal que $-\abs{μ} ≤ μ ≤ \abs{μ}$.
+\ppart Probar que $E ∈ \algb{X}$ es μ-nulo si y sólo si es $\abs{μ}$-nulo.
+\ppart Probar que $\abs{μ_1 + μ_2} ≤ \abs{μ_1} + \abs{μ_2}$.
+\ppart Probar que μ es finita si y sólo si $μ_+, μ_-$ lo son.
+\ppart Sean $μ_1, μ_2$ medidas con signo. Probar que \[ μ_1 \perp μ_2 \iff μ_1 \perp \abs{μ_2} \iff μ_1\perp μ_{2,+} \iff μ_1 \perp μ_{2,-} \]
+\solution
+
+\spart Según el \nref{thm:DescompHahn} y el \nref{thm:DescompJordan}, siempre tendremos una partición de $X = X_+ ∪ X_-$ con medidas asociadas $μ_+, μ_-$ singulares. Al considerar todas las posibles particiones de $E_i$, siempre habrá alguna tal que los $E_i$ sean subconjuntos o bien de $X_+$ o de $X_-$ (es decir, que o bien $E_i ∩ X_+ = ∅$ o $E_i ∩ X_- = ∅$).
+
+Si nos encontramos con una partición de este tipo, tendremos que $\abs{μ(E_i)} = μ_+(E_i)$ o que $\abs{μ(E_i)} = μ_-$, y por lo tanto la suma sobre todos los elementos de la partición será igual a $\abs{μ}(E)$. Sólo nos faltaría demostrar que esta partición es la que tiene valor máximo.
+
+Por suerte, eso lo podemos ver muy fácilmente. Sea $\set{E^*_n}$ otra partición de $E$ que no cumpla la ``exclusividad'', es decir, que existan conjuntos cuyas intersecciones con $X_+$ \textbf{y} con $X_-$ sean no vacías. En ese caso, podemos considerar que cada elemento de la partición se puede descomponer $E^*_i = E_j ∪ E_k$ con $E_j, E_k$ parte de la partición $\set{E_n}$ y con\footnote{Si esto no ocurre porque no tenemos conjuntos suficientemente pequeños, siempre podemos montarnos otra partición que tendrá la misma medida de la suma.} $E_j ⊆ X_+$, $E_k ⊆ X_-$, de tal forma que \[ \abs{μ(E_i^*)} = \abs{μ(E_j) + μ(E_k)} = \abs{μ_+(E_j) - μ_-(E_k)} ≤ μ_+(E_j) + μ_-(E_k) \] donde para algunos $E_i$ la desigualdad será estricta (los que intersequen con $X_+$ y con $X_-$) y para otros habrá igualdad (más que nada sólo intersecarán con $X_+$ ó con $X_-$ y $E_j$ o $E_k$ serán vacíos). En cualquier caso, la suma sobre la partición siempre será menor que la suma sobre la partición ``exclusiva'' $\set{E_n}$.
+
+Con esta demostración, es fácil ver que las definiciones de $μ_+, μ_-$ en base a supremo e ínfimo de subconjuntos de $E$ son válidas. Sólo tenemos que darnos cuenta de que $μ(F)$ valdrá el máximo cuando $F = E ∩ X_+$, y el mínimo (negativo, por eso el cambio de signo) cuando $F = E ∩ X_-$.
+
+\spart
+
+\spart
+
+No veo muy bien cómo hacerlo, más que nada porque si $μ_+(E) = μ_-(E)$ se nos puede estropear la cosa.
+
+\spart
+
+\spart Bastante trivial.
+
+\spart Hay dos tipos de implicaciones: o las que se ven fácilmente o las que me da la sensación de que no funcionan, como lo de $μ_1 \perp μ_{2,+} \iff μ_1 \perp μ_{2,-}$.
+
+\end{problem}
+
+\begin{problem}[6] Sea $\appl{μ}{\mathcal{B}(ℝ)}{[-∞,+∞]}$ una medida con signo sobre los borelianos de $ℝ$. Definimos la función $g(x) = μ([0,x])$. Probar que
+
+\ppart $μ$ es medida continua si y sólo si $g$ es continua.
+\ppart $μ$ es medida absolutamente continua si y sólo si $g$ es una función absolutamente continua.
 \solution
 
 Vamos con la definición de función absolutamente continua primero.
@@ -61,6 +116,23 @@ La continuidad absoluta implica continuidad uniforme (donde la δ no depende del
 La continuidad absoluta es la clase de funciones más grande tal que el teorema fundamental del cálculo integral con la integral de Lebesgue y la derivada clásica es cierto.
 \end{defn}
 
-\spart Idea: probarlo para $μ = m_f$ y después extenderlo a medidas genéricas.
+\spart
 
+Si $g$ es continua en $x_0$, entonces para todo $ε > 0$ existe un $δ > 0$ tal que, si $\abs{x_0 - x} < δ$, entonces $\abs{g(x_0) - g(x)} < ε$. Transformando esa última ecuación y suponiendo que $x_0 < x$, tenemos que $\abs{μ([0, x_0]) - μ([0,x])} = \abs{μ([x_0,x)} < ε$. Igualmente, si tomamos $x_1 > x$ con $\abs{x_1 - x} < δ$, tendremos que $\abs{μ([x, x_1))} < ε$. Usando la desigualdad triangular y operando un poquillo nos quedará que $\abs{μ([x_0, x_1))} < 2ε$.
+
+Podemos hacer ε tan pequeño como queramos, de tal forma que $μ([x_0, x_1)) \to 0$ con $x ∈ [x_0, x_1)$ siempre, y por convergencia dominada tendremos que $μ(\set{x}) = 0$.
+
+Creo que además podemos recorrer esta demostración al revés para sacar la implicación al otro lado.
+
+\spart
+
+
+\end{problem}
+
+\begin{problem}[8] Si $f ∈ \espL$, con $f \not\equiv 0$, probar que
+
+\ppart Existen $c, R > 0$ tales que la función maximal $Mf(x) ≥ c \abs{x}^{-N}$ para $\abs{x} > R$.
+\solution
+
+\spart
 \end{problem}
