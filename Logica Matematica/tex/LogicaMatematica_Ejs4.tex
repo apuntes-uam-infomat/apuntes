@@ -1,0 +1,265 @@
+% -*- root: ../LogicaMatematica.tex -*-
+\section{Hoja 4}
+
+Asumimos gen\'erica e informalmente la no trivialidad. Al escribir f\'ormulas, se permiten
+las abreviaciones razonables (por ejemplo, las que he usado en el primer problema).
+
+\begin{problem}[1]
+Forma normal disyuntiva: una fbf est\'a en forma normal
+disyuntiva si se expresa como $p_1 \vee \dots \vee p_n$,
+donde $n\ge1$,  cada $p_i$ es de la forma
+$q_{i, 1} \wedge \dots \wedge q_{i,n_i}$, con $n_i\ge1$,
+y cada $q_{i, j}$ es o bien at\'omica o la negaci\'on de una f\'ormula at\'omica.
+Por ejemplo, si $p, q, $ y $r$ son \'atomos, entonces $\neg p$, $p\vee q$,
+$p \wedge q \wedge r$, y  $p \vee (q \wedge r)$ est\'an en forma normal disyuntiva,
+mientras que  $p \wedge (q \vee r)$ no lo est\'a.
+
+Probar que toda fbf
+es equivalente a una fbf en forma normal disyuntiva (las formas
+normales conjuntivas se definen de modo an\'alogo, intercambiando conjunciones
+y disyunciones, y el resultado tambi\'en es cierto para ellas).
+
+\solution
+Sea A un conjunto de variables proposicionales, una fbf es o bien:
+\begin{itemize}
+\item un elemento de A, $\top$ o ⊥ o bien,
+\item cualquier fórmula de la forma: 
+$(\neg F_1), (F_1\wedge F_2), (F_1 \vee F_2), (F_1 \to F_2), (F_1 \leftrightarrow F_2)$.
+\end{itemize}
+
+En el primer caso, dichas fórmulas atómicas ya estan en FND (basándonos en la definición).
+
+En el segundo caso, basta describir el algoritmo empleado para llevar a cabo esta conversión.
+
+El algoritmo es el siguiente:
+\begin{enumerate}
+\item \textbf{Eliminación de la doble implicación}
+
+Siempre que tengamos algo de la forma $(A \leftrightarrow B)$ lo convertimos en la representación equivalente:
+\[((A \to B) \y (B \to A))\]
+
+\item \textbf{Eliminación de la implicación}
+
+Siempre que tengamos una FBF de la forma: $(A \to B)$ lo transformamos en la representación equivalente:
+
+\[((\neg A) \Or B)\]
+
+\item \textbf{Desplazar los $\neg$ hacia el interior}
+
+Empleamos las leyes de De Morgan para transformar FBFs de la forma $\neg(A \Or B)$ y $\neg(A \y B)$ en:
+\begin{gather*}
+(\neg(A \Or B)) \equiv ((\neg A) \y (\neg B))\\
+(\neg(A \y B)) \equiv ((\neg A) \Or (\neg B))
+\end{gather*}
+
+\item \textbf{Distribuir conjunciones hacia dentro sobre disyunciones}
+
+Todas las FBFs de la forma $(A \y (B \Or C))$ las convertiremos en su representación equivalente:
+
+\[((A \y B) \Or (A \y C))\]
+
+obteniendo una FBF en FND.
+
+\end{enumerate}
+
+Es decir, cualquier fórmula bien formada que no sea atómica puede ser transformada en FND aplicando sucesivamente 1-4.
+
+\end{problem}
+
+\begin{problem}[2]
+Sea $A=\{p, q, r\}$, sea $L = A \cup \{\neg, \vee, \wedge, ), (\}$,
+y sea $\sigma : A\to \{0,1\}$ una funci\'on arbitraria. Denotando tambi\'en
+por $\sigma$ su extensi\'on \'unica a una valoraci\'on Booleana definida en $\operatorname{fbf}(L)$, decidir razonadamente
+si existe una fbf $F$ tal que $\sigma (F) = 1$.
+
+Decidir razonadamente
+qu\'e ocurre si la cardinalidad de $A$ es 2015 en vez de 3.
+\solution
+
+Por supuesto que existe la FBF definida: $(p \Or ( \neg p ))$
+
+Para comprobarlo basta con ver que:
+\[σ(p \Or ( \neg p )) = \max\{σ(p), 1 + σ(p)\} = \left\{ \begin{array}{lcc}
+            \max\{0,1\} = 1 &   si  & σ(p) = 0 \\
+            \max\{1,0\} = 1 &  si  & σ(p)=1
+             \end{array}
+   \right.\]
+
+El problema no cambia al variar la cardinalidad de $A$, de modo que, cuando la cardinalidad de $A$ sea 2015 seguimos teniendo la misma FBF.
+
+\textcolor{red}{Deduzco que está mal mi razonamiento pero no se por qué. Debe haber alguna definición que no estoy entendiendo bien pero no se cual.}\newline
+\textcolor {blue} {Yo lo veo bien.}
+\end{problem}
+
+\begin{problem}[3]
+Sea $\sigma$ una valoraci\'on Booleana, y sea $T :=\{p\in FBF(L) : \sigma(p) = 1\}$.
+Demostrar que $T$ es una teor\'{\i}a completa.
+\solution
+
+Una teoría será completa si dada una FBF cualquiera $q$ se tiene que $T \vdash q$ o $T \nvdash q$
+
+Si tenemos que $σ(q)=1$ entonces $q \in T$, por definición de $T$, y por tanto, $T \vdash q$.
+
+Por otro lado, si $σ(q)=0$ es claro que no puede deducirse $q$ a partir de $T$. Vamos a demostrarlo.
+
+Toda FBF que pueda deducirse de $T$ es una tautología (puesto que en clase hemos visto que $T \vdash x \implies T \vDash x$).
+
+Por la definición de tautología vista en clase, sabemos que todo modelo de $T$ tendrá evaluación verdadera sobre la tautología. Es decir:
+
+\[T \vdash x \implies σ(x) = 1 \ \forall x\in FBF(L)\]
+
+con lo que queda claro que si $σ(x)=0 \implies T \nvdash x$
+\end{problem}
+
+
+\textcolor{blue} {Creo que la definicion de teoria completa no esta completa (valga la redundancia). Yo la tengo copiada como sigue, y me queda otra demostración:}\newline
+Usamos la siguiente definición:
+
+T es \emph{completa} $\Leftrightarrow$  T es consistente y $\forall$  FBF(L)  $p$ : $T \vdash p$ ó $T \nvdash p$.
+\begin{enumerate}
+\item T es consistente: \newline
+
+T es \emph{consistente} $\Leftrightarrow$ existe $p$ $\in$ FBF(L): $T \nvdash p$
+
+Basta tomar $p$ $\notin$ T, entonces $\sigma(p)=0$ y por esta razón, $p$ no puede ser consecuencia tautólogica de T. Por el Teorema de Validez, sabemos que si $T \nvDash p$ entonces $T \nvdash p$.\newline
+Además, siempre se puede tomar un $p\notin$ T, con T$\neq\emptyset$: si $q \in T$ entonces $p=(\neg q)$ cumple $p\notin$ T.
+
+\item $\forall$  FBF(L)  $p$ : $T \vdash p$ ó bien $T \nvdash p$
+\begin{itemize}
+\item Sea $p \in$ FBF(L): T $\vdash p$. Queremos ver que, $T \nvdash (\neg p)$
+
+T $\vdash p$ $\implies$ T $\vDash p$ $\implies$ $(\neg p) \notin$ T $\implies$ T $\nvDash (\neg p)$ $\implies$ T$\nvdash (\neg p)$
+
+
+\small {La segunda implicación se debe a que, si p es consecuencia tautológica de T entonces toda valoración $\sigma'$ que satisfaga T, satisface $p$. En particular, podemos tomar $\sigma'=\sigma$ tal que $\sigma(p)=1$. Entonces $\sigma(\neg p)=0$, es decir, $(\neg p)\notin$ T.}
+\end{itemize}
+El otro caso es análogo:
+\begin{itemize}
+\item Sea $p \in$ FBF(L): T $\vdash (\neg p)$. Queremos ver que, $T \nvdash p$
+
+T $\vdash (\neg p)$ $\implies$ T $\vDash (\neg p)$ $\implies$ $ p \notin $ T $\implies$ T $\nvDash p$ $\implies$ T$\nvdash p$
+
+\end{itemize}
+
+\end{enumerate}
+
+\begin{problem}[4]
+Sea $G$ un grafo infinito, tal que todos sus subgrafos finitos pueden colorearse con cuatro colores.
+Decidir razonadamente si $G$ puede colorearse con cuatro colores.
+\solution
+
+%La solución a este ejercicio puede encontrarse en el libro de la asignatura
+Sea $G=(V,E)$ un grafo infinito, definimos $A=V \times \{1,2,3,4\}$ como un conjunto de átomos, donde cada átomo $(v,i)$ indica que el nodo $v$ tiene color $i$.
+
+Así, para el grafo $G=(V,E)$, poder colorearlo con 4 colores implica que el siguiente conjunto $\sum \subset \text{ Prop} A$ tiene un modelo:
+\[\sum = \{(v,1)\Or (v,2) \Or (v,3) \Or (v,4) \ : \ v \in V\} \cup \{\neg((v,i)\y(v,j)) \ : v \in V, \ 1 \leq i < j \leq 4\}\atop \cup \{\neg((v,i)\y (w,i)) \ : \ (v,w) \in E,  1 \leq i \leq 4\}\]
+
+Puesto que todo subgrafo finito de $G=(V,E)$ es coloreable con 4 colores, tenemos que todo subconjunto finito de $\sum$ tiene un modelo y, por compacidad, $\sum$ tiene un modelo.
+
+\end{problem}
+
+\begin{problem}[5]
+Sea $X$ un conjunto parcialmente ordenado. Decidir razonadamente si el orden parcial puede
+extenderse a un orden lineal, o total.
+\solution
+
+%Solución obtenida de: http://math.stackexchange.com/questions/271003/every-partial-order-can-be-extended-to-a-linear-ordering
+
+Sea $(P,R)$ la representación de un conjunto (P) parcialmente ordenado (dada la relación R).
+
+Vamos a denominar como $C$ el conjunto de todos los órdenes parciales $(P,\leq)$ que extienden $R$, es decir, $R \subset \leq$.
+
+Podemos ver que los elementos de $C$ satisfacen el lema de Zorn respecto a la relación $\subset$ puesto que si tenemos una cadena:
+\[\leq_1 \subset \leq_2 \subset ... \subset \leq_n\]
+entonces el orden parcial $(P,\leq_n)$ será una cota superior.
+
+% ¡Prueba por Zornicación!
+Por tanto, podemos aplicar el lema de Zorn y sabemos que hay un elemento maximal en $C$.
+
+Este elemento maximal, será tal que dados dos elementos cualesquiera de $P$, véase $p_1$ y $p_2$, si hay un orden parcial $\leq_i$ que los relaciona ($p_1 \leq p_2$, por ejemplo), entonces también están relacionados en el orden maximal.
+
+Puesto que $C$ es el conjunto de todos los ordenes parciales existentes sobre los elementos de $P$, dos elementos cualesquiera de $P$ estarán relacionados por algún order parcial y por tanto estarán relacionados en el orden maximal. Es decir, el orden maximal es un orden total.
+\end{problem}
+
+\begin{problem}[6]
+Expresar ``$f$ es una funci\'on inyectiva"  en un lenguaje de primer orden.
+\solution
+
+\[ \forall x \forall y (f(x)=f(y)) \implies (x = y) \]
+
+\end{problem}
+
+\begin{problem}[7]
+Expresar ``$f$ es una funci\'on sobreyectiva"  en un lenguaje de primer orden.
+\solution
+
+
+Siendo la función $f$ de la forma $\appl{f}{A}{B}$
+
+\[\forall y \in B \ \exists x \in A \ f(x)=y\]
+
+%\doneby{Edu}
+\[ \forall y \ \exists x \ (f(x) = y) \]
+\textcolor{blue}{Me parece mejor esta definicion.}
+
+\end{problem}
+
+\begin{problem}[8]
+Una forma de decir que un conjunto $X$ es finito consiste en afirmar que toda funci\'on inyectiva de $X$ en $X$
+es sobreyectiva. Usar cuantificaci\'on sobre todas las funciones para probar que la noci\'on ``$X$ es finito"
+puede expresarse en una l\'ogica de segundo orden.
+\solution
+
+Podemos expresar la noción ``$X$ es finito'' como:
+$$\forall f\ ( f \in F \y((\forall x_1 \forall x_2\ (x_1\in X \y x_2\in X \y (f(x_1)=f(x_2)\implies x_1=x_2))) \iff$$ \newline $$(\forall x_2\ ( x_2 \in X \y (\exists x_1\ ( x_1 \in X \y \ (f(x_1)=x_2)))))))$$
+
+siendo $F$ el espacio de funciones $\appl{f}{X}{X}$
+\end{problem}
+
+\begin{problem}[9]
+Expresar la definici\'on habitual de  ``$f$ es continua"  en un lenguaje de primer orden (usando epsilones y deltas;
+interpretamos que el dominio y el rango de $f$ son los reales, con todas sus funciones habituales, valor absoluto, suma, etc.).
+\solution
+
+Una función $f$ será continua si y sólo si:
+\[\forall ε \in \real \  \exists δ \in \real \ \forall x_1,x_2 \in \real \  \norm{x_1,x_2} < δ \implies \norm{f(x_1),f(x_2)} < ε \]
+
+%\doneby{Edu}
+\[\forall x_0 \forall \epsilon\  (\epsilon > 0 \y (\exists \delta\ (\delta > 0 \y (\forall x\ ((\ \norm{x,x_0} < \delta) \implies (\ \norm{f(x),f(x_0)} < \epsilon) ))))) \]
+\textcolor{blue}{Me parece mejor esta definicion.}
+\end{problem}
+
+\begin{problem}[10]
+Expresar la definici\'on habitual de  ``$f$ es uniformemente continua"  en un lenguaje de primer orden (usando epsilones y deltas).
+
+
+\solution
+
+Siendo la función $f$ de la forma $\appl{f}{A}{B}$
+
+\[\forall ε \in \real \ \exists δ \in \real \ (ε>0)\y(δ>0)\y \forall x_1,x_2 \in A \  \left(\norm{x_1,x_2}<δ \right)\implies \left( \norm{f(x_1),f(x_2)} < ε\right)\]
+
+
+%\doneby{Edu}
+\[\forall \epsilon \ (\epsilon > 0 \y (\exists \delta\ (\delta > 0 \y (\forall x_1 \forall x_2\ ((\ \norm{x_1,x_2} < \delta) \implies (\ \norm{f(x_1),f(x_2)} < \epsilon) ))))) \]
+\textcolor{blue}{Me parece mejor esta definicion.}
+\end{problem}
+
+\begin{problem}[11]
+Buscar los axiomas de la Aritm\'etica de Peano, entender lo que dicen, y entregarlos escritos.
+
+\solution
+
+Los 5 Axiomas de Peano son:
+\begin{enumerate}
+\item Existe un número natural 1. En otros términos,1 está en N, el conjunto de los números naturales.
+\item Todo número natural n tiene un sucesor n* (este axioma es usado para definir posteriormente la suma).
+\item 1 no es el sucesor de algún número natural.
+\item Si hay dos números naturales n y m con el mismo sucesor, entonces n y m son el mismo número natural.
+\item Si 1 pertenece a un conjunto K de números naturales, y dado un elemento cualquiera n, el sucesor n* también pertenece al conjunto K, entonces el conjunto K debe ser el conjunto de todos los números naturales. Este axioma es el principio de inducción matemática.
+\end{enumerate}
+\end{problem}
+
+
+
+

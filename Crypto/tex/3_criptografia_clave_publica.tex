@@ -1,8 +1,21 @@
-\chapter{Criptografía de clave pública}
-\section{De la criptografía clásica a la de clave pública}
-%TODO. Comentar algo de la historia que propició este cambio. Está en las transparencias.
+\chapter{De la criptografía clásica a la de clave pública}
 
-\subsection{Enigma}
+A lo largo de la historia tuvieron lugar una serie de avances que propiciaron la aparición de la criptografía de clave pública. 
+
+
+En 1917 \textbf{Gilbert Sandford Vernam} (1890-7 de febrero de 1960) inventó un cifrado en flujo y más tarde coinventó un cifrado de libreta de un solo uso. Vernam propuso un teletipo cifrado en el cual una clave previamente preparada y almacenada en cinta perforada se combina carácter por carácter con el mensaje en texto plano para obtener un texto cifrado. Para descifrar el texto cifrado, debe combinarse de nuevo con la clave carácter a carácter para producir el mensaje en texto plano.
+
+Poco tiempo después, \textbf{Joseph Mauborgne}, en aquel entonces capitán en el US Army Signal Corps, propuso, además, que la cinta de papel con la llave tuviera información aleatoria. 
+
+Las dos ideas, cuando se combinan, implementan de manera automática una \textbf{libreta de un solo uso}, aunque ninguno de los dos inventores usó este nombre.
+
+Aunque estos pequeños avances puedan parecer muy antiguos y lejanos, lo cierto es que están muy presentes en nuestro día a día. Por ejemplo, el cifrado de flujo sigue siendo utilizado\footnote{Se emplea una adaptación del mismo} en los teléfonos móviles.
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/cifrado_flujo.png}
+\end{center}
+
+\section{Enigma}
 La máquina \textbf{enigma} funcionaba de acuerdo al siguiente esquema:
 \begin{center}
 \includegraphics[width=0.6\textwidth]{img/enigma.jpg}
@@ -39,13 +52,13 @@ Así, un esquema de transmisión del mensaje sería:
 \item Transmitimos el mensaje.
 \end{enumerate}
 
-Aquí tenemos la debilidad del criptosistema, el envío de la clave dos veces, puesto que nos adelanta cierta información acerca de la posición inicial de los rotores. Otro problema radicó en el hecho de que el primer mensaje del día siempre informaba del tiempo y siempre comenzaba de la misma forma, lo que daba aún más información a los enemigos.
+Aquí tenemos la debilidad del criptosistema, el envío de la clave dos veces, puesto que nos adelanta cierta información acerca de la posición inicial de los rotores. Otro problema radicó en el hecho de que el primer mensaje del día siempre informaba del tiempo y siempre comenzaba de la misma forma, lo que daba aún más información al bando rival.
 
 A la hora de descifrar, el mecanismo es sencillo. La forma en que funciona \textbf{enigma} está basada en trasposiciones. Es decir, si a partir de la letra $A$ obtengo la $B$, a partir de la $B$ obtendré la $A$, partiendo de la misma clave.
 
 Por tanto, una vez recibido el mensaje lo único que hay que hacer es introducir el mensaje cifrado en la máquina y como salida obtendremos el texto original.
 
-Veamos por qué estos es cierto:
+Veamos por qué esto es cierto:
 \begin{proof}
 Para comprobar que la función de cifrado y su inversa son la misma, vamos a ver cómo funcionaba \textbf{enigma} sobre cada letra.
 
@@ -62,15 +75,19 @@ En este caso, $\rho = \rho^{-1} \iff \rho = (a_1a_2)(a_3a_4)...(a_{25}a_{26})$, 
 Dada esta restricción tendremos un total de
 \[\frac{{26 \choose 2} {24 \choose 2} ... {2 \choose 2}}{13!} =\frac{26!}{13!2^{13}} \approx 1.01 \cdot 10^{15} \text{ claves posibles }\]
 
-\subsection{Criptosistemas de clave simétrica}
+\section{Criptosistemas de clave simétrica}
 Todos los sistemas que hemos visto hasta ahora, englobados como criptosistemas clásicos, comparten una misma propiedad: \textit{Si sabemos cómo cifrar sabremos cómo descifrar}. Esto se debe a que todos estos sistemas son de \textbf{clave simétrica}.
 
-Si pretendemos que diferentes usuarios puedan emplear el mismo criptosistema manteniendo seguridad entre ellos, neceistaremos una clave distinta para cada uno de ellos.
+Si pretendemos que diferentes usuarios puedan emplear el mismo criptosistema manteniendo seguridad entre ellos, necesitaremos una clave distinta para cada uno de ellos.
 
 En el mundo de la tecnología en que vivimos ahora mismo esto es inviable puesto que serían necesarias demasiadas claves (una por usuario/actividad). Además, al llegar un nuevo usuario sería necesario compartir con él la clave de alguna forma.
 
-La solución es la función $3^{n}$ en $\mathbb{F}_{1231}^*$:
-% TODO imagen de la función
+La solución se encuentra en las \textbf{funciones de un solo sentido} como $f(n)=3^{n}$ en $\mathbb{F}_{1231}^*$:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{img/3nF1231.png}
+\end{center}
+
+\newpage
 
 \begin{defn}[Función de un sólo sentido]
 Sea $\appl{f}{A}{B}$ una función inyectiva, se dice que es \textbf{de un sólo sentido} si:
@@ -92,7 +109,7 @@ Si $k$ es el tamaño de los datos, el tiempo necesario para resolver el problema
 Si $k$ es el tamaño de los datos, el tiempo necesario para resolver el problmea es no polinómico. Puede ser exponencial $T=O(e^k)$, o subexponencial $T=e^{\sqrt{k}}$ entre otros
 \end{defn}
 
-\subsection{Estimaciones de tiempo}
+\section{Estimaciones de tiempo}
 
 Los datos con los que vamos a trabajar serán, de un modo u otro, números. Por tanto debemos ser capaces de estimar cómo son estos números, a fin de ver si son manejables o no.
 
@@ -159,5 +176,180 @@ El mejor algoritmo conocido para resolver el $DLP$ en $(\ent_p)^*$ necesita tiem
 \end{defn}
 
 \begin{corol}
-El problema $DLP$ con $\appl{f}{(\ent_p)^*}{(\ent_N) *}$ es de un dólo sentido si $p$ es suficientemente grande.
+El problema $DLP$ con $\appl{f}{(\ent_p)^*}{(\ent_N)^*}$ es de un sólo sentido si $p$ es suficientemente grande.
 \end{corol}
+
+Una posible ``solución'' sería escribir una tabla en la que asociamos cada entero de $i \in\ent_N$ con la potencia $g^i$. No obstante, la construcción de esta tabla requeriría $e^{\log N}$ veces el tiempo de una multiplicación, lo que nos da un tiempo exponencial.
+
+
+\section{Usos criptográficos de las funciones de un sólo sentido}
+
+\subsection{Compartición de clave privada}
+
+El problema es sencillo: Tenemos dos usuarios que quieren comunicarse de manera secreta pero, previamente, deben establecer una clave empleando para ello un canal no seguro.
+
+El procedimiento es el siguiente (Suponemos que los dos usuarios que quieren comunicarse son A y B):
+\begin{enumerate}
+\item A elige, al azar, un número $1<a<p$
+\item A envía a B $g^a$
+\item B elige, al azar, un número $1<b<p-1$
+\item B envía a A $g^b$
+
+\item La clave común se establece como $C=g^{ab}=(g^a)^b = (g^b)^a$
+\end{enumerate}
+
+El generador $g$ es perfectamente conocido por todo el mundo. Por tanto, aquel que quiera descifrar el mensaje conocerá perfectamente $g,g^a,g^b$ y necesitará calcular $g^{ab}$ para lo que necesita resolver un DLP. Si calcula $a$ ya lo tiene todo hecho.
+
+Tecnicamente, el atacante podría tratar de resolver un problema de Diffie-helman (DFP) en lugar del DLP. Este problema consistiría en encontrar $g^{ab}$ con los mismos datos que antes, pero sin pasar por calcular $a$.
+
+En general se cree que estos dos problemas son equivalentes, pero esto aún no ha sido demostrado.
+
+La seguridad del sistema radica en que no hay forma de resolver rápidamente el DLP pero en el momento en que desarrollemos ordenadores cuánticos con capacidad para trabajar con suficientes bits, tendremos la capacidad de resolver DLP de manera inmediata, con lo que el criptosistema de clave pública-privada dejará de ser seguro.
+
+Este procedimiento sólo nos explica como llegar a compartir una clave privada. Una vez tenemos esta clave, podríamos emplear cualquier método para cifrar, incluído cualquiera de los métodos clásicos vistos hasta ahora
+
+
+\subsection{Recibir mensajes cifrados sin necesidad de acordar claves a priori}
+
+Para hacer esto, $A$ hace pública una función de un sólo sentido que sólo $A$ sabe invertir. Si $B$ quiere envía un mensaje a $A$, sólo tiene que cifrarlos empleando esta función, obteniendo un mensaje que sólo $A$ es capaz de descifrar, pues solo ella conoce la función de descifrado.
+
+\subsection{Firmas}
+
+La idea de la \textbf{firma} es crear algo que no puedan imitar los demás. Así, el emisor puede emplear como firma el mensaje $m$ cifrado con la inversa de la función pública que él mismo presenta a los demás.
+
+Supongamos que queremos firmar con nuestro nombre. Evidentemente, no lo vamos a enviar tal cual, puesto que cualquiera podría copiarlo.
+
+Para evitarlo, tomamos nuestra función $f$ y enviamos $f^{-1}(firma)$ con lo que seremos los únicos capaces de escribir un mensaje $m$ tal que $f(m)=firma$, puesto que nadie más conoce $f^{-1}$.
+
+Sin embargo, tenemos un problema. Una vez que enviemos la firma, cualquiera puede copiarla y reutilizarla, aún sin concoer $f^{-1}$. Copia y reenvía $f^{-1}(firma)$ y puede suplantar al original.
+
+Por tanto, lo que se hace es emplear como firma $f^{-1}($mensaje enviados$)$.
+
+Pero nuevamente tenemos un problema y es que si cada vez que enviamos un mensaje tenemos que emplear una firma tan larga como el mensaje, la eficiencia se ve drásticamente reducida.
+
+Para solventar este problema existe una amplia variedad de opciones. Una de ellas es el empleo de una función HASH que ``resume el mensaje''. En la práctica se emplean funciones HASH criptográficamente seguras.
+
+Esto consiste en emplear funciones resistentes a colisiones, es decir, funciones HASH tales que en la práctica resulta prácticamente imposible que se produzcan colisiones.
+
+\begin{remark}
+El receptor calculará la imagen por $f$ de la firma y la función $hash$ del mensaje. Si obtenemos el mismo resultado, podemos confiar en la autoría del mensaje.
+\end{remark}
+
+\subsection{Identificación}
+
+Supongamos que queremos acceder a un sistema que requiere una clave.
+
+En esta ocasión la relación clave-usuario estará almacenada en el sistema lo que deja un vacío de seguridad, pues el administrador del sistema tendrá acceso a las claves.
+
+Lo que se puede hacer para proteger al usuario es que el sistema almacene la relación usuario-$f(\text{clave})$. Así a la hora de autentificarnos el sistema recibe la clave, \textbf{no la guarda}, calcula su imagen a por nuestra $f$ y compara.
+
+\subsection{Challenge: Identificación a partir de otro}
+
+\begin{enumerate}
+\item Suponemos que el usuario $A$ quiere que el usuario $B$ se identifique.
+\item Entonces el usuario $A$ le envía un reto a $B$, es decir, le envía $f_B(m)$
+\item Si el usuario $B$ es capaz de responder con $f_A(m)$ es que es quien dice ser.
+\end{enumerate}
+
+La idea subyacente es sencilla. Puesto que sólo $B$ conoce $f_B^{-1}$, sólo él podrá encontrar $m$ y así enviar $f_A(m)$.
+
+\subsection{Tarjeta de crédito}
+
+Hay diferentes opciones a la hora de reconocer la tarjeta de crédito y validar que el PIN introducido es el correcto:
+
+\begin{itemize}
+\item La tarjeta contiene el PIN secreto grabado y el cajero sólo tiene que comprobar que el PIN introducido coincide con el grabado en la tarjeta.
+
+\textbf{Desventaja:} Una banda magnética es fácil de leer y si te roban la tarjeta estás jodido.
+
+\item La tarjeta contiene $f(PIN)$ siendo $f$ una función criptográfica. Así tecleo mi PIN, la máquina calcula $f(PIN)$ y compara.
+
+\textbf{Desventaja:} Si $f$ es una función clásica, todo aquel que tenga acceso a la máquina sabrá como descifrar. Además requeriría una confianza absoluta entre todos los bancos y, si $f$ es simétrica, al proporcionarle un banco a otro $f$ le está permitiendo descifrar los PIN de los clientes.
+
+\item La tarjeta contiene $f(PIN)$ siendo $f$ una función de un sólo sentido. Así tecleo mi PIN, la máquina calcula $f(PIN)$ y compara.
+
+La función $f$ será creada por una persona (la única que conocerá $f^{-1}$) y podrá ser pública, pudiendo incluso estar grabada en la propia tarjeta.
+
+\textbf{Desventaja:} Por ser el PIN un número de tan solo cuatro dígitos, los ataques por fuerza bruta podrían, fácilmente, encontrar el PIN a partir de la tarjeta.
+
+Más adelante veremos cómo se lucha contra estos ataques.
+
+\textbf{Otra desventaja:} Con este sistema no puede usarse una tarjeta robada (si el PIN fuese bastante grande) pero es sencillo crear y utilizar una tarjeta falsa.
+
+\item En lugar de grabar en la tarjeta $f(PIN)$, grabamos $f^{-1}(PIN)$.
+
+\textbf{Desventaja:} Como $f$ es pública, a partir de $f^{-1}(PIN)$ podemos encontrar el PIN y emplear una tarjeta robada. Además, puedo grabar un $x$ cualquiera en la tarjeta y emplear PIN=$f(x)$
+
+\item Empleamos dos funciones de un sólo sentido y grabamos en la tarjeta $f_2^{-1}(f_1(PIN))$.
+
+Así, una vez que el usuario introduzca su PIN, el cajero calculará $f_2$ de lo que hay guardado en la tarjeta y lo compará con $f(PIN)$.
+
+Así será difícil emplear una tarjeta robada puesto que encontrar el PIN implica encontrar $f_1^{-1}$ de $G$. Por otro lado, tampoco será posible falsificar una tarjeta pues sería necesario conocer $f_2^{-1}$.
+
+\textbf{Deventaja}: Puesto que el PIN es pequeño sigue siendo asequible que un ladrón realice todas las pruebas necesarias en su casa, llegando a descubrir el PIN por fuerza bruta.
+\end{itemize}
+
+Como el lector puede observar ninguno de estos mecanismos es perfecto y siempre queda esperanza para el atacante, que podría usar una tarjeta de crédito de forma ilícita sin excesivas complicaciones.
+
+\subsection{El gran cambio de la tecnología moderna}
+
+La idea es que no es necesario que la tarjeta tenga grabado el PIN, ni ninguna transformación del mismo.
+
+Para hacer esto, el cajero enviaría a la central un identificador de transacción, recibiendo como respuesta desde la central un nuevo valor $G=f(ID,PIN)$.
+
+Así, una vez el usuario introduce su PIN, el cajero calcula $f(ID,PIN)$ y comprueba si coincide el valor.
+
+Con esta técnica, conseguimos que cada transacción funcione de forma ligeramente distinta y, además, no hay ninguna información grabada en la tarjeta.
+
+Otra posibilidad es el empleo de una tarjeta de chip, en ocasiones conocida como \textbf{tarjeta inteligente}. 
+
+Estas tarjetas permiten hacer que la función $f$ dependa del usuario. Veamos cómo funciona:
+
+\begin{itemize}
+\item Cada usuario tiene una clave pública $e$, a partir de la cual se genera una función de un sólo uso $f_e$ y una clave secreta $d$ a partir de la cual se tiene $f_d$.
+
+\item La tarjeta contiene $f^{-1}_d$ 
+
+\item La central conoce la tupla $(ID,PIN,e)$.
+
+\item La tarjeta envía a la central $(ID,TRANSACCION)$, es decir, envía un identificador del usuario que está accediendo al cajero y un código ``aleatorio'' que identifica la transacción.
+
+\item La central responde con $f_e(TRANSACCION.PIN)=G$
+
+\item El usuario teclea el PIN y la tarjeta comprueba si $f^{-1}_d(G)=TRANSACCION.PIN$
+
+\item Una vez el PIN introducido ha sido validado, la tarjeta envía de nuevo a la central $f^{-1}_e(TRANSACCION.OK)$
+\end{itemize}
+
+Además de todo lo que hemos explicado, las comunicaciones tarjeta-banco podrían (y deberán) ir cifradas de modo que la comunicación no pueda ser interceptada por un atacante.
+
+No obstante, el método que acabamos de explicar, aún tiene un fallo: \textbf{un atacante podría hacerse pasar por el banco}. 
+
+Para evitarlo, el banco puede responder enviando $f_{BANCO}(f_e^{-1}(ID.PIN))=G$, es decir, cifrando el mensaje con su clave privada. De este modo, todo el mundo que tenga acceso a la clave pública del banco (todo el mundo, por eso es pública), podrá verificar que el mensaje ha sido escrito por el banco, puesto que nadie más conocerá $f_{BANCO}$.
+
+\section{Modos de ataque}
+
+Es importante conocer, además de los algoritmos de seguridad empleados, los ataques más habituales que pueden llevarse a cabo contra estos algoritmos, de modo que podamos anticiparnos a las carencias del sistema de seguridad.
+
+\begin{enumerate}
+\item \textbf{Con texto cifrado conocido}
+
+El atacante tiene acceso a una parte (sino el total) del texto cifrado.
+
+Puesto que esto ocurre siempre, todo sistema de seguridad que se precie debe ser capaz de defenderse de este tipo de ataques.
+
+\item \textbf{Con texto en claro conocido}
+
+El atacante tiene acceso a algunos pares de texto en claro con su correspondiente texto cifrado.
+
+Todos los sistemas clásicos tienen problemas ante este tipo de ataque, tal y como hemos visto en las primeras dos hojas de ejercicios.
+
+\item \textbf{Con texto en claro elegido}
+
+El atacante tiene acceso a pares de texto en claro con su correspondiente texto cifrado siendo el texto en claro elegido por él mismo, es decir, es capaz de cifrar todos los textos que desee (como ocurrió en la lucha contra Enigma, al hacerse con una máquina).
+
+Así el atacante puede tomar textos en claro pequeños y hacer un ataque por fuerza bruta.
+
+Siempre que empleemos un sistema de clave pública podemos ser víctimas de este tipo de ataques. 
+\end{enumerate}
+

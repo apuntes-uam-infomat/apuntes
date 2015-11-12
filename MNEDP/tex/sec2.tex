@@ -1,1 +1,599 @@
-\section{Método de Elementos Finitos}
+\newpage
+\section{Método de elementos finitos}
+
+\subsection{Espacio de funciones}
+Vamos a trabajar sobre un abierto $\Omega\subset\mathbb{R}^d$, $d=1,2,3$.
+Sea $\alpha = (\alpha_1,\hdots,\alpha_d)\in\mathbb{R}^d$ y denotaremos como $D^\alpha u=\frac{\partial}{\partial x_1}\alpha_1\frac{\partial}{\partial x_2}\alpha_2\hdots\frac{\partial}{\partial x_d}\alpha_d$.
+
+Denotaremos como 
+$$e^k(\Omega) = \{\textbf{Funciones continuas y con } D^\alpha u \textbf{ continua } \forall\alpha\textbf{ con }|\alpha|\le k\}$$
+
+En cuanto a la norma en $e^k(\Omega)$ es
+$$||u||_{e^k(\Omega)} = \sum_{|\alpha|\le k}\sup_{x\in\Omega}|D^\alpha u(x)|$$
+
+El soporte de una función continua en $\Omega$ es la adherencia del conjunto $\{x\in\Omega \tq u(x) \neq 0\}$.
+
+Definimos
+$$e_0^k (\Omega)= \{u\in e^k(\Omega) \textbf{ con soporte compacto}\}$$
+
+Si $u\in e_0^k(\Omega)$, $u=0 en \delta\Omega$.
+
+\subsubsection{Espacios de funciones integrables}
+$$L^p(\Omega) = \{u\textbf{ definida en }\Omega \textbf{ con }\int_\Omega |u|^p dx < \infty \}$$
+$$L^2(\Omega)=\{\textbf{funciones de cuadrado integrable}\}$$
+$$L^\infty (\Omega) =\{\textbf{funciones acotadas}\}$$
+
+$$||u||_{L^p(\Omega)} = (\int_{\Omega}|u|^p dx)^\frac{1}{p}$$
+$$||u||_{L^2(\Omega)} = (\int_{\Omega}|u|^2 dx)^\frac{1}{2}$$
+$$||u||_{L^\infty(\Omega)} = \sup_{x\in\Omega}|u(x)|$$
+
+$L^2(\Omega)$ es un espacio de Hilbert: un espacio normado completo donde la norma deriva de un producto interno.
+
+\paragraph{Desigualdad de Cauchy-Schwarz}
+Si $u,v\in L^2(\Omega)\implies u,v\in L^1(\Omega)$ y $(\int_\Omega |u|^2dx)^\frac{1}{2} = ||u||_{L^2(\Omega)}$ y $(\int_\Omega|v|^2)^\frac{1}{2} = ||v||_{L^2(\Omega)}$
+
+\paragraph{Desigualdad triangular}
+$$||u+v||\le ||u||_{L^p(\Omega)}+||v||_{L^p(\Omega)}$$
+
+\paragraph{Desigualdad de Holder}
+Sean $p,q$ con $\frac{1}{p}$+$\frac{1}{q} = 1$
+
+Entonces
+$$|\int_{\Omega}u(x)v(x)dx|\le||u||_{L^p(\Omega)}||v||_{L^q(\Omega)}$$
+
+Si tomamos $p=q=2$, entonces tenemos la desigualdad de Cauchy-Schwarz.
+
+\subsubsection{Espacios de Sobolev}
+\paragraph{Concepto de derivada débil}
+Se dice que $w_\alpha(x)$ es la derivada $D^\alpha u$ en sentido débil si
+$$\int_{\Omega}w_\alpha u(x) v(x)dx = (-1)^{|\alpha|}\int_{\Omega}u(x)D_v^\alpha (x) dx 
+\forall v\in e_0^\infty(\Omega)$$
+
+Si existe $D^\alpha u$ entonces $w_\alpha = D^\alpha u$.
+
+$$\int_\Omega w_\alpha (x)v(x) dx = \int_{\Omega}D^\alpha u(x) v(x)dx = (-1)^|\alpha|\int_{\Omega}u(x)D^\alpha v$$
+
+\begin{example}
+	Sea la función 
+	\begin{equation*}
+		u=\left\{
+		\begin{array}{l l l}
+			2x & x\in[0,\frac{1}{2}]\\
+			2-2x & x\in [\frac{1}{2},1]
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	La función $u$ es continua pero no derivable. Existe la derivada débil de $u$ que es
+	\begin{equation*}
+		\omega_1(x)=\left\{
+		\begin{array}{l l l}
+			2 & x\in[0,\frac{1}{2}]\\
+			-2 & x\in [\frac{1}{2},1]
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	Si $\omega_1$ es la derivada débil se debe cumplir que
+	$$\int_0^1 \omega_1(x)v(x) = -\int_0^1u(x)v'(x) \forall v\in e_0^\infty (0,1)$$
+	
+	\begin{itemize}
+		\item \textbf{Paso 1:}
+		$$\int_0^1\omega_1(x)v(x) = 2\int_0^\frac{1}{2} v(x)dx-2\int_\frac{1}{2}^1v(x)dx$$
+		\item \textbf{Paso 2:}
+		$$-\int_0^1u(x)v'(x)dx = -\int_0^\frac{1}{2}u(x)v'(x)dx -\int_\frac{1}{2}^1 u(x)v'(x)dx$$
+		
+		Si integramos por partes, obtenemos $$2\int_0^\frac{1}{2} v(x)dx-2\int_\frac{1}{2}^1v(x)dx$$
+	\end{itemize}
+\end{example}
+
+\begin{defn}[Espacio de Sobolev $H^k(\Omega)$]
+	$$H^k(\Omega) = \{u \textbf{ definida en }\Omega \textbf{ con } D^\alpha u\in L^2(\Omega)\forall \alpha \textbf{ con }|\alpha|\le k\}$$
+	
+	Nos referimos a funciones en $L^2$ con derivadas hasta orden $k$ en $L^2$. $D^\alpha u$ es la derivada en sentido débil.
+\end{defn}
+
+	Sea $u\in H^1(\Omega)$, si $H^k(\Omega)$ es un espacio de Hilbert.
+	$$||u||_{H^k(\Omega)} = (\sum_{|\alpha|\le k}||D^\alpha u||_{L^2(\Omega)}^2)^\frac{1}{2}$$
+	
+	El producto interno es:
+	$$(u,v)_{H^k(\Omega)} = \sum_{|\alpha|\le k}(D^\alpha u, D^\alpha v)_{L^2(\Omega)}$$
+	
+	con 
+	$$||u||_(H^k(\Omega)) = (u,u)^\frac{1}{2}_{H^k(\Omega)}$$
+	
+	\begin{example}
+		Sea $\Omega\subset\mathbb{R^2}$
+		
+		Definimos
+		$$H^1(\Omega) = \{u\in L^2, u_x\in L^2, u_y\in L^2\}$$
+		
+		$$||u||^2_{H^1(\Omega)} = ||u||^2_{L^2} + ||u_x||^2_{L^2} + ||u_y||^2_{L^2} = 
+		\int_\Omega u^2 + \int_\Omega u_x^2 + \int_\Omega u_y^2$$
+	\end{example}
+	
+	En $H^k(\Omega)$ definimos también una seminorma:
+	$$|u|_{H^k(\Omega)}  = (\sum_{|\alpha|=k}||D^\alpha u||^2_{L^2(\Omega)})^\frac{1}{2}$$
+	
+	\begin{example}
+		$$|u|^2_{H^1(\Omega)} = \int_{\Omega}u_x^2+\int_{\Omega}u_y^2$$
+		
+		Si $|u|_{H^k(\Omega)} = 0 \nimplies u = 0$ en $\Omega$.
+	\end{example}
+	
+	$$H_0^1(\Omega) = \{\textbf{Funciones de } H^1(\Omega)\textbf{ con } u = 0 \textbf{ en } \delta \Omega \}$$
+	
+	\paragraph{Desigualdad de Poincaré}
+	Sea $\Omega\in\mathbb{R}^d$ abierto acotado con frontera suficientemente regular. Sea $u\in H_0^1(\Omega)$, entonces existe una constante $C_*(\Omega)$ independiente de $u$ tal que
+	$$\int_{\Omega}|u|^2 dx \le c_* \sum_{i=1}^n\int_{\Omega}|\frac{\partial u}{\partial x_i}|^2dx$$
+	
+	$$||u||^2_{L^2(\Omega)}\le C_*||\nabla u||^2_{L^2(\Omega)}$$
+	
+	Siendo $\nabla u = (\frac{\partial u}{\partial x_1}\hdots\frac{\partial u}{\partial x_d})$
+	
+	\begin{example}
+		Si $u\in H_0^1(\Omega)\implies$
+		$$\int_{\Omega}u^2 \le C^*\left[\int_{\Omega}u_x^2+\int_{\Omega}u_y^2\right]$$
+	\end{example}
+	
+	En $H_0^1(\Omega)$ son equivalentes la norma y la seminorma.
+	
+	\begin{itemize}
+		\item $|u|_{H^1(\Omega)}\le c_1 ||u||_{H^1{\Omega}}$
+		\item $||u||_{H^1(\Omega)}\le c_2 |u|_{H^1(\Omega)}$
+	\end{itemize}
+	
+	\subsection{Soluciones débiles de problemas elípticos}
+	Sea $\Omega\in \mathbb{R}^d$ un abierto acotado. Consideramos la ecuacion diferencial:
+	$$\underbrace{-\sum_{i,j=1}^d \frac{\partial}{\partial x_j}(a_{ij}(x)\frac{\partial y}{\partial x_i})}_{\text{Difusión}} + \underbrace{\sum_{i=1}^d b_i(x)\frac{\partial y}{\partial x_i}}_{\text{Convección}}+\underbrace{c(x) u}_\text{Reacción} = \underbrace{f(x)}_\text{Fuerza}$$
+	
+	Con $x\in\Omega$ y $a_{ij}, b_i, c, f$ funciones definidas en $\Omega$ suficientemente regulares. Asumimos que se verifica la condición de elipticidad uniforme, con $c^2>c$ y $c=cte$:
+	$$\sum_{i,j=1}^d a_{ij}(x) \xi_i\xi_j \ge c^2 \sum_{i=1}^d \xi_i^2$$
+	
+	Esta condición es lo mismo que:
+	\begin{equation*}
+		\begin{pmatrix}
+			\xi_1 & \hdots & \xi_d
+		\end{pmatrix}
+		\begin{pmatrix}
+			a_{11} & \hdots & a_{1d}\\
+			a_{21} & \hdots & a_{2d}\\
+			\vdots & \vdots & \vdots \\
+			a_{d1} & \hdots & a_{dd}\\
+		\end{pmatrix}
+		\begin{pmatrix}
+			\xi_1\\
+			\vdots
+			\\\xi_d
+		\end{pmatrix}\ge
+		c^2
+		\begin{pmatrix}
+			\xi_1 & \hdots & \xi_d
+		\end{pmatrix}
+		\begin{pmatrix}
+			1 & \hdots & 0 & 0\\
+			0 & 1 & \ddots & 0\\
+			\vdots & \ddots & \ddots & \vdots\\
+			0 & \hdots & 0 & 1\\
+		\end{pmatrix}
+		\begin{pmatrix}
+			\xi_1\\
+			\vdots
+			\\\xi_d
+		\end{pmatrix}
+	\end{equation*}
+	
+	La ecuación diferencial se acompaña de unas condiciones de contorno  en $\partial \Omega$.
+	
+	\begin{itemize}
+		\item Condiciones de contorno Dicihlet.
+		
+		$u=g$ en $\partial\Omega$ con $g$ un dato. 
+		Si $g=0$, se denominan homogéneas.
+		\item Condiciones Neumann.
+		
+		$\frac{\partial u}{\partial n}=\nabla u \vec{n}=g$ en $\partial \Omega$.
+		Si $g=0$, se denominan homogéneas.
+	\end{itemize}
+	
+	Vamos a considerar el problema
+	\begin{equation*}
+		\left\{
+		\begin{array}{l l l}
+			-\sum_{i,j=1}^d \frac{\partial}{\partial x_j}(a_{ij}(x)\frac{\partial u}{\partial x_i}) + \sum_{i=1}^d b_i(x)\frac{\partial u}{\partial x_i}+c(x) u = f(x)\\
+			u = 0 \text{ en } \delta \Omega
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	Se dice que $u$ es solución clásica del problema si $u\in e^2(\Omega)$ satisface la ecuación diferencial en $\Omega$ y $u = 0$ en $\delta \Omega$.
+	
+	\paragraph{Concepto de solución débil.}
+	Nos puede interesar aproximar las soluciones con menos regularidad que $u\in e^2(\Omega)$.
+	
+	Tomamos la ecuación diferencial, integramos en $\Omega$ y multiplicamos por una función $v\in e^1_0(\Omega)$.
+	
+	$$-\int_{\Omega} \sum _{i,j=1}^d \frac{\partial}{\partial x_j}(a_{ij}\frac{\partial u}{\partial x_i})v + \int_{\Omega}\sum_{i=1}^d \frac{\partial u}{\partial x_i}v + \int_{\Omega} c u v = \int_{\Omega} fuv$$
+	
+	Integrando por partes el primer término tenemos lo que se denomina la \textbf{formulación varacional de la ecuación diferencial}:
+	$$\int_{\Omega} \sum_{i,j=1}^d a_{ij} \frac{\partial u}{\partial x_i}\frac{\partial v}{\partial x_j} + \int_{\Omega}\sum_{i=1}^d b_i \frac{\partial u}{\partial x_i}v + \int_{\Omega} cuv = \int_{\Omega} f v $$
+	
+	Todas las integrales son finitas si $u\in H_0^1(\Omega) y v\in H_0^1(\Omega)$.
+	
+	Decimos que $u$ es solución débil del problema $(p)$ si $u\in H_0^1$ y además se tiene que 
+	$$\sum_{i,j=1}^d \int_{\Omega}  a_{ij} \frac{\partial u}{\partial x_i}\frac{\partial v}{\partial x_j} + \sum_{i=1}^d\int_{\Omega} b_i \frac{\partial u}{\partial x_i}v + \int_{\Omega} cuv = \int_{\Omega} f v \ \forall v\in H_0^1(\Omega)$$
+	
+	\begin{itemize}
+		\item El problema tiene una única solución fuerte para datos suficientemente regulares.
+		\item Veremos a continuación que también existe una única solución débil.
+		\item Si $u$ es solución fuerte, entonces $u$ es solución débil. La implicación en el sentido contrario se tiene si $u$ es de clase $e^2$.
+	\end{itemize}
+	
+	
+	\begin{theorem}[Teorema de Lax-Milgram]
+		Sea $V$ un espacio de Hilbert con norma $||\cdot||_V$. Sea $a(\cdot, \cdot)$ una forma bilineal en $v$ que satisface
+		\begin{itemize}
+			\item \textbf{Coercividad de la forma bilineal}
+			
+			$$\exists c_0 > 0 \tq a(v,v)\ge c_0||v||_V^2 \ \forall v \in V$$
+			
+			\item \textbf{Continuidad de la forma bilineal}
+			
+			$$\exists c_1>0 \tq |a(v,w)|\le c_1||v||_V ||w||_V \ \forall v,w\in V$$
+			
+			\item \textbf{Continuidad del operador $l$}
+			
+			$$\exists c_2> 0 \tq |l(v)|\le c_2 ||v||_V \ \forall v\in V$$
+			
+			donde $l:V\longrightarrow \mathbb{R}$ es un funcional lineal.
+		\end{itemize}
+		
+		Entonces existe una única función $u\in V$ verificando
+		$$a(u,v) = l(v) \forall v\in V$$
+	\end{theorem}
+	
+	Vamos a aplicar el teorema de Lax-Milgram para probar que existe una única solución débil. Encontrar $u\in H_0^1$.
+	
+	Nuestro espacio de Hilbert será $V = H_0^1(\Omega)$.
+	
+	Definimos una forma bilineal $a(u,v): V\times V \longrightarrow \mathbb{R}$:
+	$$a(u,v) = \sum_{i,j=1}^d \int_{\Omega} a_{ij}\frac{\partial u}{\partial x_i}\frac{\partial v}{\partial x_j} + \sum_{i=1}^d \int_{\Omega}b_i \frac{\partial u}{\partial x_i}v+ \int_{\Omega} cuv$$
+	
+	Definimos un funcional lineal $l$ que está definido como $l:V\longrightarrow \mathbb{R}$:
+	$$l(v) = \int_\Omega fv$$
+	
+	La solución débil es $u\in H_0^1(\Omega)$ verificando $a(u,v) = l(v) \ \forall v \in H_0^1(\Omega)$.
+	
+	Si se cumplen las tres condiciones en el teorema, entonces existe una única solución débil.
+	
+	\begin{itemize}
+		\item \textbf{Coercividad}
+		$$a(v,v) = \sum_{i,j=1}^d \int_\Omega a_{ij} \frac{\partial v}{\partial x_i} \frac{\partial v}{\partial x_j} + \sum_{i=1}^d\int_\Omega b_i \frac{\partial v}{\partial x_i}v + \int_\Omega cv^2$$
+		
+		La condición de elipticidad uniforme:
+		$$\sum_{i,j=1}^d \int_\Omega a_{ij} \frac{\partial v}{\partial x_i} \ge c^2  \underbrace{\sum_{i=1}^d\int_\Omega (\frac{\partial v}{\partial x_i})^2}_{||\nabla v|| ^2_{L^2(\Omega)}} + \int_\Omega cv^2$$
+		
+		Nos da:
+		$$a(v,v) \ge \tilde{c}||\nabla v||^2_{L^2} + \sum_{i=1}^d \int_{\Omega} b_i\frac{\partial v}{\partial x_i}v + \int_\Omega cv^2$$
+		
+		$$\int_\Omega b_i\frac{\partial v}{\partial x_i}v = \int_\Omega b_i\frac{\partial }{\partial x_i}\left[\frac{1}{2}v^2\right] = -\int_\Omega \frac{1}{2}\frac{\partial b_i}{\partial x_i} v^2$$
+		
+		Aplicando la condición de coercividad:
+		$$c-\sum_{i=1}^d\frac{1}{2}\frac{\partial b_i}{\partial x_i} \ge 0$$
+		
+		Obetenemos:
+		$$a(v,v) \ge \tilde{c}||\nabla v||^2_{L^2} + \int_\Omega \left(c-\sum_{i=1}^d \frac{1}{2} \frac{\partial b_i}{\partial x_i}\right)v^2 \ge c^2 ||\nabla v||^2_{L^2}$$
+		
+		Lo que queremos probar es que $a(v,v) \ge c_0 ||v||^2_V$. en este caso queremos probar que existe $c_0>0$ con
+		$$a(v,v) \ge c_0 ||v||^2_{H_0^1(\Omega)} = c_0 \left[\int_\Omega v^2 + \int_\Omega (\nabla v)^2\right]$$
+		
+		Hemos probado que:
+		$$a(v,v)\ge c^2 ||\nabla v||^2_{L^2} \ge \frac{c^2}{(c^*+1)}||v||^2_{H^1(\Omega)}$$
+		
+		$$||u||^2_{H^1(\Omega)}\le (c^*+1)|u|^2_{H^1(\Omega)}$$
+		
+		\item \textbf{Continuidad}	
+		En los apuntes que ha dado la profesora.
+		
+		\item \textbf{Continuidad de $l$}
+		
+		Queremos probar que existe $c_2>0$ con
+		$$|l(v)| \le c_2||v||_V$$
+		
+		tal que
+		$$|\int_\Omega fv| \le c_2||v||_{H^1(\Omega)}$$
+		
+		Por Cauchy-Schwarz
+		$$|\int_{\Omega} fv| \le ||f||_{L^2} ||v||_{L^2} \le ||f||_{L^2}||v||_{H^1}$$
+		
+		tenemos que $c_2 = ||f||_{L^2}$, por tanto, por Lax-Milgram, existe una única función $u\in H_0^1(\Omega)$ verificando
+		$a(u,v) = l(v) \ \forall v \in H_0^1(\Omega)$.
+	\end{itemize}
+	
+	La única solución de $u\in H_0^1(\Omega)$ verifica que 
+	$$||u||_{H_0^1(\Omega)} \le \frac{||f||_{L^2}}{c_0}$$
+	
+	La demostración es la siguiente: sea $u$ solución
+	$$a(u,v) = l(v) \ \forall v\in H_0^1(\Omega)$$
+	
+	Si $v=u$, por coercividad:	
+	$$c_0||u||^2_{H^1(\Omega)} \le a(u,u) = l(u) \le ||f||_{L^2}||u||_{H^1}$$
+	
+	Luego
+	$$c_0||u||_{H^1}\le ||f||_{L^2} \implies ||u||_{H^1}\le \frac{||f||_{L^2}}{c_0}$$
+	
+	La desigualdad que acabamos de demostrar nos da la estabilidad o el carácter bien puesto del problema.
+	
+	Si $u_1\in H_0^1(\Omega)$ es solución de $a(u_1,v) = \int f_1 v$ $\forall v\in H_0^1(\Omega)$.
+	
+	Si $u_2\in H_0^1(\Omega)$ es solución de $a(u_2,v) = \int f_2 v$ $\forall v\in H_0^1(\Omega)$.
+	
+	¿Qué relacion hay entre $u_1$ y $u_2$?
+	
+	$u_1-u_2\in H_0^1(\Omega)$ verifica que 
+	$$a(u_1-u_2, v) = \int_\Omega (f_1,f_2)v \ \forall v\in H_0^1 (\Omega)$$
+	
+	Por la desigualdad
+	$$||u_1-u_2||\le \frac{1}{c_0}||f_1-f_2||_{L^2}$$
+	
+	Si $f_1$ está muy próximo a $f_2$ entonces también $u_1$ está muy próximo a $u_2$.
+	
+	\begin{example}
+		Consideremos el problema siguiente, con $\Gamma_1 \cup \Gamma_2 = \delta \Omega$:		
+		\begin{equation*}
+			\left\{
+			\begin{matrix}
+				-\Delta u = f & \text{ en } \Omega\\
+				u = 0 & \text{ en } \Gamma_1\\
+				\frac{\partial u}{\partial n} = f & \text{ en } \Gamma_2
+			\end{matrix}
+			\right.
+		\end{equation*}
+		
+		El problema se puede formular en términos del teorem de Lax-Milgram 
+		$$V = \{u\in H^1(\Omega) \text{ con } u = 0 \text{ en } \Gamma_1 \}$$
+		
+		Esta es la formulación varacional o problema en forma débil.
+		
+		$$\int_\Omega -\Delta uv = \int_\Omega fv \ v\in V$$
+		
+		Integrando por partes
+		$$\int_\Omega \nabla u\nabla v - \int _{\delta \Omega}\frac{\partial u}{\partial n} v \partial \sigma$$
+		
+		$$\int_\Omega \nabla u\nabla v - \int _{\delta \Omega}\frac{\partial u}{\partial n} v \partial \sigma = \int _\Omega fv \ \forall v \in V$$
+		
+		$$\int _{\delta \Omega}\frac{\partial u}{\partial n} v \partial \sigma 
+		= 
+		\int _{\Gamma_1}\frac{\partial u}{\partial n} v \partial \sigma
+		+
+		\int _{\Gamma_2}\frac{\partial u}{\partial n} v \partial \sigma
+		= 
+		0+\int_{\Gamma_2} gv\partial\sigma$$
+		
+		$$\int_\Omega \nabla u\nabla v - \int _{\Gamma_2}g v \partial \sigma = \int _\Omega fv$$
+		
+		$$\int_\Omega \nabla u\nabla v  = \int _\Omega fv + \int _{\Gamma_2}g v \partial \sigma$$
+		
+		Por Lax-Migram 
+		Tenemos $V = H_0^1(\Gamma_1)$,  $a(u,v) = \int_{\Omega}\nabla u\nabla v$ y $l(v) = \int _\Omega fv + \int _{\Gamma_2} gv\partial \sigma$, es decir, existencia y unicidad de la solución débil.
+	\end{example}
+
+
+    \subsection{Aproximación de problemas elípticos}
+    Buscamos encontrar un $u\in V$ verificando
+    $$a(u,v) = l(v) \ \forall v\in V$$
+    
+    La existencia de unicidad y solución están garantizadas por el teorema de Lax-Milgram. Consideramos $V_h\subset V$ subsespacio finito dimensional de $V$.
+    $$V_h = <\Phi_1, \Phi_2, \hdots, \Phi_{N(h)}>$$
+    
+    \paragraph{Método de elementos finitos}
+    Encontrar $u_h\in V_h$ verificando 
+    $$a(u_h, v_h) = l(v_h) \ \forall v_h \in V_h$$
+    
+    Como $V_h\subset V$ hereda la estructura de espacio de Hilbert, la existencia y unicidad de la solución del problema discreto se deduce de aplicar el teorema de Lax-Milgram.
+    
+    \paragraph{Forma práctica de encontrar la solución}
+    $$u_h(x) = \sum_{i=1}^{N(h)} u_i \Phi_i(x)$$
+    
+    La aproximación es combinación lineal de los elementos de la base.
+    
+    El vector de incógnitas con coeficientes en la base es
+    $$\begin{bmatrix}
+    	u_1\\u_2\\\vdots\\ u_{N(h)}
+    \end{bmatrix}$$
+    
+    con $a(u_h, v_h) = l(v_h) \ \forall v_h\in V_h$. 
+    Podemos imponer que
+    $$a(\sum_{i=1}^{N(h)} u_i \Phi_i(x), \Phi_j(x)) = l(\Phi_j)$$
+    
+    con $j=1,\hdots, N(h)$.
+    
+    Que es lo mismo que 
+	$$\sum_{i=1}^{N(h)} u_i a(\Phi_i, \Phi_j) = l(\Phi_j)$$
+	
+	Sea $A$ la matriz de tamaño $N(h) \times N(h)$ con elemento $(i,j)$ igual a $a(\Phi_i, \Phi_j)$, entonces, encontrar $u_h$ es equivalente a resolver el sistema lienal
+	$$
+	A
+	\begin{bmatrix}
+	u_1\\u_2\\\vdots\\u_{N(h)}
+	\end{bmatrix} = 
+	\begin{bmatrix}
+	l(\Phi_1)\\
+	l(\Phi_2)\\
+	\vdots\\
+	l(\Phi_{N(h)})
+	\end{bmatrix}$$
+	
+	En general $A$ va a ser una matriz definida positiva y dispersa (tiene muchos elementos nulos). Se suelen usar métodos iterativos para resolver el sistema.
+	
+	\subsection{Funciones lineales a trozos en una dimensión espacial}
+	Consideramos el problema: encontrar $u:[0,1]\longrightarrow \mathbb{R}$ verificando 
+	\begin{equation}
+	\left\{
+		\begin{array}{l l}
+		-(p(x)u')'+q(x)u=f(x) & x\in(0,1)\\
+		u(0)=u(1)=0 &\\
+		p,q\in e(0,1) , f\in L^2\\
+		p(x) \ge \tilde{c} > 0 &\\
+		q(x) \ge 0 &
+		\end{array}
+		\right.
+	\end{equation}
+	
+	Tenemos
+	$$a(u,v) = \int_{0}^{1}p(x) u'(x) v'(x) + \int_{0}^{1}q(x)u(x)v(x)$$
+	
+	Siendo $a:H_0^1(0,1)\times H_0^1(0,1) \longrightarrow \mathbb{R}$
+	
+	Y
+	$$H_0^1(0,1) =\{u\in L^2 , u'\in L^2, \text{ y }u(0)=u(1)=0\}$$
+	
+	Siendo $l(v): H_0^1(0,1) \longrightarrow\mathbb{R}$ con $l(v) = \int_{0}^{1}fvdx$
+	
+	La solución en forma débil es $u\in H_0^1(0,1)$ con 
+		$$a(u,v) = l(v) \ \forall v \in H_0^1(0,1)$$
+		
+	Vamos a verificar que se cumplen las hipótesis de Lax-Milgram.
+	\begin{itemize}
+		\item \textbf{$a$ coerciva}
+		$$\exists c_0\tq a(u,u)\ge c_0||u||^2_{H_0^1(0,1)}$$
+		
+		EN $H_0^1(0,1)$ son equivalentes
+		$$(\int u^2 + \int (u')^2)^\frac{1}{2} = (||u||^2_{L^2}+||u'||^2_{L^2})$$
+		
+		y
+		$$||u'||_{L^2} = (\int (u')^2)^\frac{1}{2}$$
+		
+		$$a(u,u) = \int_0^1 p(x) (u')^2 + \int_0^1 qu^2 \ge \tilde{c} \int_0^1 (u')^2 + \int_{0}^{1}qu^2\ge \tilde{c}\int_0^1 (u')^2 dx = \tilde{c}||u||^2_{H_0^1(0,1)}$$
+		
+		\item \textbf{$a$ continua}
+		$\exists c_1$ con $|a(u,v)| \le c_1||u||_{H_0^1}||u||_{H_0^1}$
+		
+		\begin{align*}
+			|a(u,v)| & = |\int_{0}^{1}p(x)u'v'dx + \int_{0}^{1}q(x)uvdx| \\
+			& \le |\int_0^1 p(x) u'v'dx| + |\int_{0}^{1}q(x)uvdx|\\
+			& \le ||p||_\infty ||u'||\\
+			& \textbf{No me da puto tiempo a copiar esta basura}
+		\end{align*}
+		
+		\item \textbf{$l$ continua}
+		\textbf{Ni esta tampoco}
+	\end{itemize}
+	
+	\paragraph{Aproximación por elementos ifnitos lineales}
+	
+	Defino una partición en el intervalo $(0,1)$.
+	$$x_0 = 0< x_1 <\hdots < x_N = 1$$
+	
+	Si son equiespaciados (que no es necesario)
+	$$x_j = jh,\ h=\frac{1}{N}, N>0$$
+	
+	Definimos $h$, que es el diametro de la partición, como
+	$$h=\max |x_i-x_{i-1}|\ (h=\frac{1}{N}\text{ partición uniforme })$$
+	
+	Definimos el espacio de elementos finitos lineales con funciones continuas lineales a trozos y condiciones Dirichlet homogéneas.
+	$$V_h  = \{v_h\text{ continua, } vh(0)=vh(1)\text{ y } v_h/\left[x_{i-1}, x_1\right] = \text{ polinomio lineal } \forall i=1,\hdots, N\}$$
+	
+	Vamos a tener convergencia con $h\to 0$.
+	Vamos a buscar una base de $V_h$ que tiene dimensión $N-1$.
+	
+	Definimos
+	\begin{equation*}
+		\Phi_i(x) = \left\{
+		\begin{array}{l l l}
+			\frac{x-x_{i-1}}{x_i-x_{i-1}}& x\in\left[x_{i-1}, x_i\right]\\
+			\frac{x_{i+1}-x}{x_{i+1}-x_{i}}& x\in\left[x_{i}, x_{i+1}\right]\\
+			0 & \text{ en el resto}\\
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	$$u_h(x) = \sum_{i=1}^N u_i\Phi_i(x)$$
+	
+	\paragraph{Método de elementos finitos}
+	Encontrar $u_h\in V_h$ con 
+	$$a(u_h, v_h) = l(v_h)\ \forall v_h\in V_h$$
+	
+	Encontrar
+	$$u_h(x) = \sum_{i=1}^{N} u_i\Phi _i(x)$$
+	
+	con 
+	$$\sum_{i=1}^{N-1} u_i a(\Phi_i, \Phi_j) = l(\Phi_j)$$
+	
+	o de forma equivalente, resolver el sistema lineal de matriz $A_{(N-1)\times(N-1)}$ siguiente
+	\begin{equation*}
+		A
+		\begin{bmatrix}
+			u_1\\u_2\\\vdots\\u_{N-1}
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+			\int f\Phi_1\\
+			\int f\Phi_2\\
+			\vdots\\
+			\int f\Phi_{N-1}
+		\end{bmatrix}
+	\end{equation*}
+	
+	El elemento $(i,j)$ de la matriz $A$ es
+	$$A_{(i,j)} = \int_0^1 p(x) \Phi_i'\Phi_j' + \int_0^1 q(x)\Phi_i\Phi_j$$
+	
+	Cuando no se puede calcular exactamente se usa una regla de cuadratura.
+	
+	\paragraph{Caso particular}
+	Sea $A = pK+qM$ con $p,q$ constantes donde $K$ es la matriz de rigidez
+	$K = (\int \Phi_i'\Phi_j')$ y $M$ la matriz de masa $M = (\int \Phi_i\Phi_j)$.
+	
+	Si consideramos una partición uniforme y $h = x_i - x_{i-1}$:
+	
+	\begin{equation*}
+		\Phi_i'=\left\{
+		\begin{array}{l l l}
+			1/h & [x_{i-1}, x_i]\\
+			-1/h & [x_i, x_{i+1}]\\
+			0 & \text{ Resto.}
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	Para la matriz $k$, en la fila $i$ sólo hay 3 integrales no nulas:
+	\begin{itemize}
+		\item $\int_{0}^{1} \Phi_i'\Phi_{i-1}' = \int_{x_{i-1}}^{x_i} \frac{1}{h}\frac{-1}{h} = h\frac{-1}{h^2} = \frac{-1}{h}$
+		
+		\item $\int_{0}^{1}(\Phi_i')^2 = \int_{x_{i-1}}^{x_i}(\frac{1}{h})^2 + \int_{x_i}^{x_{i+1}} (\frac{-1}{h})^2 = \frac{2}{h}$
+		
+		\item $\int_0^1 \Phi_i'\Phi_{i+1}'=\int_{x_i}^{x_{i+1}}(\frac{-1}{h})\frac{1}{h} = h\frac{-1}{h}\frac{1}{h}= \frac{-1}{h}$
+	\end{itemize}
+	
+	Podemos calcular ya la matriz $K$ que es tridiagonal y diagonalmente dominante.
+	\begin{equation*}
+		K = \begin{pmatrix}
+			\frac{2}{h} & \frac{-1}{h} & 0 & \hdots & 0\\
+			\frac{-1}{h} & \frac{2}{h} & \frac{-1}{h} & \hdots & 0\\
+			\vdots & \ddots & \ddots & \ddots & \vdots\\
+			\vdots & \vdots & \ddots & \ddots &  \frac{-1}{h}\\
+			0 & 0 & 0 & \frac{-1}{h} & \frac{2}{h}
+		\end{pmatrix}
+	\end{equation*}
+	
+	En la matriz $M$ tenemos sólo 3 elementos distintos de 0 en cada fila, utilizamos la regla de Simpson para cuadratura:
+	\begin{itemize}
+		\item $\int_0^1 \Phi_i\Phi_{i-1} = \int_{x_{i-1}}^{x_i} = \frac{h}{6}[0] + \frac{4h}{6}[\frac{1}{4}]+\frac{h}{6}[0] = \frac{h}{6}$
+		
+		\item $\int_0^1 \Phi_i^2 = \int_{x_{i-1}}^{x_i} \Phi_i^2
+		+ \int_{x_{i}}^{x_{i+1}} \Phi_i^2 = 2[\frac{h}{6}[0] + \frac{4h}{6}[\frac{1}{4}]+\frac{h}{6}[1]] = \frac{2h}{3}$
+		\item $\int_0^1\Phi_i\Phi_{i+1} = \frac{h}{6}$
+	\end{itemize}
+	
+	Nos queda 
+	\begin{equation*}
+		M = \begin{pmatrix}
+			\frac{2h}{3} & \frac{h}{6} & 0 & \hdots & 0\\
+			\frac{h}{6} & \frac{2h}{3} & \frac{h}{6} & \hdots & 0\\
+			\vdots & \ddots & \ddots & \ddots & \vdots\\
+			\vdots & \vdots & \ddots & \ddots &  \frac{h}{6}\\
+			0 & 0 & 0 & \frac{h}{6} & \frac{2h}{3}
+		\end{pmatrix}
+	\end{equation*}
+	
+	
