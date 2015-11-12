@@ -102,7 +102,7 @@ Vamos a ver unas pocas maneras de calcular la recta de mínimos cuadrados.
 
 
 	\[
-		\left(\frac{\left(\sum x_i\right)}{n} - \frac{n\gor{x}}{n}\right)\sum_{i=1}^n y_i} = (\gor{x} - \gor{x}) \sum y_i = 0
+		\left(\frac{\left(\sum x_i\right)}{n} - \frac{n\gor{x}}{n}\right)\sum_{i=1}^n y_i = (\gor{x} - \gor{x}) \sum y_i = 0
 	\]
 
 	\obs Pero... ¿y porqué $\sum(x_i -\gor{x})y_i ≠ 0$? ¿Cuál es el fallo de lo siguiente?
@@ -188,6 +188,7 @@ Por otro lado:
 
 
 Esto tiene la siguiente explicación ``intuitiva'': La recta de mínimos cuadrados contiene toda la información lineal que $X$ puede dar sobre $Y$ (debido a que la covarianza entre los residuos y $X$ es 0).
+\end{itemize}
 
 \subsubsection{Fallos de la recta de mínimos cuadrados}
 
@@ -398,11 +399,13 @@ Al estimar $σ$,  $P_{R}$ no tiene porqué ser exactamente $N(0,1)$. Si $n\to �
 
 Por ello, nos vemos en la necesidad de manipular $P_R$ algebraicamente a ver si conocemos qué distribución tiene (que debería ser algo cercano a una normal, ya que estamos estimando $σ$ con un estimador insesgado. Tal vez las colas de la distribución son menos pesadas y podríamos esperar que fuera una $\mathcal{T}$)
 
+\label{Cuentas:largas}
+
 \[
 \displaystyle\frac{\hat{β_1}-β_1}{\displaystyle\frac{S_R}{\sqrt{S_{xx}}}} = \displaystyle\frac{\hat{β_1}-β_1}{\displaystyle\frac{σ}{\sqrt{S_{xx}}}\frac{S_R}{σ}} = \left( \displaystyle\frac{\hat{β_1}-β_1}{\displaystyle\frac{σ}{\sqrt{S_{xx}}}} \right)\displaystyle\frac{1}{\displaystyle\frac{S_R}{σ}} = \displaystyle\frac{ \displaystyle\frac{\hat{β_1}-β_1}{\frac{σ}{\sqrt{S_{xx}}}} }{\displaystyle\frac{S_R}{σ}}
 \]
 
-En el numerador tenemos una $N(0,1)$ y en el denominador la raíz de una $\chi^2$ dividida por sus grados de libertad (por la proposición anterior). Esto es por definición una $\mathcal{T}$ (T-Student) con los mismos grados de libertad que la $\chi^2$, es decir $n-2$. (\href{https://en.wikipedia.org/wiki/Student%27s\_t-distribution#Characterization}{Wikipedia}})
+En el numerador tenemos una $N(0,1)$ y en el denominador la raíz de una $\chi^2$ dividida por sus grados de libertad (por la proposición anterior). Esto es por definición una $\mathcal{T}$ (T-Student) con los mismos grados de libertad que la $\chi^2$, es decir $n-2$. (\href{https://en.wikipedia.org/wiki/Student%27s\_t-distribution#Characterization}{Wikipedia})
 
 
 \begin{prop}
@@ -604,6 +607,28 @@ AZ&3550367&2428430&25578&55245&9411.55&3907526&18.0
 \end{tabular}
 \end{center}
 
+
+Estos son los datos que obtenemos de $R$:
+
+\begin{lstlisting}[style=mystyle]
+reg <- lm(FuelC ~ Drivers+Income+Miles+MPC+Tax, data=fuel2001)
+summary(reg)
+Call:
+lm(formula = FuelC ~ Drivers + Income + Miles + MPC + Tax, data = fuel2001)
+Coefficients:
+Estimate	Std.Error	t	value	Pr(>|t|)
+(Intercept)	-4.844e+05	8.102e+05	-0.598	0.552903
+Drivers	6.144e-01	2.229e-02	27.560	<	2e-16
+Income	7.526e+00	1.611e+01	0.467	0.642587
+Miles	5.813e+00	1.587e+00	3.664	0.000652
+MPC	4.643e+01	3.488e+01	1.331	0.189820
+Tax	-2.114e+04	1.298e+04	-1.629	0.110298
+---
+Residual standard error: 394100 on 45 degrees of freedom
+Multiple R-squared: 0.9808, Adjusted R-squared: 0.9787
+F-statistic: 459.5 on 5 and 45 DF, p-value: < 2.2e-16
+\end{lstlisting}
+
 \subsubsection{Notación}
 
 
@@ -693,8 +718,110 @@ Y la regresión simple, es un caso particular de esta fórmula.
 
 En las traspas encontramos una salida de regresión múltiple de $R$. La columna \textit{estimate} es el vector $\hat{β}$, el p-valor es del contraste $H_0 : β_j = 0$.
 
+
+\subsubsection{Combinaciones lineales de los coeficientes} Vamos a querer constrastar cosas del estilo ¿las 2 variables influyen igual?
+
+Para ello, transformamos eso en $H_0: β_1 = β_2 \to H_0 : β_1 - β_2 = 0$, entonces tenemos una combinación lineal $a∈ℝ^{k+1}$, tal que $H_0:a'\hat{β} = 0$
+
+Para poder hacer esto, lo primero ha sido estimar $\hat{β}$ y lo siguiente será saber su distribución.
+
+\[a'\hat{β} = N\left(a'β,\underbrace{σ^2a'(X'X)^{-1}a}_{\left(E.T.(a'\hat{β})\right)^2}\right) \to \frac{a'\hat{β} - a'β}{S_R\sqrt{a(X'X)^{-1}}} \equiv \mathcal{T}_{n-k-1}\]
+
+Y con esto, ya podemos construir el intervalo de confianza para una combinación lineal de los parámetros:
+
+\[
+IC_{1-α}(a'β) = \left[ a'\hat{β} \mp \mathcal{T}_{n-k-1;\frac{α}{2}}E.T.(\hat{a'β}) \right]
+\]
+
+La región de rechazo correspondiente es:
+
+\[
+R = \{\}
+\]
+
+\paragraph{Ejercicio:} ¿Y si queremos hacer un contraste unilateral $a'β > 0$?
+
+\subsubsection{Inferencia sobre subconjuntos de coeficientes}
+
+Todos los contrastes hechos hasta ahora son muy fáciles porque se basan en una única normal. Nuestros contrastes han sido del tipo $β_i = 0$. En esta sección vamos a estudiar contrastes del tipo $H_0: β_1 = 0, β_3 = 0$. 
+
+La primera aproximación puede ser calcular la región de confianza de $β_1$ y la de $β_3$ y tomar la intersección. Pero al no ser independientes, no estamos teniendo en cuanto las correlaciones, la información que me da saber $β_1$ para saber $β_3$. 
+
+\textcolor{red}{completar Dibujos}
+
+\paragraph{Vamos a ello formalmente:}
+\newcommand{\bpp}{β_{(p)}}
+\newcommand{\hbpp}{\hat{β_{(p)}}}
+\newcommand{\fpnk}{F_{p,n-k-1}}
+Sea $β_{(p)}$ un conjunto de coeficientes de $β$. Sea $\hbpp$ el correspondiente subconjunto de estimadores.
+
+Sea $Q_q$ la submatriz de $(X'X)^{-1}$ cuyas filas y columnas corresponden a las coordenadas del vector $\bpp$.
+
+\[\hbpp \equiv N_p \left( \bpp, σ^2Q_p \right)\]
+
+Si este es nuestro estimador, vamos a estandarizarlo (utilizando propiedades del tema 1).
+
+\[
+\frac{(\hbpp - \bpp)'Q_p^{-1}(\hbpp - \bpp)}{σ^2}\equiv \chi^2_p
+\]
+
+Tenemos el problema de que no conocemos $σ$ y tenemos que estimarlo. Para ello, vamos a seguir un proceso parecido a \ref{Cuentas:largas}. Para ello necesitamos:
+
+\begin{defn}[Distribución $F_{n,m}$]
+
+\[
+F_{n,m} \equiv \frac{\chi^2_m / m}{\chi^2_n / n}
+\]
+
+Es muy habitual que aparezca la $F$ al comparar varianzas. 
+\end{defn}
+
+Sabiendo lo que es una $F$, vamos a estudiar qué ocurre al cambiar $σ$ por $S_R$
+
+\[
+\frac{(\hbpp - \bpp)'Q_p^{-1}(\hbpp - \bpp)}{S_R^2} = \frac{\frac{(\hbpp - \bpp)'Q_p^{-1}(\hbpp - \bpp)}{σ^2}}{\frac{S_R^2}{σ^2}}
+\]
+
+En el numerador tenemos una $\chi^2_p$, pero nos faltaría dividir por los grados de libertad para tener una $F$, entonces:
+
+\[
+\frac{\frac{(\hbpp - \bpp)'Q_p^{-1}(\hbpp - \bpp)}{pσ^2}}{\frac{S_R^2}{σ^2}} = \frac{\chi^2_p/p}{\chi^2_{n-k-1}/n-k-1} \equiv F_{p,n-k-1}
+\]
+
+\paragraph{Conclusión}
+
+%TODO: esto está bien seguro
+\[
+\frac{(\hbpp - \bpp)'Q_p^{-1}(\hbpp - \bpp)}{pS_R^2} \equiv F_{p,n-k-1}
+\]
+\[
+1-α = P\left( (\hbpp - \bpp)'\left(S_R^2Q_p\right)^{-1}(\hbpp - \bpp) \leq p F_{p,n-k-1}\right)
+\]
+
+\begin{example}
+Vamos a querer contrastar si son iguales los coeficientes $β_2,β_3$ las variables ``Income'' y ``Miles''. La hipótesis es: $H_0 : β_2=β_3$ a nivel $α=0.05$
+
+Aquí damos los datos necesarios para completar (en la realidad, los obtendremos de $R$:
+\[
+S_R^2Q_{(2)} = \begin{pmatrix} 259.45&7.89\\7.89&2.52 \end{pmatrix}
+\]
+
+Vamos a proceder al contraste. Construimos el estadístico para construir la región de rechazo:
+
+\[
+t = \frac{|\hat{β_2} - \hat{β_3}|}{E.T.(\hat{β_2}-\hat{β_3})} = \frac{1.725}{15.687} \not \ge t_{45;0.025}
+\]
+
+Donde el error típico se ha calculado:
+\[\sqrt{\var{\hat{β_2}-\hat{β_3}}} = \sqrt{(1,-1) S_R^2Q_p (1,-1)} = 15.687\]
+Y los 45 grados de libertad los obtenemos de $R$.
+
+
+\end{example}
+
+
 \subsection{Estimadores de mínimos cuadrados}
 \subsection{Inferencia sobre los parámetros del modelo}
 \subsection{Análisis de la varianza}
-\subsection{Contrastes de hṕótesis lineales}
+\subsection{Contrastes de hipótesis lineales}
 \subsection{Modelo unifactorial}
