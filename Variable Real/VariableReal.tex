@@ -213,7 +213,7 @@ Por convergencia dominada de las medidas (ver \fref{prop:PropiedadesMedida}), sa
 Ahora la prueba se acaba de forma bastante sencilla: dado $ε > 0$ y $k∈ℕ$, siempre podremos encontrar un $m_k$ tal que $μ(E_{m_k}(k)) ≤ \frac{ε}{2^k}$. Entonces, definimos $E = \bigcup_{k=1}^∞ E_{m_k}(k)$, que será el conjunto donde la sucesión no se aproxima uniformemente a $f$. Por definición, \[ μ(E) ≤ \sum_{n≥1} μ(E_{n_k}) = \sum_{k≥1} \frac{ε}{2^k} ≤ ε \], esto es, podemos hacer la medida de ese conjunto tan pequeña como queramos, así que tendremos convergencia uniforme salvo en un conjunto de medida cero.
 \end{proof}
 
-\begin{theorem}[Teorema\IS de Lusin] Dada $\appl{f}{X}{ℂ}$ medible con $μ(X) < ∞$, entonces $f$ es casi continua, que como viene siendo hasta ahora significa que $f$ es continua salvo en un conjunto de medida cero. Esto es, que $∀ε>0$ existe un $N_ε⊆X$ tal que $f$ es continua en $X\setminus N_ε$ y $μ(N_ε) < ε$.
+\begin{theorem}[Teorema\IS de Lusin] \label{thm:Lusin} Dada $\appl{f}{X}{ℂ}$ medible con $μ(X) < ∞$, entonces $f$ es casi continua, que como viene siendo hasta ahora significa que $f$ es continua salvo en un conjunto de medida cero. Esto es, que $∀ε>0$ existe un $N_ε⊆X$ tal que $f$ es continua en $X\setminus N_ε$ y $μ(N_ε) < ε$.
 \end{theorem}
 
 \subsubsection{Integración en coordenadas polares}
@@ -1130,7 +1130,7 @@ Entonces, podemos ver que $\abs{g}^p = \abs{f}^p \ind_E ≤ \abs{f}^q \ind_E$, y
 
 La primera igualdad se puede ver con la \nlref{thm:DesigualdadJensen}, tomando $φ = \exp$ y $u = \log f$, y la otra se deja como ejercicio. % TODO.
 
-\begin{theorem}[Teorema\IS de Riesz-Frechet-Banach] $\espLp \meas$ es un espacio métrico completo, con la topología dada por su norma. En otras palabras, \espLp es un \nlref{def:EspacioBanach}.
+\begin{theorem}[Teorema\IS de Riesz-Frechet-Banach] \label{thm:RieszFrechetBanach} $\espLp \meas$ es un espacio métrico completo, con la topología dada por su norma. En otras palabras, \espLp es un \nlref{def:EspacioBanach}.
 \end{theorem}
 
 Necesitaremos una caracterización para espacios normados completos.
@@ -1152,6 +1152,63 @@ Ahora tenemos que coger y decir que $f_{n_k} = f_{n_1} + \sum{i=1}^{k-1} (f_{n_{
 
 La prueba ahora se acaba demostrando que $f$ es el límite y yo personalmente desisto aquí.
 \end{proof}
+
+\seprule
+
+Hasta ahora,hemos visto desigualdades integrales y además acabamos de demostrar en el \nref{thm:RieszFrechetBanach} la completitud de \espLp (esto es, que es un espacio de Banach). Lo siguiente que veremos será la aproximación de funciones simples y continuas, y con el teorema de Representación de Riesz veremos los duales. Además, veremos la aproximación de funciones \espLp con funciones continuas e infinitamente derivables.
+
+\subsection{Aproximación de funciones}
+
+Vamos a ver cómo aproximar funciones \espLp con funciones simples y de soporte ``compacto''.
+
+\begin{theorem} \label{thm:Aproximacion} Sea $S$ el conjunto de funciones simples en \meas tales que \[ μ\left(\set{x∈ X \tq s(x) ≠ 0 }\right) < ∞ \], esto es, cuyo soporte tiene medida finita.
+
+Entonces, para todo $1 ≤ p < ∞$ (atentos porque ese infinito es estricto), $S$ es denso en \espL[p].
+\end{theorem}
+
+Recordamos ahora un lema que en Teoría de la Medida es un teorema.
+
+\begin{lemma} \label{lem:AproxFuncSimples} Sea $\appl{f}{X}{[0, +∞)}$, no negativa, medible. Entonces $∃\set{s_n} ⊂ S$ una sucesión de funciones simples tales que
+
+\begin{enumerate}
+\item $0 ≤ s_1 ≤ \dotsb ≤ f$.
+\item $s_n \convs f$ para todo punto.
+\end{enumerate}
+\end{lemma}
+
+En el fondo este lema no es más que la forma de construir integrales, y de hecho su prueba es sencillita.
+
+\begin{proof}
+Para construir la sucesión, tomamos los índices $n = 1, 2, \dotsc$ y $1 ≤ i ≤ n2^n$. Entonces consideramos los conjuntos \begin{align*}
+E_{n,i} &= \inv{f}\left(\left[\frac{i - 1}{2^n}, \frac{i}{2^n}\right]\right) \\
+F_n &= \inv{f}\left([-n, +∞]\right)
+\end{align*}, ambos medibles por ser las imágenes inversas de medibles.
+
+Con esto, las funciones simples son \[ s_n = \sum_{i=1}^{n2^n} \frac{i-1}{2^n}\ind_{E_{n,i}} + n \ind_{F_n} \]
+\end{proof}
+
+Ahora vamos a por la prueba del \fref{thm:Aproximacion}.
+
+\begin{proof}[\fref{thm:Aproximacion}]
+Suponemos $f ∈ \espLp, \, f ≥ 0$ sin pérdida de generalidad (si no es mayor que cero, simplemente aproximamos la parte positiva y la parte negativa y construimos la aproximación como $f = s_n^+ - s_n^-$).
+
+Está claro que $S \nsubseteq \espLp$, y que $f$ es medible. Usamos el \fref{lem:AproxFuncSimples} y tenemos nuestra sucesión $0 ≤ s_n ≤ f$, con $s_n ∈ S ⊂ \espLp$. Dado que $\abs{f - s_n}^p ≤ f^p$, por el \nlref{thm:ConvDominada} y como $f^p$ es integrable, tenemos que $\pnorm{f - s_n} \convs 0$. Entonces, esa función $f$ arbitraria está en el cierre, y por lo tanto $\adh{S} = \espLp$ (teniendo en cuenta la topología dada por la norma $\pnorm{\cdot}$) así que $S$ es denso.
+\end{proof}
+
+Lo malo de la aproximación con funciones simples es que, por ejemplo, no nos permitirá construir una sucesión de funciones para aproximar la derivada de una función \espLp. Para eso, necesitaremos una aproximación algo mejor.
+
+\begin{theorem} Sea $X$ un espacio localmente compacto y Hausdorff\footnote{En otras palabras, espacios no demasiados raros.}. Sea μ una medida de Borel regular. Si $p ∈ (1,∞)$, entonces $C_c(X) ⊂ \overset{\text{denso}}{\hookrightarrow} L^p$, donde $C_c(X)$ son las funciones continuas de soporte compacto.
+\end{theorem}
+
+\begin{proof}
+Sea $S$ el espacio de funciones simples. Entonces si $s ∈ S$, $∀ε > 0$ existe una función $g ∈ C_c(X)$ tal que $g(x) = s(x)$ fuera de un conjunto $B_ε$ de medida menor que ε, esto es, que $g(x) = s(x)\; ∀x ∉ B_ε$ y $μ(B_ε) < ε$, esto por el \nref{thm:Lusin} ($s$ es casi continua, así que podemos considerar que es igual a una función continua salvo en un conjunto de medida ε).
+
+Sólo nos falta ver que \( \abs{g} < \norm{s}_∞ \label{eq:PrAproxCont:AbsG} \), de nuevo por el mismo teorema.
+
+Entonces, $\pnorm{g - s} ≤ 2ε^\frac{1}{p} \norm{s}_∞$. Sólo hay que ver que \[ \int_X \abs{g -s}^p = \int\limits_{X\setminus B_ε} \underbracket{\abs{g -s}^p}_{=0} + \int_{B_ε} \abs{g -s}^p \], y viendo \eqref{eq:PrAproxCont:AbsG}, tenemos que $\abs{g -s}^p ≤ \abs{g} + \norm{s}_∞ ≤ 2 \norm{s}_∞$ y ya sólo nos falta operar para sacara la desigualdad.
+\end{proof}
+
+Sobre lo de no localmente compacto, una cosa curiosa es que un espacio vectorial normado es infinitodimensional si y sólo si no es localmente compacto. Por ejemplo, la bola $\bola_1(0) ⊂ \espLp$ no es compacta.
 
 \section{SOC en espacio de Hilbert. Series de Fourier}
 
