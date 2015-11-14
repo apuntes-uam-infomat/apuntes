@@ -255,6 +255,7 @@
 \meas[X][\mu]#m
 \minuszero#m
 \essup#m
+\esinf#m
 \convsmed#m
 \mpos#m
 \msgn#m
