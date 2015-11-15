@@ -827,18 +827,25 @@ Lo siguiente que haremos es mirar si $\hat{β}$ y $S_R^2$ \textbf{son independie
 \end{obs}
 
 
-\subsubsection{Distribución de $\hat{β}$}
+\subsubsection{Distribución de $\hat{β}$ y contrastes de hipótesis individuales sobre los coeficientes $\hat{β}_i$}
+\[\esp{\hat{β}} = (X'X)^{-1}X' \underbrace{Xβ}_{\esp{Y}} = β\]
+\[\var{\hat{β}} = σ^2I_n · (X'X)^{-1}X' · X(X'X)^{-1} = σ^2(X'X)^{-1}\]
+
+Como $\hat{β}$ es una combinación lineal de $Y$ (que sigue una distribución normal):
+
 \[
-β \equiv N_{k+1}\left(β,σ^2(X'X)^{-1}\right)
+\hat{β} \equiv N_{k+1}\left(β,σ^2(X'X)^{-1}\right)
 \]
 
 Y la regresión simple, es un caso particular de esta fórmula.
+
+\textbf{Notação}: $q_{ij}\equiv$ entrada $i,j$ de la matriz $(X'X)^{-1}$
 
 \paragraph{Consecuencias:}
 
 \begin{itemize}
 	\item ¿Cuál es la distribución marginal de $\hat{β_j}$ a partir de la que hemos visto de la conjunta? Como vimos en el tema 1, es también una normal, con el correspondiente valor del vector $β$ como media y el elemento $j,j$ de la diagonal.
-	\[ β_j \equiv N\left(β_j, σ^2q_{jj}\right)\]
+	\[ \hat{β}_j \equiv N\left(β_j, σ^2q_{jj}\right)\]
 
 	Ahora, podemos estandarizar:
 
@@ -855,12 +862,12 @@ Y la regresión simple, es un caso particular de esta fórmula.
 	¿Cuál es el intervalo de confianza?
 
 	\[
-		IC_{n-α}(β_j) \equiv \left[\hat{β_j}\mp \mathcal{T}_{n-k-1}\underbrace{S_R\sqrt{q_{jj}}}_{\text{Error típico de }β_j} \right]
+		IC_{1-α}(β_j) \equiv \left[\hat{β_j}\mp \mathcal{T}_{n-k-1;\frac{α}{2}}\underbrace{S_R\sqrt{q_{jj}}}_{\text{Error típico de }β_j} \right]
 	\]
 
 	Y, como en regresión simple, estudiamos $H_0 : β_j = 0$:
 	\[
-		R = \left\{ \frac{|β_j|}{S_R\sqrt{q_{jj}}} > \mathcal{T}_{n-k-1;\frac{α}{2}} \right\}
+		R = \left\{ \frac{\abs{\hat{β}_j}}{S_R\sqrt{q_{jj}}} > \mathcal{T}_{n-k-1;\frac{α}{2}} \right\}
 	\]
 \end{itemize}
 
@@ -873,18 +880,18 @@ Para ello, transformamos eso en $H_0: β_1 = β_2 \to H_0 : β_1 - β_2 = 0$, en
 
 Para poder hacer esto, lo primero ha sido estimar $\hat{β}$ y lo siguiente será saber su distribución.
 
-\[a'\hat{β} = N\left(a'β,\underbrace{σ^2a'(X'X)^{-1}a}_{\left(E.T.(a'\hat{β})\right)^2}\right) \to \frac{a'\hat{β} - a'β}{S_R\sqrt{a(X'X)^{-1}}} \equiv \mathcal{T}_{n-k-1}\]
+\[a'\hat{β} = N\left(a'β,\underbrace{σ^2a'(X'X)^{-1}a}_{\left(E.T.(a'\hat{β})\right)^2}\right) \to \frac{a'\hat{β} - a'β}{S_R\sqrt{a'(X'X)^{-1}a}} \equiv \mathcal{T}_{n-k-1}\]
 
 Y con esto, ya podemos construir el intervalo de confianza para una combinación lineal de los parámetros:
 
 \[
-IC_{1-α}(a'β) = \left[ a'\hat{β} \mp \mathcal{T}_{n-k-1;\frac{α}{2}}E.T.(\hat{a'β}) \right]
+IC_{1-α}(a'β) = \left[ a'\hat{β} \mp \mathcal{T}_{n-k-1;\frac{α}{2}}E.T.(a'\hat{β}) \right]
 \]
 
 La región de rechazo correspondiente es:
 
 \[
-R = \left\{ \frac{a'\hat{β}}{\sqrt{σ^2a'(X'X)^{-1}a}} >  \mathcal{T}_{n-k-1;\frac{α}{2}} \right\} = \left\{ \frac{a'\hat{β}}{E.T.(\hat{β})} >  \mathcal{T}_{n-k-1;\frac{α}{2}} \right\}
+R = \left\{ \frac{a'\hat{β}}{S_R\sqrt{σ^2a'(X'X)^{-1}a}} >  \mathcal{T}_{n-k-1;\frac{α}{2}} \right\} = \left\{ \frac{a'\hat{β}}{E.T.(\hat{β})} >  \mathcal{T}_{n-k-1;\frac{α}{2}} \right\}
 \]
 
 \paragraph{Ejercicio:} ¿Y si queremos hacer un contraste unilateral $a'β > 0$?
@@ -907,7 +914,7 @@ La primera aproximación puede ser calcular la región de confianza de $β_1$ y 
 
 \paragraph{Vamos a ello formalmente:}
 \newcommand{\bpp}{β_{(p)}}
-\newcommand{\hbpp}{\hat{β_{(p)}}}
+\newcommand{\hbpp}{\hat{β}_{(p)}}
 \newcommand{\fpnk}{F_{p,n-k-1}}
 Sea $β_{(p)}$ un conjunto de coeficientes de $β$. Sea $\hbpp$ el correspondiente subconjunto de estimadores.
 
@@ -954,6 +961,13 @@ En el numerador tenemos una $\chi^2_p$, pero nos faltaría dividir por los grado
 1-α = P\left( (\hbpp - \bpp)'\left(S_R^2Q_p\right)^{-1}(\hbpp - \bpp) \leq p F_{p,n-k-1}\right)
 \]
 
+Esto nos da un elipsoide de confianza, es decir, sabemos que caerá en la región del elipsoide con probabilidad $1-α$:
+
+\begin{figure}[hbtp]
+	\centering
+	\inputtikz{elipsoide_confianza}
+\end{figure}
+
 \begin{example}
 Vamos a querer contrastar si son iguales los coeficientes $β_2,β_3$ las variables ``Income'' y ``Miles''. La hipótesis es: $H_0 : β_2=β_3$ a nivel $α=0.05$
 
@@ -968,10 +982,11 @@ Vamos a proceder al contraste. Construimos el estadístico para construir la reg
 t = \frac{|\hat{β_2} - \hat{β_3}|}{E.T.(\hat{β_2}-\hat{β_3})} = \frac{1.725}{15.687} \not \ge t_{45;0.025}
 \]
 
-Donde el error típico se ha calculado:
+Por tanto no podemos rechazar la hipótesis nula de que $β_2=β_3$.
+
+El error típico se ha calculado es:
 \[\sqrt{\var{\hat{β_2}-\hat{β_3}}} = \sqrt{(1,-1) S_R^2Q_p (1,-1)} = 15.687\]
 Y los 45 grados de libertad los obtenemos de $R$.
-
 
 \end{example}
 
