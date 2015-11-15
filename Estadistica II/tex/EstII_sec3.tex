@@ -643,41 +643,189 @@ Regresión simple es un caso particular de múltiple, tomando $k=1$.
 
 \subsubsection{Modelo}
 
-El modelo es:
+Tenemos una muestra de $n$ observaciones de las variables $Y$ y $X_1,…,X_k$. Para la observación $i$, tenemos el vector $(Y_i,x_{i1},x_{i2},…,x_{ik})$.
 
-\textcolor{red}{Completar de las traspas}
+El modelo de regresión lineal múltiple supone que:
+\[Y_i=β_0+β_1x_{i1}+…+β_kx_{ik}+ε_i,\ i=1,...,n\]
 
-Podemos agruparlo en forma matricial:
+donde las variables de error $ε_i$ verifican:
+\begin{enumerate}
+\item $ε_i$ tiene media cero, para todo $i$.
+\item Var($ε_i$) = $σ^2$, para todo $i$ (homocedasticidad).
+\item Son variables independientes.
+\item Tienen distribución normal.
+\item $n ≥ k + 2$ (hay más observaciones que parámetros).
+\item Las variables $X_i$ son linealmente independientes entre sí (no hay colinealidad).
+\end{enumerate}
 
-\textcolor{red}{Completar de las traspas}
+Las 4 primeras hipótesis se pueden reexpresar así: las observaciones de la muestra son independientes entre sí con
+\[Y_i \equiv N(β_0 +β_1x_{i1} +...+β_kx_{ik},σ),\ i=1,...,n\]
 
-\paragraph{Recordamos} que en el tema 1 vimos unas cuantas formas cuadráticas útiles para normales multivariantes con matriz de varianzas $σ^2I_n$ y media arbitraria.
+En forma matricial:
 
-\textcolor{red}{Completar de las traspas}
-
-¿Cómo estimarías $β$ a partir de $Y$ y $X$?
-
-Podemos hacer la proyección de $Y$ sobre $\mathcal{V}$
-
-Con esto, parece razonable estimar $µ$ mediante la proyección ortogonal de $T$ sobre $\mathcal{V}$ para obtener $\gor{Y} = X\gor{β}$. Equivalentemente: $||Y-X\gor{β}||^2 \leq || Y-Xβ||^2, ∀β\in ℝ^{k+1}$
-
-
-\textcolor{red}{completar cosas que faltan}
-
-\paragraph{Resumen}
-Si
-\[ Y \equiv N_n (Xβ,σ^2I_n)\]
-
-entonces, la proyección sobre \_\_\_\_\_\_\_ es:
 \[
-\hat{Y} = X\hat{β} = HY
+	\begin{pmatrix}
+		Y_1\\
+		Y_2\\
+		\vdots \\
+		Y_n
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		1 & x_{11} & … & x_{1k} \\
+		1 & x_{21} & … & x_{2k} \\
+		\vdots & \vdots &  & \vdots \\
+		1 & x_{n1} & … & x_{nk}
+	\end{pmatrix}
+	\begin{pmatrix}
+		β_1\\
+		β_2\\
+		\vdots \\
+		β_n
+	\end{pmatrix}
+	+
+	\begin{pmatrix}
+		ε_1\\
+		ε_2\\
+		\vdots \\
+		ε_n
+	\end{pmatrix}
 \]
-donde $H = X(X'X)^{-1}X^{-1}$. Además, \[\hat{β} = (X'X)^{-1}X'Y\]
 
 
-Esto tiene como consecuencia que el vector de residuos es: $e = Y-\hat{Y} = (I-H) Y$
+De forma más compacta, el modelo equivale a:
+\[Y =Xβ+ε,\ ε \equiv N_n(0,σ^2I_n) \iff Y \equiv N_n(Xβ,σ^2I_n)\]
 
-En cuanto a la interpretación geométrica, los residuos es la recta vertical que une la proyección ($\hat{Y}$) con el vector real ($Y$).
+\begin{defn}[Matriz de diseño]
+	La matriz $X$ se conoce como matriz de diseño
+\end{defn}
+
+\subsubsection{Estimación de los parámetros del modelo}
+
+La pregunta que lógicamente se nos viene a la cabeza en este momento es: ¿Cómo estimar $β$ a partir de $Y$ y $X$?. Para ello nos serviremos de la interpretación geométrica del modelo:
+
+Sea $\mathcal{V} ⊂ R^n$ el subespacio vectorial generado por las columnas de la matriz de diseño $X$ ($\dim(\mathcal{V}) = k + 1$).
+\[μ∈\mathcal{V} \iff ∃β∈R^{k+1} : μ=Xβ\]
+El modelo equivale a suponer $Y \equiv N_n(μ, σ^2I_n)$, donde $μ ∈ \mathcal{V}$.
+
+\newpage
+\begin{figure}[hbtp]
+	\centering
+	\inputtikz{proyecta_V}
+\end{figure}
+
+Con esto, parece razonable estimar $µ$ mediante la proyección ortogonal de $Y$ sobre $\mathcal{V}$ para obtener $\hat{Y} = X\hat{β}$. Equivalentemente: $\norm{Y-X\hat{β}}^2 \leq \norm{Y-Xβ}^2, ∀β\in ℝ^{k+1}$
+
+\begin{defn}[Estimador mínimos cuadrados]
+
+	Al $\hat{β}$ que minimiza
+	\[\norm{Y - Xβ}^2 = \sum_{i=1}^n (Y_i - β_0 - β_1x_{i1} - … - β_kx_{ik})^2\]
+	se le denomina estimador de mínimos cuadrados.
+\end{defn}
+
+Veamos qué podemos sacar de lo visto hasta ahora para averiguar quién es exactamente $\hat{β}$:
+
+Para que $\hat{Y}$ sea la proyección de $Y$ sobre $\mathcal{V}$ es necesario y suficiente que se satisfagan las ecuaciones normales:
+
+\begin{defn}[Ecuaciones normales]
+	Tomando $e = Y - \hat{Y}$ como el vector residuo, las ecuaciones normales se satisfacen si:
+	\[X'(Y - \hat{Y})=0 \iff X'e = 0\]
+\end{defn}
+
+Que se satisfagan estas ecuaciones es equivalente a decir que la resta $Y - \hat{Y}$ da un vector perpendicular a la base $\mathcal{V}$. Sustituyendo $\hat{Y} = X\hat{β}$:
+
+\[X'(Y - X\hat{β}) = 0 \iff X'Y = X'X\hat{β}\]
+
+Ya que las filas de $X'$ (las columnas de $X$) son independientes, sabemos que $X'X$ tiene rango completo y por tanto es invertible. Y llegamos a la expresión para nuestro estimador de mínimos cuadrados $\hat{β}$:
+\begin{equation}
+	\boxed{\hat{β} = (X'X)^{-1}X'Y}
+\end{equation}
+
+
+\begin{obs}
+	En regresión simple se tiene que:
+	\[
+		X\equiv
+		\begin{pmatrix}
+			1 & x_1\\
+			\vdots & \vdots \\
+			1 & x_n
+		\end{pmatrix}
+		\text{ y que: }
+		X'X =
+		\begin{pmatrix}
+			n & \sum x_i \\
+			\sum x_i & \sum x_i^2
+		\end{pmatrix}
+	\]
+\end{obs}
+
+Con lo visto hasta el momento sabemos que $\hat{Y} = X\hat{β} = X(X'X)^{-1}X'Y$, es decir, que nuestra $\hat{Y}$ está expresada como producto de $Y$ por una matriz que llamaremos:
+
+\begin{defn}[Hat matrix]
+	\[H = X(X'X)^{-1}X'\]
+	se conoce como hat matrix, puesto que da $Y$ gorro: $\hat{Y} = HY$.
+\end{defn}
+
+La hat matrix $H$ tiene las siguientes \textbf{propiedades}:
+\begin{itemize}
+	\item Es matriz de proyección ortogonal sobre $\mathcal{V}$.
+	\item Es simétrica e idempotente.
+	\item Tiene rango $k+1$ (la dimensión del espacio $\mathcal{V}$ sobre el que proyecta).
+\end{itemize}
+
+\begin{obs}
+	Podemos servirnos de la hat matrix para expresar el vector de residuos:
+	\[e = Y - \hat{Y} = Y - HY = (I - H)Y\]
+	Donde $(I-H)$ es una matriz simétrica e idempotente con rango $rg(I-H)=~n-~(k~+~1)$, que proyecta sobre el espacio ortogonal $\mathcal{V}^\perp$.
+\end{obs}
+
+Para acabar esta sección enumeramos algunas propiedades de los parámetros:
+\begin{itemize}
+\item $\hat{β}$ es el estimador de máxima verosimilitud (EMV) de $β$:
+\[L(β,σ)= \left(\frac{1}{\sqrt{2π}σ}\right)^n exp\left\{-\frac{1}{2σ^2} \norm{Y−Xβ}^2 \right\}.\]
+
+\item El EMV de $σ^2$ es:
+\[\hat{σ}^2 = \frac{\norm{Y−Xβ}^2}{n} = \frac{\norm{e}^2}{n} = \frac{\sum_{i=1}^n e_i^2}{n}\]
+
+\item El vector $\hat{β}$ tiene distribución $N_{k+1}(β, σ^2(X′X)^{−1})$ (en la siguiente sección se demuestra).
+\end{itemize}
+
+\subsubsection{Estudio de la varianza residual}
+Un estimador insesgado de $σ^2$ es la varianza residual $S_R^2$ , es decir, la suma de los residuos al cuadrado, corregida por los grados de libertad apropiados (en este caso $n-\dim{(\mathcal{V})}$):
+\[S_R^2 = \frac{\sum e_i^2}{n-(k+1)} = \frac{\norm{e}^2}{n-k-1} = \frac{\norm{Y - \hat{Y}}^2}{n-k-1}\]
+
+Si nos fijamos en que:
+\[\norm{Y - \hat{Y}}^2 = Y'(I-H)(I-H)Y = Y'(I-H)Y\]
+
+y sabiendo que la matriz $I-H$ es simétrica e idempotente, si recordamos la proposición \ref{prop:tema1_pepino} y demostramos $μ(I-H)μ'=0$, podemos determinar que la distribución de $S_R^2$:
+
+Dado que $μ∈\mathcal{V}$ y sabiendo que $μ=XB$:
+\[(I-H)μ = (I-H)XB = 0\]
+Ya que el vector $(I-H)$ proyecta sobre $\mathcal{V}^\perp$.
+
+Así llegamos a que:
+\[\frac{\norm{Y-\hat{Y}}^2}{σ^2} = \frac{Y'(I-H)Y}{σ^2}=\]
+\begin{equation}
+	\boxed{\frac{(n-k-1)S_R^2}{σ^2} \equiv χ_{n-k-1}^2}
+\end{equation}
+
+
+Además si tomamos esperanzas en ambos lados de la igualdad obtenemos:
+\[\frac{(n-k-1)·\mathbb{E}(S_R^2)}{σ^2} = n-k-1\]
+\begin{equation}
+	\boxed{\mathbb{E}(S_R^2) = σ^2}
+\end{equation}
+
+Lo siguiente que haremos es mirar si $\hat{β}$ y $S_R^2$ \textbf{son independientes}. Esto es cierto dado que se cumple que $(X'X)^{-1}X' · (I-H)=0$:
+\[(X'X)^{-1}X' · (I-H) = (X'X)^{-1}X' - (X'X)^{-1}X' · X(X'X)^{-1}X' =0\]
+
+\begin{obs}
+	El lema de Fisher \ref{lemma:fisher} no es más que el resultado de aplicar los resultados vistos en esta sección al caso particular del modelo:
+	\[y_i = β_0 + ε_i \iff X=\begin{pmatrix}1\\ \vdots \\ 1\end{pmatrix}\]
+	En este caso tenemos que $\dim{(V)}=1$
+\end{obs}
+
 
 \subsubsection{Distribución de $\hat{β}$}
 \[
