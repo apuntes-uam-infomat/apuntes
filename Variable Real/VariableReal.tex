@@ -1301,8 +1301,70 @@ $1 < p < ∞$ & sí & sí & $L^{\frac{p}{p-1}}$ \\
 $L^1$ & no & sí & $L^∞$ \\
 $L^∞$ & no & no & $\mathcal{M}_{\text{Radon}} (\mop{spec} L^∞)$
 \end{tabular}
-\caption{Tabla resumen con los duales de los bichos $Lmierdas$, donde ser un espacio separable significa que admite un conjunto denso y numerable.}
+\caption{Tabla resumen con los duales de los bichos \espLp, donde ser un espacio separable significa que admite un conjunto denso y numerable.}
 \end{table}
+
+% Nota: estas son las clases del tal Sandro.
+
+\subsection{Convolución}
+
+\begin{defn}[Convolución] Dadas dos funciones $\appl{f,g}{ℝ^N}{ℝ}$ se define la convolución (denotadada por $\ast$) como \[ (f \ast g) (x) ≝ \int_{ℝ^N} f(x-y) f(y) \dif y \] para casi todo $x ∈ ℝ^N$.
+\end{defn}
+
+La convolución es conmutativa, y además si $f ∈ \espLp$ y $g ∈ L^{p'}$, entonces $f * g$ está bien definida. % TODO: Demostrarlo y usar Hodler.
+
+Este producto nos permitirá definir lo que se llamará el álgebra de Banach, donde tendremos un producto de escalares, una suma de vectores y un producto de vectores.
+
+\begin{theorem}[Desigualdad\IS de Young general] Sean $p,q,r ≥ 1$ tales que $\frac{1}{p} + \frac{1}{q} + \frac{1}{r} = 2$. Sean $f ∈ L^p(ℝ^N)$, $g ∈ L^q(ℝ^N)$, $h ∈ L^r(ℝ^N)$. Entonces
+\( \abs{\int_{ℝ^N} f(x) (g * h)(x) \dif x} ≤ C_{p,q,r,N} \norm{f}_p \norm{g}_q \norm{h}_r \label{eq:DesYoungGeneral} \)
+, donde $C_{p,q,r,N} = (C_pC_qC_r)^N$ con \[ C_α^2 = \frac{α^\frac{1}{α}}{α'^{\frac{1}{α'}}} \qquad α=p,q,r\]
+
+Además, si $p,q,r > 1$ entonces la iguladad en \eqref{eq:DesYoungGeneral} se tiene si y sólo si \begin{align*}
+f(x) &= A \exp (-p'(x-a) J(x-a) + ikx) \\
+g(x) &= B \exp (-q'(x-b) J(x-b) + ikx) \\
+h(x) &= C \exp (-q'(x-c) J(x-c) + ikx)
+\end{align*} con $A,B,C ∈ ℂ$, $a,b,c,k ∈ ℝ^N$ con $a = b + c$, y además con $J$ una matriz real, simétrica y definida positiva.
+\end{theorem}
+
+Este teorema tiene una variante cutre.
+
+\begin{theorem}[Desigualdad\IS de Young cutre] Sean $f ∈ \espLp$, $g ∈ L^q$  y $\frac{1}{p} + \frac{1}{q} = 1 + \frac{1}{r}$, con $1 ≤ p,q,r ≤ ∞$. Entonces tenemos la siguiente desigualdad: \[ \norm{f*g}_r ≤ \norm{f}_p \norm{g}_q \]
+\end{theorem}
+
+Y además una variante cutrísima, que esta sí demostraremos.
+
+\begin{theorem}[Desigualdad\IS de Young cutrísima] Sean $f ∈ L^1$ y $g ∈ \espLp$, con $1 ≤ p ≤ ∞$. Entonces \[ \norm{f \ast g}_p ≤ \norm{f}_1 \norm{g}_p\]
+\end{theorem}
+
+\begin{proof}
+El primer paso que tenemos que demostrar nosotros es que sale con $p = ∞$. % TODO.
+
+Vamos a suponer ahora $p = 1$. Consideramos ahora la función $x \mapsto F(x,y) ≝ f(x,y) g(y)$. Esta función la podemos integrar porque consideramos $y$ fija, así que tenemos que \[ \int_{ℝ^N} \abs{f(x-y) g(y)} \dif x = \abs{g(y)} \int_{ℝ^N} \abs{f(x-y)} \dif x = g(y) \norm{f}_1 \]
+
+Con esto, podemos hacer la doble integral: \[ \iint\limits_{ℝ^N × ℝ^N} \abs{f(x-y) g(y)} \dif y \dif x = \norm{f}_1 \int_{ℝ^N} \abs{g(y)} \dif y = \norm{f}_1 \norm{g}_1 \] y ya tenemos la desigualdad.
+
+Sólo nos falta el caso $1 < p < ∞$. Fijamos $x ∈ ℝ^N$ y consideramos la función $y \mapsto \abs{f(x-y)}\abs{g(y)}^p$, que está en $L^1$. Entonces podemos ver que $\abs{f(x-y)}^\frac{1}{p} \abs{g(y)} ∈ L^p$.
+
+Ahora hacemos un truco: \begin{multline*} \int_{ℝ^N}\abs{f(x-y)}\abs{g(y)} \dif y = \int_{ℝ^N} \abs{f(x-y)}^\frac{1}{p'}\abs{f(x-y)}^\frac{1}{p}\abs{g(y)} \dif y \eqreasonup[≤]{\text{\nref{prop:DesHolder}}} \\
+≤ \left(\int \abs{f(x-y)}^{\frac{p'}{p'}} \dif y\right)^{\frac{1}{p'}} \left(\int \abs{f(x-y)}^\frac{p}{p}\abs{g(y)}^p \dif y \right)^{\frac{1}{p}} = \norm{f}_1^\frac{1}{p'} \left(\int \abs{f(x-y)} \abs{g(y)}^p \right)^{\frac{1}{p}} \end{multline*}, lo qe nos deja la siguiente desigualdad que podemos integrar:
+\begin{align*}
+(\abs{f} * \abs{g})^p &≤ \norm{f}_1^{\frac{p}{p'}} (\abs{f}*\abs{g})^p \\
+\int (\abs{f} * \abs{g})^p (x) \dif x &≤ \int \norm{f}_1^{\frac{p}{p'}} (\abs{f}*\abs{g})^p (x) \dif x \\
+\pnorm{f*g}^p ≤ \norm{f}_1^\frac{p}{p'} \int (\abs{f} * \abs{g}^p) (x) \dif
+\end{align*} y como tanto $\abs{f}$ como $\abs{g}^p$ están en $L^1$, podemos aplicar la demostración que habíamos hecho antes para $p = 1$, así que nos queda que \begin{align*} \pnorm{f*g}^p &≤ \norm{f}_1^{\frac{p}{p'}} \norm{f}_1 \norm{g^p}_1 \\
+\pnorm{f * g}^p &≤ \norm{f}_1^p \norm{g}_p^p
+ \end{align*} y ya tenemos la desigualdad.
+\end{proof}
+
+\begin{prop} Sean $f ∈ L^1$, $g ∈ L^p$, con $1 ≤ p ≤ ∞$. Entonces \[ \essop f * g ⊆ \essop f + \essop g = \set{z ∈ ℝ^N \tq z = x + y,\, x ∈ \essop f,\, y ∈ \essop g} \]
+\end{prop}
+
+\begin{proof}
+Vemos que \[ (f*g)(x) ≝ \int_{ℝ^N} f(x-y) g(y) \dif y = \int\limits_{(x - \essop f) ∩ \essop g} f(x-y) g(y) \dif y \]
+
+Tomamos entonces $x ∈ (\essop f + \essop g)^c$, así que $x$ no se puede expresar como suma de elementos de $\essop f$ y $\essop g$. Es decir, que $x - x' ≠ x''$ para todos $x' ∈ \essop f$, $x'' ∈ \essop g$. Entonces está claro $(x - \essop f) ∩ \essop g = ∅$.
+\end{proof}
+
 
 \section{SOC en espacio de Hilbert. Series de Fourier}
 
