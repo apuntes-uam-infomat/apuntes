@@ -64,7 +64,7 @@
 \vspace*{0.1\textheight}
 \noindent
 \textcolor{titlepagecolor}{
-	\Huge\textbf{\textsf{\thetitle}}
+	\Huge{\fontfamily{FiraSansOT-OsF}\selectfont\thetitle}
 }\par
 % Una línea que ocupe toda la página
 \noindent\makebox[\linewidth]{\color{titlepagecolor}\rule{1.1\paperwidth}{2pt}}\par
@@ -82,15 +82,17 @@
 \noindent
 \begin{minipage}{0.5\textwidth} % Dividimos en dos partes: Autores y la firmita.
 \begin{mdframed}[topline=false, rightline=false, bottomline=false, linewidth=1pt]
+\fontfamily{ppl}\selectfont
 \theauthor\par
 \vspace{5pt}
-\noindent\textit{UAM - \thedate}
+\noindent{\small UAM - \thedate}
 \titlepagebuilddate % Esta cadena la configuramos arriba, se puede quitar con una opción.
 \let\and\@oldauthorand
 \end{mdframed}
 \end{minipage}
 ~
 \begin{minipage}{0.5\textwidth} % Ahora la firmita.
+\fontfamily{ppl}\selectfont
 	\begin{flushright}
 	\footnotesize
 	Apuntes UAM \par
