@@ -1335,10 +1335,184 @@ Un esquema sobrevive si al menos 1 de sus vástagos pertenece al esquema.
 
  Una cota inferior de supervivencia de cruce es:
 
- \[ S_i = 1 - p_c\frac{d(H)}{l-1}\]
+ \[ S_c = 1 - p_c\frac{d(H)}{l-1}\]
 
 
 \end{example}
+
+
+\begin{problem}[1]
+
+Buscar el máximo de $f(x) = (x-63)^2$ en $[0,63]$ con algoritmos genéticos, utilizando:
+\begin{itemize}
+	\item Selección proporcional a fitness
+	\item Cruce en 1 punto con probabilidad $p_c = 1$.
+	\item Mutación con $P_m = \frac{1}{24}$
+\end{itemize}
+
+\spart Completa la tabla de la población inicial.
+
+
+\begin{tabular}{c|cc}
+cromosomas & x & fitness\\\hline
+100110 & & \\
+110001 & & \\
+110110 & & \\
+011001 & & 
+\end{tabular}
+
+
+\spart
+Esquemas: $H_1 = 1*0***$ y $H_2=0******$
+
+
+Cómo sobrevive cada esquema a cada uno de los pasos del algoritmo en 1 iteración.
+
+\solution
+\ppart
+Población inicial:
+\begin{center}
+\begin{tabular}{c|cc}
+cromosomas & x & fitness\\\hline
+100110 & 38 & 625\\
+110001 & 49 & 196\\
+110110 & 54 & 81\\
+011001 & 25 & 1444
+\end{tabular}
+\end{center}
+\ppart 
+
+\[S_s(H) = n_H(t) \frac{\gor{f_H})t}{\gor{f}(t)}\; \text{ para } H\in \{H_1,H_2\}\]
+
+
+Vamos a calcular cada término
+
+\[\gor{f}(t) = \frac{1444+81+196+625}{4}=586.5\]
+\[\gor{f}_{H_1}(t) = \frac{625+196+81}{3}=300.7\]
+\[\gor{f}_{H_2}(t) = \frac{1444}{1}=1444\]
+
+Ahora ya podemos calcular la supervivencia (el número esperado de individuos) para cada esquema:
+
+\[S_s(H_1) = 3·300.7\frac{1}{586.5} = 1.54\]
+\[S_s(H_2) = 1·1444\frac{1}{586.5} = 2.46\]
+
+\paragraph{Conclusiones:}
+
+Esto significa que en media, el cuarto individuo va a salir en media $2.4$ veces y los otros 3, en media $1.56$ veces. 
+
+No es casualidad que $1.54+2.46 = 4$, número de individuos.
+
+Pero no es lo mismo el número esperado de individuos de un esquema en caso de que haya cruces o en caso de que no. Si hay mutaciones o no, etc
+
+Aplicamos la fórmula de supervivencia tras el cruce:
+
+\[
+S_c = 1-p_c\frac{d(H)}{l-1} \to \left\{\begin{array}{c}S_c(H_1) = 1-1\frac{2}{5}=0.6\\S_c(H_2) = 1-1\frac{0}{5} = 1 \end{array}\right.
+\]
+
+
+Y ahora, calculamos la supervivencia tras la mutación, con una fórmula máginay novedosa:
+
+\[
+S_M = (1-P_M)^{o(H)} \to \left\{\begin{array}{c}S_M(H_1) = (1-\frac{1}{24})^2=0.92\\S_M(H_2) = 1-1\frac{0}{5} = 1 \end{array}\right.
+\]
+
+
+Y podríamos preguntarnos, porque somos muy quisquillosos: ¿cuál es la probabilidad total de supervivencia del esquema? El producto de las 3. Pero... $2.46$ no es una probabilidad...
+
+Sería\footnote{No lo hemos visto en clase, pero tiene sentido}
+\[S_T(H_1) = \frac{1.54}{4}·0.6·0.92= 0.21\]
+\[S_T(H_2) = \frac{2.46}{4}·1·0.96  = 0.59\]
+
+Como vemos, tiene mucho sentido que el esquema 2 tenga más probabilidades de supervivencia, ya que genera individuos con in fitnees muy alto.
+
+\end{problem}
+
+\begin{problem}
+
+Queremos resolver \href{https://es.wikipedia.org/wiki/Problema_del_viajante}{el problema del viajante} con algoritmos genéticos.
+
+
+Para este problema, definir los cromosomas, el ftness el cruce y la mutación.
+
+\solution
+Lo primero es definir el cromosoma. \textbf{No tienen por qué ser bits} es una información importante para esto.
+
+Los \textbf{genes} son arrays de enteros entre $1$ y $n$, siendo $n$ el número de nodos que visitar, donde el elemento $i$ del array es el elemento $i$ en ser visitado.
+
+El \textbf{fitness} podría ser la distancia. El problema es que queremos minimizar la distancia y la función fitness, cuanto más alta mejor. Es por ello que tomamos $f = \frac{1}{distancia}$
+
+El \textbf{cruce} es algo más raro: Sea $32|1465$ y $21|4563$. Vamos a construir cada hijo. El primer hijo toma la parte izquierda del primer padre y reordena su parte derecha por el orden dado según el otro padre. Es decir, el primer hijo será $32|---$ donde la segunda parte dentrá los números $1,4,5,6$ tal y como vienen en el padre derecho, esto es $1,4,5,6$ (vemos que se han intercambiado el $5$ y el $6$). El primer hijo será $32|1456$. El segundo hijo será $21|---$ donde la parte derecha serán los números $3,4,5,6$ según el orden del primer padre, es decir: $21|3465$
+
+\end{problem}
+
+\begin{problem}
+Vamos a construir el vector $ω$ de regresión logística con algoritmos genéticos.
+
+Nos piden definir la codificación de los cromosomas, fitness, cruce y mutación
+
+\solution
+
+\textbf{Cromosoma} un array de floats.
+
+\textbf{Fitness} \% de acierto podría ser una opción el problema es que podemos tener varias rectas con el mismo porcentaje de acierto. Entonces, podemos tomar como fitness el sumatorio de la probabilidad a posteriori de cada punto (o algo así).
+
+\textbf{Cruce} Podemos tomar el cruce de siempre, ya que el orden no influye como en el caso anterior. El cruce de siempre se denomina \concept{Cruce\IS uniforme}. Otro posible cruce sería dar sólo 1 hijo a partir de 2 padres con la media de los valores.
+
+\textbf{Mutación} Una posible mutación puede ser cambiarle el signo. Esto es una mutación demasiado heavy. Otra posibilidad es añadirle ruido aleatorio, por ejemplo con una $N(0,1)$.
+
+\end{problem}
+
+\chapter{Clustering}
+
+Agrupar elementos que son parecidos.
+
+Vamos a ver un ejemplo manual:
+
+\begin{center}
+\begin{tabular}{ccc}
+Perro & pez volador & besugo \\
+Pinguino & murciélago & dipnoi\\
+gallina & delfín & gorrión
+\end{tabular}
+\end{center}
+
+
+¿Qué podemos clasificar aquí? Según ``tierra, mar y aire'', o según ``mamífero, no mamífero'' ... Hay muchas posibilidades para agrupar.
+
+Podemos definir los siguientes atributos: 
+
+\begin{itemize}
+	\item Medio.
+	\item Respiración.
+	\item Alimentación.
+	\item Volador o no.
+\end{itemize}
+
+Antes de empezar, tenemos que definir la selección de atributos, la medida de proximidad, el algoritmo de clústering y cómo validar los resultados, es decir, cómo agrupar los agrupamientos.
+
+\begin{defn}[m-clústering]
+Sea un conjunto de datos $X = \{\{\vec{x}_1\},...,\{\vec{x}_n\}\}$
+
+Definimos un m-clustering de $X$ como la partición en m-subconjuntos $c_1,...,c_m$ disjuntos no vacíos.
+
+\end{defn}
+
+\section{Medidas de proximidad entre puntos: métrica}
+
+\begin{defn}[Métrica]
+\href{https://es.wikipedia.org/wiki/Distancia}{https://es.wikipedia.org/wiki/Distancia}
+\end{defn}
+
+\begin{itemize}
+	\item \concept{Distancia\IS euclídea:} $\sqrt{\sum}$
+	\item \concept{Distancia\IS Manhattan:} $d(x,y) = \sum_{d=1}^n |x_d - x_d'|$
+\end{itemize}
+
+Pero también necesitamos definir la distancia entre un punto y un cluster. Podemos definirla como la distancia al centro, la distancia al más cercano o la distancia al más lejano.
+
+También tendríamos que definir la distancia entre 2 clusters, de la misma manera que antes. Media de las distancias, mínima(enlace simple) y máxima (enlace completo).
+
 %% Apéndices (ejercicios, exámenes)
 \appendix
 
