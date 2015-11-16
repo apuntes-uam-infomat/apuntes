@@ -261,6 +261,7 @@
 \msgn#m
 \mfin#m
 \sop#m
+\essop#m
 \esplloc#m
 \esplloc[1]#m
 \esplloc[1][\real^N]#m
