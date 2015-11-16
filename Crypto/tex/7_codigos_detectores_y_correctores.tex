@@ -408,3 +408,126 @@ Algoritmo de detección-corrección & \textbf{PITO}\\
 \end{center}
 \end{minipage}
 \end{example}
+
+
+\section{Código de barras}
+Vamos a estudiar el código de barras, un código bien conocido por todos y presente en todos los productos que compramos.
+
+En los códigos de barras las barras codifican exactamente la misma información que los números y se emplean puesto que resulta más sencillo para la máquina interpretar las barras que los números.
+
+Aunque la máquina trabaja con las barras, los números siguen presentes a modo de redundancia, para que cualquier persona pueda leerlos y corregir a la máquina si se produce un error.
+
+Existen dos tipos principales de códigos de barras:
+\begin{enumerate}
+\item \textbf{EAN}: European Articlle Number
+\[\text{EAN} \subset F_{10}^{13}\]
+\item \textbf{UPC}: Universal Product Code
+\[\text{UPC} \subset F_{10}^{12}\]
+\end{enumerate}
+
+Es interesante considerar $F_{10} = \ent_{10}$ puesto que nos resultará más intuitivo a la hora de estudiar cómo funciona este sistema.
+
+Si consideramos el código de barras como la secuencia de números:
+\[x_0,x_1,...,x_{12}\]
+en el caso EAN y sin el $x_0$ para el caso UPC.
+
+De forma general, la estructura general de un código es:
+\[\underbrace{x_0,x_1,...,x_6}_{\text{código del fabricante}}\underbrace{x_7,x_8,...,x_{11}}_{\text{Código de producto}}\underbrace{x_{12}}_{\text{Redundancia}}\]
+
+La redundancia se emplea para comprobar que el mensaje ha sido leído correctamente mediante la comprobación de que se satisface la ecuación:
+\[x_{12} = -\left(\sum_{i=1}^5x_{2i} + 3 \sum_{i=0}^5x_{2i+1} \right)\mod 10\]
+
+Con lo que hemos estudiado hasta ahora de códigos podemos ver que, para el caso EAN/UPC tenemos:
+\[n=13/12, \ \ k=12/11, \ \ M = 10^{12}/10^{11}\]
+
+La distancia mínima de estos códigos es, como mucho, 2, puesto que cualquier combinación de números es válida siempre que coincida en bit de redundancia.
+
+\subsection{Detección de errores}
+A priori no sabemos si es posible cambiar un único número sin necesidad de cmabiar el código de redundancia.
+
+Por tanto este sistema puede detectar, como mucho 1 error. Para comprobar que realmente puede detectar un error necesitamos comprobar que la distancia ínima es exactamente 2.
+
+\begin{proof}
+Vamos a comprobar que siempre detecta un error. 
+
+Supongamos que tenemos un $x_i$ que, por algún motivo, se cambia por $x_i+e$ donde $e\in \ent_{10}$ no nulo.
+
+En este caso, cuando el código de barras va a comprobar la valided del código leído, calcula:
+\[x_{12}+\left(\sum_{i=1}^5x_{2i}+ 3 \sum_{i=0}^5x_{2i+1} \right)\mod 10 =  \left\{\begin{array}{lll}e & si & \text{i es par} \\ 3e & si & \text{i es impar}\end{array}\right. \mod 10\]
+
+El sistema no será capaz de detectar el error siempre que $e$ y $3e$ sean distintos de 0 módulo 10.
+
+Es evidente que $e=0 \mod 10$ siendo $e \in \ent_{10}$ sólamente si $e=0$, caso que no nos preocupa ya que entonces no habría error.
+
+Por otro lado, puesto que $(3,10)=1$ podemos ver que $3e = 0 \mod 10 \implies e=0 \mod 10$.
+\end{proof}
+
+Con esta demostración tenemos claro que el código de barras va a siempre detectar un error. Sin embargo, es posible que se produzcan dos errores sin que el sistema sea capaz de detectarlo.
+
+Por ejemplo, si dos posiciones pares se leen mal y en una se lee $x_i+e$ y en la otra $x_j-e$ el error no sería detectable.
+
+A la hora de que el error sea detectado y un humano tenga que introducir el código de manera manual, el error más probable que implica el cambio de más de una cifra es la permutación de dos cifras.
+
+Siempre que esta permutación se produza entre dos cifras en posición par o dos cifras en posición impar el error puede no ser detectable de manera obvia.
+
+Veámos que ocurre cuando se permutan dos cifras en posiciones par e impar respectivamente.
+
+\begin{proof}
+
+Sean las cifras $x_{2i}$, $x_{2j+1}$, el error cometido en cada caso es $\pm e=x_{2j+1}-x_{2i}$.
+
+Al comprobar la validez del código, nos comeremos el error si tenemos que:
+\[e-3e = 0 \mod 10 \implies e=5\]
+\end{proof}
+
+No obstante, tenemos un total de 45 posibles intercambios de los cuales hay sólo 5 que no son detectables: 
+\[\{0-5,1-6,2-7,3-8,4-9\}\]
+
+\obs Si observamos un teclado estándar podemos ver que estas parejas de dígitos nunca están contiguas de forma que se reduce el riesgo de aceptar por válido un mensaje con un error.
+
+De forma general, si cambiamos sólamente el parámetro del código de barras, es decir, si tomamos:
+\[x_{12} = -\left(\sum_{i=1}^5x_{2i} + A \sum_{i=0}^5x_{2i+1} \right)\mod 10\]
+
+Veamos qué ocurre en función del valor de $A$.
+\begin{itemize}
+\item \textbf{Si $A$ es par}
+
+Detecta el intercambio de cifras en posicion par con cifras en posición impar, pero puede cambiar un único dígito sin darnos cuenta, es decir, la distancia mínima pasaría a ser 1.
+
+\item \textbf{Si $A=5$ }
+Caso penoso, no hay error posible que podamos detectar.
+
+\item \textbf{Si $A$ es impar distinto de 5}
+No siempre podremos detectar el intercambio de cifras en posiciones par e impar respectivamente pero mantenemos distancia mínima igual a 2.
+\end{itemize}
+
+\subsection{Corrección de errores}
+Si sabemos que se ha producido un único error y sabemos qué cifra es la que está mal, es posible corregir el error puesto que podremos calcular el error $e$ o $3e$ según el dígito que haya cambiado.
+
+En el caso de que sea $3e =k$ el error, podremos despejar $e$ puesto que $3 \in U(\ent_{10})$ 
+
+\begin{example}
+Sean los siguientes productos:
+\[\begin{array}{ll}
+\text{Leche Lauki entera} & 8-414700-01101-3\\
+\text{Leche Lauki desnatada} & 8-414700-01102-0
+\end{array}\]
+
+En ocasiones hay códigos reducidos empleados para productos donde no es viable escribir todos los dígitos de un código de barras estándar. 
+\[\begin{array}{ll}
+\text{Yogur Danone de fresa} & 8410-5158
+\end{array}\]
+
+Tras ver estos ejemplos (no relacionados con lo que haremos en este ejemplo), lo que haremos será comprobar si el siguiente código es válido.
+\[6-39844-06292-3\]
+
+Para empezar, puesto que tiene 12 cifras podemos ver que es un código UPC.
+
+Realizando la comprobación estándar vemos que:
+\[\left(\sum_{i=1}^5x_{2i} + 3 \sum_{i=0}^5x_{2i+1} \right)\mod 10 = 2 \neq 0\]
+lo que nos indica que hay un error de distancia 2.
+
+A partir de esto no tenemos forma de saber en qué cifra se ha producido el error puesto que todas las cifras pueden cambiar dando lugar a este error con independencia de que sea una cifra en posición par o impar.
+
+
+\end{example}
