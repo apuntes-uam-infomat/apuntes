@@ -3,22 +3,101 @@
 
 \def\printbuilddate{\footnotetext{\tiny Documento compilado el \today\ a las \currenttime}}
 \def\enableindexbuilddate{\renewcommand{\compdate}{\tiny{\today\, \currenttime}}}
+\def\titlepagebuilddate{\par \vspace{3pt} \tiny \today\, \currenttime \vspace{-4pt}}
+\newif\if@apuntestitlepage
 
 \DeclareOption{nobuilddate}{%
 	\def\printbuilddate{}%
 	\def\enableindexbuilddate{}%
+	\def\titlepagebuilddate{}%
+}
+
+\DeclareOption{titlepage}{
+	\@apuntestitlepagetrue
+	\PassOptionsToClass{\CurrentOption}{custombase}
+}
+
+\DeclareOption{notitlepage}{
+	\@apuntestitlepagefalse
+	\PassOptionsToClass{\CurrentOption}{custombase}
 }
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
+
+\ExecuteOptions{titlepage}
 \ProcessOptions
 
-\LoadClass[titlepage]{custombase}
+\LoadClass{custombase}
 
 \RequirePackage{pdfpages}
 \RequirePackage{datetime}
+\RequirePackage{environ}
 
 \if@removechapters
 	\numberwithin{equation}{subsection}
+\fi
+
+%%%% Página de título superguay.
+
+\definecolor{titlepagecolor}{cmyk}{1,.50,0,.10} % Definimos un color fijo para usar.
+
+% Esto nos viene bien por si luego queremos
+% reemplazar el título (en traducciones por ejemplo).
+\def\@abstracttitle{Resumen}
+
+% Incluimos el abstract (resumen)
+\newif\if@abstractset % Para ver si el usuario lo ha configurado o no.
+\RenewEnviron{abstract}{
+	\global\@abstractsettrue		% Decimos que el abstract se ha usado.
+	\global\let\@abstractbody\BODY	% Y nos lo guardamos.
+}
+
+\if@apuntestitlepage % Nos piden la página de título, así que renovamos el comando \maketitle.
+\renewcommand{\maketitle}{
+\begin{titlepage}
+% Primera parte: el título en modo chulo con un margen en la parte superior
+\vspace*{0.1\textheight}
+\noindent
+\textcolor{titlepagecolor}{
+	\Huge\textbf{\textsf{\thetitle}}
+}\par
+% Una línea que ocupe toda la página
+\noindent\makebox[\linewidth]{\color{titlepagecolor}\rule{1.1\paperwidth}{2pt}}\par
+\vspace{60pt} % Margen hasta el abstract
+\noindent
+\if@abstractset % Escribimos el abstract sólo si el usuario lo ha escrito.
+\begin{minipage}{0.6\linewidth}
+\setlength{\parskip}{5pt}
+\setlength{\parindent}{0pt}
+\textbf{\@abstracttitle}\par
+\small\@abstractbody
+\end{minipage}
+\fi
+\vfill  % Llenamos hasta el final de la página con espacio.
+\noindent
+\begin{minipage}{0.5\textwidth} % Dividimos en dos partes: Autores y la firmita.
+\begin{mdframed}[topline=false, rightline=false, bottomline=false, linewidth=1pt]
+\theauthor\par
+\vspace{5pt}
+\noindent\textit{UAM - \thedate}
+\titlepagebuilddate % Esta cadena la configuramos arriba, se puede quitar con una opción.
+\let\and\@oldauthorand
+\end{mdframed}
+\end{minipage}
+~
+\begin{minipage}{0.5\textwidth} % Ahora la firmita.
+	\begin{flushright}
+	\footnotesize
+	Apuntes UAM \par
+	Doble Grado Mat.Inf. \par
+	\vspace{5pt}
+	\href{http://github.com/VicdeJuan/Apuntes}{Código en Github}
+	\end{flushright}
+\end{minipage}
+\vspace{30pt}
+\end{titlepage}
+}
+
 \fi
 
 \newcommand{\compdate}{}
