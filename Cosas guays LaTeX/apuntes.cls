@@ -46,8 +46,13 @@
 \def\@abstracttitle{Resumen}
 
 % Incluimos el abstract (resumen)
+
+% Primero eliminamos la definición del entorno abstract, si es que está.
+% (si usamos \renewenvironment peta en algún caso extraño).
+\let\abstract\@undefined
+\let\endabstract\@undefined
 \newif\if@abstractset % Para ver si el usuario lo ha configurado o no.
-\RenewEnviron{abstract}{
+\NewEnviron{abstract}{
 	\global\@abstractsettrue		% Decimos que el abstract se ha usado.
 	\global\let\@abstractbody\BODY	% Y nos lo guardamos.
 }
