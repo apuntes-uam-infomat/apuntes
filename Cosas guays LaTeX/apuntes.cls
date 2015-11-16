@@ -64,7 +64,7 @@
 \vspace*{0.1\textheight}
 \noindent
 \textcolor{titlepagecolor}{
-	\Huge{\fontfamily{FiraSansOT-OsF}\selectfont\thetitle}
+	\Huge{\textbf{\fontfamily{lmss}\selectfont\thetitle}}
 }\par
 % Una línea que ocupe toda la página
 \noindent\makebox[\linewidth]{\color{titlepagecolor}\rule{1.1\paperwidth}{2pt}}\par
