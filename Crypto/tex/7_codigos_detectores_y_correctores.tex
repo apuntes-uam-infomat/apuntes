@@ -534,16 +534,17 @@ A partir de esto no tenemos forma de saber en qué cifra se ha producido el erro
 
 \section{International Standard Book Number}
 \begin{defn}[ISBN]
-El International Standard Book Number (en español, Número Estándar Internacional de Libros o Número Internacional Normalizado del Libro),abreviado ISBN, es un identificador único para libros, previsto para uso comercial.
+El International Standard Book Number (en español, Número Estándar Internacional de Libros o Número Internacional Normalizado del Libro), abreviado ISBN, es un identificador único para libros, previsto para uso comercial.
 
 Fue creado en el Reino Unido en 1966 por las librerías y papelerías británicas W. H. Smith y llamado originalmente Standard Book Numbering (en español, ‘numeración estándar de libros’), abreviado SBN. Fue adoptado como estándar internacional ISO 2108 en 1970.
 \end{defn}
 
-Este código es un conjunto de números de la forma:
+Este código se compone de un conjunto de números de la forma:
 \[\underbrace{x_1,x_2,...,x_9}_{\text{información}}\underbrace{x_{10}}_{\text{control}} \ \ \ x_i \in \{0,...,9\} \text{ para } i=1...9\]
 
 El bit de control se emplea para comprobar que se mantiene la igualdad:
-\[\sum_{i=1}^{10}ix_i = 0 \mod 11 \implies x_{10} = \sum_{i=1}^9ix_i \mod 11\]
+\[\sum_{i=1}^{10}ix_i = 0 \mod 11 \implies -10 x_{10} = \sum_{i=1}^9ix_i \mod 11 \implies x_{10} = \sum_{i=1}^9ix_i \mod 11\]
+
 
 \begin{example}
 Si tenemos el ISBN ``84-239-5922-?'' podemos calcular el bit de control como:
@@ -557,20 +558,20 @@ Pero no podemos representar el 10 con un solo dígito con nuestro sistema decima
 
 En el caso del código bancario deciden poner un 1 en estos casos lo que resulta en una idea pésima pues reducimos la distancia mínima del código.
 
-La opción empleada en el ISBN es emplear un ``X'', que representa con un sólo caracter el número 10 en códigos romanos.
+La opción empleada en el ISBN es emplear un ``X'', que representa con un sólo caracter el número 10 en el sistema romano.
 
 Ahora que sabemos cómo está definido el ISBN podemos ver que:
 \[ISBN \subset (\ent_{11})^{10}\]
 pero no es un código lineal puesto que podemos salirnos del código al sumar dos números válidos, ya que el 10 sólo puede aparecer en el bit de control.
 
-Con lo que hemos estudiado hasta ahora de códigos podemos ver que para el código ISBN tenemos:
-\[n=10, \ \ k=9, \ \ M = 10^{0}\]
+Con lo que hemos estudiado hasta ahora de códigos podemos ver que para el ISBN tenemos:
+\[n=10, \ \ k=\emptyset, \ \ M = 10^{9}\neq 11^k \ \forall k \in \nat\]
 
 \subsection{Detección de errores}
 
 A priori sólo podemos garantizar que la distancia mínima es menor o igual que 2.
 
-Si logramos probar que este código siempre detecta un error, tendremos que su distancia mínima es exactamente 2. Vamos a ello
+Si logramos probar que este código siempre detecta un error, tendremos que su distancia mínima es exactamente 2. Vamos a ello.
 \begin{proof}
 Supongamos que un dígito se ha cambiado y tenemos $\tilde{x}_i= x_i +e$.
 
@@ -589,7 +590,7 @@ Es decir, que no haya error.
 
 Por otro lado es bien sencillo ver que dos errores no siempre serán detectados puesto que pueden complementarse pero ¿Qué ocurre si dos dígitos se intercambian?.
 
-En esta ocasión tendremos $x_i=x_i+e$, $x_j=x_j-e$ siendo $e=x_j-x_i$. Nestro código no detectará el error siempre que
+En esta ocasión tendremos $x_i=x_i+e$, $x_j=x_j-e$ siendo $e=x_j-x_i$. Nuestro código no detectará el error siempre que
 \[0 = \sum_{i=1}^{10}ix_i = ie-je = e(i-j) \implies i=j \Or e=0\]
 
 Por tanto sólo \textbf{no detectaremos} el error en caso de que el dígito se intercambie consigo mismo, es decir, si no hay error.
@@ -597,7 +598,7 @@ Por tanto sólo \textbf{no detectaremos} el error en caso de que el dígito se i
 Queda claro por tanto que este código siempre detecta el intercambio de dos dígitos.
 
 \subsection{Corrección de errores}
-Supongamos que hay un dígito que se ha perdido.
+Supongamos que hay un dígito que se ha perdido y que sabemos qué dígito es.
 
 En este caso podríamos recuperar el valor perdido $X$ resolviendo la ecuación
 \[\sum_{i=1, i\neq i_0}^{10}ix_i + i_0X = 0 \mod 11\]
@@ -611,7 +612,7 @@ El NIF consiste en una serie de caracteres de la forma:
 
 Algunas entidades utilizan mal el NIF pues piden al usuario introducir únicamente las cifras y dejan que la máquina calcule la letra con lo que se pierde el beneficio de la redundancia.
 
-La idea es que el usuario introduzca los 8 caracteres de modo que la máquina puede comprobar si se ha producido algún error.
+La idea es que el usuario introduzca los 9 caracteres de modo que la máquina puede comprobar si se ha producido algún error.
 
 Veamos cómo se calcula la letra del NIF. Vamos a tratar de averiguarlo a modo de ejercicio.
 \begin{example}
@@ -622,19 +623,19 @@ Este módulo será igual a la cantidad de letras que queremos emplear que será,
 Tenemos claro por tanto que calcularemos la letra haciendo una operación del tipo:
 \[\text{algo} \mod n \text{ con } 21 \leq n \leq 26\]
 
-Si tomamos dos NIF que tengan la misma letra y calculamos el módulo del DNI en los módulos 19,21,22,23,24,25 vemos que sólo coinciden los resultados si tomamos módulo 23.
+Si tomamos dos NIF que tengan la misma letra y calculamos el valor del DNI en los módulos 19,21,22,23,24,25 vemos que sólo coinciden los resultados si tomamos módulo 23.
 
 \end{example}
 
 Por tanto tenemos que la letra de control se utiliza para comprobar la valided del NIF dado atendiendo a la fórmula:
-\[\text{DNI}\mod 23 \sum_{i=0}^710^{i-1}x_i= n\]
+\[\text{DNI}\mod 23 = \sum_{i=0}^710^{i}x_i= n\]
 donde $n$ es un valor asociado a una letra según una tabla que relaciona las letras empleadas con los números menores que 23 de forma aleatoria.
 
 Una vez sabemos cuales son los posibles valores de cada caracter del NIF podemos ver que
 \[NIF \subset \{0,...,9\}^8 \times \{A,...,Z\} \subset (\ent_{23})^9\]
 
 Con lo que hemos estudiado hasta ahora de códigos podemos ver que para el código NIF tenemos:
-\[n=9, \ \ k=\emptyset, \ \ M = 10^{8}\neq 23^k\]
+\[n=9, \ \ k=\emptyset, \ \ M = 10^{8}\neq 23^k \ \forall k \in \nat\]
 
 \subsection{Detección de errores}
 Nuevamente, como en los casos anteriores, tenemos que la distancia mínima será como mucho 2.
@@ -644,7 +645,7 @@ Vamos a demostrar que es exactamente 2.
 Supongamos que un número es leído de forma incorrecta y tenemos $x_i=x_i+e$.
 
 En esta ocasión tendremos tendremos
-\[\sum_{i=0}^710^{i-1}x_i - n \mod 23 = 10^i e \mod 23\]
+\[\sum_{i=0}^710^{i}x_i - n \mod 23 = 10^{i} e \mod 23\]
 que sólo podrá ser 0 si $e=0$.
 
 Por tanto el NIF siempre es capaz de detectar un error por lo que la distancia mínima será 2.
@@ -652,15 +653,16 @@ Por tanto el NIF siempre es capaz de detectar un error por lo que la distancia m
 
 \subsection{Corrección de errores}
 De la misma forma, también será posible recuperar un caracter borrado (sabiendo a qué posición pertenecía) resolviendo la ecuación:
-\[X=(10^{i_0})^{-1} \left( n- \sum_{i=0,i\neq i_0}^710^ix_i \right)\]
+\[X=(10^{i_0})^{-1} \left( n- \sum_{i=0,i\neq i_0}^710^{i}x_i \right)\]
 en la que podemos garantizar la existencia del inverso puesto que estamos trabajando en un cuerpo.
 
 Por otro lado, si se produce un intercambio de dos caracteres tendremos $x_i=x_i+e$, $x_j=x_j-e$ siendo $e=x_j-x_i$. Al comprobar la validez del código, nos comeremos el error siempre que:
-\[0 = \sum_{i=0}^710^{i-1}x_i - n \mod 23 =(10^i-10^j)e = 10^j(10^{i-j}-1)e\]
+\[0 = \sum_{i=0}^710^{i}x_i - n \mod 23 =(10^i-10^j)e = 10^j(10^{i-j}-1)e\]
 
 Puesto que estamos en un cuerpo sabemos que $10^j\neq 0 \ \forall j$. No obstante aún tenemos el riesgo de que:
 \[10^{i-j}-1 = 0 \mod 23\]
 
 Pero por el pequeño teorema de Fermat sabemos que $10^{22}=1 \mod 23$
 
-TO BE COMPLETED..
+TO BE COMPLETED
+
