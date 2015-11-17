@@ -481,6 +481,28 @@ Una vez que ya nos manejamos con las cosas básicas de \LaTeX, vamos a pasar a c
 \section{¿Cómo funciona \LaTeX?}
 \label{sec:FuncionamientoLaTeX}
 
+El capítulo anterior pretendía ser un tutorial básico de \LaTeX, para que podamos ponernos a escribir rápidamente. Pero para avanzar, creo que es importante saber cómo funciona este sistema, más que nada para entender de dónde salen los errores y saber exactamente qué es lo que estamos haciendo. Además, como curiosidad informática tampoco viene nada mal.
+
+Para ser precisos, más que de \LaTeX\ deberíamos hablar de \TeX, que es el ``núcleo'' escrito por Donald Knuth. Este núcleo es un compilador que, a grandes rasgos, tiene dos fases: la de expansión y la de compilación.
+
+Cuando compilamos un documento para generar un PDF, lo que va haciendo \TeX\ es ir leyéndolo carácter a carácter, e ir traduciéndolo. Los caracteres normales se pasan sin modificar, y los comandos (los que empiezan por $\backslash$, como \verb|\textbf|) se expanden.
+
+La expansión de un comando no es más que sustituirlo por su definición sustituyendo los argumentos. Por ejemplo, yo puedo definir el comando \verb|\vector|, que recibe un argumento (denotado por \verb|#1|) y que se expande como \verb|$\mathbf{#1}$|. Así, cuando \TeX\ encuentre \verb|\vector{a}| lo sustituirá por \verb|$\mathbf{a}$|. Este proceso se va realizando de forma recursiva: cuando el compilador expande un comando y se encuentra que la expansión ha metido más comandos, los expande a ellos también. Todo esto se hace en orden de izquierda a derecha.
+
+Así, comando a comando, \TeX\ va expandiendo el documento hasta llegar a la forma más básica, que son los comandos primitivos de \TeX, que simplemente dicen cosas tan de bajo nivel ``añade este carácter a la línea'' o ``ahora usa esta fuente''. Con esos comandos, \TeX\ va decidiendo cómo va a ser la estructura del PDF que va a generar (los saltos de línea o de página, o la colocación de las imágenes, por ejemplo).
+
+Finalmente, esa información se pasa a la ``segunda etapa'' de \TeX, que transforma esos comandos primitivos en un formato estándar para un documento que nosotros podamos visualizar: normalmente es PDF, pero también pueden ser otros como DVI.
+
+La parte específica de \LaTeX\ consiste en comandos adicionales que facilitan la vida al usuario, pero a grandes rasgos el proceso de compilación es el mismo.
+
+En la práctica, hay algunas cosas algo más complicadas, pero básicamente así funciona \LaTeX. Lo primero que leerá del documento será el \verb|\documentclass|, que le dirá qué archivo base cargar: ese archivo cargará los comandos de \LaTeX\ básicos y prepará el documento (tipo de fuente, márgenes, papel, etc). Después, las sentencias \verb|\usepackage| cargarán otros documentos con más macros y comandos, y en cuanto empiece el documento con \verb|\begin{document}| el compilador empezará a procesar todos esos caracteres y comandos escritos, expandiendo estos últimos hasta llegar a las instrucciones primitivas para mostrar tu PDF.
+
+\paragraph{¿Esto es importante?} Más o menos, msás que nada porque nos explica de dónde salen dos tipos problemas muy habituales. El primero son los relacionados con la expansión de comandos: \LaTeX\ no es como un lenguaje de programación donde primero se evalúan los argumentos y luego se le pasan a la función. Aquí es al revés: primero se desarrolla la función (el comando) y luego se procesan los argumentos. Y si en algún momento algo no cuadra (cosa probable) la compilación falla.
+
+La otra cuestión es algo que no hemos dicho explícitamente, pero que se puede ver: \TeX\ es un sistema de una sola pasada. Lee el fichero y va procesando según le llega, pero en ningún momento mira hacia atrás ni hacia delante\footnote{Por ejemplo, redefinir un comando a mitad del documento sólo afecta a partir de ese punto, no antes.}. El principal inconveniente es que a veces tendremos que recompilar el documento para que pille todos los datos, como las refrencias. Las referencias las escribe \LaTeX\ en un documento aparte cuando se las encuentra, así que si ponemos una referencia antes de declarar la etiqueta, no va a saber resolverlo. En la segunda pasada ya se encontrará esa etiqueta declarada en el archivo aparte así que ya podrá rellenar el comando \verb|\ref| correctamente.
+
+Para más información sobre cómo funciona \LaTeX, es recomendable echarle un ojo al libro \textit{\TeX\ for the Impatient} o \textit{The \TeX Book}.
+
 \section{\LaTeX\ para usuarios avanzados}
 
 
