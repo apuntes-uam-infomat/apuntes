@@ -1100,13 +1100,133 @@ Queremos contrastar $H_0 : β_1 = ... = β_n = 0$.
 
 La idea intuitiva es que si $SCR$ es muy pequeño, tenemos poca variabilidad explicada sería razonable que aceptáramos la hipótesis nula de que las variables regresoras no influyen mucho.
 
-Por el contrario, si $SCR$ es muy grande, tenemos mucha variabilidad explicada, por lo que la hipóteis nula no es muy razonable.
+Por el contrario, si $SCR$ es muy \textbf{grande}, tenemos mucha variabilidad explicada, por lo que la hipóteis nula no es muy razonable y deberíamos \textbf{rechazar}. Por el contrario, si $SCR$ es \textbf{pequeña} aceptamos $H_0$.
 
 
-Para ello, necesitamos saber la distribución de $SCR$ bajo la hipótesis nula. Tenemos una forma cuadrática, si se cumple que $µ'(H-M)µ = 0$
+Para ello, es imprescindible definir ``grande'' y ``pequeño''. Deberían tener las mismas unidades. No puede ser que por cambiar de unidades afecte a la validez de la hipótesis. Además, necesitamos saber la distribución de $SCR$ bajo la hipótesis nula. 
+
+\begin{prop}[Distribución SCR en $H_0:∀i\;β_i=0$]
+
 \[
-\frac{SCR}{σ^2} \equiv \chi^2_{?}
+\frac{SCR}{σ^2} \equiv \chi^2_{k}
 \]
+\end{prop}
+\begin{proof}
+Tenemos $SCR = Y'(H-M)Y$, una forma cuadrática, teniendo $H-M$ simétrica e idempotente (por construcción).
+
+Ahora, para poder aplicar la proposición del tema 1, necesitamos $µ'(H-M)µ = 0$.
+
+Sabemos que $µ$, bajo $H_0$ tiene todas sus coordenadas iguales, con lo que está en el subespacio $1_n$, por lo que las proyecciones sobre $V$ y sobre $1_n$ de $µ$ serán $µ$. Esto quiere decir que:
+\[ Hµ = µ \;\;\; Mµ = µ \to (H-M)µ=0\]
+
+
+Por otro lado, los $k$ grados de libertad:
+\[
+gl = \rg(H-M) = \tr(H-M) = \tr(H) - \tr(M) = (k+1)-1 = k
+\]
+
+Esto se debe a que la traza de una matriz de proyección es la dimensión del espacio en el que proyectamos.
+
+\end{proof}
+
+As usual, como no conocemos $σ^2$, en la práctica utilizamos:
+\begin{prop}
+\[
+\frac{\displaystyle\frac{SCR}{kS_R^2}}{\displaystyle\frac{SCE}{n-k-1}} = \frac{\chi^2_k}{\chi^2_{n-k-1}}\sim F_{k;n-k-1}
+\]
+\end{prop}
+\begin{proof}
+Para ello necesitamos que $SCR$ y $SCE$ sean independientes. Son normas al cuadrado de vectores ortogonales. Estadísticamente, la ortogonalidad de vectores normales se traduce en independencia. 
+
+Para ello, vamos a ver que el producto de las matrices es 0 (utilizando la propiedad \ref{prop:tema1_pepino})
+
+\[
+(H-M)(I-H) = H-H-M+\underbrace{MH}_{M} = 0
+\]
+Sabemos que $MH=M$ por que, por un lado es proyectar en $V$ después de haber proyectado en un subespacio de $V$ ($1_n$) y en el otro, tenemos la proyección directamente sobre $1_n$.
+
+\end{proof}
+
+\subsubsection{Tabla anova}
+Para este caso, vamos a construir la tabla \concept{ANOVA} (análisis de la varianza)
+
+Este es el ejemplo de una tabla ANOVA simple:
+\begin{center}
+\begin{tabular}{c|ccccc}
+Fuente de variación & SC & gl & CM & F & p-valor\\\hline 
+Explicada & SCR & k & $\frac{SCR}{k}$ & $\displaystyle\frac{SCR/k}{SCE/(n-k-1)}$ & ...\\
+No explicada & SCE & n-k-1 & $\frac{SCE}{n-k-1}$ & ... & ...\\\hline
+total & & & & 
+\end{tabular}
+\end{center}
+
+\subsubsection{Coeficiente de determinación}
+\begin{defn}[Coeficiente\IS de determinación]
+Es una medida de la bondad del ajuste en el modelo de regresión múltiple \[R^2 = \frac{SCR}{SCT}\]
+\end{defn}
+
+\paragraph{Propiedades:}
+\begin{itemize}
+	\item $R^2≤1$ (ya que un cateto siempre es menor o igual que la hipotenusa)
+	\item Vamos a ver los casos extremos.
+	\subitem $R^2 = 1$ quiere decir que existe una relación lineal exacta debido a que \[R^2 = 1\implies SCR = SCT \implies SCE=0 \implies ∀i\;e_i=0\]
+
+	De hecho, podemos interpretar $R^2$ como un coeficiente de correlación múltiple entre las $k$ variables $X$ y la $Y$.
+	\subitem $R^2 = 0$ quiere decir que no existe una relación lineal debido a que \[R^2 = 0 \implies Σ(\hat{Y_i} - \gor{Y})^2 = 0 \implies \hat{Y_i}=\gor{Y} \implies \text{ ninguna X aporta información para calcular Y}\]
+	\item Se verifica que el estadístico $\displaystyle F = \frac{R^2}{1-R^2} \frac{n-k-1}{k}$
+	\begin{proof}
+		Esta identidad se obtiene inmediatamente utilizando la definición de $R^2$. Se deja como ejercicio para quien quiera escribirse la cuenta.
+	\end{proof}
+\end{itemize}
+
+Este coeficiente es útil en el contraste que estudiábamos anteriormente $H_0: ∀i\;β_i = 0$. En este contraste, es equivalente para rechazar o aceptar \begin{itemize}
+	\item $SCR$ es ``grande''.
+	\item $F$ es ``grande''.
+	\item $R^2$ se aproxima a 1.
+\end{itemize}
+
+
+El coeficiente de determinación para comparar distintos modelos de regresión entre sí tiene el siguiente inconveniente:
+Siempre que se añade una nueva variable regresora al modelo, $R^2$ aumenta, aunque el efecto de la variable regresora sobre la respuesta no sea significativo. ¿Porqué aumenta $R^2$? Porque la dimensión de $V$ aumenta provocando que disminuya $SCE$ (por algo que me he perdido) y al disminuir $SCR$, aumenta $SCR$ (porque su suma es constante) y aumenta $R^2$.
+
+Por ello, definimos:
+
+
+\begin{defn}[Coeficiente de determinación ajustado]
+\[\gor{R}^2 = 1 - \frac{SCE/(n-k-1)}{SCT/(n-1)}\]
+Esta nueva definición penaliza un aumento de las variables utilizadas. De esta manera, al aumentar $K$, sabemos que $R^2$ aumenta pero $\gor{R}^2$ puede aumentar o no. Depende de si la ganancia de información es mayor que la penalización de añadir más variables.
+\end{defn}
+
+Vamos a ver un ejemplo realmente ilustrativo.
+\begin{example}
+
+Vamos a utilizar el modelo de regresión múltiple para ajustar el grado del polinomio.
+
+El proceso a seguir podría ser: voy calculando $R^2$ para todos los grados que vaya teniendo hasta que tenga $R^2 = 1$, que hace que podamos explicar toda la varianza con estos datos. 
+
+
+Al aumentar el grado, obtenemos polinomios cada vez mejores (para estos datos).
+
+\begin{center}
+\includegraphics[scale=0.45]{img/RvsRAdj.png}
+\end{center}
+
+Si tomáramos una nueva muestra de datos, el modelo que tiene $R^2=1$ sería una mierda muy probablemente. En este caso, sería una bazofia absoluta ya que los datos han sido generados parabólicamente. Es por ello que el modelo con mayor $\gor{R}^2$ es el segundo.
+
+\end{example}
+
+
+\begin{example}
+
+Si un modelo es demasiado simple, tendremos muy poca varianza pero mucho sesgo. Por el otro lado, si el modelo es demasiado complejo, tenemos mucha varianza pero muy poco sesgo. Vamos a verlo con un ejemplo:
+
+\begin{center}
+\includegraphics[scale=0.45]{img/ModeloSimpleVsModeloComplejo.png}
+\end{center}
+
+En este ejemplo corroboramos lo dicho.
+	
+\end{example}
 
 \subsection{Contrastes de hipótesis lineales}
 \subsection{Modelo unifactorial}
