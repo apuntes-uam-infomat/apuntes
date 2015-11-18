@@ -1,0 +1,84 @@
+\chapter{Problemas Stiff}
+
+\begin{defn}[Problema Stiff]
+Decimos que el sistema
+\[\begin{array}{l}
+y'(t)=f(t,y(t)), \ t \geq 0 \\
+y(0) = y_0
+\end{array}\]
+es un problema Stiff si su resolución numérica por algunos métodos exige una disminución significativa del paso de integración (la $h$) para evitar inestabilidades.
+\end{defn}
+
+\begin{example}
+Consideramos el método numérico:
+\[y_{n+1} = y_n + \frac{h}{2}\left(f(x_{n+1},y_n+hf(x_n,y_n))+f(x_n,y_n)\right)\]
+con
+\[y'=f(x,y) = λy\]
+
+Este método puede reescribirse como:
+\[y_{n+1} = y_n + \frac{h}{2}(λ(y_n+hλy_n)+λy_n)=\left(1 +hλ+\frac{h^2λ^2}{2}\right)y_n\]
+
+Si estudiamos el error en este método tenemos que:
+\[e_{n+1} = \left(1 +hλ+\frac{h^2λ^2}{2}\right)e_n+R_n\]
+
+Si queremos poder garantizar la convergencia de este método necesitaremos, al menos, que el término que multiplica a $e_n$ tenga un valor absoluto menor que 1, es decir
+\[\norm{1+z+\frac{z^2}{2}} < 1, \text{ siendo } z=λh\]
+\end{example}
+
+\begin{example}
+Tomamos ahora el método
+\[y_{n+1} = y_n + hf(t_{n+1},y_{n+1})\]
+con
+\[y'=f(x,y) = λy\]
+
+Este método puede reescribirse como
+\[y_{n+1} = y_n + hλy_{n+1} \implies y_{n+1} = \frac{1}{1-hλ}y_n\]
+
+Si estudiamos el error tenemos:
+\[e_{n+1}=\frac{1}{1-hλ}e_n+R_n\]
+
+Igual que en el ejemplo anterior, para poder acotar el error necesitamos que
+\[\frac{1}{|1-z|} < 1 \implies 1 < |1-z| \implies (z_R+1)^2+z_I^2 > 1\]
+\end{example}
+
+\begin{defn}[Dominio de estabilidad lineal]
+El dominio de estabilidad lineal, $D$, de un método numérico es el conjunto de todos los números $z=hλ$ tales que la solución numérica
+\[\begin{array}{l}
+y'(x)=λy(x) \\
+y(0) = y_0
+\end{array}\]
+verifica que
+\[\lim_{n \to \infty}y_n = 0\]
+\end{defn}
+
+\begin{example}
+Para el método de Euler tenemos que el problema inicial
+\[\begin{array}{l}
+y'(x)=λy(x) \\
+y(0) = y_0
+\end{array}\]
+cumple
+\[y_{n+1}=y_n+λhy_n = (1+hλ)y_n\]
+
+Por recurrencia podemos ver que
+\[\lim_{n \to \infty}y_n=\lim_{n \to \infty}(1+hλ)^ny_0 = 0 \iff |1+hλ| < 1\]
+
+Por tanto, el dominio de estabilidad del método de Euler es el conjunto de todos los puntos $z=hλ$ tales que
+\[|1+z|<1\]
+
+\end{example}
+
+Veamos ahora cómo podemos generalizar esta idea a sistemas.
+
+\begin{defn}[Dominio de estabilidad (para sistemas)]
+Si tennemos un problema de la forma
+\[\begin{array}{l}
+y'(x)=Ay(x) \\
+y(0) = y_0
+\end{array}\]
+con $A$ una matriz cuadrada de dimensión $n$ con $\appl{y}{\real^n}{\real^n}$ definimos el dominio de estabilidad como el conjunto de todos los puntos $z=λ_ih$ con tales que
+\[\lim_{n \to \infty} y_n = \lim_{n \to \infty}(1+Ah)^ny_0 = 0\]
+cosa que sólo ocurre cuando
+\[|1+λ_ih|<1 \ \forall i\]
+donde $λ_i$ son los autovalores de la matriz $A$.
+\end{defn}
