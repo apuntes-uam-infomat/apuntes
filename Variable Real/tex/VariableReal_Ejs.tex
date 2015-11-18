@@ -188,9 +188,15 @@ Si esta integral se va a cero con el valor absoluto cuando $ε \to 0$ (y por lo 
 
 \solution
 
-\spart
+\spart Una función que nos permite pasar de productos a sumas es el logaritmo, así que vamos a ver qué pasa si tomamos $φ = \log$ en un espacio discreto. Por ser formales, diremos que $X = ℤ_n$, con $f(z) = x_z$ y la medida dada como $μ(z) = 1\;∀z ∈ ℤ_n$, de tal forma que  $\int f = \sum x_i$ y $μ(ℤ_n) = n$.
 
-\spart
+En este caso, φ no es convexa sino cóncava. Lo bueno es que entonces $-φ$ es convexa, así que podemos multiplicar por $-1$ en ambos lados de la desigualdad y se nos invierte. Así, lo que tenemos es que \[ \log\left(\frac{1}{n} \sum x_i\right) ≥ \frac{1}{n} \sum \log x_i  = \frac{1}{n} \log \prod x_i = \log \left(\prod x_i\right)^{\frac{1}{n}} \] y quitando los logaritmos ya tenemos lo que nos pedían.
+
+\spart Aquí tenemos que cambiar la medida, y decir que $μ(z) = α_z$, lo que nos queda que $μ(ℤ_n) = 1$, que en el fondo nos va a simplificar algo las cosas. Aplicando de nuevo la desigualdad de Jensen con $φ = \log$, tenemos que \begin{align*}
+\log\left(\int f \dif μ\right) &≥ \int \log f \dif μ \\
+\log\left(\sum α_i x_i\right) &≥ \sum α_i \log x_i = \log\left(\prod x_i^{α_i}\right)
+\end{align*}, que de nuevo se nos queda en lo que nos pedían demostrar si quitamos logaritmos.
+
 \end{problem}
 
 \begin{problem} Probar la \nlref{prop:DesHolder} como consecuencia de la \nlref{thm:DesigualdadJensen}.
@@ -198,5 +204,41 @@ Si esta integral se va a cero con el valor absoluto cuando $ε \to 0$ (y por lo 
 \solution
 
 La desigualdad de Hölder nos dice que, siendo $1 ≤ p ≤ + ∞$ y $q = \frac{p}{p - 1} ≥ 1$ de tal forma que $\frac{1}{p} + \frac{1}{q} = 1$, tenemos que \[ \int_X \abs{fg} \dif μ ≤ \norm{f}_p \norm{g}_q \]
+
+Para demostrarla, vamos a hacer un truco que consiste en montar una medida artificial. Sea \[ ν = \frac{f^p}{\norm{f}_p^p} \] una medida, cuya principal ventaja es que $ν(X) = \int_X \frac{f^p}{\norm{f}_p^p} \dif μ = 1$ y por lo tanto $\fint \dif ν\equiv \int \dif ν$.
+
+Sea $φ(z) = z^q$, convexa. Podemos aplicar ahora la desigualdad de Jensen a una función $h$ que ya veremos luego cómo montamos. La desigualdad nos dice que \begin{align*}
+\left(\int h \dif ν\right)^q &≤ \int h^q \dif ν \\
+\left(\int \frac{hf^p}{\norm{f}_p^p} \dif μ\right)^q &≤ \int \frac{h^qf^p}{\norm{f}_p^p} \dif μ
+\end{align*}
+
+Querríamos ahora que $hf^p$ fuese $fg$, así que tomamos $h = \frac{g}{f^{p-1}}$, que además nos da que $h^q f^p = \frac{g^qf^p}{f^{q(p-1)}} = \frac{g^qf^p}{f^p} = g^q$. Sustituyendo, tenemos que
+\begin{align*}
+\left(\int \frac{hf^p}{\norm{f}_p^p} \dif μ\right)^q &≤ \int \frac{h^qf^p}{\norm{f}_p^p} \dif μ \\
+\frac{1}{\norm{f}_p^{pq}} \left(\int fg \dif μ\right)^q &≤ \frac{1}{\norm{f}_p^p} \int g^q \dif μ \\
+\int fg \dif μ &≤ \norm{f}_p^{\frac{p(q-1)}{q}} \norm{g}_q \\
+\int fg \dif μ &≤ \norm{f}_p \norm{g}_q
+\end{align*}, que es la desigualdad de Hölder ya que $p\frac{q - 1}{q} = p\frac{\frac{p}{p-1} - \frac{p - 1}{p-1}}{\frac{p}{p - 1}} = \frac{\frac{1}{p-1}}{\frac{1}{p-1}}$ = 1.
+\end{problem}
+
+
+\begin{problem} Probar que la desigualdad de Hölder es una igualdad si y sólo si $\abs{f}^p = λ\abs{g}^{q}$ CTP para alguna constante $λ > 0$, con $q$ el exponente conjugado de Hölder.
+
+\solution
+
+Si $\abs{f}^p = λ\abs{g}^{q}$, entonces \[ \norm{f}_p = \left(\int_X \abs{f}^p \right)^{\frac{1}{p}} = \left(\int_X λ \abs{g}^q \right)^{\frac{1}{p}} = λ^\frac{1}{p} \norm{g}_q^{\frac{q}{p}} \], y como $\frac{q}{p} + 1 = \frac{q + p}{p} = q$, entonces $\norm{fg}_q = λ^{\frac{1}{p}} \norm{g}_q^q$.
+
+Por otra parte \[ \int_X \abs{fg} \dif μ = \int_X \abs{λ^\frac{1}{p} g^\frac{q}{p} g} \dif μ  = λ^{\frac{1}{p}} \int_X g^q \dif μ = λ^{\frac{1}{p}} \norm{g}_q^q \], así que en este sentido queda demostrado.
+
+Supongamos ahora que $\norm{fg}_1 = \norm{f}_p \norm{g}_q$. Entonces, no sé cómo demostrarlo.
+
+\end{problem}
+
+\begin{problem}[5] Probar por inducción las siguientes generalizaciones de la \nlref{prop:DesHolder}.
+
+\ppart Dados $1 < p_1, p_2, \dotsc, p_n < ∞$ con $f_i ∈ L^{p_i}$ para $i = 1,2, \dotsc, n$, entonces se cumple que \[ \abs{\int \prod f_i \dif μ} ≤ \prod \norm{f_i}_{p_i} \] cuando $\sum\frac{1}{p_i} = 1$.
+\solution
+
+\spart Sabemos que para $n = 1,2$ se cumple. Supongamos que se cumple para $n - 1$ y vamos a demostrar que se cumple para $n$. Consideramos $g = \prod_{i=1}^{n-1} f_i$, con $\sum_{i=1}^{n-1}\frac{1}{p_i} = 1$, que sabemos que cumple que $\norm{g}_1 ≤ \prod \norm{f_i}_{p_i}$, luego en concreto $g ∈ L^1$.
 
 \end{problem}
