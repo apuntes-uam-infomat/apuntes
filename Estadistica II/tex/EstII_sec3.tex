@@ -953,7 +953,6 @@ En el numerador tenemos una $\chi^2_p$, pero nos faltaría dividir por los grado
 
 \paragraph{Conclusión}
 
-%TODO: esto está bien seguro
 \[
 \frac{(\hbpp - \bpp)'Q_p^{-1}(\hbpp - \bpp)}{pS_R^2} \equiv F_{p,n-k-1}
 \]
@@ -1011,6 +1010,7 @@ Ahora ya podemos calcular el intervalo de confianza para $Y_0$ dado un vector $X
 
 \section{Análisis de la varianza (ANOVA)}
 
+\subsection{Conceptos previos}
 Las variabilidades se miden mediante la suma de cosas al cuadrado. Vamos a definir 3 sumas de cuadrados:
 
 \begin{defn}[Suma de cuadrados\IS total]
@@ -1140,6 +1140,7 @@ Para ello necesitamos que $SCR$ y $SCE$ sean independientes. Son normas al cuadr
 
 Para ello, vamos a ver que el producto de las matrices es 0 (utilizando la propiedad \ref{prop:tema1_pepino})
 
+\label{prop:SCRIndepSCE}
 \[
 (H-M)(I-H) = H-H-M+\underbrace{MH}_{M} = 0
 \]
@@ -1148,7 +1149,7 @@ Sabemos que $MH=M$ por que, por un lado es proyectar en $V$ después de haber pr
 \end{proof}
 
 \subsubsection{Tabla anova}
-Para este caso, vamos a construir la tabla \concept{ANOVA} (análisis de la varianza)
+Para este caso, vamos a construir la tabla \concept{ANOVA} (análisis de la varianza) 
 
 Este es el ejemplo de una tabla ANOVA simple:
 \begin{center}
@@ -1224,9 +1225,124 @@ Si un modelo es demasiado simple, tendremos muy poca varianza pero mucho sesgo. 
 \includegraphics[scale=0.45]{img/ModeloSimpleVsModeloComplejo.png}
 \end{center}
 
-En este ejemplo corroboramos lo dicho.
-	
+En este ejemplo, el primer caso, demasiado simple tiene muy poca varianza. Todas las pendientes son similares, pero por el contrario, siempre estimamos mal. 
+
+En el tercer caso, si cogemos un único polinomio, vemos que es un poco malo, pero si tomáramos la media de todos ellos, más o menos se asemeja bastante a la parábola, es decir, la esperanza es el valor esperado con lo que el sesgo sería muy pequeño. Por el contrario, cada polinomio es de su padre y de su madre, es decir, tiene mucha varianza estimar así.
 \end{example}
 
 \subsection{Contrastes de hipótesis lineales}
+
+Queremos contrastar $H_0 : Aβ = 0$, donde $A$ es una patriz $p×(k+1)$ con $\rg(A) = p < k+1$.
+
+\begin{example} 
+En el modelo 
+$Y_i = β0 + β_1x_{i1} + β_2x_{i2} +β_3x_{i3} + ε_{i}$ 
+queremos contrastar
+
+\[
+H_0 : β_1 = β_2\; β_0=0 \dimplies Aβ = 0 \to A = \begin{pmatrix}
+0&1&-1&0\\
+1&0&0&0
+\end{pmatrix}
+\]
+\end{example}
+
+\begin{defn}[Modelo\IS reducido ($M0$)]
+Es el modelo resultante al imponer las restricciones de $H_0$.
+\end{defn}
+\begin{example}
+Tomando el \concept{Modelo\IS completo} del ejemplo anterior
+\[\left.\begin{array}{c} Y_i = β0 + β_1x_{i1} + β_2x_{i2} +β_3x_{i3} + ε_{i}\\H_0 : β_1 = β_2\; β_0=0\end{array}\right\} \to Y_i = β_1(x_{i1} + x_{i2}) + β_3x_3 + ε_i
+\]
+
+El modelo simple es $Y_i = β_1(x_{i1} + x_{i2}) + β_3x_3 + ε_i$
+\end{example}
+
+\paragraph{Cómo elegir un modelo}
+
+Nos podemos plantear qué modelo podemos elegir. La idea sería elegir siempre lo simple, pero tenemos que ver cuánto perdemos con la simplificación. A esto se le denomina \concept{Principio\IS de incremento relativo de la variabilidad}
+
+% % % Dibujo
+
+La idea es que $SCE_0 > SCE$. Geometricamente, vemos que $SCE$ es la hipotenusa y $SCE_0$ es un cateto. Por otro lado, la variabilidad no explicada de un modelo simple siempre va a ser menor que la $SCE$ de un modelo complejo para los mismos datos.
+
+Entonces la idea sería rechazar $H_0$ cuando se pierta mucho al considerar $M0$ en lugar de $M$, es decir cuando $SCE_0 - SCE$ sea muy grande. Para evitar problemas generados por cambios de escala, tomamos \[\frac{SCE_0 - SCE}{SCE}\]
+
+¿Y esto que distribución tiene? ¿Cómo podemos definir ese ``suficientemente grande''? Las sumas de cuadrados ($SCE$) son $\chi^2$ y el cociente de $\shi^2$'s es una $F$. Vamos a estudiarlo formalmente:
+
+
+\paragraph{Distribución de $(SCE_0 - SCE)/SCE$}
+
+Sea $X$ la matriz de diseño del modelo reducido correspondiente. ``Hat matrix'' es $H_0 = X_0(X_0'X_0)^{-1}X_0'$, donde tenemos $\rg(H_0) = \tr(H_0) = k+1-p$. El rango es la traza porque es una matriz de proyección y eso es lo que debería ser debido a ........
+
+Vamos a construir el estadístico:
+
+\[
+SCE_0 - SCE = Y'(I-H_0)Y - Y'(I-H)Y = Y'(H-H_0)Y
+\]
+
+Vamos a ver si $H-H_0$ es simétrica e idempotente, teniendo que $H_0H_0 = H_0$, por ser una matriz de proyección. 
+\[
+(H-H_0)(H-H_0) = H - H_0H - HH_0 + H_0 = H_0
+\]
+
+Aquí tenemos que  $H_0H = HH_0 = H_0$ por el mismo argumento que en \ref{prop:SCRIndepSCE} Ambas son matrices de proyección sobre subespacios en los que uno está contenido dentro del otro, por lo que da igual el orden en el que proyectar y además, será lo mismo que proyectar sobre el pequeño.
+
+Ahora, necesitamos ver que $µ'(H-H_0)µ = 0$ para poder tener que $SCE_0 - SCE \sim \chi^2$. Aquí el razonamiento vuelve a ser muy parecido.
+\[(H-H_0)µ = Hµ - H_0µ = µ-µ = 0\]
+Proyectar $µ$ con $H$ y con $H_0$ no cambia $µ$, debido a que $µ$ está en el subespacio de proyección pequeño $V_0$. ¿Porqué sabemos que $µ∈V_0$? Porque, asumiendo $H_0$ ...
+
+\[
+\frac{SCE_0 - SCE}{σ^2} \overset{H_0}{\equiv}\chi^2_{p}\; \frac{SCE}{σ^2} \equiv \chi^2_{n-k-1}
+\]
+
+Si fueran independientes, su cociente sería una $F$. Vamos a ver la independencia utilizando \ref{prop:tema1_pepino}
+
+\[(H-H_0)(I-H) = H-H_0 - H + H_0 = 0\to \text{ independientes}\]
+
+Concluimos que 
+\[
+\frac{(SCE_0-SCE)/p}{SCE/(n-k-1)} \overset{H_0}{\equiv} F_{p;n-k-1}
+\]
+
+Cuya región de rechazo será:
+
+\[
+R = \left\{  \right\}
+\]
+
+\obs El contraste $H_0: β_i = β_j = 0$ es un caso particular de esto que hemos visto, tomando \[A = \begin{pmatrix} \begin{matrix}0\\\vdots\\0\end{matrix} \begin{matrix}\vdots\\\vdots\\\vdots\end{matrix} I_k \end{pmatrix} \]
+
+En este caso, el modelo reducido sería $Y_i = β_0 + ε_i$, con lo que 
+
+\[SCE_0 = \sum (Y_i-\hat{Y_i})^2 \overset{(1)}{=} \sum(Y_i - \gor{Y})^2=SCT\]
+
+$(1)$ debido a que $Y_1,...,Y_n \sim N(β_0,σ^2)$, con lo que $\hat{β_0} = \gor{Y}$.
+
+Como $SCE_0 = SCT$, tenemos lo que ya habíamos obtenido:
+\[SCE_0 = SCT \to SCE_0 -SCE = SCT - SCE = SCR\]
+
+
+\subsubsection{Explicación de la tabla ANOVA}
+
+$R$ siempre está comparando 2 modelos, el reducido y el completo.
+
+En la primera fila, el modelo completo es el que incluye la primera variable y el modelo reducido es el que no incluye ninguna.
+
+El la fila $n$, el modelo completo es el que incluye las $n$ variables, y el modelo reducido es el que incluye las $n-1$ variables.
+
+
+% % % TODO: incluir tabla de las traspas
+
+Es importante darse cuenta que los números de la columna $SumSq$ dependen del orden de las variables, ya que no es lo mismo pasar de no tener variables a tener la primera variable (que puede no influir nada) a tener la segunda (que puede ser tremendamente explicativa).
+
+\textbf{Sin embargo,} la suma es \textbf{constante}. Vamos a verlo
+\begin{proof}
+\[
+SC_1 + SC_{12} + SC_{123} = (SCE_0 - SCE_1) + (SCE_1 - SCE_{12}) + (SCE_{12} - SCE_{123}) = SCT - SCE = SCR
+\]
+\end{proof}
+
+La última columna de la fila $n$ es el p-valor del contraste $β_n = 0$, tomando el modelo que tiene las $β_0,...,β_{n-1}$. En el caso de la última fila, tenemos el p-valor de si $β_{ultimo} = 0$ en el modelo que incluye todas las demás variables. Este contraste es equivalente al que hacíamos en regresión múltiple para contrastar si $β_j = 0$. Podemos comprobar que los p-valores coinciden (0.11).
+
 \subsection{Modelo unifactorial}
