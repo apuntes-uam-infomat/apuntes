@@ -1,4 +1,4 @@
-\documentclass[palatino, notitlepage]{apuntes}
+\documentclass[palatino]{apuntes}
 
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{longtable}
@@ -6,6 +6,7 @@
 \usepackage{minted}
 \usepackage{showexpl}
 \usepackage{etoolbox}
+\usepackage{booktabs}
 
 \definecolor{lightgrey}{gray}{0.95}
 
@@ -39,12 +40,12 @@
 
 \begin{document}
 
-\pagestyle{plain}
-\maketitle
-
 \begin{abstract}
 Este documento pretende ser un manual de uso de \LaTeX\ y de los paquetes personalizados que tenemos para escribir los \href{http://github.com/VicdeJuan/Apuntes}{apuntes de matemáticas e informática}.  La idea es que sirva para aprender \LaTeX\ básico (\fref{chap:Introduccion}), que introduzca aspectos de \LaTeX\ avanzado (\fref{chap:LaTeXAvanzado}) y que documente los paquetes y comandos personalizados que hemos ido desarrollando a lo largo del tiempo (\fref{chap:PaqueteExtendido}).
 \end{abstract}
+
+\pagestyle{plain}
+\maketitle
 
 \newpage
 
@@ -86,6 +87,7 @@ Lo que necesitaremos bajarnos en nuestro ordenador será una \textit{distribuci�
 Una vez que tenemos \LaTeX\ instalado, nos bajaremos el editor. Personalmente, recomiendo \href{http://www.texstudio.org/}{TeXStudio}, que funciona bastante bien, es fácil de usar y además es bastante potente.
 
 \subsection{Un primer documento}
+\label{sec:EstructuraDocumento}
 
 Una vez que tenemos todo instalado, podemos hacer nuestro primero documento. El archivo está \href{https://github.com/VicdeJuan/Apuntes/blob/master/Cosas%20guays%20LaTeX/Manual/DocumentoMuestra.tex}{disponible para que que se pueda descargar y bajar} sin tener que copiar y pegar de un PDF.
 
@@ -104,8 +106,8 @@ En este documento podéis ver varios comandos (los que empiezan por ``\verb|\|''
 
 Lo que sí vamos a comentar son los comandos \verb|\documentclass|, \verb|\usepackage|  y los \verb|\begin{document}| y \verb|\end{document}|. El primero debería estar siempre en la primera línea de cualquier documento \LaTeX, y le dice al compilador qué tipo de documento estamos escribiendo. En este caso es \textit{article}, aunque podría ser cualquier otro como \textit{book} o \textit{report}. El tipo de documento definirá qué márgenes usamos, el tipo de letra, los tipos de secciones que se pueden usar o los paquetes que se incluyen por defecto.
 
-\index{\texttt{usepackage}}
-\index{\texttt{documentclass}}
+\index{usepackage}
+\index{documentclass}
 Eso nos lleva al siguiente comando, \verb|\usepackage|. Como su nombre indica, carga un paquete en el documento y siempre van en el preámbulo (ahora veremos qué es eso). Un paquete de \LaTeX\ puede o bien proporcionarnos comandos (por ejemplo, \textit{amsmath} nos proporciona los comandos \verb|\int| o \verb|\dotsb|) o bien cambiar el comportamiento de \LaTeX, como \textit{babel}, que con la opción \textit{spanish} traducirá las cadenas que el compilador inserte en el documento (por ejemplo, cuando ponga la fecha automáticamente o cuando ponga ``Figura N'' en las etiquetas de imágenes) en español.
 
 Por último, nos quedan los comandos \verb|\begin{document}| y \verb|\end{document}|. Son un ejemplo de lo que se llaman ``entornos'' en \LaTeX. Como uno podría imaginar, marcan el inicio y el final del documento en sí. Lo que esté dentro de estos dos comandos es lo que se ve en el documento final. Lo que está fuera (antes del \verb|\begin{document}|, porque después de \verb|\end{document}| no debería haber nada) es lo que se llama el preámbulo, que podríamos decir que es la sección de ``configuración'' del documento.
@@ -120,7 +122,7 @@ Ahora que ya sabemos a grandes rasgos cómo funciona un documento \LaTeX, vamos 
 \index{Sección}
 Normalmente, los documentos se organizan en secciones, subsecciones y similares. \LaTeX{} nos lo pone muy fácil para hacerlo. Sólo necesitaremos poner el comando correspondiente y se encargará de ponerle el número que le corresponda y de añadirlo a la tabla de contenidos si la hemos activado. Para que la tabla de contenidos nos aparezca en el documento, sólo tenemos que escribir \verb|\tableofcontents| donde queramos que se muestre.
 
-\index{\texttt{chapter}}
+\index{chapter}
 Las posibles variantes de sección son las siguientes. Como aparece en el comentario, el comando \verb|\chapter| sólo se puede usar en algunos tipos de documento, como \textit{report} o \textit{book} (no \textit{article}).
 
 \begin{minted}{latex}
@@ -224,9 +226,10 @@ Las listas son sencillas, y lo mejor es verlo con ejemplos. Por supuesto, las li
 \end{LTXexample}
 
 \subsubsection{Imágenes}
+\label{sec:Imagenes}
 
 \index{Imagen}
-\index{\texttt{includegraphics}}
+\index{includegraphics}
 Para poner imágenes, sólo es necesario un comando, \verb|\includegraphics|. La cuestión es que eso nos inserta la imagen directamente, y no nos permite poner una etiqueta ni referenciarlo más tarde. Lo que haremos será encerrar ese comando en un entorno \textit{figure}:
 
 \begin{LTXexample}[pos=r]
@@ -244,15 +247,15 @@ Lo que sí podemos decirle a \LaTeX\ es donde preferimos que ponga la imagen (lu
 
 El comando \verb|\includegraphics[width=X\textwidth]{ruta/a/la/imagen}| es el que inserta la imagen en sí. Normalmente solemos limitar el ancho de la imagen con la opción \verb|[width=X\textwidth]|, donde $X$ es el porcentaje (entre 0 y 1) del ancho del texto que queremos que ocupe. Por ejemplo, \verb|0.5\textwidth| hará que la imagen ocupe la mitad del texto de ancho.
 
-\index{\texttt{caption}}
-\index{\texttt{label}}
+\index{caption}
+\index{label}
 El comando \verb|\caption| nos permite ponerle una etiqueta o ``caption'' a la imagen, para explicar qué es. Es conveniente usarlo, porque siempre se mantiene pegado a la imagen y además nos permite ver qué índice tiene la figura. Por último, el comando \verb|\label| le asigna un identificador a la figura para que podamos referenciarla más tarde (veremos cómo hacer eso en la \fref{sec:Etiquetas}).
 
 \subsubsection{Tablas}
 \label{sec:Tablas}
 
 \index{Tabla}
-\index{\texttt{tabular}}
+\index{tabular}
 \LaTeX\ también nos permite incluir tablas en los documentos, aunque no es especialmente cómodo. Necesitaremos usar el entorno \textit{tabular}, al que le especificamos las columnas que queremos usar. Después, ponemos los contenidos de la tabla, separando cada celda con el carácter \verb|&| y cada fila con el salto de línea \verb|\\|. Veamos un ejemplo:
 
 \begin{LTXexample}[pos=r]
@@ -262,7 +265,7 @@ texto & texto & texto & texto
 \end{tabular}
 \end{LTXexample}
 
-\index{\texttt{hline}}
+\index{hline}
 El primer argumento de \textit{tabular} es el especificador de columnas. Normalmente son los caracteres \textit{r,l,c}, que indican alineación de la celda a la derecha, a la izquierda o al centro respectivamente; y separados (o no) por caracteres \texttt{|}, que le dicen a \LaTeX\ que ponga una barra vetical entre esas dos columnas. Para poner barras horizontales, ponemos el comando \texttt{hline} al final de la línea.
 
 Al igual que con las imágenes, la mayor parte de las veces nos interesará poner la tabla en un entorno flotante, \textit{table}, para que \LaTeX\ la coloque donde mejor venga y podamos poner un \textit{caption} y la referencia con \textit{label}.
@@ -347,8 +350,8 @@ Las matrices en \LaTeX\ tienen una sintaxis parecida a las tablas (\fref{sec:Tab
 
 \subsection{Delimitadores}
 
-\index{\texttt{left}}
-\index{\texttt{right}}
+\index{left}
+\index{right}
 En ocasiones querremos introducir delimitadores, como paréntesis o llaves, en las ecuaciones. Normalmente funcionan bien, salvo cuando queremos meter cosas más grandes dentro (por ejemplo, un símbolo de sumatorio) que se quedan limitadores demasiado pequeños. Para evitar eso usaremos los comandos \verb|\left| y \verb|\right| seguidos de un carácter que \LaTeX\ cambiará de tamaño para que se ajuste bien. Si por lo que sea queremos que uno de los lados no tenga ningún delimitador, podemos usar un punto. Veámoslo claro con un ejemplo:
 
 \begin{LTXexample}[pos=r]
@@ -458,7 +461,7 @@ En cualquier caso, \LaTeX\ no suele ser muy descriptivo con los mensajes de erro
 
 \paragraph{Los operadores matemáticos están muy juntos} El espaciado de algunos símbolos matemáticos no acaba de cuadrar en algunos casos, como por ejemplo $\forall a \in E \exists y(a) \in B$. En este caso, es recomendable usar los operadores de espaciado \verb|\ \, \; \quad \qquad| (ver \fref{sec:SimbolosOperadoresTexto}). Normalmente \verb|\,| es lo que mejor queda, pero esto va a gusto del consumidor.
 
-\index{\texttt{displaystyle}}
+\index{displaystyle}
 \paragraph{Los subíndices me salen pequeños cuando uso el modo \textit{inline}} Cuando se usan matemáticas en modo \textit{inline} algunos operadores cambián el lugar de los subíndices y superíndices para que no ocupen mucho, quedando algo así: $\sum_{i=1}^k$. Si afecta, lo más probable es que quede mejor pasando la ecuación a una línea separada usando \verb|\[...\]|. Sin embargo, se puede añadir \verb|\displaystyle| al principio de la ecuación para que ponga los subíndices más claros:
 
 \begin{LTXexample}[pos=r]
@@ -471,21 +474,82 @@ quizas sea mejor ponerlo separado con
 \chapter{\LaTeX\ avanzado}
 \label{chap:LaTeXAvanzado}
 
+Una vez que ya nos manejamos con las cosas básicas de \LaTeX, vamos a pasar a cosas más avanzadas, como las etiquetas, índices, marcos y Tikz. También veremos parte de desarrollo de paquetes y clases de \LaTeX: cómo crear comandos y entornos y modificarlos para que hagan lo que nosotros queremos. Para eso, antes veremos cómo funciona exactamente \LaTeX, que nos ayudará a la hora de entender por qué tenemos que hacer ciertas cosas, como compilar dos veces, o qué es lo que puede estar fallando cuando algo no funciona.
+
 \textit{Pendiente de construcción}
+
+\section{¿Cómo funciona \LaTeX?}
+\label{sec:FuncionamientoLaTeX}
+
+El capítulo anterior pretendía ser un tutorial básico de \LaTeX, para que podamos ponernos a escribir rápidamente. Pero para avanzar, creo que es importante saber cómo funciona este sistema, más que nada para entender de dónde salen los errores y saber exactamente qué es lo que estamos haciendo. Además, como curiosidad informática tampoco viene nada mal.
+
+Para ser precisos, más que de \LaTeX\ deberíamos hablar de \TeX, que es el ``núcleo'' escrito por Donald Knuth. Este núcleo es un compilador que, a grandes rasgos, tiene dos fases: la de expansión y la de compilación.
+
+Cuando compilamos un documento para generar un PDF, lo que va haciendo \TeX\ es ir leyéndolo carácter a carácter, e ir traduciéndolo. Los caracteres normales se pasan sin modificar, y los comandos (los que empiezan por $\backslash$, como \verb|\textbf|) se expanden.
+
+La expansión de un comando no es más que sustituirlo por su definición sustituyendo los argumentos. Por ejemplo, yo puedo definir el comando \verb|\vector|, que recibe un argumento (denotado por \verb|#1|) y que se expande como \verb|$\mathbf{#1}$|. Así, cuando \TeX\ encuentre \verb|\vector{a}| lo sustituirá por \verb|$\mathbf{a}$|. Este proceso se va realizando de forma recursiva: cuando el compilador expande un comando y se encuentra que la expansión ha metido más comandos, los expande a ellos también. Todo esto se hace en orden de izquierda a derecha.
+
+Así, comando a comando, \TeX\ va expandiendo el documento hasta llegar a la forma más básica, que son los comandos primitivos de \TeX, que simplemente dicen cosas tan de bajo nivel ``añade este carácter a la línea'' o ``ahora usa esta fuente''. Con esos comandos, \TeX\ va decidiendo cómo va a ser la estructura del PDF que va a generar (los saltos de línea o de página, o la colocación de las imágenes, por ejemplo).
+
+Finalmente, esa información se pasa a la ``segunda etapa'' de \TeX, que transforma esos comandos primitivos en un formato estándar para un documento que nosotros podamos visualizar: normalmente es PDF, pero también pueden ser otros como DVI.
+
+La parte específica de \LaTeX\ consiste en comandos adicionales que facilitan la vida al usuario, pero a grandes rasgos el proceso de compilación es el mismo.
+
+En la práctica, hay algunas cosas algo más complicadas, pero básicamente así funciona \LaTeX. Lo primero que leerá del documento será el \verb|\documentclass|, que le dirá qué archivo base cargar: ese archivo cargará los comandos de \LaTeX\ básicos y prepará el documento (tipo de fuente, márgenes, papel, etc). Después, las sentencias \verb|\usepackage| cargarán otros documentos con más macros y comandos, y en cuanto empiece el documento con \verb|\begin{document}| el compilador empezará a procesar todos esos caracteres y comandos escritos, expandiendo estos últimos hasta llegar a las instrucciones primitivas para mostrar tu PDF.
+
+\paragraph{¿Esto es importante?} Más o menos, msás que nada porque nos explica de dónde salen dos tipos problemas muy habituales. El primero son los relacionados con la expansión de comandos: \LaTeX\ no es como un lenguaje de programación donde primero se evalúan los argumentos y luego se le pasan a la función. Aquí es al revés: primero se desarrolla la función (el comando) y luego se procesan los argumentos. Y si en algún momento algo no cuadra (cosa probable) la compilación falla.
+
+La otra cuestión es algo que no hemos dicho explícitamente, pero que se puede ver: \TeX\ es un sistema de una sola pasada. Lee el fichero y va procesando según le llega, pero en ningún momento mira hacia atrás ni hacia delante\footnote{Por ejemplo, redefinir un comando a mitad del documento sólo afecta a partir de ese punto, no antes.}. El principal inconveniente es que a veces tendremos que recompilar el documento para que pille todos los datos, como las refrencias. Las referencias las escribe \LaTeX\ en un documento aparte cuando se las encuentra, así que si ponemos una referencia antes de declarar la etiqueta, no va a saber resolverlo. En la segunda pasada ya se encontrará esa etiqueta declarada en el archivo aparte así que ya podrá rellenar el comando \verb|\ref| correctamente.
+
+Para más información sobre cómo funciona \LaTeX, es recomendable echarle un ojo al libro \textit{\TeX\ for the Impatient} o \textit{The \TeX Book}.
+
+\section{\LaTeX\ para usuarios avanzados}
+
 
 \subsection{Etiquetas y referencias}
 \label{sec:Etiquetas}
 
-Una característica muy potente de \LaTeX\ son las referencias. Usa \verb|\label{nombreEtiqueta}| cuando quieras referenciar otras partes del documento con \verb|\ref{nombreEtiqueta}}|. Por ejemplo, si pones una etiqueta debajo de un comando de sección, \verb|\ref{nombreEtiqueta}}| mostrará el número de esa sección. También puedes hacerlo en figuras, tablas, listados de código y otros entornos definidos en el paquete \texttt{exmath}.
+Una característica muy potente de \LaTeX\ son las referencias. Usa \verb|\label{nombreEtiqueta}| cuando quieras referenciar otras partes del documento con \verb|\ref{nombreEtiqueta}}|. Por ejemplo, si pones una etiqueta debajo de un comando de sección, \verb|\ref{nombreEtiqueta}| mostrará el número de esa sección. También puedes hacerlo en ecuaciones, figuras, tablas, listados de código y otros entornos definidos en el paquete \texttt{exmath}. Para figuras y tablas, concretamente, hay que poner el \verb|\label| justo después del \verb|\caption|, tal y como aparece en las secciones \ref{sec:Imagenes} y \ref{sec:Tablas}.
 
-Hay un paquete adicional que mejora las características de las referencias de \LaTeX\, \texttt{fancysprefs}, que está basado en \texttt{fancyref}. Este paquete provee tres comandos adicionales: \verb|\fref{nombreEtiqueta}|, \verb|\nref{nombreEtiqueta}| y \verb|\nlref{nombreEtiqueta}|.
+\begin{LTXexample}[pos=r]
+Ponemos una ecuacion con su etiqueta:
+\begin{equation}
+1 + 1 = 2 \label{eq:SuperImportante}
+\end{equation}
 
-Estos comandos permiten referenciar automáticamente un elemento con su tipo y su posición, en el caso de \texttt{fref}. Por ejemplo, \verb|\fref{sec:Tikz}| se transforma en ``\fref{sec:Tikz}''. La ventaja de \texttt{fref} es que es más o menos inteligente y sólo muestra la información de la página cuando toca. Por ejemplo, \verb|\fref{sec:Etiquetas}| muestra ``\fref{sec:Etiquetas}'' porque la etiqueta está en la misma página y no hace falta nada adicional. \verb|\fref{thm:Gallinas}| (etiqueta en la siguiente página) muestra ``\fref{thm:Gallinas}''.
+Ahora podemos referenciarla: la
+ecuacion \ref{eq:SuperImportante}.
+
+Tambien podemos hacerlo con \eqref{eq:SuperImportante}.
+\end{LTXexample}
+
+La principal ventaja de usar las referencias así es que no tenemos que preocuparnos más de ellas: da igual que cambie la posición de lo que estamos referenciando, que su numeración sea distinta o incluso que cambiemos el modo de numerar (por ejemplo, que en lugar de usar números usemos letras): \LaTeX\ se encarga de mantenerlo todo coherente.
+
+Lo único que tendremos que acordarnos de hacer es de compilar bien hasta que las referencias se resuelvan: a veces, en la primera compilación \LaTeX\ no encuentra las referencias y hay que hacer más pasadas para que funcione (ver la \fref{sec:FuncionamientoLaTeX} para una explicación algo más extensa de esto).
+
+\subsubsection{Referencias todavía más automáticas: fancyref}
+\label{sec:fancyref}
+
+\index{fancyref}
+\index{fref}
+Hay un paquete adicional que mejora las características de las referencias de \LaTeX\, que se llama \textit{fancyref}\footnote{Para poder usar \textit{fancyref} en el documento, sólo hay que añadir \texttt{$\backslash$usepackage\{fancyref\}} en el preámbulo del documento. Ver la \fref{sec:EstructuraDocumento} para saber qué es exactamente el preámbulo.}. Este paquete introduce el comando \verb|\fref|, que saca la referencia con el nombre que le corresponde y con el enlace. Además, \textit{fancyref} tiene un formato ``vario'' que muestra la página en la que está lo que estemos referenciando.
+
+\begin{LTXexample}[pos=r]
+Antes usabamos \ref{eq:SuperImportante},
+pero tambien podemos hablar de la
+\fref{eq:SuperImportante}, de la
+\fref{sec:EstructuraDocumento} o
+de la \fref[vario]{sec:Tablas}.
+\end{LTXexample}
+
+\textit{fancyref} depende de que las etiquetas tengan un cierto nombre, de la forma \textit{prefijo:Identificador}, para poner el nombre correcto. Estos prefijos están en la \fref{tab:PrefjosFref}.
+
+Adicionalmente, hemos creado el paquete \textit{fancysprefs} que traducen los prefijos de \textit{fancyref} al español y añade algunos comandos para incluir el nombre de lo que estamos referenciando automáticamente. Este paquete está descrito en la \fref{sec:fancysprefs}.
 
 \begin{table}[hbtp]
 \centering
 \begin{tabular}{l|l}
-Elemento & Prefijo \\ \hline
+\textbf{Elemento} & \textbf{Prefijo} \\ \toprule
 Capítulo & chap \\
 Sección & sec \\
 Ecuación & eq \\
@@ -501,106 +565,77 @@ Definición & def
 \label{tab:PrefjosFref}
 \end{table}
 
+\subsection{Notas al pie}
 
-Para que \texttt{fref} funcione, es necesario seguir bien los prefijos de las etiquetas de \fref{tab:PrefjosFref}. Si no se siguen y se llama a \texttt{fref}, es posible que la compilación falle con un error poco explícito.
+\subsection{Tabla de contenidos y numeración de secciones}
 
-El comando \texttt{nref} hace algo parecido, pero incluye también el nombre de lo que estemos referenciando. Así, sólo nos hace falta poner \verb|\nref{thm:Gallinas}| para que aparezca ``\nref{thm:Gallinas}''. Obviamente, el nombre cambiará automáticamente aquí si lo cambiamos en el entorno correspondiente. La variante \texttt{nlref} hace exactamente lo mismo pero con el título en minúsculas (muestra: \nlref{thm:Gallinas}), que viene bien cuando estamos referenciado definiciones y no queremos que la primera letra esté en mayúscula.
+\subsection{Estilos de página: pies y cabeceras}
+
+\subsection{Tikz}
+
+\subsection{Un compilador más completo: latexmk}
+
+\section{Ampliando \LaTeX: Desarrollo de comandos, entornos, paquetes y clases}
+
+\subsection{Comandos}
+
+\subsection{Entornos}
+
+\subsection{Paquetes y clases}
+
+\subsection{Paquetes auxiliares para el desarrollo}
 
 \chapter{Manual paquetes extendidos}
 \label{chap:PaqueteExtendido}
 
-\section{Entornos}
-\subsection{Teorema y definición}
+\section{Introducción: ¿qué podemos hacer con los paquetes extendidos?}
+
+\section{Estructura de los paquetes extendidos}
+
+\section{Documetación de los paquetes}
+
+\subsection{\textit{exmath.sty}: Comandos y entornos adicionales de matemáticas}
+
+\subsubsection{Entornos para teoremas y similares}
 
 Los teoremas del paquete heredan de los teoremas de \texttt{amsthm}, pero además añaden un índice automático de teoremas que se puede imprimir en el documento con \verb|\printtheorems|. También se cargan automáticamente en el glosario de términos. El uso normal es el siguiente
 
-\begin{verbatim}
+\begin{LTXexample}[pos=r]
 \begin{theorem}[Teorema de las gallinas cluecas]
 Teorema.
 \end{theorem}
-\end{verbatim}
-
-\begin{theorem}[Teorema de las gallinas cluecas]\label{thm:Gallinas}
-Teorema.
-\end{theorem}
+\end{LTXexample}
 
 El título se carga automáticamente como una entrada para el índice. Si, por lo que sea, queremos separar los términos (por ejemplo, para que en este caso aparezca primero \textit{Teorema} y luego, debajo, \textit{de las gallinas cluecas}, ved la última página), no podemos usar la exclamación del comando \verb|\index{}| porque aparecería en el título. En su lugar, podemos usar el comando \verb|\IS|, que actúa como una separación para el índice pero que no aparece en el título.
 
-\begin{verbatim}
+\begin{LTXexample}[pos=r]
 \begin{theorem}[Teorema\IS de las gallinas cluecas]
 Teorema.
 \end{theorem}
-\end{verbatim}
-
-\begin{theorem}[Teorema\IS de las gallinas cluecas]
-Teorema.
-\end{theorem}
+\end{LTXexample}
 
 Si, por lo que sea, queremos especificar nosotros el índice, podemos añadir un segundo argumento.
 
-\begin{verbatim}
+\begin{LTXexample}[pos=r]
 \begin{theorem}[Teorema de las gallinas cluecas][Mi entrada]
 Teorema.
 \end{theorem}
-\end{verbatim}
-
-\begin{theorem}[Teorema\IS de las gallinas cluecas][Mi entrada]
-Teorema.
-\end{theorem}
-
-Por otra parte tenemos el entorno \texttt{defn} para definiciones, que funciona exactamente igual que \texttt{theorem}:
-
-\begin{verbatim}
-\begin{defn}[Título de la definición][(opcional) entrada para el índice]
-\end{defn}
-\end{verbatim}
-
-\begin{defn}[Título de la definición][(opcional) entrada para el índice]
-\end{defn}
-
-\subsection{Auxiliares para los teoremas}
+\end{LTXexample}
 
 Hay definidos varios entornos similares a teoremas. Todos ellos se pueden titular poniendo entre corchetes el título.
 
-\begin{verbatim}
-\begin{lemma}[Lema de la patata]
-\end{lemma}
-\end{verbatim}
-
-\begin{lemma}[Lema de la patata]
+\begin{LTXexample}[pos=r]
+\begin{lemma}[Lema cuarenta y dos]
 \end{lemma}
 
-\begin{verbatim}
-\begin{corol}
-\end{corol}
-\end{verbatim}
-
-\begin{corol}
+\begin{corol}[Coro]
 \end{corol}
 
-\begin{verbatim}
-\begin{prop}
+\begin{prop}[De las desigualdades]
 \end{prop}
-\end{verbatim}
-
-\begin{prop}
-\end{prop}
-
-\begin{verbatim}
-\begin{axiom}
-\end{axiom}
-\end{verbatim}
 
 \begin{axiom}
 \end{axiom}
-
-\begin{verbatim}
-\begin{proof}
-Probado queda.
-
-Al final agrega un cuadradito de QED.
-\end{proof}
-\end{verbatim}
 
 \begin{proof}
 Probado queda.
@@ -608,52 +643,50 @@ Probado queda.
 Al final agrega un cuadradito de QED.
 \end{proof}
 
-\begin{verbatim}
 \begin{op}{Nombre de operación}
 x = 3 + 1
 \end{op}
-\end{verbatim}
-
-\begin{op}{Nombre de operación}
-x = 3 + \deriv{f}{x}
-\end{op}
+\end{LTXexample}
 
 El entorno \texttt{op} incluye el modo matemático directamente, y el nombre de operación es obligatorio.
 
-\subsection{Ejercicios}
+\subsubsection{Definiciones y conceptos}
+
+Por otra parte tenemos el entorno \texttt{defn} para definiciones, que funciona exactamente igual que \texttt{theorem}:
+
+\begin{LTXexample}[pos=r]
+\begin{defn}[Título de la definición][(opcional) entrada para el índice]
+\end{defn}
+\end{LTXexample}
+
+\subsubsection{Ejercicios}
+\label{sec:Ejercicios}
 
 Hay dos entornos para incluir ejercicios o ejemplos en los archivos. El primero es \texttt{example}, que acepta un argumento opcional como nombre del ejemplo.
 
-\begin{verbatim}
+\begin{LTXexample}[pos=r]
 \begin{example}[Titulo]
-Un ejemplo sobre cosas matemáticas.
+Un ejemplo sobre cosas matematicas.
 
-\[ 3 = 3 \]
+\[ 3 = 3 \]
 
 Fin del ejemplo.
 \end{example}
-\end{verbatim}
+\end{LTXexample}
 
+\index{problem}
+\index{problemS}
+El otro sería \textit{problem}, que viene con bastantes cosillas. Acepta un argumento opcional, que es el número de ejercicio. Si no se pasa este argumento, la numeración es automática y se genera de la forma \textit{Sección.Ejercicio}, de tal forma que se pueda referenciar luego con etiquetas. El comando \verb|\solution| separa enunciado y solución, y los comandos \verb|\ppart| y \verb|spart| sirven para separar los diferentes apartados (la numeración es automática). Además, hay una variante \textit{problemS} que pone ejercicios sin la numeración por sección. Ejemplo:
 
-\begin{example}[Titulo]
-Un ejemplo sobre cosas matemáticas.
-
-\[ 3 = 3 \]
-
-Fin del ejemplo.
-\end{example}
-
-El otro sería \texttt{problem}, que viene con bastantes cosillas. Acepta un argumento opcional, que es el número de ejercicio. Si no se pasa este argumento, la numeración es automática y se genera de la forma \textit{Sección.Ejercicio}, de tal forma que se pueda referenciar luego con etiquetas. El comando \verb|\solution| separa enunciado y solución, y los comandos \verb|\ppart| y \verb|spart| sirven para separar los diferentes apartados (la numeración es automática). Ejemplo:
-
-\begin{verbatim}
-\begin{problem}[3]
+\begin{LTXexample}[pos=r]
+\begin{problem}[3] \label{ej:Ejemplo}
 Sea $x$ una cosa, entonces calcula:
 
 \ppart Calcula la divergencia de $x$.
 \ppart Calcula 3.
-\ppart Supongamos que $x$ es otra cosa distinta. Entonces dime qué te parece
+\ppart Supongamos que $x$ es otra cosa distinta. Entonces dime que te parece
 
-\[ x^2 + 1 \]
+\[ x^2 + 1 \]
 
 \solution
 
@@ -661,71 +694,77 @@ Sea $x$ una cosa, entonces calcula:
 
 \spart
 
-\[ 3 = \int_0^1 δ(x^2) \]
+\[ 3 = \int_0^1 \delta(x^2) \]
 
-\spart  Muy bien.
+\spart Muy bien.
 
 \end{problem}
-\end{verbatim}
 
-Y el resultado es
-
-\begin{problem}[3]
-Sea $x$ una cosa, entonces calcula:
-
-\ppart Calcula la divergencia de $x$.
-\ppart Calcula 3.
-\ppart Supongamos que $x$ es otra cosa distinta. Entonces dime qué te parece
-
-\[ x^2 + 1 \]
+\begin{problemS}
+Siguiendo con el ejercicio \ref{ej:Ejemplo}, dime mas cosas
 
 \solution
 
-\spart La divergencia es 0.
+\spart Mas cosas del \fref{ej:Ejemplo}.
+\end{problemS}
+\end{LTXexample}
 
-\spart
-
-\[ 3 = \int_0^1 δ(x^2) \]
-
-\spart  Muy bien.
-
-\end{problem}
-
- Además se puede añadir una explicación a los ejercicios con el comando:
-\begin{verbatim}
-\begin{expla}
-Para resolver el ejercicio utilizaremos el teorema de Parramón, formulado por Alberto Parramón, matemático español de gran popularidad...
-\end{expla}
-\end{verbatim}
-
- que da como resultado:
-\begin{expla}
-Para resolver el ejercicio utilizaremos el teorema de Parramón, formulado por Alberto Parramón, matemático español de gran popularidad...
-\end{expla}
-
-\section{Imágenes}
+\subsubsection{Imágenes}
 
 Hay dos comandos para poner fácilmente imágenes. El principal es \texttt{easyimgw}
 
-\begin{verbatim}
+\begin{LTXexample}[pos=r]
 \easyimgw{Patata.jpg}{Leyenda}{lblEtiqueta}{0.3}
-\end{verbatim}
+\end{LTXexample}
 
 El último argumento es la anchura de la imagen expresada como proporción de la anchura del texto. $0.3$ significa que ocupa un $30\%$ de la anchura del texto, por ejemplo.
 
-\easyimgw{Patata.jpg}{Leyenda}{lblEtiqueta}{0.3}
-
 También está el comando \verb|\easyimg|, el uso es el mismo salvo que sólo necesita tres argumentos: la anchura se omite y se toma el valor por defecto del $80\%$ de anchura del texto.
 
- \section{Clase apuntes}
+\subsubsection{Comandos adicionales}
 
- También hay un archivo llamado \texttt{apuntes.cls}, que provee la clase \textit{apuntes}. Básicamente, lo único que hace es cambiar la fuente, ajustar la geometría e incluir el paquete \texttt{exmath}. De esta forma, lo único que hay que hacer para usar todo el paquete y clase es cambiar la clase del documento. Es decir, que la primera línea sea
+Dado que en cada asignatura hay varias cosas que se repiten, viene muy bien definir los comandos en \textit{exmath.sty} para poder usarlos, y además así poder reutilizarlos en otras asignaturas.
+
+\index{commandsampler.py}
+Como son muchos, en esta documentación aparecen en el apéndice \ref{chap:Comandos}, con ejemplos de uso y su salida. La tabla se genera de forma automática con el script \textit{commandsampler.py}, en el directorio \textit{Cosas Guays LaTeX}. La documentación de cómo funciona está en el propio paquete \textit{exmath.sty}, aunque en algún momento debería de poner aquí cómo funciona.
+
+\subsection{\textit{fancysprefs.sty}: Referencias mejoradas}
+\label{sec:fancysprefs}
+
+\index{fancyref}
+\index{fancysprefs}
+\index{nref}
+\index{nrefl}
+\textit{fancysprefs} está basado en \textit{fancyref}, que ya hemos descrito en la \fref{sec:fancyref}. Este paquete provee dos comandos adicionales, \verb|\nref{nombreEtiqueta}| y \verb|\nlref{nombreEtiqueta}|, además de traducir las cadenas de \textit{fancyref} al castellano.
+
+El comando \texttt{nref} hace algo parecido a \textit{fref}, pero incluye también el nombre de lo que estemos referenciando. Así, sólo nos hace falta poner \verb|\nref{sec:fancysprefs}| para que aparezca ``\nref{sec:fancysprefs}''. Obviamente, el nombre cambiará automáticamente aquí si lo cambiamos en el entorno correspondiente. La variante \texttt{nlref} hace exactamente lo mismo pero con el título en minúsculas (muestra: \nlref{sec:fancysprefs}), que viene bien cuando estamos referenciado definiciones y no queremos que la primera letra esté en mayúscula.
+
+\subsection{\textit{MathUnicode.sty}: Letras griegas directamente desde el teclado}
+
+\index{MathUnicode.sty}
+
+\subsection{\textit{tikztools.sty}: Herramientas y comandos extra para Tikz}
+
+\index{tikztools.sty}
+Para facilitar los dibujos de Tikz, el paquete \textit{tikztools.sty} tiene varios comandos predefinidos. Incluye las librerías usuales, algunos estilos interesantes: \textit{nodepoint} para poner puntos sencillos, \textit{vnlin, hnlin} para poner marcas verticales u horizontales, varias clases para marcar con flechas líneas (\textit{directed, dense directed, etc}, todas con un nombre bastante claro) y varios comandos para dibujar familias de curvas que programé en su momento para EDO y ahora mismo no tengo huevos a entender. También está el comando \texttt{tikzangle} para marcar ángulos en LaTeX.
+
+\subsection{\textit{fastbuild.sty}: Recortando los tiempos de compilación}
+
+\index{fastbuild.sty}
+Tikz es lento, y cuando hay un montón de dibujos recompilar un documento puede ser un infierno. Este paquete, \textit{fastbuild.sty}, permite activar una caché de dibujos Tikz, de tal forma que los dibujos se generan en un PDF y después se incluyen, de tal forma que no hay que regenerarlos en cada compilación. Para activar esta caché, hay que incluir el comando \verb|\precompileTikz| en el preámbulo del documento.
+
+\index{-shell-escape}
+Internamente, lo que hace LaTeX cuando ahora se encuentre un dibujo Tikz, es abrir un nuevo proceso que compile el dibujo y después incluirlo en el documento. Por seguridad, la configuración por defecto de LaTeX impide la creación de nuevos procesos, por lo que hay que pasar como argumento \texttt{-shell-escape} al comando de compilación. Toda la caché se guarda en el directorio \textit{tikzgen}, hay que procurar que esté creado porque si no LaTeX se quejará con un error bastante críptico.
+
+\subsection{\textit{apuntes.cls}: La base para crear documentos de apuntes}
+
+También hay un archivo llamado \texttt{apuntes.cls}, que provee la clase \textit{apuntes}. Básicamente, lo único que hace es cambiar la fuente, ajustar la geometría e incluir el paquete \texttt{exmath}. De esta forma, lo único que hay que hacer para usar todo el paquete y clase es cambiar la clase del documento. Es decir, que la primera línea sea
 
 \begin{verbatim}
 \documentclass{apuntes}
 \end{verbatim}
 
- Además, la clase genera el título y la cabecera, sólo tenéis que configurar la fecha, título y autor con los siguientes comandos, que deben ir después de la definición de \texttt{documentclass}.
+Además, la clase genera la portada y la cabecera, sólo hay que configurar la fecha, título y autor con los siguientes comandos, que deben ir después de la definición de \texttt{documentclass}.
 
 \begin{verbatim}
 \author{Autor}
@@ -733,20 +772,11 @@ También está el comando \verb|\easyimg|, el uso es el mismo salvo que sólo ne
 \title{Título del documento}
 \end{verbatim}
 
-\section{Clase ejercicios}
+\subsection{\textit{ejercicios.cls}: documentos simples y entrega de ejercicios}
 
-Por si hace falta hacer documentos que sean únicamente ejercicios (probablemente para entregarlos), la clase \textit{ejercicios} sirve para eso. Reduce un poco los márgenes, cambia a un tipo de letra algo más compacto y quita los marcos enormes a los problemas. El resto de comandos se puede seguir usando normalmente.
+Por si hace falta hacer documentos que sean únicamente ejercicios (probablemente para entregarlos), la clase \textit{ejercicios} sirve para eso. Reduce un poco los márgenes, pone una portada más discreta y pequeña, cambia a un tipo de letra algo más compacto y quita los marcos enormes a los problemas. El resto de comandos se puede seguir usando normalmente.
 
-En este caso también puede venir útil usar el entorno \texttt{problemS} en lugar de \texttt{problem} para que los ejercicios no tengan la numeración estilo \textit{sección.ejercicio}.
-
-\section{Tikz}
-\label{sec:Tikz}
-
-Para facilitar los dibujos de Tikz, el paquete \texttt{tikztools.sty} tiene varios comandos predefinidos. Incluye las librerías usuales, algunos estilos interesantes: \textit{nodepoint} para poner puntos sencillos, \textit{vnlin, hnlin} para poner marcas verticales u horizontales, varias clases para marcar con flechas líneas (\textit{directed, dense directed, etc}, todas con un nombre bastante claro) y varios comandos para dibujar familias de curvas que programé en su momento para EDO y ahora mismo no tengo huevos a entender. También está el comando \texttt{tikzangle} para marcar ángulos en LaTeX.
-
-Por otra parte, está el paquete \texttt{fastbuild.sty}. Tikz es lento, y cuando hay un montón de dibujos recompilar un documento puede ser un infierno. Este paquete permite activar una caché de dibujos Tikz, de tal forma que los dibujos se generan en un PDF y después se incluyen, de tal forma que no hay que regenerarlos en cada compilación. Para activar esta caché, hay que incluir el comando \verb|\precompileTikz| en el preámbulo del documento.
-
-Internamente, lo que hace LaTeX cuando ahora se encuentre un dibujo Tikz, es abrir un nuevo proceso que compile el dibujo y después incluirlo en el documento. Por seguridad, la configuración por defecto de LaTeX impide la creación de nuevos procesos, por lo que hay que pasar como argumento \texttt{-shell-escape} al comando de compilación. Toda la caché se guarda en el directorio \textit{tikzgen}, hay que procurar que esté creado porque si no LaTeX se quejará con un error bastante críptico.
+En este caso también puede venir útil usar el entorno \texttt{problemS} en lugar de \texttt{problem} para que los ejercicios no tengan la numeración estilo \textit{sección.ejercicio} (ver la \fref{sec:Ejercicios} para una descripción más detallada).
 
 \appendix
 
@@ -754,7 +784,7 @@ Internamente, lo que hace LaTeX cuando ahora se encuentre un dibujo Tikz, es abr
 \label{chap:Comandos}
 
 \setcounter{LTchunksize}{10}
-\renewcommand{\arraystretch}{1.5}% Spread rows out...
+\renewcommand{\arraystretch}{1.3}% Spread rows out...
 \input{cmds.tex}
 
 \newpage

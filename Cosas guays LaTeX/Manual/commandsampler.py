@@ -64,8 +64,8 @@ for line in packagefile:
 	if "IGN" in line:
 		continue
 
-	if line.startswith("%"): 
-		title = "\\multicolumn{2}{|c|}{\\textbf{%s}} \\\\ \\hline \n" % line[1:].strip()
+	if line.startswith("%"):
+		title = "\\bottomrule \\multicolumn{2}{|c|}{\\textbf{%s}} \\\\ \\toprule \n" % line[1:].strip()
 		cmdfile.write(title)
 		continue
 
@@ -79,13 +79,13 @@ for line in packagefile:
 	cmd_type = match.group('cmd_type')
 	arginfo_str = match.group('arginfo')
 	optargspec_str = match.group('optargspec')
-	nargs = match.group('nargs') 
+	nargs = match.group('nargs')
 	is_env = False
 	envname = ""
 
 	if "environment" in cmd_type:
 		continue
-	
+
 	if cmd in processed:
 		continue
 
@@ -105,14 +105,14 @@ for line in packagefile:
 		nargs = 0
 
 	mandatory_args.extend([{"name": "arg%d" % i, "optional": False} for i in range(len(optional_args) + len(mandatory_args), nargs)])
-	
+
 	# stringify
 	mandatory_args_str = ''.join(["{%s}" % arg['name'] for arg in mandatory_args])
 	optional_args_str = ''.join(["[%s]" % arg['name'] for arg in optional_args])
 
 	cmdstr = cmd + optional_args_str + mandatory_args_str
 
-	towrite = "\\verb|{0}| & $\\displaystyle{0}$ \\\\ \\hline \n".format(cmdstr)
+	towrite = "\\verb|{0}| & $\\displaystyle{0}$ \\\\ \\midrule \n".format(cmdstr)
 
 	cmdfile.write(towrite)
 
