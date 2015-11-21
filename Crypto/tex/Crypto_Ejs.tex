@@ -4109,42 +4109,121 @@ como calculamos antes, pero con la diferencia de que esta cuenta se puede hacer 
 
 \section{Hoja 6}
 
-\begin{problem}
- a) Encuentra el dígito de control ($c$) de los
+\begin{problem}[1]
+\ppart Encuentra el dígito de control ($c$) de los
 siguientes EAN:
  5-449000-00099$c$,8-410240-32700$c$.
 
-b) ¿Cuáles de los siguientes EAN puedes asegurar que son
+\ppart ¿Cuáles de los siguientes EAN puedes asegurar que son
 incorrectos?: 6-39844-06292-3, 9-780198-538095, 8-410420-327003.
 
-c)  Al leer un UPC se ha borrado un número (que representamos por
+\ppart  Al leer un UPC se ha borrado un número (que representamos por
 una $a$) y hemos recibido 3-03$a$65-00879-5. ?`Cuánto vale $a$?
 \solution
+\doneby{Pedro}
+
+\spart
+
+En los códogios de barras el bit de control se calcula con la fórmula:
+\[x_{12} = -\left(\sum_{i=0}^5x_{2i} + 3 \sum_{i=0}^5x_{2i+1} \right)\mod 10\]
+Aplicando la fórmula obtenemos:
+
+\[\begin{array}{ll}
+5-449000-00099c & c= -(5+12+4+27+9+27)  \mod 10 = -3 \mod 10 = 7\\
+8-410240-32700c & c= -(8+12+1+2+12+9+2+21) \mod 10 = 7
+\end{array}\]
+
+\spart
+
+Para comprobar si son incorrectos calculamos $x_{12}$ y vemos si coincide con el $x_{12}$ dado.
+\small
+\[\begin{array}{ll}
+6-39844-06292-3 & x_{12} = -(16+3+27+8+12+4+6+6+9+6)  \mod 10 = -97 \mod 10 = 3\\
+9-780198-538095 & x_{12} = -(27+7+24+3+9+24+5+9+8+9) \mod 10 = -125 \mod 10 = 5 \\
+8-410420-327003 & c = -(24+4+3+12+2+3+6+7) \mod 10 = -61 \mod 10 = 9
+\end{array}\]
+\normalsize
+Sólo podemos asegurar que el último código es incorrecto.
+
+\spart
+
+Calculamos de nuevo el dígito $x_{12}$ forzamos a que el valor obtenido coincida con el real.
+
+\[5 = -(3+3+3a+6+15+8+21+9)\mod 10 = -(3a+68) \mod 10 = -3a+2 \mod 10\]
+Resolviendo la ecuación llegamos a
+\[ a=-1 \mod 10 = 9\]
+
+
 \end{problem}
 
-\begin{problem}  a) Encuentra el dígito de control ($c$) de los
+\begin{problem}[2]
+\ppart Encuentra el dígito de control ($c$) de los
 siguientes ISBN:
  3-540-96311-$c$, 84-8310-055-$c$.
 
-b) ¿Cuáles de los siguientes ISBN puedes asegurar que son
+\ppart ¿Cuáles de los siguientes ISBN puedes asegurar que son
 incorrectos?: 84-293-5922-8, 0-19-853803-0,  84-230-5921-X,
 12-345-678X-5.
 
-c) Al recibir un ISBN se ha borrado un número (que representamos
+\ppart Al recibir un ISBN se ha borrado un número (que representamos
 por una $a$) y hemos recibido 0-13-1$a$9139-9. ?`Cuánto vale $a$?
 
-d) Al recibir un ISBN se han borrado parcialmente dos números (que
+\ppart Al recibir un ISBN se han borrado parcialmente dos números (que
 representamos por $a$ y $b$) y hemos recibido 0-02-32$ab$80-0.
 Somos capaces de ver la parte superior de $a$ y $b$, y de ello
 deducimos que $a,b\in\{0,8,9\}$. ?`Cuánto valen $a$ y $b$?
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Recordemos que el dígito de control en los códigos ISBN se calcula según la fórmula:
+\[\sum_{i=1}^{10}ix_i = 0 \mod 11 \implies -10 x_{10} = \sum_{i=1}^9ix_i \mod 11 \implies x_{10} = \sum_{i=1}^9ix_i \mod 11\]
+
+\[\begin{array}{ll}
+3-540-96311-c & c = 3+10+12+45+36+21+8+9\mod 11 = 144 \mod 11 = 1\\
+84-8310-055-c & c = 8+8+24+12+5+40+45 \mod 11 = 142 \mod 11 = 9
+\end{array}\]
+
+\spart
+
+Para ver si son incorrectos calculamos $x_{10}$ y comprobamos que coincida con el que nos dan en el propio número.
+
+\[\begin{array}{ll}
+84-293-5922-8 & x_{10} = -156 \mod 11 = 8 \\
+0-19-853803-0 & x_{10} = -150 \mod 11 = 3 \\
+84-230-5921-X & x_{10} = -118 \mod 11 = 2 \\
+12-345-678X-5 & \text{incorrecto}
+\end{array}\]
+
+Para el último caso no hemos necesitado realizar la cuenta puesto que el caracter $X$ que representa el número 10 sólo puede aparecer en el dígito de control.
+
+Para el resto de casos, la comprobación de la suma de control nos dice que los dos últimos códigos contienen errores.
+
+\spart
+
+\[0 = 2+9+4+5a+54+7+24+81+90 \mod 11 = 5a+7 \implies a = 9\cdot 4 \mod 11 = 3\]
+
+\spart
+Los valores posibles serán aquellos que satisfagan la ecuación:
+\[0 = 6+12+10+6a+7b+64 \mod 11 = 6a+7b+4 \mod 11\]
+
+Vamos a probar con los valores que tenemos:
+\[\begin{array}{ll}
+a= 0 & b= 1 \\
+a=8 & b=2 \\
+a=9 & b=9
+\end{array}\]
+
+Con lo que parece razonable asumir que $(a,b)=(9,9)$
 \end{problem}
 
 \begin{problem} El NIF tiene la estructura $x_7x_6x_5x_4x_3x_2x_1x_0-r$ con
 $x_i\in\{0,\dots,9\}$ y $r\equiv\sum_{i=0}^710^ix_i\mod 23$. Cada
 resto módulo 23 se representa por  una letra de acuerdo con la
 siguiente tabla [no se utilizan I, Ñ,O, U].
-
+\small
 \begin{center}
 \begin{tabular}{llllllllllllllllllllllllll}
 \hline
@@ -4316,7 +4395,7 @@ E}\\
 \end{tabular}
 
 \end{center}
-
+\normalsize
 a) Encuentra la letra de control de los siguientes NIF:
 $2631173-r$, $841241-r$.
 
