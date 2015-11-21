@@ -4413,6 +4413,54 @@ $m<17$.
 \ppart Al recibir un NIF se ha borrado un número (que representamos
 por una $a$) y hemos recibido $0330a082-Q$. ?`Cuánto vale $a$?
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Lo único que debemos hacer es calcular el valor del DNI módulo 23 y mirar las tablas para ver con qué letra se relaciona el número obtenido.
+
+Así tenemos que los NIF serían $2631173-L$ y $841241-Q$
+
+\spart
+
+Para ver si son incorrectos vamos a calcular la letra correspondiente al DNI y comprobar si coincide con la letra en el NIF.
+
+Así tenemos que parece ser correcto el NIF: $2516344-Y$ mientras que a los otros dos les correspondería: $2516344-Y$ y $76105-K$ por lo que seguro son incorrectos los dados por el enunciado.
+
+\spart
+
+Este ejercicio esta hecho en teoría a la hora de estudiar el NIF.
+
+\spart
+
+Vamos a ver los diferentes casos que debemos comprobar
+\begin{itemize}
+\item \textbf{Detectar un error}
+
+Si el dígito $x_i$ pasa a ser $\tilde{x}_i+e$ tendremos que
+\[\tilde{r} = r + 10^ie \mod 17\]
+
+El error pasará desapercibido si $\tilde{r}=r$, cosa que sólo ocurrirá cuando
+\[10^ie = 0 \mod 17 \iff (10^{-1})^i10^ie=(10^{-1})^i\cdot 0 \implies e = 0 \mod 17\]
+
+donde la existencia de $10^{-1}$ es clara puesto que 17 es primo.
+
+Por tanto, está claro que siempre se detectará el error.
+
+\item \textbf{Intercambio de dígitos}
+
+Siguiendo el mismo razonamiento del apartado anterior, no detectaremos el intercambio de dos dígitos siempre que
+\[10^ie-10^je=0 \mod 17 \implies 10^i-10^j=0\mod 17 \implies 10^i(1-10^{j-i})=0 \mod 17\]
+
+TO BE CONTINUED
+\end{itemize}
+
+\spart
+
+Podemos ver que
+\[16 \mod 23 = 3300082+a\cdot 1000 \mod 23 = 19+11a\cdot 23 \implies 11a=20 \mod 23 \implies\]
+\[\implies a = 21 \cdot 20 \mod 23 = 6\]
 \end{problem}
 
 \begin{problem}[4]
@@ -4425,6 +4473,25 @@ embargo es costumbre escribir el NIF 02516341-A simplemente como
 se detecte el olvido de una cifra? ¿y de dos cifras consecutivas?
 ¿y de dos cifras no consecutivas?
 \solution
+
+\doneby{Pedro}
+
+Recordemos que en el ISBN teníamos:
+\[\sum_{i=1}^{10}ix_i = 0 \mod 11\]
+Si el olvido de una cifra no se detecta es porque, siendo la cifra olvidada $x_i$ se cumple que
+\[0=-\sum_{j=i}^{10}jx_j+\sum_{j=i+1}^{10}(j-1)x_j \mod 11 = -ix_i - \sum_{j=i+1}^{10}x_j \mod 11\]
+
+siendo esto algo perfectamente posible. La búsqueda de un ejemplo concreto se deja como ejercicio para el lector.
+
+Pueden olvidarse también dos cifras consecutivas con lo que nos comeríamos el error si
+\[0 = -ix_i-{i+1}x_i - \sum_{j=i+2}x_j \mod 11\]
+cosa que también es posible.
+
+De la misma forma, podemos reordenar las $x_i$ y las $x_j$ para ver que ocurre si se olvidan cifras no consecutivas.
+
+La forma más sencilla de que esto ocurra es suponiendo que se olvidan cifras nulas y buscando una combinación con el resto de cifras tales que los sumatorios valgan 11.
+
+
 \end{problem}
 
 \begin{problem}[5] El {\it Código de las Tarjetas de Crédito (CODABAR)}: El
@@ -4432,9 +4499,9 @@ número de las tarjetas de crédito esta compuesto por 16 cifras a
 las que se exige que:
 \small
 \[2(a_1+a_3+a_5+a_7+a_9+a_{11}+a_{13}+a_{15})
-+a_2+a_4+a_6+a_8+a_{10}+\atop a_{12}+a_{14}+a_{16}+
++a_2+a_4+a_6+a_8+a_{10}+ a_{12}+a_{14}+a_{16}+ \atop
 \text{número de dígitos en posición impar que son mayores que
-4}\]
+4}=0 \mod 10\]
 \normalsize
 \ppart Comprueba que 4599-8834-3278-8311 y 4605-0521-5847-2052 son
 CODABARs correctos.
@@ -4444,6 +4511,61 @@ detectar dos errores; detectar una permutación de dos cifras;
 detectar una permutación de dos cifras consecutivas; corregir un
 error; recuperar un número borrado (sabiendo qué lugar ocupa).
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Vamos a comprobar la correctitud de la suma dada:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Número & Suma pares & Suma impares & Digitos impares > 4 & total \\
+\hline
+\hline
+4599-8834-3278-8311 & 40 & 43 & 4 & 130 \\
+\hline
+4605-0521-5847-2052 & 34 & 22 & 2 & 80 \\
+\hline
+\end{tabular}
+\end{center}
+
+\spart
+
+\begin{itemize}
+\item \textbf{Detectar un error}
+
+Si se produce un error en una cifra y leemos $\tilde{x}_i = x_i+e$ no lo detectará el sistema si:
+
+Si $e$ es menor que 5, el último término de la suma podría no cambiar de modo que el error podría no detectarse si $e$ ó $2e$ es 0 módulo 10, pero esto sólo puede ocurrir si $e=0$ ó $e=5$.
+
+Puesto que suponemos que $e<5$ es claro que este error siempre se detectará.
+
+Si resulta que $e>5$ el error no se detectará si
+\[2e + 1 = 0 \mod 10 \]
+
+cosa que no puede ocurrir nunca.
+
+Por último, es posible que $e<5$ pero que aún así cambiemos el último elemento de la suma de comprobación.
+
+En ese caso nos comeríamos el error si
+\[2e + 1 = 0 \mod 10\]
+que también es imposible.
+
+Queda claro por tanto que un error siempre será detectable.
+
+\textcolor{blue}{A partir de aquí me entra pereza infinita}
+
+\item \textbf{Detectar dos errores}
+
+\item \textbf{Permutar dos cifras}
+
+\item \textbf{Permutar dos cifras consecutivas}
+
+\item \textbf{Corregir un error}
+
+\item \textbf{Recuperar un número borrado}
+\end{itemize}
 \end{problem}
 
 \begin{problem}[6]  El {\it Código de los Cheques}: Esta es una lista de
