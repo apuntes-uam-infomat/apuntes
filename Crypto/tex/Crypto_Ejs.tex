@@ -4451,9 +4451,12 @@ Por tanto, está claro que siempre se detectará el error.
 \item \textbf{Intercambio de dígitos}
 
 Siguiendo el mismo razonamiento del apartado anterior, no detectaremos el intercambio de dos dígitos siempre que
-\[10^ie-10^je=0 \mod 17 \implies 10^i-10^j=0\mod 17 \implies 10^i(1-10^{j-i})=0 \mod 17\]
+\[10^ie-10^je=0 \mod 17 \implies 10^i-10^j=0\mod 17 \implies 10^j(10^{i-j}-1)=0 \mod 17\]
 
-TO BE CONTINUED
+Por el pequeño teorema de Fermat sabemos que
+\[10^{i-j}-1=0 \mod 17 \implies 10^{i-j}=1 \mod 17 \implies i-j = 17\]
+
+pero sabemos que es imposible puesto que el NIF tiene 8 dígitos.
 \end{itemize}
 
 \spart
@@ -4535,36 +4538,112 @@ Número & Suma pares & Suma impares & Digitos impares > 4 & total \\
 \begin{itemize}
 \item \textbf{Detectar un error}
 
-Si se produce un error en una cifra y leemos $\tilde{x}_i = x_i+e$ no lo detectará el sistema si:
+Si se produce un error en una cifra y leemos $\tilde{x}_i = x_i+e$ pueden ocurrir diferentes opciones para que no lo detecte el sistema.
 
-Si $e$ es menor que 5, el último término de la suma podría no cambiar de modo que el error podría no detectarse si $e$ ó $2e$ es 0 módulo 10, pero esto sólo puede ocurrir si $e=0$ ó $e=5$.
+\begin{enumerate}
+\item \textbf{El error es tal que la cifra sigue siendo mayor o menor que 4 (como fuera antes)}
 
-Puesto que suponemos que $e<5$ es claro que este error siempre se detectará.
+En estas condiciones el último término de la suma no cambia. Aún tenemos dos opciones:
+\begin{enumerate}
+\item \textbf{El dígito modificado ocupa una posición par}
 
-Si resulta que $e>5$ el error no se detectará si
-\[2e + 1 = 0 \mod 10 \]
+En este caso nos comeríamos el error si:
+\[e=0 \mod 10 \implies e=0\]
+Es decir, siempre detectamos el error.
 
-cosa que no puede ocurrir nunca.
+\item \textbf{El dígito modificado ocupa una posición impar}
 
-Por último, es posible que $e<5$ pero que aún así cambiemos el último elemento de la suma de comprobación.
+En este caso nos comeríamos el error si:
+\[2e = 0 \mod 10 \implies e=0 \text{ ó } e=5\]
+Pero el error no puede ser 5 ya que en ese caso la cifra pasaría de ser mayor que 4 a ser menor y viceversa, con lo que estaríamos modificando el último dígito de la suma y estamos suponiendo que esto no ocurre.
 
-En ese caso nos comeríamos el error si
-\[2e + 1 = 0 \mod 10\]
-que también es imposible.
+Por tanto el error sería detectado.
+\end{enumerate}
 
-Queda claro por tanto que un error siempre será detectable.
+\item \textbf{El error hace que la cifra pase de ser menor que cuatro a ser mayor o igual o viceversa}
 
-\textcolor{blue}{A partir de aquí me entra pereza infinita}
+En estas condiciones tenemos dos opciones nuevamente:
+\begin{enumerate}
+\item \textbf{El dígito modificado ocupa una posición par}
+
+En este caso nos comeríamos el error si:
+\[e=0 \mod 10 \implies e=0\]
+Es decir, detectaríamos el error salvo que este no exista (sea 0)
+
+\item \textbf{El dígito modificado ocupa una posición impar}
+En este caso nos comeríamos el error si
+\[2e \pm 1 = 0 \mod 10 \implies 2e=1 \text{ ó } 2e = 9 \mod 10\]
+
+Pero ambos casos son imposibles puesto que $2e$ es par y su resto módulo 10 lo será tambien, por lo que es imposible que se de alguna de las condiciones que acabamos de mencionar.
+
+Por tanto el código siempre detectará el error.
+\end{enumerate}
+\end{enumerate}
 
 \item \textbf{Detectar dos errores}
 
+Es posible que se produzcan dos errores sin que el sistema lo detecte.
+
+Basta con que dos cifras que ocupan la posición par se intercambien.
+
 \item \textbf{Permutar dos cifras}
+
+Si las dos cifras ocupan una posición par o impar (ambas el mismo tipo de posición) no seremos capaces de detectar el error.
+
+Si una cifra ocupa la posición par y otra una impar podemos distinguir dos casos:
+
+\begin{enumerate}
+\item \textbf{La posición impar pasa de ser mayor que 4 a no serlo o viceversa.}
+
+En este caso nos comeríamos el error si:
+\[\left.\begin{array}{l}
+2e - e + 1 = 0 \mod 10 \\
+-2e + e -1 = 0 \mod 10
+\end{array}\right\} \implies e=9 \mod 10\]
+
+Si tenemos el caso en el que $a_1=0$ y $a_2=9$, en el primer caso sumamos
+\[2a_1+a_2 = 9\]
+
+Sin embargo, si intercambiamos los dígitos tendríamos $a_1=9$ y $a_2=0$ con lo que la suma nos da:
+\[2a_1+a_2+1 = 19 \mod 10 = 9\]
+
+Por tanto podemos ver que este error no sería detectado.
+
+\item \textbf{La posición impar se conserva mayor 4 o menor o igual si lo era.}
+
+En este caso nos comeríamos el error si:
+\[\left.\begin{array}{l}
+2e - e = 0 \mod 10 \\
+-2e + e = 0 \mod 10
+\end{array}\right\} \implies e=0 \mod 10\]
+
+Es decir, detectamos siempre el error.
+
+\end{enumerate}
 
 \item \textbf{Permutar dos cifras consecutivas}
 
+Este caso se incluye dentro de lo estudiado en el apartado anterior, pues estaríamos cambiando el valor de una cifra en posición par con una en posición impar.
+
 \item \textbf{Corregir un error}
 
+Si sabemos que sólo se ha producido un error tendremos que la suma de comprobación nos da $e$ cuando debería dar $0$ por lo que podemos corregirlo simplemente calculando el inverso aditivo de $e$.
+
 \item \textbf{Recuperar un número borrado}
+
+Si un número se ha borrado, sumando todos los demás adecuadamente obtendremos algo de la forma
+\[Σ = 0 \mod 10\]
+
+Por tanto debemos encontrar el número tal que valor $x_i$ cumpla
+\[Σ+x_i = 0 \mod 10\]
+
+Si $x_i$ ocupa una posición par tenemos
+\[x_i = - Σ \mod 10\]
+
+Si $x_i$ ocupa una posición impar, si Σ es par tomamos
+\[x_i = \frac{-Σ}{2} \mod 10\]
+si Σ es impar tomamos
+\[x_i = \frac{-Σ-1}{2}+5\]
 \end{itemize}
 \end{problem}
 
@@ -4590,6 +4669,22 @@ error; recuperar un número borrado (sabiendo qué lugar ocupa).
 
 \begin{problem}[7] Sea $\mathcal C$ un código con $d=6$. Encuentra un algoritmo que permita  \underbar{simult\'aneamente} corregir un error y detectar cuatro cuando transmitimos una palabra de $\mathcal C$.
 \solution
+
+\doneby{Pedro}
+
+Atendiendo al teorema \ref{theorem:Codigo_detector_corrector}, puesto que
+\[6 = 2\cdot 1 + 3 + 1\]
+
+podemos tomar el algoritmo definido en el teorema:
+
+\begin{enumerate}
+\item Recibo $\tilde{x} \in F_q^n$
+\item Calculo $d_0 = \min\{d(x,\tilde{x}) \forall x \in \algb{C}\}$
+\item Si $d_0 \leq r$ leo $x_0 \in \algb{C}$ tal que $d(x_0,\tilde{x})=d_0$
+\item En otro caso \textbf{PITO}
+\end{enumerate}
+
+Este algoritmo, tal y como nos garantiza el teorema, corrige 1 error y detecta 4.
 \end{problem}
 
 
@@ -4601,6 +4696,13 @@ $(n,2^{n-1},2)$-código binario, y en particular que $C$ siempre
 detecta un error. Encuentra \underbar{todos} los errores que
 pueden ser detectados por $C$.
 \solution
+
+\doneby{Pedro}
+
+Es evidente que siempre detectamos un error puesto que un cambio en un bit hará que la suma de comprobación varíe en 1 que es distinto de 0 en módulo 2.
+
+En general, siempre que el número de errores sea impar el código detectará que se ha producido un error.
+
 \end{problem}
 
 \begin{problem}[9] Consideramos el código $C$ de repetición de longitud 4 sobre
@@ -4619,6 +4721,23 @@ números), 27 - 27 - 15 - 27 - 5 - 5 - 5 - 5 - 5 - 4 - 4 - 5 - 4 -
 
 ¿qué interpretarias que nos quieren decir?
 \solution
+
+\doneby{Pedro}
+
+\spart
+El código de repetición de longitud 4 significa que cada caracter va a aparecer repetido 4 veces en el mensaje a modo de redundancia.
+
+Eivdentemente si se produce un error veremos que, donde debería haber 4 cifras iguales 1 es distinta, con lo que podemos reconocerla y corregirla.
+
+Si en el bloque de 4 cifras que deberían ser iguales hay dos distintas y esas son iguales entre ellas, podemos detectar que hay un error aunque no podremos corregirlas pues no sabemos que par es erróneo.
+
+\spart
+
+El mensaje dice:
+
+``¡FELIZNNVIDAD!''
+
+Donde parece razonable suponer que el mensaje 13-13-0-13 es realmente una ``A'' en la que se ha producido una cadena poco probable de errores.
 \end{problem}
 
 \begin{problem}[10]  Utilizamos el código binario de repetición de longitud 5
@@ -4632,5 +4751,31 @@ incorrectamente si $p=0.1$? ?`Y si  $p=0.01$? Compara con lo que
 sucedería si utilizasemos el código binario de repetición de
 longitud 3, o si no codificásemos en absoluto.
 \solution
+
+\doneby{Pedro}
+
+Para cada caracter cifrado deberíamos recibir 5 bits iguales. Descodificaremos el mensaje de forma errónea en los siguientes casos:
+\begin{enumerate}
+\item \textbf{5 bits erroneos}
+
+\[P_1=p^5\]
+
+\item \textbf{4 bits erróneos}
+
+\[P_2 = p^4\]
+
+\item \textbf{3 bits erróneos}
+
+\[P_3 = p^3\]
+\end{enumerate}
+
+Si sólo hay 2 bits erróneos o 1 lo detectaremos correctamente puesto que habrá mayoría de bits correctos y el algoritmo encontrará el vecino más próximo con lo que acertará.
+
+En cada bloque de repetición, la probabilidad de error es:
+\[P_{err} = p^5 + 5p^4+10p^3\]
+donde tenemos en cuenta las diferentes formas posibles de escoger 3,4 o 5 bits que cambiar.
+
+\textcolor{blue}{Y no se parece demasiado a lo supuestamente esperado}
+
 \end{problem}
 
