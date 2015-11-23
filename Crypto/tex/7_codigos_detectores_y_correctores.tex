@@ -666,3 +666,131 @@ Pero por el pequeño teorema de Fermat sabemos que $10^{22}=1 \mod 23$, de modo 
 
 \obs Se puede comprobar que si en vez de haber tomado 23 letras se hubieran escogido 17 o 19, el NIF seguiría siendo capaz de detectar el intercambio de dos dígitos, sin embargo con solo 11 letras no se podría corregir.
 
+\section{Probabilidades}
+
+En general, empleamos los códigos dectector/correctores de errores para disminuir la probabilidad de leer mal un mensaje.
+
+Si tenemos que la probabilidad de que un bit se modifique durante la transmisión del mensaje es $p$, hasta ahora hemos supuesto $p<\frac{1}{2}$.
+
+Sin embargo, puede ocurrir que tengamos un canal de comunicación tan pésimo que $p>\frac{1}{2}$. En este caso, lo que podemos hacer es invertir el mensaje recibido (cambiar todos los bits) y empezar a emplear toda la teoría vista hasta ahora, puesto que acabamos de convertir nuestro canal en otro con $p<\frac{1}{2}$
+
+El gran problema lo alcanzamos cuando $p=\frac{1}{2}$ puesto que en este caso llegarían 0s y 1s al azar.
+
+Genralizando a un canal por el que transmitimos $q$ posibles valores con probabilidad $p$ de que haya un error, consideramos que enviando un símbolo cualquiera, podremos recibir cualquier otro con probabilidad $\frac{p}{q}$.
+
+\begin{example}
+Supongamos que tenemos un código $\algbC = \{ \text{SI} = 1, \ \text{NO} = 0\}$ y lo enviamos por un canal con $p=\frac{1}{2}$.
+
+En este caso el mensaje leído será incorrecto con probabilidad $p$ y correcto con probabilidad $1-p$.
+\end{example}
+
+Este ejemplo no nos dice nada, pues es extremadamente sencillo. Veamos otro con más interés.
+\begin{example}
+Supongamos que tenemos un código de tripitición:
+\[\algbC = \{ \text{SI} = 111, \ \text{NO} = 000\}\]
+
+En este caso la probabilidad de leer el mensaje correctamente es:
+\[\algbP(\text{correcto})=(1-p)^3+3p(1-p)^2\]
+puesto que si sólo se produce un error lo corregiremos correctamente empleando la técnica del vecino más próximo.
+
+Por otro lado, es sencillo ver que
+\[\algbP(\text{incorrecto}) = 1 - \algbP(\text{correcto})\]
+\end{example}
+
+Hay que recalcar que la probabilidad de error en el canal es un dato que nos viene dado y que no podemos modificar desde el punto de vista matemático (eso será cosa de los ingenieros).
+
+Nuestro objetivo como matemáticos será minimizar la probabilidad de error en el código.
+
+\begin{defn}[($n,M,d$)-código q-ario]
+
+Sea $F_q$ un alfabeto con $|F_q|=q$.
+
+Decimos que un $(n,M,d)$-código q-ario es un código $\algbC$ tal que
+\[\algbC \subset F_q^n, \ \ d(\algbC)=d \text{ y } |\algbC|=M\]
+\end{defn}
+
+\begin{defn}[.$A_q(n,d)$]
+\[A_q(n,d) = \max\{M: \ \exists (n,M,d)\text{-código q-ario}\}\]
+\end{defn}
+
+\begin{prop}[Cota de Singelton]
+Para todo código se cumple que
+\[M \leq q^{n-d+1}\]
+es decir
+\[A_q(n,d) \leq q^{n-d+1}\]
+\end{prop}
+\begin{proof}
+Consideramos la aplicación
+\[\appl{π}{F_q^n}{F_q^{n-d+1}}\]
+definida como una proyección sobre las primeras $n-d+1$ coordenadas.
+
+Puesto que $\algbC \subset F_q^n$ podemos restringir nuestra aplicación al código:
+\[\appl{π}{\algbC}{F_q^{n-d+1}}\]
+
+Si la aplicación fuese inyectiva tendríamos que
+\[|\algbC| \leq |F_q^{n-d+1}| \implies n \leq q^{n-d+1}\]
+
+Por tanto, sólo tenemos que probar que es inyectiva. Para ello supongamos que hay dos puntos cuya imagen es la misma, es decir:
+\[x,y \in F_1^n \ \ F(x)=F(y) \implies d(x,y) \leq d-1\]
+Pero la distancia mínima es, por definición $d$ por lo que no es posible que tengamos dos plabras a distancia $d-1$ a no ser que sean iguales.
+
+Es decir, tenemos $x=y$ con lo que la función es inyectiva.
+\end{proof}
+
+\obs La cota de Singleton no siempre se alcanza.
+
+\begin{example}
+Consideremos un código con $A_2(5,3)$, que sabemos es menor o igual que 4 por la cota de Singleton.
+
+Para comprobar que se cumple la cota de Singleton, debemos ver que existe un $(5,4,3)$-código binario y que no existe un $(5,5,3)$-código binario.
+
+Vamos a ello.
+
+Ya hemos visto en estos apuntes un $(5,4,3)$-código binario cuando definimos códigos para un robot:
+\[\algb{C}_5 = \left\{x\in F_2^6 \tq  \begin{array}{l}
+x_1+x_2+x_3= 0 \\
+x_1+x_4 = 0 \\
+x_2+x_5 = 0
+\end{array}\right\}=\left\{\begin{array}{l}
+00000\\
+01101\\
+10110\\
+11011
+\end{array}\right\}\]
+
+Ahora tenemos que ver que no existe ninguno con 5 términos. Para ello antes debemos ver una definición.
+
+\begin{defn}[Códigos equivalentes]
+Diremos que dos códigos $\algbC_1$ y $\algbC_2$ (necesariamente de la misma longitud) son equivalentes si uno puede obtenerse a partir del otro combinando los siguientes dos tipos de transformaciones:
+\begin{enumerate}
+\item Intercambiar dos variables
+\item Permutar los símbolos que aparecen en una posición dada
+\end{enumerate}
+\end{defn}
+
+\begin{prop}
+Dos códigos equivalentes tienen los mismo parámetros y la misma capacidad de detectar/corregir errores, aunque los algoritmos a emplear será distintos en cada caso.
+\end{prop}
+
+\begin{lemma}
+Si $0\in F_q$ cualquier código no vacío $\algbC$ es equivalente a otro $\algbC'$ con $0...0\in \algbC'$
+\end{lemma}
+\begin{proof}
+Dada una palabra cualquiera sobre cada elemento $a_i$ de la palabra aplicamos la permutación $a_i\to 0 \to a_i$, con lo que obtenemos la palabra $0...0$
+\end{proof}
+
+Ahora estamos en condiciones de seguir con el ejemplo.
+
+Si existiera un $(5,5,3)$-código binario. entonces existiría uno equivalente $\algbC$ con $0...0 \in \algbC$.
+
+Además
+\[\nexists x \in \algbC \tq w(x)=1,2 \text{ puesto que } d=3\]
+
+Por otro lado, si tomamos $w(x)=4$, $w(y)=4$ y $w(z)=4$ tenemos $d(x,y)=1$, $d(y,z)=2$.
+
+Con esto tenemos que en nuestro código de longitud 5 debe haber como mucho 1 palabra de peso 5, otra de peso 0 y ninguna de pesos 2 ni 4. Por tanto, debe haber, como mínimo 3 palabras de peso 3.
+
+Si nos ponemos a buscar estas palabras vemos que sólo hay dos opciones de palabras de peso 3 que disten, al menos 3. Estas palabras son $11100$ y $00111$.
+
+Pero entonces aún nos falta una palabra para nuestro código con lo que acabamos de comprobar que no es posible la existencia del susodicho código.
+\end{example}
