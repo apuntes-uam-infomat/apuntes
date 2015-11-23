@@ -867,7 +867,7 @@ De momento, hemos hablado mucho de la función maximal pero todavía no sabemos 
 
 Para ver la prueba, haremos una definición temporal que mejoraremos más adelante:
 
-\begin{defn}[Punto\IS de Lebesgue] \label{def:PuntoLebesgue} Llamamos puntos de lebesgue de una función integrable a  los $x ∈ ℝ^N$ tales que \[ f(x) = \lim_{r \to 0} A_r f(x) = \lim_{r\to 0} \fint\limits_{\bola_r(x)} f(y) \dif y \]
+\begin{defn}[Punto\IS de Lebesgue] \label{def:PuntoLebesgue} Llamamos puntos de Lebesgue de una función integrable a los $x ∈ ℝ^N$ tales que \[ \lim_{r \to 0} \fint\limits_{\bola_r(x)}\abs{f(x) - f(y)} \dif y = 0 \]
 \end{defn}
 
 Esta definición nos da una desigualdad $\abs{f(x)} ≤ Mf(x)$, y también nos permitirá descomponer una $f$ integrable como $f = f^* + h$, con $h$ definida en un conjunto de medida cero: esa $h$ se irá a cero cuando hagamos la integral.
@@ -1396,8 +1396,31 @@ Dado un $ε > 0$ arbitrario, hacemos desigualdades y probablemente salga en alg�
 Para $k = 1$, hacemos cosas, y luego por inducción para el caso general.
 \end{proof}
 
-\begin{defn}[Familia\IS de aproximaciones de la identidad] Una familia de aproximaciones de la identidad es una sucesión $\set{ρ_n}_{n∈ℕ}$ de funciones $\appl{ρ_n}{ℝ^N}{ℝ}$ no negativas, infinitamente derivables, de soporte compacto, con $\sop ρ_n ∈ \bola_{\frac{1}{n}} (0)$ y con norma $\norm{ρ_n}_1 = 1$.
+\begin{defn}[Familia\IS de aproximaciones de la identidad] \label{def:AproxIdentidad} Una familia de aproximaciones de la identidad es una sucesión $\set{ρ_n}_{n∈ℕ}$ de funciones $\appl{ρ_n}{ℝ^N}{ℝ}$ no negativas, infinitamente derivables, de soporte compacto, con $\sop ρ_n ∈ \bola_{\frac{1}{n}} (0)$ y con norma $\norm{ρ_n}_1 = 1$.
 \end{defn}
+
+\textit{TODO: Falta una clase, de aproximación de funciones $L^p$ con funciones suaves $C^∞_c$}
+
+
+\begin{lemma}[Lema\IS del test] Sea $Ω ⊆ ℝ^N$ abierto y sea $u ∈ \esplloc[1][Ω]$. Si $\int_Ω u φ \dif x= 0$ para todo $ φ ∈ C^∞_c(Ω)$, entonces $u = 0$ para casi todo punto de Ω.
+\end{lemma}
+
+Este lema es muy útil, porque nos da una forma de ver si las funciones son nulas sin saber cómo son exactamente. Lo que haremos con él será tomar sucesiones $φ_n$ que converjan a $\sign u$, así que en algún momento llegaremos a tener $u · \sign u$, que no es más que $\abs{u}$. Entonces, ya sabemos que $\int_Ω \abs{u} = 0 \implies u = 0$ (esto no vale si la $u$ cambia de signo, sólo si es siempre no negativa) y vemos de dónde sale el lema.
+
+\begin{proof} Sea $g ∈ L^∞(ℝ^N)$ con soporte compacto en Ω. Ponemos $g_n = ρ_n * g$, con $ρ_n$ una \nlref{def:AproxIdentidad}, de manera que $g_n ∈ C_c^∞(Ω)$ cuando $n$ es grande, y tenemos que \( \int u ρ_n = 0 \label{eq:PrLemaTest:Integ} \) para todo $n$ por hipótesis.
+
+El soporte de cada $g_n$ será un poco más grande que el de $g$, esto es burdamente que $\sop g_n ⊆ (\sop g + \frac{1}{n})$.
+
+Nos gustaría poder pasar al límite en \eqref{eq:PrLemaTest:Integ} y tener que $\int ug = 0$.
+En ese caso, siendo $K$ compacto en Ω, podríamos definir \[ g = \begin{cases} \sign u & x ∈ K \\ 0 & x ∈ ℝ^N \setminus K \end{cases} \], lo que nos daría que $0 = \int ug = \int u \sign u = \int \abs{u}$ y por lo tanto nos quedaría que $u = 0$ para CTP en todo compacto $K \Subset Ω$, así que $u = 0$ para CTP de Ω.
+
+Nos falta así justificar que podemos pasar al límite. Lo malo es que la convergencia de funciones $g_n ∈ C_c^∞$ a $g ∈ L^∞$ no es siquiera esencialmente uniforme. Ahora bien, si $g ∈ C^0$ es continua entonces sí tenemos convergencia en sentido $L^1$ (ver \fref{def:ConvLp}), lo que nos dice que existe una subsucesión $g_{n_k}$ que converge a $g$ en casi todo punto.
+
+% TODO: Ver bien esto.
+Entonces, la sucesión $\ind_K u g_{n_k} ≤ u (g + 1) \ind_K$ y podemos usar convergencia dominada.
+\end{proof}
+
+Recordamos ahora el \nref{lem:Urysohn}, que nos decía existía una función ``casi característica'' $φ_K$ para todo compacto $K$ y que además era continua.
 
 \section{SOC en espacio de Hilbert. Series de Fourier}
 
