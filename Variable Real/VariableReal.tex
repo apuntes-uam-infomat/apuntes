@@ -5,6 +5,7 @@
 \usepackage{tikztools}
 \usepackage{esint}
 \usepackage{booktabs}
+\usepackage{xfrac}
 
 \bibliographystyle{plainnat}
 
@@ -971,7 +972,7 @@ Un ejemplo algo más cotidiano que es infinito-dimensional es el espacio de func
 
 Vamos a detallar la definición de espacios \espLp que veíamos en la última parte de la sección anterior.
 
-\begin{defn}[Espacio\IS de funciones $p$-integrables $\mathcal{L}^p(X,μ)$] \label{def:EspLp} Dado un espacio $X$ y una medida $μ$, definimos el espacio de funciones $p$-integrables como \[
+\begin{defn}[Espacio\IS de funciones $p$-integrables $\mathcal{L}^p(X,μ)$] \label{def:EspLIntp} Dado un espacio $X$ y una medida $μ$, definimos el espacio de funciones $p$-integrables como \[
 \espl[p][X,μ] = \set{\appl{f}{X}{ℝ} \tq f \text{ medible},\; \int_X \abs{f}^p \dif μ < + ∞} \]
 
 Equivalemente, son las funciones $f$ tales que \( \norm{f}_{\espL[p][X,μ]} = \left(\int_X \abs{f}^p \dif μ\right)^\frac{1}{p} < ∞ \label{eq:NormaLpPrev}\)
@@ -1206,9 +1207,9 @@ F_n &= \inv{f}\left([-n, +∞]\right)
 Con esto, las funciones simples son \[ s_n = \sum_{i=1}^{n2^n} \frac{i-1}{2^n}\ind_{E_{n,i}} + n \ind_{F_n} \]
 \end{proof}
 
-Ahora vamos a por la prueba del \fref{thm:Aproximacion}.
+Ahora vamos a por la prueba del \fref{thm:AproximacionSimples}.
 
-\begin{proof}[\fref{thm:Aproximacion}]
+\begin{proof}[\fref{thm:AproximacionSimples}]
 Suponemos $f ∈ \espLp, \, f ≥ 0$ sin pérdida de generalidad (si no es mayor que cero, simplemente aproximamos la parte positiva y la parte negativa y construimos la aproximación como $f = s_n^+ - s_n^-$).
 
 Está claro que $S \subsetneq \espLp$, y que $f$ es medible. Usamos el \fref{lem:AproxFuncSimples} y tenemos nuestra sucesión $0 ≤ s_n ≤ f$, con $s_n ∈ S ⊂ \espLp$. Dado que $\abs{f - s_n}^p ≤ f^p$, por el \nlref{thm:ConvDominada} y como $f^p$ es integrable, tenemos que $\pnorm{f - s_n} \convs 0$. Entonces, esa función $f$ arbitraria está en el cierre, y por lo tanto $\adh{S} = \espLp$ (teniendo en cuenta la topología dada por la norma $\pnorm{\cdot}$) así que $S$ es denso.
@@ -1420,7 +1421,25 @@ Nos falta así justificar que podemos pasar al límite. Lo malo es que la conver
 Entonces, la sucesión $\ind_K u g_{n_k} ≤ u (g + 1) \ind_K$ y podemos usar convergencia dominada.
 \end{proof}
 
-Recordamos ahora el \nref{lem:Urysohn}, que nos decía existía una función ``casi característica'' $φ_K$ para todo compacto $K$ y que además era continua.
+Recordamos ahora el \nref{lem:Urysohn}, que nos decía existía una función ``casi característica'' $φ_K$ para todo compacto $K$ y que además era continua. Ahora veremos una versión similar para espacios $C^∞$.
+
+\begin{lemma}[Lema\IS de Urysohn versión $C^∞$] \citep[Lema 8.18]{folland99} Si $K \Subset Ω ⊆ ℝ^N$, con $Ω$ abierto, existe una función $φ_K ∈ C_c^∞$ con $0 ≤ φ_K(x) ≤ 1\;∀x ∈ Ω$, $φ_K(x) = 1\;∀x ∈ K$ y $\sop φ_K \Subset Ω$.
+\end{lemma}
+
+\begin{proof}
+Sea $δ = \dst(K, Ω^c)$, esto es, la distancia de $K$ al borde de $Ω$, que es positiva por ser $K$ compacto y Ω abierto. Sea $V_{\sfrac{δ}{3}} = \set{x ∈ Ω \tq \dst(x,K) < \sfrac{δ}{3}}$. Es obvio que $V_δ ⊆ V_{δ+h}\;∀h ≥ 0$.
+
+Sea $ρ_n$ una aproximación de la identidad $C_c^∞$. Definimos entonces $φ_{K,n} = ρ_n * \ind_{V_{\sfrac{δ}{3}}}$, de tal forma que nuestra función será \[ φ_K = \lim_{n\to ∞} φ_{K,n} \]
+
+Lo primero es ver que el soporte es compacto, que efectivamente lo es: \[ \sop φ_K ⊆ \sop (ρ_n * V_{\sfrac{δ}{3}}) ⊆ \sop ρ_n ∪ V_{\sfrac{δ}{3}} = \bola_{\sfrac{1}{n}}(0) ∪ V_{\sfrac{δ}{3}} ⊆ V_{\sfrac{δ}{3} + \sfrac{1}{n}} \]
+
+Necesitamos saber también que $φ_K ∈ [0,1]$. Pero lo ha borrado. % TODO.
+
+Por último, tenemos que ver que $φ_K(x) = 1$ con $x ∈ K$. Vemos que \[ φ_{K,n}(x) = \int_Ω ρ_n(x-y) \ind_{V_{\sfrac{δ}{3}}} (y) \dif y = \int_{V_{\sfrac{δ}{3}}} ρ_n (x-y) \dif y \eqreasonup{n \text{suf. grande}} \int_{\bola_{\sfrac{1}{n}(x)}} ρ_n(z) \dif z = 1\]
+
+% TODO: Esta demostración debería explicarla bien.
+\end{proof}
+
 
 \section{SOC en espacio de Hilbert. Series de Fourier}
 
