@@ -958,20 +958,60 @@ por lo que el residuo es de orden 3 lo que nos da un orden de convergencia:
 Determinar el dominio de estabilidad lineal del método de colocación de parámetro $c_1=\frac{1}{2}$. ¿Es $A$-estable?
 \solution
 
-Tenemos que el método de colocación obedece la recurrencia:
-\[y_{n+1} = y_n + hk_1 \text{ con } k_1 = f\left( x_n +\frac{h}{2}, y_n + \frac{hk_2}{2}\right)\]
-siendo $y'(x)=λy(z)$ podemos escribir
-\[k_1 = λ\left( y_n + \frac{hk_1}{2}\right)\]
+Un \concept{método de colocación} de parámetros $c_1,...,c_v$ (con los parámetros preferiblemente definidos en el intervalo [0,1], aunque no es imprescindible) es aquel que satisface:
+\[u'(x_n+c_jh)=f(x_n+c_jh,u(x_n+c_jh)) \text{ para } j=1,...,v\]
+siendo $u(x_n)=y_n$.
 
-\[y_{n+1} = y_n \frac{λh}{1-\frac{hλ}{2}}y_n\]
-\[y_{n+1} = \left(1+ \frac{λh}{1-\frac{hλ}{2}}\right)y_n\]
-\[y_n = y_0\left(1+ \frac{λh}{1-\frac{hλ}{2}}\right)^n\]
-\[(1-z/2)/(1-z/2) < 1\]
-y asi definimos el dominio.
+Por el teorema del punto medio tenemos:
+\[y_{n+1}=y_n+hu'\left(x_n+\frac{h}{2}\right)\]
+
+Si tomamos el método de colocación con parámetro $c_1=\frac{1}{2}$ y suponemos el resto de parámetros nulos tendremos:
+\[u'\left(x_n+\frac{h}{2}\right)=f\left(x_n+\frac{h}{2},u\left(x_n+\frac{h}{2}\right)\right) =f\left(x_n+\frac{h}{2},u(x_n) + \frac{h}{2}u'\left(x_n+\frac{h}{2}\right)\right)\]
+
+Combinando lo que acabamos de ver podemos escribir la ecuación de recurrencia que define el método de colocación de parámetro $c_1=\frac{1}{2}$:
+
+\[y_{n+1} = y_n + hk_1 \text{ con } k_1 = f\left( x_n +\frac{h}{2}, y_n + \frac{hk_1}{2}\right)\]
+siendo $y'(x)=λy(x)=f(x,y)$ podemos escribir
+\[y_{n+1} = y_n + hλ\left(y_n+\frac{hk_1}{2}\right)\]
+Comparando las dos últimas ecuaciones podemos ver que
+\[k_1 = λ\left( y_n + \frac{hk_1}{2}\right) \implies k_1 = \frac{λy_n}{1-\frac{λh}{2}}\]
+
+Para comprobar si el método es A-estable debemos ver primer cual es su dominio de estabilidad para lo que debemos desarrollar la recurrencia.
+
+\[y_{n+1} = y_n + \frac{λh}{1-\frac{hλ}{2}}y_n = \left(1+ \frac{λh}{1-\frac{hλ}{2}}\right)y_n \implies y_0\left(1+ \frac{λh}{1-\frac{hλ}{2}}\right)^n\]
+
+Por definición, el dominio de integridad está formado por el conjunto de valores $z=hλ$ que hacen que la base de la potencia que multiplica a $y_0$ sea menor que 1. Es decir
+\[\abs{1+\frac{z}{1-\frac{z}{2}}} < 1 \iff \abs{\frac{1+\frac{z}{2}}{1-\frac{z}{2}}} < 1 \iff \abs{1+\frac{z}{2}} < \abs{1-\frac{z}{2}}\]
+
+Los dos números complejos que estamos comparando tienen la misma parte imaginaria. Por tanto, para que el módulo de uno sea menor que el del otro necesitaremos que los valores absolutos de sus partes reales guarden esa relación, es decir:
+\[\abs{1+Re(z)} < \abs{1 - Re(z)}\]
+Es decir, necesitamos que la parte real de $z$ sea negativa.
+
+Por tanto, atendiendo a la definición de A-estabilidad, es obvio ver que el método es A-estable pues su dominio de integridad coincide con la parte izquierda del plano complejo.
 \end{problem}
 
 \begin{problem}[2]
-Considérese el dominio de estabilidad lineal para el método de Euler mejorado. Estudiar si es simétrico con respecto al punto $z=-1$ (es decir, invariante por girso de 180 grados alrededor de dicho punto), con respecto a la recta $Im \ z = 0$, y con respecto a la recta $Re \ z = -1$.
+Considérese el dominio de estabilidad lineal para el método de Euler mejorado. Estudiar si es simétrico con respecto al punto $z=-1$ (es decir, invariante por giros de 180 grados alrededor de dicho punto), con respecto a la recta $Im \ z = 0$, y con respecto a la recta $Re \ z = -1$.
 \solution
 
+\doneby{Pedro} (Se que hizo este ejercicio en clase pero no lo copié y me toca hacerlo de nuevo en casa. En algún momento alguien (el malvado) lo corregirá y podrá borrar esta línea)
+
+El método de Euler mejorado consiste en el empleo de la recurrencia:
+\[y_{n+1}=y_n + \frac{h}{2} (f(x_n,y_n)+f(x_{n+1},y_n+hf(x_n+y_n)))\]
+
+Este caso es el primer ejemplo que aparece resuelto en la teoría al hablar de los problemas Stiff por lo que ya sabemos que su dominio de integridad es:
+\[\norm{1+z+\frac{z^2}{2}} < 1, \text{ siendo } z=λh\]
+
+Para estudiar el efecto de los movimientos rígidos dados sobre el dominio de integridad, vamos a definir $z=a+bi$ con lo que podemos escribir:
+\[\norm{1+z+\frac{z^2}{2}} = \norm{1+a+a^2-b^2 + i(b+2ab)}=\sqrt{(1+a+a^2-b^2)^2+(b+2ab)^2}\]
+que será menor que 1 siempre y cuando
+\[(1+a+a^2-b^2)^2+(b+2ab)^2<1 \iff (1+a+a^2-b^2)^2 +b^2+4a^2b^2+2ab^2 < 1\]
+
+Es evidente que si calculamos el simétrico de un punto que satisface la propiedad respecto al eje $Im(z)=0$ estamos cambiando b por -b lo que no tiene ningún efecto efecto ya que todas las apariciones de $b$ están elevadas al cuadrado.
+
+Si calculamos simétricos respecto a la recta $Re(z)=-1$, es decir, estamos cambiando $a$ por $-2-a$, que puede hacer que nos salgamos del dominio de estabilidad.
+
+Si giramos 180 grados respecto a $z=-1$ la parte real sufre el cambio $a \to -2-a$ y la parte imaginaria cambia de signo. El cambio de la parte imaginaria nos es indiferente pero no el de la parte real, como acabamos de ver.
+
+Por tanto, el dominio de estabilidad del método de Euler mejorado es simétrico respecto a la recta $Im(z)=0$ pero no respecto al punto $z=-1$ ni a la recta $Re(z)=-1$.
 \end{problem}
