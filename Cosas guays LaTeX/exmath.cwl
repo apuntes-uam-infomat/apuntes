@@ -67,6 +67,9 @@
 \sign#m
 \eq#m
 \rango#m
+\rg#m
+\tr#m
+\dist#m
 \eqexpl{arg1}#m
 \eqexpl[=]{arg1}#m
 \wrapreasontext{arg0}#m
