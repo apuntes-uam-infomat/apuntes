@@ -994,8 +994,6 @@ Por tanto, atendiendo a la definición de A-estabilidad, es obvio ver que el mé
 Considérese el dominio de estabilidad lineal para el método de Euler mejorado. Estudiar si es simétrico con respecto al punto $z=-1$ (es decir, invariante por giros de 180 grados alrededor de dicho punto), con respecto a la recta $Im \ z = 0$, y con respecto a la recta $Re \ z = -1$.
 \solution
 
-\doneby{Pedro} (Se que hizo este ejercicio en clase pero no lo copié y me toca hacerlo de nuevo en casa. En algún momento alguien (el malvado) lo corregirá y podrá borrar esta línea)
-
 El método de Euler mejorado consiste en el empleo de la recurrencia:
 \[y_{n+1}=y_n + \frac{h}{2} (f(x_n,y_n)+f(x_{n+1},y_n+hf(x_n+y_n)))\]
 
@@ -1003,15 +1001,77 @@ Este caso es el primer ejemplo que aparece resuelto en la teoría al hablar de l
 \[\norm{1+z+\frac{z^2}{2}} < 1, \text{ siendo } z=λh\]
 
 Para estudiar el efecto de los movimientos rígidos dados sobre el dominio de integridad, vamos a definir $z=a+bi$ con lo que podemos escribir:
-\[\norm{1+z+\frac{z^2}{2}} = \norm{1+a+a^2-b^2 + i(b+2ab)}=\sqrt{(1+a+a^2-b^2)^2+(b+2ab)^2}\]
+\[\norm{1+z+\frac{z^2}{2}} = \norm{1+a+\frac{a^2-b^2}{2} + i(b+ab)}=\sqrt{\left(1+a+\frac{a^2-b^2}{2}\right)^2+(b+ab)^2}\]
 que será menor que 1 siempre y cuando
-\[(1+a+a^2-b^2)^2+(b+2ab)^2<1 \iff (1+a+a^2-b^2)^2 +b^2+4a^2b^2+2ab^2 < 1\]
+\[\left(1+a+\frac{a^2-b^2}{2}\right)^2+(b+ab)^2<1 \iff \left(1+a+\frac{a^2-b^2}{2}\right)^2 +b^2+a^2b^2+2ab^2 < 1\]
 
 Es evidente que si calculamos el simétrico de un punto que satisface la propiedad respecto al eje $Im(z)=0$ estamos cambiando b por -b lo que no tiene ningún efecto efecto ya que todas las apariciones de $b$ están elevadas al cuadrado.
 
-Si calculamos simétricos respecto a la recta $Re(z)=-1$, es decir, estamos cambiando $a$ por $-2-a$, que puede hacer que nos salgamos del dominio de estabilidad.
+Si calculamos simétricos respecto a la recta $Re(z)=-1$, es decir, estamos cambiando $a$ por $-2-a$ tenemos:
+\[\left(1-2-a+\frac{a^2+4+4a-b^2}{2}\right)^2 +b^2+a^2b^2+4b^2+2ab^2-2ab^2-4b^2 = \]
+\[=\left(1+a+\frac{a^2-b^2}{2}\right)^2 +b^2+a^2b^2+2ab^2<1\]
+con lo que tenemos que el dominio de integridad es simétrico respecto a la recta $Re(z)=-1$.
 
-Si giramos 180 grados respecto a $z=-1$ la parte real sufre el cambio $a \to -2-a$ y la parte imaginaria cambia de signo. El cambio de la parte imaginaria nos es indiferente pero no el de la parte real, como acabamos de ver.
+Si giramos 180 grados respecto a $z=-1$ la parte real sufre el cambio $a \to -2-a$ y la parte imaginaria cambia de signo. Este cambio es equivalente a sustituir $z$ por $w=-z-2$.
 
-Por tanto, el dominio de estabilidad del método de Euler mejorado es simétrico respecto a la recta $Im(z)=0$ pero no respecto al punto $z=-1$ ni a la recta $Re(z)=-1$.
+En este caso vemos que
+\[\norm{1+w+\frac{w^2}{2}} = \norm{1-z-2+\frac{z^2+4+4z}{2}} = \norm{1+z+\frac{z^2}{2}}\]
+con lo que queda claro que el dominio de estabilidad es simétrico respecto al punto $z=-1$.
+
+Por tanto, el dominio de estabilidad del método de Euler mejorado es simétrico respecto a todos los movimientos comentados en el enunciado.
+\end{problem}
+
+\begin{problem}[3]
+Hallar el supremo de los $h>0$ tales que al aplicar el método de Euler al problema:
+\[y'=\left(\begin{array}{cc}-1 & 1 \\ -1 & -1 \end{array} \right)y\]
+se cumple que
+\[\lim_{n \to \infty}y_n=0 \text{ (para cada h fijado)}\]
+cualquiera que sea la condición inicial $y(0)=y_0 \in \real^2$.
+\solution
+
+Vamos a empezar calculando los autovalores y autovectores de la matriz (en realidad sólo nos interesarán los autovalores).
+
+Una vez los hemos calculado podemos escribir
+\[A = \left(\begin{array}{cc}1 & 1 \\ -1 & 1 \end{array} \right) = B\left(\begin{array}{cc}λ_+ & 0 \\ 0 & λ_- \end{array} \right)B^{-1}\]
+siendo
+\[B= \left(\begin{array}{cc}-i & 1 \\ i & 1 \end{array} \right)\]
+
+Una vez tenemos esto, podemos ver que al aplicar el método de Euler obtendremos
+\[y_{n+1} =y_n+\left(\begin{array}{cc}-1 & 1 \\ -1 & -1\end{array} \right)hy_n =  B \left(\begin{array}{cc}1+hλ_+ & 0 \\ 0 & 1+hλ_- \end{array} \right)B^{-1}y_n\]
+
+Si llamamos $ε_n=B^{-1}y_n$ podemos reescribir la relación como
+\[ε_{n+1} = \left(\begin{array}{cc}1+hλ_+ & 0 \\ 0 & 1+hλ_- \end{array} \right)ε_n\]
+
+Para garantizar que
+\[\lim_{n \to \infty}y_n=0\]
+nos basta con ver que las dos coordenadas de $ε_n$ tienden a 0, es decir, debemos comprobar que
+\[\lim_{n\to \infty}ε_n^1=\lim_{n \to \infty} (1+hλ_+)^nε_0^1 = 0 \iff |1+hλ_+|<1\]
+\[\lim_{n\to \infty}ε_n^2=\lim_{n \to \infty} (1+hλ_-)^nε_0^2 = 0 \iff |1+hλ_-|<1\]
+pero, puesto que $λ_+$ es el conjugado complejo de $λ_-$ si una de las coordenadas de $ε_n$ converge lo hará también la otra.
+
+Por tanto, para conocer el dominio de estabilidad nos basta con ver cuándo
+\[|1+z|<1 \equiv |1+z|^2 < 1 \equiv (1-h)^2+h^2 < 1 \equiv 2h(h-1)<0 \equiv h<1\]
+\obs En la última cuenta nos hemos apoyado en que el valor del autovalor es $λ_+=-1+i$
+\end{problem}
+
+
+\begin{problem}[4]
+Al aplicar el método de Euler al PVI
+\[y'(x) = -λy(x), \ \ x \in [0,10], \ \ y(0)=0\]
+donde λ es un número real positivo, obtenemos el diagrama que aparece en la siguiente figura.
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{img/figura_enunciado.png}
+\end{center}
+
+¿Cuál es el valor de λ?
+
+\solution
+
+La gráfica nos muestra que se produce un cambio brusco en el error en $h_1=0,2$
+
+Puesto que estamos empleando el método de Euler sabemos que el dominio de estabilidad está formado por todos los puntos en los que $|1-λh|<1$
+
+Si sabemos que esta desigualdad se rompe en $h_1$ podemos ver que λ=10
+
 \end{problem}
