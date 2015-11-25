@@ -1061,7 +1061,7 @@ Al aplicar el método de Euler al PVI
 donde λ es un número real positivo, obtenemos el diagrama que aparece en la siguiente figura.
 
 \begin{center}
-\includegraphics[width=0.8\linewidth]{img/figura_enunciado.png}
+\includegraphics[width=0.8\linewidth]{img/figura_enunciado1.png}
 \end{center}
 
 ¿Cuál es el valor de λ?
@@ -1073,5 +1073,69 @@ La gráfica nos muestra que se produce un cambio brusco en el error en $h_1=0,2$
 Puesto que estamos empleando el método de Euler sabemos que el dominio de estabilidad está formado por todos los puntos en los que $|1-λh|<1$
 
 Si sabemos que esta desigualdad se rompe en $h_1$ podemos ver que λ=10
+
+\end{problem}
+
+\begin{problem}[5]
+Al aplicar el método de Euler al PVI
+\[y'(x) = \left(\begin{array}{cc}-λ & 1 \\ 0 & -\frac{1}{20}\end{array} \right)y(x), \ \ x \in [0,10], \ \ y(0)=\left(1,\frac{999}{10}\right)^T\]
+donde λ es un número real positivo, obtenemos el diagrama que aparece en la siguiente figura.
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{img/figura_enunciado.png}
+\end{center}
+
+¿Cuál es el valor de λ?
+\solution
+
+El problema es igual al del ejercicio anterior, salvo que en esta ocasión el error se dispara en $h_1=0.002$.
+
+Aplicando el método de Euler a este sistema tenemos que
+\[y_{n+1}=y_n + h\left(\begin{array}{cc}-λ & 1 \\ 0 & -\frac{1}{10}\end{array} \right)y_n\]
+
+Para poder calcular el dominio de estabilidad del problema deberemos diagonalizar la matriz con lo que obtenemos:
+\[y_{n+1} = B^{-1}\left(\begin{array}{cc}1-λ & 0 \\ 0 & 1-\frac{1}{10}\end{array} \right)By_{n}\]
+
+Si renombramos las bariables de forma que $By_n =ε_n$ podemos reescribir el sistema como
+\[ε_{n+1} = \left(\begin{array}{cc}1-λh & 0 \\ 0 & 1-\frac{h}{10}\end{array} \right)ε_n = \left(\begin{array}{cc}1-hλ & 0 \\ 0 & 1-\frac{h}{10}\end{array} \right)^{n+1}ε_0\]
+
+Ahora es fácil ver que el dominio de estabilidad del PVI estará compuesto por los valores $z\in \cplex$ tales que
+\[|1-λh| < 1 \y |1-0.01h|<1 \equiv \ |1-0.002λ| \y |1-0.00002|<1\]
+
+El problema nos lo da la cota
+\[|1-0.002λ|< 1 \implies 0.002λ<2 \implies λ=1000\]
+
+
+\end{problem}
+
+\begin{problem}[6]
+Consideramos el $\phi$-método
+\[y_{n+1}=y_n+h(\theta f_n+(1-\theta)f_{n+1})\]
+
+\ppart Determinar para qué valores de $\theta$ el método es A-estable
+\ppart Fijado $h>0$, ¿Es posible elegir $\theta$ para que la solución numérica producida por este método para el PVI
+\[y'=λy \ \text{ en } [a,b], \ \ y(a)=ε\]
+coincida con la solución exacta? Con el valor de $\theta$ así elegido, ¿se obtiene un método A-estable?
+\solution
+
+\spart
+
+Aplicando la misma idea de todos los problemas, es decir, considerando $y'=λy$ tenemos:
+\[y_{n+1}=y_n+h\theta λy_n+(1-\theta)λy_{n+1} \implies y_{n+1} = \frac{1+hλ\theta}{1-(1-\theta)λh}y_n\]
+
+El dominio de integridad estará formado por aquellos puntos $z\in \cplex$ tales que
+\[\abs{\frac{1+hλ\theta}{1-(1-\theta)λh}} < 1 \iff \abs{1+λh\theta}^2 < \abs{1-(1-\theta)λh}^2 \iff\]
+\[\iff (\theta^2-(1-\theta)^2)|z|^2 < -2Re(z) \underbrace{\iff}_{\text{pasando a polares}} (1-2\theta)|z| > 2\cos(α)\]
+Si queremos que el método sea A-estable necesitamos que
+\[(1-2\theta)>0 \implies \theta < \frac{1}{2}\]
+\end{problem}
+
+\begin{problem}[7]
+Se dice que un método es L-estable si es A-estable y, además, al aplicarlo a $y'=λy$ se cumple $y_{n+1}=R(λh)y_n$ con $R(z)\to 0$ cuando $Re(z) \to -\infty$.
+
+\ppart Probar que la regla del trapecio no es L-estable mientras que el método implícito $y_{n+1}=y_n+hf(x_{n+1},y_{n+1})$ sí lo es.
+
+\ppart Explicar en qué sentido los métodos L-estables imitan mejor el decaimiento rápido de la solución de $y'=λy$ cuando $-Re(λ)$ es grande en comparación con $h^{-1}$
+\solution
 
 \end{problem}
