@@ -4448,16 +4448,31 @@ donde la existencia de $10^{-1}$ es clara puesto que 17 es primo.
 
 Por tanto, está claro que siempre se detectará el error.
 
+\item \textbf{Recuperar un número borrado}
+
+Si sabemos en qué posición estaba la cifra que hemos perdido, podemos recalcularla mediante la fórmula:
+\[x_i=\frac{1}{10^i}\left(\sum_{j\neq i}x_j10^j-L \right)\]
+
+El único problema que podríamos tener es que la fracción nos de un 0 en el denominador, cosa que se evita siempre que $(m,10)$=1 y funciona para $m=17$.
+
 \item \textbf{Intercambio de dígitos}
 
 Siguiendo el mismo razonamiento del apartado anterior, no detectaremos el intercambio de dos dígitos siempre que
 \[10^ie-10^je=0 \mod 17 \implies 10^i-10^j=0\mod 17 \implies 10^j(10^{i-j}-1)=0 \mod 17\]
 
-Por el pequeño teorema de Fermat sabemos que
-\[10^{i-j}-1=0 \mod 17 \implies 10^{i-j}=1 \mod 17 \implies i-j = 17\]
+Puesto que estamos asumiendo que $i>j$ tenemos que el sistema falla si
+\[10^{i-j}=1 \mod 17 \iff 10^k = 1 \mod 17 \text{ con }k\in[1,7]\]
 
-pero sabemos que es imposible puesto que el NIF tiene 8 dígitos.
+Llegados a este punto es sencillo comprobar que siempre que ningún $k$ del intervalo válido satisface esa relación.
+
+Sin embargo, si tomamos $m=11$ tendremos que $k=2$ satisface la ecuación, con lo que no podríamos emplear $m=11$.
+
+Por otro lado, si tomamos $m=13$ tenemos un problema con $k=6$ se satisface $10^6=1\mod 13$
 \end{itemize}
+
+Con esto queda claro que tomando $m=17$ no tenemos ningún problema pero si tomamos un $m$ menor no podríamos detectar el intercambio de dos dígitos.
+
+
 
 \spart
 
@@ -4477,23 +4492,18 @@ se detecte el olvido de una cifra? ¿y de dos cifras consecutivas?
 ¿y de dos cifras no consecutivas?
 \solution
 
-\doneby{Pedro}
+Recordemos que en el NIF teníamos:
+\[\sum_{i=1}^{10}ix_i = 0 \mod 23\]
 
-Recordemos que en el ISBN teníamos:
-\[\sum_{i=1}^{10}ix_i = 0 \mod 11\]
-Si el olvido de una cifra no se detecta es porque, siendo la cifra olvidada $x_i$ se cumple que
-\[0=-\sum_{j=i}^{10}jx_j+\sum_{j=i+1}^{10}(j-1)x_j \mod 11 = -ix_i - \sum_{j=i+1}^{10}x_j \mod 11\]
+\textbf{Si olvidamos una cifra} y el sistema asume que lo que faltan son 0s sin valor al inicio del número cometermos un error.
 
-siendo esto algo perfectamente posible. La búsqueda de un ejemplo concreto se deja como ejercicio para el lector.
+Por ejemplo, el NIF ``02516341A'' es correcto y si le sumo ``23000000'' la letra no cambiará, pues $23000000=0\mod 23$ con lo que el NIF ``25516341A'' también es correcto.
 
-Pueden olvidarse también dos cifras consecutivas con lo que nos comeríamos el error si
-\[0 = -ix_i-{i+1}x_i - \sum_{j=i+2}x_j \mod 11\]
-cosa que también es posible.
+Si el dueño de este segundo NIF lo introduce erróneamente tecleando sólo un 5, escribirá ``2516341A'' que será confundido con ``02516341A''.
 
-De la misma forma, podemos reordenar las $x_i$ y las $x_j$ para ver que ocurre si se olvidan cifras no consecutivas.
+\textbf{Si olvidamos dos cifras} y el sistema sume que lo que faltan son 0s al inicio del número, cometemos un error.
 
-La forma más sencilla de que esto ocurra es suponiendo que se olvidan cifras nulas y buscando una combinación con el resto de cifras tales que los sumatorios valgan 11.
-
+Por ejemplo, el NIF ``23000000T'' es válido. Si el usuario olvida introducir una cantidad cualquiera de 0s, puesto que la diferencia entre el número real y el introducido es múltiplo de 23, tendrán la misma letra. Esto causa que ``230000T'' sea también válido y sea confundido con ``00230000T''.
 
 \end{problem}
 
@@ -4722,16 +4732,20 @@ números), 27 - 27 - 15 - 27 - 5 - 5 - 5 - 5 - 5 - 4 - 4 - 5 - 4 -
 ¿qué interpretarias que nos quieren decir?
 \solution
 
-\doneby{Pedro}
-
 \spart
 El código de repetición de longitud 4 significa que cada caracter va a aparecer repetido 4 veces en el mensaje a modo de redundancia.
+
+En concreto nos encontramos ante un código lineal de dimensión 2.
 
 Eivdentemente si se produce un error veremos que, donde debería haber 4 cifras iguales 1 es distinta, con lo que podemos reconocerla y corregirla.
 
 Si en el bloque de 4 cifras que deberían ser iguales hay dos distintas y esas son iguales entre ellas, podemos detectar que hay un error aunque no podremos corregirlas pues no sabemos que par es erróneo.
 
+Además, el teorema \ref{theorem:Codigo_detector_corrector} nos garantiza que en este caso puesto que $d=4=2\cdot 1+1+1$ nuestro código podrá detectar 2 errores y corregir 1 simultáneamente.
+
 \spart
+
+\doneby{Pedro}
 
 El mensaje dice:
 
