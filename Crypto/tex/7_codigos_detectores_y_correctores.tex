@@ -740,10 +740,10 @@ Es decir, tenemos $x=y$ con lo que la función es inyectiva.
 \obs La cota de Singleton no siempre se alcanza.
 
 \begin{example}
-Consideremos un código con $A_2(5,3)$, del que sabemos que
+Vamos a estudiar $A_2(5,3)$. Por la cota de Singleton sabemos que
 \[|M| \leq q^{n-d+1} = 2^3=8\]
 
-En este caso sabemos que el valor máximo que puede alcanzar $M$ es 4. Para comprobarlo debemos ver que existe un $(5,4,3)$-código binario y que no existe un $(5,5,3)$-código binario.
+Sin embargo, en este caso sabemos que el valor máximo que puede alcanzar $M$ es $A_2(5,3)=4$, que dista bastante de la cota de Singleton. Para comprobarlo debemos ver que existe un $(5,4,3)$-código binario y que no existe un $(5,5,3)$-código binario.
 
 Vamos a ello.
 
@@ -803,3 +803,161 @@ Si nos ponemos a buscar estas palabras vemos que sólo hay dos posibles palabras
 
 Pero entonces aún nos falta una palabra para nuestro código con lo que acabamos de comprobar que no es posible la existencia de un $(5,5,3)$-código binario.
 \end{example}
+
+\begin{example}
+
+Vamos a estudiar los dos casos extremos de $A_q$, para los que conocemos el valor.
+
+\begin{itemize}
+\item $A_q(n,1)=q^n$
+
+En concreto tenemos el primer código que vimos a principio de la sección $\algbC_0$ que alcanza este máximo con $q=2$.
+
+\item $A_1(n,n)=q$
+
+Si las palabras del código han de estar a distancia $n$ y tener longitud $n$, entonces todas las palabras deben tener distintos todos sus caracteres.
+
+Por tanto, como en cada caracter tenemos un total de $q$ posibles valores, si tenemos la palabra 0...0, otra posible palabra será 1...1 y así sucesivamente hasta los $q$ posibles caracteres.
+\end{itemize}
+
+\end{example}
+
+\begin{prop}\label{prop:existencia_codigos_binarios}
+Siendo $d$ impar
+\[\exists  \ (n,M,d)\text{-código binario} \iff \exists \ (n+1,M,d+1) \text{-código binario}\]
+\end{prop}
+\begin{corol}
+Si $d$ es par
+\[A_2(n,d)=A_2(n-1,d-1)\]
+\end{corol}
+
+\begin{lemma}
+En $F_2^n$ se cumple que
+\[d(x,y) = w(x)+w(y)-2w(z\cap y)\]
+donde
+\[z \cap y = (x_1y_1,x_2y_2,...,x_ny_n)\]
+\end{lemma}
+\begin{proof}
+Ya sabemos que
+\[d(x,y) = w(x-y)=w(x+y)\]
+Lo que tenemos que hacer es ver cuándo hay 1s en x+y, cosa que ocurre cuando hay un 1 en x, o en y de forma exclusiva.
+
+Cuando hay un 1 en tanto en x como en y, $w(x+y)=0$ mientras que $w(x)+w(y)=2$, por lo que en ese caso deberemos restar 2.
+
+Si leemos con cuidado lo que acabamos de explicar obtenemos exactamente la definición de distancia que queremos demostrar.
+\end{proof}
+
+Ahora nos encontramos en condiciones de demostrar la proposición \ref{prop:existencia_codigos_binarios}.
+\begin{proof}
+Vamos a demostrar los dos sentidos de la implicación
+
+\begin{itemize}
+\item $\implies$
+Sea $\algbC$ un $(n,M,d)$-código definimos
+\[\tilde{\algbC} = \left\{x \in F_2^{n+1}\tq (x_1,...,x_n) \in \algbC \ \y \ \sum_{i=1}^{n+1}x_i = 0 \mod 2\right\}\]
+
+Es decir, añado al código $\algbC$ un bit de control global de paridad.
+
+Es evidente ver que $\tilde{\algbC}$ tiene $n+1$ elementos y que $|\tilde{\algbC}|=M$ pues estamos añadiendo un dígito a cada palabra de $\algbC$.
+
+Comprobemos ahora que $d(\tilde{\algbC})=d+1$.
+
+Por construcción de $\tilde{\algbC}$ ya tenemos que $d+1 \geq d(\tilde{\algbC})\geq d$ puesto que los primeros $n$ caracteres de las palabras no pueden distar menos de $d$ y sabemos que al menos en un caso están a distancia $d$.
+
+Apoyándonos en el lema anterior tenemos que
+\[d(\tilde{x},\tilde{y}) = w(\tilde{x})+w(\tilde{y})-2w(\tilde{x}\cap \tilde{y})\]
+
+Por construcción de $\tilde{\algbC}$ tenemos que todas las palabras van a ser de paridad par por lo que a la derecha de la igualdad anterior tenemos combinación de términos pares que deberá ser par.
+
+Pero hemos empezado considerando que $d$ es impar, por tanto $d(\tilde{\algbC})$ no puede ser $d$.
+
+Por tanto queda claro que $d(\tilde{\algbC})=d+1$.
+
+\item $\Longleftarrow$
+
+Para demostrar esta dirección de la implicación vamos a acortar o reducir el código.
+
+Sea $\algbC$ un $(n+1,M,d+1)$-código y sean $x,y \in \algbC$ tenemos que $d(x,y)=d+1$.
+
+Sea $i$ tal que $x_i \neq y_i$ construimos $\tilde{\algbC}$ formado a partir de las palabras de $\algbC$ quitando la coordenada i-ésima, es decir, tomamos una proyección
+\[\appl{π}{F_q^{n+1}}{F_q^n}\]
+
+Es evidente que los elementos de $\tilde{\algbC}$ tienen longitud $n$.
+
+Por otro lado podemos ver que $|\tilde{\algbC}| = M$ puesto que en caso de no ser así tendríamos
+\[π(x)=π(y) \implies d(x,y) \leq 1 \text{ contradicción pues } d(x,y) > d+1 =2\]
+
+Por último nos queda estudiar la distancia $d(\tilde{\algbC})$.
+
+Es evidente que $d(\tilde{\algbC})\geq d$. Como
+\[d(x_0,y_0)=d+1 \implies d(π(x_0),π(x_1))= d \implies d(\tilde{\algbC})=d\]
+
+\end{itemize}
+\end{proof}
+
+Hasta ahora sólo hemos visto conceptos muy triviales salvo la cota de Singleton que era algo más compleja.
+
+Vamos a empezar con cosas de verdad.
+
+\section{Cota de Hamming o del empaquetamiento de esferas}
+
+Sea $\algbC$ un $(n,M,2t+1)$-código q-nario es sencillo ver que dados $x,y \in \algbC$ con $x \neq y $ se cumple
+\[\overline{B}(x,t) \cap \overline{B}(y,t) = \emptyset\]
+
+Podemos ver, además que la unión disjunta de estas bolas se contiene en $F_q^n$, es decir
+\[\coprod_{x \in \algbC} \overline{B}(x,t) \subset F_q^n\]
+
+\obs En cada bola la única palabra que se contiene en el código es el centro de la misma.
+
+Puesto que las bolas son disjuntas, el conjunto de elementos cubiertos por la unión de las bolas es igual al producto del número de palabras cubiertas por una bola multiplicado por el número de bolas.
+
+\begin{defn}[Cota de Hamming]
+Sea $\algbC$ un $(n,M,2t+1)$-código q-nario tenemos que:
+\[|\algbC| |\overline{B}(x,t)| \leq q^n\]
+\end{defn}
+
+No obstante, esta cota es totalmente inútil mientras no seamos capaces de contar los elementos de la bola. Podemos ver que, por definición de bola cerrada:
+\[\overline{B}(x,t) = \coprod_{i=0}^t\{y \in F_q^n: \ d(x,y)=i\}\]
+
+Y sabemos que
+\[|\{y \in F_q^n \ d(x,y)=i\}| = {n \choose i} (q-1)^i\]
+puesto que tenemos ${n \choose i}$ formas de tomar $i$ posiciones de la palabra y para cada una de ellas tendremos $(q-i)^i$ posibles caracteres que utilizar.
+
+Por tanto podemos ver que
+\[|\overline{B}(x,t)| = \sum_{i=0}^t {n \choose i} (q-1)^i\]
+
+Por tanto, podemos reescribir la \textbf{cota de Hamming} como:
+\[|\algbC|=M \leq \frac{q^n}{\sum_{i=0}^t {n \choose i} (q-1)^i}\]
+En particular
+\[A_q(n,2t+1) \leq \frac{q^n}{\sum_{i=0}^t {n \choose i} (q-1)^i}\]
+
+\begin{example}
+\[A_q(n,3) \leq \frac{q^n}{1+n(q-1)}\]
+\end{example}
+
+\begin{defn}[Código perfecto]
+Decimos que un código $\algbC$ es perfecto si
+\[|\algbC| = \frac{q^n}{\sum_{i=0}^t {y \choose i} (q-1)^i}\]
+es decir, si $F_q^n$ se tesela por bolas cerradas de radio $t$ alrededor de las $x \in \algbC$
+\end{defn}
+
+Existen una serie de códigos que son perfectos de manera trivial. Vamos a verlos:
+
+\textbf{Códigos perfectos triviales}
+\begin{enumerate}
+\item $\algbC=F_q$
+
+Estamos tomando todos los posibles términos de $F_q$ por lo que tendremos $d=1$ lo que nos implica $t=0$
+
+\item $\algbC=\{a\}$
+
+Tomamos un código con una sola palabra de forma que $d=\infty$ (realmente no tiene sentido definir la distancia) y por tanto $t=\infty$ aunque, puesto que estamos en un cuerpo finito esto se traduce en considerar una bola de radio $t=n$ que engloba todo $F_q^n$.
+
+\item Código de repetición binaria de longitud $n=2t+1$.
+
+Este código tendrá $d=2t+1 =n$.
+
+Podemos comprobar que el código es perfecto puesto que sabemos que tiene 2 palabras posibles (todo 0s o todo 1s).
+
+\end{enumerate}
+

@@ -205,7 +205,7 @@ Esta es una recta de mínimos cuadrados calculada para una nube de puntos a la q
 \end{example}
 
 \begin{example}[Sobre la distancia horizontal]
-
+\label{ej:reg_simple}
 ¿Y da igual lo atípico que sea un dato? La respuesta es que no. Si el dato es muy atípico en la variable respuesta ($Y$), pero es muy \textit{típico} en la variable regresora, la recta no se desvía tanto. Vamos a verlo y después explicamos la razón.
 
 Esta es la recta, en la que hemos ignorado los 3 datos que parecen ``atípicos''.
@@ -596,6 +596,7 @@ En regresión múltiple veremos que no podemos ver los datos, ya que son demasia
 
 \subsection{Regresión lineal múltiple}
 
+\label{example:fuel2001}
 El ejemplo que vamos a estudiar en regresión múltiple es el consumo de gasolina en EEUU intentando predecirlo a partir de unas cuantas variables. Las variables regresoras son:
 
 \begin{center}
@@ -613,20 +614,22 @@ Estos son los datos que obtenemos de $R$:
 \begin{lstlisting}[style=mystyle]
 reg <- lm(FuelC ~ Drivers+Income+Miles+MPC+Tax, data=fuel2001)
 summary(reg)
-Call:
-lm(formula = FuelC ~ Drivers + Income + Miles + MPC + Tax, data = fuel2001)
+
 Coefficients:
-Estimate	Std.Error	t	value	Pr(>|t|)
-(Intercept)	-4.844e+05	8.102e+05	-0.598	0.552903
-Drivers	6.144e-01	2.229e-02	27.560	<	2e-16
-Income	7.526e+00	1.611e+01	0.467	0.642587
-Miles	5.813e+00	1.587e+00	3.664	0.000652
-MPC	4.643e+01	3.488e+01	1.331	0.189820
-Tax	-2.114e+04	1.298e+04	-1.629	0.110298
+              Estimate Std. Error t value Pr(>|t|)
+(Intercept) -4.844e+05  8.102e+05  -0.598 0.552903
+Drivers      6.144e-01  2.229e-02  27.560  < 2e-16 ***
+Income       7.526e+00  1.611e+01   0.467 0.642587
+Miles        5.813e+00  1.587e+00   3.664 0.000652 ***
+MPC          4.643e+01  3.488e+01   1.331 0.189820
+Tax         -2.114e+04  1.298e+04  -1.629 0.110298
 ---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
 Residual standard error: 394100 on 45 degrees of freedom
-Multiple R-squared: 0.9808, Adjusted R-squared: 0.9787
-F-statistic: 459.5 on 5 and 45 DF, p-value: < 2.2e-16
+Multiple R-squared:  0.9808,	Adjusted R-squared:  0.9787
+F-statistic: 459.5 on 5 and 45 DF,  p-value: < 2.2e-16
+
 \end{lstlisting}
 
 \subsubsection{Notación}
@@ -1103,7 +1106,7 @@ La idea intuitiva es que si $SCR$ es muy pequeño, tenemos poca variabilidad exp
 Por el contrario, si $SCR$ es muy \textbf{grande}, tenemos mucha variabilidad explicada, por lo que la hipóteis nula no es muy razonable y deberíamos \textbf{rechazar}. Por el contrario, si $SCR$ es \textbf{pequeña} aceptamos $H_0$.
 
 
-Para ello, es imprescindible definir ``grande'' y ``pequeño''. Deberían tener las mismas unidades. No puede ser que por cambiar de unidades afecte a la validez de la hipótesis. Además, necesitamos saber la distribución de $SCR$ bajo la hipótesis nula. 
+Para ello, es imprescindible definir ``grande'' y ``pequeño''. Deberían tener las mismas unidades. No puede ser que por cambiar de unidades afecte a la validez de la hipótesis. Además, necesitamos saber la distribución de $SCR$ bajo la hipótesis nula.
 
 \begin{prop}[Distribución SCR en $H_0:∀i\;β_i=0$]
 
@@ -1136,7 +1139,7 @@ As usual, como no conocemos $σ^2$, en la práctica utilizamos:
 \]
 \end{prop}
 \begin{proof}
-Para ello necesitamos que $SCR$ y $SCE$ sean independientes. Son normas al cuadrado de vectores ortogonales. Estadísticamente, la ortogonalidad de vectores normales se traduce en independencia. 
+Para ello necesitamos que $SCR$ y $SCE$ sean independientes. Son normas al cuadrado de vectores ortogonales. Estadísticamente, la ortogonalidad de vectores normales se traduce en independencia.
 
 Para ello, vamos a ver que el producto de las matrices es 0 (utilizando la propiedad \ref{prop:tema1_pepino})
 
@@ -1149,15 +1152,15 @@ Sabemos que $MH=M$ por que, por un lado es proyectar en $V$ después de haber pr
 \end{proof}
 
 \subsubsection{Tabla anova}
-Para este caso, vamos a construir la tabla \concept{ANOVA} (análisis de la varianza) 
+Para este caso, vamos a construir la tabla \concept{ANOVA} (análisis de la varianza)
 
 Este es el ejemplo de una tabla ANOVA simple:
 \begin{center}
 \begin{tabular}{c|ccccc}
-Fuente de variación & SC & gl & CM & F & p-valor\\\hline 
+Fuente de variación & SC & gl & CM & F & p-valor\\\hline
 Explicada & SCR & k & $\frac{SCR}{k}$ & $\displaystyle\frac{SCR/k}{SCE/(n-k-1)}$ & ...\\
 No explicada & SCE & n-k-1 & $\frac{SCE}{n-k-1}$ & ... & ...\\\hline
-total & & & & 
+total & & & &
 \end{tabular}
 \end{center}
 
@@ -1190,11 +1193,13 @@ Este coeficiente es útil en el contraste que estudiábamos anteriormente $H_0: 
 El coeficiente de determinación para comparar distintos modelos de regresión entre sí tiene el siguiente inconveniente:
 Siempre que se añade una nueva variable regresora al modelo, $R^2$ aumenta, aunque el efecto de la variable regresora sobre la respuesta no sea significativo. ¿Porqué aumenta $R^2$? Porque la dimensión de $V$ aumenta provocando que disminuya $SCE$ (por algo que me he perdido) y al disminuir $SCR$, aumenta $SCR$ (porque su suma es constante) y aumenta $R^2$.
 
+
+
 Por ello, definimos:
 
 
 \begin{defn}[Coeficiente de determinación ajustado]
-\[\gor{R}^2 = 1 - \frac{SCE/(n-k-1)}{SCT/(n-1)}\]
+\[\gor{R}^2 = r^2 = 1 - \frac{SCE/(n-k-1)}{SCT/(n-1)}\]
 Esta nueva definición penaliza un aumento de las variables utilizadas. De esta manera, al aumentar $K$, sabemos que $R^2$ aumenta pero $\gor{R}^2$ puede aumentar o no. Depende de si la ganancia de información es mayor que la penalización de añadir más variables.
 \end{defn}
 
@@ -1203,7 +1208,7 @@ Vamos a ver un ejemplo realmente ilustrativo.
 
 Vamos a utilizar el modelo de regresión múltiple para ajustar el grado del polinomio.
 
-El proceso a seguir podría ser: voy calculando $R^2$ para todos los grados que vaya teniendo hasta que tenga $R^2 = 1$, que hace que podamos explicar toda la varianza con estos datos. 
+El proceso a seguir podría ser: voy calculando $R^2$ para todos los grados que vaya teniendo hasta que tenga $R^2 = 1$, que hace que podamos explicar toda la varianza con estos datos.
 
 
 Al aumentar el grado, obtenemos polinomios cada vez mejores (para estos datos).
@@ -1225,18 +1230,26 @@ Si un modelo es demasiado simple, tendremos muy poca varianza pero mucho sesgo. 
 \includegraphics[scale=0.45]{img/ModeloSimpleVsModeloComplejo.png}
 \end{center}
 
-En este ejemplo, el primer caso, demasiado simple tiene muy poca varianza. Todas las pendientes son similares, pero por el contrario, siempre estimamos mal. 
+En este ejemplo, el primer caso, demasiado simple tiene muy poca varianza. Todas las pendientes son similares, pero por el contrario, siempre estimamos mal.
 
 En el tercer caso, si cogemos un único polinomio, vemos que es un poco malo, pero si tomáramos la media de todos ellos, más o menos se asemeja bastante a la parábola, es decir, la esperanza es el valor esperado con lo que el sesgo sería muy pequeño. Por el contrario, cada polinomio es de su padre y de su madre, es decir, tiene mucha varianza estimar así.
 \end{example}
 
+\begin{example}
+Vamos a calcular el coeficiente de determinación para el caso de regresión simple:
+
+\[R^2 = \frac{SCR}{SCT} = \frac{\sum(\hat{Y}_i - \gor{Y})}{} = ... \frac{\hat{β_1}^2S_{xx}}{S_{yy}} = r^2\]
+
+es decir, el coeficiente de determinación en regresión múltiple coincide con el coeficiente de determinación ajustado.
+
+\end{example}
 \subsection{Contrastes de hipótesis lineales}
 
-Queremos contrastar $H_0 : Aβ = 0$, donde $A$ es una patriz $p×(k+1)$ con $\rg(A) = p < k+1$.
+Queremos contrastar $H_0 : Aβ = 0$, donde $A$ es una matriz $p×(k+1)$ con $\rg(A) = p < k+1$.
 
-\begin{example} 
-En el modelo 
-$Y_i = β0 + β_1x_{i1} + β_2x_{i2} +β_3x_{i3} + ε_{i}$ 
+\begin{example}
+En el modelo
+$Y_i = β_0 + β_1x_{i1} + β_2x_{i2} +β_3x_{i3} + ε_{i}$
 queremos contrastar
 
 \[
@@ -1252,7 +1265,7 @@ Es el modelo resultante al imponer las restricciones de $H_0$.
 \end{defn}
 \begin{example}
 Tomando el \concept{Modelo\IS completo} del ejemplo anterior
-\[\left.\begin{array}{c} Y_i = β0 + β_1x_{i1} + β_2x_{i2} +β_3x_{i3} + ε_{i}\\H_0 : β_1 = β_2\; β_0=0\end{array}\right\} \to Y_i = β_1(x_{i1} + x_{i2}) + β_3x_3 + ε_i
+\[\left.\begin{array}{c} Y_i = β_0 + β_1x_{i1} + β_2x_{i2} +β_3x_{i3} + ε_{i}\\H_0 : β_1 = β_2\; β_0=0\end{array}\right\} \to Y_i = β_1(x_{i1} + x_{i2}) + β_3x_3 + ε_i
 \]
 
 El modelo simple es $Y_i = β_1(x_{i1} + x_{i2}) + β_3x_3 + ε_i$
@@ -1263,12 +1276,13 @@ El modelo simple es $Y_i = β_1(x_{i1} + x_{i2}) + β_3x_3 + ε_i$
 Nos podemos plantear qué modelo podemos elegir. La idea sería elegir siempre lo simple, pero tenemos que ver cuánto perdemos con la simplificación. A esto se le denomina \concept{Principio\IS de incremento relativo de la variabilidad}
 
 % % % Dibujo
+\textcolor{red}{Si Jorge se hace un dibujito, se agradece xD}
 
-La idea es que $SCE_0 > SCE$. Geometricamente, vemos que $SCE$ es la hipotenusa y $SCE_0$ es un cateto. Por otro lado, la variabilidad no explicada de un modelo simple siempre va a ser menor que la $SCE$ de un modelo complejo para los mismos datos.
+La idea es que $SCE_0 > SCE$. Geométricamente, vemos que $SCE$ es la hipotenusa y $SCE_0$ es un cateto. Por otro lado, la variabilidad no explicada de un modelo simple siempre va a ser menor que la $SCE$ de un modelo complejo para los mismos datos.
 
-Entonces la idea sería rechazar $H_0$ cuando se pierta mucho al considerar $M0$ en lugar de $M$, es decir cuando $SCE_0 - SCE$ sea muy grande. Para evitar problemas generados por cambios de escala, tomamos \[\frac{SCE_0 - SCE}{SCE}\]
+Entonces la idea sería rechazar $H_0$ cuando se pierda mucho al considerar $M0$ en lugar de $M$, es decir cuando $SCE_0 - SCE$ sea muy grande. Para evitar problemas generados por cambios de escala, tomamos \[\frac{SCE_0 - SCE}{SCE}\]
 
-¿Y esto que distribución tiene? ¿Cómo podemos definir ese ``suficientemente grande''? Las sumas de cuadrados ($SCE$) son $\chi^2$ y el cociente de $\shi^2$'s es una $F$. Vamos a estudiarlo formalmente:
+¿Y esto que distribución tiene? ¿Cómo podemos definir ese ``suficientemente grande''? Las sumas de cuadrados ($SCE$) son $\chi^2$ y el cociente de $\chi^2$'s es una $F$. Vamos a estudiarlo formalmente:
 
 
 \paragraph{Distribución de $(SCE_0 - SCE)/SCE$}
@@ -1281,7 +1295,7 @@ Vamos a construir el estadístico:
 SCE_0 - SCE = Y'(I-H_0)Y - Y'(I-H)Y = Y'(H-H_0)Y
 \]
 
-Vamos a ver si $H-H_0$ es simétrica e idempotente, teniendo que $H_0H_0 = H_0$, por ser una matriz de proyección. 
+Vamos a ver si $H-H_0$ es simétrica e idempotente, teniendo que $H_0H_0 = H_0$, por ser una matriz de proyección.
 \[
 (H-H_0)(H-H_0) = H - H_0H - HH_0 + H_0 = H_0
 \]
@@ -1290,59 +1304,443 @@ Aquí tenemos que  $H_0H = HH_0 = H_0$ por el mismo argumento que en \ref{prop:S
 
 Ahora, necesitamos ver que $µ'(H-H_0)µ = 0$ para poder tener que $SCE_0 - SCE \sim \chi^2$. Aquí el razonamiento vuelve a ser muy parecido.
 \[(H-H_0)µ = Hµ - H_0µ = µ-µ = 0\]
-Proyectar $µ$ con $H$ y con $H_0$ no cambia $µ$, debido a que $µ$ está en el subespacio de proyección pequeño $V_0$. ¿Porqué sabemos que $µ∈V_0$? Porque, asumiendo $H_0$ ...
+Proyectar $µ$ con $H$ y con $H_0$ no cambia $µ$, debido a que $µ$ está en el subespacio de proyección pequeño $V_0$. ¿Porqué sabemos que $µ∈V_0$? Porque, asumiendo $H_0$
 
 \[
-\frac{SCE_0 - SCE}{σ^2} \overset{H_0}{\equiv}\chi^2_{p}\; \frac{SCE}{σ^2} \equiv \chi^2_{n-k-1}
+\begin{array}{lcr} \displaystyle\frac{SCE_0 - SCE}{σ^2} \overset{H_0}{\equiv} \chi^2_{p} && \displaystyle\frac{SCE}{σ^2} \equiv \chi^2_{n-k-1}\end{array}
 \]
 
-Si fueran independientes, su cociente sería una $F$. Vamos a ver la independencia utilizando \ref{prop:tema1_pepino}
+Si fueran independientes, su cociente sería una $F$. Vamos a ver la independencia utilizando \ref{prop:tema1_pepino} y utilizando que $HH = H$ y $HH_0 = H_0H = H_0$ por ser matrices de proyección.
 
 \[(H-H_0)(I-H) = H-H_0 - H + H_0 = 0\to \text{ independientes}\]
 
-Concluimos que 
+Concluimos que
 \[
 \frac{(SCE_0-SCE)/p}{SCE/(n-k-1)} \overset{H_0}{\equiv} F_{p;n-k-1}
 \]
 
-Cuya región de rechazo será:
+Cuya región de rechazo será para un nivel $α$ será
 
 \[
-R = \left\{  \right\}
+R_α = \left\{\frac{(SCE_0-SCE)/p}{SCE/(n-k-1)} > F_{p,n-k-1;α} \right\}
 \]
 
-\obs El contraste $H_0: β_i = β_j = 0$ es un caso particular de esto que hemos visto, tomando \[A = \begin{pmatrix} \begin{matrix}0\\\vdots\\0\end{matrix} \begin{matrix}\vdots\\\vdots\\\vdots\end{matrix} I_k \end{pmatrix} \]
+\obs El contraste $H_0: β_1 = ... = β_k = 0$ es un caso particular de esto que hemos visto, tomando en $Aβ = 0$ la matriz $A$ como:
 
-En este caso, el modelo reducido sería $Y_i = β_0 + ε_i$, con lo que 
+\[A =
+\begin{pmatrix}
+	\underbrace{\begin{matrix}0\\\vdots\\0\end{matrix}}_{(1)}  &
+	%\begin{matrix}\vdots\\\vdots\\\vdots\end{matrix}
+	I_k
+\end{pmatrix}
+\]
+$(1)$: por $β_0$.
 
-\[SCE_0 = \sum (Y_i-\hat{Y_i})^2 \overset{(1)}{=} \sum(Y_i - \gor{Y})^2=SCT\]
+En este caso, el modelo reducido sería $Y_i = β_0 + ε_i$, con lo que
 
-$(1)$ debido a que $Y_1,...,Y_n \sim N(β_0,σ^2)$, con lo que $\hat{β_0} = \gor{Y}$.
+\[SCE_0 = \sum (Y_i-\hat{Y_i})^2 \overset{(2)}{=} \sum(Y_i - \gor{Y})^2=SCT\]
+
+$(2)$:debido a que $Y_1,...,Y_n \sim N(β_0,σ^2)$, con lo que $\hat{β_0} = \gor{Y}$.
 
 Como $SCE_0 = SCT$, tenemos lo que ya habíamos obtenido:
-\[SCE_0 = SCT \to SCE_0 -SCE = SCT - SCE = SCR\]
+\[SCE_0 = SCT \to {SCE}_0 -SCE = SCT - SCE = SCR\]
 
 
 \subsubsection{Explicación de la tabla ANOVA}
 
-$R$ siempre está comparando 2 modelos, el reducido y el completo.
+$R$ siempre está comparando 2 modelos, el reducido y el completo.Vamos a entenderla por inducción matemática:
 
 En la primera fila, el modelo completo es el que incluye la primera variable y el modelo reducido es el que no incluye ninguna.
 
 El la fila $n$, el modelo completo es el que incluye las $n$ variables, y el modelo reducido es el que incluye las $n-1$ variables.
 
 
-% % % TODO: incluir tabla de las traspas
+% % % TODO: como texto cuando me lo pase JoseR.
+\begin{center}
+\includegraphics[scale=0.4]{img/TablaAnovaGeneral.png}
+\end{center}
+
+
 
 Es importante darse cuenta que los números de la columna $SumSq$ dependen del orden de las variables, ya que no es lo mismo pasar de no tener variables a tener la primera variable (que puede no influir nada) a tener la segunda (que puede ser tremendamente explicativa).
 
 \textbf{Sin embargo,} la suma es \textbf{constante}. Vamos a verlo
 \begin{proof}
 \[
-SC_1 + SC_{12} + SC_{123} = (SCE_0 - SCE_1) + (SCE_1 - SCE_{12}) + (SCE_{12} - SCE_{123}) = SCT - SCE = SCR
-\]
+\begin{array}{cccccc}
+SC_1 &+ &SC_{12} &+ &SC_{123} &= \\
+(SCE_0 - SCE_1) &+ &(SCE_1 - SCE_{12}) &+ &(SCE_{12} - SCE_{123})&=\end{array}  \]
+\[ SCE_0 - SCE_{123} = SCT - SCE = SCR\]
 \end{proof}
+
+
+\begin{example}
+Vamos a ver una tabla anova normal, con los datos del consumo de combustible en EEUU:
+
+\begin{lstlisting}[style=mystyle]
+reg <- lm(FuelC ~ Drivers+Income+Miles+MPC+Tax, data=fuel2001)
+anova(reg)
+
+Response: FuelC
+          Df     Sum Sq    Mean Sq   F value    Pr(>F)
+Drivers    1 3.5301e+14 3.5301e+14 2273.2167 < 2.2e-16 ***
+Income     1 6.7563e+11 6.7563e+11    4.3507 0.0426945 *
+Miles      1 2.1698e+12 2.1698e+12   13.9723 0.0005216 ***
+MPC        1 5.2927e+11 5.2927e+11    3.4082 0.0714577 .
+Tax        1 4.1208e+11 4.1208e+11    2.6536 0.1102978
+Residuals 45 6.9882e+12 1.5529e+11
+---
+\end{lstlisting}
+
+Vemos que el $p-valor$ de la última variable es $0.1102978$. Si vamos al análisis de regresión múltiple hecho al principio de la sección (\ref{example:fuel2001}) vemos que el p-valor de $Tax$ (nuestra última variable) es $0.110298$. ¿Casualidad o causalidad?
 
 La última columna de la fila $n$ es el p-valor del contraste $β_n = 0$, tomando el modelo que tiene las $β_0,...,β_{n-1}$. En el caso de la última fila, tenemos el p-valor de si $β_{ultimo} = 0$ en el modelo que incluye todas las demás variables. Este contraste es equivalente al que hacíamos en regresión múltiple para contrastar si $β_j = 0$. Podemos comprobar que los p-valores coinciden (0.11).
 
-\subsection{Modelo unifactorial}
+\end{example}
+
+
+
+\begin{example}
+Vamos a ver ahora el contraste de si podemos utilizar el modelo simple frente al complejo.
+
+\begin{lstlisting}[style=mystyle]
+
+regsimple <- lm(FuelC ~ Drivers,data=fuel2001)
+anova(regsimple, reg)
+
+Model 1: FuelC ~ Drivers
+Model 2: FuelC ~ Drivers + Income + Miles + MPC + Tax
+  Res.Df        RSS Df  Sum of Sq      F    Pr(>F)
+1     49 1.0775e+13
+2     45 6.9882e+12  4 3.7868e+12 6.0962 0.0005231 ***
+---
+\end{lstlisting}
+
+Es de recibo comentar que: $RSS = SCE$
+
+Por otro lado, son 4 grados de libertad porque imponemos 4 restricciones del modelo compuesto para el modelo simple (4 coeficientes nulos 0).
+
+
+El p-valor obtenido, al ser tan pequeño nos dice que la ganancia de información es suficientemente grande como para tener que rechazar el modelo simple.
+
+\end{example}
+
+\subsubsection{Análisis de influencia}
+
+En esta subsección vamos a estudiar cuánto de influyente puede ser una observación. En el caso de regresión simple, teníamos que algunos datos atípicos podían desviar mucho la recta (ver \ref{ej:reg_simple}). ¿Qué ocurre en regresión múltiple? Aquí no podemos hacer razonamientos geométricos para entenderlo, pero es un tema importante que tratar.
+
+
+Vamos a estudiarlo utilizando un ejemplo en el que queremos saber la cantidad de cierto medicamento en el hígado de una rata, tras recibir una dosis oral. La dosis recibida fue de 40 mg por kg de peso corporal. Tras cierto tiempo se sacrifican las ratas y se mide la cantidad de medicamento en su hígado.
+
+Tenemos 19 observaciones, y tres variables regresoras (peso de la rata, peso del hígado y dosis recibida) para la variable respuesta (Proporción de dosis en el hígado)
+
+
+Vamos a ver contrastando con regresión simple cada $β_i = 0$. Estos son los resultados obtenidos:
+\begin{center}
+\begin{tabular}{ccccc}
+&Estimate&Std. Error&t value&Pr(>|t|)\\\hline
+(Intercept)&0.1962346&0.2215825&0.886&0.388\\
+BodyWt&0.0008105&0.0012862&0.630&0.537
+\end{tabular}
+
+\begin{tabular}{ccccc}
+&Estimate&Std. Error&t value&Pr(>|t|)\\\hline
+(Intercept)&0.22037&0.13573&1.624&0.123\\
+LiverWt&0.01471&0.01718&0.856&0.404
+\end{tabular}
+
+\begin{tabular}{ccccc}
+&Estimate&Std. Error&t value&Pr(>|t|) \\\hline
+(Intercept)&0.1330&0.2109&0.631&0.537\\
+Dose&0.2346&0.2435&0.963&0.349
+\end{tabular}
+\end{center}
+Vemos que los $p-valores$ son muy grandes, con lo que no podemos rechazar $β_i = 0$ y no debería haber relación entre la variable respuesta a partir de la regresora. Además, podemos corroborarlo gráficamente:
+
+\begin{center}
+\includegraphics[scale=0.6]{img/DiagramaRatas.png}
+\end{center}
+
+Aparentemente no hay relación entre la respuesta y las regresoras. \textbf{¿Y haciendo regresión múltiple?} Tal vez contrastando $β_1 = ... = β_3 = 0$ obtengamos otra cosa (aunque sería de esperar que no).
+
+\begin{tabular}{ccccc}
+&Estimate&Std. Error&t value&Pr(>|t|)\\\hline
+(Intercept)&0.265922&0.194585&1.367&0.1919\\
+BodyWt&-0.021246&0.007974&-2.664&\textcolor{red}{0.0177}\\
+LiverWt&0.014298&0.017217&0.830&0.4193\\
+Dose&\textcolor{red}{4.178111}&1.522625&2.744&\textcolor{red}{0.0151}
+\end{tabular}
+
+Hay unos cuantos valores extraños. ¿Ahora resulta que $BodyWt$ y $Dose$ (que además son prácticamente la misma variable, ya que existe una gran correlación entre ellas) si son influyentes? Pero si antes no lo eran... Además, el término independiente de $Dose$ es tremendamente distinto al anterior\footnote{\textbf{Se deja como ejercicio para profundizar: }\textit{Demostrar que los $β_i$ de un modelo de regresión simple son iguales a los $β_i$ de cada regresión simple por cada variable regresora si éstas son independientes (o incorreladas).}}. ¿Cómo puede ser esto posible? \textbf{La paradoja se produce por un dato atípico.} Vamos a verlo, pero para ello necesitamos un par de medidas, para poder entender lo atípico del dato.
+
+
+
+
+\begin{defn}[Potencial en un punto]
+El potencial (\concept{leverage}) de un punto es el correpondiente $h_i$ de la matriz de diseño $X$.
+\end{defn}
+
+Los potenciales definen las varianzas, ya que
+\[\var{e_i} = σ^2(1-h_i)\]
+\begin{proof}
+Esto se debe a la distribución de los residuos.
+
+Recordamos $e = Y - \hat{Y} = (I-H)Y$. Como $Y\equiv N(Xβ,σ^2I_n)$, tenemos:
+
+\[
+e \equiv N\left(0,(I-H)σ^2I_n(I-H)'\right) \equiv N(0,σ^2(I-H))
+\]
+\end{proof}
+
+Además, este potencial está tremendamente relacionado con la distancia de Mahalanobis $\dist_M$:
+\[h_i = \frac{1}{n} \frac{1}{n-1}\dist_M(x_i,\gor{x})\]
+
+Este potencial mide numéricamente la influencia de un único punto. Para valores $>0.5$, el libro (sin justificación teórica) sugiere preocuparse porque tal vez sea un dato atípico. Otra manera (más natural) de medir la influencia, es recalcular el modelo eliminando el dato. Si cambia mucho, el dato es influyente. Si no cambia nada, el dato no es influyente. Esta es la idea que hay detrás de la \textbf{Distancia de Cook}.
+
+\begin{defn}[Distancia\IS de Cook]
+La distancia de Cook mide cómo cambia el vector de estimadores $\hat{β}$ cuando se elimina cada observación.
+
+Para ello, se utiliza la distancia de Mahalanobis (estandarizada) entre $\hat{β},\hat{β_i}$.
+
+Recordando la matriz de covarianzas de $\hat{B} = S_R^2(X'X)^{-1}$, entonces:
+
+\[D_i = \frac{[\hat{β} - \hat{β_i}]' (X'X) [\hat{β} - \hat{β_i}]}{(k+1)S_R^2} \]
+\end{defn}
+
+\paragraph{Propiedades}
+\begin{itemize}
+	\item ¿Cuándo es grande esta distancia? Lo que se hace es calibrarlo comparando con $F_{k+1,n-k-1;α}$. En general $D_i>1$ suele ser relevante.
+	\item Se puede calcular de una manera más simple utilizando los valores ajustados:
+	\[D_i = \frac{\sum_j=1}^n \left(\hat{Y}_j(i) - \hat{Y}_j\right)^2}{(k+1)S_R^2}\]
+	\item Y también está relacionado con el potencial y los residuos.
+	\[
+		D_i = \frac{1}{k+1}r_i^2 \frac{h_i}{1-h_i}
+	\]
+	donde $r_i = e_i/(S_R\sqrt{1-h_i})$, los residuos estandarizados.
+\end{itemize}
+
+
+
+En el ejemplo (\ref{ej:reg_simple}), tanto el punto rojo como el verde tienen un alto potencial, pero el rojo tiene una distancia de Cook mucho menor, ya que no es muy atípico  (en tanto en cuanto el modelo se ajusta bien a ese dato). En cambio, el punto verde tiene una distancia de Cook mucho mayor.
+
+Volviendo al ejemplo de las ratas, vamos a ver porqué esa paradoja de los $β_i$ distintos en regresión simple que en compuesta.
+
+
+
+Calculando los potenciales y las distancias de Cook, vemos que:
+\begin{center}
+\includegraphics[scale=0.75]{img/CookVsPotencial.png}
+\end{center}
+
+La rata 3 es como muy rara, ya que tiene un potencial y una distancia de Cook muy altos. Vamos a pintarla en rojo, para que veamos de qué dato estamos hablando:
+
+\begin{center}
+\includegraphics[scale=0.6]{img/DiagramaRatasR}
+\end{center}
+
+Vemos que algo raro sí parece, pero a simple vista no parece que podamos juzgar. Esta es la utilidad de estas medidas. Vamos a eliminar esa rata y recalcular los p-valores:
+
+\begin{center}
+\begin{tabular}{ccccc}
+Coefficients&Estimate&Std. Error&t value&Pr(>|t|)\\\hline
+(Intercept)&0.311427&0.205094&1.518&0.151\\
+BodyWt[-3]&-0.007783&0.018717&-0.416&0.684\\
+LiverWt[-3]&0.008989&0.018659&0.482&0.637\\
+Dose[-3]&1.484877&3.713064&0.400&0.695
+\end{tabular}
+\end{center}
+
+\paragraph{Conclusión}
+Una ínica observación hace que cambien totalmente las conclusiones respecto a si las variables son o no significativas.
+
+
+\subsection{Variable regresora cualitativa}
+
+Este es un tema que da para libros enteros. También se llama ``diseñode experimentos''. Nosotros vamos a ver el \concept{Modelo\IS unifactorial}, un caso concreto del tema para entender el fundamento matemático que hay detrás. Todo lo demás en lo que se profundiza en los libros son casos concretos.
+
+Vamos a verlo con el siguiente ejemplo:
+
+En un estudio para comparar la eficacia de tres fertilizantes se utiliza
+cada uno de ellos en 10 parcelas (asignando aleatoriamente cada parcela
+a uno de los tres fertilizantes) y posteriormente se registra el peso en
+toneladas de la cosecha resultante en cada parcela. Los datos son:
+
+\begin{center}
+\begin{tabular}{|c|ccccccccccc|}
+\hline
+	Fert. 1 & 6.27 & 5.36 & 6.39 & 4.85 & 5.99 & 7.14 & 5.08 & 4.07 & 4.35 & 4.95\\
+	Fert. 2 & 3.07 & 3.29 & 4.04 & 4.19 & 3.41 & 3.75 & 4.87 & 3.94 & 6.28 & 3.15\\
+	Fert. 3 & 4.04 & 3.79 & 4.56 & 4.55 & 4.55 & 4.53 & 3.53 & 3.71 & 7.00 & 4.61\\\hline
+\end{tabular}
+\end{center}
+
+
+
+Una variable explicativa cualitativa se llama factor. Los valores que toma se llaman niveles. En este modelo los niveles son los distintos tratamientos que aplicamos a las unidades experimentales. En el ejemplo tenemos un factor (el tipo de fertilizante) que se presenta en tres niveles o tratamientos, que se aplican a las unidades experimentales (las parcelas).
+
+
+\paragraph{Notación}
+\begin{itemize}
+\item \textbf{k} es el número de niveles del factor (en este caso 3). En las transparencias se le denomina $I$.
+\item $Y_{ij}$, donde $i$ es el nivel y $j$ es la unidad dentro del nivel.
+\item $\gor{Y_{1·}}$ es la media del nivel $1$ (recordamos que $\gor{Y}_{·j}$ sería la media de la columna).
+\item De esta manera, $\gor{Y_{··}}$ es la media global de todos los datos.
+\end{itemize}
+
+Con esto, podemos entender los datos de la tabla:
+
+\begin{center}
+\includegraphics[scale=0.6]{img/ModeloUnifactorial.png}
+\end{center}
+
+
+\subsubsection{Modelo unifactorial}
+
+\[Y_{ij} = µ_i + ε_{ij}\]
+
+donde
+\begin{itemize}
+	\item $µ_i$ es el nivel medio de la respuesta para el nivel $i$ del factor.
+	\item $ε_{ij}$ es la variable de error que recoge el resto de variables que
+influyen en la respuesta.
+	\subitem $ε_{ij} \overset{iid}{\sim} N(0,σ^2) \to Y_{ij} \equiv N(µ_i,σ^2)$.
+	\subitem Vemos que son \textbf{homocedásticas}
+\end{itemize}
+
+\paragraph{Modelo unifactorial como caso de la regresión múltiple}
+
+El modelo unifactorial se puede expresar en la forma $Y = Xβ + ε$,
+donde
+
+\begin{itemize}
+	\item $Y=(Y_{1,1},Y_{1,2},Y_{k,n_k})'$
+	\item $β = (µ_1,...,µ_k)$
+	\item $ε=(ε_{1,1},ε_{1,2},ε_{k,n_k})'$
+\end{itemize}
+
+Vamos a construir la matriz $X$:
+
+\[
+\begin{pmatrix}
+\begin{matrix} Y_{11}\\\vdots \\Y_{1n_1}\end{matrix}\\\hline
+\begin{matrix} Y_{21}\\\vdots \\Y_{2n_2}\end{matrix}\\\hline
+\vdots\\\hline
+\begin{matrix} Y_{k1}\\\vdots \\Y_{kn_k}\end{matrix}
+\end{pmatrix}
+ = 
+\begin{pmatrix}
+	\begin{matrix}
+		1&0&0&\dots\\
+		1&0&0&\dots\\
+		\vdots&\vdots&\vdots&\\
+		1&0&0&\dots
+	\end{matrix}\\\hline
+	\begin{matrix}
+		0&1&0&\dots\\
+		0&1&0&\dots\\
+		\vdots&\vdots&\vdots&\\
+		0&1&0&\dots
+	\end{matrix}\\\hline 
+	\vdots \\\hline
+	\begin{matrix}
+		0&\dots&0&1\\
+		0&\dots&0&1\\
+		\vdots&&\vdots&\vdots\\
+		0&\dots&0&1
+	\end{matrix} 
+\end{pmatrix}
+\begin{pmatrix} µ_1 \\ \vdots \\µ_k \end{pmatrix}
+\begin{pmatrix}
+	\begin{matrix} ε_{11}\\\vdots \\ε_{1n_1}\end{matrix}\\\hline
+	\begin{matrix} ε_{21}\\\vdots \\ε_{2n_2}\end{matrix}\\\hline
+	\vdots
+	\begin{matrix} ε_{k1}\\\vdots \\ε_{kn_k}\end{matrix}
+\end{pmatrix}
+
+\]
+
+
+Vamos a ver que esta matriz de diseño estima $β$ correctamente:
+
+\[\hat{β} = (\hat{µ_1},...,\hat{µ_n}) = \underbrace{(X'X)^{-1}}_{A}\underbrace{X'Y}_{B} =
+\underbrace{\begin{pmatrix}
+1/n_1 & 0 & \hdots & 0\\
+0 	& 1/n_2 & \hdots & 0\\
+\vdots & & \ddots & \vdots\\
+0 & 0 & 0 & 1/n_k
+\end{pmatrix}}_{A}\underbrace{
+\begin{pmatrix}
+Y_{1·}\\
+Y_{2·}\\
+\vdots\\
+Y_{k·}
+\end{pmatrix}
+}_{B} = \begin{pmatrix}
+\gor{Y}_{1·}\\
+\gor{Y}_{2·}\\
+\vdots\\
+\gor{Y}_{k·}
+\end{pmatrix} = \gor{Y_{··}}
+\]
+
+\paragraph{Hipótesis} ¿Cuál es el contraste equivalente que queremos realizar?
+
+Queremos contrastar si el fertilizante es influyente, es decir: $H_0 : µ_1 = ... = µ_k$.
+
+
+\paragraph{Modelos reducido y completo}
+\subparagraph{Reducido}
+\[SCE_0 = \sum_i \sum_j (Y_{ij} - \gor{Y}_{··})^2 = SCT\]
+\subparagraph{Completo}
+\[SCE = \sum_i \sum_j (Y_{ij} - \gor{Y}_{··})^2 \overset{(1)}{=} \sum_i (n_i-1)S_i^2\]
+
+$(1)$ ¿?¿?¿?
+
+Teniendo esto, recordamos:
+\[SCE_0 - SCE = SCT - SCE = SCR = \sum_i \sum_j (\gor{Y}_{i·} - \gor{Y}_{··})^2 = \sum n_i(\gor{Y}_{i·} - \gor{Y}_{··})^2\]
+
+
+Ahora ya podemos construir la tabla ANOVA:
+
+\begin{center}
+\includegraphics[scale=0.55]{img/AnovaUnifactorial.png}
+\end{center}
+
+¿Porqué $n-k$ grados de libertad? Si recordamos, ahí tendríamos $n-k-1 = n-(k+1) = n - \dim(V)$, siendo $V$ el subespacio generado por la matriz $X$. En regresión múltiple teníamos $\dim(V) = k+1$, las $k$ columnas más el término independiente. En este caso, nuestra matriz $X$ tiene rango $k$.
+
+\begin{example}
+Vamos a ver esto con los datos del ejemplo.
+
+\begin{center}
+\begin{tabular}{cccc}
+Muestra & $n_i$ & $\gor{Y_{i·}}$ & $S_{i·}$\\
+1 & 10 & 5.445 & 0.976\\
+2 & 10 & 3.999 & 0.972\\
+3 & 10 & 4.487 & 0.975
+\end{tabular}
+\end{center}
+
+\[SCT = 10(5.445 - 4.644)^2 + 10(3.999 - 4.644)^2 + 10(4.487 - 4.644)^2 \simeq 10.82\]
+\[SCE = 9(0.976)^2 +9(0.972)^2 +9(0.975)^2  = 25.62\]
+
+Ahora ya podemos construir el estadístico:
+
+\[
+\frac{SCR/(k-1)}{SCE/(n-k)} = ... = 5.702
+\]
+
+Por otro lado, $F_{2,27;0.05} = 3.35$
+
+Como el valor obtenido es mayor que el estadístico, rechazamos la hipótesis.
+
+\begin{lstlisting}[style=mystyle]
+> cosecha = read.table('cosecha.txt',header=TRUE)
+> resultado = aov(cosecha ~ factor(fertilizante), data=cosecha)
+> summary(resultado)
+
+							       Df SumSq MeanSq F  value Pr(>F)
+factor(fertilizante) 2 10.82 5.411   5.702 0.00859 **
+Residuals 					27 25.62   0.949
+\end{lstlisting}
+
+\end{example}
