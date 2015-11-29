@@ -4149,9 +4149,9 @@ Sólo podemos asegurar que el último código es incorrecto.
 
 Calculamos de nuevo el dígito $x_{12}$ forzamos a que el valor obtenido coincida con el real.
 
-\[5 = -(3+3+3a+6+15+8+21+9)\mod 10 = -(3a+68) \mod 10 = -3a+2 \mod 10\]
+\[5 = -(9+9+a+18+5+24+7+27+5)\mod 10 = -(a+104) \mod 10 = -a+4 \mod 10\]
 Resolviendo la ecuación llegamos a
-\[ a=-1 \mod 10 = 9\]
+\[ a=-4 \mod 10 = 6\]
 
 
 \end{problem}
@@ -4674,6 +4674,41 @@ detectar dos errores; detectar una permutación de dos cifras;
 detectar una permutación de dos cifras consecutivas; corregir un
 error; recuperar un número borrado (sabiendo qué lugar ocupa).
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Podemos suponer que el dígito de control se calcula estudiando el módulo de una combinación lineal del resto de cifras del código.
+
+Puesto que los dígitos de control de todos los ejemplos de código dado son menores que 7, parece razonable asumir que estos dígitos se calculan de forma similar a como se hace con la letra de los DNIs pero trabajando módulo 7.
+
+Podemos comprobar que $7425090 \mod 7 = 1$ y a partir de ahí todos los demás códigos proporcionados encajan con nuestra teoría pues se trata de códigos consecutivos.
+
+\spart
+
+Para formalizar el código podemos ver que el dígito de control se calcula como:
+\[c = \sum_{i=0}^610^ix_i \mod 7 \text{ siendo el código de la forma } x_6x_5x_4x_3x_2x_1x_0c\]
+
+\textbf{Si se produce un error en una cifra} estaremos leendo $\tilde{x}_i = x_i+e$ con lo que al calcular $c$ e igualarlo con lo esperado tendremos:
+\[c = c +10^ie \mod 7 \implies 10^ie=0\mod 7 \implies e=0\]
+por lo que queda claro que podremos detectar un error.
+
+\textbf{Si se produce una permutación de dos cifras}, seremos incapaces de detectar el error si
+\[10^ix_i+10^jx_j = 10^jx_i +10^ix_j \mod 7 \equiv 10^ix_i+10^jx_i+10^je=10^jx_i+10^ix_i+10^ie \mod 7\]
+Simplificando y suponiendo $i>j$ tenemos
+\[e(10^i-10^j)=0 \mod 7 \equiv e10^j(10^{i-j}-1) = 0 \mod 7\]
+
+Es posible que no detectemos el error si $10^{i-j}=1 \mod 7$, es decir $10^k=1 \mod 7$ donde $k\in[1-6]$ asi que vamos a probar las posibilidades. Para ver todos los casos nos basta con ver que $10^2,10^3 \neq \pm 1 \mod 7$, que se cumple.
+
+Por tanto esté código detectará el intercambio de dos cifras
+
+\textbf{Si se permutan dos cifras consecutivas} estamos en un caso particular de lo que acabamos de hacer con lo que también será detectado.
+
+\textbf{Si se borra un número} podemos recuperarlo calculando
+\[jx_j = c-\sum_{i=0, i\neq j}^610^ix_i \mod 7 \]
+donde podemos despejar $x_j$ puesto que estamos en un cuerpo y $j$ tiene inverso.
+
 \end{problem}
 
 
@@ -4713,6 +4748,9 @@ Es evidente que siempre detectamos un error puesto que un cambio en un bit hará
 
 En general, siempre que el número de errores sea impar el código detectará que se ha producido un error.
 
+Puesto que estamos añadiendo un bit a cada palabra de longitud $n-1$ es evidente que en el nuevo código todas las palabras serán de longitud $n$ y que mantendremos el número de palabras existentes $2^{n-1}$.
+
+Por lo comentado al inicio del ejercicio es evidente que la distancia mínima de este código será 2 pues cambiar cualquier bit implica cambiar también el bit de paridad si queremos obtener otra palabra del código.
 \end{problem}
 
 \begin{problem}[9] Consideramos el código $C$ de repetición de longitud 4 sobre
@@ -4737,7 +4775,7 @@ El código de repetición de longitud 4 significa que cada caracter va a aparece
 
 En concreto nos encontramos ante un código lineal de dimensión 2.
 
-Eivdentemente si se produce un error veremos que, donde debería haber 4 cifras iguales 1 es distinta, con lo que podemos reconocerla y corregirla.
+Evidentemente si se produce un error veremos que, donde debería haber 4 cifras iguales 1 es distinta, con lo que podemos reconocerla y corregirla.
 
 Si en el bloque de 4 cifras que deberían ser iguales hay dos distintas y esas son iguales entre ellas, podemos detectar que hay un error aunque no podremos corregirlas pues no sabemos que par es erróneo.
 
@@ -4759,7 +4797,7 @@ para transmitir a traves de un canal binario simétrico con
 probabilidad de error en un símbolo $p$. Recibido un mensaje,
 \underbar{siempre} intentamos leerlo (es decir, lo usamos como
 código corrector). Demuestra que la probabilidad de decodificar
-erroneamente una palabra es $P_{err}=10p^3-15p^4+6p^5$.
+erróneamente una palabra es $P_{err}=10p^3-15p^4+6p^5$.
 ?`Aproximadamente con que frecuencia decodificaremos
 incorrectamente si $p=0.1$? ?`Y si  $p=0.01$? Compara con lo que
 sucedería si utilizasemos el código binario de repetición de
@@ -4776,18 +4814,18 @@ Para cada caracter cifrado deberíamos recibir 5 bits iguales. Descodificaremos 
 
 \item \textbf{4 bits erróneos}
 
-\[P_2 = p^4\]
+\[P_2 = {5 \choose 4} p^4 = 5p^4\]
 
 \item \textbf{3 bits erróneos}
 
-\[P_3 = p^3\]
+\[P_3 = {5 \choose 3} p^3 = 10p^3\]
 \end{enumerate}
 
 Si sólo hay 2 bits erróneos o 1 lo detectaremos correctamente puesto que habrá mayoría de bits correctos y el algoritmo encontrará el vecino más próximo con lo que acertará.
 
 En cada bloque de repetición, la probabilidad de error es:
 \[P_{err} = p^5 + 5p^4+10p^3\]
-donde tenemos en cuenta las diferentes formas posibles de escoger 3,4 o 5 bits que cambiar.
+
 
 \textcolor{blue}{Y no se parece demasiado a lo supuestamente esperado}
 
