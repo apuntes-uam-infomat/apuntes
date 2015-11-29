@@ -4804,30 +4804,43 @@ sucedería si utilizasemos el código binario de repetición de
 longitud 3, o si no codificásemos en absoluto.
 \solution
 
-\doneby{Pedro}
+\doneby{Edu}
 
-Para cada caracter cifrado deberíamos recibir 5 bits iguales. Descodificaremos el mensaje de forma errónea en los siguientes casos:
-\begin{enumerate}
-\item \textbf{5 bits erroneos}
+\spart
+Tenemos el código $\mathcal{R}_{2,5}=\set{00000,11111}$, con longitud $5$, y $d(\mathcal{R}_{2,5}) = 5$, luego el algoritmo de corrección corrige $\floor{\frac{d-1}{2}} = 2$ errores.
 
-\[P_1=p^5\]
+Por tanto, $P_{err} = P_{3\ errores} + P_{4\ errores} + P_{5\ errores}$, ya que suponemos que usamos un canal binario simétrico\footnote{la probabilidad de error en un bit es $p$ y los errores son independientes}.
 
-\item \textbf{4 bits erróneos}
+Luego,
+\begin{align*}
+P_{err} = p^3 (1-p)^2 {{5}\choose{3}} + p^4 (1-p) {{5}\choose{4}} + p^5 {{5}\choose{5}} =\\
+= p^3 (1-p)^2 {\frac{5!}{3! \cdot 2!}} + p^4 (1-p) {\frac{5!}{4! \cdot 1!}} + p^5 {\frac{5!}{5! \cdot 0!}} =\\
+= 10 \cdot p^3 (1-p)^2 + 5 \cdot p^4 (1-p) + p^5 = 10p^3-15p^4+6p^5
+\end{align*}
 
-\[P_2 = {5 \choose 4} p^4 = 5p^4\]
+\spart
+Basta sustituir en la fórmula:
+$P_{err}(0.1) = 8.56 \cdot {10}^{-3}$ y $P_{err}(0.01) = 9.86 \cdot {10}^{-6}$
 
-\item \textbf{3 bits erróneos}
+\spart
+En primer lugar, calculemos las tasas de $\mathcal{R}_{2,5}$ para poder compararlas con las de los otros códigos: $\delta = \frac{5}{5} = 1$ y $R = \frac{1}{5}$.
 
-\[P_3 = {5 \choose 3} p^3 = 10p^3\]
-\end{enumerate}
+Debido a que es el más sencillo, comencemos por examinar el código sin codificación: $\mathcal{C} = \set{0,1}$.
 
-Si sólo hay 2 bits erróneos o 1 lo detectaremos correctamente puesto que habrá mayoría de bits correctos y el algoritmo encontrará el vecino más próximo con lo que acertará.
+Tenemos que $d_\mathcal{C} = 1$ y $P_{err \ \mathcal{C}} = p$, y sus tasas son $\delta = \frac{1}{1} = 1$, $R = \frac{1}{1} = 1$.
 
-En cada bloque de repetición, la probabilidad de error es:
-\[P_{err} = p^5 + 5p^4+10p^3\]
+Este código tiene el problema de que no puede corregir errores, luego para $p$ muy pequeña, puede compensar usarlo ya que su tasa de transmisión es mucho mayor que la de $\mathcal{R}_{2,5}$. Eso si, $P_{err \ \mathcal{C}}(0.1) = 0.1$, $\approx 11.68$ veces mayor que $\mathcal{R}_{2,5}$ y $P_{err \ \mathcal{C}}(0.01) = 0.01$, $\approx 1015$ veces mayor que $\mathcal{R}_{2,5}$, luego la transmisión de cada bit tiene que ser muy cara para que compense usar este código.\\
 
+Ahora, examinemos $\mathcal{R}_{2,3} = \set{000,111}$. Que tiene los siguientes parámetros: ${d(\mathcal{R}_{2,3}) = 3}$, por tanto corrige $\floor{\frac{d-1}{2}} = 1$ errores; $\delta = \frac{3}{3} = 1$, $R = \frac{1}{3}$.
 
-\textcolor{blue}{Y no se parece demasiado a lo supuestamente esperado}
+Calculemos su probabilidad de error:
+\begin{align*}
+P_{err} = P_{2\ errores} + P_{3\ errores} = p^2 (1-p) {{2}\choose{3}} + p^3 {{3}\choose{3}} =3 p^2 (1-p) + p^3 = 3p^2 - 2p^3
+\end{align*}
+Luego tenemos: $P_{err}(0.1) = 2.8 {10}^{-2}$, que es $\approx 3.27$ veces mayor que la de $\mathcal{R}_{2,5}$; y $P_{err}(0.01) = 2.98 {10}^{-4}$ que es $\approx 30$ veces mayor que la de $\mathcal{R}_{2,5}$.
+
+De nuevo, $\mathcal{R}_{2,3}$ tiene mejor tasa de transmisión que $\mathcal{R}_{2,5}$, pero mayor probabilidad de error. Habría que evaluar el coste de transmitir un bit y sopesar si la tasa de error es suficientemente baja para escoger un código frente al otro.
+
 
 \end{problem}
 
