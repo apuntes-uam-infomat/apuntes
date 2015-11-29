@@ -4844,3 +4844,140 @@ De nuevo, $\mathcal{R}_{2,3}$ tiene mejor tasa de transmisión que $\mathcal{R}_
 
 \end{problem}
 
+\section{Control 4 (1-12-2014) Modelo A}
+\begin{problem}[1]
+El IBAN (International Banck Account Number) está formado por dos letras, que indican el país al que corresponde la cuenta, dos dígitos de control y una serie de números (o letras, aunque, para simplificar, nosotros NO consideramos esta posibilidad), en cantidad que depende del país, que indican el número de cuenta. Este es un ejemplo de IBAN español:
+
+\[ES7620770024003102575766\]
+
+Los dos números que siguen a las letras (76 en el ejemplo) son los dígitos de control. El resto ($20770024003102575766$) son el número de la cuenta propiamente dicho. Este es el modo de calcular los dos dígitos de control.
+
+\begin{itemize}
+\item Las dos letras del código del país se transforman cada una en un número de dos cifras del siguiente modo $A=10$, $B=11$, ..., $Z=35$ (no hay $\tilde{N}$), obteniendo así 4 cifras (en nuestro ejemplo $ES=1428$).
+
+\item Estas 4 cifras, junto a dos desconocidas que corresponden a los dígitos de control, $c_1c_2$ se colocan detrás del número de la cuenta. En el ejemplo $207700240031025757661428c_1c_2$.
+
+\item Se calcula $c_1c_2$ de manera que el número resultante sea $\equiv 1 \mod 97$. En el ejmplo
+\[20770024003102575766142876=1 \mod 97\]
+
+\item Se ponen las dos letrs y los dos dígitos de control encontrados delante del número de cuenta. En el ejemplo $142876=ES76$ se antepone a $20770024003102575766$ para obtener el IBAN que hemos dado
+\end{itemize}
+
+Se pide:
+
+\ppart Demuestra que el IBAN detecta un error en un número
+
+\ppart Demuestra que el IBAN detecta un error en una letra
+
+\ppart Demuestra que el IBAN no siempre detecta dos errores
+
+\ppart ¿Cuál es la distancia mínima del código IBAN?
+
+\ppart ¿Existe un algoritmo que permita corregir siempre un error en el IBAN?
+
+\solution
+
+\doneby{Pedro}
+
+\spart
+Si una cifra cambia, digamos la que ocupa la posición $x_i$, al reescribir el código colocando el equivalente de las letras y los dígitos al final del número y calcular su módulo obtendremos como resultado:
+\[1+10^ie \mod 97\]
+
+Nuestro código no detectará el error si
+\[10^ie = 0 \mod 97\]
+
+Puesto que 97 es primo, la única opción para que el producto sea 0 es que uno de los dos sea 0. En concreto $10^i \neq 0$ para cualquier $i$ por lo que la única posibilidad de que el error no sea detectado es que $e=0$, es decir, que no haya error.
+
+\spart
+Si cambiamos una letra, el error obtenido al calcular el módulo 97 del número y restarle 1 será
+\[ε = e1000 \text{ si falla la segunda letra o } 10000e  \text{ si falla la primera}\]
+
+En ambos casos, no detectaremos el cambio de la letra si este error es 0. Nuevamente, como estamos en un cuerpo ya que 97 es primo, esto sólo puede ocurrir si $e=0$, es decir, si no hay error.
+
+\spart
+
+Es sencillo ver que no siempre detecta dos errores. Dado el ejemplo podemos ver que:
+\[20770024003102575766142873 = 1 -3 \mod 97 \implies \]
+\[\implies 20770024003102575766142973 = 1 -3 +100 \mod 97 =1 \mod 97\]
+es decir, el IBAN
+\[ET7320770024003102575766\]
+será confundido con el IBAN del ejemplo, habiendo sólo dos cifras de distancia entre ellos.
+
+\spart
+
+Puesto que el código siempre detecta un error sabemos que la distancia mínima debe ser al menos 2 (por el teorema que garantiza que dada la distancia mínima $d$ siempre podemos detectar $d-1$ errores).
+
+Pero, puesto que dos errores pueden no ser detectados es obvio que la distancia mínima no puede ser 3, por el mismo teorema que acabamos de mencionar.
+
+Es por tanto evidente que el código tiene distancia mínima igual a 2.
+
+\spart
+No puesto que si no sabemos en qué lugar se ha producido el error no podremos corregirlo.
+
+Por ejemplo, si lo que ocurre es que la segunda cifra del código de control ha aumentado en 3 unidades (al calcular el módulo hemos obtenido 4 $\mod 97$ en lugar de 1) no sabemos si tenemos que reducir en 3 unidades esta última cifra o reducir en una unidad la cifra primera cifra del código de control.
+
+Esto se debe a que $-3=-100 \mod 97$.
+
+\end{problem}
+
+\section{Control 4 (1-12-2014) Modelo B}
+\begin{problem}[1]
+Para manejar un robot tenemos que transmitir cuatro instrucciones de direción que digitalizamos así: $NN=00, \ E=01, \ O =10, \ S=11$. Para evitar errores decidimos utilizar un código binario $\algb{C}$ de longitud 6 donde cada uno de los bits $x_1x_2x_3x_4x_5x_6$ tiene el siguiente significado
+
+\begin{itemize}
+\item $x_1x_2$ son los dos bits de la instrucción que queremos transmitir al robot
+\item $x_3x_4$ son una repetición de $x_1x_2$
+\item $x_5$ es un controlado de paridad para $x_1x_2$, es decir $x_1+x_2+x_5 = 0 \mod 2$
+\item $x_6$ es un controlado de paridad para $x_3x_4$, es decir $x_3+x_4+x_6 = 0 \mod 2$
+\end{itemize}
+
+\ppart Escribe las palabras de $\algb{C}$ que codifican cada uno de los cuatro mensajes y encuentra la distancia mínima.
+
+\ppart Escribe un algoritmo que permita \textbf{simultáneamente} corregir un error y detectar dos errores cuando se transmite una palabra de $\algb{C}$.
+
+\ppart Si aplicas el algoritmo anterior y el robot recibe $101100$, ¿qué debe hacer el robot? ¿Y si recibe $111111$
+\solution
+
+\doneby{Pedro}
+
+\spart
+Las palabras quedan codificadas como:
+\[\begin{array}{l}
+N = 000000\\
+E= 010111\\
+O= 101011\\
+S= 111100
+\end{array}\]
+
+Empíricamente podemos comprobar que la distancia mínima es $4$.
+
+\spart
+Apoyándonos en un teorema visto en clase, sabemos que si la distancia mínima es $4=2*1+1+1$ existe un algoritmo que nos permite detectar dos errores y corregir 1.
+
+Suponiendo que nos envían $x$ y recibimos $\tilde{x}$, este algoritmo funciona como sigue:
+\begin{enumerate}
+\item Si la palabra recibida pertenece a nuestro código la leemos y fin del algoritmo
+\item Si la palabra recibida no pertenece al código buscamos la palabra del código más cerca a ella.
+
+\item Si estaba a una distancia menor o igual que 1, leemos $x_0$ y fin del algoritmo
+
+\item Si la palabra más cercana estaba a una distancia mayor, avisamos del error y fin del algoritmo.
+\end{enumerate}
+
+\spart
+
+\begin{itemize}
+\item \textbf{Recibimos 101100}
+
+La palabra no está en el código así que buscamos la más cercana.
+
+Lo más cercano es $S$ que está a distancia 1. Por tanto \textbf{leemos S}
+
+\item \textbf{Recibimos 111111}
+
+La palabra no está en el código así que buscamos la más cercana.
+
+Lo más cercano está a distancia 2 que es mayor que 1 por lo que simplemente avisamos de que hay un error pero no leemos nada.
+
+\end{itemize}
+\end{problem}
