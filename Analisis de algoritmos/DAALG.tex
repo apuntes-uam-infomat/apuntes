@@ -187,8 +187,6 @@ Un algoritmo interesante en estos grafos es el \concept{Ordenamiento\IS topológ
 
 Esta ordenación nos permitirá, por ejemplo, encontrar caminos mínimos en un grafo en tiempo lineal
 
-
-
 \begin{listing}[hbtp]
 \begin{minted}[frame=lines, fontsize=\scriptsize, tabsize=4]{python}
 def shortestPathsDAG(G, from, cost, adjacent_nodes):
@@ -211,7 +209,98 @@ def shortestPathsDAG(G, from, cost, adjacent_nodes):
 \label{lst:Prim}
 \end{listing}
 
-\appendix
+\subsection{Circuitos eulerianos y hamiltonianos}
+
+\subsubsection{Circuitos eulerianos}
+
+Un camino en un grafo es un recorrido que empieza y acaba en el mismo punto. Puede ser interesante encontrar un \concept{Circuito\IS euleriano}, que es uno que pasa por todas las ramas una única vez. La condición necesaria y suficiente para que este tipo de circuitos existan es que no puede haber ningún nodo con grado impar.
+
+Si no queremos un circuito sino sólo un camino euleriano (esto es, que no acabe en el mismo vértice), tenemos que tener todos los nodos con grado par salvo el inicio y final del camino.
+
+Para encontrar un circuito o camino euleriano, se empieza en el vértice que se quiera y se empieza a crear un camino hasta llegar al vértice final (el mismo del principio en circuitos o el final que decidamos en el camino).
+
+No nos quedaremos parados en ningún otro vértice, ya que todos los intermedios tienen que tener grado par. Lo que sí puede ocurrir es que no hayamos cubierto todas las ramas. En ese caso, simplemente vamos a por el primer vértice del camino que tenga ramas por las que no hayamos pasado y creamos un circuito euleriano a través de él de la misma manera, ampliando así el camino que habíamos generado antes.
+
+\subsubsection{Circuitos hamiltonianos: el problema del viajante}
+
+Un caso similar es el caso del \concept{Circuito\IS hamiltoniano}, que es un circuito que pasa por todos los vértices del grafo. En general, este tipo de circuitos son más difíciles computacionalmente. El único algoritmo general es una búsqueda exhaustiva con back-tracking.
+
+El problema de encontrar circuitos hamiltonianos es equivalente\footnote{Simplemente buscamos un circuito con TSP para el grafo, tomando coste 1 en las ramas de nuestro grafo original y un coste mayor en otro caso. Si al final el coste del camino que nos da TSP es igual al número de vértices que tenemos, el camino del TSP es Hamiltoniano.} al problema del viajante o \concept{Traveling Salesman} (TSP), que busca cómo recorrer todos los vértices de un grafo pasando por todos los vértices al menos una vez.
+
+La cuestión es que no hay un algoritmo exacto y eficiente para el TSP. Una primera aproximación es un algoritmo codicioso (\textit{greedy}) que simplemente busque el nodo más cercano desde uno dado. Esto sólo será útil cuando el grafo sea euclídeo (esto es, que cumpla la desigualdad triangular: $∀u,v,z ∈ G\; c(u,v) ≤ c(u,z) + c(z,v)$), y tendremos un coste $c = O(\log \abs{V}) · c^*$, con $c^*$ el coste óptimo.
+
+Buscaremos algoritmos aproximados, que nos den una solución acotada entre $c^*$ y $λc^*$, con $λ ≥ 1$ fijo (el caso del vecino cercano no es aproximado, porque $λ$ depende del número de vértices). Basándonos en grafos euclídeos, un algoritmo puede ser el siguiente: buscamos un árbol abarcador mínimo, duplicamos las ramas de ese árbol, buscamos un circuito euleriano\footnote{Para esto duplicamos las ramas: para asegurarnos de que el circuito euleriano existe.} y después nos llevamos por delante las ramas vistas (?) para tener el camino Hamiltoniano. Este algoritmo tiene $λ=2$.
+
+El siguiente paso para mejorar la solución del TSP con $λ=1.5$ es el \concept{Algoritmo\IS de Christofides}. Para ello necesitamos definir lo que es un \concept{Emparejamiento}, que no es más que un subconjunto de ramas sin vértices en común. Será maximal si añadiendo cualquier otra rama deja de ser un emparejamiento; y será máximo si es imposible que tenga más ramas. Por último, tendremos un emparejamiento perfecto si contiene todos los vértices del grafo.
+
+Christofides busca un árbol abarcador mínimo $T$ en el grafo $G$. Se busca entonces en $G$ un emparejamiento perfecto $M$ para los vértices de $T$ que tengan grado impar. $T$ y $M$ se cobinan en un multigrafo $H$, y se busca un circuito euleriano $π'$ en $H$, que después se recorrerá atajando para obtener el camino final $π$.
+
+\subsubsection{Secuenciación de genoma}
+
+La idea de la secuenciación de genoma es, como su nombre indica, obtener una secuencia $S = TATGGTGC$ de un cierto genoma. La cuestión es que los métodos bioquímicos no nos dan esa secuencia directamente, sino lo que se dice un \concept{Espectro}, que son las subsecuencias de longitud $l$. Considerando la secuencia $S$ de antes, su espectro con $l = 3$ sería \[ \mop{sp}(S, 3) = \set{TAT, ATG, TGG, GGT, GTG, TGC} \]
+
+Más genéricamente, dada una secuencia $S = e_1e_2 \dotsb e_n$, su espectro será \[ \mop{sp}(S, l) = \set{ e_i e_{i+1} \dotsb e_{i + l - 1} ≝ s_i \tq i = 1, \dotsc, n - l + 1} \]
+
+El problema de la secuenciación es regenerar la secuencia a partir del espectro, reordenando para ello las subsecuencias $s_i$ de $\mop{sp}(S,l)$ de tal forma que el solapamiento entre dos subsecuencias consecutivas sea $l-1$.
+
+Una forma de ver este problema es ver el espectro como un grafo $G_l (S) = (V_l, E_l)$ con $V_l = \mop{sp}(S,l)$ y las ramas construidas de la siguiente forma: $s_i, s_j ∈ E_l$ si y sólo si el solapamiento entre ambas es $l-1$ (esto es, $σ(s_i, s_j) = l - 1$). Encontrando un camino hamiltoniano en ese grafo $G_l$ tendríamos la secuenciación que buscamos.
+
+Lo malo es que tenemos un problema: acabamos de ver que encontrar caminos hamiltonianos es bastante complicado. Iremos entonces a la otra opción, que es buscar caminos eulerianos, poniendo para ello las subsecuencias en las ramas y tratando de recorrerlas todas.
+
+Para cada subsecuencia $s_i ∈ \mop{sp}(S,l)$, consideraremos las subsecuencias formas por sus $l-1$ primeros elementos y sus $l-1$ últimos respectivamente como \begin{align*}
+s_i^1 &= e_i e_{i+1} \dotsb e_{i+l - 2} \\
+s_i^2 &= e_{i+1} e_{i+2}\dotsb e_{i+l - 1}
+\end{align*}
+
+Con esto podemos construir un grafo $G_{l-1} = (V_l, E_l)$, con $V_{l-1} = \mop{sp}(S, l - 1)$ y, aquí va el cambio, las ramas construidas de la siguiente forma: $s_i, s_j ∈ E_{l-1}$ si y sólo si son prefijo y sufijo de una subsecuencia $s_k$ $\mop{sp}(S, l)$, esto es, que $s_i = s_k^1$ y $s_j = s_k^2$.
+
+El grafo esta vez es dirigido, aunque sólo necesitamos hacer una pequeña adaptación para que la teoría de caminos eulerianos nos valga aquí: para que haya un circuito euleriano, todos los nodos tendrán que tener el mismo número de ramas de salida (que van del nodo a otro del grafo) que de entrada (incidentes desde otro nodo al nodo que consideramos).
+
+Una vez construido el grafo, podemos encontrar un camino euleriano y tener la secuenciación.
+
+\subsection{Grafos con costes negativos}
+
+En grafos con costes negativos, Dijkstra no funciona, aunque sí lo hace Floyd-Warshall, que recordemos devuelve las distancias mínimas entre todos los nodos. Para distancias mínimas entre un nodo y el resto de nodos del grafo, tenemos el \concept{Algoritmo\IS de Bellman-Ford}, que básicamente lo que hace es buscar los caminos mínimos de $i$ a $j$ con como mucho $k$ ramas en cada paso. Al final, tendremos los caminos mínimos.
+
+Más formalmente, definimos $\dst_k(i,j)$ como el camino mínimo de $i$ a $j$ pasando por como mucho $k$ ramas. Se tiene que \[ \dst_k(i,j) = \min \set{\dst_{k-1}(i,j), \min_{(v,j) ∈ E} \dst (v,j) + \dst_{k-1}(i,v)} \]
+
+Al final, cuando $k = \abs{V} - 1$, tendremos los costes mínimos.
+
+Bellman-Ford nos sirve para detectar ciclos negativos: si al final del algoritmo tenemos que $\dst_k(i,j)$ es menor que el peso de la rama $(i,j)$, es que en algún momento hemos encontrado una forma de ir de $i$ a $j$ reduciendo ese coste. Podemos recorrer entonces muchas veces más ese camino para al final encontrar un ciclo negativo.
+
+\section{Programación dinámica}
+
+\subsection{Problema del Knapsack o de la mochila}
+
+El problema del \concept{Knapsack} consiste en encontrar la combinación óptima de elementos $i$ con valor $v_i$ y peso $w_i$, de tal forma que la suma de valores sea máxima y la suma de pesos no supere un cierto valor $W$.
+
+La resolución pasa por ver que hay una estructura de subproblemas. Sea $v(i,w)$ el valor de la mochila cogiendo como mucho los elementos $0,\dotsc,i$ y con peso máximo $w$. Aquí tenemos dos opciones: si el elemento $i$ está en la solución óptima, tendríamos que $v(i,w) = v_i + v(i-1, w - w_i)$. En caso contrario, sería que $v(i,w) = v(i - 1, w)$. Así, nos queda una fórmula recursiva: \[ v(i,w)=\max\set{v_i +v(i - 1,w -w_i),v(i-1,w)} \]
+
+El pseudocódigo aparece en el \fref{lst:Knapsack}. Básicamente montamos una lista con valores inciales y vamos rellenando.
+
+\begin{listing}[hbtp]
+\begin{minted}[frame=lines, fontsize=\scriptsize, tabsize=4]{python}
+// Input:
+// Values (stored in array v)
+// Weights (stored in array w)
+// Number of distinct items (n)
+// Knapsack capacity (W)
+
+for j from 0 to W do:
+    m[0, j] := 0
+
+for i from 1 to n do:
+    for j from 0 to W do:
+        if w[i] <= j then:
+            m[i, j] := max(m[i-1, j], m[i-1, j-w[i]] + v[i])
+        else:
+            m[i, j] := m[i-1, j]
+\end{minted}
+\caption{Algoritmo Knapsack}
+\label{lst:Knapsack}
+\end{listing}
+
+Cuando no es el Knapsack 0-1 (esto es, podemos meter más de una copia de cada elemento en la mochila), simplemente tenemos que quitarnos la parte de la matriz que va de $1$ a $n$: vamos rellenando una lista unidimensional $m[W]$ con la siguiente ecuación: \[ m[w] = \max_{w_i ≤ w} v_i + m[w - w_i] \]
 
 \printindex
 \end{document}
