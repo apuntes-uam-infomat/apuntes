@@ -4,7 +4,6 @@
 \def\@fontsizeopt{}
 \newif\if@removechapters
 
-
 % Si nos pasan la opción nochap, no ponemos número de capítulo en las secciones.
 \DeclareOption{nochap}{\@removechapterstrue}
 
@@ -63,7 +62,8 @@
 		\renewcommand{\thesection}{\thechapter.\arabic{section}}
 		\oldappendix
 	}
-
+\else
+	\numberwithin{thm}{chapter}
 \fi
 
 % Números en las subsecciones
