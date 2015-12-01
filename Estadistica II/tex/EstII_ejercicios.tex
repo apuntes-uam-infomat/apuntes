@@ -1171,3 +1171,185 @@ Los cálculos se dejan para el lector, aunque el resultado será:
 \end{itemize}
 
 \end{problem}
+
+\begin{problem}[12]
+Considera el modelo de regresión múltiple $T=Xβ + ε$, donde $ε$ verifica las hipótesis habituales.
+
+\spart Define el vector de valores ajustados $\gor{Y} = (\gor{Y_1},...,\gor{Y_n})$
+\solution
+\ppart
+\[\hat{Y} = X\hat{β} = HY\]
+\[\hat{Y} \equiv N(Xβ,σ^2H)\]
+Sabemos que esa es la varianza porque $Y \equiv N_n(Xβ,σ^2I_n)$ y aplicamos $\hat{Y} = AY \to \var{\hat{Y}} = AΣA'$
+
+\ppart No son independientes en general porque $H$ no es siempre diagonal.
+No porque no tienen la misma varianza ni la misma media.
+
+\ppart Lo que nos piden es la traza de $H$. Como $H$ es idempotente, tenemos $σ^2\tr(H) = σ^2\rg(H) = σ^2(k+1) = 4σ^2$
+
+Sabemos que $\rg(H) = k+1$ por hipótesis (tenemos $k$ variables más el término independiente). En este caso $k=3$.
+
+\end{problem}
+
+
+\begin{problem}[14]
+Tres vehículos se encuentran situados en los puntos $0 < β_1 < β_2 < β_3$ de una carretera recta. Para estimar la posición de los vehículos se toman las siguientes medidas (todas ellas sujetas a errores aleatorios de medición independientes con distribución normal de media $0$ y varianza $σ^2$ ):
+
+\begin{itemize}
+	\item Desde el punto $0$ medimos las distancias a los tres vehículos dando $Y_1 , Y_2 e Y_3$
+	\item Nos trasladamos al primer vehículo y medimos las distancias a los otros dos, dando dos
+nuevas medidas $Y_4,Y_5$ .
+	\item Nos trasladamos al segundo vehículo y medimos la distancia al tercero, dando una medida
+adicional $Y_6$.
+\end{itemize}
+
+\spart Expresa el problema de estimación como un modelo de regresión múltiple indicando clara-
+mente cuál es la matriz de diseño.
+
+\spart Calcula la distribución del estimador de mínimos cuadrados del vector de posiciones $(β_1 , β_2 , β_3 )$.
+
+
+\spart Se desea calcular un intervalo de confianza de nivel 95 \% para la posición del primer vehículo $β_1$ a partir de $6$ medidas (obtenidas de acuerdo con el método descrito anteriormente) para las que la varianza residual resultó ser $S_R^2 = 2$. ¿Cuál es el margen de error del intervalo?
+
+\solution
+
+
+\ppart 
+
+\begin{gather*}
+Y_1 = β_1 + ε_1\\
+Y_2 = β_2 + ε_2\\
+Y_3 = β_3 + ε_3\\
+Y_4 = β_2 - β_1 + ε_4\\
+Y_5 = β_2 - β_1 + ε_5\\
+Y_6 = β_3 - β_2 + ε_6
+\end{gather*}
+
+Vamos a construir la matriz de diseño. Será de la forma:
+
+\[
+Y = \begin{pmatrix} X \end{pmatrix}\begin{pmatrix}β_1\\β_2\\β_3\end{pmatrix} + ε
+\]
+
+De esta manera: 
+\[
+X = \begin{pmatrix}
+1&0&0\\
+0&1&0\\
+0&0&1\\
+-1&1&0\\
+-1&0&1\\
+0&-1&1
+\end{pmatrix}
+\]
+
+
+\paragraph{Se ha dejado caer en clase un posible ejercicio de examen: } ¿Cuál es la matriz de diseño óptima para estimar los $β_i$?
+
+\ppart Con esta matriz de diseño, podemos calcular:
+
+\[
+\hat{β} = N_3\left(β, σ^2\underbrace{\begin{pmatrix} 
+\frac{1}{2} & \frac{1}{4} & \frac{1}{4}\\
+\frac{1}{4} & \frac{1}{2} & \frac{1}{2}\\
+\frac{1}{4} & \frac{1}{4} & \frac{1}{2}
+\end{pmatrix}}_{(X'X)^{-1}}  \right)
+\]
+
+\ppart 
+
+\[ IC_{0.95}(β_1) \equiv \left[\hat{β_1} \mp t_{6-3;0.025}S_R\sqrt{q_{11}} \right]\]
+\[ IC_{0.95}(β_1) \equiv \left[\hat{β_1} \mp t_{6-3;0.025}\sqrt{2}\sqrt{\frac{1}{2}} \right]\]
+
+Con lo que el margen de error es $t_{6-3;0.025}$
+
+\end{problem}
+
+\begin{problem}[15]
+
+\solution
+
+\ppart 
+
+\[Y = \begin{pmatrix}0&1\\1&0\\1&1\end{pmatrix}\begin{pmatrix}µ\\λ\end{pmatrix}+\begin{pmatrix}ε_1\\ε_2\\ε_3\end{pmatrix}\]
+
+\ppart 
+
+Tenemos una fórmula para calcularlo.
+
+\[
+\begin{pmatrix}\hat{λ}\\\hat{µ}\end{pmatrix} = (X'X)^{-1}X'Y
+\]
+
+En caso de no sabernos la fórmula, podemos recurrir al método largo y tradicional:
+
+\[φ(λ,µ) = (Y_1-µ)^2  + (Y_2-λ)^2 + (Y_3-(λ+µ))^2\]
+Y resolvemos el sistema:
+
+\[
+\left.\begin{array}{cc}
+\dpa{φ}{λ} &= 0\\
+\dpa{φ}{µ} &= 0
+\end{array}\right\}
+\]
+
+De esta manera deberíamos llegar a la misma solución.
+
+\[\begin{pmatrix}\hat{λ}\\\hat{µ}\end{pmatrix} = \begin{pmatrix}
+\frac{2Y_2 + Y_3 - Y_1}{3}\\\frac{2Y_1 + Y_3 - Y_2}{3}
+\end{pmatrix}\]
+
+Podríamos comprobar si son insesgado o no.
+
+\end{problem}
+
+
+\begin{problem}[16]
+
+Típico ejercicio de modelo unifactorial
+
+\solution
+
+\[Y_{1·} = 4.99; S_1 = 4.19\]
+
+Vamos a construir la tabla ANOVA. Para ello:
+
+\[Y_{··} ≠ \frac{\sum Y_{i·}}{4}\]
+Ya que el número de alumnos es distinto en cada grupo. La media total sería:
+
+\[Y_{··} = \frac{\sum n_i Y_{i·}}{\sum n_i}\]
+
+Ahora podemos calcular $SCR = \sum_{i=1}^4 n_i (Y_{i·} - Y_{··})^2 = ... = 10.93$
+
+\[SCE = \sum_i \sum_j(Y_{ij}-\gor{Y_{i·}})^2\]
+\begin{center}
+\begin{tabular}{ccccc}
+Fuente & SC & gl & CM&F\\\hline
+$SCR$ & $10.93$ & $4-1$ & $\frac{10.93}{3} = 3.64$&$\frac{3.64}{5.09} = 0.72$\\
+$SCE$ & $1785.17$ & $n-k = 351$ & $\frac{1785.17}{351} = 5.09$ & 
+\end{tabular}
+\end{center}
+
+Ahora buscamos $F_{3,351;0.05} = 2.60 > 0.72$, por lo que no hemos encontrado diferencias significativas de que el grupo influya en la nota. Aceptamos $H_0$.
+
+\end{problem}
+
+
+\begin{problem}[17]
+Una fabricante de botas para el agua está estudiando tres posibles colores para su nuevo modelo de bota super resistente. Las opciones que se proponen son verde, amarillo y azul. Para analizar si el color tiene algún efecto sobre el número de ventas, se eligen 16 tiendas de tamaño similar. Se envían las botas de color verde a 6 tiendas elegidas al azar, las amarillos a 5 tiendas y las azules a las 5 restantes. Después de varios días se comprueba el número de botas vendidas en cada tienda, obteniéndose los siguientes resultados:
+\begin{center}
+\begin{tabular}{ccc}
+Verdes&Amarillas&Azules\\\hline
+43&52&61\\
+52&37&29\\
+59&38&38\\
+76&64&53\\
+61&74&79\\
+81&&
+\end{tabular}
+\end{center}
+
+\solution
+Es igual que el anterior. Se deja para otro.
+
+\end{problem}
