@@ -10,6 +10,8 @@
 \usepackage{tree}
 \usepackage{tikz-qtree}
 \usepackage{wrapfig}
+\usepackage{booktabs}
+\usepackage{colortbl}
 
 % --------------------
 
@@ -302,5 +304,77 @@ for i from 1 to n do:
 
 Cuando no es el Knapsack 0-1 (esto es, podemos meter más de una copia de cada elemento en la mochila), simplemente tenemos que quitarnos la parte de la matriz que va de $1$ a $n$: vamos rellenando una lista unidimensional $m[W]$ con la siguiente ecuación: \[ m[w] = \max_{w_i ≤ w} v_i + m[w - w_i] \]
 
+\subsection{Longest Common Subsequence (LCS)}
+
+El algoritmo de \concept{Longest Common Subsequence} trata de buscar la subsecuencia de caracteres (no necesariamente consecutivos) más larga posible que sea común a dos secuencias. La idea de la resolución es usar programación dinámica, guardando en una tabla los valores $\mop{LCS}(X_i, Y_j)$ que corresponden a la subsecuencia más larga entre los primeros $i$ caracteres de $X$ y los primeros $j$ de $Y$. La relación que queda es la siguiente:
+
+\[ LCS\left(X_{i},Y_{j}\right) =
+\begin{cases}
+  ∅ & i = 0 \text{ ó } j = 0 \\
+  \mop{LCS}\left(X_{i-1},Y_{j-1}\right) + 1 &  x_i = y_j \\
+  \max\left(\mop{LCS}\left(X_{i},Y_{j-1}\right),LCS\left(X_{i-1},Y_{j}\right)\right) &  x_i \ne y_j \\
+\end{cases} \]
+
+El \fref{lst:LCS} muestra el código en Python para resolver el algoritmo. La matriz $C$ que crea tiene una fila y una columna adicionales, las de índice $i = 0$ ó $j = 0$, que se inicializan a 0: son las que contendrían la longitud de la subsecuencia común más larga con una de las secuencias vacías. Al insertarlas, tenemos una inicialización sencilla y el resto del algoritmo ya es idéntico para todas las posiciones.
+
+Para recuperar la subsecuencia, se recorre haciendo \textit{backtracking} la matriz $C$ desde la esquina inferior derecha. La \fref{tab:LCS} tiene un ejemplo de aplicación del algoritmo y de recuperación de la subsecuencia.
+
+\begin{listing}[hbtp]
+\begin{minted}[frame=lines, fontsize=\scriptsize, tabsize=4]{python}
+def LCSLength(X, Y):
+	# Add 1 to give space to the empty subsequence (i = 0 or j = 0).s
+    m = len(X) + 1
+    n = len(Y) + 1
+    C = [[0 for x in range(m)] for y in range(n)] # m×n array
+
+    # Initialize to zeros the first positions
+    for i in range(m):
+       C[i][0] = 0
+
+    for j in range(n):
+       C[0][j] = 0
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if X[i] = Y[j]
+                C[i][j] = C[i-1][j-1] + 1
+            else
+                C[i][j] = max(C[i][j-1], C[i-1][j])
+
+    return C[m][n]
+\end{minted}
+\caption{Algoritmo LCS}
+\label{lst:LCS}
+\end{listing}
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\toprule & $\emptyset$ & M & Z & J & A & W & X & U \\ \toprule
+$\emptyset$ & \cellcolor{blue!25}\textbf{0} & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \midrule
+X & \cellcolor{blue!25}0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\ \midrule
+M & 0 & \cellcolor{blue!25}\textbf{1} & \cellcolor{blue!25}1 & 1 & 1 & 1 & 1 & 1 \\ \midrule
+J & 0 & 1 & 1 & \cellcolor{blue!25}\textbf{2} & 2 & 2 & 2 & 2 \\ \midrule
+Y & 0 & 1 & 1 & \cellcolor{blue!25}2 & 2 & 2 & 2 & 2 \\ \midrule
+A & 0 & 1 & 1 & 2 & \cellcolor{blue!25}\textbf{3} & \cellcolor{blue!25}3 & \cellcolor{blue!25}3 & 3 \\ \midrule
+U & 0 & 1 & 1 & 2 & 3 & 3 & 3 & \cellcolor{blue!25}\textbf{4} \\ \midrule
+Z & 0 & 1 & 2 & 2 & 3 & 3 & 3 & \cellcolor{blue!25}4 \\ \bottomrule
+\end{tabular}
+\caption{Algoritmo LCS con las secuencias $X = XMJYAUZ$ y $Y = MZJAWXU$ que da como subsecuencia común más larga $MJAU$. Las celdas destacadas en azul son las que recorerría el algoritmo de backtracking, y las que están en negrita son las que el algoritmo incrementa la longitud por haber cadenas coinciden.}
+\label{tab:LCS}
+\end{table}
+
+
+\subsection{Distancia de Levenshtein}
+
+La distancia de Levenshtein nos permite ver cuántas operaciones (sustitución, eliminación o añadido) con letras tenemos que hacer para transformar una secuencia de caracteres en otra dada. La idea es muy parecida a la de LCS, y de hecho el algoritmo es prácticamente el mismo. Lo único que habría que cambiar en el código del \fref{lst:LCS} es los valores que vamos metiendo en la matriz: si los dos caracteres que estamos mirando son iguales, entonces $D[i,j] = D[i-1, j-1]$ (no tenemos que hacer ninguna otra operación). Si no son iguales, tenemos que escoger el mínimo de los valores colindantes y sumarle uno, esto es, $D[i,j] = 1 + \min \set{D[i-1, j], D[i-1, j-1], D[i, j-1]}$.
+
+\subsection{Árbol binario de búsqueda óptimo}
+
+Un árbol binario de búsqueda es el que minimiza el coste medio de búsqueda, sabiendo las probabilidades de aparición de cada uno de sus elementos. Se puede construir usando programación dinámica.
+
 \printindex
 \end{document}
+
+\section{Algoritmos recursivos}
+
