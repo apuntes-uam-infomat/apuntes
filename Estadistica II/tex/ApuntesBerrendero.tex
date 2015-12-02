@@ -1,0 +1,828 @@
+% ----------------------------------------------------------------
+% Presentaciones con Beamer ---------------------------------------
+% ----------------------------------------------------------------
+
+\documentclass{beamer}
+
+
+%\usepackage{beamerthemeplain}
+\usepackage{graphicx}
+%\usepackage{beamerthemesplit}
+\beamertemplateshadingbackground{red!0}{blue!0}
+\usepackage[utf8]{inputenc}
+
+%----------------------------------------------------------------------
+% Para que aparezcan varias transparencias en la misma p\'{a}gina
+\usepackage{pgfpages}
+%\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm,landscape]
+%----------------------------------------------------------------------
+% Suprime los s\'{\i}mbolos de navegaci\'{o}n
+\setbeamertemplate{navigation symbols}{}
+%---------------------------------------------------------------------
+
+%----------------------------------------------------------------
+\newcommand{\ep}{\epsilon}
+\newcommand{\real}{{\rm I\kern-.17em R}}
+\newcommand{\pro}{\mbox{P}}
+%-----------------------------------------------------------------
+
+\title[Tema 1]{Estad\'{\i}stica II\\
+Tema 4: Clasificación y regresión logística}
+\author[J.R. Berrendero]
+{Jos\'{e} R. Berrendero}
+\date{}
+\institute{Departamento de Matem\'{a}ticas\\
+ Universidad Aut\'{o}noma de Madrid}
+
+%------------------------------------------------------------
+
+\begin{document}
+
+\frame{\titlepage}
+%\section[Outline]{}
+%\frame{\tableofcontents}
+
+%------------------------------------------------------------------
+% Aqu\'{\i} empieza la presentaci\'{o}n
+%------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Estructura de este tema}
+
+\begin{itemize}
+\item Planteamiento del problema de clasificación supervisada
+
+\item Regla de Mahalanobis
+
+\item Regla lineal de Fisher
+
+\item Regresión logística
+
+\item Optimalidad: la regla de Bayes
+
+\end{itemize}
+
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}[plain]
+\frametitle{El problema de clasificación supervisada}
+
+Disponemos de una muestra de $k$ variables medidas en $n$ unidades u objetos que pertenecen a dos grupos o poblaciones \textit{(training data)}.
+
+\
+
+Cada observación $i=1,\ldots,n$ consiste en un vector $(x'_i,y_i)'$, donde $x_i\in\mathbb{R}^k$ son las $k$ variables e    $y\in\{0,1\}$ indica el grupo al que pertenece la unidad en la que se han obtenido. 
+
+\
+
+\textbf{Objetivo:} Asignar una nueva unidad con valores $x$ (e $y$ desconocida) a uno de los dos grupos (\textbf{obtener una regla de clasificación}).
+
+
+\
+
+ Este problema tiene diferentes nombres en la literatura en inglés: ``supervised classification", ``statistical learning", ``discrimination", ``machine learning", ``pattern recognition", etc.
+
+
+
+
+
+
+
+\end{frame}
+%-----------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Ejemplo: infartos de miocardio}
+
+En un estudio de factores de riesgo en enfermedades coronarias, se dispone de datos de 462 personas (de las que 160 habían sufrido infartos y 302 eran controles). Para cada una de ellas se midieron las siguientes variables:
+
+\
+
+\begin{center}
+{\scriptsize
+
+\begin{tabular}{|c|l|}
+\hline Nombre variable & Descripci\'{o}n  \\
+\hline {\tt sbp} & Tensión sanguínea sistólica \\
+{\tt tobacco} & Consumo de tabaco\\
+{\tt ldl} & Colesterol\\
+{\tt adiposity} & Medida de adiposidad\\
+{\tt typea} & Comportamiento ``tipo A"\\
+{\tt obesity} & Medida de la obesidad\\
+{\tt alcohol} & Consumo de alcohol\\
+{\tt age} & Edad \\
+ \hline
+ \end{tabular}
+
+ }
+\end{center}
+ 
+ \
+
+Representación gráfica de los datos: verde (controles)  y rojo (casos).
+
+
+\end{frame}
+
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Los datos}
+
+\centerline{\includegraphics[height=8cm,width=11cm]{pairs-SAheart}}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Las variables \textit{edad} y \textit{obesidad}}
+
+\centerline{\includegraphics[height=8cm]{edadobesidad-SAheart}}
+
+\end{frame}
+%---------------------------------------------
+\begin{frame}[plain]
+\frametitle{Regla de Mahalanobis}
+
+Para $i=0,1$ denotamos $P_i$  a la distribución condicionada  $X|Y=i$. Suponemos que $P_i$ es una distribución con vector de medias $\mu_i$ y matriz de covarianzas $\Sigma_i$.
+
+
+
+
+\
+
+Asignar al grupo cuyo centro es más cercano en el sentido de la distancia de Mahalanobis.
+
+\
+
+\textbf{Regla de Mahalanobis:} Clasificar $x$ en el grupo 1 (i.e. $Y=1$) si y solo si
+\[
+(x-\mu_0)'\Sigma_0^{-1}(x-\mu_0) >  (x-\mu_1)'\Sigma_1^{-1}(x-\mu_1).
+\]
+
+\
+
+En la práctica se usan los vectores de medias y las matrices de covarianzas muestrales. 
+
+
+\end{frame}
+%---------------------------------------------------
+\begin{frame}
+ \frametitle{Regla de Mahalanobis}
+
+\centerline{$\mu_0=(1,0)^\prime$, $\mu_1=
+(5,0)^\prime$, $\Sigma_1=\left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & 1 \
+  \end{array} \right]$,
+$\Sigma_2=\left[
+  \begin{array}{cc}
+    5 & 0 \\
+    0 & 5 \
+  \end{array} \right]$.}
+
+\centerline{{\includegraphics[width=9cm]{mahalanobis-8}}}
+
+
+
+
+\end{frame}
+%---------------------------------------------
+\begin{frame}[plain]
+\frametitle{Regla lineal de Fisher}
+
+$P_0$, $P_1$ poblaciones homocedásticas ($\Sigma_0=\Sigma_1$).
+\medskip
+
+\textbf{El enfoque de Fisher:} Proyectar los datos en la direcci\'{o}n $a$ m\'{a}s conveniente  y
+utilizar las proyecciones $a'x_i$ para discriminar.
+
+
+\centerline{{\includegraphics[width=9 cm]{fisher}}}
+
+
+
+\end{frame}
+%---------------------------------------------
+\begin{frame}[plain]
+\frametitle{Regla lineal de Fisher}
+
+\vspace{-1.7 cm}
+
+\centerline{{\includegraphics[width=7 cm,angle=-50]{proyeccion}}}
+
+\end{frame}
+%--------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Regla lineal de Fisher}
+
+¿Cuál es la direcci\'{o}n \'{o}ptima?
+
+\begin{itemize}
+  \item Una buena direcci\'{o}n debe separar bien los centros de los grupos. La distancia entre las medias $(a'\mu_0-a'\mu_1)^2 = a'Ba$, donde $B=(\mu_0-\mu_1)(\mu_0-\mu_1)'$, debe ser grande.
+\end{itemize}
+\centerline{{\includegraphics[width=7 cm]{Fisher-normales-1}}}
+\vspace{-2mm}
+
+\begin{itemize}
+  \item La varianza de las proyecciones dentro de los grupos ($a'\Sigma a$) debe ser lo menor
+  posible.
+\end{itemize}
+\centerline{{\includegraphics[width=8 cm]{Fisher-normales-2}}}
+
+
+\end{frame}
+
+%---------------------------------------------
+\begin{frame}[plain]
+\frametitle{Regla lineal de Fisher}
+
+\textbf{Problema:} Encontrar la dirección $a$ que maximiza
+\[
+f(a) = \frac{a'Ba}{a'\Sigma a}\qquad (\textbf{cociente de Rayleigh}).
+\]
+
+\
+
+Para cualquier $\lambda\ne 0$, $f(\lambda a) =f(a)$, por lo que
+es necesario imponer alguna condici\'{o}n de normalizaci\'{o}n. 
+
+\
+
+En R se impone $a'\Sigma a=1$.
+
+\
+
+La soluci\'{o}n es proporcional al vector discriminante $w=\Sigma^{-1}(\mu_1-\mu_0)$.
+
+
+
+\end{frame}
+%---------------------------------------------
+\begin{frame}[plain]
+\frametitle{Regla lineal de Fisher}
+
+\centerline{{\includegraphics[width=11cm]{mahalanobis-11}}}
+
+\textbf{Regla de Fisher:} Clasificar $x$ en el grupo 1 (i.e. $Y=1$) si y solo si
+\[
+w'\left(x-\frac{\mu_0 + \mu_1}{2}\right)>0,
+\]
+donde $w=\Sigma^{-1}(\mu_1-\mu_0).$
+
+\end{frame}
+%---------------------------------------------
+\begin{frame}[plain]
+\frametitle{Regla lineal de Fisher}
+
+\textbf{Ejercicio} 
+
+Si en la regla de Mahalanobis se supone $\Sigma_1=\Sigma_2$, se obtiene la regla de Fisher.
+
+
+\
+
+\
+
+\textbf{Estimación de los parámetros}
+
+En la práctica, para aplicar la regla de Fisher se usan los vectores de medias muestrales y la matriz de covarianzas estimada combinada siguiente:
+\[
+\hat{\Sigma} = \frac{n_0-1}{n_0+n_1-2} S_0  + \frac{n_1-1}{n_0+n_1-2} S_1,
+\]
+donde $S_i$ es la matriz de covarianzas muestral del grupo $i$, $i=0,1$.
+
+\
+
+
+
+
+\
+
+ 
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Datos simulados}
+
+\centerline{\includegraphics[height=8cm]{sim-plot}}
+
+\end{frame}
+
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Datos simulados: reglas de Mahalanobis y de Fisher}
+
+\centerline{\includegraphics[height=8cm]{sim-plot-reglas}}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Infartos de miocardio (edad y obesidad)}
+
+\centerline{\includegraphics[height=8cm]{edadobesidad-reglas}}
+
+\end{frame}
+%----------------------------------------------------
+\begin{frame}
+\frametitle{Estimación del error de clasificación}
+
+Es importante estimar el error que comete la regla de clasificación.
+
+La \textbf{tasa de error aparente} (TEA) es:
+$$\text{TEA}:=\frac{\text{Total de mal clasificados en la muestra}}{n}100\%.$$
+\vspace{-4 mm}
+
+\centerline{{\includegraphics[width=8.5 cm]{errores-1}}}
+
+
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}
+\frametitle{Estimación del error de clasificación}
+
+La TEA tiende a infraestimar el verdadero error ya que los datos se utilizan tanto para calcular la regla de clasificación como para evaluarla.
+\medskip
+
+
+Existen diversos procedimientos para resolver este problema:
+
+\begin{itemize}
+  \item[$\blacktriangleright$] Dividir la muestra en dos partes: \textbf{training data} y \textbf{test data}. Utilizar la primera parte para construir la regla de clasificación y estimar el error mediante la segunda.
+   \medskip
+
+  \item[$\blacktriangleright$] \textbf{Validaci\'{o}n cruzada:} Omitimos un dato de los $n$ observados y generamos la regla de clasificación con los $n-1$ restantes. Clasificamos la observación apartada y repetimos el procedimiento para cada una de las observaciones.
+\end{itemize}\vspace{-5 mm}
+
+$$\text{TEVC}:=\frac{\text{Total de mal clasificados en la muestra por VC}}{n}100\%.$$
+
+
+\end{frame}
+
+
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Regla de Fisher con R}
+
+{\scriptsize
+\begin{verbatim}
+library(MASS)
+resultado.lda <- lda(datos.edob, clase, prior=c(0.5,0.5))
+
+resultado.lda$scaling	# Coeficientes para cada variable
+plot(resultado.lda)   # Representa las puntuaciones discriminantes
+clasificacion <- predict(resultado.lda)$class   # Predicciones para la muestra
+sum(clasificacion!= clase)/length(clase)   # Proporcion de errores
+0.3528139
+\end{verbatim}
+}
+
+\centerline{\includegraphics[height=4cm]{edadobesidad-puntuaciones}}
+
+\end{frame}
+%---------------------------------------------------------------
+\begin{frame}[plain]
+\frametitle{El modelo de regresión logística}
+
+
+Disponemos de $n$ observaciones. Cada observación $(x_{i1},\ldots,x_{ik},y_i)'$ está formada por un vector de variables regresoras $x_i =(x_{i1},\ldots,x_{ik})'$ y el valor de la 
+variable respuesta $y_i$.
+
+
+\
+
+
+Las variables $Y_1,\ldots,Y_n$ son independientes y tienen distribución de Bernoulli. 
+
+\
+
+Denotamos
+$p_i=\mathbb{P}(Y_i=1 \mid x_i)$.
+La probabilidad de ``éxito'' depende de las variables regresoras.
+
+
+
+\
+
+Una relación lineal $p_i=\beta_0+\beta_1x_{i1}+\cdots+\beta_kx_{ik}$ no es adecuada\\ (¿por qué?)
+
+
+\end{frame}
+%---------------------------------------------------------------
+\begin{frame}[plain]
+\frametitle{El modelo de regresión logística}
+
+
+
+Suponemos que la relación entre $p_i$ y $x_i$ viene dada por 
+\[
+p_i = \frac{1}{1+e^{-\beta_0-\beta_1x_{i1}-\cdots-\beta_kx_{ik}}},
+\]
+es decir,
+\[
+p_i = F(\beta_0+\beta_1x_{i1}+\cdots+\beta_kx_{ik}),
+\]
+donde $F(x)=1/(1+e^{-x})$ es la \textbf{función logística}.
+
+
+\begin{center}
+\includegraphics[height=4cm,width=6cm]{funcion-logistica}
+\end{center}
+
+
+\end{frame}
+%---------------------------------------------------------------
+\begin{frame}[plain]
+\frametitle{Interpretación de los parámetros del modelo}
+
+Llamamos $O_i$ a la \textbf{razón de probabilidades} para la observación $i$:
+\[
+ O_i=\frac{p_i}{1-p_i} 
+\]
+¿Cómo se interpreta el valor de $O_i$? ¿Qué significa, por ejemplo, $O_i=2$?
+
+
+
+
+Si se cumple el modelo de regresión logística, entonces
+\[
+O_i =  e^{\beta_0  + \beta_1x_{i1} + \cdots + \beta_kx_{ik}}
+\]
+
+
+¿Cómo varía la razón de probabilidades si la variable regresora $x_{ij}$ se incrementa una unidad?
+\[
+\frac{O'_i}{O_i} = \frac{e^{\beta_0+\cdots+\beta_j(x+1)+\cdots+\beta_kx_{ik}}}{e^{\beta_0+\cdots+\beta_jx+\cdots+\beta_kx_{ik}}}= e^{\beta_j}.
+\]  
+Por tanto $e^{\beta_j}$ es la variación de la razón de probabilidades cuando la variable regresora $j$ se incrementa en una unidad y el resto de variables permanece constante. 
+
+
+\end{frame}
+%----------------------------------------------------------------
+\begin{frame}[plain]
+\frametitle{Estimación}
+
+Para estimar los parámetros se usa el método de máxima verosimilitud.
+
+\
+
+Por ejemplo, si observamos los datos
+
+\begin{center}
+\begin{tabular}{c|ccc}
+$x_i$ & 2 & 1 & 3 \\  \hline
+$Y_i$ & 0 & 1 & 1
+\end{tabular}
+\end{center}
+
+entonces $\hat{\beta}_0$ y $\hat{\beta}_1$ son los valores que maximizan la función de verosimilitud
+\[
+L(\beta_0,\beta_1) = P(Y=0 \mid x = 2)P(Y=1 \mid x = 1)P(Y=1 \mid x = 3)
+\]
+\[
+L(\beta_0,\beta_1) = \left(1-\frac{1}{1+e^{-\beta_0-2\beta_1}}\right)
+\left(\frac{1}{1+e^{-\beta_0-\beta_1}}\right)
+\left(\frac{1}{1+e^{-\beta_0-3\beta_1}}\right)
+\]
+
+\
+
+Se pueden aplicar métodos numéricos estándar de optimización.
+
+\end{frame}
+%-------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Regresión logística: datos simulados}
+
+\begin{verbatim}
+# Numero de observaciones
+n = 100
+
+# Parametros
+beta0 = 0
+beta1 = 3
+
+# Genera los datos
+x = rnorm(n)
+p = 1/(1+exp(-beta0-beta1*x))
+y = rbinom(n,1,p)
+
+# Ajusta el modelo
+reg = glm(y~x,family=binomial)
+summary(reg)
+\end{verbatim}
+
+\end{frame}
+%------------------------------------------------------------------
+\frame<all:1>[plain]{\frametitle{Probabilidades de \'{e}xito estimadas}
+
+\centerline{\includegraphics[height=8cm,width=8cm]{sim-probest}}
+
+}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Salida {\tt R}}
+
+{\scriptsize
+\begin{verbatim}
+Call:
+glm(formula = y ~ x, family = binomial)
+
+Deviance Residuals:
+    Min       1Q   Median       3Q      Max
+-1.8340  -0.7598  -0.1568   0.7623   2.4224
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)
+(Intercept)  -0.1157     0.2585  -0.447    0.655
+x             2.7083     0.5854   4.627 3.71e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 137.628  on 99  degrees of freedom
+Residual deviance:  90.396  on 98  degrees of freedom
+AIC: 94.396
+
+Number of Fisher Scoring iterations: 5
+\end{verbatim}
+}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Infartos de miocardio: regresión logística simple}
+
+Como variable regresora, vamos a usar s\'{o}lo la edad.
+
+\
+
+Ajustamos el modelo:
+\[
+\mbox{P}(Y=1) =
+\frac{1}{1+\exp(-\beta_0-\beta_1\mbox{{\tt edad}})}
+\]
+
+\
+
+\begin{verbatim}
+> reg1 = glm(Y ~ edad, family='binomial')
+> summary(reg1)
+\end{verbatim}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Salida {\tt R}}
+
+{\scriptsize
+\begin{verbatim}
+Call:
+glm(formula = Y ~ edad, family = "binomial")
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.4321  -0.9215  -0.5392   1.0952   2.2433  
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -3.521710   0.416031  -8.465  < 2e-16 ***
+edad         0.064108   0.008532   7.513 5.76e-14 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 596.11  on 461  degrees of freedom
+Residual deviance: 525.56  on 460  degrees of freedom
+AIC: 529.56
+
+Number of Fisher Scoring iterations: 4
+\end{verbatim}
+}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Probabilidades estimadas}
+
+Se representan los datos junto con la curva de probabilidades
+estimadas:
+\[
+\widehat{\mbox{P}(Y=1)} =
+\frac{1}{1+\exp(-\hat{\beta}_0-\hat{\beta}_1\mbox{{\tt edad}})}
+\]
+
+\centerline{\includegraphics[height=5cm,width=7cm]{edad-probest}}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Dos variables regresoras}
+
+Ajustamos el modelo con dos variables regresoras, la edad y la obesidad:
+
+\[
+\mbox{P}(Y=1) =
+\frac{1}{1+\exp(-\beta_0-\beta_1\mbox{{\tt edad}}-\beta_2\mbox{{\tt obesidad}})}
+\]
+
+\begin{verbatim}
+> reg = glm(Y ~ edad+obesidad, family='binomial')
+> summary(reg)
+\end{verbatim}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Salida {\tt R}}
+
+{\scriptsize
+\begin{verbatim}
+Call:
+glm(formula = Y ~ edad + obesidad, family = "binomial")
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.4401  -0.9227  -0.5384   1.0905   2.2497  
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -3.581465   0.742611  -4.823 1.42e-06 ***
+edad         0.063958   0.008674   7.374 1.66e-13 ***
+obesidad     0.002523   0.025934   0.097    0.923    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 596.11  on 461  degrees of freedom
+Residual deviance: 525.55  on 459  degrees of freedom
+AIC: 531.55
+
+Number of Fisher Scoring iterations: 4
+\end{verbatim}
+}
+
+\end{frame}
+
+%-------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Comparación de modelos mediante ANOVA}
+
+\begin{verbatim}
+> anova(reg1, reg, test='Chisq')
+Analysis of Deviance Table
+
+Model 1: Y ~ edad
+Model 2: Y ~ edad + obesidad
+  Resid. Df Resid. Dev Df  Deviance P(>|Chi|)
+1       460     525.56                       
+2       459     525.55  1 0.0094552    0.9225
+\end{verbatim}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Regla de clasificación logística}
+
+\textbf{Regla de clasificación logística: }
+Clasificar $x$ en el grupo 1 (i.e. $Y=1$) si y solo si
+\[
+\widehat{\mathbb{P}(Y=1|x)}>\widehat{\mathbb{P}(Y=0|x)}
+\]
+
+\
+
+Sustituyendo por la función logística tenemos una regla lineal (diferente en general a la de Fisher): Clasificar $x$ en el grupo 1 (i.e. $Y=1$) si y solo si
+\[
+\hat\beta_0 +\hat\beta_k x_1 + \ldots + \hat\beta_k x_k > 0.
+\]
+
+\
+
+En el \textbf{ejemplo}, clasificamos a un individuo como enfermo si y solo si
+\[
+-3.58 + 0.064 \cdot \tt{edad} + 0.0025 \cdot \tt{obesidad} > 0.
+\]
+
+
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Regla de clasificación logística}
+
+\centerline{\includegraphics[height=8cm]{edadobesidad-reglas-log}}
+
+\end{frame}
+%------------------------------------------------------------------
+\begin{frame}[plain,fragile]
+\frametitle{Infartos de miocardio: regresión logística múltiple}
+
+{\scriptsize
+\begin{verbatim}
+Call:
+glm(formula = Y ~ sbp + tobacco + ldl + adiposity + typea + obesity + 
+    alcohol + age, family = "binomial")
+ 
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -6.066864   1.271443  -4.772 1.83e-06 ***
+sbp          0.005641   0.005611   1.005 0.314721    
+tobacco      0.072716   0.026326   2.762 0.005742 ** 
+ldl          0.192492   0.059429   3.239 0.001199 ** 
+adiposity    0.017066   0.028433   0.600 0.548355    
+typea        0.040467   0.012078   3.350 0.000807 ***
+obesity     -0.057931   0.042980  -1.348 0.177703    
+alcohol      0.001446   0.004403   0.328 0.742627    
+age          0.050650   0.011766   4.305 1.67e-05 ***
+---
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 596.11  on 461  degrees of freedom
+Residual deviance: 488.89  on 453  degrees of freedom
+AIC: 506.89
+\end{verbatim}
+}
+
+\end{frame}
+%----------------------------------------------------
+\begin{frame}
+\frametitle{Regla Bayes}
+
+
+
+\textbf{Regla Bayes:}
+$x$ se clasifica en $P_1$ si y solo si 
+\[
+\mathbb{P}(Y=1|x)>\mathbb{P}(Y=0|x) 
+\]
+
+\
+
+
+
+En el caso en que 
+\begin{enumerate}
+\item $P_0$ tiene densidad $f_0$ y  $P_1$ tiene densidad $f_1$,
+\item las \textbf{probabilidades a priori} de las poblaciones son
+$$\mathbb{P}(P_0)=\pi_0,\quad \mathbb{P}(P_1)=\pi_1\quad (\pi_0+\pi_1=1).$$
+\end{enumerate}
+se tiene
+\[
+\mathbb{P}(Y=1|x)>\mathbb{P}(Y=0|x) \Leftrightarrow \pi_0 f_0(x)>\pi_1 f_1(x).
+\]
+
+\
+
+La regla Bayes es óptima (su error de clasificación es el mínimo posible).
+
+
+\end{frame}
+%----------------------------------------------------
+\begin{frame}
+\frametitle{Regla Bayes bajo normalidad}
+
+Supongamos que $f_0$ y $f_1$ son normales: para $x\in\mathbb{R}^p$,
+\[
+f_i(x) = |\Sigma_i|^{-1/2}(2\pi)^{-p/2}\exp\left\{-\frac{1}{2}(x-\mu_i)'\Sigma_i^{-1}(x-\mu_i)    \right\},\quad i=0,1.
+\]
+
+\
+
+\textbf{Regla Bayes bajo normalidad}\\
+$x$ en $P_0$ si $\displaystyle  d_{M_0}^2(x,\mu_0)<d^2_{M_1}(x,\mu_1)+2\log\left(\frac{\pi_0|\Sigma_1|^{1/2}}{\pi_1|\Sigma_0|^{1/2}}\right)$
+donde $\displaystyle d_{M_i}^2(x,\mu_i)=(x-\mu_i)'\Sigma_i^{-1}(x-\mu_i)$ es el cuadrado de la distancia de Mahalanobis entre $x$ y $\mu_i$ ($i=0,1$).
+\medskip
+
+
+\
+
+\textbf{Regla bajo normalidad y homocedasticidad ($\Sigma_0=\Sigma_1$)}\\
+$x$ se clasifica en $P_0$ si
+$\displaystyle  w^\prime  x < w^\prime  \left(\frac{\mu_0+\mu_1}{2}\right)+  \log\left(\frac{\pi_0}{\pi_1}\right)$
+
+
+
+
+
+\end{frame}
+
+%-----------------------------------------------------------------
+\end{document}
+% ----------------------------------------------------------------
+
+%---------------------------------------------
+\begin{frame}[plain]
+\frametitle{}
+
+
+
+\end{frame}
+
+ 
