@@ -10,12 +10,14 @@ Por último, pero no por ello menos improtante, otra ventaja de los códigos lin
 
 No obstante, los códigos lineales también tienen algunas \textbf{desventajas}. En general los códigos lineales son ``mejores'' que los demás aunque esto no siempre es así y nos encontraremos con excepciones en las que es mejor emplear códigos no lineales.
 
-\begin{defn}[.$(n,k,d)$-código q-nario]
+\section{Definición}
+
+\begin{defn}[.$(n,k,d)$-código lineal q-nario]
 Un $[n,k,d]$-código lineal q-nario es un subespacio vectorial $\algb{C} \subset F_q^n$ tal que $dim(\algb{C})=k$ y $d(\algb{C})=d$.
 \end{defn}
 
 \begin{defn}[B$_q(n,d)$]
-\[B_q(n,d)=max \{q^k \tq \ \exists [n,k,d]\text{-código linea q-nario}\}\]
+\[B_q(n,d)=max \{q^k \tq \ \exists [n,k,d]\text{-código lineal q-nario}\}\]
 \end{defn}
 
 \obs $B_q(n,d)\leq A_q(n,d)$ y en ocasiones se tiene la desigualdad escrita.
@@ -51,9 +53,16 @@ entonces podemos tomar
 donde $k$ es la dimensión del código e $I$ es la matriz identidad.
 \end{prop}
 
-\obs Queda como ejercicio para el lector la comprobación trivial de que $HG^t=0$
+\obs Sea $H$ la matriz de control de paridad de un código lineal y sea $G$ su matriz generadora, siempre que satisface que: $HG^t=0$
 
-\textcolor{red}{Malvado, completa la demostración que debería ir aquí}
+\begin{proof}
+Si escribimos
+\[G = \begin{bmatrix} g_1 \\ g_2 \\ \vdots \\ g_k\end{bmatrix}\]
+tenemos que, por definición de matriz generadora, cada fila $g_i \in F_q^n$.
+
+Por tanto, por definición de matriz controladora de paridad tenemos que $Hg_i^t = 0$, lo que nos muestra que:
+\[HG^t = 0\]
+\end{proof}
 
 
 \obs Las siguientes operaciones en $G$ o en $H$ no cambian el código:
@@ -86,7 +95,7 @@ Dado el código $Ham(3,2)$, del que hemos hallado las matrices $G$ y $H$ en el e
 define el mismo código.
 \end{example}
 
-Podemos observar que la matriz $H$ tiene 7 columnas y todas son distintas y de longitud 3. Por tanto está considerando todas las posibles combinaciones de tres bits (sin contar la combinación ``000'') lo que nos garantiza que cualquier matriz que satisfaga esta propiedad definirá el mismo código.
+Podemos observar que la matriz $H$ tiene 7 columnas y todas son no nulas, distintas entre si y de longitud 3. Por tanto está considerando todas las posibles combinaciones de tres bits (sin contar la combinación ``000'') lo que nos garantiza que cualquier matriz que satisfaga esta propiedad definirá el mismo código.
 
 \begin{prop}
 Todo código lineal es equivalente a otro de la forma:
@@ -102,16 +111,59 @@ Una vez tenemos esto, si estas columnas no están formando la matriz identidad, 
 Para garantizar la presencia de $A^t$ y $-A^t$ nos apoyamos en la propisición \ref{prop:At-At}
 \end{proof}
 
+Como ya comentamos al principio del capítulo existen ciertas ventajas en el empleo de códigos lineales. Una de estas ventajas es la facilidad de codificación y descodificación de mensajes cuando empleemos este tipo de códigos.
+
 \section{Codificación con códigos lineales}
 Tenemos que, por lo visto en la sección anterior, la matriz $G$ tiene dimensión $k \times n$. Sea
-\[G = \left(\begin{array}{l}g_1\\g_2\\...\\g_k\end{array}\right)\]
+\[G = \left(\begin{array}{l}g_1\\g_2\\ \vdots \\g_k\end{array}\right)\]
 
 A partir de esta matriz podemos deducir el código:
-\[\algb{C} = \left\{\sum_{i = 1}^k λ_ig_i \tq λ_i \in F_q \right\}\]
+\[\algb{C} = \left\{\sum_{i = 1}^k λ_ig_i \tq λ_i \in F_q \right\} = \{(λ_1, \cdots, λ_k)G \tq (λ_1, \cdots, λ_k) \in  F_q^k\}\]
 
 La forma de codificar pasará por emplear una función de la forma
 \[\appl{f}{F_q^k}{\algb{C}}\]
-Si tenemos que el código es lineal y está en su forma estándar tenemos que las primeras $k$ cifras del código codificado coinciden con el mensaje original, de modo que la decodificación es trivial.
+que tomará un vector cualquiera $(λ_1,\cdots,λ_k)$ de $F_q^k$ y nos devolverá una palabra de nuestro código.
+
+Si tenemos que el código es lineal y está en su forma estándar tenemos que las primeras $k$ cifras del código codificado coinciden con el mensaje original, de modo que la decodificación será trivial.
+
+\begin{example}
+Si el código no está en forma estandar y ciframos la palabra $(a,b)$ tenemos:
+\[(a,b)\left(\begin{array}{cccc} 1 & 1 & 0 & 0 \\ 1 & 0 & 1 & 0\end{array}\right) = (a,a,b,b)\]
+que no nos permite conocer de forma inmediata la palabra original.
+
+Por otro lado, si el código si que se encuentra en formato estándar tendremos:
+\[(a,b)\left(\begin{array}{cccc} 1 & 0 & 1 & 0 \\ 0 & 1 & 0 & 1\end{array}\right) = (a,b,a,b)\]
+
+Con lo que al principio de la palabra cifrada tendremos la palabra original.
+\end{example}
 
 \section{Decodificación con códigos lineales}
-TODO
+Ahora supongamos que tenemos un código lineal $\algb{C} \in F_q^n$ y que hemos recibido un mensaje $y \in F_q^n$. ¿Qué debemos hacer?.
+
+El objetivo es encontrar un $x \in \algb{C}$ lo más próximo posible a $y$, es decir, tendremos que hacer que el error, $y-x=e$, sea mínimo.
+
+Si observamos el conjunto cociente $F_q^n/\algb{C}$, lo que tendremos que hacer es encontrar el elemento de peso mínimo de entre todos los de la clase de equivalencia de $y$.
+
+Esta es la idea de la tabla de \concept{Slepian}. Veamos el funcionamiento de esta tabla con un ejemplo.
+
+\begin{example}
+Sea el código dado por la matriz generadora:
+\[G = \left( \begin{array}{cccc} 1 & 0 & 1 & 0 \\ 0 & 1 & 1 & 1 \end{array}\right)\].
+
+Para construir la tabla de Slepian tomamos un representante de peso mínimo de cada clase de equivalencia, formando así la primera fila de la tabla. La forma de hacer esto consiste en tomar las combinaciones lineales más básicas del código.
+
+Posteriormente tomamos diferentes elementos iniciales y aplicamos sobre ellos las operaciones posibles en nuestro código lineal.
+
+Finalmente la tabla queda:
+\[\begin{array}{cccc}
+0000 & 1010 & 0111 & 1101 \\
+1000 & 0010 & 1111 & 0101 \\
+0100 & 1110 & 0011 & 1001 \\
+0001 & 1011 & 0110 & 1100
+\end{array}\]
+
+
+La idea que hay de fondo es que estamos tomando representantes de las diferentes clases de equivalencia (primera columna) y vemos todos los elementos que pertenecen a esa clase.
+
+Ahora buscamos el mensaje recibido en esta tabla y tomamos su representante con peso mínimo que, si hemos construido la tabla de la mejor forma posible, será el elemento más a su izquierda.
+\end{example}
