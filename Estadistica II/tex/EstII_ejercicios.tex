@@ -1207,6 +1207,83 @@ Los cálculos se dejan para el lector, aunque el resultado será:
 
 \end{problem}
 
+
+\begin{problem}[9]
+Se considera el siguiente modelo de regresión lineal múltiple:
+\begin{equation}
+	\label{eq:ej9_hoja3}
+	Y_i=β_0 + β_1x_{i1} + β_2x_{i2} + β_3x_{i3} + \epsilon_i,\ \epsilon_i \equiv N(0, σ^2)
+\end{equation}
+
+Se dispone de $n = 20$ observaciones con las que se ajustan todos los posibles submodelos del modelo \ref{eq:ej9_hoja3}, obteniéndose para cada uno de ellos las siguientes sumas de cuadrados de los errores (todos los submodelos incluyen un término independiente).
+
+\scalebox{0.8} {
+	\begin{tabular}{ c c | c c }
+		Variables incluidas en el modelo & $SCE$ & Variables incluidas en el modelo & $SCE$ \\ \hline
+		Sólo término independiente & 42644.00 & $x_1$ y $x_2$ & 7713.13 \\
+		$x_1$ & 8352.28 & $x_1$ y $x_3$ & 762.55 \\
+		$x_2$ & 36253.69 & $x_2$ y $x_3$ & 32700.17 \\
+		$x_3$ & 36606.19 & $x_1, x_2$ y $x_3$ & 761.41
+	\end{tabular}
+}
+
+(\textbf{Ejemplo en negrita}: Para el modelo ajustado $\hat{Y}_i = \hat{β}_0 + \hat{β}_2x_{i2} + \hat{β}_3x_{i3}$, la suma de cuadrados de los errores es 32700.17).
+
+\ppart Calcula la tabla de análisis de la varianza para el modelo \ref{eq:ej9_hoja3} y contrasta a nivel α = 0,05 la hipótesis nula $H_0: β_1 =β_2 =β_3 =0$.
+
+\ppart En el modelo \ref{eq:ej9_hoja3}, contrasta a nivel $α=0.05$ las dos hipótesis nulas siguientes:
+\begin{itemize}
+	\item $H_0: β_2 = 0$
+	\item $H_0: β_1 = β_3 = 0$
+\end{itemize}
+
+\ppart Calcula el coeficiente de correlación entre la variable respuesta y la primera variable regresora sabiendo que es positivo.
+
+\solution
+\textbf{OJO : en clase dijo que este era uno de los problemas difíciles de un control}
+
+\spart
+Bajo $H_0: β_1 =β_2 =β_3 =0$ tendremos que $Y_i=β_0 + ε_i$ y que $\hat{β}_0 = \overline{Y}$, y por tanto:
+\[SCE_0=\sum (Y_i - \hat{Y}_i)^2 \underbrace{=}_{H_0} \sum (Y_i - \overline{Y})^2 = SCT\]
+
+En este caso tenemos que llevar a cabo el cálculo del estadístico del contraste de la regresión (véase \ref{prop:estad_contr_regresion}) $F = \frac{SCR/k}{SCE/(n-k-1)}$. Como sabemos que $SCT = SCE + SCR \implies SCR = SCE_0-SCE = 42644.00 - 761.41 = 41882.59$ podemos obtener la tabla con la que conseguimos el estadístico:
+
+\begin{center}
+	\begin{tabular}{ c c c c c }
+		Fuente & $SC$ & gl & $CM$ & $F$ \\ \hline
+		Explicada & $SCR=41882.59$ & $k=3$ & $13960.86$ & $293.37$ \\
+		No explicada & $SCE=761.41$ & $n-k-1=16$ & $47.59=S_R^2$ \\ \hline
+		Total & $42644$ & $19$
+	\end{tabular}
+\end{center}
+
+Sabemos que la región de rechazo será: $R = \{ F > F_{3,16;0.05} = 3.24 \}$, y por tanto \textbf{rechazamos $H_0$}.
+
+\spart
+\begin{itemize}
+	\item $H_0: β_2=0$. En este caso contrastamos el incremento de variabilidad relativa entre el modelo en el que solo tenemos en cuenta $x_1,x_3$, frente al modelo completo en el que tenemos en cuenta $x_1,x_2,x_3$:
+
+	\[F = \frac{\frac{SCE_0 - SCE}{p=1}}{\frac{SCE}{n-k-1}} = \frac{SCE_0 - SCE}{S_R^2} = \frac{762.55 - 761.41}{47.59} ≈ 0.024\]
+
+	En este caso la región de rechazo es $R = \{ F > F_{1,16;0.05} = 4.49 \}$, y por tanto no rechazamos la hipótesis nula $H_0$.
+
+	\item $H_0= β_1=β_3=0$, aplicando el mismo criterio que en caso anterior obtenemos:
+
+	\[F = \frac{\frac{SCE_0 - SCE}{2}}{S_R^2} = \frac{\frac{36253.69 - 761.41}{2}}{47.59} = 372.9\]
+
+	Puesto que $F_{2,16;0.05}=3.63$, rechazamos esta hipótesis nula.
+\end{itemize}
+
+\spart
+Correlación entre $Y$ y $x_1$:
+\[r^2 = R^2 = 1 - \frac{SCE}{SCT} = 1 - \frac{8352.28}{42644} = 0.8041\]
+
+De modo que tendremos $r=\pm \sqrt{0.8041}$, y con la ayuda del enunciado podemos decir que $r = +\sqrt{0.8041} = 0.8967$
+
+\end{problem}
+
+
+
 \begin{problem}[12]
 Considera el modelo de regresión múltiple $T=Xβ + ε$, donde $ε$ verifica las hipótesis habituales.
 
