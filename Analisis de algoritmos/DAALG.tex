@@ -254,7 +254,7 @@ s_i^1 &= e_i e_{i+1} \dotsb e_{i+l - 2} \\
 s_i^2 &= e_{i+1} e_{i+2}\dotsb e_{i+l - 1}
 \end{align*}
 
-Con esto podemos construir un grafo $G_{l-1} = (V_l, E_l)$, con $V_{l-1} = \mop{sp}(S, l - 1)$ y, aquí va el cambio, las ramas construidas de la siguiente forma: $s_i, s_j ∈ E_{l-1}$ si y sólo si son prefijo y sufijo de una subsecuencia $s_k$ $\mop{sp}(S, l)$, esto es, que $s_i = s_k^1$ y $s_j = s_k^2$.
+Con esto podemos construir un grafo $G_{l-1} = (V_l, E_l)$, con $V_{l-1} = \mop{sp}(S, l - 1)$ y, aquí va el cambio, las ramas construidas de la siguiente forma: $s_i, s_j ∈ E_{l-1}$ si y sólo si son prefijo y sufijo de una subsecuencia $s_k ∈ \mop{sp}(S, l)$, esto es, que $s_i = s_k^1$ y $s_j = s_k^2$.
 
 El grafo esta vez es dirigido, aunque sólo necesitamos hacer una pequeña adaptación para que la teoría de caminos eulerianos nos valga aquí: para que haya un circuito euleriano, todos los nodos tendrán que tener el mismo número de ramas de salida (que van del nodo a otro del grafo) que de entrada (incidentes desde otro nodo al nodo que consideramos).
 
@@ -303,6 +303,51 @@ for i from 1 to n do:
 \end{listing}
 
 Cuando no es el Knapsack 0-1 (esto es, podemos meter más de una copia de cada elemento en la mochila), simplemente tenemos que quitarnos la parte de la matriz que va de $1$ a $n$: vamos rellenando una lista unidimensional $m[W]$ con la siguiente ecuación: \[ m[w] = \max_{w_i ≤ w} v_i + m[w - w_i] \]
+
+\subsection{Problema de la suma}
+
+Una variante del problema de la mochila es el de la suma: dado un conjunto de números $Λ = \set{λ_1, \dotsc, λ_n}$ y otro número $S$, ver si $S$ se puede expresar como suma de números que estén en Λ. La resolución se basa de nuevo en la descomposición por subproblemas: definimos $d(i,s)$ cono una función que nos dará $1$ si $s$ se puede descomponer como suma de los elementos $λ_1, \dotsc, λ_1$ y 0 si no. Esta función quedará definida de la siguiente forma: \[ d(i,s) = \max \set{ d(i-1, s) , d(i-1, s - λ_i) }\]
+
+Es decir, podemos descomponer $s$ con los $i$ primeros elementos de Λ si también podemos hacerlo con los $i-1$ primeros, o si con los $i-1$ primeros podemos descomponer $s - λ_i$.
+
+\subsubsection{Criptografía de clave pública}
+
+El problema de la suma permite implementar un sistema de clave pública: publicamos una secuencia Λ de longitud $n$ y ciframos cada bloque de bits $B = b_1b_2\dotsc b_n$ de la siguiente forma: \[ C = \sum_{i = 1}^n λ_i b_i\]
+
+Para descifrar la cadena, habrá que resolver el problema de la suma con Λ y $C$. La cuestión es que esto es un problema NP así que hay que encontrar alguna forma de que el receptor pueda descifrar más fácilmente el mensaje.
+
+Esa forma son las sucesiones supercrecientes, sucesiones $Λ = \set{λ_1, \dotsc, λ_n}$ para las que $λ_i > \sum_{j=1}^{i-1} λ_j$, es decir, que todo elemento es mayor que la suma de los que le preceden.
+
+Suponiendo entonces que nos pasan un número $C$ que se expresa como suma de elementos $K ⊂ Λ$, podemos ir recorriendo Λ de mayor a menor (desde el final): si $C > λ_i$, entonces $λ_i$ tiene que ser parte de $K$, ya que con los que sean más pequeños que él no vamos a poder sumar más que $λ_i$, que es menor que $C$. Y obviamente, si $C < λ_i$, $λ_i$ no puede estar en $K$. Esto nos da el algoritmo lineal del \fref{lst:SumSuperCrec}.
+
+\begin{listing}
+\begin{minted}[frame=lines, fontsize=\scriptsize, tabsize=4]{python}
+ def sumSuperCrec(lambda, S):
+    N = len(lambda); bits = np.zeros(N)
+
+    for i in range(N):
+        ind = N-i-1
+
+        if S >= lambda[ind]:
+			bits[ind] = 1
+           	S -= lambda[ind]
+
+    if S > 0:
+    	return -1
+	else:
+		return bits
+\end{minted}
+\caption{Algoritmo para descifrar un bloque cifrado con una secuencia supercreciente.}
+\label{lst:SumSuperCrec}
+\end{listing}
+
+Por supuesto, si publicamos Λ super creciente cualquiera podrá descifrar el texto en tiempo lineal. Para evitar este problema, se crea otra secuencia Θ a partir de Λ con un procedimiento no invertible de la siguiente forma: \[ θ_i = P · λ_i \mod M \], donde $P$ y $M$ son el módulo $M$, mayor que la suma de los $λ_i$, y el multiplicador $P$ que se escoge coprimo con $M$.
+
+La clave pública será entonces la secuencia transformada Θ, que ya no será supercreciente, y el módulo $M$. La clave privada será $P$, ya que permitirá calcular el inverso multiplicativo $Q$, de tal forma que tengamos que $P·Q \mod M = 1$ y podamos revertir la transformación: \[ λ_i = θ_i · Q \mod M \]
+
+A la hora de enviar un bloque $B = b_1b_2\dotsc b_n$ cifrado, realizamos el mismo procedimiento con Θ, esto es, enviamos \[ C = \sum θ_i b_i \]
+
+Para descifrar, calcularemos $C' = C·Q \mod M$, que en realidad es $B$ cifrado con la sucesión supercreciente Λ: \[ C' = CQ \mod M = \left(\sum b_i θ_i\right) Q \mod M = \sum b_i (θ_i Q) \mod M = \sum b_i λ_i \] y con eso ya podremos hacer el descifrado en tiempo lineal.
 
 \subsection{Longest Common Subsequence (LCS)}
 
@@ -371,7 +416,101 @@ La distancia de Levenshtein nos permite ver cuántas operaciones (sustitución, 
 
 \subsection{Árbol binario de búsqueda óptimo}
 
-Un árbol binario de búsqueda es el que minimiza el coste medio de búsqueda, sabiendo las probabilidades de aparición de cada uno de sus elementos. Se puede construir usando programación dinámica.
+Un árbol binario de búsqueda $A$ es el que minimiza el coste medio de búsqueda, sabiendo las probabilidades de aparición de cada uno de sus elementos. Esto es, dados nodos $i = 1,\dotsc, n$ a profundidades $d_i$ y probabilidades de búsqueda $p_i$, se busca minimizar la función \[ P(A) = \sum_{i=1}^n d_i p_i\]
+
+El árbol se puede construir usando programación dinámica, fijándonos en una propiedad interesante: para un árbol $A$ dado, podemos tomar los dos subárboles izquierdo y derecho, $L$ y $R$ respectivamente. Entonces el coste de todo el árbol es la suma del peso ponderado de los dos subárboles más la probabilidad de todos los elementos en el árbol: \[ P(A) = P(L) + P(R) + \sum_{i ∈ A} p_i \]
+
+Esto se ve fácilmente si nos damos cuenta de que la profundidad de un nodo $i$ en $L$ o $R$ es uno menos la profundidad de ese mismo nodo en $A$.
+
+El algoritmo de programación dinámica consistiría así en ir buscando el mejor árbol que abarca los nodos $i$ a $j$, poniendo cada vez un nodo $r ∈ [i,j]$ como raíz y viendo en qué momento tenemos un árbol mejor. El \fref{lst:ArbolBinario} muestra cómo podría implementarse ese algoritmo.
+
+\begin{listing}[hbtp]
+\begin{minted}[frame=lines, fontsize=\scriptsize, tabsize=4]{c}
+/* A Dynamic Programming based function that calculates minimum cost of
+   a Binary Search Tree. */
+int optimalSearchTree(int keys[], int freq[], int n) {
+    /* Create an auxiliary 2D matrix to store results of subproblems */
+    int cost[n][n];
+
+    /* cost[i][j] = Optimal cost of binary search tree that can be
+       formed from keys[i] to keys[j].
+       cost[0][n-1] will store the resultant cost */
+
+    // For a single key, cost is equal to frequency of the key
+    for (int i = 0; i < n; i++)
+        cost[i][i] = freq[i];
+
+    // Now we need to consider chains of length 2, 3, ... .
+    // L is chain length.
+    for (int L=2; L<=n; L++) {
+        // i is row number in cost[][]
+        for (int i=0; i<=n-L+1; i++) {
+            // Get column number j from row number i and chain length L
+            int j = i+L-1;
+            cost[i][j] = INT_MAX;
+
+            // Try making all keys in interval keys[i..j] as root
+            for (int r=i; r<=j; r++) {
+               // c = cost when keys[r] becomes root of this subtree
+               int c = ((r > i) ? cost[i][r-1] : 0) +
+                       ((r < j) ? cost[r+1][j] : 0) +
+                       sum(freq, i, j);
+
+               if (c < cost[i][j])
+                  cost[i][j] = c;
+            }
+        }
+    }
+    return cost[0][n-1];
+}
+\end{minted}
+\caption{Algoritmo de búsqueda de árbol binario óptimo. \href{http://www.geeksforgeeks.org/dynamic-programming-set-24-optimal-binary-search-tree/}{Fuente}. }
+\label{lst:ArbolBinario}
+\end{listing}
+
+
+\subsection{Ordenación de la multiplicación de matrices}
+
+Otro problema que se puede resolver con programación dinámica es cómo ordenar un producto de varias matrices $A_1 \dotsb A_n$ para minimizar el número de operaciones que hay que hacer. El algoritmo es muy parecido al que acabamos de ver para el árbol binario de búsqueda óptimo: cogemos una secuencia $A_i \dotsb A_j$ de matrices y vemos cuál de todas las posibles formas de dividirla en dos subsecuencias de multiplicaciones $A_i \dotsb A_k$ y $A_{k + 1} \dotsb A_j$ nos da un coste menor de operación.
+
+En el \fref{lst:MatrixMult} se ve un posible pseudocódigo para este algoritmo. La única diferencia con el del \fref{lst:ArbolBinario} es cómo se calculan los costes: cogemos el coste de multiplicar la subsecuencia izquierda, lo sumamos al de la subsecuencia derecha y después sumamos el coste de multiplicar ambas matrices. Simplemente recordamos que, para multiplicar una matriz de dimensión $M×N$ por otra de dimensión $N × P$, tenemos que hacer $M·N·P$ operaciones y nos queda una matriz de dimensión $M × P$.
+
+\begin{listing}[hbtp]
+\begin{minted}[frame=lines, fontsize=\scriptsize, tabsize=4]{c}
+// Matrix Ai has dimension p[i-1] x p[i] for i = 1..n
+MatrixChainOrder(int p[])
+{
+    // length[p] = n + 1
+    n = p.length - 1;
+    // m[i,j] = Minimum number of scalar multiplications (i.e., cost)
+    // needed to compute the matrix A[i]A[i+1]...A[j] = A[i..j]
+    // cost is zero when multiplying one matrix
+    for (i = 1; i <= n; i++)
+       m[i,i] = 0;
+
+    for (L=2; L<=n; L++) { // L is chain length
+        for (i=1; i<=n-L+1; i++) {
+            j = i+L-1;
+            m[i,j] = MAXINT;
+            for (k=i; k<=j-1; k++) {
+                // q = cost/scalar multiplications
+                q = m[i,k] + m[k+1,j] + p[i-1]*p[k]*p[j];
+                if (q < m[i,j]) {
+                    m[i,j] = q;
+                    s[i,j]=k;  // s[i,j] = Second auxiliary table that stores k
+                               // k      = Index that achieved optimal cost
+
+                }
+            }
+        }
+    }
+}
+
+\end{minted}
+\caption{Algoritmo de búsqueda del coste óptimo de multiplicación de matrices.}
+\label{lst:MatrixMult}
+\end{listing}
+
 
 \printindex
 \end{document}
