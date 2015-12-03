@@ -134,10 +134,12 @@ que no nos permite conocer de forma inmediata la palabra original.
 Por otro lado, si el código si que se encuentra en formato estándar tendremos:
 \[(a,b)\left(\begin{array}{cccc} 1 & 0 & 1 & 0 \\ 0 & 1 & 0 & 1\end{array}\right) = (a,b,a,b)\]
 
-Con lo que al principio de la palabra cifrada tendremos la palabra original.
+Con lo que al principio de la palabra codificada tendremos la palabra original.
 \end{example}
 
 \section{Decodificación con códigos lineales}
+Ya hemos visto al final del apartado anterior cómo puede leerse el mensaje original a partir del mensaje codificado. El problema de la decodificación radica en la corrección de los posibles errores que nos encontremos.
+
 Ahora supongamos que tenemos un código lineal $\algb{C} \in F_q^n$ y que hemos recibido un mensaje $y \in F_q^n$. ¿Qué debemos hacer?.
 
 El objetivo es encontrar un $x \in \algb{C}$ lo más próximo posible a $y$, es decir, tendremos que hacer que el error, $y-x=e$, sea mínimo.
@@ -162,8 +164,84 @@ Finalmente la tabla queda:
 0001 & 1011 & 0110 & 1100
 \end{array}\]
 
-
 La idea que hay de fondo es que estamos tomando representantes de las diferentes clases de equivalencia (primera columna) y vemos todos los elementos que pertenecen a esa clase.
 
-Ahora buscamos el mensaje recibido en esta tabla y tomamos su representante con peso mínimo que, si hemos construido la tabla de la mejor forma posible, será el elemento más a su izquierda.
+Ahora buscamos el mensaje recibido en esta tabla y tomamos su representante con peso mínimo que, si hemos construido la tabla de la mejor forma posible, será el elemento más a su izquierda.\footnote{En la tabla ejemplo y en las que debemos hacer, empezamos tomando un representante de peso mínimo, que escribimos en la primera columna, y a su derecha escribimos el resto de elementos de la clase. No obstante, se obtiene un resultado equivalente si empezamos tomando un representante distinto.}
+
+Una vez tenemos este representante, conocemos $e$, para conocer $x$ simplemente miramos la columna en la que se encuentra $y$ de forma que se satisface
+\[y=x+e\]
+
+\obs Puesto que estamos realizando una división del código en clases de equivalencia, no puede haber ningún elemento repetido en la tabla pues estas clases son disjuntas.
 \end{example}
+
+Con el procedimiento que acabamos de ver podemos corregir un error en los bits primero, segundo y cuarto, pero no en el tercero.
+
+Por otro lado, podíamos haber construido de forma distinta la segunda fila, cambiando el representante de peso mínimo tomado. En ese caso seríamos incapaces de detectar errores en el primer bit.
+
+Como conclusión podemos ver que este código no es tan bueno para corregir errores. Veamos otro ejemplo con un mejor código, el que en su día llamamos $\algb{C}_5$.
+
+\begin{example}
+Tomamos el código dado por la matriz generadora
+\[G = \left(\begin{array}{ccccc} 1 & 0 & 1 & 1 & 0 \\ 0 & 1 & 1 & 0 & 1 \end{array}\right) \]
+
+En esta ocasión tenemos $n=5$, $k=2$, $r(=n-k)=3$, $d=3$ y la tabla de Slepian queda:
+\[\begin{array}{cccc}
+00000 & 10110 & 01101 & 11011 \\
+10000 & 00110 & 11101 & 01011 \\
+01000 & 11110 & 00101 & 10011 \\
+00100 & 10010 & 01001 & 11111 \\
+00010 & 10100 & 01111 & 11001 \\
+00001 & 10111 & 01100 & 11010 \\
+11000 & 01110 & 10101 & 00011 \\
+10001 & 00111 & 11100 & 01010
+\end{array}\]
+
+Con esta tabla seremos capaces de corregir un total de 7 errores: los 5 errores simples, error en los dos primeros bits, y error en el primer y último bit.
+
+\end{example}
+
+En este tipo de ocasiones en que el número de errores que podemos corregir está limitado, lo que se suele hacer es \concept{decodificación incompleta} que consiste en tomar sólo una parte de la tabla, es decir, nos quedamos solo con aquellas filas en las que el lider $e$ tiene peso menor o igual que $\frac{d-1}{2}$.
+
+Así siempre que recibamos un mensaje $y \in [e]$ con $w(e) \leq \frac{d-1}{2}$ leemos $x=y-e$ y en caso contrario \textbf{PITO}.
+
+Para casos pequeños como el que estamos viendo es muy sencillo encontrar la palabra recibida $y$ en la tabla. No obstante, si trabajamos en un caso más real con palabras de longitud $256$ tendremos tablas de $2^{256}$ elementos donde buscar es bastante complicado.
+
+Sin embargo, no es necesario tener todos los elementos de la tabla calculados.
+
+Para empezar, hay un síndrome clarísimo que nos permite saber si la palabra no está en el código que consiste en emplear la matriz controladora de paridad. Se define así el \concept{síndrome de una palabra} como:
+\[S(y) = Hy^t\]
+y consideramos que
+\[y \in \algb{C} \iff S(y) = 0 \text{ está sano, no tiene síndromes}\]
+
+\obs
+\[y_1 \equiv y_2 \mod \algb{C} \iff S(y_1)=S(y_2)\]
+\begin{proof}
+\[y_1 = y_2 \mod \algb{C} \iff y_1-y_2 \in \algb{C} \iff H(y_1-y_2)^t = 0 \iff Hy_1^t = Hy_2^t \iff S(y_1)=S(y_2)\]
+\end{proof}
+
+Por tanto, podemos saber en qué fila nos encontramos sólo con calcular el síndrome de la palabra recibida. Una vez tenemos la fila localizada, basta con que construyamos esta fila, ahorrándonos el proceso de construcción de la tabla completa.
+
+\begin{example}
+Retomando el ejemplo anterior, tenemos
+\[G = \left(\begin{array}{ccccc} 1 & 0 & 1 & 1 & 0 \\ 0 & 1 & 1 & 0 & 1 \end{array}\right)  \implies H = \left(\begin{array}{ccccc}
+1 & 1 & 1 & 0 & 0 \\
+1 & 0 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 & 1
+\end{array}\right) \]
+
+Ahora calculamos el síndrome de cada representante de clase de la tabla de Slepian:
+
+\[\begin{array}{cc}
+00000 & 000\\
+10000 & 110\\
+01000 & 101\\
+00100 & 100\\
+00010 & 010\\
+00001 & 001\\
+11000 & 011\\
+10001 & 111
+\end{array}\]
+
+Supongamos que hemos recibido el mensaje $y=01001$ calculamos su síndrome, que nos da $(y)=100$ con lo que asumimos que $e=00100$ con lo que leemos el mensaje $x=01101$ que es una palabra del código.
+\end{example}
+
