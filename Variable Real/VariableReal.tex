@@ -1084,7 +1084,7 @@ Un hiperplano de soporte de la gráfica de una función es un hiperplano de $ℝ
 
 Otra cosa que no sé para qué queremos.
 
-\begin{defn}[Epi] El ``epi'' de una función son los puntos que están por encima de la gráfica de la función. Formalmente:
+\begin{defn}[Epigráfico] El epigráfico de una función son los puntos que están por encima de la gráfica de la función. Formalmente:
 
 \[ \mop{epi} f = \set{(x,y) ∈ ℝ^{N+1} \tq y ≥ f(x) } \]
 \end{defn}
@@ -1450,6 +1450,11 @@ $L^2(ℂ, μ)$ es también un espacio de Hilbert, con el producto escalar dado p
 
 Los espacios de probabilidad dados por $(X, \algb{X}, \mathbb{P})$ con $\mathbb{P}(X) = 1$ también dan un espacio de Hilbert \[ L_0^2 = \set{f ∈ L^2(X,\algb{X}, \mathbb{P}(X)) \tq \fint f = 0} \] con el producto escalar dado por la covarianza de las funciones.
 
+Por cierto, el espacio de Hilbert es infinito dimensional. Aquí tenemos un teorema que nos permite caracterizar este tipo de espacios sólo mirando las bolas (no las nuestras).
+
+\begin{theorem}[Teorema\IS de Riesz] Sea $V$ un espacio vectorial normado. Entonces $\bola_r$ es compacta si y sólo si $V$ es de dimensión finita.
+\end{theorem}
+
 \subsection{Espacios de Hilbert como espacios vectoriales: propiedades}
 
 Aunque nosotros estudiaremos los espacios de Hilbert desde el punto de vista del análisis, es muy útil verlos simplemente como espacios vectoriales del álgebra básico para entender ciertas propiedades. Así, podremos después aplicar todo esto al estudio de espacios de Hilbert como espacios de funciones.
@@ -1478,7 +1483,7 @@ En espacios pre-Hilbertianos ocurren también cosas muy familiares, como que el 
 
 Los vectores ortogonales nos resultarán muy interesantes. Damos dos definiciones sencillitas:
 
-\begin{defn}[Familia\IS ortogonal] Una familia $\set{e_α}_{α∈A}$ con $A$ no necesariamente numerable es ortogonal si y sólo si $\pesc{e_α,e_β} ≠ 0$ sólo cuando $α = β$. \end{defn}
+\begin{defn}[Familia\IS ortogonal] \label{def:FamiliaOrtogonal} Una familia $\set{e_α}_{α∈A}$ con $A$ no necesariamente numerable es ortogonal si y sólo si $\pesc{e_α,e_β} ≠ 0$ sólo cuando $α = β$. \end{defn}
 
 Esa familia será además una \concept{Familia\IS ortonormal} si cumple que \[ \pesc{e_α,e_β} = δ_{α,β} = \begin{cases} 1 & α = β \\ 0 & α ≠ β \end{cases} \], es decir, que los vectores tengan norma unidad. Por darle nombres a las cosas, $δ_{α,β}$ es la llamada \concept{Delta\IS de Kronecker}.
 
@@ -1498,10 +1503,15 @@ A partir de espacios Hilbert o pre-Hilbert podemos construir otros espacios. Los
 \begin{defn}[Espacio\IS complejo-conjugado] Dado un espacio de Hilbert $H$, podemos definir el espacio $\conj{H}$ como el dado por los vectores $\conj{\vx} + \conj{\vy} = \conj{\vx+\vy}$. y algo. No sé, tengo sueño.
 \end{defn}
 
-Será importante ver qué ocurre con convexos. La siguiente proposición será muy relevante en el estudio de espacios Hilbert.
+Será importante ver qué ocurre con convexos. El siguiente teorema será muy relevante en el estudio de espacios Hilbert.
 
-\begin{prop} Sea $H$ un espacio de Hilbert, y $K$ un conjunto no vacío, cerrado y convexo\footnote{Esto es, que $∀\vx,\vy ∈ K$, se tenga que $λ\vx + (1-λ)\vy ∈ K$ para todo $λ ∈ [0,1]$. Es decir, que el segmento entre $\vx$ e $\vy$ esté contenido en $K$.}, y sea $\vx ∈ H$. Entonces existe un único $\vy ∈ K$ tal que \[ \dst (\vx,K) ≝ \min_{\vz∈K} \norm{z-\vy} = \norm{\vy-\vx} \], y además $∀\vz ∈ K$ tenemos que $\Re \pesc{\vz-\vy, \vy-\vx} ≥ 0$ (esta es la llamada \concept{Desigualdad\IS variacional}).
-\end{prop}
+\begin{theorem}[Teorema\IS de la distancia en convexos] \label{thm:DistConvexo} Sea $H$ un espacio de Hilbert, y $K$ un conjunto no vacío, cerrado y convexo\footnote{Esto es, que $∀\vx,\vy ∈ K$, se tenga que $λ\vx + (1-λ)\vy ∈ K$ para todo $λ ∈ [0,1]$. Es decir, que el segmento entre $\vx$ e $\vy$ esté contenido en $K$.}, y sea $\vx ∈ H$. Entonces existe un único $\vy ∈ K$ tal que \[ \dst (\vx,K) ≝ \min_{\vz∈K} \norm{\vz-\vy} = \norm{\vy-\vx} \], y además $∀\vz ∈ K$ tenemos que $\Re \pesc{\vz-\vy, \vy-\vx} ≥ 0$.
+\end{theorem}
+
+Esa última desigualdad tiene nombre propio, ya que nos será bastante útil:
+
+\begin{defn}[Desigualdad\IS variacional] \label{def:DesigVariacional} En las mismas condiciones del teorema anterior \ref{thm:DistConvexo}, la desigualdad variacional nos dice que \[ ∀\vz ∈ K \; \Re \pesc{\vz-\vy, \vy-\vx} ≥ 0 \]
+\end{defn}
 
 Lo que nos dice es que podemos hacer una proyección ortogonal en espacios de dimensión infinita igual que si tuviese dimensión finita. Es una propiedad importante y muy potente, también porque nos da un mínimo único en la distancia, que habitualmente está definida con el ínfimo.
 
@@ -1519,10 +1529,54 @@ Por sándwich, tenemos entonces que $\norm{\vy_n - \vy_m} \convs[][n,m] 0$, lueg
 Por último, probaremos la desigualdad variacional. Sea $\vy$ un elemento de mínima distancia. Entonces $∀z ∈ K$ y $∀θ ∈ (0,1)$ tenemos que $\dst ((1-θ)\vy + θz, \vx) ≥ \dst ((1-θ)\vy + θz,\vy)$., y desarrollando los cuadrados nos queda que \[ 2 \Re \pesc{z-\vy, \vy-\vx} ≥ - θ \norm{z-\vy}^2\]. Cuando movamos $θ \to 0$ nos quedará la desigualdad variacional.
 \end{proof}
 
-Recordamos teorema Riesz.
+El \fref{thm:DistConvexo} se puede generalizar a espacios de Banach con una desigualdad. Lo ponemos como referencia pero no lo usaremos demasiado.
 
-\begin{theorem}[Teorema\IS de Riesz] Sea $V$ un espacio vectorial normado. Entonces $\bola_r$ es compacta si y sólo si $V$ es de dimensión finita.
+\begin{theorem} Si $X$ es un \nlref{def:EspacioBanach} uniformemente convexos\footnote{Los que son reflexivos, esto es, que el dual de su dual es él mismo.} (por ejemplo, los espacios $L^p$ con $1 < p < ∞$), se cumple que \[ \norm{x + y}_p^p + \norm{x-y}_p^p ≤ C_p \left(\norm{x}_{p}^p + \norm{y}_p^p\right) \]
 \end{theorem}
+
+Un caso notable de este teorema es lo que ocurre cuando $K$ es un subespacio y no sólo un convexo sin estructura algebraica alguna.
+
+\begin{corol}[Proyecciones Ortogonales] Sea $V ⊂ H$ un subespacio cerrado de un espacio Hilbert. Entonces, para cada $\vx ∈ H$ existe una única descomposición de $\vx$ como \[ \vx = \vx_V + \vx_V^\perp \], donde $\vx_V ∈ V$ y $\vx_V^\perp$ es ortogonal a todos los elementos de $V$ (esto es, que $\pesc{\vx_V^\perp, \vz} = 0\;∀\vz ∈ V$).
+\end{corol}
+
+Este corolario nos permite definir la \concept{Proyección\IS ortogonal} de un vector como el operador lineal \begin{align*}
+\appl{π_V}{H&}{V} \\
+\vx &\longmapsto \vx_V = π_V(\vx)
+\end{align*}, que es continua por el teorema de Pitágoras. La propiedad de que $\vx_V^\perp$ es ortogonal se hace usando la \nlref{def:DesigVariacional} aprovechando que $K$ es subespacio y tiene estructura lineal.
+
+Con esto, podemos definir unas estructuras que nos permitirán trabajar mejor con cosas ortogonales.
+
+\begin{defn}[Complemento\IS ortogonal] Sea $V$ un subespacio vectorial de un espacio Hilbert $H$. Entonces definimos $V^\perp$ como el complemento ortogonal de $V$ dado por \[ V^\perp = \set{y ∈ H \tq \pesc{\vx,\vy} = 0 \; ∀\vx ∈ V} \]
+\end{defn}
+
+Este complemento tiene dos propiedades interesantes
+
+\begin{prop} \citep{brezisFunc} Sea $V ⊂ H$ subespacio vectorial de un Hilbert $H$. Entonces su complemento ortogonal cumple que
+\begin{enumerate}
+\item $V^\perp$ es cerrado.
+\item $\left(V^\perp\right)^\perp = \adh{V}$.
+\item $V^\perp = \set{0}$ si y sólo si $V$ es denso en $H$.
+\item Si $V$ es cerrado, entonces $H = V \oplus V^\perp$.
+\item Dados subespacios $V,W$ cerrados, entonces $(V+W)^\perp = V^\perp ∩ W^\perp$, y $(V∩W)^\perp = \adh{V^\perp + W^\perp}$.
+\end{enumerate}
+\end{prop}
+
+Una vez que hemos visto esto, podemos enunciar (por tercera vez, lo habíamos visto antes en \ref{thm:PrevReprRiesz} y \ref{thm:ReprRiesz}) el teorema de representación de Riesz.
+
+\begin{theorem}[Teorema\IS de representación de Riesz] \label{thm:ReprRieszHilbert} Sea $H$ un espacio Hilbert complejo. Entonces dado un funcional $\appl{λ}{H}{ℂ}$ lineal y continuo, existe un único $\vv ∈ H$ tal que $λ = λ_\vv$, es decir \[ λ(\vu) = \pesc{\vu, \vv}_H\]
+\end{theorem}
+
+\subsubsection{Base del espacio de Hilbert}
+
+Una parte importante de los espacios vectoriales es su base. En $ℝ^N$, teníamos una base $\set{\ve_i}_{i=1}^N$ de tal forma que podíamos escribir cualquier vector como $\vx = \sum x_i \ve_i$. En los espacios Hilbert, de dimensión infinita, tendremos lo mismo sólo que cambiando $N$ por ∞. Tendremos que tener algo de cuidado (la suma $\sum x_i \ve_i$ tendrá que converger) pero las cosas van a ser muy parecidas.
+
+Tomaremos una \nlref{def:FamiliaOrtogonal} $\ve_1, \dotsc, \ve_n, \dotsc$ y numerable. Entonces daremos dos definiciones para ver si esa serie nos define un número concreto o no.
+
+\begin{defn}[Convergencia\IS condicional] La serie $\sum_{n=1}^∞ c_n \ve_n$ es condicionalmente convergente si y sólo si $c_n ∈ \ell^2(ℕ)$.
+\end{defn}
+
+\begin{defn}[Convergencia\IS incondicional] Algo muy raro esto, eh?
+\end{defn}
 
 \chapter{SOC en espacio de Hilbert. Series de Fourier}
 
