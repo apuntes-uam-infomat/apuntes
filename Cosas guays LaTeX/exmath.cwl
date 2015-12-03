@@ -12,6 +12,7 @@
 \tq#m
 \tlq#m
 \wtf#m
+\MT#m
 \deriv{f}{arg1}#m
 \dpa{arg0}{arg1}#m
 \rot#m
