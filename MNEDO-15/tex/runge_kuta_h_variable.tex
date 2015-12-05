@@ -1,0 +1,101 @@
+\chapter{Métodos Runge Kutta}
+
+\section{Tablero de Butcher}
+Como ya vimos en la sección \ref{sec:runge-kurra} los métodos Runge Kutta se caracterizan por la necesidad de calcular unos valores $K_i$ como sigue:
+\[K_i = f\left(x_n+c_ih, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\]
+para escribir después el método en si mismo:
+\[y_{n+1} = y_n+ h \sum_{i=1}^s b_i K_i\]
+
+La idea de este método se apoya en la aproximación de la integral como nos muestra la siguiente ecuación.
+\[y(x_{n+1}) = y(x_n) + \int_{x_n}^{x_{n+1}} f(x,y(x))\dif x \approx y(x_n)+h \sum_{j}^{s} b_j f(x_n+hc_j, y(x_n+hc_j))\]
+
+Las diferentes formas de aproximar la función $y(x_n+hc_j)$ nos dan las diferentes $K_i$ de los distintos métodos Runge Kutta.
+
+Una forma de representar de forma compacta el método es mediante el \concept{Tablero de Butcher}. Este tablero nos permite representar de forma cómoda los valores de las constantes que intervienen en el método. Tiene la siguiente estructura:
+
+\begin{center}
+\begin{tabular}{c|cccccc}
+$c_1$ & $a_{11}$ & $a_{12}$ & $a_{13}$ & $\cdots$ & $a_{1,s}$\\
+$c_2$ & $a_{21}$ & $a_{22}$ & $a_{23}$ & $\cdots$ & $a_{2,s}$\\
+$\vdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\ddots$ & $\vdots$ \\
+$c_s$ & $a_{s1}$ & $a_{s2}$ & $a_{s3}$ & $\cdots$ & $a_{ss}$\\
+\hline
+ & $b_1$ & $b_2$ & $b_3$ & $\cdots$ & $b_s$\\
+\end{tabular}
+\end{center}
+
+Si recordamos la definición, decimos que un método de Runge Kutta es explícito si cada $K_i$ puede calcularse explícitamente a partir de los valores anteriormente calculados. Si atendemos al tablero de Butcher, esto se traduce en que la matriz $A = a_{ij}$ sea triangular inferior estricta.
+
+Evidentemente el método será implícito siempre que la matriz no sea triangular inferior estricta.
+
+No obstante, existe un subconjunto dentro de los métodos de Runge Kutta que hay que destacar. Se trata de los métodos semi-implícitos que se caracterizan por tener la matriz $A$ triangular inferior pero con elementos en la diagonal.
+
+Estos métodos son algo más complejos que los explícitos, pues tenemos que hacer aproximaciones y emplear métodos como el del punto fijo para calcular algunas $K_i$, pero siguen siendo mejores que los métodos con matrices que tengan elementos no nulos por encima de la diagonal pues nos obliga a resolver un sistema de ecuaciones implícito.
+
+Aunque el tablero de Butcher lo estamos estudiando dentro del contexto de los métodos Runge-Kutta, puede utilizarse con cualquier método como muestra el siguiente ejemplo.
+
+\begin{example}
+Si consideramos el método de Euler mejorado tenemos el siguiente tablero:
+
+\begin{center}
+\begin{tabular}{c|cc}
+$0$ & & \\
+$\frac{1}{2}$ & $\frac{1}{2}$ & \\
+\hline
+ & $0$ & $1$\\
+\end{tabular}
+\end{center}
+\end{example}
+
+\begin{example}
+Si consideramos el método RK-Raday IA de dos etapas, el tablero queda de la forma:
+
+\begin{center}
+\begin{tabular}{c|cc}
+$0$ & $1/4$ & $-1/4$\\
+$2/3$ & $1/4 $ & $5/12$ \\
+\hline
+ & $1/4$ & $3/4$\\
+\end{tabular}
+\end{center}
+\end{example}
+
+\begin{example}
+Si consideramos el método RK-Lobatto IIIA de dos etapas, el tablero queda de la forma:
+
+\begin{center}
+\begin{tabular}{c|cc}
+$0$ & $0$ & $0$\\
+$1$ & $1/2 $ & $1/2$ \\
+\hline
+ & $1/2$ & $1/2$\\
+\end{tabular}
+\end{center}
+\end{example}
+
+\obs En general es frecuente encontrarse con tableros que tienen huecos vacíos en la matriz $A$. Estos huecos representan 0s.
+
+\section{Hipótesis de los métodos numéricos}
+
+Los métodos de Runge-Kutta son métodos de un sólo paso con función de incremento:
+\[\phi_f(x_n,y_n;h) = \sum_{i=1}^sb_ik_i(x_n,y_n;h)\]
+
+Puesto que las etapas $k_i$ son evaluaciones de la función $f$, no es difícil convencerse de que $\phi_f$ satisface la condición de Lipschitz con respecto a su segunda variable si $f$ también lo hace.
+
+\begin{example}
+Vamos a comprobar que la función incremento es Lipschitz en la segunda variable en el método de Euler modificado.
+\[\norm{k_1(x_n,y_n;h)-k_1(x_n,\tilde{y}_n;h)} \leq L\norm{y_n-\tilde{y}_n}\]
+\[\norm{k_2(x_n,y_n;h)-k_2(x_n,\tilde{y}_n;h)} \leq L\left( \norm{y_n-\tilde{y}_n}+\frac{h}{2}\norm{k_1(x_n,y_n;h)-k_1(x_n,\tilde{y}_n;h)}\right) \leq \atop L\left(1+\frac{h}{2}\right) \norm{y_n-\tilde{y}_n}\]
+de donde se obtiene inmediatamente la condición de Lipschitz deseada observando que en este caso $\phi_f(x_n,y_n;h)=k_2(x_n,y_n;h)$
+\end{example}
+
+\obs En general todo método Runge-Kutta satisface las hipótesis para métodos numéricos si tomamos un $h$ suficientemente pequeño.
+
+Podemos ver que si tomamos $h=0$ tenemos
+\[k_i(x_n,y_n;0)=f(x_n,y_n)\]
+lo que nos permite escribir:
+\[\phi_f(x,y;0)=\sum_{i=1}^sf(x,y)\]
+Aplicando el criterio de consistencia \ref{consist_iif_relaciones} vemos que los métodos Runge-Kutta son consistentes si y sólo si
+\[\sum_{i=1}^sb_i = 1\]
+
+Por otro lado podemos comprobar que el criterio de la raíz \ref{theorem:criterio_raiz} siempre se satisface para los métodos Runge-Kutta lo que nos garantiza que siempre serán 0-estables.
