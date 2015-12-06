@@ -5127,6 +5127,24 @@ $d$ par, entonces existe un $(n,M,d)$-código binario en el que
 todas las palabras tienen peso par. [Sugerencia: Primero acortar
 el código y luego alargarlo.]
 \solution
+
+\doneby{Pedro}
+
+Si tenemos el $(n,M,d)$-código binario con $d$ par y lo proyectamos eliminando la última cifra de cada palabra, obtenemos un $(n-1,M,d-1)$-código binario.
+
+Si ahora añadimos a cada palabra una cifra a modo de bit de control de paridad, forzando a que todas las palabras tengan paridad par, pasaremos a tener un $(n,M,d)$-código binario donde todas las palabras tienen peso par.
+
+Vamos a comprobar esta última afirmación.
+
+Es evidente que seguimos teniendo $M$ palabras, que estas tienen longitud $n$, que son binarias y que tienen peso par. Sólo debemos comprobar que la distancia mínima es $d$.
+
+Sabemos que la distancia mínima es, al menos, $d-1$ que es un número impar. También sabemos que no puede ser mayor que $d$, que es un número par.
+
+Por otro lado sabemos que la distancia entre dos palabras del código puede calcularse de la siguiente forma:
+\[d(x,y)=w(x-y)=w(x)+w(y) - 2 w(x\cdot y)\]
+Es trivial observar que, puesto que todas las palabras tienen peso par, la distancia que acabamos de calcular será par.
+
+Por tanto, puesto que la distancia entre dos palabras de este código siempre es par, la distancia mínima también lo será, lo que nos fuerza a que la distancia del nuevo código construido sea $d$.
 \end{problem}
 
 
@@ -5138,6 +5156,27 @@ existe un $(n-1,M',d)$-código binario con  $M'\ge M/2$.
 
 \ppart Deduce de esto que $A_2(n,d)\le 2 A_2(n-1,d)$.
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Si tenemos un $(n,M,d)$-código binario y tomamos sólo aquellas palabras en las que la primera cifra sea un 0, obtenemos un nuevo código.
+
+Este nuevo código estará formado por $M'$ palabras. Podemos considerar sin pérdida de generalidad que $M'\geq \frac{M}{2}$ pues, en caso de no cumplirse esta desigualdad, basta con tomar las palabras con la primera cifra 1.
+
+Si a estas palabras les quitamos la primera cifra, su distancia mínima no cambia, puesto que la cifra que estamos quitando era una cifra común a todas ellas.
+
+Por último sólo nos queda comprobar que la distancia mínima entre estas palabras es $d$. Sabemos que la distancia mínima entre estas palabras tiene que ser mayor que $d$ puesto que proceden de un código con distancia mínima $d$.
+
+Por otro lado, si ninguna par de palabras estuviesen a distancia $d$, podríamos modificar una de las palabras forzando el acercamiento.
+
+\spart
+
+Dando por válido el enunciado del apartado anterior, aunque la demostración no sea lo bastante rigurosa, podemos ver que:
+\[A_2(n,d) = \max\{M \tq \exists \ (n,M,d)\text{-código binario}\}\]
+Una vez tenemos el código que da lugar a este máximo, podemos apoyarnos en el apartado anterior y obtener un $(n,M',d)$-código binario con $2M'\geq M$ lo que nos garantiza que
+\[A_2(n-1,d) = \max\{M \tq \exists \ (n-1,M,d)\text{-código binario}\} \geq \frac{M}{2} = A_2(n,d)\]
 \end{problem}
 
 
@@ -5152,6 +5191,41 @@ $0110011$.
 
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Lo que tenemos que hacer es colocar las cifras del mensaje recibido formando la estructura que caracteriza el código (descrito en \ref{def:codigo_hamming}) y comprobar que todos los círculos tienen paridad par.
+
+En cuanto la paridad de algún círculo no sea 0, podemos concluir que hay un error. Lo habremos detectado.
+
+Si queremos corregir el error, deberemos tratar de corregir la paridad de todos los círculos con el menor número de cambios posibles. Para ello basta con modificar el dígito que se encuentra en la intersección de los círculos con paridad incorrecta.
+
+Para el caso concreto que nos atañe tenemos:
+
+\begin{minipage}{0.57\textwidth}
+Todos los círculos contienen un número par de 1s de modo que el mensaje es correcto.
+
+\end{minipage}
+\begin{minipage}{0.42\textwidth}
+\begin{center}
+\inputtikz{ej_hamming_1}
+\end{center}
+\end{minipage}
+
+\spart
+
+\begin{minipage}{0.57\textwidth}
+El círculo superior y el de la izquierda tienen un número impar de 1s de modo que debemos cambiar el bit que aparece en la intersección de ambos círculos, haciendo que el código quede:
+\[0010011\]
+\end{minipage}
+\begin{minipage}{0.42\textwidth}
+\begin{center}
+\inputtikz{ej_hamming_2}
+\end{center}
+\end{minipage}
+
 \end{problem}
 
 
@@ -5165,10 +5239,30 @@ puedes decir sobre su capacidad para detectar errores de pesos
 superiores?
 
 \solution
+
+\doneby{Pedro}
+
+Si que puede detectar algunos errores triples, siempre que estos se compensen.
+
+Recordando la estructura del código:
+
+\begin{minipage}{0.57\textwidth}
+Si se produce un error en los bits $x_1,x_2$ y $x_3$ cada círculo sufrirá dos cambios lo que les permite mantener la paridad.
+
+
+Por otro lado, si todos los bits de un círculo cambian, el código tampoco será capaz de detectarlos pues ese círculo mantendrá la paridad (obtendremos su negación) y los otros dos círculos experimentarán cambios en dos bits.
+
+También se detectarán 4 errores si estos ocurren en las posiciones $x_4,x_5,x_6$ y $x_7$.
+\end{minipage}
+\begin{minipage}{0.42\textwidth}
+\begin{center}
+\inputtikz{hamming}
+\end{center}
+\end{minipage}
 \end{problem}
 
 \begin{problem}[9]
-\ppart Demuestra que si $C$ es un código binario perfecto de
+\ppart Demuestra que si $\algb{C}$ es un código binario perfecto de
 longitud $n$ con $d=7$, entonces $n=7$ o $n=23$.
 
 \ppart Construye  un código binario perfecto de longitud $n=7$ con
@@ -5176,15 +5270,48 @@ $d=7$. [Se puede también construir  un código binario perfecto de
 longitud $n=23$ con $d=7$, pero es más difícil. Es uno de los
 llamados Códigos de Golay.]
 \solution
+
+
 \end{problem}
 
-\begin{problem}[10] La cota de Hamming suele ser más precisa que la de Hamming, salvo <<para $q$ grande>>. Para verlo en un par de situaciones, llamamos, para $d=2t+1$, $$S_q(n,d):=q^{n-d+1}=q^{n-2t}\qquad \text{y} \qquad H_q(n,d):=\frac{q^n}{\sum_{i=0}^t \binom{n}{i}(q-1)^i}$$ respectivamente a las cota de Singleton y de Hamming.
+\begin{problem}[10] La cota de Singleton suele ser más precisa que la de Hamming, salvo <<para $q$ grande>>. Para verlo en un par de situaciones, llamamos, para $d=2t+1$, $$S_q(n,d):=q^{n-d+1}=q^{n-2t}\qquad \text{y} \qquad H_q(n,d):=\frac{q^n}{\sum_{i=0}^t \binom{n}{i}(q-1)^i}$$ respectivamente a las cota de Singleton y de Hamming.
 
 \ppart Demuestra, para $q=2$, que $H_2(n,d)\le S_2(n,d)$ cualesquiera que sean $n$ y $d=2t+1$.
 
 \ppart Caracteriza los pares $(q,n)$ para los que $S_q(n,3)<H_q(n,3)$.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Para comprobar $H_2(n,d) \leq S_2(n,d)$ nos basta con ver que
+\[4^{t} \leq \sum_{i=0}^t \binom{n}{i} = \frac{n!}{(t+1)!}\sum_{i=0}^t\binom{t}{i}\]
+
+Podemos ver que la suma de números combinatorios de la derecha se corresponde con la evaluación del polinomio $\frac{n!}{(t+1)!}(x+1)^t$ en $x=1$ que nos da $2^t$ con lo que llegamos a la desigualdad equivalente:
+\[4^t \leq \frac{n!}{(t+1)!}2^t \iff 2^t(t+1)! \leq n!\]
+
+Sabemos que $n>2t+1$ puesto que la distancia mínima ha de ser menor que $n$.
+
+Por tanto sabemos que:
+\[n! \geq (2t+1)! = (2t+1)2t! \geq (t+1)t!t! \geq (t+1)!t! \]
+
+Si conseguimos probar que $t! \geq 2^t$ habremos completado el ejercicio. No obstante, esto es sencillo de ver en cuanto $t>2$ puesto que a la izquierda multiplicamos $t$ veces el número 2 y a la derecha multiplicamos $t$ veces números mayores que el 2.
+
+A partir del caso $t=4$ es obvia la desigualdad. Los casos menores podemos probarlos directamente sobre la desigualdad inicial.
+
+\spart
+
+Como en el apartado anterior, la desigualdad que se pide se cumplirá siempre que:
+\[q^{2t} \leq \sum_{i=0}^1 \binom{n}{i}(q-1)^i=\frac{n!}{(t+1)!}\sum_{i=0}^1\binom{t}{i}(q-1)^i\]
+donde la parte de la derecha de la desigualdad se corresponde con la evaluación del polinomio $\frac{n!}{(t+1)!}(x+1)^t$ en $x=q-1$ que equivale a $\frac{n!}{(t+1)!}q^t$.
+
+Por tanto, la cota de Singleton será más restrictiva que la de Hamming siempe que
+\[q^{2t} \leq \frac{n!}{(t+1)!}q^t \iff q^t \leq \frac{n!}{(t+1)!}\]
+
+Por tanto $S_q(n,3)<H_q(n,3)$ siempre que
+\[q^t \leq \frac{6}{(t+1)!}\]
 \end{problem}
 
 \begin{problem}[11]
