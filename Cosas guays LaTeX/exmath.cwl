@@ -282,3 +282,7 @@
 \espLp#m
 \esplp#m
 \pnorm{arg0}#m
+\espell#m
+\espell[2]#m
+\spn#m
+\densein#m
