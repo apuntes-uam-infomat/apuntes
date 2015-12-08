@@ -5287,31 +5287,25 @@ llamados Códigos de Golay.]
 \spart
 
 Para comprobar $H_2(n,d) \leq S_2(n,d)$ nos basta con ver que
-\[4^{t} \leq \sum_{i=0}^t \binom{n}{i} = \frac{n!}{(t+1)!}\sum_{i=0}^t\binom{t}{i}\]
+\[4^{t} \leq \sum_{i=0}^t \binom{n}{i} = n! \sum_{i=0}^t\frac{1}{i!\cdot (n-i)!}\]
 
-Podemos ver que la suma de números combinatorios de la derecha se corresponde con la evaluación del polinomio $\frac{n!}{(t+1)!}(x+1)^t$ en $x=1$ que nos da $2^t$ con lo que llegamos a la desigualdad equivalente:
-\[4^t \leq \frac{n!}{(t+1)!}2^t \iff 2^t(t+1)! \leq n!\]
+Sabiendo que $n>d > 2t$ podemos escribir:
+\[ n! \sum_{i=0}^t\frac{1}{i!\cdot (n-i)!} =\sum_{i=0}^t\frac{n(n-1)...(n-i+1)}{i!}\]
 
-Sabemos que $n>2t+1$ puesto que la distancia mínima ha de ser menor que $n$.
+Como $n>2t+1$ sabemos que en el numerador tenemos más de $i$ términos, todos ellos mayores que $i$ por lo que la fracción será mayor que $i!$.
 
-Por tanto sabemos que:
-\[n! \geq (2t+1)! = (2t+1)2t! \geq (t+1)t!t! \geq (t+1)!t! \]
+Así tenemos
+\[n! \sum_{i=0}^t\frac{1}{i!\cdot (n-i)!} > \sum_{i=0}^t i! > 4^t\]
 
-Si conseguimos probar que $t! \geq 2^t$ habremos completado el ejercicio. No obstante, esto es sencillo de ver en cuanto $t>2$ puesto que a la izquierda multiplicamos $t$ veces el número 2 y a la derecha multiplicamos $t$ veces números mayores que el 2.
+Donde la última desigualdad es sencilla de comprobar.
 
-A partir del caso $t=4$ es obvia la desigualdad. Los casos menores podemos probarlos directamente sobre la desigualdad inicial.
+Es obvio que la exponencial de $t$ términos es mayor que $4^t$ a partir de $t=9$ y para valores más pequeños podemos comprobar que el sumatorio es mayor que la exponencial.
 
 \spart
 
-Como en el apartado anterior, la desigualdad que se pide se cumplirá siempre que:
-\[q^{2t} \leq \sum_{i=0}^1 \binom{n}{i}(q-1)^i=\frac{n!}{(t+1)!}\sum_{i=0}^1\binom{t}{i}(q-1)^i\]
-donde la parte de la derecha de la desigualdad se corresponde con la evaluación del polinomio $\frac{n!}{(t+1)!}(x+1)^t$ en $x=q-1$ que equivale a $\frac{n!}{(t+1)!}q^t$.
+Sabiendo que $d=2=2t+1 \implies t=1$, podemos ver que la desigualdad pedida se dará siempre que
+\[q^{2} \geq \sum_{i=0}^1 \binom{n}{i} = 1 + n\]
 
-Por tanto, la cota de Singleton será más restrictiva que la de Hamming siempe que
-\[q^{2t} \leq \frac{n!}{(t+1)!}q^t \iff q^t \leq \frac{n!}{(t+1)!}\]
-
-Por tanto $S_q(n,3)<H_q(n,3)$ siempre que
-\[q^t \leq \frac{6}{(t+1)!}\]
 \end{problem}
 
 \begin{problem}[11]
@@ -5352,7 +5346,7 @@ En este caso tendremos $t=\frac{n-1}{2}$ y sustituyendo en la igualdad tenemos:
 Tomando las indicaciones del apartado:
 \[2 = \frac{2^n}{\sum_{i=0}^t{n \choose i}} \iff \sum_{i=0}^t{2t+1 \choose i} = 2^{2t}\]
 
-TO BE CONTINUED...
+Sabiendo que la exponencial crece más rápido
 \end{enumerate}
 \end{problem}
 
@@ -5372,6 +5366,8 @@ errores, ?`se detectarán todos los errores dobles? Si no es así,
 ?`cuáles no se detectan?
 
 \solution
+
+\doneby{Pedro}
 
 La matriz comprobadora de paridad es una matriz tal que al multiplicar por la traspuesta de un vector de dimensión adecuada nos dará 0 si y sólo si el vector pertenece al código.
 
@@ -5397,6 +5393,20 @@ obtenemos sigue siendo lineal.
 binario.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Un código será lineal cuando puede verse como un espacio vectorial sobre $F_q$. Por tanto, si $\algb{C}$ es lineal, tendremos una serie de palabras que constituirán la base del código y que, junto con la palabra nula, nos permiten generar todas las palabras del código.
+
+Añadiendo un bit de control de paridad seguimos teniendo el elemento nulo y la base sigue generando todas las palabras, cada una de ellas ahora con su bit de paridad.
+
+Si teníamos dos elementos de la base con número impar de 1s, la suma de ambos tendrá un número par de 1s por lo que el bit de paridad pasará de ser 1 en ambos elementos de la base a ser 0 en el resultado final.
+
+\spart
+
+TODO
 \end{problem}
 
 \begin{problem}[14]
@@ -5411,11 +5421,48 @@ código MDS (un código lineal que satisface la cota de Singleton).
 \ppart ¿Cuántos elementos tiene $C$? ¿Cuántos elementos tiene el
 conjunto $\{x\in F_2^n \mid w(x) \text{ es impar}\}$?
 \solution
+
+
+\doneby{Pedro}
+
+\spart
+
+Sabemos que $F_2$ es un cuerpo y es evidente que las palabras de $\algb{C}$ forman un espacio vectorial pues si sumamos dos palabras de peso par, podremos calcular el peso de la resultante como:
+\[w(y)=w(x_1)+w(x_2) - 2w(x_1x_2)\]
+Es evidente ver que el peso de la palabra resultante será un número par y, por tanto, $y \in \algb{C}$
+
+La distancia mínima del código sabemos que tiene que ser menor que 2 puesto que la palabra nula y una cualquier con dos 1s están en el código.
+
+También sabemos que debe ser par y que será distinta de 0.
+
+Queda claro por tanto que la distancia mínima del código es 2.
+
+\spart
+
+La matriz $H$ será algo tan sencillo como un vector de 1s.
+
+Sabemos que esta matriz tiene dimensión $(n-k)\times n$ y, por tanto, la matriz $G$ tiene dimensión $k \times n$.
+
+En este caso particular tenemos que $n-k=1$ por lo que $k=1-n$. Así la matriz $g$ tendrá dimensión:
+\[(2n-1) \times n\]
+
+\spart
+
+Puesto que se trata de un código lineal, sabemos que tendrá $2^k$ elementos. En este caso concreto tendrá
+\[2^k = 2^{n-1} \text{ elementos}\]
+
+Al hablar del conjutno de elementos con peso impar estamos hablando del complementario del conjunto dado. Por tanto este conjunto tendrá:
+\[2^n-2^{n-1} = 2^{n-1}\text{ elementos.}\]
+
+Es decir, tendrá el mismo número de elementos.
+
 \end{problem}
 
 \begin{problem}[15] Demuestra que el dual del código de Hamming $Ham(2,q)$
 es un $[q+1,2,q]$-código.
 \solution
+
+
 \end{problem}
 
 
@@ -5443,6 +5490,44 @@ $
 G_3=\left[\begin{array}{ccccc} 1&2&4&0&3\\0&2&1&4&1\\2&0&3&1&4
 \end{array}\right].$
 \solution
+
+\doneby{Pedro}
+
+Lo único que tenemos que hacer es escribir las matrices $G$ en la forma estándar (como la identidad acompañada de algo), escribir la matriz $H$ correspondiente y contar el número de columnas independientes de la matriz $H$.
+
+Así tenemos:
+\[H_1=\left(\begin{array}{ccccccccccc}
+1 & 1 & 0 & 1 & 1 & 0 & 1 & 1 & 0 & 0 & 0\\
+1 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 1 & 0 & 0\\
+0 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 1
+\end{array}\right)\]
+
+Reescribiendo $G_2$ tenemos
+\[G_2=\left(\begin{array}{cccccc}
+1 & 0 & 0 & 2 & 1 & 0 \\
+0 & 1 & 0 & 2 & 0 & 1 \\
+0 & 0 & 1 & 2 & 1 & 2
+\end{array}\right) \implies H_2 = \left(\begin{array}{cccccc}
+1 & 1 & 1 & 1 & 0 & 0 \\
+2 & 0 & 2 & 0 & 1 & 0 \\
+0 & 2 & 1 & 0 & 0 & 1
+\end{array}\right)\]
+
+Para obtener $G_2$ realizamos las siguientes operaciones:
+\[C_1 = C_1-C_4-C_2, \text{ } C_3=C_3-C_1, \text{ } C_2=2C_2-2C_1\]
+
+Por último vamos a por $G_3$.
+\[G_3=\left(\begin{array}{ccccc}
+1 & 0 & 0 & 4 & 3 \\
+0 & 1 & 0 & 1 & 1 \\
+0 & 0 & 1 & 3 & 4
+\end{array}\right) \implies H_3=\left(\begin{array}{ccccc}
+1 & 4 & 2 & 1 & 0 \\
+2 & 4 & 1 & 0 & 1
+\end{array}\right)\]
+Para obtener $G_5$ realizamos las siguientes operaciones:
+\[C_2 = 2(C_2-2C_1+4C_4), \text{ } C_4 = C_4-4C_2, \text{ intercambio }C_3 \text{ con }C_4, \text{ } C_1=C_1+3C_3\]
 \end{problem}
 
 
