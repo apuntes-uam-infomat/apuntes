@@ -37,7 +37,7 @@ En un estudio de factores de riesgo en enfermedades coronarias, se dispone de da
  }
 \end{center}
 
-\includegraphics[scale=0.5]{img/pairs-heart.png}
+\includegraphics[width=13 cm]{img/pairs-heart.png}
 
 
 Ahora nos gustaría poder predecir si un nuevo individuo va a tener un infarto o no en función de su consumo de tabaco, colesterol, ...
@@ -83,7 +83,7 @@ $\Sigma_2=\left[
   \end{array} \right]$.}
 
 \begin{center}
-\includegraphics[width=11cm]{img/ReglaMahalanobis.png}
+\includegraphics[width=13 cm]{img/ReglaMahalanobis.png}
 \end{center}
 
 \end{example}
@@ -93,14 +93,14 @@ $\Sigma_2=\left[
 Vamos a suponer $Σ_1 = Σ_0$, que es cuando mejor funciona esta regla. Vamos a suponer que tenemos estos datos:
 
 \begin{center}
-\includegraphics[width=11cm]{img/ReglaFisherIntro.png}
+\includegraphics[width=13 cm]{pdf/tema4/_Fisher}
 \end{center}
 
 
 Y la idea intuitiva es construir una recta sobre la que proyectar, para construir 2 histogramas. Si nos dan un nuevo dato, lo clasificaremos en el histograma al que sea más probable que pertenezca.
 
 \begin{center}
-\includegraphics[width=11cm]{img/ReglaFisherIntuitiva.png}
+\includegraphics[width=13 cm]{img/ReglaFisherIntuitiva.png}
 \end{center}
 
 
@@ -110,12 +110,12 @@ Y la idea intuitiva es construir una recta sobre la que proyectar, para construi
 \begin{itemize}
   \item Una buena direcci\'{o}n debe separar bien los centros de los grupos. La distancia entre las medias $(a'\mu_0-a'\mu_1)^2 = a'Ba$, donde $B=(\mu_0-\mu_1)(\mu_0-\mu_1)'$, debe ser grande.
 
-\centerline{{\includegraphics[width=11 cm]{img/FisherNormales.png}}}
+\centerline{{\includegraphics[width=13 cm]{pdf/tema4/_Fisher-normales-1}}}
 
   \item La varianza de las proyecciones dentro de los grupos ($a'\Sigma a$) debe ser lo menor
   posible.
 
-\centerline{{\includegraphics[width=11 cm]{img/FisherNormales2.png}}}
+\centerline{{\includegraphics[width=13 cm]{pdf/tema4/_Fisher-normales-2}}}
 
 \end{itemize}
 
@@ -151,5 +151,159 @@ donde $ω=\Sigma^{-1}(\mu_1-\mu_0).$
 En caso de tener $ω'\left(x-\frac{\mu_0 + \mu_1}{2}\right)<0$, clasificaríamos en el grupo 2.
 \end{defn}
 
+\obs Esta regla funciona bien cuando $Σ_0 = Σ_1$, es decir, las nubes de puntos tienen la misma forma y orientación. ¿Qué ocurre cuando las matrices de covarianzas son distintas?
+
+\begin{center}
+\includegraphics[width=13 cm]{pdf/tema4/_sim-plot}
+\end{center}
+
+En la imagen vemos que la regla de Fisher (recta azul) no divide nada bien los datos. Por otro lado, vemos la división por la distancia de Mahalanobis (en rojo) que es mucho más adecuada.
+
+\begin{center}
+\includegraphics[width=13 cm]{pdf/tema4/_sim-plot-reglas}
+\end{center}
+
+
+\subsection{Validación del modelo}
+
+Acabamos de ver un ejemplo de un caso en el que vemos (a simple vista) que un modelo clasifica mejor que el otro. ¿Porqué sabemos que es mejor? Porque comete menos errores. Vamos a ver en esta sección cómo calcular errores.
+
+\centerline{{\includegraphics[width=13 cm]{pdf/tema4/_errores-1}}}
+
+\begin{defn}[Tasa de error aparente]
+$$\text{TEA}:=\frac{\text{Total de mal clasificados en la muestra}}{n}100\%.$$
+\end{defn}
+
+El problema de esta tasa de error es que infraestima la tasa de error. Esto se debe a que estamos utilizando los mismos puntos para construir el modelo y para evaluarlo. 
+
+La solución es la creación de particiones de train y de test. De esta manera utilizamos los datos de train para construir el modelo y el de test para evaluarlo. ¿Y cómo asegurar que la tasa de error no depende de las particiones construidas? No se puede, pero lo que podemos hacer es utilizar la Validación cruzada.
+
+\begin{defn}[Validación\IS cruzada]Omitimos un dato de los n observados y generamos la regla de clasificación con los n − 1 restantes. Clasificamos la observación apartada y repetimos el procedimiento para cada una de las observaciones.
+\end{defn}
+
 
 \section{Regresión logística}
+
+Vamos a recordar el ejemplo de infartos de miocardio y vamos a ver cómo clasifican los modelos de clasificación estudiados hasta ahora.
+
+En rojo vemos utilizando la distancia de Mahalanobis y en azul la regla de Fisher.
+\centerline{\includegraphics[width=13 cm]{pdf/tema4/_edadobesidad-reglas}}
+
+Vemos que ninguno de los 2 es bueno. Por ello, vamos a ver otro método de clasificación planteando  la clasificación como un problema de regresión múltiple. 
+
+No podemos utilizarlo como tal porque la variable regresora $Y_i$ es binaria y en la regresión múltiple era continua (más concretamente normal). Por ello, hay que buscar una alternativa.
+
+
+\subsection{Construcción del modelo}
+Las variables $Y_1,\ldots,Y_n$ son independientes y tienen distribución de Bernoulli. 
+
+Denotamos $p_i=\mathbb{P}(Y_i=1 \mid x_i)$. La probabilidad de ``éxito'' depende de las variables regresoras.
+
+Una relación lineal $p_i=\beta_0+\beta_1x_{i1}+\cdots+\beta_kx_{ik}$ no es adecuada\\ (¿por qué?)
+
+Suponemos que la relación entre $p_i$ y $x_i$ viene dada por 
+\[p_i = \frac{1}{1+e^{-\beta_0-\beta_1x_{i1}-\cdots-\beta_kx_{ik}}},\]
+es decir,
+\[p_i = F(\beta_0+\beta_1x_{i1}+\cdots+\beta_kx_{ik}),\]
+
+donde $F(x)=1/(1+e^{-x})$ es la \concept{Función\IS logística}.
+
+
+\obs 
+
+\begin{itemize}
+  \item \[F(-x) = \frac{1}{1+e^{x}} = \frac{e^{-x}}{1 + e^{-x}} = 1 - F(x)\]
+  \item \[F'(x) = \frac{e^{-x}}{(1+e^{-x})^2} = F(x)(1-F(x))\]
+  \item \[\log\frac{p_i}{1-p_i} = β'x_i\]
+\end{itemize}
+
+
+\begin{defn}[Razón\IS de probabilidades]
+Llamamos $O_i$ a la \textbf{razón de probabilidades} para la observación $i$:
+\[
+ O_i=\frac{p_i}{1-p_i} 
+\]
+\end{defn}
+\paragraph{Interpretación} El estado de las apuestas. 
+
+
+\paragraph{¿Cómo varía la razón de probabilidades si la variable regresora $x_{ij}$ se incrementa una unidad?}
+
+Si se cumple el modelo de regresión logística, entonces
+\[
+O_i =  e^{\beta_0  + \beta_1x_{i1} + \cdots + \beta_kx_{ik}}
+\]
+
+Con lo que la variación:
+
+\[
+\frac{O'_i}{O_i} = \frac{e^{\beta_0+\cdots+\beta_j(x+1)+\cdots+\beta_kx_{ik}}}{e^{\beta_0+\cdots+\beta_jx+\cdots+\beta_kx_{ik}}}= e^{\beta_j}.
+\]  
+Por tanto $e^{\beta_j}$ es la variación de la razón de probabilidades cuando la variable regresora $j$ se incrementa en una unidad y el resto de variables permanece constante. 
+
+
+\subsection{Estimación de los parámetros}
+
+
+Para estimar los parámetros se usa el método de máxima verosimilitud.
+
+
+
+Por ejemplo, si observamos los datos
+
+\begin{center}
+\begin{tabular}{c|ccc}
+$x_i$ & 2 & 1 & 3 \\  \hline
+$Y_i$ & 0 & 1 & 1
+\end{tabular}
+\end{center}
+
+entonces $\hat{\beta}_0$ y $\hat{\beta}_1$ son los valores que maximizan la función de verosimilitud
+
+%TODO: una pequeña explicación.
+
+\[
+L(\beta_0,\beta_1) = P(Y=0 \mid x = 2)P(Y=1 \mid x = 1)P(Y=1 \mid x = 3)
+\]
+\[
+L(\beta_0,\beta_1) = \left(1-\frac{1}{1+e^{-\beta_0-2\beta_1}}\right)
+\left(\frac{1}{1+e^{-\beta_0-\beta_1}}\right)
+\left(\frac{1}{1+e^{-\beta_0-3\beta_1}}\right)
+\]
+
+Se suelen aplicar métodos numéricos estándar de optimización ya que es difícil sacar los valores exactos.
+
+
+La fórmula general es:
+
+\[ L(β) = \prod_{i=1}^n p_i^{Y_i}(1-p_i)^{1-Y_i}\]
+
+De esta manera, cuando $Y_i = 0$, entonces nos quedamos con el término $(1-p_i)$. Por otro lado, cuando $Y_i = 1$, tenemos el término $p_i$.
+
+
+Vamos a derivar el logaritmos de la función de verosimilitud:
+
+\[
+l(β) = \log (L(β)) = \sum_{i=1}^n \left[ Y_i\log p_i + (1-Y_i)\log (1-p_i) \right]
+\]
+
+\[
+\grad l(β) = \sum_{i=1}^n \left[ \frac{Y_i}{p_i} p_i(1-p_i)x_i - \frac{1-Y_i}{1-p_i}p_i(1-p_i)x_i \right] = \sum_{i=1}^n\left[  \right] = \sum_{i=1}^n (y_i-p_i)x_i
+\]
+
+En esta última cuenta podemos ver la conveniencia de la función logística. En realidad, podríamos utilizar cualquier otra función $F:ℝ \to [0,1]$. Utilizando otras funciones, no se tendrían estas simplificaciones que hacen relativamente fácil el cálculo del E.M.V. de $\vec{β}$
+
+
+\paragraph{Conclusión:} $\hat{β}$ verifica:
+
+\[
+\sum(Y_i - \hat{p}_i)x_i = 0
+\]
+donde $p_i = \frac{1}{1 + e^{-\hat{β}'\vec{x}_i}}$
+
+\subparagraph{Relación con regresión simple}
+
+En regresión lineal simple, teníamos que el E.M.V. verifica: \[ \sum (Y_i - \hat{Y_i}) x_i = 0\] donde $\hat{Y_i} = \hat{β}'x_i$. 
+
+
+
