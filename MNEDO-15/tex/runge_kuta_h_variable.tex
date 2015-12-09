@@ -101,11 +101,11 @@ Por otro lado podemos comprobar que el criterio de la raíz \ref{theorem:criteri
 
 \section{Orden del método}
 Considerando un método Runge-Kutta general podemos escribir el residuo como:
-\[R_n = y(x_{n+1})-y(x_n)-h \sum_{i=1}^sb_iK_i(x_n,y(x_n),;h)\]
+\[R_n = y(x_{n+1})-y(x_n)-h \sum_{i=1}^sb_iK_i(x_n,y(x_n);h)\]
 
 Para escribirlo más comodamente definimos dos funciones:
 \[\begin{array}{l}
-F(h) = y(x_n+h)\\
+F(h) = y(x_{n+1}) = y(x_n+h)\\
 G(h) = y(x_n)+h \sum_{i=1}^sb_iK_i(x_n,y(x_n),;h)
 \end{array}\]
 
@@ -121,25 +121,36 @@ y(0)=y^0
 Así tenemos
 \[F(h)=y(x_n)+hy'(x_n)+\frac{h}{2}y''(x_n)+\frac{h^3}{3!}y'''(ε_n) = \atop y(x_n)+hf+\frac{h^2}{2}\left(f_x+f_y\cdot f\right)+\frac{h^3}{3!}y'''(ε_n)\]
 
+donde tanto la función $f$ como sus derivadas están evaluadas en $(x_n,y(x_n))$.
+
 Por definición de $K_i$ tenemos
-\[K_i(x_n,y(x_n);h) = f\left(x_n+c_ih,h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\]
-y derivando con respectoa $h$ tenemos:
-\[\frac{\partial K_i}{\partial h}(x_n,y(x_n);h) =c_if_x\left(x_n+c_ih,y(x_n) + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)+\atop f_y\left(x_n+c_ih,y(x_n)+h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)+h\sum a_{ij}\frac{\partial K_j}{\partial h}(x_j,y(x_j);h)\]
+\[K_i(x_n,y(x_n);h) = f\left(x_n+c_ih,y_n + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\]
+y derivando con respecto a $h$ tenemos:
+\[\frac{\partial K_i}{\partial h}(x_n,y(x_n);h) =c_if_x\left(x_n+c_ih,y(x_n) + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)+\atop f_y\left(x_n+c_ih,y(x_n)+h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)\]
 
 Si evaluamos ahora en $h=0$ tenemos
 \[\frac{\partial K_i}{\partial h}(x_n,y(x_n);0) = c_if_x\left(x_n,y(x_n)\right) + \sum_{j=1}^s a_{ij}f_y(x_n,y(x_n))f(x_n,y(x_n))\]
 
-Por otro lado, podemos calcular el desarrollo en Taylor de $G(h)$ obteniendo:
+Apoyándonos en esto es relativamente sencillo calcular el desarrollo de Taylor de $G(h)$, con lo que obtenemos:
 \[G(h)=y(x_n)+h\sum_{i=1}^sb_if() + h^2\sum_{i=1}^sb_ic_if_x()+h^2\sum_{i,j=1}^sb_ic_{ij}f_y()+\varphi(x_n,y(x_n),h)h^3\]
 siendo $f() = f(x_n,y(x_n))$.
 
-Igualando ...
+Nuestro objetivo es calcular el residuo y estimarlo como $O(h^p)$ siendo así $p$ el orden del método. Como ya hicimos al principio del curso, vamos a restar los desarrollos de Taylor con lo que obtenemos:
 
-\textcolor{red}{Malvado, completa esto que me he perdido}
+\[R_n=h\left(f-\sum_{i=1}^sb_if\right)+h^2\left(\frac{1}{2}f_x+\frac{1}{2}f_y\cdot f + \sum_{i=1}^sb_ic_if_x()+\sum_{i,j=1}^sb_ic_{ij}f_y()\right)+O(h^3)\]
+
+Si queremos que el residuo sea de orden 3 (y por tanto el método tenga orden de convergencia $p-1$) necesitamos que todos los términos distintos de $O(h^3)$ se cancelen en la fórmula del residuo.
+
+Así vemos que necesitamos:
+\begin{itemize}
+\item $\sum_{i=1}^sb_i = 1$, que ya nos garantizaba la consistencia
+\item $\sum_{i=1}^sb_ic_i = \frac{1}{2}$
+\item $\sum_{i,j=1}^sb_ic_{ij} = \frac{1}{2}$
+\end{itemize}
+
 
 En general, es más sencillo estudiar los métodos de Runge-Kutta sobre sistemas \concept{automatizados}.
 
-\textcolor{red}{Completar. Añadir algo acerca de que es automatizar un sistema}
 
 \obs Un método de Runge-Kutta no da, en general, la misma solución para el sistema $y'=f(x,y)$ que para el ``autonomizado'' $\overline{y}'= \left( \begin{array}{c}1 \\ f(\overline{y}) \end{array}\right)$
 
