@@ -91,7 +91,7 @@ Vamos a computar la suma $15 + 267$, sumando en columna:
 \end{example}
 
 \begin{defn}[Máquinas de Turing]
-Variantes (que dan lugar al mismo modelo de computación)  que cumplen:
+Variantes (que dan lugar al mismo modelo de computación) que cumplen:
 
 \begin{itemize}
 	\item El modelo ideal de computación sin limitaciones de tiempo ni de espacio.
@@ -103,11 +103,128 @@ Variantes (que dan lugar al mismo modelo de computación)  que cumplen:
 	\hline 
 	\end{tabular}
 	\end{center}
-	\item En las casillas encontramos símbolos pertenecientes a un alfabeto finito $S$. (En la actualidad, ese alfabeto finito sólo tiene 2 símbolos: $0$ y $1$, ya que todos los demás se pueden traducir en esos símbolos)
+	\item En las casillas encontramos símbolos pertenecientes a un alfabeto finito $S$. (En la actualidad, ese alfabeto finito sólo tiene 2 símbolos: $0$ y $1$, ya que todos los demás se pueden traducir en esos símbolos). En lugar de $0$, a veces utilizaremos $B$ denotando ``espacio en blanco''.
 	\item La máquina tiene un cabezal que lee los contenidos de la celda. Puede modificarlos o dejarlos igual.
 	\item Puede desplazarse a la casilla de la izquierda o a la de la derecha.
-	\item La acción de una \MT depende únicamente de el contenido de la casilla que está leyendo y de su estado interno.
+	\item La acción de una máquina de Turing depende únicamente de el contenido de la casilla que está leyendo y de su estado interno.
+	\item La computación se inicia con el cabezal sobre la casilla con el primer $1$.
+	\item Denotaremos los estados por $q_0, q_1, \hdots$.
 \end{itemize}
 
+\textbf{Acciones:} 
+\begin{itemize}
+	\item Acción $B$: Si la casilla que está leyendo tiene una $B$ o un $1$, la máquina borra y escribe $B$.
+	\item Acción $1$: La máquina borra y escribe un $1$.
+	\item Acción $D$: El cabezal puede moverse una casilla a la derecha.
+	\item Acción $I$: El cabezal puede moverse una casilla a la izquierda.
+\end{itemize}
+
+Un paso de la Máquina de Turing viene especificado por una cuaterna
+$$\left(q_i, S, A, q_j\right)$$
+donde
+\begin{itemize}
+	\item $q_i$: Estado inicial.
+	\item $S$: Símbolo.
+	\item $A$: Acción que toma.
+	\item $q_j$: Siguiente estado.
+\end{itemize}
+
+Una máquina de Turing viene definida por un número finito de cuaternas con la propiedad de que dos cuaternas distintas no pueden tener los dos primeros símbolos iguales.
 \end{defn}
+
+\begin{example}
+	Consideramos la siguiente máquina de Turing: 
+	\begin{enumerate}
+		\item $(q_0, 1, B, q_1)$
+		\item $(q_1, B, D, q_0)$
+	\end{enumerate}
+	
+	Averiguar que hace con el siguiente input:
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline 
+			B & B & 1 & 1 & 1 & B & 1 & B & B & B & $\hdots$\\
+			\hline 
+		\end{tabular}
+	\end{center}
+	
+	\begin{enumerate}
+		\item \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline 
+			B & B & B & 1 & 1 & B & 1 & B & B & B & $\hdots$\\
+			\hline
+		\end{tabular}\\
+		\begin{tabular}{c c c c c c c c c c c }
+			&  &  & \ $\uparrow$ & \ $\uparrow$  &  &  &  &  &  & \\
+			&  &  & $q_1$ & $q_0$  &  &  &  &  &  & \\
+		\end{tabular}
+		\item \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline 
+			B & B & B & B & B & B & 1 & B & B & B & $\hdots$\\
+			\hline
+		\end{tabular}\\
+		\begin{tabular}{c c c c c c c c c c c }
+			&  &  &  &  &  &  &  & \ $\uparrow$ &  & \\
+			&  &  &  &  &  &  &  & $q_0$ &  & \\
+		\end{tabular}
+		
+		Como no hay ninguna cuaterna $(q_0, B, \hdots)$, la máquina se detiene.
+	\end{enumerate}
+\end{example}
+
+\begin{example}
+	Extendemos el alfabeto a $S=\{B, 1, +\}$
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+			\hline 
+			B & 1 & 1 & 1 & $+$ & 1 & 1 & B & $\hdots$\\
+			\hline 
+		\end{tabular}
+		
+	\begin{tabular}{c c c c c c c c c c c}
+		  \ $\uparrow$ &  &  &  &  &  & &  & &&  \\
+		  $q_0$ &  &  &  &  &  &  &  & & &\\
+	\end{tabular}
+	\end{center}
+	
+	La máquina de Turing es
+	\begin{itemize}
+		\item $(q_0, 1, B, q_0)$
+		\item $(q_0, B, D, q_1)$
+		\item $(q_1, 1, D, q_1)$
+		\item $(q_1, +, 1, q_2)$
+	\end{itemize}
+	
+	El estado final es 
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline 
+			B & B & B & 1 & 1 & 1 & 1 & 1 & B & $\hdots$\\
+			\hline 
+		\end{tabular}
+		
+		\begin{tabular}{c c c c c c c c c c c c}
+			&  &  &  &  &  & $\uparrow$ &  & & & & \\
+			&  &  &  &  & &  $q_2$  &  &  & & & \\
+		\end{tabular}
+	\end{center}
+	
+	La máquina ha sumado $3+2$, increíble.
+\end{example}
+
+\paragraph{Test de Church-Turing} \mbox{}
+
+Sea $f:A\subset\nat^k\to \nat$ calculable mediante un algoritmo. La clase (informal) de todas las funciones coincide exactamente con la clase de las funciones recursivas, o equivalentemente, con las funciones cuyos valores pueden calcularse por MT.
+
+
+\begin{theorem}
+	Las funciones $f:A\subset\nat^k\to \nat$ $(k=0,1,2,\hdots)$, calculables por MT son exactamente las funciones recursivas.
+\end{theorem}
+
+\begin{example}
+	Del uso de la tesis de Church. Los primos $P$ forman un conjunto recursivo, o equivalentemente, hay una MT que determina, para cada $n\ge2$, si $n\in P$ o $n\in P^c$.
+	``Dem'': Dado $n$, calculamos $\frac{n}{m}$ para todo $2\le m\le \sqrt{n}$. Si algún resto da $0$, entonces $n\in P^c$. Si no, $n\in P$. Como existe un algoritmo, por las tesis de Church-Turing, hay una MT que decide si $n\in P$ o $n\in P^c \forall n\ge 2$. Una demostración consistiría en dar una lista de cuaternas que deciden si $n\in P$  $n\notin P$.
+\end{example}
+
+
 
