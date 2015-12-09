@@ -22,6 +22,14 @@
 	\message{Loading Sans-Serif fonts}
 }
 
+\DeclareOption{english}{
+	\def\@babel@load{\RequirePackage[english]{babel}}
+}
+
+\DeclareOption{spanish}{
+	\def\@babel@load{\RequirePackage[spanish,es-noquoting,es-noshorthands]{babel}}
+}
+
 \def\@exmathload{\RequirePackage{exmath}}
 
 \DeclareOption{noprobframes}{
@@ -30,7 +38,7 @@
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
 
-\ExecuteOptions{sansserif}
+\ExecuteOptions{sansserif,spanish}
 \ProcessOptions
 
 \PassOptionsToClass{\@fontsizeopt}{report}
@@ -43,7 +51,7 @@
 \RequirePackage{titling} % Para poder referenciar \thetitle, \thedate, etc.
 \RequirePackage{fancyhdr} % Cabeceras de página
 \RequirePackage{lastpage} % Módulo para añadir una referencia a la última página
-\RequirePackage[spanish,es-noquoting,es-noshorthands]{babel} % Cadenas de LaTeX traducidas al español
+\@babel@load
 \RequirePackage{amsthm} % Paquete de matemáticas
 \RequirePackage{framed} % Marcos
 \RequirePackage{mdframed} % Más marcos
