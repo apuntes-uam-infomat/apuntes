@@ -98,3 +98,161 @@ Aplicando el criterio de consistencia \ref{theorem:consist_iif_relaciones} vemos
 \[\sum_{i=1}^sb_i = 1\]
 
 Por otro lado podemos comprobar que el criterio de la raíz \ref{theorem:criterio_raiz} siempre se satisface para los métodos Runge-Kutta lo que nos garantiza que siempre serán 0-estables.
+
+\section{Orden del método}
+Considerando un método Runge-Kutta general podemos escribir el residuo como:
+\[R_n = y(x_{n+1})-y(x_n)-h \sum_{i=1}^sb_iK_i(x_n,y(x_n),;h)\]
+
+Para escribirlo más comodamente definimos dos funciones:
+\[\begin{array}{l}
+F(h) = y(x_n+h)\\
+G(h) = y(x_n)+h \sum_{i=1}^sb_iK_i(x_n,y(x_n),;h)
+\end{array}\]
+
+de modo que el residuo queda escrito como
+\[R_n=F(h)-G(h)\]
+
+Consideramos también un problema de valor inicial genérico de la forma:
+\[\begin{array}{l}
+y'=f(x,y(x))\\
+y(0)=y^0
+\end{array}\]
+
+Así tenemos
+\[F(h)=y(x_n)+hy'(x_n)+\frac{h}{2}y''(x_n)+\frac{h^3}{3!}y'''(ε_n) = \atop y(x_n)+hf+\frac{h^2}{2}\left(f_x+f_y\cdot f\right)+\frac{h^3}{3!}y'''(ε_n)\]
+
+Por definición de $K_i$ tenemos
+\[K_i(x_n,y(x_n);h) = f\left(x_n+c_ih,h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\]
+y derivando con respectoa $h$ tenemos:
+\[\frac{\partial K_i}{\partial h}(x_n,y(x_n);h) =c_if_x\left(x_n+c_ih,y(x_n) + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)+\atop f_y\left(x_n+c_ih,y(x_n)+h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)+h\sum a_{ij}\frac{\partial K_j}{\partial h}(x_j,y(x_j);h)\]
+
+Si evaluamos ahora en $h=0$ tenemos
+\[\frac{\partial K_i}{\partial h}(x_n,y(x_n);0) = c_if_x\left(x_n,y(x_n)\right) + \sum_{j=1}^s a_{ij}f_y(x_n,y(x_n))f(x_n,y(x_n))\]
+
+Por otro lado, podemos calcular el desarrollo en Taylor de $G(h)$ obteniendo:
+\[G(h)=y(x_n)+h\sum_{i=1}^sb_if() + h^2\sum_{i=1}^sb_ic_if_x()+h^2\sum_{i,j=1}^sb_ic_{ij}f_y()+\varphi(x_n,y(x_n),h)h^3\]
+siendo $f() = f(x_n,y(x_n))$.
+
+Igualando ...
+
+\textcolor{red}{Malvado, completa esto que me he perdido}
+
+En general, es más sencillo estudiar los métodos de Runge-Kutta sobre sistemas \concept{automatizados}.
+
+\textcolor{red}{Completar. Añadir algo acerca de que es automatizar un sistema}
+
+\obs Un método de Runge-Kutta no da, en general, la misma solución para el sistema $y'=f(x,y)$ que para el ``autonomizado'' $\overline{y}'= \left( \begin{array}{c}1 \\ f(\overline{y}) \end{array}\right)$
+
+\textbf{Ejercicio de examen: Si un sistema cumple $c+i = \sum_{j=1}^sa_{ij}$ entonces la solución del sistema y la del automatizado coinciden}
+
+\subsection{Barreras de Butcher}
+\begin{theorem}
+Un método de Runge-Kutta explícito de $s$ etapas no puede tener orden mayor que $s$
+\end{theorem}
+\begin{proof}
+Consideramos el método PVI:
+\[\begin{array}{l}
+y'=y \text{ con } y\in [0,b]\\
+y(0)=1
+\end{array}\text{ cuya solución es } y=e^x \text{ con } x\in [0,\log(b)]\]
+
+En esta ocasión podemos calcular el residuo como
+\[R_n=y(x_{n+1})-y(x_n)-h\sum_{i=1}^sb_iK_i(x_n,y(x_n);h)\]
+
+Nuevamente definimos las funciones $F$ y $G$:
+\[\begin{array}{l}
+F(h) = y(x_n+h)\\
+G(h) = y(x_n)+h \sum_{i=1}^sb_iK_i(x_n,y(x_n),;h)
+\end{array}\]
+
+de modo que el residuo queda escrito como
+\[R_n=F(h)-G(h)\]
+
+Por Taylor podemos ver que
+\[F(x_n+h)=f(x_n)+\sum_{j=1}^p\frac{\partial^j F}{\partial h^j}(x_n)\frac{h^p}{j!} + O(h^3)\]
+Pero sabemos que
+\[F(x_n+h)=e^{x_n+h}=e^{x_n}e^h \implies \frac{\partial^p F}{\partial h^p}(x_n)=e^{x_n}=y(x_n)\]
+
+Combinando estas ecuaciones podemos escribir
+\[F(x_n+h)=y(x_n)+\sum_{j=1}^p \frac{h^j}{j!}y(x_n) + O(h^3)\]
+
+Por otro lado tenemos
+\[\left.\frac{\partial^p G}{\partial h^p}\right|_{h=0} = \left. p\sum_{j=1}^sb_{j_1}K_{j_1}^{(p-1)}\right|_{h=0}\]
+siendo
+\[K_{j_1}=\left.(p-1)\sum_{j_2=1}a_{j_1j_2}K_{j_2}^{(p-2)}\right|_{h=0} = \left.(p-1)!\sum_{j_1h_2...j_p}^2a_{j_1j_2}\cdots a_{j_{p-1}j_p} K_{j_p}^{(0)}\right|_{h=0}\]
+Una vez conocemos la fórmula de las derivadas, podemos escribir el desarrollo de Taylor de $G(h)$ que nos queda:
+\[G(h)=y(x_n)+y(x_n)\sum_{j=1}^ph^j\sum_{j_1,...,j_p=1}^sb_{ij}a_{j_1j_2}\cdots a_{j_{p-1}j_p} + O(h^{p+1})\]
+
+Una vez tenemos los desarrollos de Taylor de $G(h)$ y de $F(h)$ podemos calcular la diferenia entre ambos, lo que nos permitirá conocer el residuo.
+
+Si tuviéramos que el residuo tiene orden mayor que $p$, por ejemplo $p+1$ tendríamos
+\[F(h)-g(h) = O(h^{p+1})\implies p!\sum_{j_1,...,j_p=1}a_{j_1j_2}\cdots a_{j_{p-1}j_p} = 1\]
+
+Para que sea $1$, como poco debemos evitar que los $a_{j_i,j_{i+1}}$ sean nulos.
+
+Es obvio entonces que uno de los sumandos ha de ser distinto de 0. Para ese sumando, puesto que la matriz de las $a_{ij}$ es triangular inferior, necesitamos que
+\[j_1>j_2>...>j_p\]
+Pero la matriz tiene tamaño $s$. Es evidente por tanto que si llegamos a tener un $p$ mayor que $s$ será imposible satisfacer la relación, con lo que todos los términos del sumatorio serán nulos y por tanto el sumatorio también.
+
+\end{proof}
+
+Este teorema nos pone una cota muy amplia que, a menudo, no se alcanza. Hay otros resultados para casos conretos que quedan recogidos por la siguiente proposición
+\begin{prop}
+\begin{enumerate}
+\item Con $s=1,2,3,4$ se puede conseguir orden $1,2,3,4$ respectivamente.
+\item Con $p=5$ no existe un método RK explícito con orden $p$
+\item Con $p=\geq 7$ no existe un método RK explícito con orden $p$ con $p=s+1$
+\item Con $p\geq 8$ no existe un método RK explíito de orden $p$ con $s=p+1$.
+\end{enumerate}
+\end{prop}
+
+\section{A-estabilidad}
+Vamos a ver cómo se aplica la definición de A-estabilidad a los métodos Runge-Kutta.
+
+Si vamos a resolver un problema del tipo $y'=λy$ con $λ\in \cplex$ empleando un método Runge-Kutta, tendremos:
+\[K_i=f\left(x_n+c_ih,y_n+h\sum_{j=1}^sa_{ij}K_j\right)\]
+\[y_{n+1}=y_n+h\sum_{i=1}^sb_iK_i\]
+
+que es equivalente a escribir:
+\[Y_i=y_n+h\sum_{j=1}^sa_{ij}f(x_n+c_jh,Y_j)\]
+\[y_{n+1}=y_n + h \sum_{i=1}^sb_if(x_n+c_ih,Y_i)\]
+
+Trabajando con vectores definidos en $\real^s$ podemos escribir:
+\[\overline{Y}=y_ne+hλA\overline{Y} \text{ siendo } e=(1,...,1)\in \real^s\]
+\[y_{n+1}=y_n+hλb^T\overline{Y}\]
+
+Por definición, teníamos que el dominio de estabilidad lineal es:
+\[D = \{z=hλ \tq |R(z)|<1\}\]
+
+En nuestro caso tendremos
+\[R(λh) = 1+λhb^t(1-λhA)^{-1}e\]
+
+No obstante, para los métodos Runge-Kutta esta definición se acompaña de cierta precisión, que recoge el siguiente lemma:
+\begin{lemma}
+Para todo método Runge-Kutta se tiene que $R(z) \in \mathbb{P}_{S/S}$ y si el método es explícito, entonces $R(z) \in \mathbb{P}_S$.
+
+Aquí $\mathbb{P}_S$ es el conjunto de los poliniomios de grado menor o igual que $S$ y $\mathbb{P}_{S/S}$ el conjunto de funciones racionales $\frac{p}{q}$ con $p,q \in \mathbb{P}_S$
+\end{lemma}
+\begin{proof}
+Recordando la definición de matriz inversa tenemos:
+\[(1-za)^{-1}=\frac{\text{adj}(1-zA)^T}{det(1-zA)}\]
+
+Los elementos de $(1-zA)$ son lineales. El adjunto pertenece a $\mathbb{P}_{S-1}$ por lo que pertenece a $\mathbb{P}_S$.
+
+Si el método es explícito, el determinante es 1.
+\end{proof}
+\begin{corol}
+Ningún RK explícito es A-estable.
+\end{corol}
+
+\begin{lemma}
+Sea $R(z)$ una función racional no constante entonces
+\[|R(z)| < 1 \ \forall z \in \cplex^- \iff \text{ los polos de R tienen parte real positiva y } |R(t)| < 1 \ \forall t \in \real\]
+\end{lemma}
+\begin{proof}
+Si $|R(z)|<1$ en $\cplex^-$ los polos sólo pueden estar en $\cplex^+$ y, por continuidad, sabemos que $|R(z)|\leq1$ en $\overline{\cplex}$ lo que implica que $|R(t)|\leq 1 \ \forall t \in \real$.
+
+Si todos los polos tienen parte real positiva, entonces el máximo y el m'inimo se alcanzan en la frontera.
+
+%TODO completar la ultima afirmación que no la veo clara.
+\end{proof}
