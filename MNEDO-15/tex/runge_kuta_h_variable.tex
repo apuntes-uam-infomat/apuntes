@@ -148,9 +148,17 @@ Así vemos que necesitamos:
 \item $\sum_{i,j=1}^sb_ic_{ij} = \frac{1}{2}$
 \end{itemize}
 
+Por otra parte, si consideramos el problema $y'(x)=1, \ x\in [0,b], \ y(0)=0$ cuya solución es la función identidad se tiene que
+\[R_n=h\left( 1 - \sum_{i=1}^sb_i\right)\]
+Por consiguiente, si $\sum_{i=1}^sb_i\neq 1$ el método no tiene orden de consistencia 1.
 
-En general, es más sencillo estudiar los métodos de Runge-Kutta sobre sistemas \concept{automatizados}.
+De manera análoga se demuestra que las condiciones que acabamos de ver son necesarias para tener orden de consistencia de 2.
 
+Una vez llegados a este punto el lector puede convencerse de que calcular condiciones de orden para un método de Runge-Kutta general es una tarea ardua. Así que vamos a simplificar un poco las cosas.
+
+Cualquier problema de valor inicial puede escribirse en \concept{forma autónoma} a costa de aumentar la dimensión del espacio. En efecto, si definimos
+\[\overline{y}(x)=\left(\begin{array}{c} x \\ y(x)\end{array}\right), \ \ \tilde{y}^0 = \left(\begin{array}{c} 0 \\ y(0)\end{array}\right), \ \ \overline{f}(\overline{y}(x)) = \left(\begin{array}{c} 1 \\ f(x,y(x))\end{array}\right)\]
+el problema autónomo es equivalente al original.
 
 \obs Un método de Runge-Kutta no da, en general, la misma solución para el sistema $y'=f(x,y)$ que para el ``autonomizado'' $\overline{y}'= \left( \begin{array}{c}1 \\ f(\overline{y}) \end{array}\right)$
 
@@ -162,37 +170,37 @@ Un método de Runge-Kutta explícito de $s$ etapas no puede tener orden mayor qu
 \end{theorem}
 \begin{proof}
 Consideramos el método PVI:
-\[\begin{array}{l}
+\[\left\{\begin{array}{l}
 y'=y \text{ con } y\in [0,b]\\
 y(0)=1
-\end{array}\text{ cuya solución es } y=e^x \text{ con } x\in [0,\log(b)]\]
+\end{array}\right.\text{ cuya solución es } y=e^x \text{ con } x\in [0,\log(b)]\]
 
-En esta ocasión podemos calcular el residuo como
+Como siempre, si aplicamos un método de Runge-Kutta genérico tendremos que el residuo es:
 \[R_n=y(x_{n+1})-y(x_n)-h\sum_{i=1}^sb_iK_i(x_n,y(x_n);h)\]
 
 Nuevamente definimos las funciones $F$ y $G$:
 \[\begin{array}{l}
 F(h) = y(x_n+h)\\
-G(h) = y(x_n)+h \sum_{i=1}^sb_iK_i(x_n,y(x_n),;h)
+G(h) = y(x_n)+h \sum_{i=1}^sb_iK_i(x_n,y(x_n);h)
 \end{array}\]
 
 de modo que el residuo queda escrito como
 \[R_n=F(h)-G(h)\]
 
 Por Taylor podemos ver que
-\[F(x_n+h)=f(x_n)+\sum_{j=1}^p\frac{\partial^j F}{\partial h^j}(x_n)\frac{h^p}{j!} + O(h^3)\]
+\[F(x_n+h)=F(x_n)+\sum_{j=1}^p\frac{\partial^j F}{\partial h^j}(x_n)\frac{h^p}{j!} + O(h^3)\]
 Pero sabemos que
 \[F(x_n+h)=e^{x_n+h}=e^{x_n}e^h \implies \frac{\partial^p F}{\partial h^p}(x_n)=e^{x_n}=y(x_n)\]
 
-Combinando estas ecuaciones podemos escribir
+Atendiendo a esta propiedad que acabamos de mencionar podemos escribir:
 \[F(x_n+h)=y(x_n)+\sum_{j=1}^p \frac{h^j}{j!}y(x_n) + O(h^3)\]
 
 Por otro lado tenemos
-\[\left.\frac{\partial^p G}{\partial h^p}\right|_{h=0} = \left. p\sum_{j=1}^sb_{j_1}K_{j_1}^{(p-1)}\right|_{h=0}\]
+\[\left.\frac{\partial^p G}{\partial h^p}\right|_{h=0} = \left. p\sum_{j_1=1}^sb_{j_1}K_{j_1}^{(p-1)}\right|_{h=0}\]
 siendo
 \[K_{j_1}=\left.(p-1)\sum_{j_2=1}a_{j_1j_2}K_{j_2}^{(p-2)}\right|_{h=0} = \left.(p-1)!\sum_{j_1h_2...j_p}^2a_{j_1j_2}\cdots a_{j_{p-1}j_p} K_{j_p}^{(0)}\right|_{h=0}\]
 Una vez conocemos la fórmula de las derivadas, podemos escribir el desarrollo de Taylor de $G(h)$ que nos queda:
-\[G(h)=y(x_n)+y(x_n)\sum_{j=1}^ph^j\sum_{j_1,...,j_p=1}^sb_{ij}a_{j_1j_2}\cdots a_{j_{p-1}j_p} + O(h^{p+1})\]
+\[G(h)=y(x_n)+y(x_n)\sum_{j=1}^p\frac{h^j}{j!}\sum_{j_1,...,j_p=1}^sb_{ij}a_{j_1j_2}\cdots a_{j_{p-1}j_p}K_{j_p}^{(0)} + O(h^{p+1})\]
 
 Una vez tenemos los desarrollos de Taylor de $G(h)$ y de $F(h)$ podemos calcular la diferenia entre ambos, lo que nos permitirá conocer el residuo.
 
@@ -207,12 +215,14 @@ Pero la matriz tiene tamaño $s$. Es evidente por tanto que si llegamos a tener 
 
 \end{proof}
 
-Este teorema nos pone una cota muy amplia que, a menudo, no se alcanza. Hay otros resultados para casos conretos que quedan recogidos por la siguiente proposición
+
 \begin{prop}
+El teorema anterior nos pone una cota muy amplia que, a menudo, no se alcanza. En general se tiene que:
+
 \begin{enumerate}
 \item Con $s=1,2,3,4$ se puede conseguir orden $1,2,3,4$ respectivamente.
 \item Con $p=5$ no existe un método RK explícito con orden $p$
-\item Con $p=\geq 7$ no existe un método RK explícito con orden $p$ con $p=s+1$
+\item Con $p\geq 7$ no existe un método RK explícito con orden $p$ con $p=s+1$
 \item Con $p\geq 8$ no existe un método RK explíito de orden $p$ con $s=p+1$.
 \end{enumerate}
 \end{prop}
