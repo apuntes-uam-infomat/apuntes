@@ -306,4 +306,154 @@ donde $p_i = \frac{1}{1 + e^{-\hat{β}'\vec{x}_i}}$
 En regresión lineal simple, teníamos que el E.M.V. verifica: \[ \sum (Y_i - \hat{Y_i}) x_i = 0\] donde $\hat{Y_i} = \hat{β}'x_i$. 
 
 
+\obs
+
+\begin{enumerate}
+  \item Recordamos que en el caso unidimensional, el E.M.V. tiene una distribución de media el valor verdadero y varianza $\frac{1}{I_F}$ donde $I_F$ es la información de Fisher y se calculaba derivando 2 veces la verosimilitud (más o menos)
+
+  En el caso multidimensional, tenemos:
+
+  \[
+  \hat{B} \equiv N_{k+1}\left( β,(X'\hat{W}X)^{-1}\right)
+  \]
+
+  Teniendo \[\hat{W} = \begin{pmatrix}\hat{p_1}(1-\hat{p_1}) & 0 & \dots & \dots \\ 0 & \hat{p_2}(1-\hat{p_2}) & \dots & \dots \\ \vdots &\ddots & & \vdots \\ 0 & \dots & 0 & \hat{p_n}(1-\hat{p_n})
+   \end{pmatrix}\]
+  y siendo $X$ la matriz de diseño.
+  \item Desviaciones:
+
+    \[D_i^2 = -2\left[ Y_i\log \hat{p_i} + (1-\hat{p}_i)\log(1-\hat{p}_i)\right] \]
+
+  $D_i$ mide la bondad de ajuste del modelo a la observación $i$. 
+
+  \subitem $Y_i = 1 \to D_i^2 = -2\log \hat{p}_i$. De esta manera, si $\hat{p}_i \to 0$, entonces $D_i^2 \to ∞$, cosa que tiene toda la lógica del mundo. Si el modelo me da muy poca probabilidad de clasificarlo como enfermo, siendo enfermo entonces estoy muy desviado y el modelo se ajusta mal para esa observación. Si por el contrario, $\hat{p}_i \to 1 \implies D_i^2 \to 0$, es decir, si me da mucha probabilidad, entonces hay muy poca desviación.
+
+  \item Todas las consideraciones anteriores sobre las desviaciones se podrían haber hecho sin multiplicarlo por el 2. Vamos a ver porqué aparece.
+
+  Maximizar $l(β)$ es lo mismo que minimizar $-2·l(β)$. 
+
+  \begin{defn}[Desviación\IS residual]
+    Vemos que cada sumando de $l(β)$ el $D_i^2$ correspondiente multiplicado por $-2$, es decir:
+    \[
+      -2 l(β) = \sum D_i^2 = D^2
+    \]
+    Este sumatorio es la desviación residual
+  \end{defn}
+  \obs Igual que en regresión múltiple minimizábamos la suma de los residuos, en este, el E.M.V. minimiza la desviación residual. Análogamente, si el modelo tiene demasiadas variables esta desviación se reduce y provoca que demasiadas variables reduzcan este valor. Lo mismo ocurría con el coeficiente de determinación ajustado.
+
+  La solución es construir una ``desviación residual ajustada'' que penalice los modelos complicados.
+
+  \subitem Utilizamos el \concept{Criterio\IS de Información de Akaike (AIC)} 
+
+    \[AIC = D^2 + 2(k+1)\]
+
+    \begin{proof}
+      Si alguien está interesado en saber cuál es la justificación teórica del sumando ``2(k+1)'', puede buscar el artículo de Akaike en el que se explica, porque es algo que ni el profesor sabe bien.
+    \end{proof}
+\end{enumerate}
+
+\begin{example}
+
+\begin{lstlisting}[style=mystyle]
+# Numero de observaciones
+n = 100
+
+# Parametros
+beta0 = 0
+beta1 = 3
+
+# Genera los datos
+x = rnorm(n)
+p = 1/(1+exp(-beta0-beta1*x))
+y = rbinom(n,1,p)
+
+# Ajusta el modelo
+reg = glm(y~x,family=binomial)
+summary(reg)
+
+# # # # Y obtenemos: # # # #
+
+
+Deviance Residuals:
+    Min       1Q   Median       3Q      Max
+-1.8340  -0.7598  -0.1568   0.7623   2.4224
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)
+(Intercept)  -0.1157     0.2585  -0.447    0.655
+x             2.7083     0.5854   4.627 3.71e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 137.628  on 99  degrees of freedom
+Residual deviance:  90.396  on 98  degrees of freedom
+AIC: 94.396
+
+Number of Fisher Scoring iterations: 5
+
+\end{lstlisting}
+
+\begin{itemize}
+  \item Los errores típicos son los elementos de la diagonal de la matriz $X'\hat{W}X$.
+  \item Ejemplos:
+  \subitem $H_0 : β_0 = 0$
+
+  Vemos el valor $-0.447$ y lo comparamos con la tabla de la normal, o en su defecto cogemos el p-valor $0.655$ y no rechazamos la hipótesis (cosa que está bien)
+
+  \subitem  Para el $IC(β_1)$
+
+  \[
+    IC(β_1) = [2.70 \mp \underbrace{z_{α/2}}_{1.96}0.5859] = 
+  \]
+
+  ¿Y porqué utilizamos la $N$ y no una $t$ como siempre? 
+
+  %TODO: contestar
+
+  \item Como en este caso $k=1$, vemos que $AIC = 4 + (\text{Resudial deviance}) = 4+D^2$
+  \item ¿Qué es la ``Null deviance''? 
+
+    \begin{defn}[Null\IS deviance]
+    Tomando $H_0 : β_1 = ... = β_k = 0$, la ``Null deviance'' es $D_0^2$ para este modelo reducido.
+    \end{defn}
+
+\end{itemize}
+
+\end{example}
+
+\subsection{Contraste de un modelo reducido}
+
+Modelo completo ($M$) y un modelo reducido ($M_0$) que procede de imponer $p$ restricciones en el modelo completo y tenemos el contraste $H_0 : M_0$ es cierto.
+
+Vamos a estudiar $D_0^2 - D^2$ (que siempre es negativo, ya que al aumentar el número de variables el máximo del E.M.V. es mayor)
+
+\[
+D_0^2 - D^2  = -2 \log L(\hat{β}^{(0)}) + 2 \log L(\hat{β}) = -2\log\frac{L(\hat{β}^{(0)})}{L(\hat{β})}\] 
+
+Esto es un \concept{Cociente\IS de verosimilitudes}. 
+
+Llamamos $\Lambda = \frac{L(\hat{β}^{(0)})}{L(\hat{β})}$ y además sabemos que $$-2\log\Lambda\xrightarrow[H_0]{d}\chi^2_p$$
+
+
+¿Porqué sabemos que se distribuye como una $\chi^2$? Este es un resultado visto en \cite[IV.4.3]{ApuntesEstI}.
+
+Entonces, la región de rechazo es: \[R = \{D^2_0 - D^2 > \chi^2_{p;α}\}\]
+
+
+Vamos a verlo en el ejemplo de la salida de $R$.
+
+$D_0 = 137.628$, con lo que $D_0^2 - D^2  = 47.2$ y $p = 99-98 = 1$, entonces:
+
+\[
+R = \{47.2 > \chi^2_{1;0.05}\}\to \text{ p-valor } \simeq 0
+\]
+
+\paragraph{Conclusión}
+
+Para contrastar $H_0 : β_j = 0$ tenemos 2 posibilidades. La primera es el test de ``Wald'' que es el que hace $R$ pero también podemos construir un test de razón de verosimilitudes, que es lo que acabamos de hacer. Como en el ejemplo de $R$ hay 2 coeficientes, $M_0$ es sólamente $β_1 = 0$.
+
+
+
 
