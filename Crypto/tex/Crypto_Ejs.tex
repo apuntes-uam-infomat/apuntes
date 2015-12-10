@@ -5024,7 +5024,9 @@ Por tanto, es claro que no podemos encontrar tres palabras distintas de longitud
 
 \item \textbf{(8,30,3)}
 
-TODO
+Si estudiamos la cota de Hamming vemos que, en caso de existir el código tendríamos:
+\[30 \leq \frac{2^8}{1+8}=\frac{256}{9} \approx 28 \]
+por lo que es imposible que exista este código.
 
 \end{itemize}
 
@@ -5271,6 +5273,24 @@ longitud $n=23$ con $d=7$, pero es más difícil. Es uno de los
 llamados Códigos de Golay.]
 \solution
 
+\spart
+
+El profesor dice que en clase que este examen no lo vamos a hacer y no entrará en el examen, pues no consigue dar con una demostración satisfactoria.
+
+Para que el código fuese perfecto tiene que satisfacerse la ecuación:
+\[M = \frac{2^n}{\sum_{i=0}^3{n \choose i}}\]
+
+Sabemos que $M=2^k$. Por tanto necesitamos ver que:
+\[6+6n+3n(n-1)+n(n-1)(n-2) = 6 \cdot 2^r\]
+
+Siendo $r$ un número arbitrario, es sencillo demostrar que $n=7$ y $n=23$ satisfacen la ecuación aunque no es nada sencillo comprobar que estas son las únicas soluciones posibles.
+
+\spart
+
+El único código posible es el código de repetición:
+\[\algb{C} = \{0000000,1111111\}\]
+
+Con esto garantizamos que el código tenga la longitud y distancia mínima pedidas por lo que sólo nos queda comprobar que es un código perfecto, cuenta trivial que queda como ejercicio para el lector desconfiado.
 
 \end{problem}
 
@@ -5373,15 +5393,17 @@ La matriz comprobadora de paridad es una matriz tal que al multiplicar por la tr
 
 La matríz será:
 \[H =\left(\begin{array}{ccccccccccc}
-3 &  7  &  6  &  1  &  8  &  9  &  4  &  5  &  2  &  -1 &  0 \\
-5 & 4 & 3 & 2 & 7 & 6 & 5 & 4 & 3 &  2  & -1
+3 &  7  &  6  &  1  &  8  &  9  &  4  &  5  &  2  &  1 &  0 \\
+5 & 4 & 3 & 2 & 7 & 6 & 5 & 4 & 3 &  2  & 1
 \end{array}\right)\]
 
 Puesto que en cada fila de la matriz están puestos los coeficientes de una de las ecuaciones que deben cumplirse módulo 11, es evidente que si un vector multiplicado por esta matriz da 0 módulo 11, entonces satisfacirá las ecuaciones y, por tanto, pertenecerá al código.
 
-Es sencillo comprobar que no siempre se detectarán dos errores. Si modificamos $x_1$ sumándole 4, $x_{10}$ se verá incrementado en una unidad de modo que la primera ecuación se satisface. Esto provocará en la segunda ecuación que tengamos $2 + 20=22 = 0 \mod 11$ con lo que la segunda ecuación se satisface también.
-
 En general (y en este caso se cumple) todos los errores que no serán detectados serán aquellos que, escritos como vector, pertenezcal al númecleo de $H$.
+
+\textbf{Solución del profesor}
+Los errores dobles serán de la forma $e=λe_i+μe_j$. Estos errores no serán detectados si al calcular su síndrome obtenemos 0, es decir:
+\[S(λe_i+μe_j)=λH_i+μH_j=0 \iff H_j = -\frac{λ}{μ}H_j\]
 \end{problem}
 
 \begin{problem}[13]
@@ -5394,9 +5416,9 @@ binario.
 
 \solution
 
-\doneby{Pedro}
-
 \spart
+
+\doneby{Pedro}
 
 Un código será lineal cuando puede verse como un espacio vectorial sobre $F_q$. Por tanto, si $\algb{C}$ es lineal, tendremos una serie de palabras que constituirán la base del código y que, junto con la palabra nula, nos permiten generar todas las palabras del código.
 
@@ -5404,9 +5426,25 @@ Añadiendo un bit de control de paridad seguimos teniendo el elemento nulo y la 
 
 Si teníamos dos elementos de la base con número impar de 1s, la suma de ambos tendrá un número par de 1s por lo que el bit de paridad pasará de ser 1 en ambos elementos de la base a ser 0 en el resultado final.
 
+\textbf{Solución del profesor}
+
+En general podemos comprobar si un código es lineal porque este podrá representarse a partir de una matriz generadora.
+
+Viendo la matriz controladora de paridad el cambio que estamos realizando al añadir el bit de control consiste en completar la matriz $H$ primero con una columna de $0$s (añadimos longitud sin cambiar los primeros bits) a la derecha y luego con una fila de $1$s por abajo (control de paridad).
+
 \spart
 
-TODO
+Por el apartado anterior, si somos capaces de construir un $[7,4,3]$-código lineal binario sólo tendremos que añadirle un bit de paridad para obtener el código deseado.
+
+Así podemos construir el código pedido como aquel dado por la matriz de control de paridad:
+\[H = \left( \begin{array}{ccccccc|c}
+0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 \\
+0 & 1 & 1 & 0 & 0 & 1 & 1 & 0 \\
+1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\
+\hline
+1 & 1 & 1 & 1 & 1 & 1 & 1 & 1
+\end{array}\right)\]
+
 \end{problem}
 
 \begin{problem}[14]
