@@ -35,7 +35,7 @@ Estos métodos son algo más complejos que los explícitos, pues tenemos que hac
 Aunque el tablero de Butcher lo estamos estudiando dentro del contexto de los métodos Runge-Kutta, puede utilizarse con cualquier método como muestra el siguiente ejemplo.
 
 \begin{example}
-Si consideramos el método de Euler mejorado tenemos el siguiente tablero:
+Si consideramos el método de Euler modificado tenemos el siguiente tablero:
 
 \begin{center}
 \begin{tabular}{c|cc}
@@ -84,6 +84,10 @@ Puesto que las etapas $k_i$ son evaluaciones de la función $f$, no es difícil 
 
 \begin{example}
 Vamos a comprobar que la función incremento es Lipschitz en la segunda variable en el método de Euler modificado.
+
+Debemos recordar que este método se basa en el uso de la siguiente recurrencia:
+\[y_{n+1}=y_n+hf\left(x_n+\frac{1}{2}h,y_n+\frac{h}{2}K_1\right)=y_n+hf\left(x_n+\frac{1}{2}h,y_n+\frac{h}{2}f(x_n,y_n)\right)\]
+\[\norm{k_1(x_n,y_n;h)-k_1(x_n,\tilde{y}_n;h)} \leq L\norm{y_n-\tilde{y}_n}\]
 \[\norm{k_2(x_n,y_n;h)-k_2(x_n,\tilde{y}_n;h)} \leq L\left( \norm{y_n-\tilde{y}_n}+\frac{h}{2}\norm{k_1(x_n,y_n;h)-k_1(x_n,\tilde{y}_n;h)}\right) \leq \atop L\left(1+\frac{h}{2}\right) \norm{y_n-\tilde{y}_n}\]
 de donde se obtiene inmediatamente la condición de Lipschitz deseada observando que en este caso $\phi_f(x_n,y_n;h)=k_2(x_n,y_n;h)$
 \end{example}
@@ -93,7 +97,7 @@ de donde se obtiene inmediatamente la condición de Lipschitz deseada observando
 Podemos ver que si tomamos $h=0$ tenemos
 \[k_i(x_n,y_n;0)=f(x_n,y_n)\]
 lo que nos permite escribir:
-\[\phi_f(x,y;0)=\sum_{i=1}^sf(x,y)\]
+\[\phi_f(x,y;0)=\sum_{i=1}^sb_if(x,y)\]
 Aplicando el criterio de consistencia \ref{theorem:consist_iif_relaciones} vemos que los métodos Runge-Kutta son consistentes si y sólo si
 \[\sum_{i=1}^sb_i = 1\]
 
@@ -118,28 +122,28 @@ y'=f(x,y(x))\\
 y(0)=y^0
 \end{array}\]
 
-Así tenemos
+Escribiendo el desarrollo de Taylor de la función $F(h)$ en torno a $x_n$ tenemos:
 \[F(h)=y(x_n)+hy'(x_n)+\frac{h}{2}y''(x_n)+\frac{h^3}{3!}y'''(ε_n) = \atop y(x_n)+hf+\frac{h^2}{2}\left(f_x+f_y\cdot f\right)+\frac{h^3}{3!}y'''(ε_n)\]
 
 donde tanto la función $f$ como sus derivadas están evaluadas en $(x_n,y(x_n))$.
 
 Por definición de $K_i$ tenemos
-\[K_i(x_n,y(x_n);h) = f\left(x_n+c_ih,y_n + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\]
+\[K_i(x_n,y(x_n);h) = f\left(x_n+c_ih,y_n + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)\right)\]
 y derivando con respecto a $h$ tenemos:
 \[\frac{\partial K_i}{\partial h}(x_n,y(x_n);h) =c_if_x\left(x_n+c_ih,y(x_n) + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)+\atop f_y\left(x_n+c_ih,y(x_n)+h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)\]
 
 Si evaluamos ahora en $h=0$ tenemos
 \[\frac{\partial K_i}{\partial h}(x_n,y(x_n);0) = c_if_x\left(x_n,y(x_n)\right) + \sum_{j=1}^s a_{ij}f_y(x_n,y(x_n))f(x_n,y(x_n))\]
 
-Apoyándonos en esto es relativamente sencillo calcular el desarrollo de Taylor de $G(h)$, con lo que obtenemos:
+Apoyándonos en esto es relativamente sencillo calcular el desarrollo de Taylor de $G(h)$\footnote{Desarrollamos sólamente el sumatorio, que es una suma de funciones $f$ evaluadas en distintos puntos}, con lo que obtenemos:
 \[G(h)=y(x_n)+h\sum_{i=1}^sb_if() + h^2\sum_{i=1}^sb_ic_if_x()+h^2\sum_{i,j=1}^sb_ic_{ij}f_y()+\varphi(x_n,y(x_n),h)h^3\]
 siendo $f() = f(x_n,y(x_n))$.
 
 Nuestro objetivo es calcular el residuo y estimarlo como $O(h^p)$ siendo así $p$ el orden del método. Como ya hicimos al principio del curso, vamos a restar los desarrollos de Taylor con lo que obtenemos:
 
-\[R_n=h\left(f-\sum_{i=1}^sb_if\right)+h^2\left(\frac{1}{2}f_x+\frac{1}{2}f_y\cdot f + \sum_{i=1}^sb_ic_if_x()+\sum_{i,j=1}^sb_ic_{ij}f_y()\right)+O(h^3)\]
+\[R_n=h\left(f-\sum_{i=1}^sb_if\right)+h^2\left(\frac{1}{2}f_x+\frac{1}{2}f_y\cdot f - \sum_{i=1}^sb_ic_if_x()-\sum_{i,j=1}^sb_ic_{ij}f_y()\right)+O(h^3)\]
 
-Si queremos que el residuo sea de orden 3 (y por tanto el método tenga orden de convergencia $p-1$) necesitamos que todos los términos distintos de $O(h^3)$ se cancelen en la fórmula del residuo.
+Si queremos que el residuo sea de orden 3 (y por tanto el método tenga orden de convergencia $2$) necesitamos que todos los términos distintos de $O(h^3)$ se cancelen en la fórmula del residuo.
 
 Así vemos que necesitamos:
 \begin{itemize}
@@ -158,11 +162,36 @@ Una vez llegados a este punto el lector puede convencerse de que calcular condic
 
 Cualquier problema de valor inicial puede escribirse en \concept{forma autónoma} a costa de aumentar la dimensión del espacio. En efecto, si definimos
 \[\overline{y}(x)=\left(\begin{array}{c} x \\ y(x)\end{array}\right), \ \ \tilde{y}^0 = \left(\begin{array}{c} 0 \\ y(0)\end{array}\right), \ \ \overline{f}(\overline{y}(x)) = \left(\begin{array}{c} 1 \\ f(x,y(x))\end{array}\right)\]
-el problema autónomo es equivalente al original.
+el problema original es equivalente al problema autónomo:
+\[\overline{y}'(x)=\overline{f}(\overline{y}(x)), \ \ \overline{y}(a)=\tilde{y}^0\]
 
-\obs Un método de Runge-Kutta no da, en general, la misma solución para el sistema $y'=f(x,y)$ que para el ``autonomizado'' $\overline{y}'= \left( \begin{array}{c}1 \\ f(\overline{y}) \end{array}\right)$
+\begin{problem}[Ejercicio de examen]Ejercicio de examen: Si un sistema cumple $c_i = \sum_{j=1}^sa_{ij}$ entonces la solución del sistema y la del automatizado coinciden
 
-\textbf{Ejercicio de examen: Si un sistema cumple $c+i = \sum_{j=1}^sa_{ij}$ entonces la solución del sistema y la del automatizado coinciden}
+\solution
+
+\doneby{Pedro}
+
+Si tomamos la definición genérica de un método Runge-Kutta y la aplicamos sobre el PVI genérico:
+\[\begin{array}{l}
+y'=f(x,y(x))\\
+y(0)=y^0
+\end{array}\]
+obtendremos
+\[y_{n+1} = y_n+ h \sum_{i=1}^s b_i K_i \text{ siendo } K_i = f\left(x_n+c_ih, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\]
+
+Por otro lado, si aplicamos la misma definición del método al problema autónomo tendremos:
+\[\left(\begin{array}{c}
+x_{n+1} \\ y_{n+1}
+\end{array} \right) = \left(\begin{array}{c}
+x_n \\ y_{n}
+\end{array} \right) + h \sum_{i=1}^sb_iK_i \text{ siendo } K_i=\left(\begin{array}{c}
+1 \\ f\left(x_n+c_ih, y(x_n+c_ih)+h \sum_{j=1}^ia_{ij}K_j\right)\\
+\end{array} \right)\]
+
+Por otro lado sabemos que
+\[y(x_n+c_ih) = y_n+c_ih\sum_{i=1}^s b_i K_i = y_n+c_ihK_i\]
+
+\end{problem}
 
 \subsection{Barreras de Butcher}
 \begin{theorem}
