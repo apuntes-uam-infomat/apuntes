@@ -5588,6 +5588,55 @@ corregir errores. Si recibes los vectores $11111$ y $01011$,
 palabra que se corrija y de un error doble que no se corrija.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+La tabla para $G_1$ tendra una única fila y será
+
+\[\begin{array}{cccc}
+00 & 10 & 10 & 11
+\end{array}\]
+
+Para $G_2$ podemos ver de antemano que cada tendrá dos filas pues cada fila tendrá 4 elementos y la tabla tendrá un total de 8.
+\[\begin{array}{cccc}
+000 & 101 & 011 & 110 \\
+001 & 100 & 010 & 111
+\end{array}\]
+
+Por último, la tabla de $G_3$ tendrá 8 filas y será:
+\[\begin{array}{cccc}
+00000 & 10110 & 01011 & 11101 \\
+00001 & 10111 & 01010 & 11100 \\
+00010 & 10100 & 01001 & 11111 \\
+00100 & 10010 & 01111 & 11001 \\
+01000 & 11110 & 00011 & 10101 \\
+10000 & 00110 & 11011 & 01101 \\
+11000 & 01110 & 10011 & 00101 \\
+10001 & 00111 & 11010 & 01100
+\end{array}\]
+
+\spart
+
+Lo que hacemos para decodificar los mensajes es calcular su síndrome. Si este es 0, entonces la palabra no tiene error. Si es distinto de 0, recurrimos a la tabla.
+
+Puesto que la matriz $G_3$ está en formato estándar, es sencillo calcular la matriz controladora
+\[H = \left(\begin{array}{ccccc}
+1 & 0 & 1 & 0 & 0 \\
+1 & 1 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 & 1
+\end{array}\right)\]
+
+Ahora calculamos los síndromes:
+\[S(11111) = 010, \ \ \ S(01011) = 000\]
+
+Tenemos que la palabra 01011 pertenece al código pero la otra no. Puesto que tenemos la tabla de Slepian construida podemos buscarlas en el código y conocer la palabra de la que proceden (con mayor probabilidad y el error).
+
+Así tenemos que ``11111'' procede de la palabra ``11101'' sufriendo el error ``00010''.
+
+
+
 \end{problem}
 
  \begin{problem}[2]
@@ -5599,6 +5648,40 @@ perfecto.
 vectores recibidos $2121$, $1201$ y $2222$.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Puesto que es ternario tenemos que $q=3$ y la distancia mínima de este código es $d=2\cdot 1 + 1$.
+
+
+Para ser perfecto debe cumplirse pues:
+\[|\algb{C}| = \frac{q^n}{\sum_{i=0}^t {n \choose i} (q-1)^i} = \frac{3^4}{1+4\cdot 2} = 3^2\]
+
+Puesto que el código puede definirse como:
+\[\algb{C} = \{α_1(1110) + α_2(2011) \tq α_1,α_2 \in \ent_3\}\]
+
+Con lo que vemos claramente que el código tiene 9 palabras posibles y, por tanto, se satisface la definición.
+
+\spart
+
+Lo primero que tenemos que hacer es escribir la matriz de forma genérica para poder encontrar fácilmente la matriz $H$.
+
+Si a la primera columna le sumamos la última y a la segunda le sumamos la última y dos veces la nueva primera tenemos:
+\[G= \left( \begin{array}{cccc}
+1 & 0 & 1 & 0\\
+0 & 1 & 1 & 1
+\end{array}\right) \implies H = \left( \begin{array}{cccc} 2 & 2 & 1 & 0 \\
+0 & 2 & 0 & 1  \end{array}\right)\]
+
+Si calculamos el síndrome de los vectores dados tenemos:
+\[S(2121) = 20\ \ \ S(1201) = 02\ \ \ \ S(2222) =10\]
+
+Puesto que los síndromes dados coinciden con columnas de la matriz $H$ es sencillo ver que proceden del error $e_i$ (siendo $H_i$ la columna con la que coinciden).
+
+Una vez tenemos esto podemos ver de qué palabra proceden:
+\[2121 \to 1121, \ \ \ \ 1201 \to 1202, \ \ \ \ 2222 \to 2212\]
 \end{problem}
 
 \begin{problem}[3]
@@ -5621,6 +5704,34 @@ $C:=\left\{(x_1,\dots,x_{10})\in(\ent_{10})^{10} \ : \
 simples.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Supongamos que inteligente significa que el teléfono comprueba si el número introducido puede ser correcto o no y en caso de error busca el más cercano.
+
+Nuestro teléfono calculará el síndrome del código introducido obteniendo:
+\[S(20617960587)=79\]
+Con lo que queda claro que hemos introducido un número erróneo.
+
+Es sencillo ver que el error más pequeño que también nos causa ese mismo síndromes es el ``40030000000''.
+
+Por tanto nuestro teléfono detectará que el código es incorrecto y realmente llamará a: ``90697960587''
+
+\spart
+
+En este caso tendríamos la matriz controladora de paridad:
+\[H=\left(\begin{array}{cccccccccc}
+1&1&1&1&1&1&1&1&1&1\\0&1&2&3&4&5&6&7&8&9
+\end{array}\right)\]
+
+Si pudiésemos corregir todos los errores simples, la distancia mínima sería mayor o igual que 3, lo que implicaría que dos columnas cualesquiera de la matriz serán linealmente independientes.
+
+No obstante podemos comprobar que $2{1 \choose 5} + 8 { 1 \choose 0} = {0 \choose 0}$ por lo que la distancia mínima es menor que 2 y no corregirá siempre un error.
+
+En concreto si se incrementa el quinto dígito en dos unidades, el error será confundido con una reducción del primer dígito en 8 unidades.
+
 \end{problem}
 
 
@@ -5644,6 +5755,7 @@ retransmitir ?`que leerías si recibes el siguiente mensaje
 $0011111,0110110,0001111,1111000$ (las comas separan las letras)?
 
 \solution
+
 \end{problem}
 
 \begin{problem}[5]
@@ -5830,7 +5942,7 @@ LEVANTE - VALENCIA
 \end{problem}
 
 
-\begin{problem}[16]
+\begin{problem}[15]
  Construye un $[11,6,5]$-código perfecto sobre $ F_3$. (Lo
 que se pretende es que escribas la matriz de paridad. Quizá haya
 que experimentar un poco. Si te ves incapaz de hacerlo sin
