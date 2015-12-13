@@ -7,7 +7,8 @@
 % Paquetes adicionales
 \usepackage{fancysprefs}
 \usepackage{xfrac}
-
+\usepackage{tikztools}
+\usetikzlibrary{calc}
 % --------------------
 
 \begin{document}
@@ -397,7 +398,7 @@ Una vez hecho esto, se refinan esos puntos de interés. Se mira qué desplazamie
 
 Posteriormente se eliminan extremos poco contrastados, eliminando los que tengan $\abs{D(\vx)} ≤ 0.03$; y se quitan también los que forman arte de los bordes. Se calculan los Hessianos de esos puntos y se analiza la curvatura de la función $D(\vx)$. Si hay una curvatura con dirección predominante ($r = \sfrac{λ_1}{λ_2} > 10$) se descarta. Para facilitar este cálculo, se usa la traza y determinante del Hessiano y la desigualdad que se aplica es \[ \frac{\tr^2 HD(\vx)}{\det HD(\vx)} = \frac{(r + 1)^2}{r} > \frac{11^2}{10} \]
 
-Sobre los puntos que quedan se computan unos descriptores basados en los ángulos del gradiente. Se coge una ventana de $16 × 16$ píxeles en la escala en la que aparece el punto, y se calcula el ángulo del gradiente en cada píxel con respecto a la orientación detectada del punto de interés. Se descartan los ángulos pequeños y entonces para cada subcelda de $4 × 4$ píxeles se calcula un histograma de las orientaciones que quedan, representadas como flechas de distinta magnitud en las ocho posibles direcciones que se puedan tomar. En la \fref{fig:SIFTDescritors} aparecen unos ejemplos del resultado de esos descriptores.
+Sobre los puntos que quedan se computan unos descriptores basados en los ángulos del gradiente. Se coge una ventana de $16 × 16$ píxeles en la escala en la que aparece el punto, y se calcula el ángulo del gradiente en cada píxel. Se descartan los ángulos pequeños y entonces para cada subcelda de $4 × 4$ píxeles se calcula un histograma de las orientaciones que quedan rotadas con respecto a la orientación dominante (la que tenga el pico en el histograma), representadas como flechas de distinta magnitud en las ocho posibles direcciones que se puedan tomar. En la \fref{fig:SIFTDescritors} aparecen unos ejemplos del resultado de esos descriptores.
 
 \begin{figure}[hbtp]
 \centering
@@ -405,5 +406,128 @@ Sobre los puntos que quedan se computan unos descriptores basados en los ángulo
 \caption{Descriptores de SIFT sobre dos imágenes.}
 \label{fig:SIFTDescritors}
 \end{figure}
+
+\subsubsection{SURF - Speeded Up Robust Features}
+
+Se trata de un algoritmo rápido inspirado en SIFT de detección de puntos de interés y descripción de la región colindante. Se buscan los máximos del determinante del Hessiano de $L(\vx, σ)$ a cada escala. Para facilitar la computación, se aproximan las segundas derivadas de la gaussiana mediante filtros de caja (\fref{fig:FiltrosSURF}) cada vez más grandes y usando la imagen integral para mejorar el rendimiento. El detector devuelve regiones de interés (imagen de girasoles).
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/FiltrosSURF.png}
+\caption{Aproximación a la segunda derivada con filtros sencillos para SURF.}
+\label{fig:FiltrosSURF}
+\end{figure}
+
+\subsubsection{MSER - Maximal Stable Extremal Regions}
+
+Busca regiones asociadas a máximos o mínimos locales, y que son estables (variación mínima frente a cambios en el valor del umbral de luminancia).  Es robusta a variaciones del punto de vista, a cambio de escala y a cambios globales de iluminación, y es barato de computar.
+
+A medida que se hace crecer el valor del umbral se obtienen las componentes conexas. Para cada componente se obtiene su área en función del umbral. Al final del proceso se buscan las regiones con un mínimo en el ritmo de cambio en el área, y con el umbral correspondiente se detecta la MSER.
+
+\subsubsection{Descripción de regiones de interés}
+
+Para describir las regiones de interés, hay dos algoritmos (aparte del de SIFT que ya hemos visto).
+
+\paragraph{GLOH - Gradient Location and Orientation Histogram} Es prácticamente igual que el descriptor de SIFT, salvo porque la región entorno al punto de interés es circular, se divide en 17 regiones en forma log-polar, con el histograma de orientaciones cuantificado en 16 bins, lo que resulta en un vector descriptor de 17*16=272 componentes que luego se reduce aplicando PCA.
+
+\paragraph{HOG - Histogram of Oriented Gradients}  Se describe una región rectangular (R-HOG) o circular (C-HOG) a partir de histogramas de orientación del gradiente de subregiones o celdas que pueden estar solapados. Es más bien un marco para adaptar a cada apliación. Para evitar variaciones de contraste, por ejemplo, se agrupan las celdas en bloques solapados. El vector concatena los histogramas de sus celdas.
+
+\subsection{Detección y extracción de contornos}
+
+\subsubsection{Algoritmo de Canny}
+
+El principal algoritmo para esto es el algoritmo multietapa de Canny, que busca localizar todos los bordes de una imagen, con máxima precisión y sólo una vez cada borde. Su principal aportación es el cálculo de cruces por cero de la segunda derivada en la dirección del gradiente.
+
+El algoritmo primero realiza un filtrado gaussiano y calcula el gradiente con los operadores de Prewitt o Sobel. Después, en cada entorno $3×3$ se analiza cada píxel (que contiene el valor del gradiente en ese punto): si el pixel central no es el máximo en la dirección del gradiente, entonces su magnitud se anula. Si la dirección del gradiente no es un divisible por $45$ grados, o bien se cuantifica en esos posibles valores o bien se interpola.
+
+Luego se selecciónan dos umbrales: uno para identificar bordes muy marcados y otro algo menor para detectar bordes conectados con los anteriores. Asumiendo que los bordes pertenecen a contornos continuos, sobre la imagen de máximos del gradiente se seleccionan los píxeles mayores que el primer umbral y después se sigue en las direcciones perpendiculares al gradiente seleccionando píxeles conectados que superen el segundo umbral.
+
+\subsubsection{Transformada de Hough}
+
+El siguiente paso es la transformada de Hough, que basada en un esquema de votaciones permite localizar formas regulares básicas en imágenes binarias aunque no estén perfectamente definidas. El primer paso es pasar de la expresión en rectas a partir de los parámetros $m,b$ de la ecuación $y = mx + b$, que no están acotados, a otro espacio de parámetros $(r,θ)$ más cómodo (\fref{fig:RectasRTheta}). Así, cada punto $(x,y)$ de la imagen se transforma en una sinusoide del espacio $(r,θ)$, donde cada punto de esa sinusoide es una posible recta de la imagen binaria  que pasa por el punto $(x,y)$. El punto donde más sinusoides se crucen indican las rectas en la imagen.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[scale=1.2]
+\draw[->] (-0.1, 0) -- (5, 0) node [right] {$x$};
+\draw[->] (0, -0.1) -- (0, 3) node [above] {$y$};
+
+\coordinate (LBegin) at (0,2);
+\coordinate (LEnd) at (4,0);
+\coordinate (O) at (0,0);
+\coordinate (I) at ($(LBegin)!(O)!(LEnd)$) {};
+\coordinate (XEnd) at (3,0);
+
+\draw[thick, blue] (LBegin) -- node[midway, above, anchor=south west] {$y = mx + b \equiv r = y\sin θ + x \cos θ$} (LEnd);
+\draw[green!80!black] (I) -- node[midway, above, sloped] {$r$} (O);
+
+\tikzangle[name={$\theta$}]{O}{I}{LEnd}
+
+\end{tikzpicture}
+\caption{Una recta se puede modelar con dos parámetros, $r$ y θ, sabiendo que $m = -\frac{\cos θ}{\sin θ}$ y que $b = \frac{r}{\sin θ}$.}
+\label{fig:RectasRTheta}
+\end{figure}
+
+La ventaja de este proceso es que es robusto a ruido y a discontinuidades en los contornos. Eso sí, hay que buscar máximos en entornos para evitar tener haces de rectas.
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+\includegraphics[width=0.4\textwidth]{img/HoughGeneral.png}
+\caption{Esquema para asignar a cada $θ$ una serie de valores $(ω,r)$ en la transformada de Hough generalizada.}
+\label{fig:HoughGeneral}
+\end{wrapfigure}
+
+La transformada de Hough también se puede aplicar a circunferencias: se hace un espacio de parámetros de tres dimensiones (centro $(a,b)$ y radio $r$) de la circunferencia. Igualmente, se puede generalizar a formas arbitrarias. Dada una forma de referencia con un centro, generamos una tabla R que a cada orientación $θ$ de la tangente le asigna varios puntos $(ω,r)$ con las coordenadas polares del punto del contorno (\fref{fig:HoughGeneral}).
+
+A la hora de localizar las instancias de ese modelo, para cada píxel de un borde se estima la orientación de la recta tangente y para cada posible par $(ω,r)$ se incrementa el contador de la posición candidata del punto de referencia.
+
+Este algoritmo también serviría para buscar la misma forma rotada por α, simplemente buscando las tuplas correspondientes al ángulo $θ-α$ e incrementando el contador la posición que tuviese radio $r$ y coordenadas $ω + α$. Igualmente, se puede hacer invariante a escalado poniendo como posición candidata la que tiene radio $rβ$.
+
+\subsection{Seguimiento y aproximación de bordes}
+
+Permite extraer y caracterizar las secuencias de píxeles de los diferentes segmentos de borde presentes en el resultado de un detector de bordes de grosor de un píxel, e identificar formas elementales, por ejemplo rectas. Consta de dos pasos que se van repitiendo en bucle: se selecciona el primer píxel que aparezca como borde al recorrer la imagen, y después se va siguiendo el borde usando codificación de Freeman (\fref{fig:Freeman}) para guardar la secuencia de bordes. Esos píxeles se suprimen, y se repiten los pasos hasta que no quedan mas píxeles en la imagen.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/Freeman.png}
+\caption{Codificación Freeman para secuencia de píxeles}
+\label{fig:Freeman}
+\end{figure}
+
+El seguimiento de contornos puede usarse para aproximar curvas por tramos rectos (obviamente). Esas secciones rectas pueden usarse como alternativa a la transformada de Hough.
+
+\section{Introducción a la segmentación}
+
+La segmentación busca definir conjuntos $Ω_j$ de píxeles similares conectados, homogéneos con respecto a alguna característica que representan una parte del espacio distinta al resto. Normalmente se asigna un identificador a cada región (etiqueta) y un representante, un descriptor de las características de la región.
+
+El problema de la segmentación es que no está bien condicionada: depende de la escala, del conocimiento previo y de la relevancia que le demos a distintos detalles.
+
+Las ventajas de la segmentación son ayudar a la descripción de imágenes y reducir la variablidad de los datos analizados, además de poder reducir ruido y de poder auto-definir la región de interés alrededor de un punto de interés.
+
+La primera técnica es el clustering o agrupamiento por $k$-means o $c$-means, que busca particionar los puntos en $k$ subconjuntos para minimizar la distancia entre cada punto y la media de la región en la que está.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/Superpixels.png}
+\caption{Efecto de los parámetros de la segmentación en superpíxeles.}
+\label{fig:Superpixeles}
+\end{figure}
+
+También se usan los superpíxeles, donde se divide la imagen en bloques, se hace $k$-means en cada bloque y después se caracteriza cada píxel según una función $f$ (por ejemplo, la luminancia $L$) con el vector $\begin{pmatrix}λx & λy & f(x,y)\end{pmatrix}$, donde $λ$ es el cociente entre el regularizador y el tamaño medio de región. Un λ más alto da regiones más rectangulares, mientras que si es más bajo da regiones más ajustadas a los objetos (\fref{fig:Superpixeles}).
+
+La segmentación en superpíxeles se suele usar como un paso previo a otros algoritmos más avanzados, para reducir su coste computacional. Por eso da una sobresegmentación, pero no elimina mucha información.
+
+Otra técnica es el Mean-Shift, que busca modas en el espacio de decisión asumiendo que la relación moda - región es biunívoca. Se puede considerar como una técnica de ascenso de gradiente hasta llegar a un máximo. Para obtenerlo, se fija una ventana entorno a cada muestra y se obtiene la media de valores de la muestra en esa ventana. Después se desplaza la ventana para centrarla en la media obtenida, repitiendo el proceso hasta que la media converge.
+
+Es un método muy eficaz, y además elimina la necesidad de establecer el número de regiones deseadas. Lo malo es que depende mucho del ancho de banda de los núcleos.
+
+El método de \textit{snakes} (serpientes) trata de minimizar la energía de un contorno controlando la energía interna (aumenta con la deformación, evita el sobreajuste), la externa (ajuste a contornos) y la restrictiva (restricciones \textit{ad hoc} de diseño).
+
+También hay métodos basados en grafos, como el SWA (\textit{Segmentation by Weighted Aggregation}), que fusiona píxeles o regiones similares en cada nivel de la jerarquía buscando minimizar la saliencia. El resultado es una jerarquía de regiones que además permite almacenar y manejar texturas. Cada región tiene un nivel óptimo en el que se obtiene su máxima saliencia.
+
+También está el Global PB: se detectan contornos con diferentes hipótesis en su orientación, se genera un grafo de disimilutid y se estudian los contornos en las componentes principales que quedan codificadas en el grafo. Así en general no entiendo nada este algoritmo pero la idea es que parece generar pocas regiones.
+
+
+
 
 \end{document}
