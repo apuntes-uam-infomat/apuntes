@@ -1,16 +1,22 @@
-\documentclass[nochap,palatino,notitlepage]{apuntes}
+\documentclass[nochap,palatino]{apuntes}
 
-\title{Tratamiento de señales visuales}
+\title{Tratamiento de Señales Visuales}
 \author{Guillermo Julián Moreno}
 \date{15/16 C1}
 
 % Paquetes adicionales
 \usepackage{fancysprefs}
+\usepackage{xfrac}
 
 % --------------------
 
 \begin{document}
 \pagestyle{plain}
+
+\begin{abstract}
+Estos apuntes son un pequeño resumen, no exhaustivo, de la asignatura de Tratamiento de Señales Visuales de la EPS UAM. Aquí recogemos todos los conceptos de forma resumida, basándonos en los apuntes proporcionados por los profesores.
+\end{abstract}
+
 \maketitle
 
 \section{Operadores puntuales}
@@ -105,7 +111,7 @@ Los operadores lineales e invariantes con el espacio efectúan transformaciones 
 
 Por comodidad, consideraremos $w[n,m] = h[-n, -m]$, invirtiendo la respuesta al impulso $h$ y evitándonos que hacer la inversión en cada cálculo.
 
-Al usar la convolución, podemos irnos al dominio frecuencial. Como notación, las letras minúsculas se referirán al dominio espacial y en mayúsculas al dominio frecuencial, pasando de una a otra con la transformada discreta de Fourier. En el dominio frecuencial, la convolución es un producto y por lo tanto \[ Θ = Ψ \cdot H \], bastante más fácil de computar.
+Al usar la convolución, podemos irnos al dominio frecuencial. Como notación, las letras minúsculas se referirán al dominio espacial y en mayúsculas al dominio frecuencial, pasando de una a otra con la transformada discreta de Fourier. En el dominio frecuencial, la convolución es un producto y por lo tanto \[ Θ = ψ \cdot H \], bastante más fácil de computar.
 
 El problema de este tipo de filtros es que nos comemos los bordes al no tener suficientes píxeles para valorar. Para ello, se puede realizar \textit{padding} aumentando la imagen original. Para rellenar esos píxeles adicionales, se pueden usar valores fijos, hacer una simetría, extender el bore con los mismos valores o hacer una réplica circular con el otro lado de la imagen.
 
@@ -130,7 +136,7 @@ El suavizado también se puede hacer con un filtro de mediana, que suele ser má
 El realce de contornos se relaciona con la primera y segunda derivada direccionales, versión discreta:
 \[ \dpa{f[n]}{n} = f[n+ 1] - f[n]\qquad \pd[2]{f[n]}{n} = f[n+1] + f[n-1] - 2f[n]\]
 
-El estudio de la laplaciana (la suma de las derivadas segundas en las dos direcciones) \[ \nabla^2 Ψ = \pd[2]{ψ}{x} + \pd[2]{ψ}{y} \] nos da dos posibles máscaras: la laplaciana $L'$ y la isótropa $I'$, que realzan los bordes:
+El estudio de la laplaciana (la suma de las derivadas segundas en las dos direcciones) \[ \nabla^2 ψ = \pd[2]{ψ}{x} + \pd[2]{ψ}{y} \] nos da dos posibles máscaras: la laplaciana $L'$ y la isótropa $I'$, que realzan los bordes:
 \[
 L' = \begin{pmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{pmatrix}
 \qquad
@@ -269,15 +275,32 @@ La apertura por reconstrucción de la erosión facilitará el suavizado sin perd
 
 \section{Extracción de características}
 
-% TODO: Aquí falta una hora de clase.
+En este tema trataremos de extraer patrones y características de las imágenes. Una cosa que tendremos que tener en cuenta es la escala de lo que estamos detectando. Esto será lo que se llama el análisis multiescala.
+
+\subsection{Primeras aproximaciones: quad-tree y pirámides}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{img/QuadTree.png}
+\caption{Representación en quad-tree de una imagen usando criterios de homogeneidad.}
+\label{fig:QuadTree}
+\end{figure}
+
+Una primera aproximación es la representación en quad-tree (\fref{fig:QuadTree}): seleccionamos un criterio de homogeneidad, un umbral de decisión y un tamaño mínimo de región; y vamos subdividiendo hasta llegar al tamaño mínimo construyendo un árbol por el camino. Salvo esas últimas regiones, el resto cumplen los criterios de homogeneidad.
+
+La segunda aproximación es el uso de repreentaciones piramidales, donde vamos suavizando y diezmando la imagen original para reducir su tamaño. No es un esquema muy formal pero es rápido y computacionalmente barato.
 
 Una ventaja de usar las pirámides es que podemos mandar una imagen en distintas resoluciones sin tener que enviar todos los datos: podemos enviar la imagen original y las diferencias entre niveles, que nos ocuparán menos píxeles.
+
+Podemos usar pirámides paso bajo, donde convolucionamos con un kernel y después reducimos el tamaño a la mitad. El kernel tiene que ser positivo, simetrico, monomodal, de área unidad. Para $N=3$, sólo el dado por $c[n] = \set{\frac{1}{4}, \frac{1}{2}, \frac{1}{4}}$ lo cumple. Para $N=5$, son de la forma \[ c[n] = \set{\frac{1 - 2a}{4}, \frac{1}{4}, \frac{a}, \frac{1}{4}, \frac{1 - 2a}{4}} \]
+
+El siguiente paso es usar las pirámides paso-banda (DoLP, \textit{difference of low-pass pyramids}) en general o, en el caso que más nos interesará, la pirámide laplaciana o DoG \textit{Difference of Gaussians} cuando la pirámide paso-bajo sea Gaussiana (la principal ventaja de usar kernels gaussianos es que minimizamos la aparición de estructuras por \textit{aliasing}). La idea de la pirámide laplaciana es que cada nivel es una aproximación al LoG de la imagen a esa escala.
 
 \subsection{Espacio escala}
 
 En el espacio escala, en lugar de reducir el tamaño de la imagen, lo que haremos será suavizar, y además podremos tomar la variable de suavizado continua. Veremos que usando el kernel gaussiano, tendremos una aproximación perfecta de la LoG. También veremos que es invariante a traslaciones. Por último, el espacio escala no introduce artefactos, estructuras que no existiesen en la imagen.
 
-\begin{defn}[Representación\IS espacio escala] Dada una señal escalar de dimensión $N$ $\appl{Ψ}{ℝ^N}{ℝ}$, su representación espacio escala es una aplicación $\appl{L}{ℝ^N × ℝ^+}{ℝ}$ dada por \begin{align*}
+\begin{defn}[Representación\IS espacio escala] Dada una señal escalar de dimensión $N$ $\appl{ψ}{ℝ^N}{ℝ}$, su representación espacio escala es una aplicación $\appl{L}{ℝ^N × ℝ^+}{ℝ}$ dada por \begin{align*}
 L(\vx, 0) &= ψ(\vx) \\
 L(\vx, t) &= g(\vx, t) \ast ψ(\vx)
 \end{align*} donde $g(\vx, t)$ es la gaussiana dada por \[ g(\vx, t) = \frac{1}{2πt}e^{-\frac{\norm{\vx}}{2t}}\]
@@ -298,10 +321,89 @@ Un hecho importante del espacio escala cumple la ecuación del calor, dada por \
 Esta propiedad permite inferir que esta representación no realza máximos ni mínimos, y además nos da una pseudodemostración de por qué la LoG y la DoG son equivalentes:
 \[ \nabla^2 L(\vx,t) \simeq L(\vx,t + Δt) - L(\vx, t - Δt) \]
 
-También podremos derivar haciendo una ligera perversión matemática.
+También podremos derivar haciendo una ligera perversión matemática: \[ ∂_{x^my^n} L(\vx, t) = ∂_{x^my^n} \left(g(\vx,t) * ψ(\vx)\right) = \left(∂_{x^my^n} g(\vx, t)\right) * ψ(\vx) \], cuya principal ventaja es que las propiedades del espacio escala se trasladan a sus derivadas, por ser la derivada de la gaussiana también una gaussiana.
 
-\subsubsection{LoG en el espacio escala}
+Este hecho nos permitirá hacer detección inicial de características básicas (blobs), pudiendo detectar también en qué escala se producen. Hay tres métodos para esto: los basados en la LoG, en la DoG, y en el determinante del Hessiano (DoH).
+
+\subsubsection{LoG - Laplacian of Gaussian}
 
 Podemos considerar la laplaciana en las direcciones espaciales. Simplificando y tomando $L_{xx} = \pd[2]{L}{x}$, diremos que  \[ \nabla^2 L = L_{xx} + L_{yy}\], que tomará grandes valores negativos y positivos para bloques claros y oscuros de anchura $2 \sqrt{t}$. La respuesta, eso sí, dependerá de la escala y decrece según esta aumenta, así que para evitarlo se normaliza con respecto de la escala,  de tal forma que nos quedará \[ \nabla^2_{\text{norm}} = t(L_{xx} + L_{yy}) \]
+
+En ese operador buscaremos máximos y mínimos locales, que nos darán puntos y escalas de las regiones más claras y oscuras, respectivamente, del espacio escala.
+
+\subsubsection{DoG - Difference of Gaussians}
+
+En este caso simplemente hacemos lo mismo que en el LoG, pero implementando el operador laplaciano como \[ \nabla^2_{\text{norm}} L(\vx, t) \simeq \frac{t}{Δt} \left(L(\vx, t + Δt) - L(\vx, t - Δt)\right)\] y buscando máximos y mínimos locales.
+
+\subsubsection{DoH - Determinant of Hessian}
+
+El Hessiano de la imagen ψ será una amtriz cuadrada con las segundas derivadas parciales de la función. Su cálculo en puntos críticos (gradiente nulo) y el posterior estudio de los autovalores nos dirá el tipo de punto: autovalores positivos implican mínimo, negativos implican máximo, y mixtos punto de silla.
+
+Al ser el determinante el producto de autovalores, sólo tendremos que calcular eso: si es positivo, es máximo o mínimo, y si es negativo estamos en un punto de silla. Así, sólo tenemos que buscar los máximos locales en el determinante normalizado: \[ \det H_{\text{norm}}L(\vx, t) = t^2 (L_{xx} L_{yy} - L^2_{xy})\]
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/Autovalores.png}
+\caption{Interpretación geométrica de los autovalores viendo en qué transforman la bola unitaria.}
+\label{fig:Autovalores}
+\end{figure}
+
+Los autovalores tienen una interpretación geométrica (ver \fref{fig:Autovalores}) que no se por qué podría resultar interesante pero que en cualquier caso es bastante obvia.
+
+\subsection{Detección de puntos de interés}
+
+La idea es buscar de forma precisa y robusta a ruido puntos invariantes a transformaciones típicas en la imagen. Hay varios métodos que pasamos a ver.
+
+\subsubsection{Detector de Harris-Stephens}
+
+Este detector se basa en un primer enfoque de fuerza bruta: cogemos una ventana en la imagen, la desplazamos un poquito y vemos en qué dirección cambia menos. Si no cambia en ninguna dirección, tenemos una zona plana. Si cambia muy poco en dos direcciones, tenemos un borde. Si cambia mucho en todas, probablemente estemos ante una esquina. Ese cambio se puede definir usando la suma de cuadrados de las diferencias.
+
+Vamos a hacerlo algo formalmente. Tenemos nuestra imagen $\appl{ψ}{ℝ^2}{ℝ}$ y una ventana $W ⊂ ℝ^2$. Entonces, el error cuando desplazamos en la dirección del vector $\vu$ será \[ E(\vu) = \sum_{\vx ∈ W} \left(ψ(\vx + \vu) - ψ(\vx)\right)^2 \]
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+\includegraphics[width=0.32\textwidth]{img/StructureTensorEigenvalues.png}
+\caption{Ilustración de los posibles casos según los autovalores de $A$}
+\label{fig:StructureTensor}
+\vspace{-10pt}
+\end{wrapfigure}
+
+Para desplazamientos pequeños, podremos aproximar la diferencia por el gradiente \[ ψ(\vx + \vu) \simeq ψ(\vx) + \vu · \grad ψ(\vx) \] de tal forma que nos queda \[ E(\vu) = \sum_{\vx ∈ W} \left(\vu \grad ψ(\vx)\right)^2 = \vu A \trans{\vu} \] con $A$ el tensor de estructura dado por \[ A =  \sum_{\vx ∈ W} \begin{pmatrix} ψ_x^2 (\vx) & ψ_x (\vx) · ψ_y (\vx) \\ ψ_x (\vx) · ψ_y (\vx) & ψ_y^2 (\vx) \end{pmatrix} \] (ojo: sólo primeras derivadas).
+
+El estudio de autovalores y autovectores de $A$ nos dirá para dónde cambia la imagen y si tenemos un borde, esquina o región plana (\fref{fig:StructureTensor}). Sin embargo, como calcular los autovalores es computacionalmente caro, lo que se hace es hacer una estimación con la función de respuesta a una esquina, dada por \[ R(\vx) = λ_1λ_2 - κ (λ_1 + λ_2)^2 = \det A - κ \tr^2 A \] con $κ ∈ [0.04, 0.15]$ un parámetro que se ajusta experimentalmente.
+
+Este enfoque es invariante a rotaciones y cambios de iluminación globales, pero tenemos el problema de la selección de κ y del umbral de $R$. Además, no es invariante a cambios de escala, y detecta más bien regiones que puntos de interés.
+
+En la práctica, para calcularlo se sacan las imágenes de gradientes horizontales y verticales, se sacan las imágenes para la información del gradiente del tensor de estructura y por último se hace un filtrado gaussiano para obtener en cada píxel el tensor de estructura correspondiente de su entorno.
+
+En otras palabras, lo que hace es estimar en el entorno de cada píxel la magnitud relativa del gradiente, en su dirección de máxima variación, con respecto a la que presenta en la dirección perpendicular.
+
+Este detector se podría ampliar para localizar máximos/mínimos locales en el espacio escala que también sean máximos-minimos locales del laplaciano (Laplacian-Harris detector).
+
+\subsubsection{SIFT - Scale-Invariant Feature Transform}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/SIFT.png}
+\caption{Espacio escala híbrido: hacia la derecha suavizamos, hacia abajo diezmamos.}
+\label{fig:SIFTScaleSpace}
+\end{figure}
+
+Este es un algoritmo avanzado para encontrar puntos de interés y describir su entorno. Es robusto a cambios de escala, traslaciones, rotaciones y cambios de iluminación; aunque no tanto a transformaciones afines y además tiene muchos parámetros a ajustar. Se basa en cuatro pasos: detección inicial de PoIs con la DoG en el espacio escala, localización precisa y descarte de PoIS, identificación de las orientaciones principales del gradiente y descripción del entorno en cada orientación principal.
+
+El primer paso consiste en la obtención de un espacio escala híbrido (\fref{fig:SIFTScaleSpace}), obteniendo después las DoG en cada octava (entre cada suavizado), y se buscan máximos o mínimos locales en cada octava (de nuevo, comparando sólo con los vecinos de cada suavizado).
+
+Una vez hecho esto, se refinan esos puntos de interés. Se mira qué desplazamiento $\vu$ minimiza (o maximiza) el valor de la DoG. Este valor vendrá dado por \[ \vu = - \left(\dpd[2]{D}{\vx}\right)^{-1} \pd{D}{\vx} \]. Si sus componentes son menores que $0.5$ se asume que el extremo está en la posición $\vx + \vu$. Si no, se asume que el extremo está más cerca del vecino correspondiente y se repite el proceso en torno a él.
+
+Posteriormente se eliminan extremos poco contrastados, eliminando los que tengan $\abs{D(\vx)} ≤ 0.03$; y se quitan también los que forman arte de los bordes. Se calculan los Hessianos de esos puntos y se analiza la curvatura de la función $D(\vx)$. Si hay una curvatura con dirección predominante ($r = \sfrac{λ_1}{λ_2} > 10$) se descarta. Para facilitar este cálculo, se usa la traza y determinante del Hessiano y la desigualdad que se aplica es \[ \frac{\tr^2 HD(\vx)}{\det HD(\vx)} = \frac{(r + 1)^2}{r} > \frac{11^2}{10} \]
+
+Sobre los puntos que quedan se computan unos descriptores basados en los ángulos del gradiente. Se coge una ventana de $16 × 16$ píxeles en la escala en la que aparece el punto, y se calcula el ángulo del gradiente en cada píxel con respecto a la orientación detectada del punto de interés. Se descartan los ángulos pequeños y entonces para cada subcelda de $4 × 4$ píxeles se calcula un histograma de las orientaciones que quedan, representadas como flechas de distinta magnitud en las ocho posibles direcciones que se puedan tomar. En la \fref{fig:SIFTDescritors} aparecen unos ejemplos del resultado de esos descriptores.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/SIFT_Descriptors.png}
+\caption{Descriptores de SIFT sobre dos imágenes.}
+\label{fig:SIFTDescritors}
+\end{figure}
 
 \end{document}
