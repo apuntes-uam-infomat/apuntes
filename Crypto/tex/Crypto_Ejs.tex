@@ -5756,6 +5756,47 @@ $0011111,0110110,0001111,1111000$ (las comas separan las letras)?
 
 \solution
 
+\doneby{Pedro}
+
+\spart
+
+Este código está formado por $M=2^3=8$ palabras de longitud $n=7$.
+
+Para conocer la distancia mínima escribimos la matriz controladora de paridad:
+\[H = \left(\begin{array}{ccccccc}
+1 & 1 & 1 & 1 & 0 & 0 & 0 \\
+1 & 1 & 0 & 0 & 1 & 0 & 0 \\
+1 & 0 & 1 & 0 & 0 & 1 & 0 \\
+0 & 1 & 1 & 0 & 0 & 0 & 1
+\end{array} \right)\]
+
+Una vez tenemos esta matriz construida podemos ver que la distancia mínima del código es 4 pues no hay tres columnas iguales mientras que si que existen 4 columnas dependientes. ($H_1=H_4+H_5+H_6$)
+
+Por el teorema \ref{theorem:Codigo_detector_corrector} sabemos que este código, con $d=4=2\times 1 + 1 + 1$ es capaz de corregir 1 error y detectar 2 simultáneamente.
+
+\spart
+
+Como ya hemos visto en ejercicios anteriores, el proceso a seguir consiste en calcular el síndrome de cada palabra recibida. Si este síndrome es 0, leemos la palabra tal cual, pues es una palabra de nuestro código y asumimos que se ha recibido correctamente.
+
+En caso de que el síndrome no sea 0, construimos la fila de la tabla Slepian correspondiente al error que, con mayor probabilidad, se está produciendo y buscamos la palabra correspondiente.
+
+Para las palabras recibidas tenemos:
+\[S(00111111) = 0100, \ S(0110110) = 0000, \ S(0001111)=1111, \ S(1111000) = 0000\]
+
+En estas condiciones asumimos que la segunda y última palabra recibidas han sido correctas. Gracias a que la matriz generadora se encuentra en forma estándar podemos ver cómodamente que las letras correspondientes a esos dos mensajes son: $I$ y $N$ respectivamente.
+
+Para corregir el error de las otras dos letras recibidas calculamos los síndromes de errores pequeños obteniendo:
+\[S(0000100) = 0100, \ S(1000001)=1111\]
+
+Generamos ahora las filas de la tabla asociadas a esos dos errores obteniendo:
+\[\begin{array}{cccccccc}
+0000000 & 1001110 & 0101101 & 0011011 & 1100011 & 1010101 & 0110110 & 1111000 \\
+0000100 & 1001010 & 0101001 & 0011111 & 1100100 & 1010001 & 0110010 & 1111100 \\
+1000001 & 0001111 & 1101100 & 1011010 & 0100010 & 0010100 & 1110111 & 0111001 \end{array}\]
+
+Así para la primera y tercera letra leemos respectivamente ``0011011'' y ``1001110''. Finalmente, podemos ver que estos códigos se corresponden con las letras $B$ y $L$.
+
+Parece evidente que en este caso se han producido más errores de la cuenta puesto que nuestro programa leerá ``BILN'' cuando parece evidente que el mensaje debería ser ``BIEN''.
 \end{problem}
 
 \begin{problem}[5]
@@ -5779,6 +5820,47 @@ el mensaje $$000000,100201,020101,010021,001022,100110,000000$$
 letras). ¿Qué te han querido decir?
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+La matriz controladora de paridad será:
+
+\[H = \left(\begin{array}{cccccc}
+1 & 1 & 0 & 1 & 0 & 0 \\
+1 & 0 & 1 & 0 & 1 & 0 \\
+0 & 1 & 1 & 0 & 0 & 1 \\
+\end{array} \right)\]
+
+Se trata de un código de $M=3^3=27$ palabras de longitud $n=6$ con distancia mínima $d=3$ puesto que dos columnas de la matriz $H$ siempre son independientes pero no tres.
+
+\spart
+
+Calculamos el síndrome de cada código recibido:
+\[\begin{array}{ccc}
+S(000000) & = & 000\\
+S(100201) & = & 011\\
+S(020101) & = & 020\\
+S(010021) & = & 122\\
+S(001022) & = & 000\\
+S(100110) & = & 220\\
+S(000000) & = & 000
+\end{array}\]
+
+De todas estas palabras tenemos 3 que parecen haber sido recibidas correctamente. Como la matriz generadora se encuentra en forma estándar podemos descifrar fácilmente estas letras teniendo que el mensaje recibido será de la forma:
+\[A\_\_\_B\_A \]
+
+Buscamos ahora los errores que propician esos síndromes obteniendo:
+\[S(001000) = 011, \ S(0000020) = 020, \ S(002100) = 122, \ S(200000)=220\]
+
+En esta ocasión da pereza escribir la tabla de Slepian completa, pues cada fila tendrá 27 columnas.
+
+Vamos a ver en qué nos queda cada código con error si le restamos el error que causa su síndrome:
+\[100201 \to 102201, \ 020101 \to 020111, \ 010021 \to 011221, \ 100110 \to 200110\]
+
+Descifrando estas letras llegamos al mensaje:
+\[ALGEBRA \]
 \end{problem}
 
 
