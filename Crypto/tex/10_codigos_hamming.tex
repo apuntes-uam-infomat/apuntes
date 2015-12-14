@@ -33,3 +33,107 @@ Si queremos encontrar el código Ham(2,3) óptimo con distancia mínima $d=3$ te
 1 & 0 & 1 & 2
 \end{array}\right)\]
 \end{example}
+
+\begin{prop}
+Sean $q,r \geq 2$ enteros (podríamos tomar también $r=1$ pero se trataría de códigos muy triviales). Sean
+\[n = \frac{q^r-1}{q-1}, \ M=q^{n-r} \implies M(1+n(q-1))=q^n\]
+\end{prop}
+\begin{proof}
+\[M(1+n(q-1))=q^n \iff 1+n(q-1) = q^r \iff n(q-1)=q^r-n \iff n=\frac{q^r-1}{q-1}\]
+\end{proof}
+
+\begin{corol}
+Si $q$ es potencia de un primo, entonces el código $Ham(r,q)$ es perfecto con $d=3$
+\end{corol}
+
+\obs Que los parámetros satisfagan la ecuación de Hamming no garantiza que el código en cuestión exista.
+
+\begin{example}
+Podemos ver que no existe un $(7,6^5,3)$-código 6-ario.
+
+Sin embargo, los parámetros de este código son ``de Hamming'' pues satisfacen
+\[\frac{6^2-1}{6-1}=7=n=r+k \text{ siendo } r=2 \ k=5 \text{ y } d=3\]
+
+\end{example}
+
+Si se buscan soluciones a las ecuaciones de Hamming, que recordemos son de la forma:
+\[M \times \sum_{i=0}^t {n \choose i} (q-1)^i=q^n\]
+con $n,t \leq 1000$ y $q \leq 100$ salen los códigos de Hamming que hemos visto hasta ahora con $t=1$, los triviales y 3 soluciones más que son:
+
+\begin{enumerate}
+\item $(23,2^{12},7)$-código binario, conocido como \concept{Código de Golay binario}
+\item $(90,2^{78},5)$-código binario.
+\item $(11,3^6,5)$-código ternario, conocido como \concept{Código de Golay ternario}
+\end{enumerate}
+
+En concreto, para los casos 1 y 3 si que existe un código con esas características mas no así con el segundo caso.
+
+\begin{theorem}
+No existe un $(90,2^{78},5)$-código binario.
+\end{theorem}
+
+\begin{theorem}
+Si $q$ es potencia de un primo, entonces todo código perfecto no trivial tiene los parámetros de un Hamming o un Golay
+\end{theorem}
+
+Con esto tenemos que, definiéndolos sobre cuerpos, tenemos códigos binarios para corregir 1 o 3 errores (Hamming y Golay binario respectivamente) y códigos ternarios para corregir dos errores (Golay ternario).
+
+Veamos cómo trabaja un algoritmo de corrección para un \textbf{código perfecto} con $d=2t+1$.
+
+\begin{enumerate}
+\item Recibo $y\in F_q^n$
+\item Busco $x_0 \in \algb{C}$ tal que $d(x_0,y)=\min\{d(x,y)\tq x \in \algb{C}\}$
+\item Leo $x_0$
+\end{enumerate}
+
+Podemos observar que este código nunca pita sino que siempre lee algo. Esto funciona porque estamos trabajando con un código perfecto que se caracteriza por dividir el espacio \textbf{total} en el que se mueven las palabras en bolas disjuntas.
+
+Puesto que todo el espacio está divido, siempre encontraremos algún $x_0$ y, puesto que las bolas son disjuntas, no tendremos conflictos con el $x_0$ que será único.
+
+Veamos ahora una versión de este algoritmo que utiliza los síndromes. Supongamos que tenemos un código $Ham(r,q)$ con $d=3 \implies t=1$. Los pasos a seguir son:
+
+\begin{enumerate}
+\item Recibo $y$
+\item Calculo $S=S(y)$
+\item Si $S=0$ leo $y$
+\item Si $S\neq 0$ busco $i,λ$ tales que $S=λH_i$ y leo $y-λH_i$.
+\end{enumerate}
+
+Este algoritmo se apoya en la siguiente propiedad:
+\[\forall y \in F_q^n\setminus \{0\} \ \ \exists ! i, \ \exists ! λ\in F_q\setminus\{0\} \text{ t.q } y=λH_i\]
+
+\obs Sea $S=(s_1,...,s_r)$ con $s_1=s_2=...=s_e=0$ y $s_{e+1} \neq 0$ entonces
+\[S = \left( \begin{array}{c} 0 \\ \vdots \\ 0 \\ \frac{s_{e+2}}{s_{e+1}} \\ \vdots \\ \frac{s_{r}}{e_{e+1}}=H_i\end{array}\right)\]
+
+\begin{example}
+Supongamos que estamos empleando un código $Ham(3,3)$ y que recibimos el mensaje $y=0112200000000$, ¿Qué leemos?.
+
+Lo primero que debemos hacer es construir la matriz controladora de paridad:
+\[H = \left(\begin{array}{ccccccccccccc}
+0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 2 & 2 & 2\\
+1 & 0 & 1 & 2 & 0 & 1 & 2 & 0 & 1 & 2 & 0 & 1 & 2
+\end{array}\right)\]
+
+Ahora debemos calcular el síndrome de la palabra recibida:
+\[S(y) = \left(\begin{array}{c} 2 \\ 1 \\ 2\end{array} \right) = 2 \cdot  \left(\begin{array}{c} 1 \\ 2 \\ 1\end{array} \right) = 2H_{12}\]
+
+Por tanto leeremos $y-2H_{12}=0112200000010$.
+\end{example}
+
+\begin{example}
+Vamos a construir el código $Ham(2,4)$.
+
+Lo primero que tenemos que hacer es construir un cuerpo de 4 elementos que, recordando algo de Galois, será $\{0,1,α,α+1\}$ siendo $α^2=α+1$.
+
+En el caso del código que queremos construir tenemos que $r=2$, $n=\frac{4^r-1}{4-1}=5$. Por tanto la matriz $H$ tendrá dimensión $2 \times 5$. Vamos a construirla:
+\[H = \left(\begin{array}{ccccc}
+0 & 1 & 1 & 1 & 1\\
+1 & 0 & 1 & α & α+1
+\end{array} \right)\]
+
+Supongamos ahora que leemos el mensaje $y=(0,0,1,α,0)$. Para corregirlo calculamos su síndrome obteniendo:
+\[S(y) =  \left(\begin{array}{c} α+1 \\ α\end{array} \right)=(α+1) \left(\begin{array}{c} 1 \\ α+1\end{array} \right)\]
+
+Por tano leemos $y-(α+1)(1,α+1) = (0,0,1,α,α+1)$
+\end{example}
