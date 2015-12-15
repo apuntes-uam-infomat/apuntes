@@ -286,3 +286,4 @@
 \espell[2]#m
 \spn#m
 \densein#m
+\fourier#m
