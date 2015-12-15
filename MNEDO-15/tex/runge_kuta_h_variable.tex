@@ -165,7 +165,7 @@ Cualquier problema de valor inicial puede escribirse en \concept{forma autónoma
 el problema original es equivalente al problema autónomo:
 \[\overline{y}'(x)=\overline{f}(\overline{y}(x)), \ \ \overline{y}(a)=\tilde{y}^0\]
 
-\begin{problem}[Ejercicio de examen]Ejercicio de examen: Si un sistema cumple $c_i = \sum_{j=1}^sa_{ij}$ entonces la solución del sistema y la del automatizado coinciden
+\begin{problem}[ Ejercicio de examen]Si un sistema cumple $c_i = \sum_{j=1}^sa_{ij}$ entonces la solución del sistema y la del automatizado coinciden
 
 \solution
 
@@ -185,8 +185,12 @@ Por otro lado, si aplicamos la misma definición del método al problema autóno
 Con las relaciones entre las funciones originales y las del sistema autónomo podemos reescribir las dos ecuaciones anteriores (la de la $\overline{K}_i$ y la de $\overline{y}_n$) de la siguiente forma:
 \small
 \[\overline{K}_i = \left( \begin{array}{c} r_i \\ K_i \end{array}\right) = \left(\begin{array}{c} 1 \\ f\left(x_n+h\sum a_{ij}r_j, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\end{array}\right) \implies \]
-\[\implies \left( \begin{array}{c} x_{n+1} \\ y_{n+1}\end{array}\right) = \left( \begin{array}{c} x_n \\ y_n\end{array}\right) + h\sum_{i=1}^sb_i\left( \begin{array}{c} r_i \\ K_i\end{array}\right)=  \left(\begin{array}{c} x_n+h\sum_{i=1}^sb_i \\ y_n+h\sum_{i=1}^sb_if\left(x_n+h\sum a_{ij}r_j, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\end{array}\right)\]
+\[\implies \left( \begin{array}{c} x_{n+1} \\ y_{n+1}\end{array}\right) = \left( \begin{array}{c} x_n \\ y_n\end{array}\right) + h\sum_{i=1}^sb_i\left( \begin{array}{c} r_i \\ K_i\end{array}\right)=  \left(\begin{array}{c} x_n+h\sum_{i=1}^sb_i \\ y_n+h\sum_{i=1}^sb_if\left(x_n+h\sum a_{ij}r_j, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\end{array}\right)=\]
 \normalsize
+
+\obs La primera igualdad procede de la idea feliz de que escribiendo $\bar{K}_i$ de esa forma simplificamos la notación\footnote{Supongo que será parte de la definición de los métodos Runge-Kutta sobre sistemas}. Una vez tenemos eso, podemos deducir la segunda igualdad de la siguiente forma:
+\[\overline{K}_i = \overline{f}\left(\overline{y}_n+h\sum_{j=1}^ia_{ij}\overline{K}_j\right) = \left(\begin{array}{c} 1 \\ f(\overline{y}_n(x)+h\sum_{j=1}^ia_{ij}\overline{K}_j(x))  \end{array} \right) =\]
+\[= \left(\begin{array}{c} 1 \\ f\left(\left(\begin{array}{c} x_n \\ y_n\end{array}\right)+h\sum_{j=1}^ia_{ij}\left(\begin{array}{c} r_j \\ k_j\end{array}\right)\right)  \end{array} \right) = \left(\begin{array}{c} 1 \\ f\left(\left(\begin{array}{c} x_n + h\sum_{j=1}^ia_{ij}r_j \\ y_n + h \sum_{j=1}^ia_{ij}k_j\end{array}\right)\right)  \end{array} \right)\]
 
 Sabemos que cualquier método RK satisface $\sum b_j=1$. Por otro lado, por la construcción que hemos realizado, podemos ver que $r_j=1$.
 
@@ -222,17 +226,17 @@ de modo que el residuo queda escrito como
 \[R_n=F(h)-G(h)\]
 
 Por Taylor podemos ver que
-\[F(x_n+h)=F(x_n)+\sum_{j=1}^p\frac{\partial^j F}{\partial h^j}(x_n)\frac{h^j}{j!} + O(h^{p+1})\]
+\[F(h)=F(0)+\sum_{j=1}^p\frac{\partial^j F}{\partial h^j}(0)\frac{h^j}{j!} + O(h^{p+1})\]
 Pero sabemos que
-\[F(x_n+h)=e^{x_n+h}=e^{x_n}e^h \implies \frac{\partial^p F}{\partial h^p}(x_n)=e^{x_n}=y(x_n)\]
+\[F(h)=e^{x_n+h}=e^{x_n}e^h \implies \frac{\partial^p F}{\partial h^p}(0)=e^{x_n}=y(x_n)\]
 
 Atendiendo a esta propiedad que acabamos de mencionar podemos escribir:
-\[F(x_n+h)=y(x_n)+\sum_{j=1}^p \frac{h^j}{j!}y(x_n) + O(h^{p+1})\]
+\[F(h)=y(x_n)+\sum_{j=1}^p \frac{h^j}{j!}y(x_n) + O(h^{p+1})\]
 
 Por otro lado tenemos
 \[\left.\frac{\partial^p G}{\partial h^p}\right|_{h=0} = \left. p\sum_{j_1=1}^sb_{j_1}K_{j_1}^{(p-1)}\right|_{h=0}\]
 siendo
-\[K_{j_1}=\left.(p-1)\sum_{j_2=1}a_{j_1j_2}K_{j_2}^{(p-2)}\right|_{h=0} = \left.(p-1)!\sum_{j_1h_2...j_p}^2a_{j_1j_2}\cdots a_{j_{p-1}j_p} K_{j_p}^{(0)}\right|_{h=0}\]
+\[K_{j_1}^{(p-1)}=\left.(p-1)\sum_{j_2=1}a_{j_1j_2}K_{j_2}^{(p-2)}\right|_{h=0} = \left.(p-1)!\sum_{j_1h_2...j_p}^2a_{j_1j_2}\cdots a_{j_{p-1}j_p} K_{j_p}^{(0)}\right|_{h=0}\]
 Una vez conocemos la fórmula de las derivadas, podemos escribir el desarrollo de Taylor de $G(h)$ que nos queda:
 \[G(h)=y(x_n)+y(x_n)\sum_{j=1}^p\frac{h^j}{j!}\sum_{j_1,...,j_p=1}^sb_{ij}a_{j_1j_2}\cdots a_{j_{p-1}j_p}K_{j_p}^{(0)} + O(h^{p+1})\]
 
@@ -273,14 +277,60 @@ que es equivalente a escribir:
 \[y_{n+1}=y_n + h \sum_{i=1}^sb_if(x_n+c_ih,Y_i)\]
 
 Trabajando con vectores definidos en $\real^s$ podemos escribir:
-\[\overline{Y}=y_ne+hλA\overline{Y} \text{ siendo } e=(1,...,1)\in \real^s\]
-\[y_{n+1}=y_n+hλb^T\overline{Y}\]
+\[\left(\begin{array}{c}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_s
+\end{array}\right) = \left(\begin{array}{c}
+y_n \\
+y_n \\
+\vdots \\
+y_n
+\end{array}\right) +h\cdot \left(\begin{array}{ccccc}
+a_{11} & a_{12} & a_{13} & \cdots & a_{1,s}\\
+a_{21} & a_{22} & a_{23} & \cdots & a_{2,s}\\
+\vdots & \cdots & \cdots & \ddots & \vdots \\
+a_{s1} & a_{s2} & a_{s3} & \cdots & a_{ss}
+\end{array}\right) \cdot \left( \begin{array}{c} f(x_n+c_jh, Y_1) \\ f(x_n+c_jh, Y_2) \\ \vdots \\ f(x_n+c_jh, Y_s)\end{array}\right)\]
+
+\[y_{n+1}=y_n+h\left(b_1,b_2, \cdots, b_s \right)\left(\begin{array}{c}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_s
+\end{array}\right)\]
+
+Recordando que estamos considerando $y'=f(x,y)=λy$ podemos simplificar la primera ecuación obteniendo:
+\[\left(\begin{array}{c}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_s
+\end{array}\right) = \left(\begin{array}{c}
+y_n \\
+y_n \\
+\vdots \\
+y_n
+\end{array}\right) +h\cdot \left(\begin{array}{ccccc}
+a_{11} & a_{12} & a_{13} & \cdots & a_{1,s}\\
+a_{21} & a_{22} & a_{23} & \cdots & a_{2,s}\\
+\vdots & \cdots & \cdots & \ddots & \vdots \\
+a_{s1} & a_{s2} & a_{s3} & \cdots & a_{ss}
+\end{array}\right) \cdot λ \cdot \left(\begin{array}{c}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_s
+\end{array}\right)\]
 
 Por definición, teníamos que el dominio de estabilidad lineal es:
 \[D = \{z=hλ \tq |R(z)|<1\}\]
 
 En nuestro caso tendremos
-\[R(λh) = 1+λhb^t(1-λhA)^{-1}e\]
+\[R(λh) = 1+λh\left(b_1,b_2,\cdots ,b_s \right)(1-λhA)^{-1}e, \text{ siendo } e \text{ vector columna de } 1s\]
+
+\obs Para entender esta fórmula basta con despejar el vector columna $\overline{Y}=(Y_1,...,Y_n)^T$ de la fórmula que lo define.
 
 No obstante, para los métodos Runge-Kutta esta definición se acompaña de cierta precisión, que recoge el siguiente lemma:
 \begin{lemma}
@@ -290,11 +340,11 @@ Aquí $\mathbb{P}_S$ es el conjunto de los poliniomios de grado menor o igual qu
 \end{lemma}
 \begin{proof}
 Recordando la definición de matriz inversa tenemos:
-\[(1-za)^{-1}=\frac{\text{adj}(1-zA)^T}{det(1-zA)}\]
+\[(1-zA)^{-1}=\frac{\text{adj}(1-zA)^T}{det(1-zA)}\]
 
 Los elementos de $(1-zA)$ son lineales. El adjunto pertenece a $\mathbb{P}_{S-1}$ por lo que pertenece a $\mathbb{P}_S$.
 
-Si el método es explícito, el determinante es 1.
+Si el método es explícito, la matriz $(1-zA)$ será triangular inferior con 1s en la diagonal por lo que su determinante será 1..
 \end{proof}
 \begin{corol}
 Ningún RK explícito es A-estable.
@@ -304,13 +354,13 @@ Ningún RK explícito es A-estable.
 Sea $R(z)$ una función racional no constante entonces
 \[|R(z)| < 1 \ \forall z \in \cplex^- \iff \text{ los polos de R tienen parte real positiva y } |R(t)| < 1 \ \forall t \in \real\]
 \end{lemma}
-\begin{proof}
-Si $|R(z)|<1$ en $\cplex^-$ los polos sólo pueden estar en $\cplex^+$ y, por continuidad, sabemos que $|R(z)|\leq1$ en $\overline{\cplex}$ lo que implica que $|R(t)|\leq 1 \ \forall t \in \real$.
+%\begin{proof}
+%Si $|R(z)|<1$ en $\cplex^-$ los polos sólo pueden estar en $\cplex^+$ y, por continuidad, sabemos que $|R(z)|\leq1$ en $\overline{\cplex}$ lo que implica que $|R(t)|\leq 1 \ \forall t \in \real$.
 
-Si todos los polos tienen parte real positiva, entonces el máximo y el m'inimo se alcanzan en la frontera.
+%Si todos los polos tienen parte real positiva, entonces el máximo y el mínimo se alcanzan en la frontera.
 
 %TODO completar la ultima afirmación que no la veo clara.
-\end{proof}
+%\end{proof}
 
 \section{Pares encajados}
 
