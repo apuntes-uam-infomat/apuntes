@@ -300,7 +300,7 @@ Si el método es explícito, el determinante es 1.
 Ningún RK explícito es A-estable.
 \end{corol}
 
-\begin{lemma}
+\begin{lemma}\label{lemma:a-estable}
 Sea $R(z)$ una función racional no constante entonces
 \[|R(z)| < 1 \ \forall z \in \cplex^- \iff \text{ los polos de R tienen parte real positiva y } |R(t)| < 1 \ \forall t \in \real\]
 \end{lemma}
@@ -311,3 +311,96 @@ Si todos los polos tienen parte real positiva, entonces el máximo y el m'inimo 
 
 %TODO completar la ultima afirmación que no la veo clara.
 \end{proof}
+
+\section{Pares encajados}
+
+En general es habitual encontrarnos con que el método aproxima bien la función en algunos intervalos pero no en otros. En estas ocasiones lo que nos interesa es tomar un $h$ más pequeño en aquellas regiones en las que la función es singular, invirtiendo mucho esfuerzo en ello y relajarnos tomando $h$ mayor en regiones donde la función es más estable.
+
+Tomemos como ejemplo el \textbf{método de Euler} que, recordemos, venía definido por la recursión:
+\[y_{n+1} = y_n + h f(x_n,y_n)\]
+
+El error se calcula como:
+\[\text{error} = y''(x_n)\frac{h_n^2}{2}+O(h^3)\]
+
+Cuando estudiemos el intervalo $x_n \to x_{n+1}$ tendremos el error:
+\[\text{error} = \left(f_x(x_n,y_n)+f_y(x_n,y_n)f(x_n,y_n) \right)\frac{h_n^2}{2}\]
+
+Si el error es menor, en valor absoluto, que una cierta toleracia, aceptamos el valor $y_{n+1}$ calculado. En caso contrario, repetimos estas cuentas reduciendo $h$ a la mitad.
+
+\obs Este procedimiento corre el riesgo de entrar en bucle infinito si la tolerancia que tomamos es demasiado pequeña. En la práctica acostumbra a establecerse un máximo de iteraciones tras las cuales dejamos de intentar mejorar el error.
+
+Una pega importante de este procedimiento es que para cada cálculo del error tenemos que hacer dos evaluaciones de funciones derivadas (que suelen ser más complicadas que la función $f$ original). Computacionalmente este trabajo es muy costoso y para evitarlo se emplean los pares encajados.
+
+El \textbf{par encajado} consiste en el empleo de dos métodos Runge-Kutta:
+\begin{itemize}
+\item \textbf{Avanzador}
+Este método tendrá orden $p$ y su tablero de Butcher será:
+
+\begin{center}
+\begin{tabular}{c|c}
+c & A \\
+\hline
+ & b\\
+\end{tabular}
+\end{center}
+
+
+\item \textbf{Estimador}
+Este método tendrá orden $\tilde{p}>p$ y su tablero de Butcher será:
+
+\begin{center}
+\begin{tabular}{c|c}
+c & A \\
+\hline
+ & $\tilde{b}$\\
+\end{tabular}
+\end{center}
+\end{itemize}
+
+La forma de proceder consiste en suponer que el estimador nos da la solución exacta de forma que el error será:
+\[\text{error} = h_n \sum_{i=1}^s(b_i-\tilde{b}_i)K_i\]
+
+Veamos un ejemplo
+\begin{example}
+Consideramos los métodos:
+\begin{itemize}
+\item \textbf{Avanzador}
+\begin{center}
+\begin{tabular}{c|cc}
+0 & 0 & 0 \\
+1 & 1 & 0\\
+\hline
+ & 1 & 0\\
+\end{tabular}
+\end{center}
+
+\item \textbf{Estimador}
+
+\begin{center}
+\begin{tabular}{c|cc}
+0 & 0 & 0 \\
+1 & 1 & 0 \\
+\hline
+ & 1/2 & 1/2\\
+\end{tabular}
+\end{center}
+\end{itemize}
+
+Ambos métodos emplearán las mismas $K_i$, pues se definen igual. Una vez vemos esto podemos escribir:
+
+\[\left\{ \begin{array}{l}
+K_1=f(x_n,y_n)\\
+K_2=f(x_n+h,y_n+hK_1)
+
+\end{array} \implies  \begin{array}{l}
+y_{n+1} = y_n+hb_1K_1+hb_2K_2\\
+\tilde{y}_{n+1} = \tilde{y}_n + h\tilde{b}_1K_1 + h\tilde{b}_2K_2
+\end{array}\right.\]
+
+Aunque puede parecer que tenemos que calcular dos $K$ en cada paso, la realidad es que $K_2$ de un paso coincide con $K_1$ del paso siguiente.
+
+El método estimado se ha empleado en cada caso para estimar el error $y_{n+1}$.
+\end{example}
+
+En general, todos los métodos en los que la primera $K$ que calculamos en cada paso coincide con la última $K$ calculada en el paso anterior, se denominan \concept{FSAL} y vienen caracterizados por la propiedad:
+\[a_{s_i}=b_i \text{ con } i=1...2 \text{ y } c_i = \sum_{j=1}^sa_{ij}\]
