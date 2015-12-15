@@ -248,7 +248,7 @@ Invocar la tesis de Church-Turing no prueba nada, pero con frecuencia puede ser 
 
 Consideramos funciones parciales y funciones de $A\subset\mathbb{N}^k\to \mathbb{N}$ con $k\ge 0$.
 
-\begin{defn}[Función\IS recursiva]
+\begin{defn}[Función\IS parcial]
 	$F=\{f:A\subseteq\mathbb{N}^k\to\mathbb{N}\tq k=0,1,2,\hdots\}$.
 	Recordatorio: las constantes son las funciones $0-$arias.
 	Una función $k-$aria con $k\ge 1$ también puede ser constante.
@@ -371,3 +371,82 @@ Un conjunto $A \subset \nat^k$ es recursivo si y sólo si $\ind_A$ es \textbf{re
 \begin{defn}[Conjunto recursivamente enumberable]
 Un conjunto $A \subset \nat^k$ es recursivamente enumerable si es el dominio de una función recursiva (parcial o total).
 \end{defn}
+
+\obs Si $A$ es un conjunto recursivo su complementario también lo es
+\obs Si $A$ es recursivo, $A$ es recursivamente enumerable. Para comprobar esta afirmación basta con tomar $f(a)=\ind_A(a)$ para $a\in A$ que sabemos es primitiva pues $A$ es un conjunto recursivo. Por tanto $A$ es el dominio de una función recursiva.
+
+Puede demostrarse (aunque aquí no lo vamos a hacer) que las siguientes formulaciones de ``A es recursivamente enumerable'' son equivalentes a la definición:
+\begin{enumerate}
+\item Existe una función recursiva $f$ tal que dom($f$)=$A$ y $f=1$ en $A$.
+\item $A$ es el rango de una función recursiva parcial
+\item $A=\emptyset$ ó $A$ es el rango de una función recursiva total.
+\item Existe una \MT que se detiene exactamente cuando su inputo $a$ es un elemento de $A$.
+\end{enumerate}
+
+\begin{theorem}
+Dada una función $f\in F$, $f$ es recursiva si existe una \MT que calcula sus valores. Si una \MT calcula los valores de una función $g \in F$, entonces $g$ es recursiva.
+\end{theorem}
+
+\begin{theorem}
+Un conjunto $A$ es recursivo \textbf{si y sólo si} $A$ y $A^c$ son recursivamente enumerables.
+\end{theorem}
+\begin{proof}
+Como tantas otras veces vamos a ver los dos sentidos de la implicación.
+\begin{enumerate}
+\item $\implies$
+Este sentido de la implicación es trivial y su comprobación queda como ejercicio para el lector.
+
+\item $\Longleftarrow$
+Tenemos que definir como función claculable $\ind_A$, con lo que estaríamos demostrando que $A$ es recursivo por definición.
+
+Sean $MT_A$ y $MT_{A^c}$ máquinas de Turing que se detienen exactamente cuando el input pertenece a $A$ y $A^c$ respectivamente.
+
+Es decir, si tomamos un input perteneciente a $A$, la máquina $MT_{A^c}$ se ejecutará infinitamente mientras que $MT_{A}$ parará su ejecución.
+
+Una vez tenemos esto podemos definir la función $\ind_A$ como:
+\[\ind_A = \left\{ \begin{array}{lll}
+1 & si & MT_A \text{ detiene su ejecución mientras } MT_{A^c} \text{ se ejecuta infinitamente}\\
+0 & si & MT_{A^c} \text{ detiene su ejecución mientras } MT_{A} \text{ se ejecuta infinitamente}
+\end{array}\right.\]
+\end{enumerate}
+\end{proof}
+
+\begin{theorem}
+No existe una enumeración efectiva (calculable, algorítmica) de las funciones recursivas totales $\appl{f}{\nat}{\nat}$
+\end{theorem}
+\begin{proof}
+Vamos a realizar esta demostración por reducción al absurdo.
+
+Supongamos que existe esta enumeración. En ese caso la función $g(n)=f_n(n)+1$, donde $f_n$ es la $n$-ésima función de la enumeración, es recursiva total pero no está en la lista.
+
+Para ver que no está en la lista basta con ver que si la comparamos con la función $f_n$ obtenemos un valor distinto en $n$ por lo que difiere en al menos un punto con todas las funciones de la lista.
+\end{proof}
+
+\begin{theorem}
+Existe una enumeración efectiva de las funciones recursivas (parciales o totales)
+\end{theorem}
+
+\begin{theorem}
+Existe una enumeración efectiva de las máquinas de Turing.
+\end{theorem}
+
+\begin{theorem}
+Existe una máquina de Turing universal, es decir, existe una máquina de Turing $MTU$ tal que $MTU(m,n)$ (donde $m$ es el código de una máquina de Turing y $n$ es un número natural) simula la acción de la máquina de Turing codificada por $m$ evaluada sobre el input $n$.
+\end{theorem}
+\begin{proof}
+En el mundo de hoy es sencillo creer en la existencia de esta máquina de Turing universal pues sería algo similar a un ordenador de los que hoy en día todos conocemos.
+
+\textbf{Algoritmo para resolver el problema}
+
+Dada una enumeración efectiva $MT_0,MT_1,...$ usamos el algoritmo que permite calcular la lista para hallar $MT_n$ y, a continuación, usamos el algoritmo de esta máquina para averiguar qué hace sobre el input $k$.
+
+Puesto que tenemos definido el algoritmo, invocamos la tesis de \textbf{Church-Turing} que nos garantiza que existe una $MT$ que ejecuta este algoritmo.
+
+Esta $MT$ será una máquina de Turing universal.
+\end{proof}
+
+\obs Lo que acabamos de hacer es una pseudo-demostración del teorema. Una auténtica demostración requeriría dar explícitamente una sucesión de cuaternas que definen la $MTU$.
+
+\begin{theorem}
+El problema de la detención es insoluble
+\end{theorem}
