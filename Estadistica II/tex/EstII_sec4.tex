@@ -419,6 +419,8 @@ Number of Fisher Scoring iterations: 5
     Tomando $H_0 : β_1 = ... = β_k = 0$, la ``Null deviance'' es $D_0^2$ para este modelo reducido.
     \end{defn}
 
+  \item \textit{Family = binomial} es el valor que utilizar para que sea regresión logística.
+
 \end{itemize}
 
 \end{example}
@@ -455,5 +457,218 @@ R = \{47.2 > \chi^2_{1;0.05}\}\to \text{ p-valor } \simeq 0
 Para contrastar $H_0 : β_j = 0$ tenemos 2 posibilidades. La primera es el test de ``Wald'' que es el que hace $R$ pero también podemos construir un test de razón de verosimilitudes, que es lo que acabamos de hacer. Como en el ejemplo de $R$ hay 2 coeficientes, $M_0$ es sólamente $β_1 = 0$.
 
 
+\begin{example}
 
+Para el siguiente resultado:
+
+\begin{lstlisting}[style=mystyle]
+reg1 = glm(Y ~ edad, family='binomial')
+summary(reg1)
+
+
+Call:
+glm(formula = Y ~ edad, family = "binomial")
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.4321  -0.9215  -0.5392   1.0952   2.2433  
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -3.521710   0.416031  -8.465  < 2e-16 ***
+edad         0.064108   0.008532   7.513 5.76e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1  ' 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 596.11  on 461  degrees of freedom
+Residual deviance: 525.56  on 460  degrees of freedom
+AIC: 529.56
+
+Number of Fisher Scoring iterations: 4
+\end{lstlisting}
+
+
+
+
+Queremos calcular:
+\begin{itemize}
+  \item Modelo ajustado $P(\hat{y=1 | edad})$
+  \item Interpretación.
+  \item $H_0 : β_1 = 1$ con los 2 métodos conocidos, Wald y Razón de verosimilitudes (RV).
+  \item IC para $e^{β_1}$
+\end{itemize}
+
+Vamos a verlo.
+
+Recordamos que el modelo es:
+\[P_i = P(Y_i =1 | X = x) = \frac{1}{1+e^{-β'x}}\] donde $Y_1,...,Y_n \sim B(1,p_i)$ independientes.
+
+Entonces, \[P(\hat{y=1 | EDAD}) = \frac{1}{1+\exp(3.5217 - 0.0651 · EDAD)}\]
+
+La \textbf{interpretación} tiene que ver con $e^{\hat{β_1}} = 1.066$. Si la edad se incrementa un año, ¿Cuánto aumentan las apuestas de tener un infarto? $\tilde{O_i} = 1.066·O_i$
+
+Para el \textbf{contraste} con el método de \textbf{Wald}, rechazamos $H_0$ porque el p-valor del contrate $β_1 = 0$ es muy pequeño.
+
+Para el \textbf{contraste} utilizando RV, tenemos: $D_0^2 - D^2 = 591.11 - 525.56 = 70.55$ y utilizamos el resultado que asintóticamente es una $\chi^2$, con lo que la región de rechazo:
+
+\[R = \{D_0^2 - D^2 > \chi^2_{1;α}\}\]
+
+Consultando las tablas, vemos que para casi cualquier $α$, rechazamos porque el p-valor (que no estamos calculando) debe de ser casi 0. 
+
+Vamos a construir el \textbf{intervalo de confianza}.
+\[IC_{0.95}(β_1) = [0.064 - 1.96 · 0.0085]\] 
+Con lo que:
+\[ IC_{0.95}(e^{β_1}) = [e^{0.064 - 1.96 · 0.0085},e^{-0.064 + 1.96 · 0.0085}] \] 
+
+\end{example}
+
+
+\obs Como hemos visto, tenemos 2 contrastes para una misma hipótesis. Son contrastes distintos que usualmente dan los mismo resultados. Se podrían ``cocinar'' un poco los datos para rechazar con un contraste y aceptar con el otro.
+
+
+\subsection{Con 2 variables regresoras}
+
+Ahora vamos a tomar el modelo con la edad y la obesidad. En este caso, el estadístico $D_0^2 - D^2 = 596.11 -525.55$ sirve para contrastar $H_0 : β_1 = β_2 = 0$ y se compara con $\chi^2_2$ (2 grados de libertad porque imponemos 2 restricciones).
+
+
+Vamos a verlo:
+
+\begin{lstlisting}[style=mystyle]
+
+reg = glm(Y ~ edad+obesidad, family='binomial')
+# # Recordamos:
+# reg1 = glm(Y ~ edad, family='binomial')
+
+summary(reg)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.4401  -0.9227  -0.5384   1.0905   2.2497  
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -3.581465   0.742611  -4.823 1.42e-06 ***
+edad         0.063958   0.008674   7.374 1.66e-13 ***
+obesidad     0.002523   0.025934   0.097    0.923    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1  ' 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 596.11  on 461  degrees of freedom
+Residual deviance: 525.55  on 459  degrees of freedom
+AIC: 531.55
+
+Number of Fisher Scoring iterations: 4
+
+\end{lstlisting}
+
+Ahora comparamos si al añadir la obesidad obtenemos suficiente información. 
+
+\begin{lstlisting}[style=mystyle]
+anova(reg1, reg, test='Chisq')
+Analysis of Deviance Table
+
+Model 1: Y ~ edad
+Model 2: Y ~ edad + obesidad
+  Resid. Df Resid. Dev Df  Deviance P(>|Chi|)
+1       460     525.56                       
+2       459     525.55  1 0.0094552    0.9225
+\end{lstlisting}
+
+Al ser las desviaciones muy similares quiere decir que al añadir la obesidad no obtenemos suficiente información como para que merezca la pena añadirla. Es por ello que el p-valor es muy grande.
+
+\section{Regresión logística como clasificador}
+
+\begin{defn}[Regla de clasificación\IS logística]
+Clasificar $x$ en el grupo 1 (i.e. $Y=1$) si y solo si
+\[
+\widehat{\mathbb{P}(Y=1|x)}>\widehat{\mathbb{P}(Y=0|x)}
+\]
+\end{defn}
+Sustituyendo por la función logística tenemos una regla lineal (diferente en general a la de Fisher): Clasificar $x$ en el grupo 1 (i.e. $Y=1$) si y solo si
+\[
+\hat\beta_0 +\hat\beta_k x_1 + \ldots + \hat\beta_k x_k > 0.
+\]
+
+En el \textbf{ejemplo}, clasificamos a un individuo como enfermo si y solo si
+\[
+-3.58 + 0.064 \cdot \tt{edad} + 0.0025 \cdot \tt{obesidad} > 0.
+\]
+
+
+En la nube de puntos, incluimos la frontera de clasificación según la regla de regresión logística como línea discontinua azul:
+
+\centerline{\includegraphics[height=8cm]{pdf/tema4/_edadobesidad-reglas-log}}
+
+\section{Regla de Bayes}
+
+Vamos a ver (en la tercera asignatura del grado) la regla de Bayes para clasificar.
+
+Imaginemos que tenemos las probabilidades reales, entonces, $P(Y=1 | x) > P(Y=0 | x)$. 
+
+
+
+En el caso en que 
+\begin{enumerate}
+\item $P_0$ tiene densidad $f_0$ y  $P_1$ tiene densidad $f_1$,
+\item las \textbf{probabilidades a priori} de las poblaciones son
+$$\mathbb{P}(P_0)=\pi_0,\quad \mathbb{P}(P_1)=\pi_1\quad (\pi_0+\pi_1=1).$$
+\item Distribución condicionada de las variables explicativas: $P(X|Y=0) = 0$ tiene densidad $f_0$ y $P(X|Y=1)$ tiene densidad $f_1$.
+
+\subitem Ahora, aplicamos la regla de bayes: \[P(Y=1 | X=x) = \frac{P(X=x|Y=1)P(Y=1)}{P(X=x)} = \frac{f_1(x)π_1}{π_0f_0(x) + π_1f_1(x)}\]
+Por otro lado:
+\[P(Y=0 | X=x) = \frac{P(X=x|Y=0)P(Y=0)}{P(X=x)} = \frac{f_0(x)π_0}{π_0f_0(x) + π_1f_1(x)}\]
+
+\paragraph{Conclusión}
+\[
+\mathbb{P}(Y=1|x)>\mathbb{P}(Y=0|x) \Leftrightarrow \pi_1 f_1(x)>\pi_0 f_0(x).
+\]
+\end{enumerate}
+
+\begin{prop}
+La regla Bayes es óptima (su error de clasificación es el mínimo posible).
+\end{prop}
+\begin{proof}
+No da tiempo a verlo, asique nos lo creemos.
+\end{proof}
+\subsection{Bayes para normalidad}
+
+Supongamos que $f_0$ y $f_1$ son normales: para $x\in\mathbb{R}^p$,
+\[
+f_i(x) = |\Sigma_i|^{-1/2}(2\pi)^{-p/2}\exp\left\{-\frac{1}{2}(x-\mu_i)'\Sigma_i^{-1}(x-\mu_i)    \right\},\quad i=0,1.
+\]
+
+
+\textbf{Regla Bayes bajo normalidad}\\
+$x$ en $P_0$ si $\displaystyle  d_{M_0}^2(x,\mu_0)<d^2_{M_1}(x,\mu_1)+2\log\left(\frac{\pi_0|\Sigma_1|^{1/2}}{\pi_1|\Sigma_0|^{1/2}}\right)$
+donde $\displaystyle d_{M_i}^2(x,\mu_i)=(x-\mu_i)'\Sigma_i^{-1}(x-\mu_i)$ es el cuadrado de la distancia de Mahalanobis entre $x$ y $\mu_i$ ($i=0,1$).
+
+La distancia de Mahalanobis aparece porque es lo que está en el argumento de la exponencial de la normal. Se deja como ejercicio el convencerse de esto.
+
+
+\obs Vemos que esta regla se parece a la regla de Mahalanobis, solo que hay una constante que modifica la inecuación. Si esa constante fuera 0, tendríamos exactamente la regla de Mahalanobis.
+
+¿Cuándo esa constante es 0? Cuando $Σ_0 = Σ_1$ (es decir, \textbf{Homocedasticidad}) y además, cuando $π_0 = π_1$, es decir, cuando las probabilidades a priori son iguales. 
+
+
+\obs Ahora, nos venimos arriba y vamos a relacionarlo con la regla de Fisher:
+
+\textbf{Regla bajo normalidad y homocedasticidad ($\Sigma_0=\Sigma_1$)}\\
+$x$ se clasifica en $P_0$ si
+$\displaystyle  w^\prime  x < w^\prime  \left(\frac{\mu_0+\mu_1}{2}\right)+  \log\left(\frac{\pi_0}{\pi_1}\right)$
+
+
+Esto tiene algún parecido a la regla de Fisher.
+
+
+\section{Regla óptima de clasificación bajo normalidad}
+
+\begin{itemize}
+  \item \textbf{Homocedasticidad} $Σ_1 = Σ_0 \to$ Regla de Fisher trasladada en función de $π_0$ y $π_1$.
+  \item Cuando además de homocedasticidad, tenemos $π_0 = π_1$, la regla óptima es la regla de Fisher tal y como la hemos visto.
+  \item $Σ_0 ≠ Σ_1 \to $ la distancia de Mahalanobis trasladada.
+\end{itemize}
 
