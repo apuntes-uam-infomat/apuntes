@@ -52,7 +52,7 @@ cmddefs_begun = False
 #\\(?<cmd_type>newcommand|newcommandx|renewcommand|newenvironment|newenvironmentx|renewenvironment|DeclareMathOperator)*?{(?<name>.*?)}(\[(?<nargs>\d*)])?(\[(?<optargspec>.*]))?[^%\n]*%?(?<arginfo>[^\|\n]*)
 rgx = re.compile(r"\\(?P<cmd_type>newcommand|newcommandx|renewcommand|newenvironment|newenvironmentx|renewenvironment|DeclareMathOperator)\*?{(?P<name>.*?)}(\[(?P<nargs>\d*)])?(\[(?P<optargspec>.*]))?[^%\n]*%?(?P<arginfo>[^\|\n]*)")
 
-cmdfile.write("\\begin{longtable}{|c|c|}\n \\hline")
+cmdfile.write("\\footnotesize\\begin{longtable}{|p{3.5cm}|p{2cm}|}\n \\hline")
 
 
 for line in packagefile:
@@ -65,7 +65,7 @@ for line in packagefile:
 		continue
 
 	if line.startswith("%"):
-		title = "\\bottomrule \\multicolumn{2}{|c|}{\\textbf{%s}} \\\\ \\toprule \n" % line[1:].strip()
+		title = "\\bottomrule \\multicolumn{2}{|p{5.5cm}|}{\\textbf{%s}} \\\\ \\toprule \n" % line[1:].strip()
 		cmdfile.write(title)
 		continue
 
