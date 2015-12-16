@@ -6095,3 +6095,153 @@ construido es un código equivalente al $[11,6,5]$-código ternario
 de Golay.
 \solution
 \end{problem}
+
+\section{Control 5 (18-12-2014) Modelo A}
+\begin{problem}[1]
+Demuestra que $A_{17}(9,5)=17^5$.
+\solution
+
+La cota de Singleton nos garantiza que:
+\[A_{17}(9,5) \leq q^{n-d+1} = 17^{9-5+4} = 17^5\]
+
+Por tanto, lo que nos pide hacer el ejercicio es demostrar que esta cota se alcanza, por lo que nos basta con construir un código con estas características. Este código será un $(9,17^5,5)$-código sobre un alfabeto de 17 letras.
+
+Podemos construir un código lineal de dimensión $5$ con palabras de longitud 9 y distancia mínima igual a 5, para lo que nos basta con encontrar la matriz de paridad.
+
+Necesitamos encontrar una matriz tal que $4$ columnas cualesquiera siempre sean linealmente dependientes pero $5$ de ellas no siempre lo sean.
+
+Empleando la idea de los códigos BCH, que se apoyan en el determinante de Vandermonde, tenemos la matriz
+\[H = \left(\begin{array}{ccccccccc}
+1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+1 & 2^2 & 3^2 & 4^2 & 5^2 & 6^2 & 7^2 & 8^2 & 9^2 \\
+1 & 2^3 & 3^3 & 4^3 & 5^3 & 6^3 & 7^3 & 8^3 & 9^3
+\end{array} \right)\]
+
+Como era de esperar, si tomamos $n<4$ columnas cualesquiera, obtenemos una matriz de Vandermonde $4\times 4$ o una parte de la misma donde no puede haber dependencia lineal pues, de lo contrario, el determinante de Vandermonde sería 0.
+
+Queda claro por tanto que la distancia mínima de este código es mayor que 4. Por otro lado sabemos que, dada la matriz $H$, la distancia mínima es menor o igual que el rango más 1. Por tanto queda claro que la distancia mínima del código asociado a esta matriz es $d=5$.
+
+
+\end{problem}
+
+\begin{problem}[2]
+Sea $\algb{C}$ el código lineal sobre $\mathbb{F}_3$ con matriz generadora:
+\[G = \left(\begin{array}{cccccc}
+1 & 0 & 0 & 2 & 2 & 2 \\
+0 & 1 & 0 & 2 & 1 & 0 \\
+0 & 0 & 1 & 1 & 0 & 2
+\end{array} \right)\]
+
+\ppart ¿Cuáles son la longitud $n$ y la dimensión $k$ de $\algb{C}$?
+
+\ppart Escribe la matriz comprobadora de paridad de $\algb{C}$
+
+\ppart ¿Cuál es la distancia mínima $d$ de $\algb{C}$?
+
+\ppart ¿Es $\algb{C}$ un código perfecto?
+
+Tenemos un sistema de codificación y decodificación que utiliza el código $\algb{C}$ para enviar unidades de mensaje que son elementos $m \in \mathbb{F}_3^3$. La codificación se hace convirtiendo $m$ en $x=mG$, y es $x$ lo que se transmite. Para decodificar, si se recibe un mensaje $y$ se usa el siguiente algoritmo:
+
+\begin{enumerate}
+\item Se calcula el síndrome $S(y)$
+\item Se mira si hay un $e \in \mathbb{F}_3^n$ con $S(e)=S(y)$ y $w(e)\leq \lfloor \frac{d-1}{2}\rfloor$. En caso afirmativo, $x=y-e \in \algb{C}$ y el decodificador devuelve el mensaje $m$ tal que $x=mG$.
+\item Si no existe ningún $e$ que cumpla las condiciones, el decodificador nos dice que hay errores.
+\end{enumerate}
+
+\ppart Demuestra que el $e$ del paso 2, si existe, es único y que, efecitvamente $y-e \in \algb{C}$. Concluye que también son únicos el $x$ y el $m$ de ese paso del algoritmo.
+
+\ppart ¿Qué contestará el decodificador si recibe el mensaje $y=010201$?
+\solution
+
+\spart
+
+Puesto que las palabras se formarán como combinaciones lineales de las filas de la matriz generadora, podemos ver que las palabras del código tendrán longitud $n=6$ y será un código de dimensión $k=3$.
+
+\spart
+
+Puesto que la matriz generadora se encuentra en forma estándar, es sencillo ver que la matriz controladora de paridad es:
+\[H = \left(\begin{array}{cccccc}
+1 & 1 & 2 & 1 & 0 & 0 \\
+1 & 2 & 0 & 0 & 1 & 0 \\
+1 & 0 & 1 & 0 & 0 & 1
+\end{array} \right)\]
+
+\spart
+
+Vamos por partes:
+
+\begin{itemize}
+\item Puesto que ninguna columna es nula, podemos concluir que la distancia mínima es mayor que 1.
+
+\item Puesto que ninguna matriz es múltiplo de otra, podemos concluir que la distancia mínima es mayor que 2.
+
+\item Puesto que, siendo $H_i$ la i-ésima columna de la matriz, se satisface
+\[H_3+2H_4=H_6\]
+podemos ver que 3 columnas no son siempre independientes.
+
+Por tanto podemos concluir que la distancia mínima es $d=3$.
+\end{itemize}
+
+\spart
+
+Para ver si es o no un código perfecto debemos comprobar si satisface la cota de Hamming. Según esta cota, un código con $d=2t+1$ será perfecto si y sólo si:
+\[M=\frac{q^n}{\sum_{i=0}^t{n \choose i}(q-1)^i}\]
+
+En este caso tenemos:
+\[3^3=\frac{3^6}{1+3\cdot 2}=\frac{3^6}{7}\]
+
+Con lo que queda claro que no es un código perfecto.
+
+\spart
+
+Supongamos que existen dos errores (que no son más que palabras del código) con el mismo síndrome.
+
+Entonces tendríamos
+\[S(e_1)=S(e_2)=S(y) \implies S(e_1-e_2)=0 \implies e_1-e_2 \algb{C}\]
+pero entonces
+\[w(e_1-e_2)=w(e_1)+w(e_2)-2w(e_1\cdot e_2) \leq w(e_1)+w(e_2) = 2\cdot \lfloor \frac{d-1}{2}\rfloor=d-1 \]
+lo que nos lleva a una contradicción, pues la distancia mínima del código es $d$.
+
+Fijado ahora el vector $x=(x_1,x_2,x_3,x_4,x_5,x_6)$, puesto que la matriz $G$ está en formato estandar (o puede estarlo), es inmediato ver que el mensaje $m$ está determinado de manera unívoca por los primeros elementos de $x$.
+
+\spart
+
+Aplicamos el algoritmo del decodificador:
+\begin{enumerate}
+\item Calculamos el síndrome del mensaje recibido
+\[S(y)=021\]
+\item
+Buscamos un error con el mismo síndrome y peso 1.
+
+Puesto que el síndrome obtenido no coincide con ninguna columna de la matriz, podemos concluir que no hay error de peso 1 que provoque este síndrome por lo que el algoritmo pitará.
+\end{enumerate}
+
+\end{problem}
+
+\section{Control 5 (18-12-2014) Modelo B}
+\begin{problem}[1]
+Demuestra que $A_{19}(8,5)=19^4$.
+\solution
+
+Empezamos viendo que, por la cota de Singleton, se cumple:
+\[A_{19}(8,5) \leq 19^{n-d+1}=19^4\]
+
+Por tanto, por definición de $A_q(n,d)$, basta con encontrar un código que alcance la cota para demostrar la igualdad.
+
+Procedemos a buscar una matriz controladora de $8$ columnas, y $8-4=4$ filas.
+
+Para garantizar que tengamos la distancia mínima deseada nos apoyamos en los códigos BCH, que se fundamentan en el empleo del determinante de Vandermonde. Así obtenemos la matriz
+\[H = \left(\begin{array}{ccccccccc}
+1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+1 & 2^2 & 3^2 & 4^2 & 5^2 & 6^2 & 7^2 & 8^2 \\
+1 & 2^3 & 3^3 & 4^3 & 5^3 & 6^3 & 7^3 & 8^3
+\end{array} \right)\]
+
+Como era de esperar, si tomamos $n<4$ columnas cualesquiera, obtenemos una matriz de Vandermonde $4\times 4$ o una parte de la misma donde no puede haber dependencia lineal pues, de lo contrario, el determinante de Vandermonde sería 0.
+
+Queda claro por tanto que la distancia mínima de este código es mayor que 4. Por otro lado sabemos que, dada la matriz $H$, la distancia mínima es menor o igual que el rango más 1. Por tanto queda claro que la distancia mínima del código asociado a esta matriz es $d=5$.
+\end{problem}
+
+El segundo ejercicio de este examen es exactamente el mismo que el del modelo A.
