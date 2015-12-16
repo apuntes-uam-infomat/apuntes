@@ -2,6 +2,8 @@
 
 Esta es una colección de apuntes que los alumnos del doble grado en Informática-Matemáticas de la Universidad Autónoma de Madrid hemos ido tomando a lo largo de la carrera. Están disponibles libremente ([licencia CC-BY-NC-SA](#licencia)). Si encuentras algún fallo o quieres contribuir, puedes mandarnos un pull request o abrir un [_issue_](https://github.com/VicDeJuan/Apuntes/issues) en Github.
 
+La documentación de los paquetes está en el [manual en PDF](https://github.com/VicdeJuan/Apuntes/raw/master/Cosas%20guays%20LaTeX/Manual/_Manual.pdf), junto con una introducción a LaTeX básico y algunas pinceladas de cosas un poco más avanzadas.
+
 ## Descarga
 
 Puedes descargar los apuntes en PDF, actualizados diariamente, [aquí](https://www.dropbox.com/sh/kbymf37cykz77ha/AADuRd3CoU6UUCZMtK0GdEtPa?dl=0).
