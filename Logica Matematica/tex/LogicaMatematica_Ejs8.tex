@@ -1,0 +1,235 @@
+% -*- root: ../LogicaMatematica.tex -*-
+\section{Hoja 8}
+Los 7  primeros problemas en esta hoja proporcionan una ``construcción" moderadamente explicita (Zorn) de modelos
+no estándar de los naturales. Consideramos probabilidades $P$ finitamente aditivas, que sólo toman los valores
+$0$ y $1$.
+
+\begin{problem}
+Sea $P$ una probabilidad finitamente aditiva, definida en un álgebra de subconjuntos de $\mathbb{N}$,
+con valores en $\{0,1\}$. Los conjuntos con probabilidad 1 forman un {\em filtro}. Definir {\em filtro} sin utilizar
+probabilidades, y probar que las dos definiciones coinciden.
+
+\solution
+
+Comencemos por especificar las definiciones:
+
+\begin{defn}[Filtro]\label{filtro}
+
+Un subconjunto no vacío $F$ de un conjunto parcialmente ordenado $(P,≤)$ es un filtro si se dan las siguientes condiciones: % P de Poset
+\begin{enumerate}
+\item F no está vacío.
+\item Para cada $x \in F$, $x,y \in P$, $x ≤ y$ implica que $y$ también está en F.
+\item Para cada $x, y \in F$, existe cierto elemento $z \in F$, tal que $z ≤ x$ y $z ≤ y$.
+\end{enumerate}
+Un filtro se dice propio si no es igual a todo el conjunto P.
+\end{defn}
+
+\begin{defn}[Filtro\IS de conjuntos]
+
+Un filtro de conjuntos se obtiene tomando el conjunto potencia de un conjunto dado $S$, visto como orden parcial y ordenado por la inclusión de subconjuntos. Con ello tendremos que un filtro $F$ sobre un conjunto $S$ es un conjunto de subconjuntos de $S$ con las siguientes propiedades:
+
+\begin{enumerate}
+\item $S$ está en $F$. ($F$ es no vacío)
+\item $F$ no contiene al conjunto vacío. ($F$ es propio)
+\item Si $A$ y $B$ están en $F$, también su intersección. ($F$ es cerrado bajo intersecciones finitas)
+\item Si $A$ está en $F$ y $A$ es un subconjunto de $B$, entonces $B$ está en $F$, para todos los subconjuntos $B$ de $S$. %($F$ es cerrado bajo supercontenencias)
+\end{enumerate}
+\end{defn}
+Ahora damos la definición de filtro utilizando probabilidades, rescatando las siguientes definiciones:
+
+\begin{defn}[{Á}lgebra\IS de conjuntos]
+
+Dado un conjunto X, no vacío, y dado un subconjunto de sus partes $\algb{M} \subset \parts{X}$, se dice que $\algb{M}$ es un álgebra de conjuntos si:
+\begin{enumerate}
+\item $\algb{M}$ es no vacío.
+\item $\algb{M}$ es cerrado por la unión finita. Esto es, si tenemos $A_1, A_2, \dotsc, A_n ∈ \algb{M}$, entonces $\bigcup_{i=1}^n A_i ∈ \algb{M}$.
+\item $\algb{M}$ es cerrado por complementación. Es decir, si $A ∈ \algbM$ entonces $A^c = X \setminus A ∈ \algbM$.
+\end{enumerate}
+\end{defn}
+
+\begin{defn}[Función\IS de Probabilidad]
+P:$\algb{M} \rightarrow [0,1]$ es una función definida en ($\Omega,\algb{M}$). Siendo $\Omega$ un conjunto.
+
+Si $\algb{M}$ es un álgebra entonces P es finitamente aditiva y cumple:
+\begin{enumerate}
+\item $P(\Omega) = 1$.
+\item $A,B ∈ \algb{M}$ y $A \cap B = \emptyset$ $\Rightarrow$ $P(A \cup B) = P(A) + P(B)$ (\textbf{aditividad finita}).
+\end{enumerate}
+\end{defn}
+
+Ya que tenemos que $\appl{P}{\algb{M}}{\set{0,1}}$, lo que tenemos es que
+\[ F = \set{A : P(A) = 1, A \in \algb{M}} \]
+
+A partir de las definiciones de álgebra y función de probabilidad anteriores hemos podido dar una definición de filtro. Veamos que coincide con la definición que no usa probabilidades.
+
+Debido a que P es una probabilidad, lo que tenemos es una cadena de inclusiones $A_1 \subseteq A_2 \subseteq \dots \subseteq A_n = \Omega$ con $A_i \in F$; ya que el total debe estar en $F$ y la probabilidad no puede sumar más de uno, luego $\forall A,B \in F \implies A\cap B \neq \emptyset$. Llamamos $S$ al álgebra de conjuntos de $\mathbb{N}$, con valores en $\set{0,1}$.
+
+Por construcción, tenemos que ambas definiciones son equivalentes, ya que
+\begin{itemize}
+\item El filtro no puede estar vacío pues contiene al total $\Omega$ (cuya probabilidad sabemos que es 1),
+
+\item Si $A_i \in F$, $A_j \in S$ y $A_i\subseteq A_j$ implica que $A_j$ también está en F.\newline La razón es que si $A_i$ está en $F$ es por que es un conjunto con probabilidad 1. No existen conjuntos con probabilidad mayor que 1 porque no existen conjuntos mayores que el total, y la probabilidad es finitamente aditiva. Por tanto, todo conjunto $A_j$ en $S$ con probabilidad mayor o igual que $A_i$ debe tener probabilidad igual a 1 y por tanto estar en $F$.
+\item Si $A_i, A_j \in F$, $i \leq j$ , $A_i \cap A_j = A_i \in F$. \newline Esto es análogo a la tercera propiedad de filtros en la definición \ref{filtro} ya que la intersección de dos conjuntos de esa forma es siempre menor o igual que cada uno de ellos, en particular igual al menor de ellos, de modo que está en $F$.
+\end{itemize}
+
+
+\end{problem}
+
+\begin{problem}
+Probar que todo filtro de subconjuntos de un conjunto $S$,
+ puede extenderse a un ultrafiltro (a un filtro maximal con respecto a la inclusión) en $S$.
+Sugerencia: Zorn.
+
+\solution
+% http://delta.cs.cinvestav.mx/~gmorales/LogicaComputacional/alog01/node14.html
+
+Recordemos que el lemma de zorn dice: ``Todo conjunto parcialmente ordenado no vacío en el que toda cadena (subconjunto totalmente ordenado) tiene una cota superior, contiene al menos un elemento maximal''.
+
+Dado el conjunto $S$ tomamos un filtro cualquiera $F$ y a partir de él definimos $\algb{F}$ como la colección de filtros que contienen a $F$.
+
+Es sencillo ver que $\algb{F}$ no es vacío, pues contiene a $F$ y, además, $\algb{F}$ está ordenador por inclusión.
+
+Consideramos ahora $\algb{D}=(D_i)$ una cadena en $\algb{F}$ y definimos $D=\cup D_i$.
+
+Con esta definición es sencillo ver que $D$ es un filtro, pues satisface las condiciones de la definición:
+\begin{proof}
+Si tomamos dos elementos $x,y \in D$ entonces existen dos subíndices $i,j$ tales que $x\in D_i$ y $y \in D_j$. Al ser $\algb{D}$ una cadena, para algún $k\in \{i,j\}$ se ha de tener que $x,y \in D_k$. Como $D_k$ es un filtro, $x,y \in D_k \subset D$.
+
+Por otro lado, si $x\in D$ y tenemos un elemento $x \leq y$, entonces para algún $i$ tenemos $x\in D_i$ y al ser este un filtro, $y \in D_i \subset D$. Ahora bien, como para todo $i$ $\emptyset \notin D_i$, se tiene que $\emptyset \notin D$.
+
+\end{proof}
+
+Queda concluido que $D$ es un filtro propio que acota superiormente a la cadena $\algb{D}$ con lo que se satisfacen las hipótesis del lema de zorn.
+
+Como conlusión, existe un elemento maximal de $\algb{F}$, que será un ultrafiltro.
+\end{problem}
+
+\begin{problem}
+Probar que si $U$ es un ultrafiltro en $S$, para todo $A\subset S$, o $A\in U$ o $A^c\in U$.
+
+\solution
+% http://delta.cs.cinvestav.mx/~gmorales/LogicaComputacional/alog01/node14.html
+
+En primer lugar, nos damos cuenta de que no puede ocurrir: $A \in U$ y $A^c \in U$ puesto que por la propiedad de las intersecciones finitas se daría: $A \cap A^c \in U$ pero  $A \cap A^c  = \emptyset$ y $\emptyset \notin U$, si U es un filtro (en particular un ultrafiltro).
+
+Para todo conjunto $A$ tenemos diferentes posibles casos.
+
+Si $A \in U$ ya hemos completado el ejercicio.
+
+Si $A \notin U$ definimos $V = U \cup A$. Al ser $U$ un ultrafiltro contenido propiamente en $V$ tenemos que, necesariamente, $V=S$, puesto que $U$ es maximal y no puede haber otro filtro mayor que él (distinto del total). Por tanto $U \cup A$ no tiene la propiedad de intersección finita (de lo contrario sería un filtro).
+
+Así, existen $u_1,...,u_n \in U$ tales que
+\[u_1\cap u_2 \cap ... u_n \cap A = \emptyset\]
+Por tanto $\cap u_i \subset A^c$ lo que implica que $A^c \in U$, por la definición de filtro.
+\end{problem}
+
+\begin{problem}
+Probar que si $U$ es un ultrafiltro en $S$, y  $A_1 \cup \cdots \cup A_n = S$, entonces existe una $j\in \{ 1, \dots, n\}$ tal que
+$A_j\in U$.
+
+\solution
+
+Si no existiera $j\in \{1,...,n\}$ tal que $A_j \in U$ tendríamos que, para cada $j$, $A_j^c \in U$.
+
+Pero el filtro es cerrado por la intersección finita de modo que
+\[\bigcap A_j^c \in U\]
+
+Pero, por definición tenemos que $\bigcap A_j^c = \emptyset$ que no puede pertenecer a $U$ por definición de filtro \footnote{En caso de contener el vacío, la primera propiedad de filtro hace que el filtro sea el total.}.
+
+\end{problem}
+
+\begin{problem}
+Sea  $\prod_{n\in \mathbb{N}} X_n$ un producto cartesiano de conjuntos no vacíos, y sea $U$ un ultrafiltro en $\mathbb{N}$.
+Para $x,y \in  \prod_{n\in \mathbb{N}}\ X_n$, definimos $x\sim y$ si $x$ e $y$ son iguales casi seguro, es
+decir si $\{n\in \mathbb{N}: x_n = y_n\}\in U$. Probar que $\sim$ es una relación de equivalencia.
+Al conjunto $\mathcal{U}:=\prod_{n\in \mathbb{N}} X_n/\sim$ se le denomina {\em ultraproducto}.
+
+\solution
+
+Si $\sim$ es una relación de equivalencia, entonces cumple las siguientes propiedades:
+\begin{itemize}
+	\item $x \sim x$ {\bf Reflexiva}
+	\item $x \sim y \implies y \sim x$ {\bf Simétrica}
+	\item $x \sim y, y \sim z \implies x \sim z$ {\bf Transitiva}
+\end{itemize}
+
+Tenemos que probar que para $x,y \in \prod\limits_{n \in \nat} X_n$, $U$ ultrafiltro en $\nat$
+\[ \set{ n \in \nat : x_n = y_n} \in U \xLeftrightarrow{\text{def}} x \sim y \]
+
+Gracias a que la igualdad es una relación de equivalencia, tenemos que si $x \sim y$,
+\[\set{ n \in \nat : x_n = y_n} = \set{ n \in \nat : y_n = x_n} \implies y \sim x \]
+Debido a que la igualdad es simétrica, ambos conjuntos de índices contendrán los mismos elementos $n$, y si $x\sim y$, entonces dicho conjunto de índices pertenece a $U$.
+
+Por el mismo motivo, si $\set{ n \in \nat : x_n = x_n} \in U$, entonces $x \sim x$; ya que\\
+$\forall x \in \prod\limits_{n \in \nat} X_n$, $x_n = x_n \ \forall n$.
+
+Finalmente, tenemos que si $x_n = y_n$, $y_n = z_n \implies x_n = z_n$, es decir,
+\[x \sim y, y \sim z \implies x \sim z\]
+
+\end{problem}
+
+\begin{problem}
+Tomando $X_n = \mathbb{N}$ para todo $n$ en la construcción anterior, probar que $\mathcal{U}$ es un modelo de los axiomas de Peano. Sugerencia: Buscar en la literatura el Teorema Fundamental de los Ultraproductos, de {\L}o\'s, e invocarlo.
+
+\solution
+% https://en.wikipedia.org/wiki/Ultraproduct
+
+Atendiendo a la sugerencia del enunciado, invocamos el teorema fundamental de los ultraproductos.
+
+\begin{theorem}[Teorema Fundamental de los Ultraproductos de {\L}o\'s]
+Consideremos una familia $\{M_i\}_{i\in I}$ de modelos de un lenguaje formal $\algb{L}$ y sea $U$ un ultrafiltro en $I$.
+
+Si $\phi(x_1,...,x_n) \in \text{Form}(\algb{L})$ y $f_1,...,f_n \in \prod_{i \in I} M_i$, entonces
+\[\prod_{i\in I}^U M \models \phi[[f_1], \ldots, [f_n]] \iff \{ i \in I : M_{i} \models \phi[f_1(i), \ldots, f_n(i) ] \} \in U\]
+
+En particular, si $\phi$ es una sentencia
+\[\prod_{i\in I}^U M \models \phi \iff \{ i \in I : M_i \models \phi\} \in U\]
+\end{theorem}
+
+Imitando la construcción del ejercicio anterior con $X_n = \nat$ construimos el ultraproducto
+\[U = \prod_{n \in \nat}\nat/\sim\]
+
+\end{problem}
+
+\begin{problem}
+Probar que si el ultrafiltro $U$ contiene a todos los subconjuntos de $\mathbb{N}$ con complemento finito, entonces
+existe una $c\in \mathcal{U}$ tal que para todo $n\in \mathbb{N}, c>n$. Sugerencia: tomar $c_n = n$.
+
+\solution
+
+El ultrafiltro $U$ es un caso particular de filtro de Fréchet o también conocido como filtro cofinito. El filtro de Fréchet $F$ en el conjunto $X$ el conjunto de todos los subconjuntos $A$ de $X$ tales que el complemento de $A$ en $X$ es finito.
+
+Si un subconjunto de $\nat$ tiene complemento finito, puesto que $\nat$ es infinito, es obvio que el subconjunto en cuestión será infinito.
+
+Por tanto, queda claro que el ultrafiltro $U$ está formado por todos los subconjuntos de $\nat$ infinitos.
+
+\end{problem}
+
+\begin{problem}
+Dada la MT con alfabeto $\set{B, 1, 2}$, definida por $\{(q_0 \ 1 \ 2 \ q_0), (q_0 \ 2 \ D \ q_0),  (q_0 \ B \ D \ q_0)\}$,
+determinar su output cuando el input es $1 \ 1  \ B \ B \ 1 \  B  \ 2  \ B \ $ (el resto de la cinta son $B's$). Describir en general que hace esta MT, y si se detiene el algún momento o no.
+
+\solution
+Esta MT recorre la cinta buscando $1s$, cuando encuentra un 1, lo cambia por un 2, y sigue avanzando hacia la derecha. Esta MT no para nunca, ya que en la cinta solo puede haber caracteres en el alfabeto $\set{B, 1, 2}$, si encuentra un 1 lo convierte en un 2, y si se encuentra un 2 ó un B avanza a la derecha, de manera que no parará nunca de desplazarse a la derecha.
+
+Para el {\it input} dado, realizará las siguientes acciones:
+
+\begin{enumerate}
+	\item empezamos en el estado $q_0$ y con el cabezal en el 1 de la izquierda. Reescribimos ese 1 por un 2 y pasamos al estado $q_0$. La cinta queda así: $2 \ |\ 1  \ |\ B \ |\ B \ |\ 1 \ |\  B  \ |\ 2  \ |\ B \dots$
+	\item como estamos en el estado $q_0$ y leemos un 2, avanzamos a la derecha y pasamos al estado $q_0$. La cinta no cambia.
+	\item como estamos en el estado $q_0$ y leemos un 1, lo cambiamos por un 2 y pasamos al estado $q_0$. La cinta queda así: $2 \ |\ 2 \ |\ B \ |\ B \ |\ 1 \ |\  B  \ |\ 2  \ |\ B \dots$
+	\item como estamos en el estado $q_0$ y leemos un 2, avanzamos a la derecha y pasamos al estado $q_0$. La cinta no cambia.
+	\item como estamos en el estado $q_0$ y leemos B, avanzamos a la derecha y pasamos al estado $q_0$. La cinta no cambia.
+	\item como estamos en el estado $q_0$ y leemos B, avanzamos a la derecha y pasamos al estado $q_0$. La cinta no cambia.
+	\item como estamos en el estado $q_0$ y leemos 1, lo cambiamos por un 2 y pasamos al estado $q_0$. La cinta queda así: $2 \ |\ 2 \ |\ B \ |\ B \ |\ 2 \ |\  B  \ |\ 2  \ |\ B \dots$
+	\item como estamos en el estado $q_0$ y leemos un 2, avanzamos a la derecha y pasamos al estado $q_0$. La cinta no cambia.
+	\item como estamos en el estado $q_0$ y leemos B, avanzamos a la derecha y pasamos al estado $q_0$. La cinta no cambia.
+	\item como estamos en el estado $q_0$ y leemos un 2, avanzamos a la derecha y pasamos al estado $q_0$. La cinta no cambia.
+	\item como estamos en el estado $q_0$ y leemos B, avanzamos a la derecha y pasamos al estado $q_0$. La cinta no cambia.
+\end{enumerate}
+
+A partir de ahora, suponiendo una cadena infinita de símbolos B, la MT no parará de avanzar a la derecha.
+
+\end{problem}
+
+

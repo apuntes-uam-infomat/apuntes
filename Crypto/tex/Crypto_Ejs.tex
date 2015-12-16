@@ -5024,7 +5024,9 @@ Por tanto, es claro que no podemos encontrar tres palabras distintas de longitud
 
 \item \textbf{(8,30,3)}
 
-TODO
+Si estudiamos la cota de Hamming vemos que, en caso de existir el código tendríamos:
+\[30 \leq \frac{2^8}{1+8}=\frac{256}{9} \approx 28 \]
+por lo que es imposible que exista este código.
 
 \end{itemize}
 
@@ -5271,6 +5273,24 @@ longitud $n=23$ con $d=7$, pero es más difícil. Es uno de los
 llamados Códigos de Golay.]
 \solution
 
+\spart
+
+El profesor dice que en clase que este examen no lo vamos a hacer y no entrará en el examen, pues no consigue dar con una demostración satisfactoria.
+
+Para que el código fuese perfecto tiene que satisfacerse la ecuación:
+\[M = \frac{2^n}{\sum_{i=0}^3{n \choose i}}\]
+
+Sabemos que $M=2^k$. Por tanto necesitamos ver que:
+\[6+6n+3n(n-1)+n(n-1)(n-2) = 6 \cdot 2^r\]
+
+Siendo $r$ un número arbitrario, es sencillo demostrar que $n=7$ y $n=23$ satisfacen la ecuación aunque no es nada sencillo comprobar que estas son las únicas soluciones posibles.
+
+\spart
+
+El único código posible es el código de repetición:
+\[\algb{C} = \{0000000,1111111\}\]
+
+Con esto garantizamos que el código tenga la longitud y distancia mínima pedidas por lo que sólo nos queda comprobar que es un código perfecto, cuenta trivial que queda como ejercicio para el lector desconfiado.
 
 \end{problem}
 
@@ -5373,18 +5393,20 @@ La matriz comprobadora de paridad es una matriz tal que al multiplicar por la tr
 
 La matríz será:
 \[H =\left(\begin{array}{ccccccccccc}
-3 &  7  &  6  &  1  &  8  &  9  &  4  &  5  &  2  &  -1 &  0 \\
-5 & 4 & 3 & 2 & 7 & 6 & 5 & 4 & 3 &  2  & -1
+3 &  7  &  6  &  1  &  8  &  9  &  4  &  5  &  2  &  1 &  0 \\
+5 & 4 & 3 & 2 & 7 & 6 & 5 & 4 & 3 &  2  & 1
 \end{array}\right)\]
 
 Puesto que en cada fila de la matriz están puestos los coeficientes de una de las ecuaciones que deben cumplirse módulo 11, es evidente que si un vector multiplicado por esta matriz da 0 módulo 11, entonces satisfacirá las ecuaciones y, por tanto, pertenecerá al código.
 
-Es sencillo comprobar que no siempre se detectarán dos errores. Si modificamos $x_1$ sumándole 4, $x_{10}$ se verá incrementado en una unidad de modo que la primera ecuación se satisface. Esto provocará en la segunda ecuación que tengamos $2 + 20=22 = 0 \mod 11$ con lo que la segunda ecuación se satisface también.
-
 En general (y en este caso se cumple) todos los errores que no serán detectados serán aquellos que, escritos como vector, pertenezcal al númecleo de $H$.
+
+\textbf{Solución del profesor}
+Los errores dobles serán de la forma $e=λe_i+μe_j$. Estos errores no serán detectados si al calcular su síndrome obtenemos 0, es decir:
+\[S(λe_i+μe_j)=λH_i+μH_j=0 \iff H_j = -\frac{λ}{μ}H_j\]
 \end{problem}
 
-\begin{problem}[13]
+\begin{problem}[13]\label{ej:Hamming_extendido}
 \ppart Demuestra que si a un código lineal binario $C$
 le añadimos un comprobador global de paridad, el código que
 obtenemos sigue siendo lineal.
@@ -5394,9 +5416,9 @@ binario.
 
 \solution
 
-\doneby{Pedro}
-
 \spart
+
+\doneby{Pedro}
 
 Un código será lineal cuando puede verse como un espacio vectorial sobre $F_q$. Por tanto, si $\algb{C}$ es lineal, tendremos una serie de palabras que constituirán la base del código y que, junto con la palabra nula, nos permiten generar todas las palabras del código.
 
@@ -5404,9 +5426,25 @@ Añadiendo un bit de control de paridad seguimos teniendo el elemento nulo y la 
 
 Si teníamos dos elementos de la base con número impar de 1s, la suma de ambos tendrá un número par de 1s por lo que el bit de paridad pasará de ser 1 en ambos elementos de la base a ser 0 en el resultado final.
 
+\textbf{Solución del profesor}
+
+En general podemos comprobar si un código es lineal porque este podrá representarse a partir de una matriz generadora.
+
+Viendo la matriz controladora de paridad el cambio que estamos realizando al añadir el bit de control consiste en completar la matriz $H$ primero con una columna de $0$s (añadimos longitud sin cambiar los primeros bits) a la derecha y luego con una fila de $1$s por abajo (control de paridad).
+
 \spart
 
-TODO
+Por el apartado anterior, si somos capaces de construir un $[7,4,3]$-código lineal binario sólo tendremos que añadirle un bit de paridad para obtener el código deseado.
+
+Así podemos construir el código pedido como aquel dado por la matriz de control de paridad:
+\[H = \left( \begin{array}{ccccccc|c}
+0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 \\
+0 & 1 & 1 & 0 & 0 & 1 & 1 & 0 \\
+1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\
+\hline
+1 & 1 & 1 & 1 & 1 & 1 & 1 & 1
+\end{array}\right)\]
+
 \end{problem}
 
 \begin{problem}[14]
@@ -5550,6 +5588,55 @@ corregir errores. Si recibes los vectores $11111$ y $01011$,
 palabra que se corrija y de un error doble que no se corrija.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+La tabla para $G_1$ tendra una única fila y será
+
+\[\begin{array}{cccc}
+00 & 10 & 10 & 11
+\end{array}\]
+
+Para $G_2$ podemos ver de antemano que cada tendrá dos filas pues cada fila tendrá 4 elementos y la tabla tendrá un total de 8.
+\[\begin{array}{cccc}
+000 & 101 & 011 & 110 \\
+001 & 100 & 010 & 111
+\end{array}\]
+
+Por último, la tabla de $G_3$ tendrá 8 filas y será:
+\[\begin{array}{cccc}
+00000 & 10110 & 01011 & 11101 \\
+00001 & 10111 & 01010 & 11100 \\
+00010 & 10100 & 01001 & 11111 \\
+00100 & 10010 & 01111 & 11001 \\
+01000 & 11110 & 00011 & 10101 \\
+10000 & 00110 & 11011 & 01101 \\
+11000 & 01110 & 10011 & 00101 \\
+10001 & 00111 & 11010 & 01100
+\end{array}\]
+
+\spart
+
+Lo que hacemos para decodificar los mensajes es calcular su síndrome. Si este es 0, entonces la palabra no tiene error. Si es distinto de 0, recurrimos a la tabla.
+
+Puesto que la matriz $G_3$ está en formato estándar, es sencillo calcular la matriz controladora
+\[H = \left(\begin{array}{ccccc}
+1 & 0 & 1 & 0 & 0 \\
+1 & 1 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 & 1
+\end{array}\right)\]
+
+Ahora calculamos los síndromes:
+\[S(11111) = 010, \ \ \ S(01011) = 000\]
+
+Tenemos que la palabra 01011 pertenece al código pero la otra no. Puesto que tenemos la tabla de Slepian construida podemos buscarlas en el código y conocer la palabra de la que proceden (con mayor probabilidad y el error).
+
+Así tenemos que ``11111'' procede de la palabra ``11101'' sufriendo el error ``00010''.
+
+
+
 \end{problem}
 
  \begin{problem}[2]
@@ -5561,6 +5648,40 @@ perfecto.
 vectores recibidos $2121$, $1201$ y $2222$.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Puesto que es ternario tenemos que $q=3$ y la distancia mínima de este código es $d=2\cdot 1 + 1$.
+
+
+Para ser perfecto debe cumplirse pues:
+\[|\algb{C}| = \frac{q^n}{\sum_{i=0}^t {n \choose i} (q-1)^i} = \frac{3^4}{1+4\cdot 2} = 3^2\]
+
+Puesto que el código puede definirse como:
+\[\algb{C} = \{α_1(1110) + α_2(2011) \tq α_1,α_2 \in \ent_3\}\]
+
+Con lo que vemos claramente que el código tiene 9 palabras posibles y, por tanto, se satisface la definición.
+
+\spart
+
+Lo primero que tenemos que hacer es escribir la matriz de forma genérica para poder encontrar fácilmente la matriz $H$.
+
+Si a la primera columna le sumamos la última y a la segunda le sumamos la última y dos veces la nueva primera tenemos:
+\[G= \left( \begin{array}{cccc}
+1 & 0 & 1 & 0\\
+0 & 1 & 1 & 1
+\end{array}\right) \implies H = \left( \begin{array}{cccc} 2 & 2 & 1 & 0 \\
+0 & 2 & 0 & 1  \end{array}\right)\]
+
+Si calculamos el síndrome de los vectores dados tenemos:
+\[S(2121) = 20\ \ \ S(1201) = 02\ \ \ \ S(2222) =10\]
+
+Puesto que los síndromes dados coinciden con columnas de la matriz $H$ es sencillo ver que proceden del error $e_i$ (siendo $H_i$ la columna con la que coinciden).
+
+Una vez tenemos esto podemos ver de qué palabra proceden:
+\[2121 \to 1121, \ \ \ \ 1201 \to 1202, \ \ \ \ 2222 \to 2212\]
 \end{problem}
 
 \begin{problem}[3]
@@ -5583,6 +5704,34 @@ $C:=\left\{(x_1,\dots,x_{10})\in(\ent_{10})^{10} \ : \
 simples.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Supongamos que inteligente significa que el teléfono comprueba si el número introducido puede ser correcto o no y en caso de error busca el más cercano.
+
+Nuestro teléfono calculará el síndrome del código introducido obteniendo:
+\[S(20617960587)=79\]
+Con lo que queda claro que hemos introducido un número erróneo.
+
+Es sencillo ver que el error más pequeño que también nos causa ese mismo síndromes es el ``40030000000''.
+
+Por tanto nuestro teléfono detectará que el código es incorrecto y realmente llamará a: ``90697960587''
+
+\spart
+
+En este caso tendríamos la matriz controladora de paridad:
+\[H=\left(\begin{array}{cccccccccc}
+1&1&1&1&1&1&1&1&1&1\\0&1&2&3&4&5&6&7&8&9
+\end{array}\right)\]
+
+Si pudiésemos corregir todos los errores simples, la distancia mínima sería mayor o igual que 3, lo que implicaría que dos columnas cualesquiera de la matriz serán linealmente independientes.
+
+No obstante podemos comprobar que $2{1 \choose 5} + 8 { 1 \choose 0} = {0 \choose 0}$ por lo que la distancia mínima es menor que 2 y no corregirá siempre un error.
+
+En concreto si se incrementa el quinto dígito en dos unidades, el error será confundido con una reducción del primer dígito en 8 unidades.
+
 \end{problem}
 
 
@@ -5606,6 +5755,48 @@ retransmitir ?`que leerías si recibes el siguiente mensaje
 $0011111,0110110,0001111,1111000$ (las comas separan las letras)?
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Este código está formado por $M=2^3=8$ palabras de longitud $n=7$.
+
+Para conocer la distancia mínima escribimos la matriz controladora de paridad:
+\[H = \left(\begin{array}{ccccccc}
+1 & 1 & 1 & 1 & 0 & 0 & 0 \\
+1 & 1 & 0 & 0 & 1 & 0 & 0 \\
+1 & 0 & 1 & 0 & 0 & 1 & 0 \\
+0 & 1 & 1 & 0 & 0 & 0 & 1
+\end{array} \right)\]
+
+Una vez tenemos esta matriz construida podemos ver que la distancia mínima del código es 4 pues no hay tres columnas iguales mientras que si que existen 4 columnas dependientes. ($H_1=H_4+H_5+H_6$)
+
+Por el teorema \ref{theorem:Codigo_detector_corrector} sabemos que este código, con $d=4=2\times 1 + 1 + 1$ es capaz de corregir 1 error y detectar 2 simultáneamente.
+
+\spart
+
+Como ya hemos visto en ejercicios anteriores, el proceso a seguir consiste en calcular el síndrome de cada palabra recibida. Si este síndrome es 0, leemos la palabra tal cual, pues es una palabra de nuestro código y asumimos que se ha recibido correctamente.
+
+En caso de que el síndrome no sea 0, construimos la fila de la tabla Slepian correspondiente al error que, con mayor probabilidad, se está produciendo y buscamos la palabra correspondiente.
+
+Para las palabras recibidas tenemos:
+\[S(00111111) = 0100, \ S(0110110) = 0000, \ S(0001111)=1111, \ S(1111000) = 0000\]
+
+En estas condiciones asumimos que la segunda y última palabra recibidas han sido correctas. Gracias a que la matriz generadora se encuentra en forma estándar podemos ver cómodamente que las letras correspondientes a esos dos mensajes son: $I$ y $N$ respectivamente.
+
+Para corregir el error de las otras dos letras recibidas calculamos los síndromes de errores pequeños obteniendo:
+\[S(0000100) = 0100, \ S(1000001)=1111\]
+
+Generamos ahora las filas de la tabla asociadas a esos dos errores obteniendo:
+\[\begin{array}{cccccccc}
+0000000 & 1001110 & 0101101 & 0011011 & 1100011 & 1010101 & 0110110 & 1111000 \\
+0000100 & 1001010 & 0101001 & 0011111 & 1100100 & 1010001 & 0110010 & 1111100 \\
+1000001 & 0001111 & 1101100 & 1011010 & 0100010 & 0010100 & 1110111 & 0111001 \end{array}\]
+
+Así para la primera y tercera letra leemos respectivamente ``0011011'' y ``1001110''. Finalmente, podemos ver que estos códigos se corresponden con las letras $B$ y $L$.
+
+Parece evidente que en este caso se han producido más errores de la cuenta puesto que nuestro programa leerá ``BILN'' cuando parece evidente que el mensaje debería ser ``BIEN''.
 \end{problem}
 
 \begin{problem}[5]
@@ -5629,6 +5820,47 @@ el mensaje $$000000,100201,020101,010021,001022,100110,000000$$
 letras). ¿Qué te han querido decir?
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+La matriz controladora de paridad será:
+
+\[H = \left(\begin{array}{cccccc}
+1 & 1 & 0 & 1 & 0 & 0 \\
+1 & 0 & 1 & 0 & 1 & 0 \\
+0 & 1 & 1 & 0 & 0 & 1 \\
+\end{array} \right)\]
+
+Se trata de un código de $M=3^3=27$ palabras de longitud $n=6$ con distancia mínima $d=3$ puesto que dos columnas de la matriz $H$ siempre son independientes pero no tres.
+
+\spart
+
+Calculamos el síndrome de cada código recibido:
+\[\begin{array}{ccc}
+S(000000) & = & 000\\
+S(100201) & = & 011\\
+S(020101) & = & 020\\
+S(010021) & = & 122\\
+S(001022) & = & 000\\
+S(100110) & = & 220\\
+S(000000) & = & 000
+\end{array}\]
+
+De todas estas palabras tenemos 3 que parecen haber sido recibidas correctamente. Como la matriz generadora se encuentra en forma estándar podemos descifrar fácilmente estas letras teniendo que el mensaje recibido será de la forma:
+\[A\_\_\_B\_A \]
+
+Buscamos ahora los errores que propician esos síndromes obteniendo:
+\[S(001000) = 011, \ S(0000020) = 020, \ S(002100) = 122, \ S(200000)=220\]
+
+En esta ocasión da pereza escribir la tabla de Slepian completa, pues cada fila tendrá 27 columnas.
+
+Vamos a ver en qué nos queda cada código con error si le restamos el error que causa su síndrome:
+\[100201 \to 102201, \ 020101 \to 020111, \ 010021 \to 011221, \ 100110 \to 200110\]
+
+Descifrando estas letras llegamos al mensaje:
+\[ALGEBRA \]
 \end{problem}
 
 
@@ -5642,6 +5874,39 @@ $[31,28]$-código de Hamming sobre $ F_5$.
 
 
 \solution
+
+\doneby{Pedro}
+
+\approvedby{Edu}
+
+\spart
+
+Sabemos que la matriz $H$ tendrá $n=8$ columnas y $n-k=2$ filas siendo todos sus elementos $a_{ij}\in F_7$.
+
+Podemos comprobar que se satisface la propiedad de los códigos de Hamming que nos da el número de cifras del código pues:
+\[8=n = \frac{q^r-1}{q-1} = \frac{7^2-1}{7-1} = \frac{48}{6} = 8\]
+
+Estamos trabajando, como se asume siempre en los códigos de Hamming, que la distancia mínima es $d=3$.
+
+Por tanto sólo tenemos que buscar $n=8$ vectores de tamaño $r=n-k=2$ tales que ninguno sea nulo ni múltiplo del anterior.
+
+Así obtenemos:
+\[H = \left(\begin{array}{cccccccc}
+0 & 1 & 1 & 2 & 3 & 4 & 5 & 6\\
+1 & 0 & 1 & 1 & 1 & 1 & 1 & 1
+\end{array} \right)\]
+
+\spart
+
+Repitiendo los pasos del apartado anterior tenemos $r=n-k=3$ por lo que tendremos que escribir una matriz $H$ de 3 filas y 31 columnas compuesta por elementos de $F_5$.
+\small
+\[\left(\begin{array}{ccccccccccccccccccccccccccccccc}
+0 & 0 & 1 & 1 & 2 & 3 & 2 & 1 & 2 & 3 & 2 & 1 & 1 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 2 & 3 & 4 & 1 & 1 & 1\\
+0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 2 & 3 & 4 & 1 & 1 & 1 & 1 & 2 & 3 & 2 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+1 & 0 & 0 & 1 & 1 & 1 & 2 & 0 & 0 & 0 & 3 & 2 & 3 & 4 & 0 & 0 & 0 & 1 & 2 & 3 & 4 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 2 & 3 & 4
+\end{array} \right)\]
+\normalsize
+
 \end{problem}
 
 
@@ -5652,6 +5917,34 @@ incompleta. Si recibes los vectores $11100000$, $01110000$,
 $11000000$ y $00110011$, ?`cómo los decodificarías?
 
 \solution
+
+\doneby{Pedro}
+
+Para recordar la definición del código de Hamming extendido debemos atender la solución del profesor del ejercicio \ref{ej:Hamming_extendido}.
+
+Una vez sabemos lo que es un código de Hamming extendido procedemos a construir el código Ham(3,2) y a extenderlo como se hizo en el ejercicio anteriormente mencionado.
+
+\[H = \left( \begin{array}{ccccccc|c}
+0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 \\
+0 & 1 & 1 & 0 & 0 & 1 & 1 & 0 \\
+1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\
+\hline
+1 & 1 & 1 & 1 & 1 & 1 & 1 & 1
+\end{array}\right)\]
+
+Por otro lado, debemos recordad que, como se explicó en teoría, la decodificación incompleta es la que se basa en el cálculo del síndrome de los posibles errores y de las palabras recibidas, ahorrando la necesidad de construir la tabla de Slepian.
+
+Los síndromes de los códigos recibidos son:
+\[S(11100000)= 0001, \ S(01110000)= 1011, \ S(11000000)= 0110, \ S(00110011)= 0000 \]
+
+La última palabra será leída tal cual. Para las otras tres debemos tratar de corregirlas para lo que buscamos el error asociado a cada palabra, que será aquel con el mismo síndrome. Así:
+\[S(00000001)=0001, \ S(00001000) = 1011, \ S(11000000)=0110\]
+
+Así los cuatro vectores leídos serán:
+\[11100001, \ 01111000, \ 00000000, \text{ y } 00110011\]
+
+Para completar la decodificación de estos vectores debemos encontrar la matriz generadora del código. Para ello debemos escribir la matriz $H$ en su forma estándar, lo que nos permitirá escribir rápidamente la matriz generadora.
+
 \end{problem}
 
 
@@ -5792,7 +6085,7 @@ LEVANTE - VALENCIA
 \end{problem}
 
 
-\begin{problem}[16]
+\begin{problem}[15]
  Construye un $[11,6,5]$-código perfecto sobre $ F_3$. (Lo
 que se pretende es que escribas la matriz de paridad. Quizá haya
 que experimentar un poco. Si te ves incapaz de hacerlo sin

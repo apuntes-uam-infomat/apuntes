@@ -1653,10 +1653,10 @@ En el fondo, lo que estamos diciendo con todo esto es que cada espacio $H$ es is
 
 La condición que necesitaremos para todo esto será tener lo que llamaremos sistemas ortogonales completos:
 
-\begin{defn}[Sistema\IS ortogonal completo] Un conjunto $\set{\ve_α}$ es un sistema ortogonal completo de un espacio Hilbert $H$ si y sólo si $\spn \set{\ve_α} \densein H$.
+\begin{defn}[Sistema\IS ortogonal completo] \label{def:SOC} Un conjunto $\set{\ve_α}$ es un sistema ortogonal completo de un espacio Hilbert $H$ si y sólo si $\spn \set{\ve_α} \densein H$.
 \end{defn}
 
-\section{Series de Fourier}
+\chapter{Teoría de Fourier}
 
 Todo el lío que hemos montado con esto viene por el intento de resolver un viejo problema, que es el de aproximar funciones globalmente con polinomios. En los primeros cursos de matemáticas se ve que podemos usar Taylor, pero eso sólo nos vale localmente con funciones analíticas y derivables: no podemos usar funciones sólo continuas, y mucho menos funciones sólo Lebesgue integrables.
 
@@ -1684,7 +1684,50 @@ Lo que hizo Fourier fue encontrar los polinomios trigonométricos \[ P_n(z) = a_
 
 Podremos hacer esto con la bola, por ejemplo, aunque no podremos hacerlo con $L^2(ℝ^N)$ porque no es separable. La base será no numerable, dada por $\set{e^{iξx}}_{ξ∈ℝ}$. Esa es la diferencia entre una serie de Fourier y la transformada de Fourier.
 
-\chapter{Transformada de Fourier}
+\section{Series de Fourier}
+
+Una vez vista una ``ligera'' introducción a lo que significa Fourier, vamos a ir a ver la teoría formal detrás de esto. Trabajaremos en el intervalo $(0,1)$, que es equivalente a $\bbs^1$, al toro $\mathbb{T}$ en una dimensión o a $\quot{ℝ}{ℤ}$; y consideraremos el siguiente espacio de Hilbert complejo: \[ L^2(0,1) = \set{\appl{f}{(0,1)}{ℂ} \tq f(0) = f(1)} \]
+
+Vamos a estudiar las funciones de la forma $e_n(x) = e^{2π\imath nx}$. Es fácil ver que integrando, \( \int_0^1 e_n(x) \dif x = \begin{cases} 0 & n ≠ 0 \\ 1 & n = 0 \end{cases} \label{eq:IntBaseEn} \), y que por lo tanto nos dice que $\pesc{e_0, e_n}_{L^2} = 0$ para $n ≠ 1$, ya que $e_0 = 1$.
+
+Querremos demostrar que esas funciones $e_n$ son un sistema ortogonal. Para ello necesitamos demostrar que $\pesc{e_n, e_m}_{L^2} = 0$, pero \[ \pesc{e_n, e_m}_{L^2} = \int_0^1 e^{2πinx} e^{2πimx} \dif x = \int_0^1 e^{2πi(m+n)x} \dif x = \int_0^1 e_{m+n}(x) \dif x \eqexpl{\eqref{eq:IntBaseEn}} 0 \]
+
+Ahora queremos ver que con lo que estamos trabajando es en realidad un sistema ortogonal (ortonormal de hecho) completo (\fref{def:SOC}), es decir, que $\spn_H \set{e_n} = H = L^2(0,1)$. Para eso, necesitaremos definir los núcleos de Fejer.
+
+\begin{defn}[Núcleos\IS de Fejer] Los núcleos de Fejer son una sucesión $F_n$ que convergen en algún sentido a la delta de Dirac $δ_0$. Son funciones no negativas, con integral $1$, periódicas en $(0,1)$ y que cumplen que \[ F_n * \ind_I \convs \ind_I \]. Su expresión es \[ F_n(x) = \frac{1}{n} \sum_{k=0}^{n-1} D_k(x) = \frac{1}{n} \left(\frac{\sin \sfrac{nx}{2}}{\sin \sfrac{x}{2}}\right)^2 \], donde $D_k$ son los \concept{Núcleos\IS de Dirichlet} dados por \[ D_k(x) = \sum_{s=-k}^k e^{2πisx}\], que aunque no son positivos al promediarlos salen no negativos y con las propiedades que les pedíamos.
+\end{defn}
+
+Nos preguntamos ahora si, dados los coeficientes de Fourier \[ \hat{f}_k = \pesc{e_k, f}_{L^2} = \int_0^1 f(x) e^{2πi kx} \dif x \] se cumple que \[ \sum_{k=-∞}^{+∞} \hat{f}_k e^{2πi kx} = f(x) \] en casi todo punto.
+
+Para demostrarlo, primero aproximaremos la característica de un interfvalo con los núcleos de Fejer. Por linealidad, esa aproximación nos valdrá para una suma finita de intervalos.
+
+Los conjuntos Lebesgue-medibles se aproximan con sumas finitas de intervalos, así que por linealidad podemos aproximar las funciones simples como $\sum e_n \ind_{I_n}$, y eso nos lleva a que las funciones simples son densas en $L^2$. Zas. Hemos probado que los polinomios son densos en $L^2$, y de hecho sabemos qué polinomios son.
+
+El hecho de probar que los $e_n$ son un SOC nos permite aplicar la teoría de los espacios Hilbert que vimos en el capítulo anterior. De hecho, lo que tenemos es que la aplicación $\fourier$ o $\hat{\cdot}$ según notación, definida como \begin{align*}
+\appl{\hat{\cdot} \equiv \fourier}{L^2(\mathbb{T})&}{\ell^2(ℤ)} \\
+f &\longmapsto \set{\hat{f}_n}_{n∈ℤ} \equiv \set{\fourier(f) (n)}_{n∈ℤ}
+\end{align*}, es una isometría que nos dice que cualquier espacio $L^2(\mathbb{T})$ (Hilbert separable) es en realidad un espacio de sucesiones numerables.
+
+En estos espacios, se cumplirán cosas como la identidad de Parseval que nos dice que \[ \norm{\hat{f}_n}_{\ell^2(ℤ)} = \sum_{n∈ℤ} \abs{\hat{f}_n}^2 = \int_0^1 \abs{f}^2 \dif = \norm{f}^2_{L^2(\mathbb{T})}\]
+
+También tenemos la fórmula de inversión: \[ f(x) = \sum_{n∈ℤ} \hat{f}_n e_n = \sum_{n∈ℤ} \left(\int_0^1 f(x) e^{2π\imath n x}\dif x\right)e^{2π\imath n x}\quad \text{ CTP}\]
+
+La transformada de Fourier también nos permite hacer cosas interesantes, como derivar \[ \widehat{\od{f}{x}} (n) = n \widehat{f} (n) \] o hacer convoluciones: \[ \widehat{f*g}(n) = \hat{f}(n) \hat{g}(n)\]
+
+En este momento estoy bastante perdido así que esto es copia sin sentido. Si $f$ es absolutamente continua entonces \[ \abs{\hat{f}(n)} ≤ \frac{k(f)}{\abs{n}}\] y si $f∈W^{1,1}$ (esto es, que $f,f' ∈ L^1$) entonces \[ \abs{\hat{f}(n)} ≤ \frac{\norm{f}_{L^1(\mathbb{T})}}{\abs{n}}\] y además si $f ∈ C^k$ entonces \[ \abs{\hat{f}(n)} ≤ \frac{\norm{f^{k)}}_{L^1}}{\abs{n}^k} \]
+
+Lo que deducimos de esto es que cuanto más regular es la función más rápido decaen los coeficientes de Fourier.
+
+Hay resultados más finos. Nosequé de módulo de continuidad pero no sabemos lo que es así que nada.
+
+Ahora algo de la convergencia puntual, creo. Si $f ∈ C^α$, con $α∈(0,1)$ hay convergencia uniforme en la serie \[ f(x) = \sum_{n∈ℤ} \hat{f}(n) e^{2π\imath nx}\]
+
+Nota: \[ f∈C^α \iff \frac{\abs{f(x) - f(y)}}{\abs{x-y}^α} < ∞\]
+
+Si además $f ∈ BV$ (bounded variation, creo) entonces converge en todo punto. Además, si $f$ es sólo continua entonces $\set{\hat{f}(n)} ∈ \ell^1$ y hay convergencia uniforme.
+
+Un poco de historia y con esto acabamos la clase porque quierenombrar a los nuevos fourieristas de este siglo y no del siglo pasado, si hablamos de convergencia en casi todo punto de la serie de Fourier, este fue un problema dado por Lusin en los años 1920, y en 1966 Carleson ha probado que la serie de Fourier de $f ∈ L^2$ converge en CTP. Luego Hunt probó que la serie de Fourier de $f∈L^p$ converge en CTP para $p > 1$. Por último, la pregunta grande era que pasa con $p = 1$. Kolmogorov encuentra un ejemplo de función $L^1$ tal que $S_n(f)$ (la reducida de la serie de Fourier) diverge en casi todo punto. Luego lo ha mejorado en todo punto. Y luego hay un resultado muy reciente de Kahoma y Katznelsen que dice que para todo $E ∈ \algb{X}$ de medida cero existe una $f$ continua tal que la serie de Fourier no converge en todos los puntos de $E$.
+
 
 \chapter{Introducción a la teoría espectral}
 

@@ -1,1 +1,283 @@
 \chapter{Códigos de Hamming}
+
+\section{Códigos de Hamming binarios}
+Trabajando con $q=2$ y $d=3$ vamos a trabajar con códigos Ham(r,2). Fijando $r$ vamos a buscar códigos con el mayor $n$ posible.
+
+Para garantizar que la distancia mínima sea mayor o igual que 3, simplemente necesitamos:
+\[\forall i \ H_i \neq 0 \ \ \ \forall i,j \ H_i \neq H_j\]
+Es decir, basta con tomar cualquier conjunto $\{H_1,...,H_n\}\in F_2^r-\{0\}$ con $n$ vectores distintos.
+
+Si queremos que el $n$ sea el mayor posible, tendremos un total de $n=2^r-1$.
+
+Una vez tenemos $n$, sabiendo que la matriz controladora de paridad, $H$, tendrá $r$ filas y $n$ columnas (y sabiendo que la distancia del código es 3) podemos concluir que nos encontramos ante un $(n=q^r-1,q^{n-r},3)$-código $q$-ario.
+
+\begin{example}
+Si tenemos un código $Ham(4,2)$ con distancia mínima $d=3$, estamos ante un $(15,2^{11},3)$-código binario.
+
+\end{example}
+
+En general, si tenemos un código Ham(r,q) con distancia mínima $d=3$ queremos tener $q=p^s$ sobre $F_q$. Pedimos que $q$ sea potencia de un primo para poder trabajar con álgebra de primero puesto que de no ser $F_q$ un cuerpo el concepto de linealmente independiente quedaría bastante más complejo.
+
+Para tener distancia mínima $d \geq 3$ necesitamos que ninguna columna de $H$ sea nula ni múltiplo de otra.
+
+En el cuerpo $F_q^r-\{0\}$ tenemos un total de $q^r-1$ posibles columnas \footnote{Ya estamos descontando la columna nula}. Sin embargo, por cada columna $H_i$ que fijamos, nos estamos eliminando $q-1$ opciones, ya que el resto de columnas no podrán ser múltiplo de la primera.
+
+Por tanto, tenemos como máximo $n=\frac{q^r-1}{q-1}$.
+
+Lo más fácil es exigir que la coordenada más alta sea distinta de 0, por ejemplo 1.
+
+\begin{example}
+Si queremos encontrar el código Ham(2,3) óptimo con distancia mínima $d=3$ tenemos $n=\frac{3^2-1}{3-1}=4$. En concreto tenemos
+\[H=\left( \begin{array}{cccc}
+0 & 1 & 1 & 1 \\
+1 & 0 & 1 & 2
+\end{array}\right)\]
+\end{example}
+
+\begin{prop}
+Sean $q,r \geq 2$ enteros (podríamos tomar también $r=1$ pero se trataría de códigos muy triviales), se cumple que:
+\[n = \frac{q^r-1}{q-1}, \ M=q^{n-r} \implies M(1+n(q-1))=q^n\]
+\end{prop}
+\begin{proof}
+\[M(1+n(q-1))=q^n \iff 1+n(q-1) = q^r \iff n(q-1)=q^r-n \iff n=\frac{q^r-1}{q-1}\]
+\end{proof}
+
+\begin{corol}
+Si $q$ es potencia de un primo, entonces el código $Ham(r,q)$ es perfecto con $d=3$
+\end{corol}
+
+\obs Que los parámetros satisfagan la ecuación de Hamming no garantiza que el código en cuestión exista.
+
+\begin{example}
+Podemos ver que no existe un $(7,6^5,3)$-código 6-ario.
+
+Sin embargo, los parámetros de este código son ``de Hamming'' pues satisfacen
+\[\frac{6^2-1}{6-1}=7=n=r+k \text{ siendo } r=2 \ k=5 \text{ y } d=3\]
+
+\end{example}
+
+Si se buscan soluciones a las ecuaciones de Hamming, que recordemos son de la forma:
+\[M \times \sum_{i=0}^t {n \choose i} (q-1)^i=q^n\]
+con $n,t \leq 1000$ y $q \leq 100$ salen los códigos de Hamming que hemos visto hasta ahora (cuando $t=1$), los triviales y 3 soluciones más que son:
+
+\begin{enumerate}
+\item $(23,2^{12},7)$-código binario, conocido como \concept{Código de Golay binario}
+\item $(90,2^{78},5)$-código binario.
+\item $(11,3^6,5)$-código ternario, conocido como \concept{Código de Golay ternario}
+\end{enumerate}
+
+En concreto, para los casos 1 y 3 si que existe un código (el de Golay) con esas características mas no así con el segundo caso.
+
+\begin{theorem}
+No existe un $(90,2^{78},5)$-código binario.
+\end{theorem}
+
+\begin{theorem}
+Si $q$ es potencia de un primo, entonces todo código perfecto no trivial tiene los parámetros de un Hamming o un Golay
+\end{theorem}
+
+Con esto tenemos que, definiéndolos sobre cuerpos, existen códigos binarios para corregir 1 o 3 errores (Hamming y Golay binario respectivamente) y códigos ternarios para corregir dos errores (Golay ternario).
+
+Veamos cómo trabaja un algoritmo de corrección para un \textbf{código perfecto} con $d=2t+1$.
+
+\begin{enumerate}
+\item Recibo $y\in F_q^n$
+\item Busco $x_0 \in \algb{C}$ tal que $d(x_0,y)=\min\{d(x,y)\tq x \in \algb{C}\}$
+\item Leo $x_0$
+\end{enumerate}
+
+Podemos observar que este código nunca pita sino que siempre lee algo. Esto funciona porque estamos trabajando con un código perfecto que se caracteriza por dividir el espacio \textbf{total} en el que se mueven las palabras en bolas disjuntas.
+
+Puesto que todo el espacio está divido, siempre encontraremos algún $x_0$ y, puesto que las bolas son disjuntas, no tendremos conflictos con el $x_0$ que será único.
+
+Veamos ahora una versión de este algoritmo que utiliza los síndromes. Supongamos que tenemos un código $Ham(r,q)$ con $d=3 \implies t=1$. Los pasos a seguir son:
+
+\begin{enumerate}
+\item Recibo $y$
+\item Calculo $S=S(y)$
+\item Si $S=0$ leo $y$
+\item Si $S\neq 0$ busco $i,λ$ tales que $S=λH_i$ y leo $y-λH_i$.
+\end{enumerate}
+
+Este algoritmo se apoya en la siguiente propiedad:
+\[\forall y \in F_q^n\setminus \{0\} \ \ \exists ! i, \ \exists ! λ\in F_q\setminus\{0\} \text{ t.q } y=λH_i\]
+
+\obs Sea $S=(s_1,...,s_r)$ con $s_1=s_2=...=s_e=0$ y $s_{e+1} \neq 0$ entonces
+\[S = \left( \begin{array}{c} 0 \\ \vdots \\ 0 \\ \frac{s_{e+2}}{s_{e+1}} \\ \vdots \\ \frac{s_{r}}{e_{e+1}}\end{array}\right)=s_{e+1}\cdot H_i\]
+
+\begin{example}
+Supongamos que estamos empleando un código $Ham(3,3)$ y que recibimos el mensaje $y=0112200000000$, ¿Qué leemos?.
+
+Lo primero que debemos hacer es construir la matriz controladora de paridad:
+\[H = \left(\begin{array}{ccccccccccccc}
+0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 2 & 2 & 2\\
+1 & 0 & 1 & 2 & 0 & 1 & 2 & 0 & 1 & 2 & 0 & 1 & 2
+\end{array}\right)\]
+
+Ahora debemos calcular el síndrome de la palabra recibida:
+\[S(y) = \left(\begin{array}{c} 2 \\ 1 \\ 2\end{array} \right) = 2 \cdot  \left(\begin{array}{c} 1 \\ 2 \\ 1\end{array} \right) = 2H_{12}\]
+
+Por tanto leeremos $y-2H_{12}=0112200000010$.
+\end{example}
+
+\begin{example}
+Vamos a construir el código $Ham(2,4)$.
+
+Lo primero que tenemos que hacer es construir un cuerpo de 4 elementos que, recordando algo de Galois, será $\{0,1,α,α+1\}$ siendo $α^2=α+1$.
+
+En el caso del código que queremos construir tenemos que $r=2$, $n=\frac{4^r-1}{4-1}=5$. Por tanto la matriz $H$ tendrá dimensión $2 \times 5$. Vamos a construirla:
+\[H = \left(\begin{array}{ccccc}
+0 & 1 & 1 & 1 & 1\\
+1 & 0 & 1 & α & α+1
+\end{array} \right)\]
+
+Supongamos ahora que leemos el mensaje $y=(0,0,1,α,0)$. Para corregirlo calculamos su síndrome obteniendo:
+\[S(y) =  \left(\begin{array}{c} α+1 \\ α\end{array} \right)=(α+1) \left(\begin{array}{c} 1 \\ α+1\end{array} \right)\]
+
+Por tano leemos $y-(α+1)(1,α+1) = (0,0,1,α,α+1)$
+\end{example}
+
+\begin{prop}
+Sean $q,r \geq 2$ enteros y $q$ una potencia de un primo, entonces
+\[A_q\left(\frac{q^r-1}{q-1},3\right) = q^{n-r}\]
+\end{prop}
+
+\begin{proof}
+Sabemos de antemano que
+\[A_q\left(\frac{q^r-1}{q-1},3\right) \leq q^{n-r}\]
+por la cota de Hamming.
+
+Por tanto tenemos que centrarnos en mostrar que se siempre se alcanza la igualdad.
+
+Para ello basta con considerar un código $Ham(r,q)$ que, como ya hemos visto, es un código perfecto y alcanza la cota.
+
+Por tanto queda claro que se da la igualdad.
+\end{proof}
+
+Ya tenemos que la cota de Hamming se alcanza pero ¿ocurre lo mismo con la cota de Singleton?. Vamos a verlo.
+
+Recordemos que la cota de Singleton establece:
+\[A_q(n,d) \leq q^{n-d+1}\]
+Por tanto, lo que tenemos que hacer es ver si existe o no un código lineal con $r=d-1$. Los códigos que cumplan esta relación se denominan \concept{códigos Maximum Distance Separable}.
+
+Un ejemplo de códigos de este tipo son los códigos BCH.
+
+\section{Códigos BCH (Bose Ray-Chaudhury y Hocquenghem)}
+
+Este tipo de códigos son empleados en los CDs para evitar que rallajos, que dañan una serie de bits consecutivos, no dejen el CD inutilizable.
+
+Se dice que un CD es 75\% música y 25\% matemáticas.
+
+Veamos cómo construir un código BCH.
+
+Lo primero que debemos hacer es recordar que para generar el código nos basta con ser capaces de escribir la matriz controladora de paridad y esto se hacía atendiendo a la distancia mínima que queremos tener para el código.
+
+En este caso estamos buscando un código con $r=d-1 \implies d=r+1$. Por tanto necesitamos encontrar $n$ columnas $H_i \in F_q^r$ tales que $r$ de ellas sean independientes.
+
+Puesto que tenemos $r$ vectores de dimensión $r$, podemos comprobar si son o no independientes estudiando su determinante.
+
+Por tanto, necesitamos encontrar vectores de tamaño $r$: $H_1,...,H_n$ tales que
+\[\text{det}(H_{i_1}...H_{i_r}) \neq 0 \text{ para cualquier combinación de r vectores}\]
+
+\begin{defn}[Determinante de Vandermonde]
+Se trata de un determinante famoso que ya hemos visto en algebra lineal y que tiene la forma:
+\[\left| \begin{array}{cccc}
+1 & 1 & \cdots & 1 \\
+x_1 & x_2 & \cdots & x_r \\
+x_1^2 & x_2^2 & \cdots & x_r^2 \\
+\vdots & \vdots & \ddots & \vdots \\
+x_1^{r-1} & x_2^{r-1} & \cdots & x_r^{r-1} \\
+\end{array}\right| = \prod_{1 \leq j < i \leq r}(x_i-x_j)\]
+\end{defn}
+
+Si trabajamos sobre un dominio tenemos:
+\[\prod_{1 \leq j < i \leq r}(x_i-x_j) \neq 0 \iff x_i-x_j \neq 0 \ \forall i,j \iff x_i\neq x_j  \ \forall i,j\]
+Por tanto, si en $F_q$ existen $n$ valores distintos podemos construir fácilmente una matriz de la forma del determinante de Vandermonde, lo que nos garantiza que tomando $r$ columnas cualesquiera de esta matriz, tendremos un determinante no nulo.
+
+Es decir, nos quedaría la matriz:
+\[H=\left( \begin{array}{cccc}
+1 & 1 & \cdots & 1 \\
+x_1 & x_2 & \cdots & x_n \\
+x_1^2 & x_2^2 & \cdots & x_n^2 \\
+\vdots & \vdots & \ddots & \vdots \\
+x_1^{r-1} & x_2^{r-1} & \cdots & x_n^{r-1} \\
+\end{array}\right)\]
+que define un [$n,n-r,r+1$]-código.
+
+\begin{example}
+Veamos cuánto vale $A_{11}(7,5)$.
+
+Para calcular este valor empezamos estableciendo la cota de Singleton, que nos garantiza:
+\[A_{11}(7,5) \leq 11^3\]
+
+Ahora tenemos que ver si se da la igualdad. Para que se de la igualdad debemos ser capaces de construir una matriz controladora de paridad compuesta por $4$ filas y $7$ columnas.
+
+Recordando lo que hicimos anteriormente debemos encontrar $7$ elementos distintos en $F_{11}$ y ya lo tendremos. Esta tarea es bien sencilla y, como resultado, no permite obtener la matriz:
+\[H=\left( \begin{array}{ccccccc}
+1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+1 & 2^2 & 3^2 & 4^2 & 5^2 & 6^2 & 7^2 \\
+1 & 2^3 & 3^3 & 4^3 & 5^3 & 6^3 & 7^3
+\end{array}\right)\]
+\end{example}
+
+\begin{theorem}
+Si $q$ es potencia de un primo y $d \leq n \leq q$, se tiene que:
+\[A_q(n,d)=q^{n-d+1}\]
+\end{theorem}
+
+\begin{theorem}
+Si $q$ es potencia de un primo y $d \leq n \leq q+1$, se tiene que:
+\[A_q(n,d)=q^{n-d+1}\]
+\end{theorem}
+
+\obs Ya no hay $q+1$ elementos distintos en $F_q$.
+
+\begin{proof}
+Con lo visto anteriormente es sencillo construir las primeras $q$ columnas de la matriz $H$, pero necesitamos $q+1$.
+
+Basta con añadir una columna de 0s con un 1 al final. De esta forma, al calcular el determinante por adjuntos obtendremos el determinante de VanderMonde con lo que seguimos garantizando que $q+1$ columnas serán independientes.
+\end{proof}
+
+Los códigos BCH con $d \leq n \leq q$ se pueden decodificar usando técnicas inspiradas por Ramalujan. Veamos un ejemplo.
+
+\begin{example}
+Consideramos un código con matriz controladora:
+\[H=\left( \begin{array}{ccccc}
+1& 1 & 1 & \cdots & 1 \\
+0 & 1 & 2 & \cdots & 10 \\
+0 & 1^2 & 2^2 & \cdots & 10^2 \\
+0 & 1^3 & 2^3 & \cdots & 10^3 \\
+\end{array}\right)\]
+de la que sabemos $n=11$, $r=4$, $k=7$ y $d=5$.
+
+Este código puede corregir hasta 2 errores. Vamos a corregir el error usando el síndrome. El algoritmo sería:
+
+\begin{enumerate}
+\item Recibimos $y=y_1,...,y_{10} \in F_{11}^{10}$
+\item Calculamos su síndrome obteniendo:
+\[S(y) = \left( \begin{array}{c} s_1 \\ s_2 \\ s_3 \\ s_4\end{array}\right)\]
+\item Si el síndrome es $0$, leemos $y$ y \textbf{fin del algoritmo}
+\item Supongamos que se ha producido un error doble. En ese caso tenemos que encontrar los valores $a,b,i,j$ que satisface:
+\[\left( \begin{array}{c} s_1 \\ s_2 \\ s_3 \\ s_4\end{array}\right) = a\left( \begin{array}{c} 1 \\ i \\ i^2 \\ i^3\end{array}\right) + b\left( \begin{array}{c} 1 \\ j \\ j^2 \\ j^3\end{array}\right)\]
+
+Resolver este sistema no es tarea fácil, pues no es lineal. Si a cada ecuación le restamos $i$ veces la de debajo, podemos llegar al sistema:
+\[\begin{array}{l}
+b(i-j) = is_1-s_2\\
+bj(i-j)=is_2-s_3\\
+bj^2(i-j)=is_3-s_4
+\end{array}\]
+
+Podemos ver que el lado izquierdo de la segunda ecuación al cuadrado es igual al producto de los lados iquierdos de las otras dos ecuaciones.
+
+Gracias a esta relación podemos escribir:
+\[(s_2^2-s_1s_3)i^2+(s_1s_4-s_2s_3)i+s_3^2-s_2s_4=0\]
+que se denomina \concept{polinomio localizador de errores}, cuyas raices son $i$ y $j$.
+
+\item En el paso anterior suponemos que se han producido dos errores pero, ¿Qué ocurre si sólo hay un error?
+
+En este caso, aplicando el mismo procedimiento del apartado anterior, obtenemos que el poliniomio localizador de errores es el polinomio nulo.
+
+\end{enumerate}
+\end{example}

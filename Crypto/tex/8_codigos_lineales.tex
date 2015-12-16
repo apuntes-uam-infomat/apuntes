@@ -152,9 +152,9 @@ Esta es la idea de la tabla de \concept{Slepian}. Veamos el funcionamiento de es
 Sea el código dado por la matriz generadora:
 \[G = \left( \begin{array}{cccc} 1 & 0 & 1 & 0 \\ 0 & 1 & 1 & 1 \end{array}\right)\].
 
-Para construir la tabla de Slepian tomamos un representante de peso mínimo de cada clase de equivalencia, formando así la primera fila de la tabla. La forma de hacer esto consiste en tomar las combinaciones lineales más básicas del código.
+La tabla se construye por filas. Para cada fila empezamos tomando una cadena de peso mínimo que aún no haya aparecido en la tabla.
 
-Posteriormente tomamos diferentes elementos iniciales y aplicamos sobre ellos las operaciones posibles en nuestro código lineal.
+Para continuar la construcción de la fila, añadiremos los elementos que pertenecen a la misma familia. Lo haremos escribiendo los resultados de aplicar combinaciones lineales de los generadores sobre el elemento que representa la clase de equivalencia.
 
 Finalmente la tabla queda:
 \[\begin{array}{cccc}
@@ -244,4 +244,96 @@ Ahora calculamos el síndrome de cada representante de clase de la tabla de Slep
 
 Supongamos que hemos recibido el mensaje $y=01001$ calculamos su síndrome, que nos da $(y)=100$ con lo que asumimos que $e=00100$ con lo que leemos el mensaje $x=01101$ que es una palabra del código.
 \end{example}
+
+\subsection{Decodificación por síndrome para Ham(3,2)}
+Cuando trabajamos con Ham(3,2), que es un $(7,16,3)$-código binario, tenemos la matriz comprobadora de paridad:
+\[H = \left(\begin{array}{ccccccc}
+0 & 0 & 0 & 1 & 1 & 1 & 1 \\
+0 & 1 & 0 & 0 & 0 & 1 & 1\\
+1 & 0 & 1 & 0 & 1 & 0 & 1
+\end{array}\right) \]
+
+Cuando recibimos una palabra $y$, calculamos su síndrome $S(y)=Hy^t$. Si este síndrome vale 0, entonces leemos la palabra $y$.
+
+Puesto que todas las combinaciones posibles de 3 bits están representadas como columnas de la matriz $H$, en caso de que el síndrome no sea el vector 0, este será igual a una de las columnas de la matriz $H_i$. En esta ocasión leeríamos $\tilde{y}=y-e_i$.
+
+Alternativamente:
+\[Sy=\left( \begin{array}{c} s_2 \\ s_1 \\ s_0 \end{array}\right) \implies \text{ leo } \tilde{y} = y-e_{s_0+2s_1+4s_2}\]
+siendo esto posible sólamente si escribimos la matriz $H$ como hemos mostrado al inicio de la sección, donde cada columna $i$ se corresponde con la representación binaria del número $i$.
+
+Dado un código lineal con matriz generadora $G_{k \times n}$ y matriz controladora de paridad $H_{r\times n}$ siendo $r=n-k$, el \concept{Código dual $\algb{C}^*$} es aquel que tiene como matriz generadora la $H_{r\times n}$. Por construcción, la matriz controladora del código dual será la matriz $G_{k\times n}$.
+
+A continuación veremos el resultado más importante de lo que resta de curso. La idea es que en un código lineal existen formas alternativas de calcular la distancia mínima.
+
+En general, si $|\algb{C}|=M$, la primera forma de calcular $d(\algb{C})$ que estudiamos requería ${M \choose 2}$ cálculos de distancias entre palabras.
+
+Esta cota ya la mejoramos al estudiar el concepto de los pesos con lo que logramos reducir la cantidad de operaciones necesarias a $M-1$ cálculos de pesos de palabras.
+
+Pero esto puede mejorarse más aún, puesto que $H$ contiene la información necesaria para conocer $d(\algb{C})$.
+
+\begin{obs}
+Sea la matriz $H=[H_1,...,H_n]$ y sea $x \in \algb{C}$. Considerando $w=w(x)$ entonces sabemos que $x_{i_1},...,x_{i_w}\neq 0$, por definición de peso de una palabra.
+
+Por definición de la matriz controladora tenemos:
+\[Hx^t=0 \implies x_{i_1}H_1 + \cdots + x_{i_w}H_w = 0\]
+es decir, tenemos una combinación lineal de $w$ columnas de $H$ en la que ningún coeficiente es 0.
+\end{obs}
+
+\begin{prop}
+Sea $\algb{C}$ un código lineal con matriz controladora $H$ y $d(\algb{C})=d$, son ciertas las siguientes afirmaciones:
+\begin{enumerate}
+\item $H$ no puede tener $d-1$ (o menos) columnas linealmente dependientes
+\item $H$ tiene $d$ columnas linealmente dependientes
+\end{enumerate}
+\end{prop}
+\begin{proof}
+\begin{enumerate}
+\item Si tuviéramos $d-1$ columnas linealmente independientes, atendiendo a la observación anterior, tendríamos una palabra de peso $d-1$ que pertenece al código, lo que nos daría que la distancia mínima no podría ser $d$.
+
+\item Sea $x$ una palabra del código con $w(x)=d$, entonces tenemos una relación de dependencia entre $d$ columnas de la matriz $H$.
+\end{enumerate}
+\end{proof}
+
+\begin{corol}
+Sea $\algb{C}$ un código lineal con matriz controladora $H$, entonces $d(\algb{C})=d$ si y sólo si se cumplen las dos propiedades siguientes:
+\begin{enumerate}
+\item $d-1$ columnas \textbf{cualesquiera} de $H$ sean linealmente independientes
+\item Existen $d$ columnas de $H$ linealmente dependientes.
+\end{enumerate}
+\end{corol}
+\begin{proof}
+La perimera afirmación nos garantiza que la distancia mínima del código será al menos $d$.
+
+Por otro lado, la segunda afirmación nos garantiza que la distancia mínima del código seá como mucho $d$.
+
+Combinando ambas afirmaciones, queda probado que la distancia mínima es $d$.
+\end{proof}
+
+Veamos un pequeño ejemplo en binario para entender estos conceptos.
+\begin{example}
+Tomamos el código binario $\algb{C}$ con matriz controladora de paridad:
+\[H = \left(\begin{array}{cccccc}
+1 & 1 & 0 & 1 & 0 & 0 \\
+1 & 0 & 1 & 0 & 1 & 0\\
+0 & 1 & 1 & 0 & 0 & 1
+\end{array}\right) \]
+
+Vamos a calcular ahora la distancia mínima del código a partir de la matriz $H$.
+
+Comprobamos si la distancia mínima puede ser mayor o igual que 2. Esto implicaría, por el corolario anterior, que toda columna es linealmente independiente es decir, que toda columna es no nula.
+
+Puesto que nuestra matriz cumple esta propiedad ya sabemos que la distancia mínima será, al menos, 2.
+
+Vemos ahora que ocurre para $d\geq 3$. Si esto fuese así, dos columnas cualesquiera de la matriz serían independientes, propiedad que se cumple.
+
+Vamos a ver si $d \geq 4$. Para ello debemos ver si tres columnas cualesquiera son linealmente independientes. En este caso es sencillo ver que
+\[H_1=H_4+H_5\]
+por lo que la distancia mínima no puede ser 4.
+
+Como conlusión tenemos que el código dado tiene distancia mínima igual a 3 y que carolina es preciosa.
+\end{example}
+
+Recordemos que el rango de una matriz nos daba el máximo número de columnas linealmente independientes. Por tanto, siendo $r$ el rango de la matriz controladora de paridad, sabemos que $r+1$ columnas siempre serán dependientes por lo que $d\leq r+1$.
+
+Podemos ver que no tendremos siempre la igualdad (de hecho por eso hemos escrito una desigualdad) puesto que el rango nos garantiza la existencia de $r$ columnas independientes pero no garantiza que todas las combinaciones de $r$ columnas sean independientes.
 
