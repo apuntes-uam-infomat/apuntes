@@ -81,7 +81,7 @@ Esto no resulta nada eficiente y resta mucho dinamismo a la hora de transcribir 
 * AltGr + letra = letra griega minúscula.
 * AltGr + shift + letra = letra griega mayúscula.
 
-En ubuntu, la forma más cómoda de cambiar esta configuración es a través del siguiente [README]{}
+En ubuntu, la forma más cómoda de cambiar esta configuración es a través del siguiente [README]{https://github.com/VicdeJuan/Apuntes/tree/master/Cosas%20guays%20LaTeX/ConfiguracionTeclado}
 
 # Licencia
 
