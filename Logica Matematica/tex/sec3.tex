@@ -447,6 +447,39 @@ Esta $MT$ será una máquina de Turing universal.
 
 \obs Lo que acabamos de hacer es una pseudo-demostración del teorema. Una auténtica demostración requeriría dar explícitamente una sucesión de cuaternas que definen la $MTU$.
 
+Vamos a considerar ahora el conjunto de máquinas de Turing que calculan funciones recursivas de una variable.
+
+\textbf{Notación:} MT(input)=output
+
+Estas máquinas de Turing pueden entenderse como análogos a programas que reciben una entrada ``input'' y tras un tiempo nos devuelve un resultado ``output''. Śiguiendo con esta idea, una máquina de Turing universal sería el equivalente a un ordenador, pues recibe descripciones de programas (máquinas de Turing) y nos devuelve su resultado.
+
+Nos gustaría tener una \MT, llamémoslada $D$, que resuelva el \concept{problema de la detención}, es decir, $D$ simula una \MT con input $m\in \nat$ y nos dice si la \MT se detiene o se queda en un bucle infinito.
+
+Fijamos una codificación (algoritmo) que asigna a cada \MT su número de Godel siendo $g(MT) \in \nat$.
+
+Por ejemplo, si $MT(m)$ genera un output (es decir, la máquina se detiene) entonces $D(g(MT),m)=1$. En caso contrario tendríamos $D(g(MT),m)=0$.
+
 \begin{theorem}
-El problema de la detención es insoluble
+El problema de la detención es insoluble.
+
+Es decir, la \MT $D$ descrita anteriormente no existe.
 \end{theorem}
+\begin{proof}
+Esta demostración se realizará por diagonalización.
+
+Usando $D$ construimos la \MT $V$ definida en los números $g(MT)$ como sigue:
+\begin{enumerate}
+\item Dado un input $m$, $V$ genera $(m,m)$.
+\item $V$ ``simula'' o ``ejecuta'' el programa $D(m,m)$
+\item $V$ \textbf{diagonaliza}. Es decir, si $D(m,m)=1$ entonces $V$ entra en un bucle infinito\footnote{Estamos construyendo la \MT $V$ y forzamos a que entre en un bucle infinito en caso de que $D(m,m)=1$.}
+
+Por otro lado, si $D(m,m)=0$ entonces $V$ imprime $1$ y se detiene.
+\end{enumerate}
+
+Con este algoritmo llegamos a una \textbf{contradicción}:
+
+Si $V(g(V))=1$ entonces $D(g(V),g(V))=0$ lo que implica que $V(g(v))$ entra en un bucle infinito.
+
+Si $V(g(V))$ entra en un bucle infinito, entonces $D(g(V),g(V))=1$ luego $V(g(V))$ se detiene.
+
+\end{proof}
