@@ -42,6 +42,8 @@
 \RequirePackage{xstring} % Para trabajar con cadenas.
 \RequirePackage{mathtools} % Arregla bastantes cosas de los entornos matemáticos por defecto.
 \RequirePackage{nameref}
+\RequirePackage{scalerel,stackengine} % Para los sombreros grandes (widehat)
+
 
 \newtoggle{probframes} % Controla si los problemas tienen marcos o no
 \@setframeconfig
@@ -520,7 +522,7 @@
 \newcommand{\restr}[2]{{#1}|_{#2}}
 \newcommand{\bbs}{\mathbb{S}}
 \newcommand{\crc}{\ensuremath{\mathbb{S}^1}\xspace}
-\newcommand{\torus}{\ensuremath{\mathbb{T}^2}\xspace}
+\newcommandx{\torus}[1][1=2]{\ensuremath{\mathbb{T}^{#1}}\xspace}
 \newcommand{\disc}{\ensuremath{\overline{\mathbb{D}}}\xspace}
 
 % TIM
@@ -593,3 +595,14 @@
 \DeclareMathOperator{\spn}{span}
 \newcommand{\densein}{\xhookrightarrow{\text{denso}}}
 \newcommand{\fourier}{\mathfrak{F}}
+
+\stackMath
+\renewcommand\widehat[1]{%
+\savestack{\tmpbox}{\stretchto{%
+  \scaleto{%
+    \scalerel*[\widthof{\ensuremath{#1}}]{\kern-.6pt\bigwedge\kern-.6pt}%
+    {\rule[-\textheight/2]{1ex}{\textheight}}%WIDTH-LIMITED BIG WEDGE
+  }{\textheight}%
+}{0.5ex}}%
+\stackon[1pt]{#1}{\tmpbox}%
+}
