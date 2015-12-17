@@ -69,6 +69,20 @@ Recomendada instalación a través de MacPorts. En la página [están todos los 
 
 Hay que instalar el paquete base y también los extras ya que se usan varios paquetes presentes ahí: _texlive-latex-base_, _texlive-latex-extra_, _texlive-latex-recommended_. También es interesante instalarse la documentación de cada de uno de esos paquetes.
 
+
+## Sacar el máximo provecho a LaTeX
+
+La idea original de este proyecto era tomar apuntes en clase directamente a LaTeX. Para ello, evidentemente, es necesario tener una buena velocidad de escritura a máquina, un dominio bastante extenso de los comandos desarrollados en este proyecto y una customización del teclado a gusto del usuario.
+
+En un principio, cada vez que queramos escribir una letra griega (algo extremadamente frecuente en matemáticas), deberemos escribir un comando de la forma \sigma o \Sigma para representar σ y Σ respectivamente.
+
+Esto no resulta nada eficiente y resta mucho dinamismo a la hora de transcribir a LaTeX una clase en directo. Para ello, lo más cómo es modificar la configuración del teclado para tener la siguiente combinación de teclas, normalmente sin usar:
+
+* AltGr + letra = letra griega minúscula.
+* AltGr + shift + letra = letra griega mayúscula.
+
+En ubuntu, la forma más cómoda de cambiar esta configuración es a través del siguiente [README]{}
+
 # Licencia
 
 Estos apuntes se comparten bajo la licencia [Creative Commons - No Commercial - Share Alike](http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode): se pueden usar libremente siempre y cuando se de crédito a los autores originales, no se usen con propósitos comerciales y los trabajos derivados se compartan bajo esta misma licencia.
