@@ -71,4 +71,6 @@ Para ello empleamos el script de [push](push.sh) que se ejecuta de la forma:
 
     $ ./push.sh es
 
-Antes de hacer esto se *recomienda encarecidamente* realizar una copia del fichero original de modo que siempre podamos volver a nuestro teclado en caso de que algo no salga bien.
+Este script volverá a copiar el archivo *es* al directorio del sistema de que se obtuvo pero con un nombre diferente (evitando así el borrado del original) y causa la actualización de la configuración del teclado respecto a esta nueva configuración.
+
+Para ejecutar este script es necesario tener permisos de super usuario.
