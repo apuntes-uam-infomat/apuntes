@@ -4,7 +4,7 @@ Para cambiar la configuración del teclado lo único que debemos hacer es cambia
 
 El script de [pull](pull.sh) lo único que hace es acceder al directorio donde se guardan estas configuraciones y copiar una de ellas directorio desde el que se invoca. Un ejemplo de uso de este script sería:
 
-$ ./pull.sh es
+    $ ./pull.sh es
 
 Y nos permite acceder cómodamente al archivo que describe la configuración en Español del teclado (que probablemente sea la que estamos usando).
 
@@ -68,6 +68,7 @@ key <AC03> {	[	  d,	D,    Greek_delta,   Greek_DELTA ]	};
 Una vez hemos modificado nuestro fichero, lo que debemos hacer es devolverlo a su sitio e indicar al ordenador que se actualice de acuerdo a la nueva información.
 
 Para ello empleamos el script de [push](push.sh) que se ejecuta de la forma:
-$ ./push.sh es
+
+    $ ./push.sh es
 
 Antes de hacer esto se *recomienda encarecidamente* realizar una copia del fichero original de modo que siempre podamos volver a nuestro teclado en caso de que algo no salga bien.
