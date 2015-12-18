@@ -193,8 +193,52 @@ El paquete no soporta sólo letras griegas: también símbolos como $∀, ∃, �
 \subsection{\textit{tikztools.sty}: Herramientas y comandos extra para Tikz}
 \label{sec:Tikztools}
 
-\index{tikztools.sty}
-Para facilitar los dibujos de Tikz (ver \fref{sec:Tikz} para una introducción sobre qué es Tikz), el paquete \textit{tikztools.sty} tiene varios comandos predefinidos. Incluye las librerías usuales, algunos estilos interesantes: \textit{nodepoint} para poner puntos sencillos, \textit{vnlin, hnlin} para poner marcas verticales u horizontales, varias clases para marcar con flechas líneas (\textit{directed, dense directed, etc}, todas con un nombre bastante claro) y varios comandos para dibujar familias de curvas que programé en su momento para EDO y ahora mismo no tengo narices a entender. También está el comando \texttt{tikzangle} para marcar ángulos en LaTeX.
+\index{tikztools.sty}\cindex{curvefam}\cindex{tikzangle}
+Para facilitar los dibujos de Tikz (ver \fref{sec:Tikz} para una introducción sobre qué es Tikz), el paquete \textit{tikztools.sty} tiene varios comandos predefinidos. Incluye las librerías usuales, algunos estilos interesantes: \textit{nodepoint} para poner puntos sencillos, \textit{vnlin, hnlin} para poner marcas verticales u horizontales, varias clases para marcar con flechas líneas (\textit{directed, dense directed, etc}, todas con un nombre bastante claro); un comando para dibujar familias de curvas (\verb|\curvefam|). También está el comando \texttt{tikzangle} para marcar ángulos en LaTeX.
+
+\begin{LTXexample}[width=0.4\textwidth, pos=r]
+\begin{tikzpicture}
+\node[nodepoint, red] at (0,0) {};
+\node[cross, blue] at (1,0) {};
+
+% vnlin y hnlin vienen bien para marcar puntos en ejes
+\draw[->] (2,0) -- (4,0);
+\draw[->] (3,-1) -- (3,1);
+
+\node[vnlin, label=below:{$x_0$}] at (3.5, 0) {};
+\node[hnlin, label=left:{$y_0$}] at (3, 0.5) {};
+
+% Los comandos "directed" nos permiten marcar flechas de flujo con distintas densidades
+\draw[sparse directed, blue] (0, -2) -- (4, -2);
+\draw[directed, red] (0, -2.2) -- (4, -2.2);
+\draw[dense directed, orange] (0, -2.4) -- (4, -2.4);
+\draw[plot directed, brown] (0, -2.6) -- (4, -2.6);
+\draw[full directed, yellow] (0, -2.8) -- (4, -2.8);
+\draw[really dense directed, green] (0, -3) -- (4, -3);
+
+% Todos los estilos tienen versión "invert"
+\draw[invert full directed, purple] (0, -3.2) -- (4, -3.2);
+
+% Tambien hay familias de curvas (ver documentación completa en tikztools.sty)
+\node[nodepoint, label=left:{$A$}] (A) at (0, -4) {};
+\node[nodepoint, label=left:{$B$}] (B) at (0, -6) {};
+\node[nodepoint, label=above:{$C$}] (C) at (4, -5) {};
+\node[nodepoint, label=right:{$D$}] (D) at (4, -6) {};
+\node[nodepoint, label=right:{$E$}] (E) at (2, -8) {};
+\node[nodepoint, label=left:{$F$}] (F) at (4, -8) {};
+
+% Curvas de A a B que son "tiradas" por C.
+\curvefam[blue, dense directed, thin]{(A)}{(B)}{(C)}
+
+% Tambien se puede hacer que las lineas no llegen todas al mismo punto
+% Igualmente, se puede hacer con la salida con boffset/btarget
+\curvefam[red, dense directed, thin, eoffset = 0.1, etarget = C]{(B)}{(D)}{(E)}
+
+% Se pueden marcar angulos
+\draw (E) -- (D) -- (F);
+\tikzangle[name={$\alpha$}, blue]{D}{E}{F}
+\end{tikzpicture}
+\end{LTXexample}
 
 \subsection{\textit{fastbuild.sty}: Recortando los tiempos de compilación}
 \label{sec:fastbuild}
