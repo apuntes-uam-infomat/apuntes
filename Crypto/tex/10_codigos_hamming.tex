@@ -306,3 +306,88 @@ con lo que obtenemos $a$ y $b$ que son los pesos buscados.
 \end{enumerate}
 
 \obs El procedimiento funciona sobre cualquier $\mathbb{F}_q$ siempre que $q$ sea potencia de un primo distinto de 2. Esto se debe, entre otros motivos, a que la forma de resolver la ecuación del polinomio característico cambia dependiendo del cuerpo en el que estemos trabajando.
+
+\section{Códigos binarios extendidos}
+Ya vimos un ejemplo de un código binario extendido cuando pasamos de un $(n,M,d)$-código binario con $d$ impar a un $(n+1,M,d+1)$-código binario, cosa que logramos mediante la adición de un bit de paridad.
+
+Otro ejemplo de extensión de código binario es el código $\widehat{Ham(r,2)}$, que ya hemos visto. Recordemos que la construcción de este código consistía en añadir una fila de 1s debajo de la matriz $H$ y una columna de 0s a la derecha de esta misma matriz.
+
+Vamos a ver cómo funcionan los algoritmo de descodificación sobre este tipo de códigos.
+
+Si nos centramos en el caso $\widehat{Ham(3,2)}$, donde tenemos la matriz controladora de paridad:
+\[H=\left( \begin{array}{cccccccc}
+0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 \\
+0 & 1 & 1 & 0 & 0 & 1 & 1 & 0 \\
+1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\
+1 & 1 & 1 & 1 & 1 & 1 & 1 & 1
+\end{array}\right)\]
+
+\begin{enumerate}
+\item Recibimos una palabra $y\in F_2^8$
+\item Calculamos el síndrome de la palabra recibida, $S(y)$.
+\item En función sel valor del síndrome calculado tendremos diferentes opciones:
+\begin{itemize}
+\item Si $S=0$ leemos la palabra $y$
+\item Si $S\neq 0$ y $s_4=0$ entonces se habrán producido al menos dos errores por lo que el algoritmo \textbf{PITA}.
+\item Si $s_4\neq 0$ y $s_1=s_2=s_3=0$ entonces leemos $y-e_8$.
+\item Si $s_4\neq 0$ y $(s_1,s_2,s_3)\neq (0,0,0)$ leemos $y-e_{s_3+2s_2+4s_1}$.
+\end{itemize}
+\end{enumerate}
+
+El negocio de la extensión de códigos Hamming sólo resulta rentable cuando nos encontraos con códigos binarios. En otro tipo de códigos, al extender aumentamos la longitud de cada palabra pero no logramos aumentar la cantidad de palabras posibles ni la distancia mínima, por lo que simplemente obtenemos un código más caro.
+
+\section{Códigos binarios acortados (o reducidos)}
+\begin{prop}
+Dado un $[n,k,d]$-código lineal sobre $\mathbb{F}_q$ existe un $[n-1,k-1,d']$-código lineal sobre $\mathbb{F}_q$ con $d' \geq d$.
+\end{prop}
+\begin{proof}
+Elejimos una posición $i$ y nos fijamos en
+\[\algb{C}'=\{x \in \algb{C} : \ x_i=0\}\subset \algb{C}\]
+
+Esta construcción nos permite garantizar que:
+\[dim(\algb{C}') = \left\{ \begin{array}{lll} k & si & \algb{C}'=\algb{C} \\
+k-1 & si & \algb{C}' \subset \algb{C}\end{array}\right.\]
+El código reducido que buscamos es:
+\[\algb{C}^*=\{(x_1,...,\widehat{x}_i,...,x_n): \ x_1,...,x_i,...,x_n \in \algb{C}'\}\]
+donde $\widehat{x}_i$ implica que esa cifra no está presente.
+
+Queda claro que la longitud de las palabras en $\algb{C}^*$ es $n-1$. Del mismo modo podemos comprobar que
+\[\forall x^*,y^* \in \algb{C}^* \ d(x^*,y^*)\geq d\]
+Si esta distancia fuese menor que $d$ tendríamos que dos palabras del código original se encuentran a distancia menor que $d$, puesto que sabemos que la cifra que hemos eliminado es la misma en ambas palabras.
+
+No podemos garantizar la igualdad puesto que puede ocurrir que entre el subconjunto de palabras que hemos tomado del código original no haya ningún par de palabras a distacia $d$.
+\end{proof}
+
+Aunque con el procedimiento empleado en la demostración no podemos garantizar que la distancia mínima sea $d$ (lo cual es beneficioso puesto que siempre nos interesa tener una distancia mínima lo mayor posible), podemos garantiar que se cumpla esta distancia mínima.
+
+La forma de conseguir esto pasa por tomar una palabra $x^*\in \algb{C}^*$, que tendrá:
+\[x_{i_1}\neq 0, \ ..., x_{i_{d'}}\neq 0 \text{ y los demás } x_j=0\]
+y tomar convertir $d'-d$ cifras que no eran nulas en 0.
+
+Una vez determinamos que columnas vamos a hacer 0, aplicamos esta misma operación sobre todas las palabras del código.
+
+Con esto garantizamos que alguna palabra tenga peso $d$, la palabra con la que empezamos a trabajar) y sabemos que todas las demás palabras, que tenían peso al menos $d'$ tendrán ahora peso al menos $d$ con lo que, efecitvamente, hemos reducido la distancia del código a $d$.
+
+%\begin{theorem}[Cota de Varshamov-Gigabenet]
+%Sea $q$ potencia de un primo, entonces:
+%\[\sum{i=0}^{d-2}{n \choose i} (q-1)^i < q^{n-k} \implies \exists [n,k,d]\text{-código lineal sobre }\mathbb{F}_q\]
+%\end{theorem}
+%\begin{corol}
+%\[A_q(n,d)\geq B_q(n,d) \geq q^{k_1}\]
+%donde
+%\[k_1 = \max \left\{k \tq q^k < \frac{q^n}{\sum_{i=0}^{d-2}{n \choose i}(q-1)^i}\right\}\]
+%\end{corol}
+
+En general, siempre nos interesa obtener los mejores códigos posibles pero ¿Cómo de bueno puede ser un código?.
+
+Para que un código sea bueno necesitamos que la tasa de transmisión sea grande y que la probabilidad de equivocarnos al leer el mensaje recibido sea pequeña, es decir, queremos que $n$ sea pequeño con $d$ grande.
+\[\text{ tasa de transmisión = } R = \frac{\log_q(M)}{n}\]
+
+Shannon dijo que cada canal tiene una \textbf{capacidad}.
+
+Por ejemplo, para el canal binario simétrico con probabilidad de error en un bit $p$ tenemos que la capacidad del mismo es viene dada por
+\[C(p)=1+p\log_2(p)+(-p)\log_2(1-p)=\left(1-\frac{H_2(R)}{\text{entropía}}\right)\]
+
+\begin{theorem}[Teorema de Shanon (1948)]
+Dado $R$ menor que la capacidad del canal y dado cualquier ε positivo, existe un código con tasa de transmisión mayor o igual que $R$ y probabilidad de error al corregir menor que ε.
+\end{theorem}
