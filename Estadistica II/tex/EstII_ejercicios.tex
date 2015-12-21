@@ -1465,3 +1465,191 @@ Verdes&Amarillas&Azules\\\hline
 Es igual que el anterior. Se deja para otro.
 
 \end{problem}
+
+
+\section{Hoja 4}
+
+\begin{problem}[1]
+
+\ppart Estima a partir de estos datos, la función lineal discriminante de Fisher.
+
+\ppart Clasifica la observación $xx = (2,7)'$ utilizando la regla obtenida en el apartado anterior.
+\solution
+
+\spart Vamos a estimar las medias de cada población: 
+$$\hat{µ_0} = \gor{x_0} = (3,6)'$$
+$$\hat{µ_1} = \gor{x_1} = (5,8)'$$
+
+Y la estimación de la matriz de varianzas, para lo que necesitamos:
+
+\[
+S_0 = \begin{pmatrix}1&1.5\\1.5&3\end{pmatrix} \quad
+S_1 = \begin{pmatrix}1&0.5\\0.5&1\end{pmatrix}
+\]
+
+\[
+\hat{Σ} = \frac{(n_0-1)S_0  + (n_1 - 1)S_1}{n_0+n_1-2} = \frac{S_1+S_2}{2} = \begin{pmatrix}1&1\\1&2\end{pmatrix}
+\]
+
+Por último, la dirección proyección de la regla de fisher es 
+\[
+ω = \hat{Σ^{-1}}(\gor{x}_1  - \gor{x}_0) = \begin{pmatrix}2&-1\\-1&1\end{pmatrix}\begin{pmatrix}2\\2\end{pmatrix} = \begin{pmatrix}2\\0\end{pmatrix}
+\]
+
+Entonces, utilizando la fórmula de clasificación de la regla de fisher, obtenemos:
+
+\[
+2x_1 > (2,0)\begin{pmatrix}4\\7\end{pmatrix} \to x_1 > 4
+\]
+
+\spart Como $x_1 = 2 \neg > 4$, el punto $x=(2,7)'$ lo clasificamos como $P_0$.
+
+\obs La frontera es una linea vertical. Las segundas coordenadas no importan nada, es curioso.
+\end{problem}
+
+\begin{problem}[2]
+Considera los datos sobre enfermedades coronarias en Sudáfrica (infartos.RData). Calcula la
+función lineal discriminante de Fisher para clasificar entre sano (clase = 0) o enfermo (clase = 1) a
+un individuo en función de las 8 variables regresoras contenidas el fichero. Compara los coeficientes
+de las variables con los correspondientes a la regla de clasificación basada en regresión logística.
+¿Son muy diferentes?
+\solution
+
+\begin{lstlisting}[style=mystyle]
+# X <- matriz de los datos con $p = 8$ columnas y $n$ filas.
+# clases <- vector de $0$ o $1$ si el individuo (columna) ha sufrido infarto (1) o no (0).
+infartos <- lda(X,clases,prior=c(0.5,0.5))
+\end{lstlisting}
+
+
+\end{problem}
+
+\begin{problem}[3]
+Para 100 lirios, 50 de ellos correspondientes a la especie Versicolor (Y = 1) y otros 50 corres-
+pondientes a la especie Virginica (Y = 0) se ha medido la longitud (Long) y la anchura (Anch) del
+pétalo en milímetros. Con los datos resultantes se ha ajustado un modelo de regresión logística con
+el objetivo de clasificar en alguna de las dos especies un lirio cuya especie se desconoce a partir de las medidas de su pétalo. A continuación se muestra un resumen de los resultados 
+(algunos valores han sido suprimidos o sustituidos por letras):
+
+
+\begin{lstlisting}[style=mystyle]
+
+glm(formula = y ~ Long + Anch, family = binomial)
+
+Deviance Residuals:
+
+Min		1Q		Median		3Q		Max
+-1.8965923		-0.0227388		0.0001139		0.0474898		1.7375172
+
+Coefficients:
+
+		Estimate		Std.Error		z-value		Pr(>|z|)
+(Intercept)		45.272		13.610		3.327		0.00088
+Long		-5.755		2.306		*****		BBBB
+Anch		-10.447		3.755		-2.782		0.00540
+
+
+Null deviance: 138.629 on 99 degrees of freedom
+Residual deviance: AAAA on 97 degrees of freedom
+
+AIC: 26.564
+\end{lstlisting}
+
+\ppart Escribe la fórmula de lo que en la salida de $R$ se llama ``Deviance residuals'' y calcula la suma de estos residuos al cuadrado.
+
+\ppart Calcula la desviación residual AAAA y contrasta, usando el método de razón de verosimilitudes, la hipótesis de que ningunad elas 2 medidas influte en la variable respuesta: $H_0: β_1 = β_2 = 0$
+
+\ppart Calcula el p-valor BBBB y contrasta a nivel α = 0,05 la hipótesis nula de que la longitud del
+pétalo no es significativa para explicar la respuesta.
+
+\ppart Para un lirio se sabe que la longitud del pétalo es de 4.9 mm y la anchura es 1.5 mm. ¿En cuál
+de las dos especies se debe clasificar?
+
+\solution
+
+\spart Clacular la suma de los resudios y la desviación residual es lo mismo. Es el valor objetivo que sale al maximizar.
+
+\[
+	l(\hat{β}) = \sum D_i^2
+\]
+
+Si recordamos la información de Akaike (\ref{def:AIC}), tenemos:
+
+	\[AIC = -2l(\hat{β}) + 2(k+1) = -2A  + 6 \to A = -2l(\hat{β}) = 26.564 - 6 =  20.564 =  \sum_{i=1}^{n} D_i^2\]
+
+\spart \[138.629 - 20.564 = 118.065\]
+
+Y comparamos este valor con $\chi^2_{2;0.05} = 5.99$, con lo que rechazamos la hipótesis y concluimos que las medidas de la planta influyen en la clase.
+
+\spart Vamos a utilizar el test de Wald (\ref{test:Wald}) para contrastar $H_0 : β_1 = 0$
+
+Tenemos $z = \frac{-5.755}{2.306} = -2.4957$.
+
+\[B = P(|z| > 2.4957) \simeq 0.0128\]
+
+\spart Clasificar en $Y=1$, entonces:
+
+\[
+	\frac{1}{1+e^{-x'β}} > \frac{1}{2} \to \hat{β}x > 0
+\]
+
+Es decir, la regla de clasificación logística en este caso es:
+
+\[
+45.272 - 5.755·\underbrace{Long}_{4.9} - 10.447 · \underbrace{Anch}_{1.5} > 0
+\]
+
+\obs ¿Y cuál es la probabilidad estimada de clasificar como $Y=1$?  No es lo mismo obtener en la regla anterior 0.001 o 0.9, que ambos son positivos. Para ello:
+
+\[
+	\frac{1}{1+e^{-x'β}} = \frac{1}{1+e^{1.4020}} = 0.19
+\]
+\textcolor{red}{Esto es un poco raro.}
+
+\end{problem}
+
+\begin{problem}[4]
+
+
+\solution
+La dificultad de este problema radica en cómo introducir en $R$ los datos para aplicar el comando $glm$.
+
+Para ello, tenemos que meter $n$ datos, por cada $n$ insectos expuestos a un nivel de dosis.
+
+Nuestro vector $X$ entonces es:
+
+\[X = \left( \underbrace{1.69, ... , 1.69}_{59}, \underbrace{1.7242,...,1.7242}_{60}, ... \right)\]
+
+Y nuestro vector de clases sería:
+
+\[
+Y = \left( \underbrace{1,...,1}_{6}, \underbrace{0,...,0}_{53}, ... \right)
+\]
+
+
+En $R$ sería:
+
+\begin{lstlisting}[style=mystyle]
+y  = c(rep(1,6),rep(0,53),rep(1,13),rep(0,60-13),...)
+\end{lstlisting}
+
+Y ahora con los datos ya podemos calcular
+\begin{lstlisting}[style=mystyle]
+reg <- glm(y ~ dosis, family='binomial')
+\end{lstlisting}
+
+Y ahora ya podemos utilizar:
+
+	\[\hat{P}(Y=1 | X=1.8) = \frac{1}{1+\exp{-\hat{β}_0 - \hat{β}_1(1.8)}} = 0.72\]
+
+\end{problem}
+
+
+\begin{problem}[5]
+\solution
+\end{problem}
+
+
+\begin{problem}[6]
+\solution
+\end{problem}
