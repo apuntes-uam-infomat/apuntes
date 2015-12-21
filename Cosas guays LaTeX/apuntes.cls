@@ -63,8 +63,10 @@
 % Primera parte: el título en modo chulo con un margen en la parte superior
 \vspace*{0.1\textheight}
 \noindent
-\textcolor{titlepagecolor}{
-	\Huge{\textbf{\fontfamily{lmss}\selectfont\thetitle}}
+\textcolor{titlepagecolor}{%
+	\begin{hyphenrules}{nohyphenation}%
+	\Huge{\textbf{\fontfamily{lmss}\selectfont\thetitle}}%
+	\end{hyphenrules}%
 }\par
 % Una línea que ocupe toda la página
 \noindent\makebox[\linewidth]{\color{titlepagecolor}\rule{1.1\paperwidth}{2pt}}\par
