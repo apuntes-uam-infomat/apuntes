@@ -5,19 +5,26 @@
 \RequirePackage{pgfplots}
 \usetikzlibrary{decorations.pathmorphing,decorations.markings,patterns,intersections,positioning,external,calc, shapes.misc}
 
+\makeatletter
+
 \tikzset{>=latex}
 
+%% Self-explanatory node styles.
 \tikzstyle{nodepoint}=[inner sep=1pt, circle, draw, black, fill=black]
 \tikzset{cross/.style={cross out, draw=black, fill=none, minimum size=2*(#1 - \pgflinewidth), inner sep = 0pt, outer sep = 0pt}, cross/.default={2pt}}
-
 \tikzstyle{vnlin}=[rectangle, inner sep=0pt, minimum height=6pt, minimum width=0pt, draw, fill=black]
 \tikzstyle{hnlin}=[rectangle, inner sep=0pt, minimum height=0pt, minimum width=6pt, draw, fill=black]
+
+%% Styles to draw arrows as line decorations.
 \tikzstyle{dense directed}=[postaction={decorate,decoration={markings,
     mark=between positions 0.2 and 0.8 step 1cm with {\arrow{stealth};}}}]
+
 \tikzstyle{full directed}=[postaction={decorate,decoration={markings,
     mark=between positions 0 and 1 step 1cm with {\arrow{stealth};}}}]
+
 \tikzstyle{directed}=[postaction={decorate,decoration={markings,
         mark=at position 0.5 with {\arrow[scale=1.3]{stealth};}}}]
+
 \tikzstyle{sparse directed}=[postaction={decorate,decoration={markings,
         mark=between positions 0.25 and 0.75 step 0.25 with {\arrow[scale=1.3]{stealth};}}}]
 
@@ -42,25 +49,28 @@
 \tikzstyle{really dense directed}=[postaction={decorate,decoration={markings,
     mark=between positions 0.1 and 0.9 step 0.25cm with {\arrow{stealth};}}}]
 
-
+%% Allow cached compilations of tikz drawings (see fastbuild.sty) when using this command.
 \newcommand{\inputtikz}[1]{\centering\tikzsetnextfilename{#1.tgen}\input{tikz/#1.tex}\tikzpicturedependsonfile{tikz/#1.tex}}
 
+%% A set of commands to allow plotting families of curves
+
+% Parameter definition for \curvefam
 \pgfkeys{
 	/cfam/.is family,
 	/cfam,
-	start/.estore in = \crvfstart,
+	start/.estore in = \crvf@start,
 	start/.value required,
-	end/.estore in = \crvfend,
+	end/.estore in = \crvf@end,
 	end/.value required,
 	step/.estore in = \crvfstep,
 	step/.value required,
-	boffset/.estore in = \crvfbofst,
+	boffset/.estore in = \crvf@beginoffset@step,
 	boffset/.value required,
-	eoffset/.estore in = \crvfeofst,
+	eoffset/.estore in = \crvf@endoffset@step,
 	eoffset/.value required,
-	etarget/.estore in = \crvfeofstnode,
+	etarget/.estore in = \crvf@endoffset@node,
 	etarget/.value required,
-	btarget/.estore in = \crvfbofstnode,
+	btarget/.estore in = \crvf@beginoffset@node,
 	btarget/.value required,
 	offset/.value required,
 	offset/.code={ %
@@ -82,29 +92,54 @@
 	}%
 }
 
-
+% \curvefam[opts]{Begin}{End}{Puller}
+% Draws a number of curves from Begin to End that are more or less "pulled" by Puller.
+% Begin, End and Puller should be nodes or coordinates, in the form (0,1) or (A).
+% Optional arguments:
+% - opts: Options that will be passed to the drawn lines.
+% - start, end: Controls the range of "pulling" of the drawn curves.
+% - step: A lower step means more drawn lines.
+% - btarget/etarget: If we want the curve family not to begin/end on the same point, but
+%		on several points along a segment, we can use these parameters. The value is either
+%		the name of a node or the coordinates (delimited by {}, such as btarget = {3,2}, or
+%		LaTeX will crash parsing that option).
+% - boffset/eoffset: Controls the separation between line starts/ends when btarget/etarget
+%		is set.
+% - offset: Sets both boffset and eoffset at the same time. Deprecated.
 \newcommand{\curvefam}[4][]{
 	\pgfkeys{/cfam, default, #1}
-	\edef\crvfpa{#2}
-	\edef\crvfpb{#3}
-	\edef\crvftr{#4}
+	\edef\crvf@pa{#2}
+	\edef\crvf@pb{#3}
+	\edef\crvf@tr{#4}
 
-	\node (CFA) at \crvfpa {};
-	\node (CFB) at \crvfpb {};
-	\node (CFTR) at \crvftr {};
+	\node (CFA) at \crvf@pa {}; 	% Where the curve family begins
+	\node (CFB) at \crvf@pb {};		% Where the curve family ends
+	\node (CFTR) at \crvf@tr {}; 	% Tractor point to bend the lines.
 
-	\pgfmathsetmacro{\crvfnext}{\crvfend - \crvfstep}
+	% Just a helper for the loop
+	\pgfmathsetmacro{\crvf@next}{\crvf@end - \crvfstep}
 
-	\foreach \x [count=\i] in {\crvfend,\crvfnext,...,\crvfstart}
+	\foreach \x [count=\i] in {\crvf@end,\crvf@next,...,\crvf@start}
 	{
-		\pgfmathsetmacro{\crvfaof}{\i * \crvfbofst}
-		\pgfmathsetmacro{\crvfbof}{\i * \crvfeofst}
+		\pgfmathsetmacro{\crvf@beginoffset}{\i * \crvf@beginoffset@step}
+		\pgfmathsetmacro{\crvf@endoffset}{\i * \crvf@endoffset@step}
+
+		% Use the remaining options from the command passing them to the
+		% draw line command.
 		\draw[/cfam/remainingkeys]
-			($(CFA) + \crvfaof*(\crvfbofstnode) - \crvfaof*(CFA)$)
+			% Start from the start point plus a certain offset in the direction of
+			% the begin offset node (which by default is the same CFA, so no actual offset)
+			% is done
+			($(CFA) + \crvf@beginoffset*(\crvf@beginoffset@node) - \crvf@beginoffset*(CFA)$)
+			% Move, with controls (so we get a curved line) to a point between CFA and CFB
+			% and closer to CFTR as \x is greater.
 			..controls ( $(CFA)!.5!(CFB)!\x!(CFTR)$ )
-			.. ($(CFB) + \crvfbof*(\crvfeofstnode) - \crvfbof*(CFB)$);
+			% Finish in CFB plus the offset calculated in the same way that with CFA.
+			.. ($(CFB) + \crvf@endoffset*(\crvf@endoffset@node) - \crvf@endoffset*(CFB)$);
 	}
 }
+
+%% Draw the normals to a given curve
 
 \pgfkeys{
 	/cnorm/.is family,
@@ -125,7 +160,8 @@
 	}%
 }
 
-
+% \curveNormal[opts]{f(\x)}
+% Draws the normal curves to f(\x). Eg: \curveNormal{sin(\x)}
 \newcommand{\curveNormal}[2][]{ %
 	\pgfkeys{/cnorm, default, #1}
 	\coordinate (O) at (\x, {#2});
@@ -134,6 +170,7 @@
 	\draw[->, /cnorm/remainingkeys] (O) -- ($(O)!\cnlen!90:(OD)$);
 }
 
+%% Angle drawing comand
 
 \pgfkeys{
 	/angle/.is family,
@@ -158,10 +195,17 @@
 	}%
 }
 
+% \tikzangle[opts]{V}{A}{B}
+% Marks the angle AVB, with V being the vertex.
+% opts:
+%	- name: name of the angle (for the label).
+%	- radius: Radius
+%	- sepradius: Separation from the angle shading to the label
+% Additional options are passed to the angle shading command.
 \newcommand{\tikzangle}[4][]{ %
 	\pgfkeys{/angle, default, #1}
 	\begin{scope}
-			\path[clip] (#2) -- (#3) -- (#4);
+			\clip (#2) -- (#3) -- (#4) -- (#2);
 			\fill[red, draw=black, opacity=0.2, /angle/remainingkeys] (#2) circle (\aradius);
 			\node (bisect_a) at ($(#2)!5mm!(#3)$) {};
 			\node (bisect_b) at ($(#2)!5mm!(#4)$) {};
@@ -169,3 +213,5 @@
 			\node[anchor=center] at ($(#2)!\aradius + \asepradius!(bisect)$) {\aname};
 	\end{scope}
 }
+
+\makeatother

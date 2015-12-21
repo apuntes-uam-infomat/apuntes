@@ -2,6 +2,8 @@
 
 Esta es una colección de apuntes que los alumnos del doble grado en Informática-Matemáticas de la Universidad Autónoma de Madrid hemos ido tomando a lo largo de la carrera. Están disponibles libremente ([licencia CC-BY-NC-SA](#licencia)). Si encuentras algún fallo o quieres contribuir, puedes mandarnos un pull request o abrir un [_issue_](https://github.com/VicDeJuan/Apuntes/issues) en Github.
 
+La documentación de los paquetes está en el [manual en PDF](https://github.com/VicdeJuan/Apuntes/raw/master/Cosas%20guays%20LaTeX/Manual/_Manual.pdf), junto con una introducción a LaTeX básico y algunas pinceladas de cosas un poco más avanzadas.
+
 ## Descarga
 
 Puedes descargar los apuntes en PDF, actualizados diariamente, [aquí](https://www.dropbox.com/sh/kbymf37cykz77ha/AADuRd3CoU6UUCZMtK0GdEtPa?dl=0).
@@ -66,6 +68,20 @@ Recomendada instalación a través de MacPorts. En la página [están todos los 
 #### Ubuntu
 
 Hay que instalar el paquete base y también los extras ya que se usan varios paquetes presentes ahí: _texlive-latex-base_, _texlive-latex-extra_, _texlive-latex-recommended_. También es interesante instalarse la documentación de cada de uno de esos paquetes.
+
+
+## Sacar el máximo provecho a LaTeX
+
+La idea original de este proyecto era tomar apuntes en clase directamente a LaTeX. Para ello, evidentemente, es necesario tener una buena velocidad de escritura a máquina, un dominio bastante extenso de los comandos desarrollados en este proyecto y una customización del teclado a gusto del usuario.
+
+En un principio, cada vez que queramos escribir una letra griega (algo extremadamente frecuente en matemáticas), deberemos escribir un comando de la forma \sigma o \Sigma para representar σ y Σ respectivamente.
+
+Esto no resulta nada eficiente y resta mucho dinamismo a la hora de transcribir a LaTeX una clase en directo. Para ello, lo más cómo es modificar la configuración del teclado para tener la siguiente combinación de teclas, normalmente sin usar:
+
+* AltGr + letra = letra griega minúscula.
+* AltGr + shift + letra = letra griega mayúscula.
+
+En ubuntu, la forma más cómoda de cambiar esta configuración es a través del siguiente [README](https://github.com/VicdeJuan/Apuntes/tree/master/Cosas%20guays%20LaTeX/ConfiguracionTeclado)
 
 # Licencia
 

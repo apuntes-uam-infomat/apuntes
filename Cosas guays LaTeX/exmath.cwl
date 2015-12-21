@@ -30,9 +30,9 @@
 \rnk#m
 \rk#m
 \ncl{f}#m
-\normp{vector}{norma-n}#m
+\normp{vec}{norma-n}#m
 \liminft{variable}#m
-\mylim{vector}{tiende-a}{variable}#m
+\mylim{vec}{to}{var}#m
 \df{x,y,z}#m
 \dfl{comienzo}{fin}#m
 \id{x,y,z}#m
@@ -79,7 +79,7 @@
 \eqreasonup{arg1}#m
 \eqreasonup[=]{arg1}#m
 \x#m
-\appl{f}{dominio}{imagen}#m
+\appl{f}{from}{to}#m
 \uexists#m
 \sint#m
 \stdf#m
@@ -87,16 +87,16 @@
 \parts{arg0}#m
 \ind#m
 \esp{arg1}#m
-\esp[parametro]{arg1}#m
+\esp[param]{arg1}#m
 \prob{arg1}#m
-\prob[parametro]{arg1}#m
+\prob[param]{arg1}#m
 \var{arg1}#m
-\var[parametro]{arg1}#m
+\var[param]{arg1}#m
 \fd#m
 \convs#m
-\convs[texto superior]#m
-\convs[texto superior][variable]#m
-\convs[texto superior][variable][converge a]#m
+\convs[txt. arriba]#m
+\convs[txt. arriba][var]#m
+\convs[txt. arriba][var][converge a]#m
 \convdist#m
 \convdist[variable]#m
 \convprob#m
@@ -104,8 +104,8 @@
 \convcs#m
 \convcs[variable]#m
 \sample#m
-\sample[variable]#m
-\sample[variable][indice]#m
+\sample[var]#m
+\sample[var][n]#m
 \sesgo#m
 \ECM#m
 \emv#m
@@ -176,7 +176,7 @@
 \begin{proof}#
 \begin{expla}#
 \ctrig{angulo}#m
-\ceul{modulo}{angulo}#m
+\ceul{mod}{angulo}#m
 \i#m
 \trans{arg0}#m
 \bin#m
@@ -187,7 +187,7 @@
 \ord#m
 \gr#m
 \kbb#m
-\mv{vector}#m
+\mv{vec}#m
 \cv#m
 \cv[\alpha]#m
 \cvv#m
@@ -221,8 +221,9 @@
 \bbs#m
 \crc#m
 \torus#m
+\torus[2]#m
 \disc#m
-\algb{arg0}#m
+\algb{C}#m
 \algbA#m
 \algbM#m
 \algbC#m
@@ -286,3 +287,4 @@
 \espell[2]#m
 \spn#m
 \densein#m
+\fourier#m

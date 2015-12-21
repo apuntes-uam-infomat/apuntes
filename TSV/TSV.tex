@@ -1,16 +1,23 @@
-\documentclass[nochap,palatino,notitlepage]{apuntes}
+\documentclass[nochap,palatino]{apuntes}
 
-\title{Tratamiento de señales visuales}
+\title{Tratamiento de Señales Visuales}
 \author{Guillermo Julián Moreno}
 \date{15/16 C1}
 
 % Paquetes adicionales
 \usepackage{fancysprefs}
-
+\usepackage{xfrac}
+\usepackage{tikztools}
+\usetikzlibrary{calc}
 % --------------------
 
 \begin{document}
 \pagestyle{plain}
+
+\begin{abstract}
+Estos apuntes son un pequeño resumen, no exhaustivo, de la asignatura de Tratamiento de Señales Visuales de la EPS UAM. Aquí recogemos todos los conceptos de forma resumida, basándonos en los apuntes proporcionados por los profesores.
+\end{abstract}
+
 \maketitle
 
 \section{Operadores puntuales}
@@ -105,7 +112,7 @@ Los operadores lineales e invariantes con el espacio efectúan transformaciones 
 
 Por comodidad, consideraremos $w[n,m] = h[-n, -m]$, invirtiendo la respuesta al impulso $h$ y evitándonos que hacer la inversión en cada cálculo.
 
-Al usar la convolución, podemos irnos al dominio frecuencial. Como notación, las letras minúsculas se referirán al dominio espacial y en mayúsculas al dominio frecuencial, pasando de una a otra con la transformada discreta de Fourier. En el dominio frecuencial, la convolución es un producto y por lo tanto \[ Θ = Ψ \cdot H \], bastante más fácil de computar.
+Al usar la convolución, podemos irnos al dominio frecuencial. Como notación, las letras minúsculas se referirán al dominio espacial y en mayúsculas al dominio frecuencial, pasando de una a otra con la transformada discreta de Fourier. En el dominio frecuencial, la convolución es un producto y por lo tanto \[ Θ = ψ \cdot H \], bastante más fácil de computar.
 
 El problema de este tipo de filtros es que nos comemos los bordes al no tener suficientes píxeles para valorar. Para ello, se puede realizar \textit{padding} aumentando la imagen original. Para rellenar esos píxeles adicionales, se pueden usar valores fijos, hacer una simetría, extender el bore con los mismos valores o hacer una réplica circular con el otro lado de la imagen.
 
@@ -130,7 +137,7 @@ El suavizado también se puede hacer con un filtro de mediana, que suele ser má
 El realce de contornos se relaciona con la primera y segunda derivada direccionales, versión discreta:
 \[ \dpa{f[n]}{n} = f[n+ 1] - f[n]\qquad \pd[2]{f[n]}{n} = f[n+1] + f[n-1] - 2f[n]\]
 
-El estudio de la laplaciana (la suma de las derivadas segundas en las dos direcciones) \[ \nabla^2 Ψ = \pd[2]{ψ}{x} + \pd[2]{ψ}{y} \] nos da dos posibles máscaras: la laplaciana $L'$ y la isótropa $I'$, que realzan los bordes:
+El estudio de la laplaciana (la suma de las derivadas segundas en las dos direcciones) \[ \nabla^2 ψ = \pd[2]{ψ}{x} + \pd[2]{ψ}{y} \] nos da dos posibles máscaras: la laplaciana $L'$ y la isótropa $I'$, que realzan los bordes:
 \[
 L' = \begin{pmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{pmatrix}
 \qquad
@@ -269,15 +276,32 @@ La apertura por reconstrucción de la erosión facilitará el suavizado sin perd
 
 \section{Extracción de características}
 
-% TODO: Aquí falta una hora de clase.
+En este tema trataremos de extraer patrones y características de las imágenes. Una cosa que tendremos que tener en cuenta es la escala de lo que estamos detectando. Esto será lo que se llama el análisis multiescala.
+
+\subsection{Primeras aproximaciones: quad-tree y pirámides}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{img/QuadTree.png}
+\caption{Representación en quad-tree de una imagen usando criterios de homogeneidad.}
+\label{fig:QuadTree}
+\end{figure}
+
+Una primera aproximación es la representación en quad-tree (\fref{fig:QuadTree}): seleccionamos un criterio de homogeneidad, un umbral de decisión y un tamaño mínimo de región; y vamos subdividiendo hasta llegar al tamaño mínimo construyendo un árbol por el camino. Salvo esas últimas regiones, el resto cumplen los criterios de homogeneidad.
+
+La segunda aproximación es el uso de repreentaciones piramidales, donde vamos suavizando y diezmando la imagen original para reducir su tamaño. No es un esquema muy formal pero es rápido y computacionalmente barato.
 
 Una ventaja de usar las pirámides es que podemos mandar una imagen en distintas resoluciones sin tener que enviar todos los datos: podemos enviar la imagen original y las diferencias entre niveles, que nos ocuparán menos píxeles.
+
+Podemos usar pirámides paso bajo, donde convolucionamos con un kernel y después reducimos el tamaño a la mitad. El kernel tiene que ser positivo, simetrico, monomodal, de área unidad. Para $N=3$, sólo el dado por $c[n] = \set{\frac{1}{4}, \frac{1}{2}, \frac{1}{4}}$ lo cumple. Para $N=5$, son de la forma \[ c[n] = \set{\frac{1 - 2a}{4}, \frac{1}{4}, \frac{a}, \frac{1}{4}, \frac{1 - 2a}{4}} \]
+
+El siguiente paso es usar las pirámides paso-banda (DoLP, \textit{difference of low-pass pyramids}) en general o, en el caso que más nos interesará, la pirámide laplaciana o DoG \textit{Difference of Gaussians} cuando la pirámide paso-bajo sea Gaussiana (la principal ventaja de usar kernels gaussianos es que minimizamos la aparición de estructuras por \textit{aliasing}). La idea de la pirámide laplaciana es que cada nivel es una aproximación al LoG de la imagen a esa escala.
 
 \subsection{Espacio escala}
 
 En el espacio escala, en lugar de reducir el tamaño de la imagen, lo que haremos será suavizar, y además podremos tomar la variable de suavizado continua. Veremos que usando el kernel gaussiano, tendremos una aproximación perfecta de la LoG. También veremos que es invariante a traslaciones. Por último, el espacio escala no introduce artefactos, estructuras que no existiesen en la imagen.
 
-\begin{defn}[Representación\IS espacio escala] Dada una señal escalar de dimensión $N$ $\appl{Ψ}{ℝ^N}{ℝ}$, su representación espacio escala es una aplicación $\appl{L}{ℝ^N × ℝ^+}{ℝ}$ dada por \begin{align*}
+\begin{defn}[Representación\IS espacio escala] Dada una señal escalar de dimensión $N$ $\appl{ψ}{ℝ^N}{ℝ}$, su representación espacio escala es una aplicación $\appl{L}{ℝ^N × ℝ^+}{ℝ}$ dada por \begin{align*}
 L(\vx, 0) &= ψ(\vx) \\
 L(\vx, t) &= g(\vx, t) \ast ψ(\vx)
 \end{align*} donde $g(\vx, t)$ es la gaussiana dada por \[ g(\vx, t) = \frac{1}{2πt}e^{-\frac{\norm{\vx}}{2t}}\]
@@ -298,10 +322,212 @@ Un hecho importante del espacio escala cumple la ecuación del calor, dada por \
 Esta propiedad permite inferir que esta representación no realza máximos ni mínimos, y además nos da una pseudodemostración de por qué la LoG y la DoG son equivalentes:
 \[ \nabla^2 L(\vx,t) \simeq L(\vx,t + Δt) - L(\vx, t - Δt) \]
 
-También podremos derivar haciendo una ligera perversión matemática.
+También podremos derivar haciendo una ligera perversión matemática: \[ ∂_{x^my^n} L(\vx, t) = ∂_{x^my^n} \left(g(\vx,t) * ψ(\vx)\right) = \left(∂_{x^my^n} g(\vx, t)\right) * ψ(\vx) \], cuya principal ventaja es que las propiedades del espacio escala se trasladan a sus derivadas, por ser la derivada de la gaussiana también una gaussiana.
 
-\subsubsection{LoG en el espacio escala}
+Este hecho nos permitirá hacer detección inicial de características básicas (blobs), pudiendo detectar también en qué escala se producen. Hay tres métodos para esto: los basados en la LoG, en la DoG, y en el determinante del Hessiano (DoH).
+
+\subsubsection{LoG - Laplacian of Gaussian}
 
 Podemos considerar la laplaciana en las direcciones espaciales. Simplificando y tomando $L_{xx} = \pd[2]{L}{x}$, diremos que  \[ \nabla^2 L = L_{xx} + L_{yy}\], que tomará grandes valores negativos y positivos para bloques claros y oscuros de anchura $2 \sqrt{t}$. La respuesta, eso sí, dependerá de la escala y decrece según esta aumenta, así que para evitarlo se normaliza con respecto de la escala,  de tal forma que nos quedará \[ \nabla^2_{\text{norm}} = t(L_{xx} + L_{yy}) \]
+
+En ese operador buscaremos máximos y mínimos locales, que nos darán puntos y escalas de las regiones más claras y oscuras, respectivamente, del espacio escala.
+
+\subsubsection{DoG - Difference of Gaussians}
+
+En este caso simplemente hacemos lo mismo que en el LoG, pero implementando el operador laplaciano como \[ \nabla^2_{\text{norm}} L(\vx, t) \simeq \frac{t}{Δt} \left(L(\vx, t + Δt) - L(\vx, t - Δt)\right)\] y buscando máximos y mínimos locales.
+
+\subsubsection{DoH - Determinant of Hessian}
+
+El Hessiano de la imagen ψ será una amtriz cuadrada con las segundas derivadas parciales de la función. Su cálculo en puntos críticos (gradiente nulo) y el posterior estudio de los autovalores nos dirá el tipo de punto: autovalores positivos implican mínimo, negativos implican máximo, y mixtos punto de silla.
+
+Al ser el determinante el producto de autovalores, sólo tendremos que calcular eso: si es positivo, es máximo o mínimo, y si es negativo estamos en un punto de silla. Así, sólo tenemos que buscar los máximos locales en el determinante normalizado: \[ \det H_{\text{norm}}L(\vx, t) = t^2 (L_{xx} L_{yy} - L^2_{xy})\]
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/Autovalores.png}
+\caption{Interpretación geométrica de los autovalores viendo en qué transforman la bola unitaria.}
+\label{fig:Autovalores}
+\end{figure}
+
+Los autovalores tienen una interpretación geométrica (ver \fref{fig:Autovalores}) que no se por qué podría resultar interesante pero que en cualquier caso es bastante obvia.
+
+\subsection{Detección de puntos de interés}
+
+La idea es buscar de forma precisa y robusta a ruido puntos invariantes a transformaciones típicas en la imagen. Hay varios métodos que pasamos a ver.
+
+\subsubsection{Detector de Harris-Stephens}
+
+Este detector se basa en un primer enfoque de fuerza bruta: cogemos una ventana en la imagen, la desplazamos un poquito y vemos en qué dirección cambia menos. Si no cambia en ninguna dirección, tenemos una zona plana. Si cambia muy poco en dos direcciones, tenemos un borde. Si cambia mucho en todas, probablemente estemos ante una esquina. Ese cambio se puede definir usando la suma de cuadrados de las diferencias.
+
+Vamos a hacerlo algo formalmente. Tenemos nuestra imagen $\appl{ψ}{ℝ^2}{ℝ}$ y una ventana $W ⊂ ℝ^2$. Entonces, el error cuando desplazamos en la dirección del vector $\vu$ será \[ E(\vu) = \sum_{\vx ∈ W} \left(ψ(\vx + \vu) - ψ(\vx)\right)^2 \]
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+\includegraphics[width=0.32\textwidth]{img/StructureTensorEigenvalues.png}
+\caption{Ilustración de los posibles casos según los autovalores de $A$}
+\label{fig:StructureTensor}
+\vspace{-10pt}
+\end{wrapfigure}
+
+Para desplazamientos pequeños, podremos aproximar la diferencia por el gradiente \[ ψ(\vx + \vu) \simeq ψ(\vx) + \vu · \grad ψ(\vx) \] de tal forma que nos queda \[ E(\vu) = \sum_{\vx ∈ W} \left(\vu \grad ψ(\vx)\right)^2 = \vu A \trans{\vu} \] con $A$ el tensor de estructura dado por \[ A =  \sum_{\vx ∈ W} \begin{pmatrix} ψ_x^2 (\vx) & ψ_x (\vx) · ψ_y (\vx) \\ ψ_x (\vx) · ψ_y (\vx) & ψ_y^2 (\vx) \end{pmatrix} \] (ojo: sólo primeras derivadas).
+
+El estudio de autovalores y autovectores de $A$ nos dirá para dónde cambia la imagen y si tenemos un borde, esquina o región plana (\fref{fig:StructureTensor}). Sin embargo, como calcular los autovalores es computacionalmente caro, lo que se hace es hacer una estimación con la función de respuesta a una esquina, dada por \[ R(\vx) = λ_1λ_2 - κ (λ_1 + λ_2)^2 = \det A - κ \tr^2 A \] con $κ ∈ [0.04, 0.15]$ un parámetro que se ajusta experimentalmente.
+
+Este enfoque es invariante a rotaciones y cambios de iluminación globales, pero tenemos el problema de la selección de κ y del umbral de $R$. Además, no es invariante a cambios de escala, y detecta más bien regiones que puntos de interés.
+
+En la práctica, para calcularlo se sacan las imágenes de gradientes horizontales y verticales, se sacan las imágenes para la información del gradiente del tensor de estructura y por último se hace un filtrado gaussiano para obtener en cada píxel el tensor de estructura correspondiente de su entorno.
+
+En otras palabras, lo que hace es estimar en el entorno de cada píxel la magnitud relativa del gradiente, en su dirección de máxima variación, con respecto a la que presenta en la dirección perpendicular.
+
+Este detector se podría ampliar para localizar máximos/mínimos locales en el espacio escala que también sean máximos-minimos locales del laplaciano (Laplacian-Harris detector).
+
+\subsubsection{SIFT - Scale-Invariant Feature Transform}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/SIFT.png}
+\caption{Espacio escala híbrido: hacia la derecha suavizamos, hacia abajo diezmamos.}
+\label{fig:SIFTScaleSpace}
+\end{figure}
+
+Este es un algoritmo avanzado para encontrar puntos de interés y describir su entorno. Es robusto a cambios de escala, traslaciones, rotaciones y cambios de iluminación; aunque no tanto a transformaciones afines y además tiene muchos parámetros a ajustar. Se basa en cuatro pasos: detección inicial de PoIs con la DoG en el espacio escala, localización precisa y descarte de PoIS, identificación de las orientaciones principales del gradiente y descripción del entorno en cada orientación principal.
+
+El primer paso consiste en la obtención de un espacio escala híbrido (\fref{fig:SIFTScaleSpace}), obteniendo después las DoG en cada octava (entre cada suavizado), y se buscan máximos o mínimos locales en cada octava (de nuevo, comparando sólo con los vecinos de cada suavizado).
+
+Una vez hecho esto, se refinan esos puntos de interés. Se mira qué desplazamiento $\vu$ minimiza (o maximiza) el valor de la DoG. Este valor vendrá dado por \[ \vu = - \left(\dpd[2]{D}{\vx}\right)^{-1} \pd{D}{\vx} \]. Si sus componentes son menores que $0.5$ se asume que el extremo está en la posición $\vx + \vu$. Si no, se asume que el extremo está más cerca del vecino correspondiente y se repite el proceso en torno a él.
+
+Posteriormente se eliminan extremos poco contrastados, eliminando los que tengan $\abs{D(\vx)} ≤ 0.03$; y se quitan también los que forman arte de los bordes. Se calculan los Hessianos de esos puntos y se analiza la curvatura de la función $D(\vx)$. Si hay una curvatura con dirección predominante ($r = \sfrac{λ_1}{λ_2} > 10$) se descarta. Para facilitar este cálculo, se usa la traza y determinante del Hessiano y la desigualdad que se aplica es \[ \frac{\tr^2 HD(\vx)}{\det HD(\vx)} = \frac{(r + 1)^2}{r} > \frac{11^2}{10} \]
+
+Sobre los puntos que quedan se computan unos descriptores basados en los ángulos del gradiente. Se coge una ventana de $16 × 16$ píxeles en la escala en la que aparece el punto, y se calcula el ángulo del gradiente en cada píxel. Se descartan los ángulos pequeños y entonces para cada subcelda de $4 × 4$ píxeles se calcula un histograma de las orientaciones que quedan rotadas con respecto a la orientación dominante (la que tenga el pico en el histograma), representadas como flechas de distinta magnitud en las ocho posibles direcciones que se puedan tomar. En la \fref{fig:SIFTDescritors} aparecen unos ejemplos del resultado de esos descriptores.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/SIFT_Descriptors.png}
+\caption{Descriptores de SIFT sobre dos imágenes.}
+\label{fig:SIFTDescritors}
+\end{figure}
+
+\subsubsection{SURF - Speeded Up Robust Features}
+
+Se trata de un algoritmo rápido inspirado en SIFT de detección de puntos de interés y descripción de la región colindante. Se buscan los máximos del determinante del Hessiano de $L(\vx, σ)$ a cada escala. Para facilitar la computación, se aproximan las segundas derivadas de la gaussiana mediante filtros de caja (\fref{fig:FiltrosSURF}) cada vez más grandes y usando la imagen integral para mejorar el rendimiento. El detector devuelve regiones de interés (imagen de girasoles).
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/FiltrosSURF.png}
+\caption{Aproximación a la segunda derivada con filtros sencillos para SURF.}
+\label{fig:FiltrosSURF}
+\end{figure}
+
+\subsubsection{MSER - Maximal Stable Extremal Regions}
+
+Busca regiones asociadas a máximos o mínimos locales, y que son estables (variación mínima frente a cambios en el valor del umbral de luminancia).  Es robusta a variaciones del punto de vista, a cambio de escala y a cambios globales de iluminación, y es barato de computar.
+
+A medida que se hace crecer el valor del umbral se obtienen las componentes conexas. Para cada componente se obtiene su área en función del umbral. Al final del proceso se buscan las regiones con un mínimo en el ritmo de cambio en el área, y con el umbral correspondiente se detecta la MSER.
+
+\subsubsection{Descripción de regiones de interés}
+
+Para describir las regiones de interés, hay dos algoritmos (aparte del de SIFT que ya hemos visto).
+
+\paragraph{GLOH - Gradient Location and Orientation Histogram} Es prácticamente igual que el descriptor de SIFT, salvo porque la región entorno al punto de interés es circular, se divide en 17 regiones en forma log-polar, con el histograma de orientaciones cuantificado en 16 bins, lo que resulta en un vector descriptor de 17*16=272 componentes que luego se reduce aplicando PCA.
+
+\paragraph{HOG - Histogram of Oriented Gradients}  Se describe una región rectangular (R-HOG) o circular (C-HOG) a partir de histogramas de orientación del gradiente de subregiones o celdas que pueden estar solapados. Es más bien un marco para adaptar a cada apliación. Para evitar variaciones de contraste, por ejemplo, se agrupan las celdas en bloques solapados. El vector concatena los histogramas de sus celdas.
+
+\subsection{Detección y extracción de contornos}
+
+\subsubsection{Algoritmo de Canny}
+
+El principal algoritmo para esto es el algoritmo multietapa de Canny, que busca localizar todos los bordes de una imagen, con máxima precisión y sólo una vez cada borde. Su principal aportación es el cálculo de cruces por cero de la segunda derivada en la dirección del gradiente.
+
+El algoritmo primero realiza un filtrado gaussiano y calcula el gradiente con los operadores de Prewitt o Sobel. Después, en cada entorno $3×3$ se analiza cada píxel (que contiene el valor del gradiente en ese punto): si el pixel central no es el máximo en la dirección del gradiente, entonces su magnitud se anula. Si la dirección del gradiente no es un divisible por $45$ grados, o bien se cuantifica en esos posibles valores o bien se interpola.
+
+Luego se selecciónan dos umbrales: uno para identificar bordes muy marcados y otro algo menor para detectar bordes conectados con los anteriores. Asumiendo que los bordes pertenecen a contornos continuos, sobre la imagen de máximos del gradiente se seleccionan los píxeles mayores que el primer umbral y después se sigue en las direcciones perpendiculares al gradiente seleccionando píxeles conectados que superen el segundo umbral.
+
+\subsubsection{Transformada de Hough}
+
+El siguiente paso es la transformada de Hough, que basada en un esquema de votaciones permite localizar formas regulares básicas en imágenes binarias aunque no estén perfectamente definidas. El primer paso es pasar de la expresión en rectas a partir de los parámetros $m,b$ de la ecuación $y = mx + b$, que no están acotados, a otro espacio de parámetros $(r,θ)$ más cómodo (\fref{fig:RectasRTheta}). Así, cada punto $(x,y)$ de la imagen se transforma en una sinusoide del espacio $(r,θ)$, donde cada punto de esa sinusoide es una posible recta de la imagen binaria  que pasa por el punto $(x,y)$. El punto donde más sinusoides se crucen indican las rectas en la imagen.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[scale=1.2]
+\draw[->] (-0.1, 0) -- (5, 0) node [right] {$x$};
+\draw[->] (0, -0.1) -- (0, 3) node [above] {$y$};
+
+\coordinate (LBegin) at (0,2);
+\coordinate (LEnd) at (4,0);
+\coordinate (O) at (0,0);
+\coordinate (I) at ($(LBegin)!(O)!(LEnd)$) {};
+\coordinate (XEnd) at (3,0);
+
+\draw[thick, blue] (LBegin) -- node[midway, above, anchor=south west] {$y = mx + b \equiv r = y\sin θ + x \cos θ$} (LEnd);
+\draw[green!80!black] (I) -- node[midway, above, sloped] {$r$} (O);
+
+\tikzangle[name={$\theta$}]{O}{I}{LEnd}
+
+\end{tikzpicture}
+\caption{Una recta se puede modelar con dos parámetros, $r$ y θ, sabiendo que $m = -\frac{\cos θ}{\sin θ}$ y que $b = \frac{r}{\sin θ}$.}
+\label{fig:RectasRTheta}
+\end{figure}
+
+La ventaja de este proceso es que es robusto a ruido y a discontinuidades en los contornos. Eso sí, hay que buscar máximos en entornos para evitar tener haces de rectas.
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+\includegraphics[width=0.4\textwidth]{img/HoughGeneral.png}
+\caption{Esquema para asignar a cada $θ$ una serie de valores $(ω,r)$ en la transformada de Hough generalizada.}
+\label{fig:HoughGeneral}
+\end{wrapfigure}
+
+La transformada de Hough también se puede aplicar a circunferencias: se hace un espacio de parámetros de tres dimensiones (centro $(a,b)$ y radio $r$) de la circunferencia. Igualmente, se puede generalizar a formas arbitrarias. Dada una forma de referencia con un centro, generamos una tabla R que a cada orientación $θ$ de la tangente le asigna varios puntos $(ω,r)$ con las coordenadas polares del punto del contorno (\fref{fig:HoughGeneral}).
+
+A la hora de localizar las instancias de ese modelo, para cada píxel de un borde se estima la orientación de la recta tangente y para cada posible par $(ω,r)$ se incrementa el contador de la posición candidata del punto de referencia.
+
+Este algoritmo también serviría para buscar la misma forma rotada por α, simplemente buscando las tuplas correspondientes al ángulo $θ-α$ e incrementando el contador la posición que tuviese radio $r$ y coordenadas $ω + α$. Igualmente, se puede hacer invariante a escalado poniendo como posición candidata la que tiene radio $rβ$.
+
+\subsection{Seguimiento y aproximación de bordes}
+
+Permite extraer y caracterizar las secuencias de píxeles de los diferentes segmentos de borde presentes en el resultado de un detector de bordes de grosor de un píxel, e identificar formas elementales, por ejemplo rectas. Consta de dos pasos que se van repitiendo en bucle: se selecciona el primer píxel que aparezca como borde al recorrer la imagen, y después se va siguiendo el borde usando codificación de Freeman (\fref{fig:Freeman}) para guardar la secuencia de bordes. Esos píxeles se suprimen, y se repiten los pasos hasta que no quedan mas píxeles en la imagen.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/Freeman.png}
+\caption{Codificación Freeman para secuencia de píxeles}
+\label{fig:Freeman}
+\end{figure}
+
+El seguimiento de contornos puede usarse para aproximar curvas por tramos rectos (obviamente). Esas secciones rectas pueden usarse como alternativa a la transformada de Hough.
+
+\section{Introducción a la segmentación}
+
+La segmentación busca definir conjuntos $Ω_j$ de píxeles similares conectados, homogéneos con respecto a alguna característica que representan una parte del espacio distinta al resto. Normalmente se asigna un identificador a cada región (etiqueta) y un representante, un descriptor de las características de la región.
+
+El problema de la segmentación es que no está bien condicionada: depende de la escala, del conocimiento previo y de la relevancia que le demos a distintos detalles.
+
+Las ventajas de la segmentación son ayudar a la descripción de imágenes y reducir la variablidad de los datos analizados, además de poder reducir ruido y de poder auto-definir la región de interés alrededor de un punto de interés.
+
+La primera técnica es el clustering o agrupamiento por $k$-means o $c$-means, que busca particionar los puntos en $k$ subconjuntos para minimizar la distancia entre cada punto y la media de la región en la que está.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/Superpixels.png}
+\caption{Efecto de los parámetros de la segmentación en superpíxeles.}
+\label{fig:Superpixeles}
+\end{figure}
+
+También se usan los superpíxeles, donde se divide la imagen en bloques, se hace $k$-means en cada bloque y después se caracteriza cada píxel según una función $f$ (por ejemplo, la luminancia $L$) con el vector $\begin{pmatrix}λx & λy & f(x,y)\end{pmatrix}$, donde $λ$ es el cociente entre el regularizador y el tamaño medio de región. Un λ más alto da regiones más rectangulares, mientras que si es más bajo da regiones más ajustadas a los objetos (\fref{fig:Superpixeles}).
+
+La segmentación en superpíxeles se suele usar como un paso previo a otros algoritmos más avanzados, para reducir su coste computacional. Por eso da una sobresegmentación, pero no elimina mucha información.
+
+Otra técnica es el Mean-Shift, que busca modas en el espacio de decisión asumiendo que la relación moda - región es biunívoca. Se puede considerar como una técnica de ascenso de gradiente hasta llegar a un máximo. Para obtenerlo, se fija una ventana entorno a cada muestra y se obtiene la media de valores de la muestra en esa ventana. Después se desplaza la ventana para centrarla en la media obtenida, repitiendo el proceso hasta que la media converge.
+
+Es un método muy eficaz, y además elimina la necesidad de establecer el número de regiones deseadas. Lo malo es que depende mucho del ancho de banda de los núcleos.
+
+El método de \textit{snakes} (serpientes) trata de minimizar la energía de un contorno controlando la energía interna (aumenta con la deformación, evita el sobreajuste), la externa (ajuste a contornos) y la restrictiva (restricciones \textit{ad hoc} de diseño).
+
+También hay métodos basados en grafos, como el SWA (\textit{Segmentation by Weighted Aggregation}), que fusiona píxeles o regiones similares en cada nivel de la jerarquía buscando minimizar la saliencia. El resultado es una jerarquía de regiones que además permite almacenar y manejar texturas. Cada región tiene un nivel óptimo en el que se obtiene su máxima saliencia.
+
+También está el Global PB: se detectan contornos con diferentes hipótesis en su orientación, se genera un grafo de disimilutid y se estudian los contornos en las componentes principales que quedan codificadas en el grafo. Así en general no entiendo nada este algoritmo pero la idea es que parece generar pocas regiones.
+
+
+
 
 \end{document}

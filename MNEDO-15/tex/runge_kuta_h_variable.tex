@@ -165,7 +165,7 @@ Cualquier problema de valor inicial puede escribirse en \concept{forma autónoma
 el problema original es equivalente al problema autónomo:
 \[\overline{y}'(x)=\overline{f}(\overline{y}(x)), \ \ \overline{y}(a)=\tilde{y}^0\]
 
-\begin{problem}[Ejercicio de examen]Ejercicio de examen: Si un sistema cumple $c_i = \sum_{j=1}^sa_{ij}$ entonces la solución del sistema y la del automatizado coinciden
+\begin{problem}[ Ejercicio de examen]Si un sistema cumple $c_i = \sum_{j=1}^sa_{ij}$ entonces la solución del sistema y la del automatizado coinciden
 
 \solution
 
@@ -180,16 +180,25 @@ obtendremos
 \[y_{n+1} = y_n+ h \sum_{i=1}^s b_i K_i \text{ siendo } K_i = f\left(x_n+c_ih, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\]
 
 Por otro lado, si aplicamos la misma definición del método al problema autónomo tendremos:
-\[\left(\begin{array}{c}
-x_{n+1} \\ y_{n+1}
-\end{array} \right) = \left(\begin{array}{c}
-x_n \\ y_{n}
-\end{array} \right) + h \sum_{i=1}^sb_iK_i \text{ siendo } K_i=\left(\begin{array}{c}
-1 \\ f\left(x_n+c_ih, y(x_n+c_ih)+h \sum_{j=1}^ia_{ij}K_j\right)\\
-\end{array} \right)\]
+\[\overline{y}_{n+1}=\overline{y}_n+h\sum_{i=i}^sb_i\overline{K}_i\ \text{ siendo } \overline{K}_i = \overline{f}\left(\overline{y}_n+h\sum_{j=1}^ia_{ij}\overline{K}_j\right)\]
 
-Por otro lado sabemos que
-\[y(x_n+c_ih) = y_n+c_ih\sum_{i=1}^s b_i K_i = y_n+c_ihK_i\]
+Con las relaciones entre las funciones originales y las del sistema autónomo podemos reescribir las dos ecuaciones anteriores (la de la $\overline{K}_i$ y la de $\overline{y}_n$) de la siguiente forma:
+\small
+\[\overline{K}_i = \left( \begin{array}{c} r_i \\ K_i \end{array}\right) = \left(\begin{array}{c} 1 \\ f\left(x_n+h\sum a_{ij}r_j, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\end{array}\right) \implies \]
+\[\implies \left( \begin{array}{c} x_{n+1} \\ y_{n+1}\end{array}\right) = \left( \begin{array}{c} x_n \\ y_n\end{array}\right) + h\sum_{i=1}^sb_i\left( \begin{array}{c} r_i \\ K_i\end{array}\right)=  \left(\begin{array}{c} x_n+h\sum_{i=1}^sb_i \\ y_n+h\sum_{i=1}^sb_if\left(x_n+h\sum a_{ij}r_j, y_n+h \sum_{j=1}^ia_{ij}K_j\right)\end{array}\right)=\]
+\normalsize
+
+\obs La primera igualdad procede de la idea feliz de que escribiendo $\bar{K}_i$ de esa forma simplificamos la notación\footnote{Supongo que será parte de la definición de los métodos Runge-Kutta sobre sistemas}. Una vez tenemos eso, podemos deducir la segunda igualdad de la siguiente forma:
+\[\overline{K}_i = \overline{f}\left(\overline{y}_n+h\sum_{j=1}^ia_{ij}\overline{K}_j\right) = \left(\begin{array}{c} 1 \\ f(\overline{y}_n(x)+h\sum_{j=1}^ia_{ij}\overline{K}_j(x))  \end{array} \right) =\]
+\[= \left(\begin{array}{c} 1 \\ f\left(\left(\begin{array}{c} x_n \\ y_n\end{array}\right)+h\sum_{j=1}^ia_{ij}\left(\begin{array}{c} r_j \\ k_j\end{array}\right)\right)  \end{array} \right) = \left(\begin{array}{c} 1 \\ f\left(\left(\begin{array}{c} x_n + h\sum_{j=1}^ia_{ij}r_j \\ y_n + h \sum_{j=1}^ia_{ij}k_j\end{array}\right)\right)  \end{array} \right)\]
+
+Sabemos que cualquier método RK satisface $\sum b_j=1$. Por otro lado, por la construcción que hemos realizado, podemos ver que $r_j=1$.
+
+Por otro lado, si queremos que con las segundas coordenadas formemos la misma ecuación que al resolver el PVI original necesitamos que
+\[c_i = \sum_{j=1}^s a_{ij}\]
+
+Es evidente entonces que cuando no se de esta condición el problema autonomizado tendrá una solución distinta al original.
+
 
 \end{problem}
 
@@ -217,17 +226,17 @@ de modo que el residuo queda escrito como
 \[R_n=F(h)-G(h)\]
 
 Por Taylor podemos ver que
-\[F(x_n+h)=F(x_n)+\sum_{j=1}^p\frac{\partial^j F}{\partial h^j}(x_n)\frac{h^p}{j!} + O(h^3)\]
+\[F(h)=F(0)+\sum_{j=1}^p\frac{\partial^j F}{\partial h^j}(0)\frac{h^j}{j!} + O(h^{p+1})\]
 Pero sabemos que
-\[F(x_n+h)=e^{x_n+h}=e^{x_n}e^h \implies \frac{\partial^p F}{\partial h^p}(x_n)=e^{x_n}=y(x_n)\]
+\[F(h)=e^{x_n+h}=e^{x_n}e^h \implies \frac{\partial^p F}{\partial h^p}(0)=e^{x_n}=y(x_n)\]
 
 Atendiendo a esta propiedad que acabamos de mencionar podemos escribir:
-\[F(x_n+h)=y(x_n)+\sum_{j=1}^p \frac{h^j}{j!}y(x_n) + O(h^3)\]
+\[F(h)=y(x_n)+\sum_{j=1}^p \frac{h^j}{j!}y(x_n) + O(h^{p+1})\]
 
 Por otro lado tenemos
 \[\left.\frac{\partial^p G}{\partial h^p}\right|_{h=0} = \left. p\sum_{j_1=1}^sb_{j_1}K_{j_1}^{(p-1)}\right|_{h=0}\]
 siendo
-\[K_{j_1}=\left.(p-1)\sum_{j_2=1}a_{j_1j_2}K_{j_2}^{(p-2)}\right|_{h=0} = \left.(p-1)!\sum_{j_1h_2...j_p}^2a_{j_1j_2}\cdots a_{j_{p-1}j_p} K_{j_p}^{(0)}\right|_{h=0}\]
+\[K_{j_1}^{(p-1)}=\left.(p-1)\sum_{j_2=1}a_{j_1j_2}K_{j_2}^{(p-2)}\right|_{h=0} = \left.(p-1)!\sum_{j_1h_2...j_p}^2a_{j_1j_2}\cdots a_{j_{p-1}j_p} K_{j_p}^{(0)}\right|_{h=0}\]
 Una vez conocemos la fórmula de las derivadas, podemos escribir el desarrollo de Taylor de $G(h)$ que nos queda:
 \[G(h)=y(x_n)+y(x_n)\sum_{j=1}^p\frac{h^j}{j!}\sum_{j_1,...,j_p=1}^sb_{ij}a_{j_1j_2}\cdots a_{j_{p-1}j_p}K_{j_p}^{(0)} + O(h^{p+1})\]
 
@@ -268,14 +277,60 @@ que es equivalente a escribir:
 \[y_{n+1}=y_n + h \sum_{i=1}^sb_if(x_n+c_ih,Y_i)\]
 
 Trabajando con vectores definidos en $\real^s$ podemos escribir:
-\[\overline{Y}=y_ne+hλA\overline{Y} \text{ siendo } e=(1,...,1)\in \real^s\]
-\[y_{n+1}=y_n+hλb^T\overline{Y}\]
+\[\left(\begin{array}{c}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_s
+\end{array}\right) = \left(\begin{array}{c}
+y_n \\
+y_n \\
+\vdots \\
+y_n
+\end{array}\right) +h\cdot \left(\begin{array}{ccccc}
+a_{11} & a_{12} & a_{13} & \cdots & a_{1,s}\\
+a_{21} & a_{22} & a_{23} & \cdots & a_{2,s}\\
+\vdots & \cdots & \cdots & \ddots & \vdots \\
+a_{s1} & a_{s2} & a_{s3} & \cdots & a_{ss}
+\end{array}\right) \cdot \left( \begin{array}{c} f(x_n+c_jh, Y_1) \\ f(x_n+c_jh, Y_2) \\ \vdots \\ f(x_n+c_jh, Y_s)\end{array}\right)\]
+
+\[y_{n+1}=y_n+h\left(b_1,b_2, \cdots, b_s \right)\left(\begin{array}{c}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_s
+\end{array}\right)\]
+
+Recordando que estamos considerando $y'=f(x,y)=λy$ podemos simplificar la primera ecuación obteniendo:
+\[\left(\begin{array}{c}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_s
+\end{array}\right) = \left(\begin{array}{c}
+y_n \\
+y_n \\
+\vdots \\
+y_n
+\end{array}\right) +h\cdot \left(\begin{array}{ccccc}
+a_{11} & a_{12} & a_{13} & \cdots & a_{1,s}\\
+a_{21} & a_{22} & a_{23} & \cdots & a_{2,s}\\
+\vdots & \cdots & \cdots & \ddots & \vdots \\
+a_{s1} & a_{s2} & a_{s3} & \cdots & a_{ss}
+\end{array}\right) \cdot λ \cdot \left(\begin{array}{c}
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_s
+\end{array}\right)\]
 
 Por definición, teníamos que el dominio de estabilidad lineal es:
 \[D = \{z=hλ \tq |R(z)|<1\}\]
 
 En nuestro caso tendremos
-\[R(λh) = 1+λhb^t(1-λhA)^{-1}e\]
+\[R(λh) = 1+λh\left(b_1,b_2,\cdots ,b_s \right)(1-λhA)^{-1}e, \text{ siendo } e \text{ vector columna de } 1s\]
+
+\obs Para entender esta fórmula basta con despejar el vector columna $\overline{Y}=(Y_1,...,Y_n)^T$ de la fórmula que lo define.
 
 No obstante, para los métodos Runge-Kutta esta definición se acompaña de cierta precisión, que recoge el siguiente lemma:
 \begin{lemma}
@@ -285,24 +340,129 @@ Aquí $\mathbb{P}_S$ es el conjunto de los poliniomios de grado menor o igual qu
 \end{lemma}
 \begin{proof}
 Recordando la definición de matriz inversa tenemos:
-\[(1-za)^{-1}=\frac{\text{adj}(1-zA)^T}{det(1-zA)}\]
+\[(1-zA)^{-1}=\frac{\text{adj}(1-zA)^T}{det(1-zA)}\]
 
 Los elementos de $(1-zA)$ son lineales. El adjunto pertenece a $\mathbb{P}_{S-1}$ por lo que pertenece a $\mathbb{P}_S$.
 
-Si el método es explícito, el determinante es 1.
+Si el método es explícito, la matriz $(1-zA)$ será triangular inferior con 1s en la diagonal por lo que su determinante será 1..
 \end{proof}
 \begin{corol}
 Ningún RK explícito es A-estable.
 \end{corol}
 
-\begin{lemma}
+\begin{lemma}\label{lemma:a-estable}
 Sea $R(z)$ una función racional no constante entonces
-\[|R(z)| < 1 \ \forall z \in \cplex^- \iff \text{ los polos de R tienen parte real positiva y } |R(t)| < 1 \ \forall t \in \real\]
+\[|R(z)| < 1 \ \forall z \in \cplex^- \iff \text{ los polos de R tienen parte real positiva y } |R(it)| \leq 1 \ \forall t \in \real\]
 \end{lemma}
 \begin{proof}
-Si $|R(z)|<1$ en $\cplex^-$ los polos sólo pueden estar en $\cplex^+$ y, por continuidad, sabemos que $|R(z)|\leq1$ en $\overline{\cplex}$ lo que implica que $|R(t)|\leq 1 \ \forall t \in \real$.
+Vamos a demostrar los dos lados de la implicación:
+\begin{itemize}
+\item $\implies$
 
-Si todos los polos tienen parte real positiva, entonces el máximo y el m'inimo se alcanzan en la frontera.
+Si $|R(z)|<1$ para todo $z \in \cplex^-$, por continuidad tenemos $|R(z)|\leq 1$ para todo $z \in \bar{\cplex}^-$. En particular $R$ no puede tener polos en el semiplano cerrado izquierdo y $|R(it)|\leq 1$ para todo $t \in \real$.
 
-%TODO completar la ultima afirmación que no la veo clara.
+\item $\Longleftarrow$
+
+Para probar este sentido de la implicación observamos que si los polos están a la derecha del eje imaginario, entonces la función racional $R$ es analítica en el cerrado $\bar{\cplex}^-$.
+
+Por tanto, al no ser $R$ constante, $|R|$ no puede tener un máximo en el interior y alcanza su máximo en la frontera. Parte de la frontera está en el infinito.
+
+Sin embargo, por ser $R$ una función racional existe el límite (finito o infinito) $\lim_{|z|\to \infty}|R(z)|$ y es igual a $\lim_{t \to \infty}|R(it)|$.
+
+Por tanto, si $|R(it)|<\leq 1, \ \forall t \in \real$ entonces $|R(z)|<1$ para todo $z \in \cplex^-$.
+
+\end{itemize}
 \end{proof}
+
+\section{Pares encajados}
+
+En general es habitual encontrarnos con que el método aproxima bien la función en algunos intervalos pero no en otros. En estas ocasiones lo que nos interesa es tomar un $h$ más pequeño en aquellas regiones en las que la función es singular, invirtiendo mucho esfuerzo en ello y relajarnos tomando $h$ mayor en regiones donde la función es más estable.
+
+Tomemos como ejemplo el \textbf{método de Euler} que, recordemos, venía definido por la recursión:
+\[y_{n+1} = y_n + h f(x_n,y_n)\]
+
+El error se calcula como:
+\[\text{error} = y''(x_n)\frac{h_n^2}{2}+O(h^3)\]
+
+Cuando estudiemos el intervalo $x_n \to x_{n+1}$ tendremos el error:
+\[\text{error} = \left(f_x(x_n,y_n)+f_y(x_n,y_n)f(x_n,y_n) \right)\frac{h_n^2}{2}\]
+
+Si el error es menor, en valor absoluto, que una cierta toleracia, aceptamos el valor $y_{n+1}$ calculado. En caso contrario, repetimos estas cuentas reduciendo $h$ a la mitad.
+
+\obs Este procedimiento corre el riesgo de entrar en bucle infinito si la tolerancia que tomamos es demasiado pequeña. En la práctica acostumbra a establecerse un máximo de iteraciones tras las cuales dejamos de intentar mejorar el error.
+
+Una pega importante de este procedimiento es que para cada cálculo del error tenemos que hacer dos evaluaciones de funciones derivadas (que suelen ser más complicadas que la función $f$ original). Computacionalmente este trabajo es muy costoso y para evitarlo se emplean los pares encajados.
+
+El \textbf{par encajado} consiste en el empleo de dos métodos Runge-Kutta:
+\begin{itemize}
+\item \textbf{Avanzador}
+Este método tendrá orden $p$ y su tablero de Butcher será:
+
+\begin{center}
+\begin{tabular}{c|c}
+c & A \\
+\hline
+ & b\\
+\end{tabular}
+\end{center}
+
+
+\item \textbf{Estimador}
+Este método tendrá orden $\tilde{p}>p$ y su tablero de Butcher será:
+
+\begin{center}
+\begin{tabular}{c|c}
+c & A \\
+\hline
+ & $\tilde{b}$\\
+\end{tabular}
+\end{center}
+\end{itemize}
+
+La forma de proceder consiste en suponer que el estimador nos da la solución exacta de forma que el error será:
+\[\text{error} = h_n \sum_{i=1}^s(b_i-\tilde{b}_i)K_i\]
+
+Veamos un ejemplo
+\begin{example}
+Consideramos los métodos:
+\begin{itemize}
+\item \textbf{Avanzador}
+\begin{center}
+\begin{tabular}{c|cc}
+0 & 0 & 0 \\
+1 & 1 & 0\\
+\hline
+ & 1 & 0\\
+\end{tabular}
+\end{center}
+
+\item \textbf{Estimador}
+
+\begin{center}
+\begin{tabular}{c|cc}
+0 & 0 & 0 \\
+1 & 1 & 0 \\
+\hline
+ & 1/2 & 1/2\\
+\end{tabular}
+\end{center}
+\end{itemize}
+
+Ambos métodos emplearán las mismas $K_i$, pues se definen igual. Una vez vemos esto podemos escribir:
+
+\[\left\{ \begin{array}{l}
+K_1=f(x_n,y_n)\\
+K_2=f(x_n+h,y_n+hK_1)
+
+\end{array} \implies  \begin{array}{l}
+y_{n+1} = y_n+hb_1K_1+hb_2K_2\\
+\tilde{y}_{n+1} = \tilde{y}_n + h\tilde{b}_1K_1 + h\tilde{b}_2K_2
+\end{array}\right.\]
+
+Aunque puede parecer que tenemos que calcular dos $K$ en cada paso, la realidad es que $K_2$ de un paso coincide con $K_1$ del paso siguiente.
+
+El método estimado se ha empleado en cada caso para estimar el error $y_{n+1}$.
+\end{example}
+
+En general, todos los métodos en los que la primera $K$ que calculamos en cada paso coincide con la última $K$ calculada en el paso anterior, se denominan \concept{FSAL} y vienen caracterizados por la propiedad:
+\[a_{s_i}=b_i \text{ con } i=1...2 \text{ y } c_i = \sum_{j=1}^sa_{ij}\]
