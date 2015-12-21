@@ -1,4 +1,4 @@
-\documentclass[nochap,palatino,notitlepage]{apuntes}
+\documentclass[nochap,palatino]{apuntes}
 
 \title{Organización de Empresas Tecnológicas}
 \author{Guillermo Julián}
@@ -9,14 +9,16 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{textcomp}
+\usepackage{tikztools}
 
 \begin{document}
 \pagestyle{plain}
-\maketitle
 
 \begin{abstract}
 Estos apuntes pretenden ser un resumen concreto y más o menos completo de la asignatura de Organización de Empresas Tecnológicas, con (esperemos) pocas abreviaturas.
 \end{abstract}
+
+\maketitle
 
 \tableofcontents
 \newpage
@@ -588,8 +590,150 @@ Coste de la deuda & $\frac{F}{P}$ & 9 \% & 9 \% \\
 \end{table}
 
 \section{Viabilidad de negocios}
+
+Normalmente, antes de lanzarnos a la piscina con una empresa, querremos hacer un análisis para saber si efectivamente ese negocio puede tener futuro o no. Se pueden hacer análisis más avanzados, aunque nosotros sólo haremos análisis de previabilidad. Tenemos por una parte el análisis de \concept{Previabilidad\IS estática}, en el que simplemente hacemos una proyección de ingresos y gastos y vemos a ver si sale positivo o no. También podemos hacer un análisis de \concept{Previabilidad\IS dinámica} en el que preveemos los ingresos y gastos que va a tener la empresa a lo largo del tiempo, viendo así en qué momento empezamos a ser rentables.
+
+Aquí entran en juego dos conceptos simples: el margen sobre compras y sobre ventas. Si compramos a precio $C$ y vendemos a $V$, tenemos una ganancia de $G = V - C$ y por lo tanto los márgenes sobre compras y ventas son $\frac{G}{C}$ y $\frac{G}{V}$ respectivamente.
+
+También podemos calcular cuántas ventas debemos hacer para empezar a ser rentables, es decir, en qué momento el margen sobre nuestras ventas es suficiente para cubrir los costes fijos que tenemos. Este punto se llama \concept{Umbral\IS de cobertura}, de rentabilidad o \concept{Break-even point}.
+
+El último concepto que vemos es el del \concept{Apalancamiento\IS operativo}, que es la relación entre costes fijos y variables. Un grado de apalancamiento operativo bajo implica costes fijos reducidos y costes variables altos; justo al revés que un grado de apalancamiento operativo alto. El primero permite funcionar con menos riesgo (si baja la demanda, simplemente despedimos al personal o dejamos de comprar materias primas), pero el segundo permite aumentar más los beneficios al aumentar la demanda. Ambos casos están ilustrados en la \fref{fig:Apalancamiento}.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[scale = 0.8]
+\begin{scope}
+\pgfmathsetmacro{\fixedcosts}{1}
+\pgfmathsetmacro{\unitcost}{0.4}
+\pgfmathsetmacro{\unitmax}{5}
+\pgfmathsetmacro{\unitprice}{0.8}
+\pgfmathsetmacro{\bepunits}{\fixedcosts / (\unitprice - \unitcost)}
+\pgfmathsetmacro{\bepvalue}{\unitprice * \bepunits}
+
+\node at ({\unitmax / 2}, {\unitmax + 0.5}) {A. Operativo. bajo};
+
+\draw[->] (0,-0.1) -- (0, \unitmax) node[left] {\texteuro};
+\draw[->] (-0.1,0) -- (\unitmax, 0)
+	node[below, align = center] {\scriptsize Uds. vendidas};
+
+\draw[blue] (0,\fixedcosts) -- (\unitmax, \fixedcosts)
+	node[below] {\scriptsize Costes fijos};
+\draw[orange] (0,0) -- (\unitmax, {\unitmax * \unitcost})
+	node[right, align = left] {\scriptsize Costes \\ \scriptsize variables};
+
+\coordinate (G) at (\unitmax,{\fixedcosts + (\unitmax * \unitcost)});
+\draw[red, thick] (0,\fixedcosts) --
+	node[pos = 0.9, below, sloped] {\scriptsize Total gastos} (G);
+
+\coordinate (I) at (\unitmax,{\unitmax * \unitprice});
+\draw[green!70!black, thick] (0,0) --
+	node[pos = 0.9, above, sloped] {\scriptsize Ingresos} (I);
+
+\coordinate (BE) at (\bepunits, \bepvalue);
+
+\fill[red, opacity = 0.5] (0,0) -- (BE) -- (0, \fixedcosts) -- (0,0);
+\fill[green!70!black, opacity = 0.5] (G) -- (BE) -- (I) -- (G);
+\node[nodepoint, label=above:{\scriptsize Break-even}] at (BE) {};
+
+\end{scope}
+
+\begin{scope}[xshift = 8cm]
+\pgfmathsetmacro{\fixedcosts}{2}
+\pgfmathsetmacro{\unitcost}{0.2}
+\pgfmathsetmacro{\unitmax}{5}
+\pgfmathsetmacro{\unitprice}{1}
+\pgfmathsetmacro{\bepunits}{\fixedcosts / (\unitprice - \unitcost)}
+\pgfmathsetmacro{\bepvalue}{\unitprice * \bepunits}
+
+\node at ({\unitmax / 2}, {\unitmax + 0.5}) {A. Operativo. alto};
+
+\draw[->] (0,-0.1) -- (0, \unitmax) node[left] {\texteuro};
+\draw[->] (-0.1,0) -- (\unitmax, 0)
+	node[below, align = center] {\scriptsize Uds. vendidas};
+
+\draw[blue] (0,\fixedcosts) -- (\unitmax, \fixedcosts)
+	node[below] {\scriptsize Costes fijos};
+\draw[orange] (0,0) -- (\unitmax, {\unitmax * \unitcost})
+	node[right, align = left] {\scriptsize Costes \\ \scriptsize variables};
+
+\coordinate (G) at (\unitmax,{\fixedcosts + (\unitmax * \unitcost)});
+\draw[red, thick] (0,\fixedcosts) --
+	node[pos = 0.9, below, sloped] {\scriptsize Total gastos} (G);
+
+\coordinate (I) at (\unitmax,{\unitmax * \unitprice});
+\draw[green!70!black, thick] (0,0) --
+	node[pos = 0.9, above, sloped] {\scriptsize Ingresos} (I);
+
+\coordinate (BE) at (\bepunits, \bepvalue);
+
+\fill[red, opacity = 0.5] (0,0) -- (BE) -- (0, \fixedcosts) -- (0,0);
+\fill[green!70!black, opacity = 0.5] (G) -- (BE) -- (I) -- (G);
+\node[nodepoint, label=above:{\scriptsize Break-even}] at (BE) {};
+
+\end{scope}
+\end{tikzpicture}
+\caption{Ilustración del apalancamiento operativo.}
+\label{fig:Apalancamiento}
+\end{figure}
+
+\subsection{Viabilidad de empresas tecnológicas}
+
+\textit{N.A.: Me daba pena dejar esta sección tan parca en palabras. Añado cosas que me parecen importantes a la hora de montar una empresa tecnológica. Léase con escepticismo, no soy ningún experto.}
+
+Las empresas tecnológicas, o más comúnmente \textit{startups}, son bastante peculiares. Uno puede montar un kiosko y hacerse una estimación de cuánta gente le va a comprar el periódico, y después hacer predicciones según cómo le vaya. Sin embargo, estimar cuánta gente se va a descargar nuestra aplicación es bastante más complicado, por no decir imposible. Igualmente, es muy difícil prever si alguien nos va a adelantar por la derecha y quitarnos los clientes, o qué margen vamos a tener por usuario. Es decir, que lo que hemos visto anteriormente no nos sirve para nada porque habitualmente fallaremos en el paso cero: hacer las predicciones sobre nuestro negocio.
+
+Lo habitual suele ser sobreestimar la utilidad de lo que montemos y cómo se diferencia de la competencia. El problema es que como nuestro producto es nuestro, lo hemos montado nosotros y le tenemos cariño, tenemos ciertos sesgos a la hora de valorarlo y de pensar cómo lo van a usar los usuarios. Algunos fallos comunes:
+
+\begin{itemize}
+\item Subestimar la pereza de los usuarios. Los usuarios son reticentes a cambiar sus hábitos. Si eres un actor nuevo, no tienes que ser sólo mejor que lo que ya hay: tienes que ser mucho mejor para que los usuarios den el salto. Si no, ¿por qué van a molestarse en aprender una aplicación nueva y en mover los datos que ya tengan? Así se explica que Whatsapp haya seguido siendo el más usado a pesar de que otros clientes ofrecen más características.
+
+Aquí entra en juego también el efecto red: a veces, cambiar de aplicación (por ejemplo, mensajería) no compensa porque no tienes a los amigos ahí. Y como no tienes a los amigos, no te pasas a la nueva aplicación, y como tú no lo haces, tus amigos tampoco. Y así se acaba en un círculo que es muy difícil de romper.
+
+\item Sobreestimar el valor que aportas a los usuarios. Siguiendo con el caso de Spotbros, lo del almacenamiento en la nube o la seguridad extra está muy bien, pero, ¿son relevantes? ¿Va un usuario normal a cambiar de aplicación porque sea ``más segura''? Probablemente no, por muy relevante que nos parezca a nosotros como creadores.
+
+A veces también puede ser sorprendente ver qué usan los usuarios para resolver sus problemas. Por ejemplo, podríamos pensar que una aplicación para recomendar sitios para salir de fiesta está bien, pero quizás la gente ya usa Twitter o habla con sus amigos para enterarse, y con eso ya le basta y no hacen falta aplicaciones más complejas de usar.
+
+\item Sobreestimar el beneficio por usuario. No es raro ver a gente que piensa que con publicidad puede soportar su negocio, cuando en realidad es bastante difícil. El CPC (coste por clic en un anuncio) está habitualmente por debajo de medio dólar, y el CPM (coste por cada mil impresiones) en torno al dólar\footnote{Son cifras sacadas de algunos blogs y redes de anuncios. Varían bastante según la fuente pero todas comparten un mismo rasgo: precios bajos por publicidad.}. Por ejemplo, si quisiésemos ganar 750 dólares al mes con una aplicación, necesitaríamos varios miles usuarios activos (probablemente 10.000 o más\footnote{Cálculos a ojo, suponiendo un CPM de 1\$ y usuarios que abren la aplicación 15 veces al mes y ven 5 anuncios. Y son estimaciones bastante optimistas.}), lo que implicaría bastantes más descargas. Nada fácil, y apenas hemos pagado un sueldo mensual.
+
+Incluso sin publicidad, es difícil estimar cuánto nos va a costar cada usuario y cuánto vamos a ganar con cada uno. Temas como la tasa de conversión (usuarios gratuitos que pasan a contratar nuestra versión de pago), la recurrencia (usuarios que vuelven a dejarse dinero en nuestro sitio) o el coste adicional por usuario (soporte, peticiones adicionales de características) son complicados de estimar y optimizar.
+\end{itemize}
+
+Para que nos hagamos una idea de lo complicado que es esto, dos ejemplos muy conocidos. Twitter, a pesar de sus millones de usuarios y fama mundial, todavía no es rentable. Facebook sólo lo consiguió en 2009 -- cinco años después de su lanzamiento -- y con 300 millones de usuarios en la cartera. Muchas \textit{startups}, especialmente las más conocidas, funcionan así con pérdidas constantes.
+
+¿Dónde está el truco entonces? Resulta que las \textit{startups} consiguen financiación gracias a los inversores de capital riesgo (VC, Venture Capitalists) y otros. Esta gente no busca rentabilidad, ni siquiera un modelo de negocio validado, sino principalmente crecimiento que en algún momento en el futuro se pueda convertir en dinero, no necesariamente sacado del funcionamiento de la empresa: basta con que otra más grande la compre (lo que se llama un \textit{exit}) para que los inversores recuperen lo invertido.
+
+Precisamente por eso se ha montado todo un ecosistema alrededor de las \textit{startups} y el mundo \textit{entrepeneur}\footnote{Nota: la mitad de la gente que pronuncia esta palabra (especialmente si te la dice en inglés mientras habla contigo en español) está vendiendo humo y/o no sabe de lo que habla.}: es un mundo con mucho riesgo (muchísimas empresas acaban fallando y perdiendo dinero a espuertas) pero también con muchas posibilidades de ganar mucho dinero, incluso teniendo en cuenta las compañías que fallan. Así se entiende el éxito de inversores y grupos de inversión, concursos de \textit{startups} y de aceleradoras como \href{https://www.ycombinator.com/}{Y Combinator}\footnote{Pongo a Y Combinator más que nada porque su ``líder'', Paul Graham, tiene \href{http://paulgraham.com/articles.html}{ensayos muy interesantes}, como \href{http://paulgraham.com/startuplessons.html}{este sobre las lecciones más importantes para una startup}, y en general es un tipo que, a pesar de estar metido en \textit{startups}, está alejado de la charla vacía, palabrería y humo que suele rodear a este mundo.}, organizaciones que ``acogen'' \textit{startups} recién creadas y les dan un empujón (por eso lo de aceleradora) con una pequeña inversión, consejos técnicos y de organización y poniéndoles en contacto con otras empresas, inversores y periodistas.
+
 \section{Financiación}
+
+\subsection{Matemática financiera}
+
+Esta sección se basa en la siguiente idea: el dinero no vale lo mismo a lo largo del tiempo. No es lo mismo que me paguen hoy 10 euros que me los paguen dentro de diez años: entra en juego la inflación (dentro de diez años me podré comprar menos cosas que hoy con diez euros, ya que los precios suben) y lo que yo pueda hacer con ese dinero (inversiones) para sacarle rentabilidad.
+
+En este sentido, nos interesará hacer dos cosas: una, ver cuánto dinero vamos a tener pasado un cierto tiempo (por ejemplo, un depósito). Otra, ver cuánto vale ese dinero futuro en este momento. Para ello, vamos a desarrollar las fórmulas de recurrencia que entran aquí.
+
+El primer modelo, el simple, es en el que ponemos una inversión que nos va generando intereses que se acumulan. Por ejemplo, un depósito con un interés $i ∈ (0,1)$ anual, en el que si tenemos depositado $x$ nos pagan $ix$ al final del año. Entonces, está claro que si depositamos $C_n$ en un período, al siguiente tendremos $C_{n+1} = C_n(1+i)$. Desarrollando esto nos queda simplemente que, con $C_0$ la inversión inicial, \( C_n = C_0 (1+i)^n \iff C_0 = C_n (1+i)^{-n} \label{eq:InteresCapFijo} \), las dos fórmulas para saber el valor a futuro ($C_n$) y actual ($C_0$).
+
+Hay otra posibilidad, que ocurre cuando vamos poniendo un cierto dinero en cada período. Por ejemplo, un préstamo en el que cada mes paguemos al banco una cuota fija $p$, pero en el que la cantidad que le debemos al banco aumente en un cierto interés $i$ en cada período. En ese caso, tenemos que $C_n = (1 + i) C_{n-1} - p$. Sustituyendo en la fórmula de recurrencia queda \[ C_n = (1 + i) \left[ (1+i) C_{n-2} - p\right] - p = \dotsb = (1+i)^nC_0 - \sum_{k = 0}^{n} p (1 + i)^k \] y, resolviendo la suma geométrica de la derecha\footnote{Nunca me acuerdo de la fórmula, pero se saca despejando $S_n$ (la suma de $n$ términos) de $S_n - r·S_n$ y sale $S_n = a_0 \frac{r^n - 1}{r-1}$.} queda \[ C_n = (1+i)^nC_0 - p\frac{(1+i)^{n} - 1}{(1+i) - 1}  \], con $C_0$ la cantidad inicial del préstamo.
+
+Normalmente, en un préstamo debería quedarnos $C_n = 0$ (no le debemos nada al banco), así que podemos simplificar y nos queda que \( C_0 = p \frac{1 - (1 + i)^{-n}}{i} \label{eq:InteresCapVariable}\), lo que nos permite obtener el pago mensual (o anual, o lo que sea) de un préstamo $C_0$ con interés $i$ en $n$ plazos.
+
+\subsection{Préstamos}
+
+Aunque antes los préstamos los hemos visto muy simplificados, en realidad las entidades financieras hacen varias complicaciones y pueden salir préstamos muy diferentes.
+
+Un concepto que ayuda a simplificar esos líos es la \concept{TAE} o Tasa Anual Equivalente, de obligatoria inclusión por todos los bancos. Este indicador da el rendimiento efectivo de un producto financiero en porcentaje anual, y que incluye no sólo el tipo de interés sino también los costes y comisiones que haya que pagar al banco. Se trata entonces de promediar el interés que nos den para que salga anual e incluir esos gastos extra. Por ejemplo, un depósito con interés mensual $i$ tendrá, al cabo de un año, un valor de $C_0(1+i)^{12}$ según \eqref{eq:InteresCapFijo}, por lo que la TAE será \[ \mathrm{TAE} = \frac{(C_0(1+i)^{12} - GC_0) - C_0}{C_0} = (1+i)^{12} - G - 1 \], donde $G$ es el porcentaje de comisiones que cobran. Si algunos gastos son fijos o tienen mínimos, puede ser que el TAE sea variable en función de la inversión inicial.
+
+\subsection{Fuentes financieras y Coste de capital. Estruct financ}
+
+Nota: ese título nolo he puesto yo. Pendiente de rellenar porque no sé a qué se refiere.
+
+\subsection{Apalancamiento financiero}
+
+\subsection{Crowdfunding}
+
 \section{Evaluación de proyectos de inversión}
+
 \section{Mercado y márketing}
 \section{Recursos humanos}
 \printindex
