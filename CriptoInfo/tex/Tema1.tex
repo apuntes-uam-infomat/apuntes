@@ -1419,9 +1419,273 @@ Pero esto es muy poco, vamos a ver el DES Triple
 	Y asi vemos que se cumple la igualdad 	
  \end{example}
  \newpage
+ \chapter{AES}
+ \section{Historia del AES}
+ Aquí contaría todo lo del concurso y que el AES ganó el concurso y todo eso.
+ \section{Conceptos previos para entender el funcionamiento}
+ \subsection{Campos de Galois}
+ El AES se basa en los \textbf{campos de Galois}
+ \begin{defn}
+ 	Los campos de Galois son campos finitos que se definen como
+ 	$$GF(p^n)$$
+ 	con $p$ primo.
+ 	
+ 	Además cumplen que 
+ 	$$|GF(p^n)| = p^n$$
+ \end{defn}
  
+ \subsection{Definiciones sobre polinomios}
+ Vamos a definir algunos conceptos y operaciones de polinomios necesarios para entender el funcionamiento del AES:
+ \begin{enumerate}
+ 	\item Definimos el \textbf{grupo $Z_p[x]$} con $f(x) \in Z_p[x]$ tal que
+ 	$$f(x) = a_nx^n + a_{n-1}x^{n-1}+....+a_1x + a_0$$
+ 	donde $a_i \in Z_p$
+ 	
+ 	Este grupo está definido con las operaciones $+$ y $\cdot$ sobre polinomios
+ 	\item \textbf{Grado de un polinomio}.
+ 	
+ 	Tenemos $f(x)\in Z_p[x]$. Definimos el grado de $f(x)$ como su mayor exponente
+ 	
+ 	\item Dados $g(x)$ y $f(x)$ decimos que $f(x)|g(x) \iff$ podemos encontrar un $q(x)$ que verifica que:
+ 	$$g(x) = q(x)\cdot f(x)$$
+ 	
+ 	\item Dados $f(x), g(x)$ y $h(x) \in Z_p[x]$ decimos que
+ 	$$f(x)\equiv g(x) \text{ mod } h(x) \iff h(x)|f(x)-g(x) \iff f(x) = g(x) + k(x)h(x)$$
+ 	
+ 	\begin{theorem}
+ 		Dados $f(x), g(x) \in Z_p[x]$ podemos encontrar un $f(x) 0 q(x)\cdot g(x) + r(x)$ tal que $q(x), r(x) \in Z_p[x]$
+ 	\end{theorem}
+ 	
+ 	\item Definimos $Z_p[x]/m(x)$ un campo tal que $m(x)\equiv$ polinomio irreducible y $m(x)\in Z_p[x]$
+ 	
+ 	\begin{remark}
+ 		Poner $Z_p[x]/m(x)$ es equivalente a cuando poníamos $Z_x$, solo que ahora los elementos no son números sino polinomios y en vez de estar módulo x los polinomios están en "módulo $m(x)$"
+ 	\end{remark}
+ 	
+ 	\item $m(x)$ es irreducible $\iff \nexists f(x) \in Z_p[x]$ ta que $f(x)|m(x)$
+ 	
+ 	\begin{theorem}
+ 		Si tenemos un campo finito $Z_p[x]/m(x)$ definida con las operaciones $+$ y $\cdot$, entonces
+ 		$$Z_p[x]/m(x) \equiv GF(p^n)$$
+ 		tal que 
+ 		$$\begin{cases}
+ 		P \text{ primo}\\
+ 		n = \text{ grado del polinomio irreducible }m(x)\\
+ 		p^n = \text{  cardinalidad del conjunto}\\
+ 		\text{Todos los coeficientes están en }Z_p\\
+ 		\text{Cuando el grado es mayor que n-1, se reduce con }m(x)
+ 		
+ 		\end{cases}$$
+ 	\end{theorem}
+ 	
+ \end{enumerate}
  
+ \begin{example}
+ 	Vamos a estudiar el grupo $GF(2^3)$
+ 	\begin{itemize}
+ 		\item En este conjunto tendremos $2^3 = 8$ polinomios
+ 		\item Los coeficientes podrán ser 0 o 1.
+ 		\item El grado máximo será 3.
+ 	\end{itemize}
+ 	
+ 	\begin{center}
+ 		\begin{tabular}{l | l | c  r}
+ 			$a_2$ & $a_1$ & $a_0$ &   \\
+ 			\hline
+ 			0  & 0 & 0 & 0 \\
+ 			\hline
+ 			0  & 0 & 1 & $1$ \\
+ 			\hline
+ 			0 & 1 & 0 & $x$ \\
+ 			\hline
+ 			0 & 1 & 1 & $x +1$\\
+ 			\hline
+ 			1 & 0 & 0 & $x^2$\\
+ 			\hline
+ 			1 & 0 &  1 & $x^2 +1$\\
+ 			\hline
+ 			1 & 1 & 0 & $x^2 +x$\\
+ 			\hline
+ 			1 & 1 & 1 & $x^2 +x +1$
+ 		\end{tabular}
+ 	\end{center}
+ 	
+ 	Vemos que un polinomio irreducible en este grupo es
+ 	$$m(x) = x^3 +x +1$$
+	(No nos ha enseñado cómo ha sacado este polinomio).
+	
+	Vamos a estudiar la operación producto ($\cdot$) con estas condiciones.
+	
+	Tenemos:
+	$$\begin{cases}
+	P_1(x) = x^2 +1\\
+	P_2(x) = x^2 +x
+	\end{cases} \implies P_{1,2} = P_1(x) \cdot P_2(x) = x^4 + x^3 + x^2 + x \text{ mod }m(x) $$
+	
+	Y ¿Como calculamos $P_{1,2}$?
+	Vamos a dividir entre $m(x)$:
+	
+	\begin{center}
+		\includegraphics[angle=90 , width=200pt]{DivPol.jpg}
+	\end{center}
+	
+	Vemos que el resto nos queda $-x -1$, si pasamos los coeficientes a $Z_2$ nos queda $x+1$, por tanto 
+	$$P_{1,2} = x+1$$
+		
+ \end{example}
  
+\subsection{Euclides}
+Al igual que podíamos aplicar Euclides en $Z_m$ podemos aplicarlo a $GF(2^8)/m(x)$ siguiendo los mismos pasos:
+$$\begin{cases}
+	r_0(x) = q_1(x)r_1(x) + r_2(x)\\
+	r_1(x) = q_2(x)r_2(x) + r_3(x)\\
+	.....\\
+	r_{n-1}(x) = q_n(x)r_n(x) + 0\\
+\end{cases}$$
+
+Y para calcular el inverso también podemos utilizar \textbf{Bezout}
+
+$$m(x)U(x) + f(x)V(x) = 1 \iff f(x)V(x) = 1 \text{ mod } m(x) \implies f^{-1}(x) = V(x)$$
+
+Para ver esto más claro vamos a poner un ejemplo
+\begin{example}
+	Estamos de nuevo en $GF(2^3)$ , con $m(x) = x^3 + x +1$
+	
+	Vamos a ver como calculamos $[x^2]^{-1}$
+	
+	Empezamos calculando el $mcd(m(x), x^2)$
+	
+	Dividiendo como hemos aprendido en el ejemplo anterior nos queda que:
+	$$\begin{cases}
+		x^3 + x + 1 = x^2 \cdot x + (x+1)\\
+		x^2 = (x+1)\cdot(x+1) +1
+	\end{cases}$$
+	
+	Por lo tanto ya tenemos que $mcd(m(x), x^2) = 1$, para calcular el inverso hacemos:
+	$$\begin{cases}
+		 1 = x^2 -(x+1)\cdot(x+1)\\
+		 1 = x^2 -(x+1)\cdot((x^3 +x +1) -(x\cdot x^2))\\
+		 1 = (x^2 + x + 1)\cdot x^2 -(x+1)\cdot(x^3 + x +1)
+	\end{cases}$$
+	
+	Por lo tanto 
+	$$[x^2]^{-1} = x^2 + x + 1$$
+	
+\end{example}
+
+\section{Base matemática del AES}
+
+Una vez que hemos estudiado todos estos conceptos y operaciones ya podemos entender la base matemática del AES.
+
+En el AES utiliamos:
+\begin{itemize}
+	\item El \textbf{campo de Galois} $GF(2^8)$
+	\item El cuerpo $Z_2[x]|m(x)$
+	\item $m(x)= x^8 + x^4 + x^3 + x + 1$
+\end{itemize}  
+
+De esta forma cada polinomio representa un byte, y los coeficientes son los bits, por ejemplo:
+$$P(x) = x^6 + x^4 + x^2 + x + 1 \equiv 01010111_2 = 57_8$$
+ 
+ \subsection{Suma}
+ Dados los polinomios
+ \begin{itemize}
+ 	\item $P_a(x) = a_7x^7 + a_6x^6 +...+ a_0$
+ 	\item $P_b(x) = b_7x^7 + b_6x^6 +...+ b_0$
+ \end{itemize}
+ 
+ Definimos la suma como:
+ $$P_a(x) + P_b(x) = \sum_{i=0}^{7} [(a_i + b_i) \text{ mod }2]\cdot x^i$$
+ 
+ Además
+ $$b(P_a(x) + P_b(x)) = b\cdot(P_a(x)) \oplus b \cdot (P_b(x))$$
+ 
+ \subsection{Optimización del producto - XTIME}
+ 
+ \begin{defn}[Xtime]
+ 	Dado $b(x) =b_7x^7 + b_6x^6 +...+ b_0$, definimos la operación \textbf{xtime} tal que:
+ 	$$xtime(b(x)) = x \cdot b(x)$$
+ 	Entonces
+ 	$$xtime(b(x)) =b_7x^8 + b_6x^7 +...+ b_0x \text{ mod }m(x) $$
+ \end{defn}
+ 
+ Vamos a distinguir dos casos del xtime:
+ \begin{itemize}
+ 	\item CASO 1: $b_7 =0$
+ 	Entonces
+ 	$$x \cdot b(x) = b_6x^7 + b_5x^6 +...+ b_0x \text{ mod }m(x)  $$
+ 	Como vemos esto es un desplazamiento a la izquierda, por lo tanto:
+ 	$$\text{Si } b_7=0 \implies xtime(b(x)) \equiv L(b(x))$$
+ 	
+ 	\item CASO 2: $b_7 = 1$
+ 	
+ 	En este caso tenemos que dividir entre $m(x)$ ya que $x^8$ no está en módulo $m(x)$
+ 	
+ 	Dividimos $x\cdot b(x)$ en dos partes:
+ 	\begin{enumerate}
+ 		\item $x^8$ mod $m(x)$
+ 		\item $b_6x^7 + b_5x^6 +...+ b_0x$ mod $m(x)$
+ 	\end{enumerate}
+ 	
+ 	En el caso 1 hemos visto que $b_6x^7 + b_5x^6 +...+ b_0x$ mod $m(x)$ es igual que desplazar a la izquierda.
+ 	
+ 	Por otra parte calculamos $x^8$ mod $m(x)$,
+ 	$$x^8 \text{ mod } m(x) = x^4 + x^3 + x + 1 = 1B_8$$
+ 	
+ 	Por lo tanto:
+ 		$$\text{Si } b_7=1 \implies xtime(b(x)) \equiv 1B_8 \oplus L(b(x))$$
+ \end{itemize}
+ 
+ \begin{example}
+ 	Vamos a calcular $57_8 \cdot 13_8$
+ 	
+ 	Primero escribimos $13_8$ como:
+ 	$$13_8 \equiv 1 + x + x^4 \equiv 01_8 \oplus 02_8 \oplus 10_8$$
+ 	
+ 	Nos fijamos en que 
+ 	$$x^4 \cdot 57_8 = xtime(xtime(xtime(xtime(57_8))))$$
+ 	
+ 	Entonces podemos escribir:
+ 	$$57_8 \cdot 13_8 = 57_8 \cdot (01_8 \oplus 02_8 \oplus 10_8) = 57_8 \cdot 01_8 \oplus 57_8 \cdot 02_8 \oplus 57_8 \cdot 10_8 = $$
+ 	$$= 57_8 \oplus xtime(57_8) \oplus xtime(xtime(xtime(xtime(57_8))))$$
+ 	
+ 	Lo calculamos por partes:
+ 	$$\begin{cases}
+	 	57_8 \cdot 02_8 = xtime(57_8) = AE_8\\
+	 	57_8 \cdot 04_8 = xtime(AE_8) = 47_8\\
+	 	57_8 \cdot 08_8 = xtime(47_8) = 8E_8\\
+	 	57_8 \cdot 10 _8 = 07_8
+ 	\end{cases}$$
+ 	
+ 	Y ahora si podemos terminar el cálculo:
+ 	$$57_8 \cdot 13_8 = 57_8 \oplus AE_8 \oplus 07_8 = FE_8$$
+ \end{example}
+ 
+ \subsection{Producto de polinomios con coeficientes en GF($2^8$)}
+ 
+ Dados dos polinomios
+ $$A(x) = a_3x^3 + a_2x^2 + a_1x + a_0$$
+ $$B(x) = b_3x^3 + b_2x^2 + b_1x + b_0$$
+ 
+ Si hacemos el producto de ambos obtenemos:
+ $$C(x) = A(x) \cdot B(x) =(a_3x^3 + a_2x^2 + a_1x + a_0)b_3x^3 +...+(a_3x^3 + a_2x^2 + a_1x + a_0)b_0 = $$
+ $$= b_3a_3x^6 + a_2b_3x^5 + a_1b_3x^4 +...+ a_0b_0 = $$
+ $$= C_6x^6 + C_5x^5 +...+ C_0$$
+ 
+ Siendo los $C_i$:
+ $$\begin{cases}
+	 C_0 = a_0b_0\\
+	 C_1 = a_1b_0 \oplus a_0b_1\\
+	 C_2 = a_2b_0 \oplus a_1b_1 \oplus a_0b_2\\
+	 C_3 = a_3b_0 \oplus a_2b_1 \oplus a_1b_1 \oplus a_0b_3\\
+	 C_4 = a_3b_1 \oplus a_2b_2 \oplus a_1b_3\\
+	 C_5 = a_3b_2 \oplus a_2b_3\\
+	 C_6 = a_3b_3
+ \end{cases}$$
+ 
+Y ahora solo faltaría reducir por $M(x)$.Dividir por $M(x)$ equivale a:
+$$x^j \text{ mod } M(x) = x^j \text{ mod } (x^4 +1) = x^{j \text{ mod } 4}$$ 
+
  $$D(x) = C(x) \text{ mod M(x)} \begin{cases}
  d_0 = a_0\cdot b_0 \oplus a_3 \cdot b_1 \oplus a_2 \cdot b_2 \oplus a_1 \cdot b_3 = C_0 \oplus C_4\\
  d_1 = a_1\cdot b_0 \oplus a_0 \cdot b_1 \oplus a_3 \cdot b_2 \oplus a_2 \cdot b_3 = C_1 \oplus C_5\\
@@ -1501,15 +1765,14 @@ A pesar de utilizar los principios de confusión y difusión no es una esructura
  
 \subsubsection{Diseño de Rijndael}
 
-STATE (estado)
+\paragraph{State(estado)}
 
 $$\overrightarrow{X} = x_0 , ...., x_n$$
 
 $$x_i \in GF(2^8)|m(x)$$
 
-Antes de estrar en el algoritmo se coloca este string en bloques para que el algoritmo pueda operar con él.
+Antes de estrar en el algoritmo se coloca este string (el state) en bloques para que el algoritmo pueda operar con él.
 
-Se coloca de la siguiente forma:
 
 Se pasa de esta notación:
 
@@ -1549,7 +1812,7 @@ A esta notación
 	\end{center}
 
 
-\subsubsection{Tamaño de clave}
+\paragraph{Tamaño de clave}
 
 	\begin{center}
 		
@@ -1571,7 +1834,7 @@ A esta notación
 		N_K = 8 \rightarrow 256\\
 		\end{cases}$$
 		
-\subsubsection{Número de rondas}
+\paragraph {Número de rondas}
 	\begin{center}
 		
 		\begin{tabular}{l | c | r | r }
@@ -1651,8 +1914,9 @@ Ahora vamos a analizar cada una de las \textbf{funciones del AES}
 	Esta cajas S cogen los 4 primeros bits, que le indican la columna, y los 4 últimos bits le indican la fila.
 	
 	¿Cómo funciona la función inversa? \textbf{INVByteSub}:
+	\subitem{INVByteSub}
 	\begin{enumerate}
-		\item Se calcula la\textbf{transformación afín INVERSA}, que viene determinada por (imagen de moodle matriz Y)
+		\item Se calcula la \textbf{transformación afín INVERSA}, que viene determinada por (imagen de moodle matriz Y)
 		\item Se calcula el \textbf{inverso multiplicativo del resultado}
 	\end{enumerate}
 	
@@ -1678,4 +1942,337 @@ Ahora vamos a analizar cada una de las \textbf{funciones del AES}
 		 $$IS-BOX[95]=  AD$$
 	\end{itemize}
 	Ejercicio para casa: intentar calcular el ByteSub de '95'. Solución= '2A'
+	\item \textbf{ShiftRow} $\rightarrow$ XTIME
+	Cuando llegamos a esta función hemos hecho $a_{ij} \rightarrow b_{ij}$ nuestro STATE está de la siguiente forma:
+	
+	\begin{center}
+		
+		\begin{tabular}{l | c | r | r}
+			$b_{00}$ & $b_{01}$ & $b_{02}$ & $b_{03}$\\
+			\hline
+			$b_{10}$ &   &   &  \\
+			\hline
+			$b_{20}$ &   &   & \\
+			\hline
+			$b_{30}$ &   &   & 
+			
+		\end{tabular}
+	\end{center}
+	
+	Ahora hacemos el desplazamieto de cada fila.
+	
+	No se muy bien que es esta tabla:
+	
+		\begin{center}
+			
+			\begin{tabular}{l | c | r | r | r}
+				$N_B$ & $C_1$ & $C_2$ & $C_3$ & $C_0$\\
+				\hline
+				$4$ & 1  &  2 & 3  &  0 \\
+				\hline
+				$6$ &  1 &  2 &  3 &  0  \\
+				\hline
+				$8$ &   1& 2  &  3 & 0 
+				
+			\end{tabular}
+		\end{center}
+		
+		De forma que la función que estamos aplicando es:
+		$$C_{ij} = b_{i\cdot (j-c_i) mod 4}$$
+	
+	
+		\begin{center}
+			
+			\begin{tabular}{l | c | r | r}
+				$b_{00}$ & $b_{01}$ & $b_{02}$ & $b_{03}$\\
+				\hline
+				$b_{11}$ &  $b_{12}$ & $b_{13}$  &  $b_{10}$ \\
+				\hline
+				$b_{22}$ &  $b_{23}$ & $b_{20}$  & $b_{21}$ \\
+				\hline
+				$b_{33}$ &  $b_{30}$ & $b_{31}$  & $b_{32}$
+				
+			\end{tabular}
+		\end{center}
+		
+		\subitem{InvShiftRow}
+		
+		$$b_{ij} = C_{i\cdot (j+c_i) mod 4}$$
+		
+		La base de diseño de shiftrow es combinar al máximo los bytes del state
+		
+		\item \textbf{MixColumn}
+		Coge las columnas del STATE y las mezcla a través de un producto.
+		
+		Considera las columnas de STATE como polinomios de grado $\leq$ 3 con coeficientes en $GF(2^8)$
+		
+		FUNCIONAMIENTO:
+		
+		Multiplica cada columna (en aritmética $M(x)$) por el siguiente polinomio:
+		
+		$$c(x) = '03'x^3 + '01'x^2 + '01'x + '02'$$
+		
+		Este $c(x)$ es coprimo con $M(x) = x^4 +1$
+		
+		Así cada columna se transforma
+		
+		$$\left(\begin{matrix}
+			d_0\\d_1\\d_2\\d_3
+		\end{matrix} \right) = \left(\begin{matrix}
+		02 & 03 & 03 & 01\\
+		01 & 02 & 03 & 01\\
+		01 & 01 & 02 & 03\\
+		03 & 01 & 01 & 02\\
+	\end{matrix}\right) \cdot \left( \begin{matrix}
+	C_0\\
+	C_1\\
+	C_2\\
+	C_3
+\end{matrix}\right)$$
+	
+\subitem{InvMixColumn}
+
+\begin{enumerate}
+	\item
+	$$C(x) \cdot C(x)^{-1} \equiv '01' \text{ mod } M(x)$$
+	
+	$$C^{-1}(x) = '0B'x^3 + '0D'x^2 + '09'x + '0E'$$
+	
+	\item Transformación inversa de cada columna
+	$$\left(\begin{matrix}
+	C_0\\C_1\\C_2\\C_3
+	\end{matrix} \right) = \left(\begin{matrix}
+	0E & 0B & 0D & 09\\
+	09 & 0E & 0B & 0D\\
+	0D & 09 & 0E & 0B\\
+	0B & 0D & 09 & 0E\\
+	\end{matrix}\right) \cdot \left( \begin{matrix}
+	d_0\\
+	d_1\\
+	d_2\\
+	d_3
+	\end{matrix}\right) = M^{-1} \cdot \left( \begin{matrix}
+	d_0\\
+	d_1\\
+	d_2\\
+	d_3
+	\end{matrix}\right)$$
+	
+\end{enumerate}
+
+BASE DEL DISEÑO DE MIXCOLUMN
+
+$$0B \times d_i \forall d_i \in GF(2^8) \rightarrow 256 bytes$$
+
+$$0D \times d_i \forall d_i \in GF(2^8) \rightarrow 256 bytes$$
+
+$$09 \times d_i \forall d_i \in GF(2^8) \rightarrow 256 bytes$$
+
+
+Al ser tan pocas posibilidades podemos precalcularlo de forma que el coste quedaría reducido a la velocidad de redireccionamiento de los datos.
+
+\item \textbf{AddRoundKey}
+
+\begin{center}
+	
+	\begin{tabular}{l | c | r | r}
+		$d_{00}$ & $d_{01}$ & $d_{02}$ & $d_{03}$\\
+		\hline
+		$d_{10}$ &   &   &  \\
+		\hline
+		$d_{20}$ &   &   & \\
+		\hline
+		$d_{30}$ &   &   & 
+		
+	\end{tabular} $\oplus$
+	
+	\begin{tabular}{l | c | r | r}
+		$k_{00}$ & $k_{01}$ & $k_{02}$ & $k_{03}$\\
+		\hline
+		$k_{10}$ &   &   &  \\
+		\hline
+		$k_{20}$ &   &   & \\
+		\hline
+		$k_{30}$ &   &   & 
+		
+	\end{tabular}
+
+\end{center}
+
+		
 \end{itemize}
+
+
+\subsubsection{Resumen Ronda AES}
+
+ByteSub : $b_{ij} \leftarrow S[a_{ij}]$
+
+ShiftRow : $C_{ij} \leftarrow b_{i\cdot(j-c_i) mod 4}$
+
+MixColumn: $\overline{d} = M\cdot \overline{c}$
+
+AddRoundKey: $e_{ij} = d_{ij} \oplus K_{ij}$
+
+
+\subsubsection{¿CÓMO OBTENEMOS LA CLAVE?}
+
+
+	\paragraph{ Expansión de K}
+	
+	 número de bits de la clave = número de bits del bloque $\times$ ($N_R +1$) , siendo $N_R$ el número de rondas.
+	
+	Lo que se hace es almacenar la clave por columnas en una matriz, igual que el STATE.
+	
+	$$\left(\begin{matrix}
+	W[0] & W[1] & W[2] & W[3]
+	\end{matrix}\right)$$
+	
+	Primero aplico una función $g$ a la columna $W[3] \rightarrow g(W[3])$
+	
+	$$W[4] = W[0] \oplus g(W[3])$$
+	
+	$$W[5] = W[1] \oplus W[4]$$
+	
+	$$W[6] = W[2] \oplus W[5]$$
+	
+	$$W[7] = W[3] \oplus W[6]$$
+	
+	Siendo mi nueva clave expandida
+	
+		$$\left(\begin{matrix}
+		W[4] & W[5] & W[6] & W[7]
+		\end{matrix}\right)$$
+	
+	Así mis nuevas $W[i]$ dependen de $W[i-1]$ y $W[i-4]$
+	
+	¿QUÉ ES LA FUNCIÓN g?
+	\begin{itemize}
+		\item RotWord
+		
+			RotWord($b_0$ $b_1$ $b_2$ $b_3$) = $b1$ $b_2$ $b_3$ $b_0$
+		\item SubWord $\rightarrow$ Ejecuta la sustitución utilizando las S-BOX
+	\end{itemize}
+	
+	Entonces la función g es:
+	$$ SubWord[RotWord[b_0 b_1 b_2 b_3] ] = S[b_1]S[b_2]S[b_3]S[b_0]$$
+	Además se suma un Rc:
+	$$R_{con}[j] = [R_C[j] , 00 , 00 , 00]$$
+	
+	De forma que depende de cada ronda (j)
+	
+	\begin{tabular}{l | c | r | r | r| r}
+		j & 1 & 2 & 3 & ... & 10\\
+		\hline
+		$R_C[j]$ & 01  & 02  & 04 & ....& 36 \\
+	
+		
+	\end{tabular}
+	
+	Vamos a ver el código del AES para tamaño de bloque y clave 128:
+	
+	\lstset{language=C, breaklines=true, basicstyle=\footnotesize}
+	\begin{lstlisting}[frame=single]
+	
+	AES(S , K){
+	
+		KEY_EXPANSION(K,W) ; 
+	
+		AddRoundKey(S,K);// la K es un bloque de la W,en  este caso W[0,3]
+		
+		for(i=0;9){
+			ROUND(S,K); // Vamos cambiando la K , al principio es el bloque W[4,7]
+		}
+		FinalRound(S,K); // No tiene MIXColumn, K=W[40,43] 
+	}
+	
+	\end{lstlisting}
+¿Porqué no tiene mixColumn? mirar en el libro, es para que se parezca al algoritmo de descifrado.
+PISTA: hay funciones que se pueden intercambiar porque son independientes, como ShiftRows y SubBytes
+
+\subsubsection{Resumen AES para 32 bits}
+
+\begin{enumerate}
+	\item dividimos el State en vectores de 4 bits
+	\item AddRoundKey
+	$$\begin{matrix}
+	e_{0j}\\
+	e_{1j}\\
+	e_{2j}\\
+	e_{3j}
+	\end{matrix} = \begin{matrix}
+	d_{0j}\\
+	d_{1j}\\
+	d_{2j}\\
+	d_{3j}
+	\end{matrix} \oplus \begin{matrix}
+	K_{0j}\\
+	K_{1j}\\
+	K_{2j}\\
+	K_{3j}
+	\end{matrix}$$
+	
+	\item MixColumn
+		$$\left(\begin{matrix}
+		d_{0j}\\d_{1j}\\d_{2j}\\d_{3j}
+		\end{matrix} \right) = \left(\begin{matrix}
+		02 & 03 & 03 & 01\\
+		01 & 02 & 03 & 01\\
+		01 & 01 & 02 & 03\\
+		03 & 01 & 01 & 02\\
+		\end{matrix}\right) \cdot \left( \begin{matrix}
+		C_{0j}\\
+		C_{1j}\\
+		C_{2j}\\
+		C_{3j}
+		\end{matrix}\right)$$
+		
+	\item ShiftRow
+	$$\begin{matrix}
+	d_{0j}\\d_{1j}\\d_{2j}\\d_{3j}
+	\end{matrix} = \begin{matrix}
+	b_{0(j-C_0)}\\b_{1(j-C_1)}\\b_{2(j-C_2)}\\b_{3(j-C_3)}\\
+	\end{matrix}$$
+	\item ByteSub
+	$$b_{ij} = S[a_{ij}]$$
+\end{enumerate}
+
+Si sustituimos recursivamente nos queda que el AES es:
+$$\begin{matrix}
+	e_{0j}\\
+	e_{1j}\\
+	e_{2j}\\
+	e_{3j}
+\end{matrix} = \left(\begin{matrix}
+02 & 03 & 03 & 01\\
+01 & 02 & 03 & 01\\
+01 & 01 & 02 & 03\\
+03 & 01 & 01 & 02\\
+\end{matrix}\right) \cdot \begin{matrix}
+S[a_{0(j-C_0)}]\\S[a_{1(j-C_1)}]\\S[a_{2(j-C_2)}]\\S[a_{3(j-C_3)}]\end{matrix} \oplus \begin{matrix}
+K_{0j}\\
+K_{1j}\\
+K_{2j}\\
+K_{3j}
+\end{matrix}
+$$
+
+Escrito de otra forma:
+
+$$\left(\begin{matrix}
+e_{0j}\\e_{1j}\\e_{2j}\\e_{3j}
+\end{matrix}\right) = S[a_{0(j-C_0)}] \left(\begin{matrix}
+02\\01\\01\\03
+\end{matrix}\right) \oplus S[a_{1(j-C_1)}] \left(\begin{matrix}
+03\\02\\01\\01
+\end{matrix}\right) \oplus S[a_{2(j-C_2)}] \left(\begin{matrix}
+01\\03\\02\\01
+\end{matrix}\right) \oplus S[a_{3(j-C_3)}] \left(\begin{matrix}
+01\\01\\03\\02
+\end{matrix}\right) \oplus \left(\begin{matrix}
+K_{0j}\\K_{1j}\\K_{2j}\\K_{3j}
+\end{matrix}\right)$$
+
+vemos que esto es la transformación de una sola palabra, es decir, una columna del State.
+
+
+MODOS DE OPERACIÓN: Los mismos que el DES, hay más, pero para cifrado los que hemos visto son los más habituales
