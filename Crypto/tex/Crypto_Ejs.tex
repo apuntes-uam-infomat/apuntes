@@ -5962,6 +5962,23 @@ $(8,16,4)$- código binario.
 
 \ppart Demuestra que $A_2(6,3)=A_2(7,4)=8$.
 \solution
+
+\spart
+
+\spart
+
+\spart
+
+Sabemos que $A_2(8,4)=A_2(7,3)$.
+
+También sabemos que el código Ham(3,2) es un código perfecto con $n=7$ y $d=3$, es decir, es un código de los que se tienen en cuenta al evaluar $A_2(7,3)$ (recordemos que $A_2(,3)$ calculaba el máximo $M$ para el que existe un código con esas propiedades)
+
+Una vez tenemos esto conocemos la cota y tenemos un código que la alcanza por lo que tenemos el valor.
+
+Ahora, para obtener un código binario con $n=8$ y $d=4$ nos basta con tomar el código Ham(3,2) y completarlo añadiendo un bit de paridad para obtener el código buscado.
+
+\spart
+
 \end{problem}
 
 \begin{problem}[9]
@@ -5981,6 +5998,33 @@ sobre  $ F_5$.
 palabras y $d=3$, o demuestra que tal código no existe.
 
 \solution
+
+\spart
+Para intentar construir este código debemos encontrar una matriz $H_{3 \times 6}$ en la que 3 columnas cualesquiera sean linealmente independientes. Esto automáticamente nos garantizaría que 4 columnas serían dependientes.
+
+Puesto que $6\leq q+1$ estamos ante un código BCH extendido. Así la matriz controladora de paridad es
+\[H = \left(\begin{array}{cccccc}
+1 & 1 & 1 & 1 & 1 & 0 \\
+0 & 1 & 2 & 3 & 4 & 0 \\
+0 & 1^2 & 2^2 & 3^2 & 4^2 & 1
+\end{array} \right)\]
+
+\spart
+
+En este caso podemos ver que la cota de Singleton no se satisface puesto que necesitamos
+\[q^k \leq q^{n-d+1}\]
+y en este caso tendríamos:
+\[11^7 \leq 11^6\]
+que evidentemente no es cierto.
+
+\spart
+
+Puesto que queremos que el código sea perfecto, necesitamos que la longitud de cada palabra sea:
+\[n=\frac{3^r-1}{2}\]
+Una vez tenemos esto y sabemos que $n=15$ sólo tenemos que probar a encontrar un $r$ que satisfaga la ecuación.
+
+Con tan sólo unas pocas cuentas podemos comprobar que no existe dicho $r$ por lo que podemos concluir que no existe el código pedido.
+
 \end{problem}
 
 \begin{problem}[11]
@@ -5991,6 +6035,26 @@ $0011111$, $0111111$, $1111111$. Diseña un $[7,k]$-código lineal
 binario que corrija todos estos errores y que tenga una tasa de
 transmisión lo más alta posible.
 \solution
+
+Sabemos de antemano que la matriz controladora de paridad tendrá 7 columnas aunque no sabemos la dimensión de cada columna.
+
+Puesto que sabemos qué errores vamos a poder encontrar, podemos forzar a que nuestro código sea capaz de detecar y corregirlos todos. Para ello simplemente tenemos que garantiar que los síndromes de esos errores sean distintos de 0.
+
+Así podemos ver que la última columna no puede ser nula, ni la suma de las $n$ últimas columnas puede ser 0, par acualquier valor de $n$.
+
+Respetando estas relaciones vamos a contruir la matriz con la idea de lograr que la suma de las $i$ últimas columnas sea el número $i$ representado en binario.
+
+Con esta idea nos bastaría con tomar vectores columna de 3 elementos.
+\[\left( \begin{array}{ccccccc}
+0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 1 & 0 & 1 & 0 \\
+1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+\end{array}\right)\]
+
+Podemos observar que nuestra matriz tiene columnas repetidas pero esto nos da igual. No podremos distinguir un error en la primera cifra de un error en la última pero este error nunca se va a producir, puesto que conocemos exactamente los posibles errores.
+
+\obs Esta situación no es tan artificial pues estamos diciendo que si se produce un error en un bit, todos los siguientes también tendrán un error.
+
 \end{problem}
 
 \begin{problem}[12]
@@ -6005,6 +6069,11 @@ Encuentra, o explica por qué no lo puedes encontrar, el vector de
 error correspondiente a cada uno de estos tres síndromes:
 $(2,0,2,2),(3,4,9,1),(6,5,0,3)$.
 \solution
+
+Por definición de la matriz $H$ podemos ver que cualquier combinación de 4 columas será invertible por lo que podremos seleccionar cuatro columnas cualesquiera, tomar la matriz que se forma y calcular su inversa.
+
+Una vez tenemos esta inversa la aplicamos sobre los síndromes obtenidos y automáticamente obtenemos el vector que da lugar al síndrome.
+
 \end{problem}
 
 \begin{problem}[13]
@@ -6027,6 +6096,64 @@ asegurar que en la transmisión se han producido al menos tres
 errores.
 
 \solution
+
+\spart
+
+Por la construcción de la matriz vemos que obtenemos una matriz cuyo determinante es el determinante de Vandermonde. Por tanto parece que estamos ante un código BCH.
+
+No obstante, la dimensión de la matriz no es la adecuada por lo que estamos ante un BCH reducido.
+
+La matriz controladora de paridad es:
+\[H=\left(\begin{array}{cccccc}
+1 & 1 & 1 & 1 & 1 & 1 \\
+1 & 3 & 5 & 7 & 9 & 11 \\
+1 & 3^2 & 5^2 & 7^2 & 9^2 & 11^2 \\
+1 & 3^3 & 5^3 & 7^3 & 9^3 & 11^3
+\end{array} \right)\]
+
+La distancia mínima del código sabemos que es $d=5$ puesto que 4 columnas de la matriz siempre serán independientes y 5 columnas si que lo serán.
+
+Además sabemos que la dimensión es $k=n-r=6-4=2$.
+
+Por último, calculamos el número de palabras presentes en este código, que es $M=13^2$.
+
+\spart
+
+Empezamos comprobando que la palabra $y$ pertenece al código para lo que calculamos su síndrome.
+\[S(y)=Hy^t=\left( \begin{array}{c}8 \\ 10 \\ 12 \\ 11 \end{array}\right)\]
+
+Estudiando el síndrome sabemos que se ha producido únicamente un error si $S(y)$ coincide con una columna de la matriz.
+
+Puesto que todas las columnas de la matriz empiezan por 1, lo que haremos será tratar de sacar factor común 8 a todos los elementos del síndrome con lo que escribimos:
+\[S(y) = \left( \begin{array}{c}8 \\ 10 \\ 12 \\ 11 \end{array}\right) = 8\cdot \left( \begin{array}{c}1 \\ 11 \\ α \\ β \end{array}\right)\]
+
+En cuanto comprobamos que α es distintos de $11^2$ tenemos que el error no es simple. Por tanto tenemos que buscar errores dobles.
+
+La forma de hacer esto consiste en emplear el polinomio localizador de errores. Vamos a recordar el origen de este polinomio.
+
+El sistema de ecuaciones que nos permite identificar los dos errores producidos es:
+\[\left\{ \begin{array}{l}
+a+b=8\\
+ai+bj=10\\
+ai^2+bj^2=12\\
+ai^3+bj^3=11
+\end{array}\right. \implies \left\{ \begin{array}{l}
+b(i-j)=8i-10\\
+bj(i-j)=10i-12\\
+bj^2(i-j)=12i-11
+\end{array}\right. \implies (8i-10)(12i-11)=(10i-12)^2\]
+
+Simplificando la ecuación llegamos a:
+\[4i^2+3i+8=0 \implies i,j= \frac{-3\pm \sqrt{9-16\cdot 8}}{8} = \frac{-3 \pm \sqrt{9-24}}{8}=\frac{-3 \pm \sqrt{11}}{8}\]
+
+Llegados a este punto podemos comprobar que 11 no es un cuadrado en $\mathbb{F}_{13}$ por lo que no podemos encontrar los enteros $i,j$ buscados de donde deducimos que se han producido tres o más errores.
+
+\obs El profesor considera que la probabilidad de haber un error en estas cuentas es alta. En caso de estar mal, los valores $i,j$ se calcularían según este procedimiento.
+
+\spart
+
+
+\spart
 \end{problem}
 
 \begin{problem}[14]
