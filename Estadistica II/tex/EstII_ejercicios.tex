@@ -1646,10 +1646,133 @@ Y ahora ya podemos utilizar:
 
 
 \begin{problem}[5]
+Para tratar la meningitis bacteriana es vital aplicar con urgencia un tratamiento con antibióticos.
+Por ello, es importante distinguir lo más rápidamente posible este tipo de meningitis de la menin-
+gitis vírica. Con el fin de resolver este problema se ajustó con R un modelo de regresión logística a
+las siguientes variables medidas en 164 pacientes del Duke University Medical Center:
+
+\begin{center}
+\begin{tabular}{cc}
+Nombre variable & Descripción\\\hline
+age & Edad en años \\
+bloodgl & Concentración de glucosa en la sangre \\
+gl & Concentración de glucosa en el líquido cefalorraquídeo \\
+pr & Concentración de proteína en el líquido cefalorraquídeo \\
+whites & Leucocitos por mm 3 de líquido cefalorraquídeo \\
+polys & Porcentaje de leucocitos que son leucocitos polimorfonucleares \\
+abm & Tipo de meningitis: bacteriana (abm=1) o vírica (abm=0) 
+\end{tabular}
+\end{center}
+
+
+El resultado del ajuste se muestra a continuación (algunos valores se han sustituido por letras):
+
+
+
+\ppart Calcula el valor de A en la salida anterior sabiendo que hay 68 pacientes con meningitis
+bacteriana en la muestra.
+
+\ppart Calcula el valor de B en la salida anterior. A nivel $α = 0.1$, ¿puede afirmarse que al aumentar la
+cantidad de leucocitos en el líquido cefalorraquídeo disminuye la probabilidad de que la meningitis
+sea de tipo vírico?
+
+\ppart En un análisis realizado a un paciente de 15 años se han determinado los siguientes valores para
+el resto de variables:
+\begin{tabular}{cc}
+bloodgl&119\\
+gl&72\\
+pr&53\\
+whites&262\\
+polys&41
+\end{tabular}
+
+¿En cuál de los dos tipos de meningitis debe clasificarse este paciente?
+
 \solution
+Tenemos $k=6$ y una proporción de $\frac{68}{164}$ individuos con meningitis bacteriana.
+
+\spart \textit{Null deviance} $\equiv A \equiv D_0^2 \equiv -2\log(\hat{B}^{(0)})$ bajo $H_0 : β_1 = ... = β_k = 0$
+
+Bajo $H_0$, $Y_1,..,Y_n \overset{iid}{\sim} B(1,p)$.
+
+El E.M.V. de $p$ es $\hat{p} = \frac{68}{164}$, entonces:
+
+\[L(p) = \prod_{i=1}^n p^{Y_i}(1-p)^{1-Y_i} \to L(\hat{p}) = \sum_{i=1}^n\left[Y_i\log(\hat{p}) + (1-Y_i)\log(1-\hat{p})\right] = 68\log\left(\frac{68}{164}\right) + (164-68)\log\left(1-\frac{68}{164}\right)\]
+
+\spart $B$ es el estadístico de Wald para la variable ``white''
+
+¿Cuál es nuestra $H_0$? Tenemos que si aumenta ``white'', entonces $P(Y=0|x)$ disminuya. Esto no es la hipótesis nula, sino la hipótesis alternativa. Para construir la hipótesis nula, si ``white'' aumenta, etonces $H_0: P(Y=1|x)$ disminuya $\dimplies β_5 \leq 0$\footnote{Es importante darnos cuenta de que 0 es vírico y 1 bacteriano, al revés que la pregunta}
+
+Entonces $B = z = \frac{\hat{β}_5}{e.t.(\hat{β}_5)} = \frac{0.00079971}{0.0005108} \simeq 1.56$
+
+Para el contraste con $α=0.1$ y $H_0: β_5 \leq 0$.
+
+\[R = \left\{  \right\}\]
+
+	\spart \[\hat{β_0} + \sum_{i=1}^6 \hat{β}_ix_i = ... = -4.3136 < 0\]
+	Al ser negativo, lo clasificamos como vírico.
 \end{problem}
 
 
 \begin{problem}[6]
+
+Supongamos que la distribución de X condicionada a Y = 1 es normal con vector de medias μ 1 y
+matriz de covarianzas Σ, mientras que la distribución de X condicionada a Y = 0 es normal con
+vector de medias μ 0 y la misma matriz de covarianzas Σ (caso homocedástico). Demuestra que el
+error de la regla Bayes (error Bayes) del correspondiente problema de clasificación es:
+
+donde $∆^2 = (μ_0 − μ_1 ) Σ^{−1}(μ_0 − μ_1 )$ es el cuadrado de la distancia de Mahalanobis entre los dos
+vectores de medias y Φ es la función de distribución de una v.a. normal estándar. (Se supone que
+las probabilidades a priori de ambas poblaciones son iguales, π 0 = π 1 = 1/2)
 \solution
+
+En este caso, la regla de bayes es la regla de Fisher.
+
+Definimos $\appl{g^{\ast}}{ℝ^k}{\{0,1\}}$ definida como:
+
+\[
+g^{\ast} = \left\{ 
+\begin{array}{cc} 
+1 & ω'\left(x-\frac{µ_0 + µ_1}{2}\right) > 0\\
+0 & ω'\left(x-\frac{µ_0 + µ_1}{2}\right) \leq 0
+\end{array} \right. \text{ donde } ω = Σ^{-1}(µ_1 - µ_0)
+\]
+
+Para calcular el error, $L^{\ast} = P(g^{\ast}(x) \neq Y) = P(g^{\ast}(x) = 1, Y=0) + P(g^{\ast}(x) = 0 Y=1)$.
+
+Vamos a calcular sólo uno de ellos:
+
+\[P(g^{\ast}(x) = 1, Y=0) = P(g^{\ast}(x) = 1 | Y=0) \underbrace{P(Y=0)}_{\frac{1}{2}} \]
+Por otro lado,
+
+\[P(g^{\ast}(x) = 1 | Y=0) = P\left(ω'\left(x-\frac{µ_0 + µ_1}{2}\right) > 0 | Y=0\right)\]
+
+¿Y cuál es la distribución de $\displaystyle ω'\left(x-\frac{µ_0 + µ_1}{2}\right) |_{Y=0}$? Es una \textbf{normal} (no se muy bien porqué)
+
+Ahora, calculamos la media
+\[
+ω'\left(x-\frac{µ_0 + µ_1}{2}\right) = \frac{1}{2}(µ_1-µ_0)'Σ^{-1}(µ_0-µ_1) = ... = -\frac{1}{2}\Delta
+\]
+
+y la varianza:
+
+\[
+\var{ω'x | Y=0} = ω'Σω = ... = \Delta^2
+\]
+
+
+Entonces,
+
+\[
+ω'\left(x-\frac{µ_0 + µ_1}{2}\right) |_{Y=0} \equiv N\left(-\frac{1}{2}\Delta,\Delta^2\right)
+\]
+
+\paragraph{Por último}, siendo $z\sim N(0,1)$
+
+\[
+P\left(ω'\left(x-\frac{µ_0 + µ_1}{2}\right) > 0 | Y=0\right) = P\left(z>\frac{0 - \left(-\frac{\Delta^2}{2}\right)}{1}\right) = P\left(z>\frac{1}{2}\right) = 1-\Phi\left(\frac{\Delta}{2}\right)
+\]
+
+¿Tiene esto sentido? $L^{\ast}$ es una función decreciente de $Δ = \left((µ_1 - µ_0)'Σ^{-1}(µ_1-µ_0)\right)^{\frac{1}{2}}$. Esto quiere decir que si $µ_0 = µ_1$ (y como teníamos $Σ_1 = Σ_2 = Σ$), necesariamente $L^{\ast} = \frac{1}{2}$. \footnote{Si las distribuciones son exactamente iguales, no tenemos manera de distinguirlas}. Por otro lado, cuando $Δ\to ∞$, tenemos un error que tiende a 0, consecuencia con sentido también. 
+
 \end{problem}
