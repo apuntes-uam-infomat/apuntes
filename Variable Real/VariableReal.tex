@@ -1796,13 +1796,67 @@ En otras palabras, si $f,g ∈ L^1(ℝ^N)$, entonces $\hat{f} ⊂ C_0^0(ℝ^N)$ 
 Tomamos $f ∈ C^1 ∩ C^∞_c$. Entonces $\abs{ξ} \hat{f} (ξ)$ es acotado por la \fref{prop:TFourierDerivadas}. Así, $\hat{f} ∈ C_0^0(ℝ^N)$. Pero $C_1∩C_c^∞$ es denso en $L^1$, así que si tomamos la aproximación $\hat{f}_n$ convergerá a $\hat{f}$ uniformemente cuando $f_n \to f$ en $L^1$. Sin embargo, dado que $C_0^0$ es cerrado con la topología de la convergencia uniforme, hemos ganado.
 \end{proof}
 
-La clase de Schwartz (Laurent), $\mathcal{S}(ℝ^N)$, es la clase de funciones que decaen rápido a ∞. Más formalmente, \[ \mathcal{S}(ℝ^N) = \set{f ∈ C^∞(ℝ^N) \tq \norm{f}_{k,α} = \sup_{x∈ℝ^N} (1+ \abs{x}^k) \abs{∂^αf(x)} < ∞\qquad ∀k ≥ 0, ∀\abs{α} ∈ ℕ^n } \], es decir, las funciones que decaen más rápido que cualquier potencia.
+\begin{defn}[Clase\IS de Schwartz] \label{def:ClaseSchwartz} La clase de Schwartz (Laurent), $\mathcal{S}(ℝ^N)$, es la clase de funciones que decaen rápido a ∞. Más formalmente, \[ \mathcal{S}(ℝ^N) = \set{f ∈ C^∞(ℝ^N) \tq \norm{f}_{k,α} = \sup_{x∈ℝ^N} (1+ \abs{x}^k) \abs{∂^αf(x)} < ∞\qquad ∀k ≥ 0, ∀\abs{α} ∈ ℕ^n } \], es decir, las funciones que decaen más rápido que cualquier potencia.\end{defn}
 
 ¿Por qué es interesante esta clase? Porque es la única invariante por la transformada de Fourier, ya que $\appl{\fourier}{\mathcal{S}(ℝ^N)}{\mathcal{S}(ℝ^N)}$ es biyectiva; y además $\mathcal{S}(ℝ^N) \densein L^p$ con $p ∈ [1,∞)$. Así, permitirá definir la transformada de Fouerier en espacios $L^p$.
 
 Otra cosa que querremos ver es la fórmula de inversión: \[ \inv{\fourier}(\hat{f}) (x) = \int \left(\int f(y) e^{-2πiyξ} \dif y\right) e^{2πixξ} \dif x \]
 
-Si valiese Fubini, podríamos integrar primero $\int e^{-2πiξ(y-x)} \dif ξ$, que nos quedaría la delta de Dirac $δ_x$ y entonces la otra integral daría $f(x)$. El problema es que esa exponencial no es integrable, así que hay que usar un truco que veremos otro día.
+Si valiese Fubini, podríamos integrar primero $\int e^{-2πiξ(y-x)} \dif ξ$, que nos quedaría la delta de Dirac $δ_x$ y entonces la otra integral daría $f(x)$. El problema es que esa exponencial no es integrable (son senos y cosenos), así que hay que usar un truco.
+
+\begin{lemma} Dadas $f,g ∈ L^1$, entonces \[ \int \hat{f} g = \int f \hat{g} \] \label{lem:TFourierSwitch}
+\end{lemma}
+
+Con esto podemos avanzar al siguiente teorema:
+
+\begin{theorem} Si $f, \hat{f} ∈ L^1$, entonces $f = f_0$ en CTP con $f_0 ∈ C^0$, y \[ \inv{\fourier}(\fourier(f)) = \fourier(\inv{\fourier} (f)) = f_0 \]
+\end{theorem}
+
+Acabo de perderme el paso intermedio. Dado $t > 0$, $x ∈ ℝ^N$ definimos \[ φ(ξ) = e^{2πiξx - πt^2\norm{x}^2}\], cuya transformada es \[ \hat{φ}(y) = t^{-N} e^{-\frac{π\norm{x-y}^2}{t^2}} = g_t(x-y) \]
+
+Como curiosidad, $g_{\sqrt{t}}$ es la solución de la ecuación del calor.
+
+Ahora aplicamos el \fref{lem:TFourierSwitch}, y entonces tenemos que \[ \int e^{-πt^2\norm{ξ}^2} e^{2πixξ} \hat{f}(ξ) \dif ξ = \int\hat{f}φ = \int f \hat{φ} = f * g_t(x)\]
+
+Peeeeeeeeeeeero $g_t$ es una aproximación de la identidad sin soporte compacto, por lo tanto $f*g_t \convs[][t][0^+] f$ y por convergencia dominada \[ f(x) = \lim_{t \to 0^+} \int e^{-πt^2\norm{ξ}^2}e^{2πiξx}\hat{f} = \int e^{2πiξx}\hat{f}(ξ) \dif x = \inv{\fourier}(\fourier(f)) \]
+
+\begin{theorem}[Teorema\IS de Plancharel] Si $f ∈ L^1 ∩ L^2$, entonces $\hat{f} ∈ L^2$ y $\restr{\fourier}{L^1∩L^2}$ se extiende a un único isomorfismo de $L^2$.
+\end{theorem}
+
+\begin{proof} Definimos el espacio $\mathbb{L}_1 = \set{f ∈ L^1 \tq \hat{f} ∈ L^1}$. El teorema de inversión nos dice que $\fourier(\mathbb{L}_1) = \mathbb{L}_1$. Como $f ∈ L^1$ implica que $\hat{f} ∈ L^∞$, entonces $\mathbb{L}_1 ⊆ L^1 ∩ L^∞ ⊂ L^2(ℝ^N)$. Resulta que esto tiene algo que ver con la \nlref{def:ClaseSchwartz} que veíamos antes y entonces $\mathbb{L}_1$ es denso en $L^2$ y puedo extender $\appl{\fourier}{\mathbb{L}_1}{L^2}$.
+\end{proof}
+
+\begin{corol} El teorema nos lleva a la \concept{Identidad\IS de Plancharel} \[ \norm{f}_{L^2} = \norm{\hat{f}}_L^2 \]
+\end{corol}
+
+Todo esto nos permite definir la transformada de la delta de Dirac. Sabiendo que $f * δ_0 = f$, entonces transformando ambos lados de la ecuación tenemos que $\widehat{f*δ_0} = \hat{f}$, por las propiedades de la convolución $\widehat{f*δ_0} = \hat{f}\hat{δ_0}$ y entonces queda que $\hat{δ_0} = 1$, ¡sorpresa!\footnote{Esto es sólo un \textit{sketch}, no es formal.}
+
+Esto es importante porque sirve para resolver problemas en ecuaciones diferenciales. Pongamos que queremos resolver el problema de Poisson: $-Δu = f$ en $ℝ^N$. Lo que hacemos es transformar ambos lados de la ecuación: \begin{align*}
+\widehat{-Δu} &= \hat{f} \\
+\norm{ξ}^2 \hat{u} &= \hat{f} \\
+u = \inv{\fourier}\left(\frac{\hat{f}}{\norm{ξ}^2}\right)
+\end{align*}
+
+Resulta que hay una $f$ privilegiada que nos permite resolver otros problemas: $f = δ_0$, que nos da la \concept{Función\IS de Green}: \[ G^0 = \inv{\fourier}\left(\frac{1}{\norm{ξ}^2}\right) = \frac{1}{\norm{x}^{N-2}} \], y eso nos permitirá decir que, para la ecuación general $-Δu = f$ la solución es $f * G$, ya que $-Δ(f*G) = f * (-ΔG) = f * δ_0 = f$.
+
+\subsection{Cosas simpáticas sobre la Transformada de Fourier}
+
+\begin{prop} \citep[Prop. 8.24]{folland99} Sea $f(x) = e^{-πa\norm{x}^2}$ con $a > 0$ y $x ∈ ℝ^N$. Entonces \[ \hat{f}(ξ) = \frac{1}{a^{\sfrac{N}{2}}} e^{-\left(\frac{π\norm{ξ}^2}{a}\right)}\]
+
+La Gaussiana es la única función cuya transformada es ella misma (más o menos).
+\end{prop}
+
+\begin{proof}
+Tomamos $a = N = 1$ por simplificar: si tenemos $a ≠ 1$ podemos cambiar el argumento y decir que $f_a(x) = f_1(\sfrac{x}{\sqrt{a}})$ y que por lo tanto \[ \hat{f}_a(ξ) = \frac{1}{\sqrt{a}^N} \hat{f}_1 (\sfrac{ξ}{\sqrt{a}}) \]
+
+Si lo que cambia es la dimensión ($N ≠ 1$) por las propiedades de tensorización de la exponencial: podremos ir integrando coordenada a coordenada con integrales unidimensionales.
+
+Vamos ahora con la demostración, dándonos cuenta de que $f$ satisface la EDO \[ f'(x) = -2πxf(x)\] con $f(0) = 1$. Al ser un problema lineal, tenemos existencia y unicidad de la solución. Podemos transformar por Fourier esa ecuación y nos queda que \begin{align*}
+\hat{f'} &= \widehat{-2πxf} \\
+2πiξ\hat{f} &= -i \od{\hat{f}}{ξ} \\
+- 2πξ\hat{f} &= \od{\hat{f}}{ξ}
+\end{align*}, exactamente la misma ecuación que antes, incluida la misma ecuación inicial. Por lo tanto, la solución única ha de ser la misma: $\hat{f} = e^{-πξ^2}$
+\end{proof}
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
