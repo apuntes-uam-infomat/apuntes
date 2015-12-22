@@ -1,3 +1,4 @@
+% -*- root: ../LogicaMatematica.tex -*-
 \section{Incompletitud}
 
 Los principales enunciados básicos correspondientes a esta sección ya los hemos visto. Lo que haremos será añadir ciertas definiciones y varios resultados/teoremas importantes.
@@ -37,7 +38,7 @@ El problema que nos deriva de esta codificación es que no es claro cómo descif
 
 Empleamos la factorización única para resolver este problema. Para ello definimos la función primo($K$) que nos devuelve el primero que ocupa la posición $K+1$.
 
-Así el número de Godel de una palabra se calcula como:
+Así el número de Gödel de una palabra se calcula como:
 \[g(u_0,u_1,...,u_k)=2^{n(u_0)}\times 2^{n(u_1)}\times ... \times \text{primo}(k)^{n(u_k)}\]
 
 De esta forma, al leer el número asociado a una fórmula basta con factorizarlo, lo que nos permite obtener la fórmula original de forma unívoca.
@@ -45,7 +46,7 @@ De esta forma, al leer el número asociado a una fórmula basta con factorizarlo
 %TODO completar. codificacion de vectores usando el dibujito ese que recorre todo.
 
 \begin{defn}[Teoría recursiva]
-Una teoría Σ es recursiva si el conjunto de números de Godel
+Una teoría Σ es recursiva si el conjunto de números de Gödel
 \[\#Σ = \{g(σ) \tq σ \in Σ\}\]
 es recursivo.
 \end{defn}
@@ -109,6 +110,7 @@ que es justo lo que necesitamos probar.
 \end{proof}
 
 \begin{corol}
+\label{completaRecursivaImplicaDecidible}
 Si Σ es recursiva y completa entonces es decidible.
 \end{corol}
 \begin{proof}
@@ -117,3 +119,93 @@ Como $\#\text{Teor}(Σ)$ es recursivamente enumerable, basta probar que su compl
 Dada σ, enunciamos los teoremas de Σ sistematicamente. Como Σ es completa, tras un número finito de pasos aparecerá σ o $\neg σ$.
 \end{proof}
 
+Vamos a ver ahora los teoremas de incompletitud.
+
+\begin{theorem}
+Sea $Σ$ una teoría consistente y recursiva que contiene a $\underbar{N} = \{N_1,...,N_9\}$ (los 9 axiomas de la aritmética).
+
+\textbf{Entonces} $Σ$ no es decidible.
+\end{theorem}
+
+\begin{proof}
+Idea: Si $Σ$ fuera decidible, podríamos determinar de manera algorítmica si cualquier $σ$ es un teorema o no.
+
+Ello nos permitiría resolver problemas insolubes que se pueden codificar en $L$ utilizando $\underbar{N}$, por ejemplo el $X$ problema de Hilbert (\ref{problema:Hilbert}), con alguna salvedad.
+
+El problema de Hilbert pregunta por soluciones en los enteros y aquí sólo tenemos naturales, pero puede demostrarse que no tiene solución algorítmica, cuando consideramos soluciones estrictamente positivas.
+%
+También basta utilizar coeficientes es $ℕ$, por ejemplo, decidir si $x^n + y^n - z^n = 0$ tiene soluciones en los naturales positivos es equivalente a decidirlo para $x^n + y^n = z^n$
+
+\end{proof}
+
+\begin{corol}
+La lógica de primer orden no es decidible, es decir, el conjunto de números de Gödel que pueden deducirse de los axiomas no es recursivo.
+\end{corol}
+
+\begin{proof}
+En este caso, $Σ = Ø$. No estamos añadiendo nada a los axiomas lógicos.
+
+Utilizando el teorema de la deducción y Modus Ponens, 
+\[\underbar{N} \vdash σ \dimplies \vdash  (N_1 \y N2 \y ... \y N9) \to σ\]
+
+Si la lógica de primer orden fuera decidible, la teoría $\underbar{N}$ también lo sería y podríamos resolver problemas insolubles.
+\end{proof}
+
+\begin{corol}
+Sea $Σ$ una teoría consistente y recursiva que contiene a $\underbar{N}$. Entonces $Σ$ no es completa.
+\end{corol}
+
+\obs No es completa ni completable. Si añadiéramos una nueva sentencia que no podemos probar, mantendríamos la consistencia, pero aparecerían nuevas sentencias que no podemos probar.
+
+\begin{proof}
+Si $Σ$ fuera completa, sería decidible (por el corolario \ref{completaRecursivaImplicaDecidible})
+\end{proof}
+
+
+
+Vamos a recordar algo visto con anterioridad, sobre la codificación. Teníamos $n(\perp) = 3$ y $g(\perp) = 2^3$.
+%
+Informalmente, $\underbar{N} \vdash 2+2=4$ es cierto. Formalmente, escribiríamos: 
+\[\underbar{N} \vdash S_1^2(\underbar{0}),+,\vdash S_1^2(\underbar{0}) = \vdash S_1^4(\underbar{0})\]
+
+Ahora nos preguntamos, ¿Podemos demostrar $\underbar{N} \vdash 2+2 = 5$? \textbf{No.} 
+%
+¿Y podríamos probar $\underbar{N} \vdash \left( \underbar{N} \not \vdash 2+2=5 \right)$? 
+\textbf{Tampoco}, por el segundo teorema de incompletitud.
+
+La segunda parte del recordatorio es que $Dem(Σ)$ es recursivo. Ello implicaba que $\exists φ_{Dem(Σ)}$ que ``representaba'' a $Dem(Σ)$, es decir, si $$(m,n) \in Dem(Σ), Σ\vdash φ_{Dem(Σ)}(S_1^m(\underbar{0},S_1^n(\underbar{0}))$$ 
+Por otro lado: $$(m,n) \not \in Dem(Σ), Σ\vdash \neg φ_{Dem(Σ)}(S_1^m(\underbar{0},S_1^n(\underbar{0}))$$.
+
+Y utilizando esto, se puede formalizar qué es la consistencia.
+
+\begin{defn}[Consistencia (CON)]
+\[CON(Σ) := \neg ∃ v_0 \left( φ_{Dem(Σ)}(\perp,v_0) \right)\]
+Aunque $\perp$ no puede aparecer ahí (porque estamos codificando todo en números), sino que tiene que aparecer su número de Gödel, es decir $g(\perp) = 2^3 = 8$
+\[CON(Σ) := \neg ∃ v_0 \left( φ_{Dem(Σ)}(S_1^8(\underbar{0}),v_0) \right)\]
+\end{defn}
+
+\begin{theorem}[Teorema\IS de incompletitud (Segundo)]
+Si $Σ$ es recursiva, consistente y contiene a $\underbrace{N}$, entonces $Σ\not\vdash CON(Σ)$
+\end{theorem}
+
+Este es el teorema que implica que \[\underbar{N} \vdash \left( \underbar{N} \not \vdash 2+2=5 \right)\]
+Demostrar esa afirmación, sería demostrar la consistencia de $Σ$ y eso no es demostrable como hemos visto en el segundo teorema de incompletitud.
+
+
+\paragraph{Comentario sobre la hoja 8}. Esta hoja está puesta por la poca confianza que hay en el teorema de compacidad.
+
+Definimos:
+
+\[F = \{A\subset ℕ : A^c \text{ es finito}\}.\]
+\[F\subset U^{\text{ultrafiltro}}\]
+Entonces, podemos definir $ℕ^ℕ$, con la siguiente inclusión $f(n) : ℕ^ℕ \to ℕ$ construida de la siguiente manera $f(n) = (n,n, ... ,n)$
+
+Por lo que: $(a_n)_{n=1}^{∞} \sim (b_n)_{n=1}^{∞}$ si $\{a_n = b_n\} \in U$ \footnote{Es decir, 2 sucesiones son iguales si son iguales en casi todo punto (iguales salvo en conjuntos de probabilidad 0 y los elementos que tienen probabilidad 0 son los del ultrafiltro (o algo así))}
+
+Definimos también $\mathcal{U} := ℕ^ℕ / \sim$
+
+\textbf{Afirmación} \[c = \left\{\left[ (n)_{n=1}^{∞} \right] > \left[ (k)_{n=1}^{∞} \right] ∀k∈ℕ\right\}\]
+
+Tenemos también una inclusión de $ℕ$ en $\mathcal{U}$.
+
+Siento esta mierda de comentario, he hecho lo que he podido.
