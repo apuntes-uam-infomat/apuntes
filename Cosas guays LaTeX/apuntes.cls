@@ -5,6 +5,8 @@
 \def\enableindexbuilddate{\renewcommand{\compdate}{\tiny{\today\, \currenttime}}}
 \def\titlepagebuilddate{\par \vspace{3pt} \tiny \today\, \currenttime \vspace{-4pt}}
 \newif\if@apuntestitlepage
+\newif\if@shortheader
+\@shortheaderfalse
 
 \DeclareOption{nobuilddate}{%
 	\def\printbuilddate{}%
@@ -20,6 +22,10 @@
 \DeclareOption{notitlepage}{
 	\@apuntestitlepagefalse
 	\PassOptionsToClass{\CurrentOption}{custombase}
+}
+
+\DeclareOption{shortheader}{
+	\@shortheadertrue
 }
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
@@ -115,7 +121,11 @@
 \fancyhf{}
 \PrerenderUnicode{ÁáÉéÍíÓóÚúÑñ} % Para que salgan las tildes y demás mierdas en el título.
 \fancypagestyle{plain}{%
+	\if@shortheader
+	\lhead{\small \itshape \thetitle}
+	\else
 	\lhead{\small \itshape \thetitle\, -\, \thedate\, -\, UAM}
+	\fi
 	\rhead{\small \theauthor}
 	\cfoot{\thepage\ de \pageref{LastPage}}
 	\rfoot{\compdate}
