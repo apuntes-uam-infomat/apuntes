@@ -19,15 +19,15 @@
 \pagestyle{plain}
 
 \begin{abstract}
-Estos son los apuntes tomados a lo largo del curso de Variable Real (5º curso Doble Grado) en la Facultad de Ciencias de la UAM, con el profesor Matteo Bonforte. El curso trata de temas de análisis avanzado, ampliando la asignatura de Teoría de Integral y la Medida \citep{ApuntesTIM} y llegando a espacios de Banach y Hilbert, Fourier y teoría espectral.
+Estos son los apuntes tomados a lo largo del curso de Variable Real (5º curso Doble Grado) en la Facultad de Ciencias de la UAM, con el profesor Matteo Bonforte. El curso trata de temas de análisis avanzado, ampliando la asignatura de Teoría de Integral y la Medida \citep{ApuntesTIM} y llegando a espacios de Banach y Hilbert y teoría de Fourier.
 \end{abstract}
 
 \maketitle
-\section*{Estructura}
+\section*{Estructura y contenidos}
 
-El \fref{chap:TeoriaBasicaIntegral} se dedica a un repaso de los conceptos básicos de cursos anteriores de teoría de la integral y la medida (en \citep{ApuntesTIM} están los apuntes completos de esta asignatura). Estos conceptos se amplían con otros más avanzados en el \fref{chap:ComplementosTIM}.
+El \fref{chap:TeoriaBasicaIntegral} se dedica a un repaso de los conceptos básicos de cursos anteriores de teoría de la integral y la medida (en \citep{ApuntesTIM} están los apuntes completos de esta asignatura). Estos conceptos se amplían con otros más avanzados en el \fref{chap:ComplementosTIM}. Los espacios de Banach y Hilbert se tratan en el \fref{chap:EspaciosBanachHilbert}, y por último hablamos de algunos aspectos de la teoría de Fourier en el \fref{chap:Fourier}.
 
-En el apéndice \ref{chap:Discusiones} comentamos algunas discusiones interesantes relacionadas con la asignatura pero que no entran en el temario. Por último, el apéndice \ref{chap:Ejercicios} contiene algunos ejercicios y sus soluciones, sacados de los colgados en \url{http://uam.es/personal_pas/mbonfort/teaching.html}.
+En el apéndice \ref{chap:Discusiones} comentamos algunas discusiones interesantes relacionadas con la asignatura pero que no entran en el temario. El apéndice \ref{chap:Resumen} contiene un resumen rápido de la asignatura. Por último, el apéndice \ref{chap:Ejercicios} contiene algunos ejercicios y sus soluciones, sacados de los colgados en \url{http://uam.es/personal_pas/mbonfort/teaching.html}.
 
 \tableofcontents
 
@@ -951,8 +951,8 @@ Para demostrarlo (sí, es cierto), consideramos $E$ como el conjunto donde $f_1 
 
 Esto nos sirve como introducción a los espacios $L^p$. Trabajaremos con funciones que son equivalentes si tienen la misma integral. Así, tendremos que \[ \espL[p] = \quot{\espl[p]}{\sim}\] con $\sim$ la relación de equivalencia que nos dirá que dos funciones son iguales si lo son salvo en un conjunto de medida cero.
 
-\chapter{Espacios de Banach y espacios $L^p$}
-\label{sec:EspaciosBanach}
+\chapter{Espacios de Banach y Hilbert. Espacios $L^p$}
+\label{chap:EspaciosBanachHilbert}
 
 Hasta ahora nos hemos movido en el entorno de espacios de dimensión finita. Ahora iremos un paso más allá y saltaremos a los fascinantes espacios de dimensión infinita.
 
@@ -1324,12 +1324,24 @@ $L^∞$ & no & no & $\mathcal{M}_{\text{Radon}} (\mop{spec} L^∞)$
 
 \section{Convolución}
 
-\begin{defn}[Convolución] Dadas dos funciones $\appl{f,g}{ℝ^N}{ℝ}$ se define la convolución (denotadada por $\ast$) como \[ (f \ast g) (x) ≝ \int_{ℝ^N} f(x-y) f(y) \dif y \] para casi todo $x ∈ ℝ^N$.
+A lo largo de la sección anterior hemos visto cómo el espacio de funciones integrables se puede tratar como un espacio más o menos vectorial (y de hecho ampliaremos en esto en la siguiente sección sobre espacios Hilbert). Tenemos suma de funciones y multiplicación por escalares compatible con la norma. Ahora bien, nos falta una cosa: necesitamos un producto.
+
+Uno podría pensar en poner el producto habitual, pero nos encontraríamos con un problema, y es que el producto de dos funciones integrables no tiene por qué serlo él mismo. Por ejemplo, si tomamos $f = g = \frac{1}{\sqrt{x}} · \ind_{[0,1]}$, son funciones integrables cuyo producto es $fg = \frac{1}{x}$, no integrable. Necesitamos entonces una operación que sea compatible con todos estos espacios.
+
+\begin{defn}[Convolución] Dadas dos funciones $\appl{f,g}{ℝ^N}{ℝ}$ se define la convolución (denotadada por $\ast$) como \[ (f \ast g) (x) ≝ \int_{ℝ^N} f(x-y) g(y) \dif y \] para casi todo $x ∈ ℝ^N$.
 \end{defn}
 
-La convolución es conmutativa, y además si $f ∈ \espLp$ y $g ∈ L^{p'}$, entonces $f * g$ está bien definida. % TODO: Demostrarlo y usar Hodler.
+En concreto, los espacios $L^p$ con la convolución (y algunas condiciones más) forman un \concept{{Á}lgebra\IS de Banach}, que no es más que un espacio Banach con una suma, un producto por escalares y un producto asociativo.
 
-Este producto nos permitirá definir lo que se llamará el álgebra de Banach, donde tendremos un producto de escalares, una suma de vectores y un producto de vectores.
+Hay muchas formas de entender la convolución de manera intuitiva, y la mayoría son igual de poco efectivas. Una de ellas nos lleva al mundo de la probabilidad: pongamos que tenemos dos dados con distribuciones de probabilidad $P_A$ y $P_B$. Si queremos sacar un número $n$ con la suma de ambos, podemos hacerlo sacando $m$ en un dado y $m - n$ en el otro. Tendríamos que sumar esos valores para todos los posibles valores de $n$, y entonces tendríamos que \[ P_{A+B}(n) = \sum P_A(m) P_B(n-m) \]
+
+Si lo extendiésemos al mundo continuo, tendríamos la convolución: \[ P_{A+B}(x) = \int_{-∞}^{∞} P_A(y) P_B(x-y) \dif y = P_A * P_B \]
+
+Otra forma de verlo es tomar $f = \ind_{[-1,1]}$, de tal forma que $f * g$ sería una versión ``suavizada'' de $g$, tomando la media de los puntos de alrededor para cada punto.
+
+En cualquier caso, a nosotros lo que nos interesa es ver que es una forma especial de combinar funciones y, sobre todo, que combina muy bien con las integrales y los espacios $L^p$. La convolución es conmutativa y asociativa, y además si $f ∈ \espLp$ y $g ∈ L^{p'}$, entonces $f * g$ está bien definida\footnote{Esto se puede ver trivialmente aplicando la \nref{prop:DesHolder}.}.
+
+Una muestra de que la convolución juega bien con las integrales son las desigualdades de Young en sus tres variantes:
 
 \begin{theorem}[Desigualdad\IS de Young general] Sean $p,q,r ≥ 1$ tales que $\frac{1}{p} + \frac{1}{q} + \frac{1}{r} = 2$. Sean $f ∈ L^p(ℝ^N)$, $g ∈ L^q(ℝ^N)$, $h ∈ L^r(ℝ^N)$. Entonces
 \( \abs{\int_{ℝ^N} f(x) (g * h)(x) \dif x} ≤ C_{p,q,r,N} \norm{f}_p \norm{g}_q \norm{h}_r \label{eq:DesYoungGeneral} \)
@@ -1342,20 +1354,17 @@ h(x) &= C \exp (-q'(x-c) J(x-c) + ikx)
 \end{align*} con $A,B,C ∈ ℂ$, $a,b,c,k ∈ ℝ^N$ con $a = b + c$, y además con $J$ una matriz real, simétrica y definida positiva.
 \end{theorem}
 
-Este teorema tiene una variante cutre.
-
 \begin{theorem}[Desigualdad\IS de Young cutre] Sean $f ∈ \espLp$, $g ∈ L^q$  y $\frac{1}{p} + \frac{1}{q} = 1 + \frac{1}{r}$, con $1 ≤ p,q,r ≤ ∞$. Entonces tenemos la siguiente desigualdad: \[ \norm{f*g}_r ≤ \norm{f}_p \norm{g}_q \]
 \end{theorem}
-
-Y además una variante cutrísima, que esta sí demostraremos.
 
 \begin{theorem}[Desigualdad\IS de Young cutrísima] Sean $f ∈ L^1$ y $g ∈ \espLp$, con $1 ≤ p ≤ ∞$. Entonces \[ \norm{f \ast g}_p ≤ \norm{f}_1 \norm{g}_p\]
 \end{theorem}
 
-\begin{proof}
-El primer paso que tenemos que demostrar nosotros es que sale con $p = ∞$. % TODO.
+Nosotros demostraremos esta última versión, que es la sencilla.
 
-Vamos a suponer ahora $p = 1$. Consideramos ahora la función $x \mapsto F(x,y) ≝ f(x,y) g(y)$. Esta función la podemos integrar porque consideramos $y$ fija, así que tenemos que \[ \int_{ℝ^N} \abs{f(x-y) g(y)} \dif x = \abs{g(y)} \int_{ℝ^N} \abs{f(x-y)} \dif x = g(y) \norm{f}_1 \]
+\begin{proof} Para $p = ∞$, simplemente operamos y vemos que \[ \norm{f*g}_∞ = \essup_{x∈ℝ^N} \int_{ℝ^N} f(x-y) g(y) \dif y ≤ \essup_{x∈ℝ^N} \int f(x-y) (\essup_{t∈ℝ^N} g(t)) \dif y = \norm{f}_1 \norm{g}_∞ \], ya que podemos tomar el supremo esencial dentro de la integral porque los puntos que nos quita tienen medida cero, que no afectan a la integral. En ese caso se convierte en una constante y podemos sacarlo fuera.
+
+Vamos a suponer ahora $p = 1$. Consideramos ahora la función $x \mapsto F(x,y) ≝ f(x - y) g(y)$. Esta función la podemos integrar porque consideramos $y$ fija, así que tenemos que \[ \int_{ℝ^N} \abs{f(x-y) g(y)} \dif x = \abs{g(y)} \int_{ℝ^N} \abs{f(x-y)} \dif x = g(y) \norm{f}_1 \]
 
 Con esto, podemos hacer la doble integral: \[ \iint\limits_{ℝ^N × ℝ^N} \abs{f(x-y) g(y)} \dif y \dif x = \norm{f}_1 \int_{ℝ^N} \abs{g(y)} \dif y = \norm{f}_1 \norm{g}_1 \] y ya tenemos la desigualdad.
 
@@ -1366,7 +1375,7 @@ Ahora hacemos un truco: \begin{multline*} \int_{ℝ^N}\abs{f(x-y)}\abs{g(y)} \di
 \begin{align*}
 (\abs{f} * \abs{g})^p &≤ \norm{f}_1^{\frac{p}{p'}} (\abs{f}*\abs{g})^p \\
 \int (\abs{f} * \abs{g})^p (x) \dif x &≤ \int \norm{f}_1^{\frac{p}{p'}} (\abs{f}*\abs{g})^p (x) \dif x \\
-\pnorm{f*g}^p ≤ \norm{f}_1^\frac{p}{p'} \int (\abs{f} * \abs{g}^p) (x) \dif
+\pnorm{f*g}^p ≤ \norm{f}_1^\frac{p}{p'} \int (\abs{f} * \abs{g}^p) (x) \dif x
 \end{align*} y como tanto $\abs{f}$ como $\abs{g}^p$ están en $L^1$, podemos aplicar la demostración que habíamos hecho antes para $p = 1$, así que nos queda que \begin{align*} \pnorm{f*g}^p &≤ \norm{f}_1^{\frac{p}{p'}} \norm{f}_1 \norm{g^p}_1 \\
 \pnorm{f * g}^p &≤ \norm{f}_1^p \norm{g}_p^p
  \end{align*} y ya tenemos la desigualdad.
@@ -1381,9 +1390,9 @@ Vemos que \[ (f*g)(x) ≝ \int_{ℝ^N} f(x-y) g(y) \dif y = \int\limits_{(x - \e
 Tomamos entonces $x ∈ (\essop f + \essop g)^c$, así que $x$ no se puede expresar como suma de elementos de $\essop f$ y $\essop g$. Es decir, que $x - x' ≠ x''$ para todos $x' ∈ \essop f$, $x'' ∈ \essop g$. Entonces está claro $(x - \essop f) ∩ \essop g = ∅$.
 \end{proof}
 
-Antes de seguir, vamos a ver una notación que nos erá muy útil, que es la del \concept{Multiíndice}, un vector $α = (α_i, \dotsc, α_n)$ con $α_i ∈ ℕ$. Esto nos permite definir la derivada parcial en múltiples coordenadas como \[ ∂^α f= \pd[α_1]{}{x_1} \dotsb \pd[α_N]{}{x_N} f \]
+La convolución juega también muy bien con las derivadas. Antes de seguir, vamos a ver una notación que nos erá muy útil, que es la del \concept{Multiíndice}, un vector $α = (α_i, \dotsc, α_n)$ con $α_i ∈ ℕ$. Esto nos permite definir la derivada parcial en múltiples coordenadas como \[ ∂^α f= \pd[α_1]{}{x_1} \dotsb \pd[α_N]{}{x_N} f \]
 
-\begin{prop} Sea $f ∈ C_c^k(ℝ^N)$ (funciones $k$ veces derivables de soporte compacto), y $g ∈ \espLloc$. Entonces $f * g ∈ C^k(ℝ^N)$ y $∂^α(f*g) = (∂^αf * g)$.
+\begin{prop} \label{prop:DerivadasConvolucion} Sea $f ∈ C_c^k(ℝ^N)$ (funciones $k$ veces derivables de soporte compacto), y $g ∈ \espLloc$. Entonces $f * g ∈ C^k(ℝ^N)$ y $∂^α(f*g) = (∂^αf * g)$.
 \end{prop}
 
 \begin{proof}
@@ -1394,11 +1403,36 @@ Dado un $ε > 0$ arbitrario, hacemos desigualdades y probablemente salga en alg�
 Para $k = 1$, hacemos cosas, y luego por inducción para el caso general.
 \end{proof}
 
+Una de las cosas malas de la convolución es que no tenemos definida una identidad. Esto es, no existe ninguna función que cumpla que $f * I = f$. Ahora bien, sí podremos construir una familia de funciones que aproximen esa identidad (que más tarde veremos que es la delta de Dirac $δ_0$).
+
 \begin{defn}[Familia\IS de aproximaciones de la identidad] \label{def:AproxIdentidad} Una familia de aproximaciones de la identidad es una sucesión $\set{ρ_n}_{n∈ℕ}$ de funciones $\appl{ρ_n}{ℝ^N}{ℝ}$ no negativas, infinitamente derivables, de soporte compacto, con $\sop ρ_n ∈ \bola_{\frac{1}{n}} (0)$ y con norma $\norm{ρ_n}_1 = 1$.
 \end{defn}
 
-\textit{TODO: Falta una clase, de aproximación de funciones $L^p$ con funciones suaves $C^∞_c$}
+Ahora vamos con el teorema importante de estas familias, que es el que nos dice que efectivamente funcionan como aproximaciones de la identidad con la convolución.
 
+\begin{theorem} \label{thm:AproxIdentidad} \citep[Teorema 8.14]{folland99} Sea $ρ_n$ una familia de aproximaciones de la identidad, y sea $f ∈ L^p$ con $1 ≤ p < ∞$. Entonces, $f * ρ_n \convs f$ en la norma $L^p$.
+\end{theorem}
+
+\begin{proof}
+\end{proof}
+
+Las aproximaciones de la identidad nos permitirán igualmente aproximar funciones $L^p$ con funciones suaves $C_c^∞$ de soporte compacto. Haremos la prueba basándonos en una proposición previa más débil.
+
+\begin{prop} \citep[Proposición 7.9]{folland99} Si μ es una \nlref{def:MedidaRadon} en $X$, entonces $C_c(X)$ es denso en $L^p$ para $1 ≤ p < ∞$.
+\end{prop}
+
+\begin{proof} Sabemos que con funciones simples (suma de $\ind_E$) podemos aproximar funciones $L^p$ generales (es la idea de la integral de Lebesgue), esto es, es un conjunto denso en $L^p$. Nos bastará por lo tanto probar que $C_c(X)$ es denso en el espacio de funciones simples  $\ind(E)$ con $μ(E) < ∞$.
+
+Lo que haremos será ``atrapar'' $E$ por dentro con un compacto $K ⊂ E$ y por fuera con un abierto $U ⊃ E$. Por ser μ medida de Radon, es regular interna y externa y entonces $∀ε > 0$ podemos tomar $K$ y $U$ de tal forma que $μ(U \setminus K) < ε$. Por el \nref{lem:Urysohn} podemos tomar una $f ∈ C_c(X)$ tal que $\ind_K ≤ f ≤ \ind_U$, y por lo tanto $\norm{\ind_E -f}_p ≤ μ(U\setminus K)^{\sfrac{1}{p}} < ε^{\sfrac{1}{p}}$.
+\end{proof}
+
+\begin{prop} \citep[Proposición 8.17]{folland99} $C_c^∞$ es denso en $L^p$ para $1≤p <∞$.
+\end{prop}
+
+\begin{proof} Sea $f ∈ L^p$ y $ε > 0$. Entonces, por la proposición anterior existe una $g ∈ C_c$ con $\norm{f-g}_p < \frac{ε}{2}$.
+
+Ahora, podemos usar la \fref{prop:DerivadasConvolucion} para hacer $g$ infinitamente derivable, y usaremos una familia de aproximaciones de la identidad para hacerlo sin alejarnos de $g$.
+\end{proof}
 
 \begin{lemma}[Lema\IS del test] Sea $Ω ⊆ ℝ^N$ abierto y sea $u ∈ \esplloc[1][Ω]$. Si $\int_Ω u φ \dif x= 0$ para todo $ φ ∈ C^∞_c(Ω)$, entonces $u = 0$ para casi todo punto de Ω.
 \end{lemma}
@@ -1436,7 +1470,7 @@ Por último, tenemos que ver que $φ_K(x) = 1$ con $x ∈ K$. Vemos que \[ φ_{K
 % TODO: Esta demostración debería explicarla bien.
 \end{proof}
 
-\chapter{Espacios de Hilbert}
+\section{Espacios de Hilbert}
 
 % TODO: Aquí falta una clase y creo que encima es la jodida.
 
@@ -1454,7 +1488,7 @@ Por cierto, el espacio de Hilbert es infinito dimensional. Aquí tenemos un teor
 \begin{theorem}[Teorema\IS de Riesz] Sea $V$ un espacio vectorial normado. Entonces $\bola_r$ es compacta si y sólo si $V$ es de dimensión finita.
 \end{theorem}
 
-\section{Espacios de Hilbert como espacios vectoriales: propiedades}
+\subsection{Espacios de Hilbert como espacios vectoriales: propiedades}
 
 Aunque nosotros estudiaremos los espacios de Hilbert desde el punto de vista del análisis, es muy útil verlos simplemente como espacios vectoriales del álgebra básico para entender ciertas propiedades. Así, podremos después aplicar todo esto al estudio de espacios de Hilbert como espacios de funciones.
 
@@ -1656,6 +1690,7 @@ La condición que necesitaremos para todo esto será tener lo que llamaremos sis
 \end{defn}
 
 \chapter{Teoría de Fourier}
+\label{chap:Fourier}
 
 Todo el lío que hemos montado con esto viene por el intento de resolver un viejo problema, que es el de aproximar funciones globalmente con polinomios. En los primeros cursos de matemáticas se ve que podemos usar Taylor, pero eso sólo nos vale localmente con funciones analíticas y derivables: no podemos usar funciones sólo continuas, y mucho menos funciones sólo Lebesgue integrables.
 
