@@ -6125,30 +6125,44 @@ Empezamos comprobando que la palabra $y$ pertenece al código para lo que calcul
 Estudiando el síndrome sabemos que se ha producido únicamente un error si $S(y)$ coincide con una columna de la matriz.
 
 Puesto que todas las columnas de la matriz empiezan por 1, lo que haremos será tratar de sacar factor común 8 a todos los elementos del síndrome con lo que escribimos:
-\[S(y) = \left( \begin{array}{c}8 \\ 10 \\ 12 \\ 11 \end{array}\right) = 8\cdot \left( \begin{array}{c}1 \\ 11 \\ α \\ β \end{array}\right)\]
+\[S(y) = \left( \begin{array}{c}s_1 \\ s_2 \\ s_3 \\ s_4 \end{array}\right) = \left( \begin{array}{c}8 \\ 10 \\ 12 \\ 11 \end{array}\right) = 8\cdot \left( \begin{array}{c}1 \\ 11 \\ α \\ β \end{array}\right)\]
 
 En cuanto comprobamos que α es distintos de $11^2$ tenemos que el error no es simple. Por tanto tenemos que buscar errores dobles.
 
-La forma de hacer esto consiste en emplear el polinomio localizador de errores. Vamos a recordar el origen de este polinomio.
+La forma de hacer esto consiste en emplear el polinomio localizador de errores, que en este caso se ve ligeramente modificado debido a que para esta $H$ la $i$-ésima columna lo que contiene no son potencias de $i$, sino potencias de $(2i - 1)$, es decir:
+\begin{equation}
+\label{eq:ejrc13b-hoja4}
+	S(y)=
+	a\left( \begin{array}{c}1 \\ 2i-1 \\ (2i-1)^2 \\ (2i-1)^3 \end{array}\right) +
+	b\left( \begin{array}{c}1 \\ 2j-1 \\ (2j-1)^2 \\ (2j-1)^3 \end{array}\right) 
+\end{equation}
 
-El sistema de ecuaciones que nos permite identificar los dos errores producidos es:
+Para no hacer muy cargante la resolución del sistema llamamos $i'=(2i-1),\ j'=(2j-1)$
 \[\left\{ \begin{array}{l}
-a+b=8\\
-ai+bj=10\\
-ai^2+bj^2=12\\
-ai^3+bj^3=11
+a+b=s_1\\
+ai'+bj'=s_2\\
+ai'^2+bj'^2=s_3\\
+ai'^3+bj'^3=s_4
 \end{array}\right. \implies \left\{ \begin{array}{l}
-b(i-j)=8i-10\\
-bj(i-j)=10i-12\\
-bj^2(i-j)=12i-11
-\end{array}\right. \implies (8i-10)(12i-11)=(10i-12)^2\]
+s_2 - i's_1 = b(j' - i')\\
+s_3 - i's_2 = bj'(j' - i')\\
+s_4 - i's_3 = bj'^2(j' - i')
+\end{array}\right. \implies (s_3 - i's_2)^2 = (s_2 - i's_1)(s_4 - i's_3)\]
 
-Simplificando la ecuación llegamos a:
-\[4i^2+3i+8=0 \implies i,j= \frac{-3\pm \sqrt{9-16\cdot 8}}{8} = \frac{-3 \pm \sqrt{9-24}}{8}=\frac{-3 \pm \sqrt{11}}{8}\]
+Conocidos $s_1,s_2,s_3,s_4$ si sustituimos términos en la última ecuación llegamos a:
+\[4i'^2 + 7i' + 8 = 0 \implies i',j'= \frac{-7\pm \sqrt{12}}{8} = \frac{-7 \pm 5}{8} \implies i'=5, j'=3\]
 
-Llegados a este punto podemos comprobar que 11 no es un cuadrado en $\mathbb{F}_{13}$ por lo que no podemos encontrar los enteros $i,j$ buscados de donde deducimos que se han producido tres o más errores.
+El siguiente paso es encontrar $a,b$ en \ref{eq:ejrc13b-hoja4}:
+\[
+	\left\{ \begin{array}{l}
+		8 = a+b\\
+		10 = 5a + 3b
+	\end{array}\right.
+	\implies a=6,b=2
+\]
 
-\obs El profesor considera que la probabilidad de haber un error en estas cuentas es alta. En caso de estar mal, los valores $i,j$ se calcularían según este procedimiento.
+Deshaciendo el cambio de variable tendremos $i=3,j=2$, y por tanto el error doble es $e=6e_3+2e_2$. Si queremos leer el mensaje original, este sería:
+\[x = y - 6e_3 - 2e_2 = (4,11,7,3,0,1)\]
 
 \spart
 
