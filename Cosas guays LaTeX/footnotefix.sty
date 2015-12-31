@@ -1,0 +1,33 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{footnotefix}[2015/12/31 Fixes for footnotes in various environments]
+
+\RequirePackage{etoolbox} % Provides with the different hooks
+\RequirePackage{tablefootnote}
+
+\newcommand{\AlignFootnote}[1]{% IGN
+	\ifmeasuring@
+  	\else
+  		\iffirstchoice@\footnote{#1}\fi
+ 	\fi
+}
+
+\AtBeginEnvironment{proof}{%
+	\let\oldfootnote\footnote%
+	\let\footnote\tablefootnote%
+}
+
+\AfterEndEnvironment{proof}{%
+	\tfn@tablefootnoteprintout%
+ 	\gdef\tfn@fnt{0}%
+}
+
+\AtBeginEnvironment{framed}{%
+	\let\oldfootnote\footnote%
+	\let\footnote\tablefootnote%
+}
+
+\AfterEndEnvironment{framed}{%
+	\tfn@tablefootnoteprintout%
+ 	\gdef\tfn@fnt{0}%
+}
+
