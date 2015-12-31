@@ -30,15 +30,12 @@
 	\def\@babel@load{\RequirePackage[spanish,es-noquoting,es-noshorthands]{babel}}
 }
 
-\def\@exmathload{\RequirePackage{exmath}}
 
-\DeclareOption{noprobframes}{
-	\def\@exmathload{\RequirePackage[noproblemframes]{exmath}}
 }
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
 
-\ExecuteOptions{sansserif,spanish}
+\ExecuteOptions{sansserif,spanish,probframes}
 \ProcessOptions
 
 \PassOptionsToClass{\@fontsizeopt}{report}
@@ -56,7 +53,7 @@
 \RequirePackage{framed} % Marcos
 \RequirePackage{mdframed} % Más marcos
 \RequirePackage{hyperref} % Para que salgan enlaces en la tabla de contenidos y el glosario
-\@exmathload
+\RequirePackage{exmath}
 \RequirePackage{wrapfig} % Figuras flotantes
 \RequirePackage{MathUnicode} % Paquete para poder poner caracteres griegos y demás cosas raras.
 \RequirePackage{listings} % Para poner código.

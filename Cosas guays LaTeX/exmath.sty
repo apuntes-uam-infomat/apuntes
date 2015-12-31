@@ -8,15 +8,18 @@
 %	La "O" (una "o", no un 0) después del número de argumento indica que es opcional.
 % ----------------------------------------------------------a
 
+\newif\if@useprobframes % Controla si los problemas tienen marcos o no
 
 \def\@setframeconfig{}
+\DeclareOption{probframes}{\@useprobframestrue}
+\DeclareOption{noprobframes}{\@useprobframesfalse}
 
 % Tenemos que retrasar la ejecución del \toggletrue/\togglefalse hasta que tengamos
 % 	el paquete cargado, así que lo que hacemos es guardarnos el comando.
 \DeclareOption{problemframes}{\def\@setframeconfig{\toggletrue{probframes}}}
 \DeclareOption{noproblemframes}{\def\@setframeconfig{\togglefalse{probframes}}}
 
-\ExecuteOptions{problemframes}
+\ExecuteOptions{probframes}
 \ProcessOptions
 
 % Paquetes requeridos
@@ -42,10 +45,6 @@
 \RequirePackage{mathtools} % Arregla bastantes cosas de los entornos matemáticos por defecto.
 \RequirePackage{nameref}
 \RequirePackage{scalerel,stackengine} % Para los sombreros grandes (widehat)
-
-
-\newtoggle{probframes} % Controla si los problemas tienen marcos o no
-\@setframeconfig
 \RequirePackage{footnotefix}
 
 % Para evitar que el \md de nuestro paquete tenga conflictos con el de commath
@@ -314,54 +313,51 @@
 }
 
 \newcommand{\solution}{  %IGN
-	\iftoggle{probframes}
-		{\end{framed}}
-		{\normalfont\textcolor{gray}{\hrulefill} \\}
-		\setcounter{apr}{0}
+	\if@useprobframes
+		\end{framed}
+	\else
+		\normalfont\textcolor{gray}{\hrulefill} \\
+	\fi
+	\setcounter{apr}{0}
 }
 
 \newcommand{\ejrheader}{\theejr} % IGN
+\newcommand{\custom@ejrheader}{\theejr} % IGN
 
-\newenvironmentx{problem}[1][1=] % 1O: N. ejercicio;
-{
+\newenvironment{innerproblem}[1]{ % IGN. Common environment
 	\vspace{1 pt}
-	\renewcommand{\ejrheader}{\theejr}
 	\ifthenelse{\equal{#1}{}}{}{
 		\IsInteger{#1}{
 			\setcounter{ejr}{#1}
 			\addtocounter{ejr}{-1}
 		}{
-			\renewcommand{\ejrheader}{\arabic{section}.{#1}}
+			\renewcommand{\ejrheader}{\custom@ejrheader}
 		}
 	}
 	\refstepcounter{ejr}
 	\renewcommand{\iPartSpaceSkip}{}
-	\iftoggle{probframes}{\begin{framed}}{}
+	\if@useprobframes\begin{framed}\fi
 	\textbf{Ejercicio \ejrheader}:
-	\iftoggle{probframes}{}{\itshape}
+	\if@useprobframes\itshape\fi
 	\setcounter{apr}{0}
 }{\vspace{10 pt}}
+
+\newenvironmentx{problem}[1][1=] % 1O: N. ejercicio;
+{
+	\renewcommand{\custom@ejrheader}{\arabic{section}.{#1}}
+	\renewcommand{\ejrheader}{\theejr}
+
+	\begin{innerproblem}{#1}
+}{\end{innerproblem}}
 
 % Problemas sin numeración por secciones. IGN
 \newenvironmentx{problemS}[1][1=] % 1O: N. ejercicio;
 {
-	\vspace{1 pt}
 	\renewcommand{\ejrheader}{\arabic{ejr}}
-	\ifthenelse{\equal{#1}{}}{}{
-		\IsInteger{#1}{
-			\setcounter{ejr}{#1}
-			\addtocounter{ejr}{-1}
-		}{
-			\renewcommand{\ejrheader}{#1}
-		}
-	}
-	\refstepcounter{ejr}
-	\renewcommand{\iPartSpaceSkip}{}
-	\iftoggle{probframes}{\begin{framed}}{}
-	\textbf{Ejercicio \ejrheader}:
-	\iftoggle{probframes}{}{\itshape}
-	\setcounter{apr}{0}
-}{\vspace{10 pt}}
+	\renewcommand{\custom@ejrheader}{#1}
+
+	\begin{innerproblem}{#1}
+}{\end{innerproblem}}
 
 % Teoremas y otros entornos. IGN
 
