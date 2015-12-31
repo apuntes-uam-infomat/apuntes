@@ -5,7 +5,6 @@
 \newif\if@removechapters
 
 % Si nos pasan la opción nochap, no ponemos número de capítulo en las secciones.
-\DeclareOption{nochap}{\@removechapterstrue}
 
 \DeclareOption{palatino}{%
 	\renewcommand{\rmdefault}{ppl}
@@ -30,17 +29,27 @@
 	\def\@babel@load{\RequirePackage[spanish,es-noquoting,es-noshorthands]{babel}}
 }
 
+\DeclareOption{noprobframes}{\PassOptionsToPackage{\CurrentOption}{exmath}}
+\DeclareOption{probframes}{\PassOptionsToPackage{\CurrentOption}{exmath}}
 
+\DeclareOption{nochap}{
+	\PassOptionsToPackage{\CurrentOption}{exmath}
+	\@removechapterstrue
+}
+
+\DeclareOption{chap}{
+	\PassOptionsToPackage{\CurrentOption}{exmath}
+	\@removechaptersfalse
 }
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
 
-\ExecuteOptions{sansserif,spanish,probframes}
+\ExecuteOptions{sansserif,spanish,probframes,chap}
 \ProcessOptions
 
 \PassOptionsToClass{\@fontsizeopt}{report}
 
-\LoadClass[a4paper,reqno]{report}
+\LoadClass[a4paper]{report}
 
 \RequirePackage[usenames,dvipsnames]{xcolor}
 \RequirePackage[includemp, left=3cm,right=1cm,top=3cm,bottom=2cm, marginparwidth=1.6cm, marginparsep=0.7cm]{geometry} % Márgenes
@@ -52,7 +61,7 @@
 \RequirePackage{amsthm} % Paquete de matemáticas
 \RequirePackage{framed} % Marcos
 \RequirePackage{mdframed} % Más marcos
-\RequirePackage{hyperref} % Para que salgan enlaces en la tabla de contenidos y el glosario
+\RequirePackage[pdfencoding=auto,psdextra]{hyperref} % Para que salgan enlaces en la tabla de contenidos y el glosario
 \RequirePackage{exmath}
 \RequirePackage{wrapfig} % Figuras flotantes
 \RequirePackage{MathUnicode} % Paquete para poder poner caracteres griegos y demás cosas raras.
@@ -67,8 +76,6 @@
 		\renewcommand{\thesection}{\thechapter.\arabic{section}}
 		\oldappendix
 	}
-\else
-	\numberwithin{thm}{chapter}
 \fi
 
 % Números en las subsecciones

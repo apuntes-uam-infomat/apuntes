@@ -132,6 +132,7 @@
 \vr#m
 \vz#m
 \thethm#m
+\thedef#m
 \begin{remark}#
 \IS#m
 \begin{op}{arg0}#
@@ -151,6 +152,8 @@
 \spart[apartado]#m
 \solution#m
 \ejrheader#m
+\custom@ejrheader#m
+\begin{innerproblem}{arg0}#
 \begin{problem}#
 \begin{problem}[N. ejercicio]#
 \begin{problemS}#
@@ -240,7 +243,6 @@
 \tc[Id. superior]{arg3}#m
 \tc[Id. superior][Id. inferior]{arg3}#m
 \tc[Id. superior][Id. inferior][máx superior]{arg3}#m
-\AlignFootnote{arg0}#m
 \projp#m
 \lie{arg0}#m
 \tgs#m
