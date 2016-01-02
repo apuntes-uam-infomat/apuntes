@@ -244,11 +244,11 @@ A partir de los valores $\sigma(p), \sigma(q),\hdots$ se define $\sigma$ para la
 \end{defn}
 
 \begin{defn}[Consecuencia tautológica]
-	Decimos que $p$ es una consecuencia tautológica de $T$, y escribimos $T\vDash p$, si para toda interpretación $\sigma$ de $T$, $\sigma(p) = 1$. En este contexto, decimos que $p$ es una \textbf{tautología} y escribimos  $\vDash p$.
+	Decimos que $p$ es una consecuencia tautológica de $T$, y escribimos $T\vDash p$, si para todo modelo $\sigma$ de $T$, $\sigma(p) = 1$. En este contexto, decimos que $p$ es una \textbf{tautología} y escribimos  $\vDash p$.
 \end{defn}
 
 \begin{obs}
-	Si $p\in T = \emptyset$, entonces toda $\sigma$ es un modelo de $T$.
+	Si $T = \emptyset$, entonces toda $\sigma$ es un modelo de $T$.
 \end{obs}
 
 \newpage
@@ -348,19 +348,12 @@ El problema es saber cuánto tiempo se tarda en averiguar si $F$ es una tautolog
 \paragraph{Clases de complejidad}
 \begin{itemize}
 	\item \textbf{P:} clase de problemas para los que existe un algoritmo que los resuelve en tiempo polinómico en función del número de datos de entrada, es decir, $\exists K\ge 0$ (dependiendo el problema pero no del número de datos $n$) tal que si tenemos $n$ datos de entrada, el algoritmo requiere menos de $O(n^K)$ operaciones.
-	\item \textbf{NP:} tiempo polinómico no determinista. La solución la proporciona un oráculo (\ref{fig:oraculo}), que podemos comprobar que es correcta (o no) en tiempo polinómico. Obviamente P$\subset$NP.
+	\item \textbf{NP:} tiempo polinómico no determinista. La solución la proporciona un oráculo, que podemos comprobar que es correcta (o no) en tiempo polinómico. Obviamente P$\subset$NP.
 		\item La clase de problemas \textbf{NP-difícil} se define como aquella que contiene a los problemas que son como mínimo tan difíciles como un problema de NP. Alternativamente, se define como la clase de problemas H tal que todo problema en NP puede ser transformado polinomialmente en H.
 	\item La clase de problemas \textbf{NP-completo} se define como la intersección entre la clase de problemas NP y la clase de problemas NP-difícil.
 	\item No se sabe si P$=$NP. Clay Mathematics Institute ha ofrecido un premio de un millón de dólares estadounidenses para quién desarrolle la primera demostración correcta (el profesor no tiene tanto dinero, el te ofrece una matrícula).
 \end{itemize}
 Se sabe que \textbf{TAUT} es NP-difícil.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth/2]{img/oraculo.jpg}
-	\caption{El oráculo echándose un piti después de resolverte el problema.}
-	\label{fig:oraculo}
-\end{figure}
 
 \begin{defn}[Satisfación]
 	$\sigma$ satisface a $T$ si $\forall p \in T$, $\sigma(p) = 1$, o equivalentemente, si $\sigma$ es un modelo de $T$.
@@ -373,7 +366,7 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 \begin{example}
 	Comprobar si $p\implies (p\implies q)$.
 
-	El oráculo (\ref{fig:oraculo}) dice que
+	El oráculo dice que
 	\vspace{-3mm}
 	\begin{itemize}
 		\item $\sigma(p) = 0$
@@ -429,7 +422,7 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 
 	\textbf{Validez:} Sea $V$ el conjunto de todas las valoraciones que satisfacen a $T$. Si $V=\emptyset$, entonces $T\vdash \sigma$ trivialmente. Si $V\neq \emptyset$, entonces, argumentamos como en el teorema anterior pero considerando sólo las valoraciones en $V$ en lugar de todas.
 
-	\textbf{Adecuación:} Sea $p$ una tautología sin demostración. Como $\nvdash p$ entonces $T=\{\neg p\}$ es consistente (ver teorema \ref{thm:pconsnegp}). Pero $T\vdash \neg p$, como $p$ es una tautología, entonces $T\vdash \neg p\equiv \perp$.
+	\textbf{Adecuación:} Sea $p$ una tautología sin demostración. Como $\nvdash p$ entonces $T\cup\{\neg p\}$ es consistente (ver teorema \ref{thm:pconsnegp}) lo que nos dice que, además, $T \vdash \neq p$. Pero, puesto que $p$ es una tautología, $\neg p = \perp$ con lo que nos queda $T\vdash \neg p\equiv \perp$, que es una contradicción pues esta suponiendo que la teoría es consistente.
 
 	\textit{Otra forma:} Probamos la formulación equivalente ``$T\nvdash p \implies T\nvDash p$'', es decir, hay un modelo $\sigma$ de $T$ tal que $\sigma(p) = 0$. $T\nvdash p \implies T\cup\{\neg p\}$ es consistente. Por \ref{thm:comp2}, $T\cup\{\neg p\}$ tiene un modelo $\sigma$. Por tanto, $\forall q\in T$, $\sigma(q) = 1$, pero $\sigma(p) = 0$ porque $\sigma(\neg p) = 1$.
 
@@ -456,11 +449,18 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 	Si $T \nvdash p$, entonces $T\cup \{\neg p\}$ es consistente. Por tanto $T$ es consistente.
 	\label{thm:pconsnegp}
 \end{theorem}
-\begin{proof}\mbox{}
+\begin{proof}
 
-	Probamos la formulación equivalente:  ``Si $T\cup \{\neg p\}$ es inconsistente, entonces $T\vdash p$''.
+	Vamos a reescribir lo que queremos probar como:
+	\begin{center}``Si $T\cup \{\neg p\}$ es inconsistente, entonces $T\vdash p$''.\end{center}
 
-	$T\cup \{\neg p\}\vdash \perp$, por el teorema de la deducción, $T\vdash \neg p\implies \perp$. Por el axioma 8, con $(\neg p \implies \perp)\implies p$ y modus ponens, obtenemos $T\vdash p$.
+	Si $T\cup \{\neg p\}$ es inconsistente podemos escribir
+	\[T\cup \{\neg p\}\vdash \perp\]
+	Por el teorema de la deducción
+	\[T\vdash \neg p\implies \perp\]
+	Por el axioma 8, que dice:
+	\[(\neg p\implies \perp)\implies p\]
+	tomando $(\neg p \implies \perp)\implies p$ y aplicando modus ponens, obtenemos $T\vdash p$.
 \end{proof}
 
 \begin{defn}[Teoría completa]
@@ -472,25 +472,34 @@ Se sabe que \textbf{TAUT} es NP-difícil.
 	\label{thm:lindenbaum}
 \end{theorem}
 \begin{proof}
-	Usamos el lema de Zorn. Sea $T$ consistente y sea $P$ el conjunto de todas las teorías consistentes que extienden a $T$. Definimos un orden parcial en $P$ mediante inclusión:
-	$$T_1\le T_2 \iff T_1\subset T_2$$
+	En esta demostración nos apoyaremos en el Lemma de Zorn.
+
+	Sea $T$ una teoría consistente y sea $P$ el conjunto de todas las teorías consistentes que extienden a $T$, definimos un orden parcial en $P$ mediante inclusión:
+	\[T_1\le T_2 \iff T_1\subset T_2\]
 
 	Sea $\{T_\alpha\}_{\alpha\in\Lambda}$ una cadena en $P$.
 
-	Si $\cup_{\alpha\in\Lambda} T_\alpha$ es consistente, entonces es una cota superior de la cadena. Trivialmente, $\forall\gamma\in\Lambda$, $T_\gamma \le \cup_{\alpha \in \Lambda} T_\alpha$.
+	Si $\cup_{\alpha\in\Lambda} T_\alpha$ es consistente, entonces es una cota superior de la cadena.
 
-	Para ver que toda $T_\alpha$ es consistente $\implies$ $\cup_{\alpha\in\Lambda}T_\alpha$ es consistente, consideramos la formulación equivalente: ``Si $\cup_{\alpha\in\Lambda}T_\alpha \vdash \perp$, entonces $\exists \beta\in\Lambda \tq T_\beta \vdash \perp$''.
+	Puesto que todas las $T_\alpha$ son consistentes, la unión será consistente.
+	\begin{proof}
+	Queremos probar que:
+	\[\bigcup_α T_α \vdash \perp \implies \exists α \ T_α \vdash \perp \equiv \forall α \ T_α \nvdash \perp \implies \bigcup_αT_α \nvdash \perp\]
 
-	\textbf{Razón:} Sea $p_1,\hdots,p_n = \perp$ una prueba formal de $\perp$. Entonces, $\exists T_{\alpha_1}\vdash p_1$, $T_{\alpha_2} \supset T_{\alpha_1}$ tal que $T_{\alpha_2}\vdash p_2, \hdots, T_{\alpha_n}\supset T_{\alpha_{n-1}}$ tal que $T_{\alpha_n}\vdash \perp, T_\beta = T_{\alpha_n}$.
+	Realizaremos la prueba por reducción al absurdo.
 
-	Por Zorn, $P$ tiene un elemento maximal $M\supset T$, $M\in P \implies M$ consistente y $M$ maximal $\implies\forall p \in FBF(L)$, o $M\vdash p$ o $M\vdash \neg p$.
+	Sea $p_1,\hdots,p_n = \perp$ una prueba formal de $\perp$. Entonces, $\exists T_{\alpha_1}\vdash p_1$, $\exists T_{\alpha_2} \supset T_{\alpha_1}$ tal que $T_{\alpha_2}\vdash p_2, \hdots, T_{\alpha_n}\supset \exists T_{\alpha_{n-1}}$ tal que $T_{\alpha_n}\vdash p_n$.
 
-	Si no, es decir, si $M\nvdash p$ y $M\nvdash \neg p$, tanto $M\cup\{p\}$ como $M\cup\{\neg p\}$ son consistentes, por el teorema \ref{thm:pconsnegp} y, puesto que $M$ es maximal y  $M\cup\{p\}$ extiende a $T$ y es consistente tendremos que $p \in M$. Del mismo modo, $\neg p \in M$.
+	\obs Al final del ``procedimiento'' que acabamos de definir llegamos a una teoría $T_n$ que contiene a todos los $p_i$ y que, por tanto $T_n \vdash \perp$. Pero estábamos considerando que todas las $T_i$ eran consistentes, por lo que acabamos de llegar a una contradicción.
 
-	Pero si ocurre esto, de $M$ se podrían deducir $p$ y $\neg p$ con lo que dejaría de ser consistente llegando a una contradicción.
+	Queda claro pues que la unión de teorías consistentes es consistente.
+	\end{proof}
 
-	Por tanto $M$ es completa.
+	Por el lema de Zorn sabemos que $P=\bigcup_αT_α$ tiene un elemento maximal $M$, que contiene a $T$. Por tanto $M\in P$, lo que implica que $M$ es consistente.
 
+	Además, por ser $M$ maximal tenemos que $\forall p \ M \vdash p \Or M \vdash \neg p$ puesto que de no ser así, tanto $M\cup\{p\}$ como $M\cup\{\neg p\}$ serían consistentes y extenderían $T$ por lo que pertencerían a $P$. Puesto que $M$ es el elemento maximal de $P$ tenemos que $M\cup\{p\} \subset M \implies p \in M$ y $M\cup\{\neg p\}\subset M \implies \neg p \in M$ con lo que $M$ no sería consistente.
+
+	Queda claro pues que $M$ es la extensión completa de la teoría que estábamos buscando.
 \end{proof}
 
 \begin{theorem}[Teorema de completitud II]
