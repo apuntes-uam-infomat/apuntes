@@ -1515,7 +1515,7 @@ A la hora de trabajar con subespacios, tendremos también conceptos familares. L
 
 Por ser esa generalización de los espacios euclídeos, tienen propiedades geométricas muy familiares. De hecho, muchas nos valen incluso para espacios pre-Hilbertianos, ya sean reales o complejos.
 
-\begin{prop}[Desigualdad\IS de Cauchy-Schwartz] Dados $\vx,\vy ∈ V$, se tiene que \[ \abs{\pesc{x,y}} ≤ \norm{x} \norm{y} \]
+\begin{prop}[Desigualdad\IS de Cauchy-Schwartz] \label{def:DesigCauchySchwartz} Dados $\vx,\vy ∈ V$, se tiene que \[ \abs{\pesc{x,y}} ≤ \norm{x} \norm{y} \]
 \end{prop}
 
 \begin{proof}  Lo hacemos para el caso complejo porque el real es demasiado fácil. Es obvio que \[ 0 ≤ \norm{λ \frac{x}{\norm{x}} - \frac{y}{\norm{y}}}^2\] para todo $λ ∈ ℂ$. Desarrollando eso y tomando $λ = \frac{\pesc{x,y}}{\abs{\pesc{x,y}}}$ sale.
@@ -1591,12 +1591,12 @@ Este corolario nos permite definir la \concept{Proyección\IS ortogonal} de un v
 
 Con esto, podemos definir unas estructuras que nos permitirán trabajar mejor con cosas ortogonales.
 
-\begin{defn}[Complemento\IS ortogonal] Sea $V$ un subespacio vectorial de un espacio Hilbert $H$. Entonces definimos $V^\perp$ como el complemento ortogonal de $V$ dado por \[ V^\perp = \set{y ∈ H \tq \pesc{\vx,\vy} = 0 \; ∀\vx ∈ V} \]
+\begin{defn}[Complemento\IS ortogonal] \label{def:ComplOrtogonal} Sea $V$ un subespacio vectorial de un espacio Hilbert $H$. Entonces definimos $V^\perp$ como el complemento ortogonal de $V$ dado por \[ V^\perp = \set{y ∈ H \tq \pesc{\vx,\vy} = 0 \; ∀\vx ∈ V} \]
 \end{defn}
 
 Este complemento tiene dos propiedades interesantes
 
-\begin{prop} \citep{brezisFunc} Sea $V ⊂ H$ subespacio vectorial de un Hilbert $H$. Entonces su complemento ortogonal cumple que
+\begin{prop} \label{prop:PropsComplOrtogonal} \citep{brezisFunc} Sea $V ⊂ H$ subespacio vectorial de un Hilbert $H$. Entonces su complemento ortogonal cumple que
 \begin{enumerate}
 \item $V^\perp$ es cerrado.
 \item $\left(V^\perp\right)^\perp = \adh{V}$.
@@ -1605,6 +1605,11 @@ Este complemento tiene dos propiedades interesantes
 \item Dados subespacios $V,W$ cerrados, entonces $(V+W)^\perp = V^\perp ∩ W^\perp$, y $(V∩W)^\perp = \adh{V^\perp + W^\perp}$.
 \end{enumerate}
 \end{prop}
+
+\begin{proof}\begin{enumerate}
+\item Para demostrar que $V^\perp$ es cerrado, tomamos una sucesión $\set{\vv_n}_{n∈ℕ} ⊆ V^\perp$ que sea convergente en $H$ con límite $\vv = \lim_{n\to ∞} \vv_n$. Dado que $\vv_n ∈ V^\perp$, entonces $\pesc{\vv_n, \vx} = 0$ para todo $\vx ∈ V$. Entonces operamos y vemos que \[ \pesc{\vv,\vx} = \pesc{\vv - \vv_n + \vv_n, \vx} = \pesc{\vv - \vv_n, \vx} \eqreasonup[≤]{\nref{def:DesigCauchySchwartz}} \norm{\vv - \vv_n} · \norm{\vx} \convs 0 \]
+\end{enumerate}
+\end{proof}
 
 Una vez que hemos visto esto, podemos enunciar (por tercera vez, lo habíamos visto antes en \ref{thm:PrevReprRiesz} y \ref{thm:ReprRiesz}) el teorema de representación de Riesz.
 
@@ -1731,6 +1736,7 @@ Lo que hizo Fourier fue encontrar los polinomios trigonométricos \[ P_n(z) = a_
 Podremos hacer esto con la bola, por ejemplo, aunque no podremos hacerlo con $L^2(ℝ^N)$ porque no es separable. La base será no numerable, dada por $\set{e^{iξx}}_{ξ∈ℝ}$. Esa es la diferencia entre una serie de Fourier y la transformada de Fourier.
 
 \section{Series de Fourier}
+\label{sec:SeriesFourier}
 
 Una vez vista una ``ligera'' introducción a lo que significa Fourier, vamos a ir a ver la teoría formal detrás de esto. Trabajaremos en el intervalo $(0,1)$, que es equivalente a $\bbs^1$, al toro $\mathbb{T}$ en una dimensión o a $\quot{ℝ}{ℤ}$; y consideraremos el siguiente espacio de Hilbert complejo: \[ L^2(0,1) = \set{\appl{f}{(0,1)}{ℂ} \tq f(0) = f(1)} \]
 
@@ -1743,7 +1749,7 @@ Ahora queremos ver que con lo que estamos trabajando es en realidad un sistema o
 \begin{defn}[Núcleos\IS de Fejer] Los núcleos de Fejer son una sucesión $F_n$ que convergen en algún sentido a la delta de Dirac $δ_0$. Son funciones no negativas, con integral $1$, periódicas en $(0,1)$ y que cumplen que \[ F_n * \ind_I \convs \ind_I \]. Su expresión es \[ F_n(x) = \frac{1}{n} \sum_{k=0}^{n-1} D_k(x) = \frac{1}{n} \left(\frac{\sin \sfrac{nx}{2}}{\sin \sfrac{x}{2}}\right)^2 \], donde $D_k$ son los \concept{Núcleos\IS de Dirichlet} dados por \[ D_k(x) = \sum_{s=-k}^k e^{2πisx}\], que aunque no son positivos al promediarlos salen no negativos y con las propiedades que les pedíamos.
 \end{defn}
 
-Nos preguntamos ahora si, dados los coeficientes de Fourier \[ \hat{f}_k = \pesc{e_k, f}_{L^2} = \int_0^1 f(x) e^{2πi kx} \dif x \] se cumple que \[ \sum_{k=-∞}^{+∞} \hat{f}_k e^{2πi kx} = f(x) \] en casi todo punto.
+Nos preguntamos ahora si, dados los coeficientes de Fourier \( \hat{f}_k = \pesc{e_k, f}_{L^2} = \int_0^1 f(x) e^{2πi kx} \dif x \label{eq:RepresFourier} \) se cumple que \[ \sum_{k=-∞}^{+∞} \hat{f}_k e^{2πi kx} = f(x) \] en casi todo punto.
 
 Para demostrarlo, primero aproximaremos la característica de un interfvalo con los núcleos de Fejer. Por linealidad, esa aproximación nos valdrá para una suma finita de intervalos.
 
@@ -1754,7 +1760,7 @@ El hecho de probar que los $e_n$ son un SOC nos permite aplicar la teoría de lo
 f &\longmapsto \set{\hat{f}_n}_{n∈ℤ} \equiv \set{\fourier(f) (n)}_{n∈ℤ}
 \end{align*}, es una isometría que nos dice que cualquier espacio $L^2(\mathbb{T})$ (Hilbert separable) es en realidad un espacio de sucesiones numerables.
 
-En estos espacios, se cumplirán cosas como la identidad de Parseval que nos dice que \[ \norm{\hat{f}_n}_{\ell^2(ℤ)} = \sum_{n∈ℤ} \abs{\hat{f}_n}^2 = \int_0^1 \abs{f}^2 \dif = \norm{f}^2_{L^2(\mathbb{T})}\]
+En estos espacios, se cumplirán cosas como la identidad de Parseval que nos dice que \( \norm{\hat{f}_n}_{\ell^2(ℤ)} = \sum_{n∈ℤ} \abs{\hat{f}_n}^2 = \int_0^1 \abs{f}^2 \dif = \norm{f}^2_{L^2(\mathbb{T})} \label{eq:IdParseval} \)
 
 También tenemos la fórmula de inversión: \[ f(x) = \sum_{n∈ℤ} \hat{f}_n e_n = \sum_{n∈ℤ} \left(\int_0^1 f(x) e^{2πi n x}\dif x\right)e^{2πi n x}\quad \text{ CTP}\]
 
