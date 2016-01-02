@@ -458,6 +458,118 @@ N\left( 0,  \right)
 	\end{proof}
 \end{itemize}
 
+\subsection{Distancia de Mahalanobis}
+La distancia de Mahalanobis tiene como objetivo introducir la variabilidad y correlaciones de las variables a la hora de ver cuánto dista un dato de otro sabiendo que ambos provienen de cierta distribución.
+
+\begin{defn}[Distancia de Mahalanobis]\label{defn:distanciaMahalanobis}
+	La distancia de Mahalanobis de un vector aleatorio a su vector de medias se define como:
+	\[d_M(X,µ) = \sqrt{(X-µ)'Σ^{-1}(X-μ)}\]
+\end{defn}
+
+Tiene las siguientes \textbf{propiedades}:
+\begin{enumerate}
+	\item $d_M$ coincide con la distancia euclídea entre los datos estandarizados de forma multivariante
+	\item $d_M$ es adimensional
+	\item $d_M$ tiene en cuenta las diferentes variabilidades (varianzas) de las variables
+	\item $d_M$ tiene en cuenta las correlaciones entre las variables
+	\item $d_M$ bajo normalidad, su cuadrado se distribuye como una $χ_p^2$
+\end{enumerate}
+
+Vamos a comprobar la primera y última propiedad:
+\begin{proof}
+	\begin{itemize}
+		\item $d_M$ coincide con la distancia euclídea entre los datos estandarizados de forma multivariante:
+
+		Tenemos $X\sim N(μ=0,Σ=I)$ y por tanto:
+		\[d_M(X,μ=0) = \sqrt{X'IX} = \norm{X}\]
+
+		\item $d_M$ bajo normalidad, su cuadrado se distribuye como una $χ_p^2$:
+		
+		Tomando $Y = Σ^{-1/2}(X-μ)$ se tiene $Y\sim N(0,I)$, y por tanto:
+		\[d_M^2(X,μ) = (X-µ)'Σ^{-1}(X-μ) = \left[Σ^{-1/2}(X-μ)\right]'\left[Σ^{-1/2}(X-μ)\right] =\]
+		\[= Y'Y = \sum_{j=1}^p Y_j^2 \sim χ_p^2\]
+	\end{itemize}
+\end{proof}
+
+\begin{obs}
+	Si al aplicar la $d_M$ a cada uno de los datos de la observación, vemos que el histograma no corresponde con la función de densidad de una $χ_p^2$, se puede deducir que $X \overset{d}{\nsim} N_p(μ,Σ)$.
+\end{obs}
+
+\subsection{Transformaciones afines de vectores normales}
+\begin{prop}
+	Si $X \equiv N_p(μ,Σ)$, A es matriz $q×p$ y $b ∈ ℝ^q$ , entonces:
+	\[AX+b \equiv N_p(Aμ+b, AΣA')\]
+\end{prop}
+\begin{proof}
+	\begin{align*}
+		φ_{AX+b}(t) &= \mathbb{E}(e^{it'(AX+b)}) = e^{it'b}·\mathbb{E}(e^{it'AX})\\
+		&= e^{it'b}·φ_X(A't) = e^{it'b}·\text{exp}\{it'μ - \frac{1}{2}t'AΣA't\}\\
+		&= \text{exp}\{it'(Aμ+b) - \frac{1}{2}t'AΣA't\}
+	\end{align*}
+
+	Que corresponde precisamente con la función característica de una normal $N_p(Aμ+b, AΣA')$.
+\end{proof}
+
+\begin{corol}
+	Si $X =(X_1 |X_2)$, con $X_1 ∈ ℝ^q$ y $X_2 ∈ ℝ_{p-q}$,y consideramos las particiones correspondientes de $μ$ y $Σ$:
+
+	\[μ = (μ_1|μ_2), Σ = 
+		\left( \begin{array}{c|c}
+			Σ_{11} & Σ_{12}\\ \hline
+			Σ_{21} & Σ_{22}
+		\end{array} \right)
+	\]
+
+	Entonces $X_1\equiv N(μ_1, Σ_{11})$.
+\end{corol}
+
+\begin{prop}
+	Dichas $X_1$ y $X_2$ son independientes $\Leftrightarrow Σ_{12}=0$.
+\end{prop}
+\begin{proof}
+	\doneby{Jorge}
+
+	Se demuestra la implicación hacia la izquierda (la otra es equivalente pero empezando por el final).
+
+	\[f(X) = \abs{Σ}^{-1/2}(2π)^{-p/2} \text{exp}\{-\frac{1}{2}(X-μ)'Σ^{-1}(X-μ)\} = \]
+	\[= \abs{Σ}^{-1/2}(2π)^{-p/2} \text{exp}\left\{-\frac{1}{2}(X_1-μ_1, X_2-μ_2)\left[ \begin{array}{c c} Σ_{11}^{-1} & Σ_{12}^{-1}\\ Σ_{21}^{-1} & Σ_{22}^{-1}  \end{array} \right] \left( \begin{array}{c} X_1-μ_1\\ X_2-μ_2 \end{array} \right) \right\} =\]
+	
+	\begin{multline*}
+		= \abs{Σ}^{-1/2}(2π)^{-p/2} \text{exp}\{-\frac{1}{2}[ (X_1-μ_1)'Σ_{11}^{-1}(X_1-μ_1) + (X_2-μ_2)'Σ{21}^{-1}(X_1-μ_1) \\
+		+ (X_1-μ_1)'Σ{12}^{-1}(X_2-μ_2) + (X_2-μ_2)'Σ{22}^{-1}(X_2-μ_2) ] \}
+	\end{multline*}
+
+	Con $Σ_{12}=Σ{21}=0$ se tiene:
+	\begin{align*}
+		f(X) &= \abs{Σ_{11}}^{-1/2}(2π)^{-q/2}\text{exp}\left\{ -\frac{1}{2}(X_1 - μ_1)Σ_{11}^{-1}(X_1-μ_1) \right\} ·\\
+		& ·\abs{Σ_{22}}^{-1/2}(2π)^{-(p-q)/2}\text{exp}\left\{ -\frac{1}{2}(X_2 - μ_2)Σ_{22}^{-1}(X_2-μ_2) \right\} = \\
+		&= f(X_1)·f(X_2)
+	\end{align*}
+
+	Por tanto tendremos que $X_1$ y $X_2$ son independientes.
+\end{proof}
+
+\begin{obs}
+	\begin{itemize}
+		\item Si dos v.a. $X$ e $Y$ tienen distribución normal y además $Cov(X,Y) = 0$, esto no implica que $X$ e $Y$ sean independientes. {\color{gray} Para que esto sea cierto es necesario que $X$ e $Y$ sean conjuntamente normales.}
+
+		\item Si dos v.a. $X$ e $Y$ tienen distribución normal y $a,b ∈ R$, la combinación lineal $aX + bY$ no tiene necesariamente distribución normal. {\color{gray} Para que esto sea cierto es necesario que $X$ e $Y$ sean independientes.}
+		\begin{proof}
+			\doneby{Jorge}
+
+			Con independencia se tiene:
+			\[φ_{aX+bY}(t) = \mathbb{E}[e^{it(aX+bY)}] = \mathbb{E}[e^{itaX}]\mathbb{E}[e^{itbY}] =\]
+			\[= φ_X(ta)·φ_Y(tb) = \text{exp}\{itaμ_X - \frac{1}{2}σ_X^2t^2a^2\}·\text{exp}\{itbμ_Y- \frac{1}{2}σ_Y^2t^2b^2\}=\]
+			\[= \text{exp}\{it(aμ_X + bμ_Y) - \frac{1}{2}(σ_X^2a^2+σ_Y^2b^2)t^2\}\]
+
+			Que coincide con la función característica de una normal:
+			\[N(aμ_X + bμ_Y, σ_X^2a^2+σ_Y^2b^2)\]
+		\end{proof}
+
+		\item Aunque todas las marginales de un vector aleatorio $p$-dimensional $X$ tengan distribución normal, esto no implica que $X$ tenga distribución normal $p$-dimensional.{\color{gray} Para que esto sea cierto es necesario que $X$ e $Y$ sean independientes. Se demuestra en el ejercicio 4 de la hoja 1 \ref{ejrc:4-hoja1}.}
+	\end{itemize}
+\end{obs}
+
 \subsection{Distribuciones condicionadas}
 
 \begin{prop}
