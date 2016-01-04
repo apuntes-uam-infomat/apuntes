@@ -44,7 +44,7 @@ Lo cierto es que esto es el \nlref{thm:ConvMonotonaSeries}, así que no hay que 
 
 \end{problem}
 
-\begin{problem}[5] Probar la siguiente generalización de la \nref{prop:DesigualdadMarkov}. Sea $\appl{g}{ℝ}{[0, +∞]}$ una función medible y creciente en la imagen de $\appl{f}{\meas}{ℝ}$. Probar que \[ μ\left(\set{x ∈ X \tq f(x) > t}\right) ≤ \frac{1}{g(t)} \int_X g(f(x)) \dif μ(x) \]
+\begin{problem}[5] Probar la siguiente generalización de la \nref{prop:DesigualdadMarkov}. Sea $\appl{g}{ℝ}{[0, +∞]}$ una función medible y creciente en la imagen de $\appl{f}{\meas}{ℝ}$. Probar que \( μ\left(\set{x ∈ X \tq f(x) > t}\right) ≤ \frac{1}{g(t)} \int_X g(f(x)) \dif μ(x) \label{eq:H1E5} \)
 
 Como consecuencia, probar que si $f_n \convs f$ en $\espL$, entonces $f_n \convs f$ en medida.
 \solution
@@ -58,8 +58,7 @@ Como $g$ es creciente en la imagen de $f$, tenemos que $∀a ∈ f(E),\, g(a) > 
 Ahora tenemos que usar esto para demostrar que si $f_n \convs f$ en $\espL$, entonces $f_n \convs f$ en medida o, en otras palabras, que
 \[ \int_X \abs{f_n - f} \dif μ \to 0 \implies ∀ε > 0 \quad μ\left(\set{x∈X \tq \abs{f_n(x) - f(x)} > ε}\right) \to 0 \]
 
-% TODO: Acabar esto.
-
+Sea $h_n(x) = \abs{f_n - f}$ y $g(t) = εt$. $g$ es medible y creciente en la imagen de $h_n$, así que podemos aplicar \eqref{eq:H1E5}, y como $\int_X h_n \dif μ \to 0$ entonces tendremos que $μ(h_n > ε) \to 0$ igualmente.
 \end{problem}
 
 \section{Hoja 2 - Medidas con signo y Teorema de Lebesgue-Radon-Nikodim}
@@ -151,6 +150,13 @@ Si ahora hacemos la integral de $Mf$ nos quedará que \[ \norm{Mf}_{\espL} = \in
 \begin{problem} A partir del \nref{thm:Maximal} y usando la \nlref{thm:DesigualdadJensen}, probar que si $p ∈ [1,∞)$ existe $C < ∞$ tal que para toda $f ∈ \espLp(ℝ)$ y para todo $λ>0$ se cumple que \[ m\left(\set{x ∈ ℝ \tq Mf(x) > λ}\right) ≤ \frac{C}{λ^p} \int_ℝ \abs{f(y)}^p \dif y \] donde $M$ es la \nlref{def:FuncMaximalHL}.
 
 \solution
+
+Está claro que si $Mf(x) > λ$, entonces $(Mf(x))^p > λ^p$. Operamos con $(Mf(x))^p$: \[ (Mf(x))^p = \left(\sup_{r>0} \fint_{\bola_r(x)} \abs{f} \dif μ\right)^p = \sup_{r>0} \left(\fint_{\bola_r(x)} \abs{f} \dif μ\right)^p\]
+
+Sea entonces $φ(t) = t^p$. Como nos dicen que $p ∈ [1,∞)$, entonces φ es convexa y estamos en las condiciones de la desigualdad de Jensen. Así, podemos decir que \[ \sup_{r>0} \left(\fint_{\bola_r(x)} \abs{f} \dif μ\right)^p ≤ \sup_{r>0} \fint_{\bola_r(x)} \abs{f}^p \dif μ = Mf^p (x)\]
+
+Como $(Mf(x))^p ≤ Mf^p(x)$, entonces\footnote{Por simplificar notación $\set{Mf(x) > λ} \equiv \set{x ∈ ℝ \tq Mf(x) > λ}$.} $m\left(\set{(Mf(x))^p > λ^p}\right) ≤ m\left(\set{Mf^p(x) > λ^p}\right)$. Aplicando el Teorema Maximal a esa segunda medida, tenemos que \[ m\left(\set{(Mf(x))^p > λ^p}\right) ≤ m\left(\set{Mf^p(x) > λ^p}\right) ≤ \frac{C}{λ^p} \int_ℝ \abs{f^p(y)} \dif y \] que es lo que queríamos demostrar (como tenemos el valor absoluto ahí, podemos meter y sacar el exponente $p$ tranquilamente).
+
 \end{problem}
 
 \begin{problem}[13] Probar el siguiente teorema que relaciona la derivada de Radon-Nikodim con el \nref{thm:DifLebesgue}. Sea μ una medida de Borel Regular y sea $μ = μ_S + μ_{AC}$ con $μ_{AC} = f \dif m$.  Entonces, para casi todo punto $x ∈ ℝ^n$, se tiene que \[ \lim_{r \to 0} \frac{μ(E_r)}{m(E_r)} = f(x) \] para toda familia $\set{E_r}$ que tiende suavemente (\fref{def:EncogerBien}) a $x$.
@@ -397,5 +403,38 @@ Y bueno, ya supongo que la función esa que decían sale. No me apetece hacer m�
 \solution
 \end{problem}
 
-
 \section{Hoja 6 - Transformada de Fourier}
+
+\begin{problem} Para una función $\appl{f}{ℝ^N}{ℝ}$ se define la traslación por $y ∈ ℝ^N$ como $(T_yf) (x) = f(x-y)$, la modulación por $z ∈ ℝ^N$ como $(M_zf)(x) = e^{2πix·z}f(x)$ y la dilatación por una matriz de orden $N$ no singular $A$ como $(D_A f)(x) = f(Ax)$. Demostrar las siguientes identidades:
+
+\ppart $\widehat{(T_yf)}(ξ) = (M_{-y}\hat{f})(ξ)$.
+\ppart $\widehat{(M_zf)}(ξ) = (T_{z}\hat{f})(ξ)$.
+\ppart $\widehat{(D_Af)}(ξ) = \frac{1}{\abs{\det A}}(D_{(\inv{A})^T}\hat{f})(ξ)$.
+
+\solution
+
+A modo de recordatorio, la \nref{def:TransFourier} se define como \[ \hat{f}(ξ) = \int_{ℝ^N} f(x) e^{-2πixξ} \dif x\quad ξ∈ℝ^N \]
+
+\spart
+
+\[ \widehat{(T_yf)}(ξ) = \int_ℝ f(x-y) e^{-2πixξ} \dif x = e^{2πiξ·(-y)} \int_ℝ f(x-y) e^{-2πi(x - y)ξ} \dif x = (M_{-y}\hat{f})(ξ) \]
+
+\spart
+
+\[ \widehat{(M_z f)}(ξ) = \int_ℝ e^{2πix·z} f(x) e^{-2πixξ} \dif x = \int_ℝ f(x) e^{-2πix(ξ-z)} \dif x = (T_z\hat{f}) (ξ) \]
+
+\spart
+
+\[ \widehat{(D_Af)}(ξ) = \int_ℝ f(Ax) e^{-2πixξ} \dif x \]
+
+\end{problem}
+
+
+\begin{problem}[6] Si $λ > 0$ y $x ∈ ℝ$, calcular \[ \lim_{R\to ∞} \int_{-R}^R \frac{\sin λt}{t} e^{itx} \dif t \]
+
+Sugerencia: escribir $\sfrac{\sin λt}{t}$ como transformada de Fourier de una función característica, usar Fubini y después pasar al límite. En el último paso quizás necesites usar $\int_0^{∞} \sfrac{\sin x}{x} \dif x = \sfrac{π}{2}$.
+
+\solution
+
+
+\end{problem}
