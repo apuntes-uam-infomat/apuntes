@@ -290,7 +290,7 @@ Al igual que en el caso unidimensional, nos interesaría poder transformar una n
 \begin{proof}
 Sabemos por definición que:
 \[
-f_X(x)=\abs{\Sigma}^{-1/2}(2\pi)^{-p/2} exp \left( -\frac{1}{2}(x-\mu)' \right)
+f(x) = |Σ|^\frac{-1}{2}(2π)^{\frac{-p}{2}}\exp\left\{ -\frac{1}{2}(x-μ)'Σ^{-1}(x-μ) \right\}\; x∈ℝ^p
 \]
 
 Vamos a aplicar un cambio de variable en la fórmula de la densidad:
@@ -604,27 +604,27 @@ Definimos $X_{2.1} = X_2 - Σ_{21}Σ_{11}^{-1}X_1$.
 X_1\\
 X_{2.1}
 \end{pmatrix} =
-\begin{pmatrix}
-I &| &0\\
+\left(\begin{array}{c | c}
+I & 0\\
 \hline
-- Σ_{21}Σ_{11}^{-1}  &| &I
- \end{pmatrix}
+- Σ_{21}Σ_{11}^{-1}  & I
+ \end{array}\right)
 \]
 
 Como es una combinación lineal de $(X_1,X_2)'$, entonces $X_{2.1}$ es normal multivariante.
 
 Vamos a calcular la media y la matriz de covarianzas de $X_{2.1}$
 
-$X_{2-1} = N\left( µ_2-Σ_{21}Σ_{11}^{-1}µ_1 , \begin{pmatrix} Σ_{11} &|&0\\\hline 0&|&Σ_{2.1} \end{pmatrix} \right)$
+$X_{2-1} = N\left( µ_2-Σ_{21}Σ_{11}^{-1}µ_1 , \left(\begin{array}{c | c} Σ_{11} & 0\\\hline 0& Σ_{2.1} \end{array}\right) \right)$
 
 Donde las covarianzas se calculan: $AΣA'$, siendo $A$ la matriz de la combinación lineal, es decir:
 
 \[
-A=\begin{pmatrix}
-I &| &0\\
+A=\left(\begin{array}{c|c}
+I &0\\
 \hline
-- Σ_{21}Σ_{11}^{-1}  &| &I
- \end{pmatrix}
+- Σ_{21}Σ_{11}^{-1} &I
+ \end{array}\right)
 \]
 
 
@@ -742,25 +742,56 @@ En este caso, al ser homocedásticas (\ref{defn::Homocedasticidad}) entonces $\v
 \subsection{Formas cuadráticas bajo normalidad}
 
 \begin{prop}[]
-Sea $B$ una matriz simétrica e idempontente, $$Y\sim N_2(µ,σ^2I_n)$$ y \[µ'Bµ = 0 \text{  y  } p = Rg(B)\]
+Bajo las hipótesis:
+\begin{enumerate}
+	\item $B$ una matriz simétrica e idempontente
+	\item $Y\sim N_2(µ,σ^2I_n)$
+	\item µ'Bµ = 0
+\end{enumerate}
 
-\textbf{Entonces: } \[\frac{Y'BY}{σ^2} \equiv \chi_p^2 \]
+\textbf{se tiene que:}
+\[\frac{Y'BY}{σ^2} \equiv \chi_p^2 \]
+\indent con $p=Rg(B)$.
 \end{prop}
 
 \obs
 \begin{itemize}
-	\item La única matriz idempontente de rango completo es $I_n$
-	\item $λ = 0,1 ∀λ$ autovalor de $B$.
+	\item La única matriz idempontente de rango completo es $I_n$.
+	\item $λ = 0,1\ ∀λ$ autovalor de $B$.
 	\begin{proof}
 \[\left.\begin{array}{c} Bu = λu\\ Bu=B^2u = λBu = λ^2u \end{array}\right\} λu = λ^2u \implies λ=0,1\]
 	\end{proof}
 
-	\subitem Este último hecho permite calcular los grados de libertad de la distribución más fácilmente, ya que $p = Rg(B) = tr(B) = \#\{i \tq λ_i = 1\}$
+	\item Este último hecho permite calcular los grados de libertad de la distribución más fácilmente, ya que $p = Rg(B) = tr(B) = \#\{i \tq λ_i = 1\}$
 \end{itemize}
+
+\begin{proof}
+	Puesto que $B$ es simétrica e idempotente tenemos que se puede expresar como $B=CDC'$ donde $C$ es una matriz formada por autovectores ortonormales y $D$ es la matriz diagonal con los autovalores de $B$ (que como ya hemos visto serán exclusivamente $λ=0,1$).
+
+	\[B = CDC' = (\underset{n×p}{C_1},C_2)
+		\left(\begin{array}{c | c}
+			I_p & 0\\ \hline
+			0 & 0
+		\end{array}\right)
+		\left(\begin{array}{c}
+			C_1\\ \hline
+			C_2
+		\end{array}\right) = C_1C_1'
+	\]
+	Puesto que $C_1$ está formado por autovectores ortogonales se tiene que:
+	\[C_1'C_1 = I_p\]
+	\[Y'BY = Y'C_1\underbrace{C_1'Y}_{Z}=Z'Z = \sum_{i=1}^pz_i^2\]
+	\[Z\sim N_p(C_1'μ, σ^2I_p)\]
+
+	Pero se puede ver que la media es nula haciendo uso de la tercera hipótesis:
+	\[\norm{C_1'μ}^2 = μ'C_1C_1'μ = μ'Bμ = 0 \implies C_1'μ=0\]
+	Así ya solo falta dividir por $σ^2$ para llegar a que $z_1,…,z_p \overset{\text{iid}}{\sim} N(0,1)$ y por tanto:
+	\[\frac{Y'BY}{σ^2} \equiv \chi_p^2\]
+\end{proof}
 
 \begin{prop}[Formas cuadráticas bajo normalidad]
 \label{prop:tema1_pepino}
-Sea $\vec{Y}\equiv = N_n (µ,σ^2I_n)$ y sean $A_{p\times n},B_{q\times n},C_{n\times n},D_{n\times n}$ con $C,D$ simétricas.
+Sea $\vec{Y}\equiv N_n (µ,σ^2I_n)$ y sean $A_{p\times n},B_{q\times n},C_{n\times n},D_{n\times n}$ con $C,D$ simétricas e idempotentes.
 
 \textbf{Entonces:}
 \begin{itemize}
@@ -769,11 +800,32 @@ Sea $\vec{Y}\equiv = N_n (µ,σ^2I_n)$ y sean $A_{p\times n},B_{q\times n},C_{n\
 	\item $AY$ e $Y'CY$ son independientes $\dimplies AC=0$
 \end{itemize}
 
+\begin{proof}
+	\begin{itemize}
+		\item La primera afirmación se demuestra realizando una transformación lineal sobre $Y$:
+		\[\left( \begin{array}{c} A\\B \end{array} \right)Y \sim
+			N\left(
+				\left( \begin{array}{c} A\\B \end{array} \right)μ,
+				σ^2·\left(\begin{array}{c|c}
+					AA' & AB'\\ \hline
+					BA' & BB'
+				\end{array}\right)
+			\right)
+		\]
+		Por tanto tendremos independencia $\dimplies AB' = 0$.
+
+		\item La segunda afirmación se deduce como consecuencia de la primera pues:
+		\[Y'CY = \norm{CY}^2 = Y'\underbrace{C'C}_{C}Y\]
+		\[Y'DY = \norm{DY}^2\]
+		\item La tercera afirmación es consecuencia directa de las dos anteriores.
+	\end{itemize}
+\end{proof}
+
 \end{prop}
 
 \begin{lemma}[Lema\IS de Fisher]
 \label{lemma:fisher}
-Sean $Y_1,..,Y_n \overset{iid}{\sim} N(µ,σ)$. Vamos a considerar el vector cuyas marginales son estas $Y \equiv (Y_1,...,Y_n) = N(µ1_n,σ^2I_n)$\footnote{$1_n = (1,1,...,1)$ n veces.}
+Sean $Y_1,..,Y_n \overset{iid}{\sim} N(µ,σ)$. Vamos a considerar el vector cuyas marginales son estas $Y \equiv (Y_1,...,Y_n) = N(µ1_n',σ^2I_n)$\footnote{$1_n = (1,1,...,1)$ n veces.}
 
 \textbf{Entonces: } $\gor{Y}, S^2 = \frac{\sum (Y_i - \gor{Y})^2}{n-1}$ son independientes. Además,
 \[\frac{(n-1)S^2}{σ^2} \equiv \chi^2_{n-1}\]
@@ -781,7 +833,32 @@ Sean $Y_1,..,Y_n \overset{iid}{\sim} N(µ,σ)$. Vamos a considerar el vector cuy
 \end{lemma}
 
 \begin{proof}
-Lamentándolo mucho, la prueba será ignorada por el momento.
+	Vamos a tomar $\gor{Y} = \frac{1}{n}1_nY$:
+	\[\sum_{i=1}^n (Y_i - \gor{Y})^2 = \left(\sum_{i=1}^n Y_i^2\right) - n\gor{Y}^2 = Y'Y - Y'\underbrace{\frac{1}{n}1_n'1_n}_{M}Y =\]
+
+	Donde $M$ es una matriz $n×n$:
+	\[
+		M = \left(\begin{array}{c c c}
+			\frac{1}{n} & … & \frac{1}{n}\\
+			\vdots & & \vdots \\
+			\frac{1}{n} & … & \frac{1}{n}
+		\end{array}\right)
+	\]
+
+	\[= Y'Y - Y'MY = Y'(I-M)Y\]
+
+	Tenemos que $M$ es una matriz simétrica e idempotente cuyas columnas generan el subespacio sobre el que proyectamos (en este caso el subespacio $V\equiv <(1,…,1)>$). Y por tanto $I-M$ también será matriz simétrica e idempotente.
+
+	De modo que para poder aplicar la proposición \ref{prop:tema1_pepino} debemos ver si $(μ1_n)(I-M)(μ1_n)'=0$:
+
+	\[μ^21_n(I-M)1_n' = μ^21_n(1_n' - 1_n') = 0\]
+
+	Lo siguiente es ver el rango de $I-M$:
+	\[rg(I-M) = tr(I-M) = tr(I) - tr(M) = n-1\]
+
+	Ahora ya estamos en condiciones de aplicar la proposición \ref{prop:tema1_pepino} para obtener que:
+
+	\[\frac{\sum(Y_i - \gor{Y})^2}{σ^2} = \frac{Y'(I-M)Y}{σ^2} \equiv χ_{n-1}^2\]
 \end{proof}
 
 
