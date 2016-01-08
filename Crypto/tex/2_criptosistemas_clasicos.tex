@@ -154,17 +154,20 @@ A lo largo de este capítulo veremos los métodos que han sido empleados a lo la
 				$f_{a,b}$ inyectiva $\iff a \in U(\mathbb{Z}/N)$
 
 				\begin{proof}
+
+					Vamos a demostrar los dos sentidos de la implicación.
+
 					\begin{itemize}
-					\item $\Leftarrow$)
-						Visto
-
 					\item $\Rightarrow$)
+						Si la función es inyectiva, como nos estamos moviendo entre cuerpos finitos, la función será también sobreyectiva.
 
-					$f_{a,b}$ inyectiva $\implies$ $f_{a,b}^{-1} = f_{a^{-1},-a^{-1}b}$
+						Por ser sobreyectiva sabemos que, en concreto:
+						\[\exists α \tq f_{a,b}(α)=1+b \implies aα+b = 1+b \implies aα=1 \implies α=1^{-1}\]
 
-					$f_{a,b}$ sobreyectiva (porque $\mathbb{Z}/N$ es finito) $\implies$
+					\item $\Leftarrow$)
 
-					$$\exists \alpha \in \mathbb{Z}/N : f_{a,b}(\alpha) = 1 + b \implies a \alpha + b = 1 + b \implies a \alpha = 1$$
+						Si $a\in U(\mathbb{Z}/N)$ sabemos que existe su inverso. Sabiendo esto, es fácil ver que
+						\[f_{a,b}(x_1)=f_{a,b}(x_2) \implies ax_1+b=ax_2+b \implies a(x_1-x_2)=0 \implies \atop x_1-x_2=a^{-1}\cdot 0 \implies x_1-x_2=0 \implies x_1=x_2\]
 
 					\end{itemize}
 				\end{proof}
@@ -198,7 +201,7 @@ A lo largo de este capítulo veremos los métodos que han sido empleados a lo la
 
 			Volvemos entonces al número de claves ya que sabemos como calcularlo:
 
-			$$ \#E = \#U(\mathbb{Z}/N) * \#\mathbb{Z}/N = \phi(N)*N $$
+			$$ \#E = \#U(\mathbb{Z}/N) * \#\mathbb{Z}/N = \varphi(N)*N $$
 
 
 			\subsection{La función de Euler}
@@ -210,13 +213,46 @@ A lo largo de este capítulo veremos los métodos que han sido empleados a lo la
 
 				En el caso de que queramos calcular la función de Euler de un número primo $p$ tenemos:
 
-				$\phi(p) = p-1$
+				\[\varphi(p) = p-1\]
 
-				$\phi(p^n) = p^{n} - p^{n-1} = p^{n-1} (p-1) = p^{n}(1- \frac{1}{p})$
+				\[\varphi(p^n) = p^{n} - p^{n-1} = p^{n-1} (p-1) = p^{n}\left(1- \frac{1}{p}\right)\]
 
-				Como es una función multiplicativa:
+				Vamos a demostrar esta fórmula que acabamos de ver por inducción:
+				\begin{proof}
+				Es evidente que en el caso $n=1$ la fórmula es correcta.
 
-				$\phi(N) =N \Pi \phi(P_i^{n_i}) = \Pi P_i^{n_i} n_i \Pi \left(1- \frac{1}{p_i}\right) = N \Pi\left(1 - \frac{1}{p_i}\right)$
+				Suponemos que la hipótesis es válida para un cierto $n$ y tratamos de ver qué ocurre con $n+1$.
+
+				Considerando el número $p^{n+1}$ vamos a contar todos los enteros menores que él y eliminaremos de la cuenta aquellos enteros que sabemos no son coprimos.
+
+				\begin{enumerate}
+
+				\item Empezamos teniendo $p^{n+1}-1$ enteros menores que $p^{n+1}$.
+
+				\item Sabemos que todos los números que no sean coprimos con $p^n$ tampoco lo seρán con $p^{n+1}$, con lo que debemos eliminar de la lista:
+				\[\varphi(p^n)=p^n-p^{n-1} \text{(hipótesis de inducción)}\]
+
+
+				\item Por último debemos eliminar de la lista los múltiplos de $p$, de $p^2$, $p^3$, ... $p^n$ comprendidos entre $p^{n+1}$ y $p^n$.
+
+				Es sencillo ver que en este intervalo tendremos \\$p-1$ múltiplos de $p^n$.
+
+				Así también tendremos $p^2-p$ múltiplos de $p^{n-1}$. En general, tendremos\\
+				$p^i-p^{i-1}$ múltiplos de $p^i$.
+				\end{enumerate}
+
+				Combinando lo que acabamos de ver tenemos:
+				\[\varphi(p^{n+1})=p^{n+1}-1-p^n+p^{n-1}-\sum_{i=1}^{n-1}p^{i}-p^{i-1}\]
+
+				En cuanto nos percatamos de que estamos ante una suma telescópica es sencillo comprobar que:
+				\[\varphi(p^{n+1}) = p^{n+1}-p^n\]
+
+				con lo que damos por concluida la demostración por inducción.
+				\end{proof}
+
+				Como es una función multiplicativa, siendo $N=\prod p_i^{n_1}$ la factorización de $N$, podemos escribir:
+
+				\[\varphi(N) =\prod \varphi(p_i^{n_i}) = \prod p_i^{n_i} \prod \left(1- \frac{1}{p_i}\right) = N \prod\left(1 - \frac{1}{p_i}\right)\]
 				\label{func:Euler}
 				\end{defn}
 
@@ -450,7 +486,6 @@ Finalmente, multiplicando todos estos valores, vemos el número de posibles matr
 
 Hasta ahora hemos estado considerando que el alfabeto tiene un tamaño primo y, con esa condición, hemos visto cómo calcular el número de claves posibles sea cual sea la forma en que hemos agrupado las letras.
 
-\newpage
 Sin embargo, la condición de que $n$ sea primero es demasiado restrictiva. Veamos qué hacer cuando no es así:
 \begin{itemize}
 \item \textbf{Si el tamaño del alfabeto es potencia de un primo}
@@ -716,3 +751,25 @@ La única forma de descifrar un mensaje cifrado con este sistema es conocer la c
 
 El inconveniente de este sistema es que para cada mensaje hay que emplear una nueva clave aleatoria distinta de la anterior. El motivo por el que no se usa este sistema es la necesidad de compartir ese cuaderno de claves y mantenerlo secreto.
 
+\subsubsection{Explicación matemática del índice de coincidencia}
+
+Como ya hemos comentado, la forma práctica de hacer uso del \textbf{índice de coincidencia} consiste en tomar el texto cifrado y escribir debajo de él una copia del mismo. Una vez tenemos las letras dispuestas de esta forma desplazamos el texto inferior una poisición a la derecha y comprobamos con que frecuencia letras colocadas una bajo la otra coinciden. Tras esto desplazamos una vez más y volvemos a calcular este valor y así sucesivamente.
+
+Cuando se comparan letras a distancia $n$, siendo $n$ la longitud de la palabra clave, estamos considerando letras que han sido cifradas con el mismo \textbf{cifrado de César}.
+
+Sean estas letras:
+\[a_1a_2a_3,...,a_r\]
+Cuando calculásemos el \textbf{índice de coincidencia} sobre esta secuencia de palabras estamos calculando:
+\[I.C. = \frac{1}{(n-1)^2}\sum_{i=1}^r\sum_{j=i}^r\ind_{\{a_i=a_j\}}\footnote{La función $\ind_{\{a_i=a_j\}}$ toma el valor 1 únicamente cuando $a_i=a_j$, valiendo 0 en caso contrario.}\]
+
+Por otro lado, el valor que se calcula al aplicar el procedimiento que acabamos de ver es:
+\[α = \frac{1}{n-1} \sum_{i=1}^r \ind_{\{a_i=a_{i+1}\}}\]
+
+Puesto que el texto ha sido escogido al azar y estamos tomando simplemente una serie de caracteres del texto escogidos de forma aleatoria, es sencillo convencerse de que:
+\[\forall j < n \ α \simeq \frac{1}{n-1}\sum_{i=1}^r\ind_{\{a_i=a_{i+j}\}}\]
+
+Teniendo esto en cuenta basta con escribir:
+\[I.C. = \frac{1}{(n-1)^2}\sum_{i=1}^r\sum_{j=i}^r\ind_{\{a_i=a_j\}} = \frac{1}{(n-1)^2}\sum_{i=1}^r \left( \ind_{a_i=a_{i+1}} + ... + \ind_{a_i=a_{i+n-1}}\right)\simeq\]
+\[\simeq \frac{1}{(n-1)^2}\sum_{i=1}^r(n-1)\ind_{a_i=a_{i+1}} = \frac{1}{n-1}\sum_{i=1}^r\ind_{a_i=a_{i+1}}=α\]
+
+Por tanto, llegados a cierto punto obtendremos un valor similar al \textbf{índice de frecuencia} del idioma en que fue escrito el texto y, sabiendo cuántos desplazamientos hemos realizado, conoceremos la longitud de la \textbf{palabra clave} empleada.

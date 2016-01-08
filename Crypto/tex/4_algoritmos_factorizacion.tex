@@ -19,9 +19,9 @@ Una vez tenemos la lista de primos existentes menores que $\sqrt{n}$ (cosa que e
 \[O(\log^3(n))\cdot O\left(\frac{\sqrt{n}}{\log(\sqrt{n})}\right) = O\left( e^{\frac{1}{2}\log(n)}\log^2(n)\right) \text{ operaciones }\]
 
 \begin{example}
-Supongamos que queremos factorizar un número del orden de $10^{75}$ empleando el ordenador mas rápido del punto.
+Supongamos que queremos factorizar un número del orden de $10^{75}$ empleando el ordenador mas rápido del mundo.
 
-El ordenador mas rápido del punto es capaz de realizar 33,86 PETAFLOPS, es decir, realizar un total de $33.86 \cdot 10^{15}$ operaciones por segundo.
+El ordenador mas rápido del mundo es capaz de realizar 33,86 PETAFLOPS, es decir, realizar un total de $33.86 \cdot 10^{15}$ operaciones por segundo.
 
 Puesto que un año tiene $3,1537 \cdot 10^{7}$ segundos, tenemos que en un año podemos realizar, \textbf{con el ordenador más potente del mundo} un total de $10^{24}$ operaciones.
 
@@ -62,7 +62,7 @@ En esta ocasión
 \item $\implies$
 
 Sea $n$ primo, dado un elemento $a\in \ent_n$ tenemos:
-\[a=a^{-1} \mod n \iff a^2 = 1 \mod n \iff a^2-1 = m \mod n\]
+\[a=a^{-1} \mod n \iff a^2 = 1 \mod n \iff a^2-1 = 0 \mod n\]
 
 y la ecuación $a^2-1=0\mod n$ tiene, como mucho, dos raíces en un cuerpo.
 
@@ -116,11 +116,11 @@ Con este lemma, si $n$ no es primo, entonces $b^{n-1} \neq 1 \mod n$ con probabi
 
 Veamos la demostración del lemma
 \begin{proof}
-Consideramos el conjunto de valores $\{a_1,...1_r\} \subset \left(\ent_n\right)^*$ tales que
+Consideramos el conjunto de valores $\{a_1,...a_r\} \subset \left(\ent_n\right)^*$ tales que
 \[a_i^{n-1} = 1 \mod n\]
 
 Entonces $n$ no es pseudoprimo en la bases $\{b_0a_1,...,b_0a_r\}$ ya que
-\[(b_0a_i)^{n-1} = b_0^{n-1}a_i^{n-1} = b^{n-1} \neq 1 \mod n\]
+\[(b_0a_i)^{n-1} = b_0^{n-1}a_i^{n-1} = b_0^{n-1} \neq 1 \mod n\]
 
 Es decir, \textbf{si existe una base en la que no es pesudoprimo} entonces por cada base en la que sea pseudo primo tenemos otra en la que no lo es con lo que queda claro que al menos en la mitad de los casos no será pesudoprimo.
 \end{proof}
@@ -135,7 +135,7 @@ Empezamos considerando una versión \textbf{beta} del test.
 \item Si $b$ no es coprimo con $n$ entonces $n$ no es primo, obviamente
 \item Si $b$ es coprimo con $n$ calculo $b^{n-1} \mod n$ que también vimos que era una tarea \textbf{fácil}
 \end{itemize}
-\item Compruebo si $b^{n-1}$ es coprimo con $n$.
+\item Compruebo si $b^{n-1} = 1 \mod n$.
 \begin{itemize}
 \item Si $b^{n-1}\neq 1 \mod n$ entonces $n$ no es primo.
 \item Si $b^{n-1} = 1 \mod n$ entonces $n$ podría ser primo. Volvemos al paso 1.
@@ -146,6 +146,8 @@ Tras repetir el procedimiento 200 veces, si resulta que $n$ es pseudoprimo en la
 
 Sin embargo, esta versión tiene un problema: \textbf{¿Qué ocurre si $n$ es pseudoprimo en todas las bases?}.
 
+El origen de este problema, que estudiaremos en la siguiente sección, es que el Teorema de Fermat, en el que nos estamos apoyando, usa una implicación y no un si y sólo si. Es decir, todo número primo cumple cierta propiedad pero cumplirla no garantiza que estemos ante un número primo.
+
 \subsection{Números de Carmichael}
 
 \begin{defn}[Número de Carmichael]
@@ -155,7 +157,7 @@ Un \textbf{número de Carmichael} es un número compuesto tal que $b^{n-1}=1 \mo
 Lo que nos interesa es comprobar si existen números de Carmichael (evidentemente existen, pues de lo contrario no hablaríamos de ellos), ver cuántos son y si existe alguna forma útil de caracterizarlos.
 
 \begin{theorem}[Teorema de Korset (1899)]\label{theorem:Korset}
-Sea $n \in \ent$ son equivalentes:
+Sea $n \in \ent$ un número compuesto, son equivalentes:
 \begin{enumerate}
 \item \[b^n=b \mod n \ \forall b \in \ent_n\]
 \item $n$ es un número de Carmichael, es decir:
@@ -179,11 +181,13 @@ Sabiendo que $n$ es libre de cuadrados tenemos que:
 \[b^n = b \mod n \iff b^n = b \mod p \ \forall p|n\]
 
 \begin{proof}
-Para cualquier primo $p$ que divida a $n$ tenemos
-\[b^n = b \mod p \iff 0^n=0 \mod p \]
+La implicación de izquierda a derecha siempre la tenemos por definición del módulo. Es decir, si la diferencia entre dos números es múltiplo de $n$ y $p|n$, entonces la diferencia será múltiplo de $p$.
 
-Por otro lado, puesto que estamos considerando que $n$ es libre de cuadrados, sabemos que $p-1$ divide a $n-1$ por lo que podemos escribir:
-\[(b,p)=1 \implies b^n=bb^{n-1} = bb^{(p-1)k}=b\left(b^{p-1}\right)^k=b\mod p\]
+Para el otro sentido de la implicación nos apoyamos en el hecho de que $n$ es libre de cuadrados.
+
+Por ser $n$ libre de cuadrados sabemos que $p-1$ divide a $n-1$ por lo que podemos escribir:
+\[(b,p)=1 \implies b^n=b\cdot b^{n-1} = b\cdot \left( b^{p-1}\right)^k=b\mod p\]
+donde la última igualdad se apoya en el teorema de Fermat, que nos garantiza que $b^{p-1}=b \mod p$ por ser $p$ un primo.
 \end{proof}
 
 \item $2 \implies 3$
@@ -298,7 +302,7 @@ A partir de este teorema podemos desarrollar el \concept{Test de Miller-Marsin} 
 Si repetimos el test $x$ veces, la probabilidad de que pasemos el tets todas esas veces es de $\left(\frac{3}{4}\right)^x$. Es decir, la probabilidad de decir que un número $n$ es primo sin serlo es de $\left(\frac{3}{4}\right)^x$.
 
 \begin{example}
-	veamos si el 21 pasa o no el \textbf{Test de Miller-Robin}:
+	Veamos si el 21 pasa o no el \textbf{Test de Miller-Robin}:
 
 	\[n - 1 = 20 = r · 2^s = 5 · 2^2\]
 	Saco al azar $b=13$ y miramos si $b^r = 1 \mod n$:
@@ -461,7 +465,7 @@ Este algoritmo siempre nos permite factorizar un número $n$ cualquiera. No obst
 
 \subsubsection{Idea de Kraitchik~1922}
 La idea es que no necesitamos que $x^2-y^2 =n$ sino que basta con tener:
-\[x^2 = y^2 \mod n \text{ y } x \neq \pm y \mod n\]
+\[x^2 = y^2 \mod n \implies x \neq \pm y \mod n\]
 puesto que
 \[x^2 = y^2 \mod n \iff n|(x^2-y^2) \equiv n|(x-y)(x+y)\]
 
