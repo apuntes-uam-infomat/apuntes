@@ -39,6 +39,7 @@
 \RequirePackage{pdfpages}
 \RequirePackage{datetime}
 \RequirePackage{environ}
+\RequirePackage{pgfkeys}
 
 \if@removechapters
 	\numberwithin{equation}{subsection}
@@ -65,6 +66,27 @@
 }
 
 \if@apuntestitlepage % Nos piden la página de título, así que renovamos el comando \maketitle.
+
+\newif\if@showsignature
+
+% Preparamos las opciones
+\pgfkeys{
+	/apntstitle/.is family, /apntstitle,
+	signature/.is choice,
+	signature/true/.code = {\@showsignaturetrue},
+	signature/false/.code = {\@showsignaturefalse},
+	default/.style = {signature = true} % Argumentos por defecto
+}
+
+% Ejecutamos los argumentos por defecto por si el usuario no pone
+% \titlesetup en el documento
+\pgfkeys{/apntstitle, default}
+
+% Hay que hacer esta chapuza de pasar los argumentos a \maketitle antes con
+% \titlesetup porque por alguna razón no puedo redefinir \maketitle con argumentos
+% opcionales.
+\newcommand{\titlesetup}[1]{\pgfkeys{/apntstitle, #1}} % Procesamos argumentos
+
 \renewcommand{\maketitle}{
 \begin{titlepage}
 	% Primera parte: el título en modo chulo con un margen en la parte superior
@@ -105,20 +127,21 @@
 		\end{mdframed}
 	\end{minipage}
 	~
-	\begin{minipage}{0.5\textwidth} % Ahora la firmita.
-		\fontfamily{ppl}\selectfont
-		\begin{flushright}
-			\footnotesize
-			Apuntes UAM \par
-			Doble Grado Mat.Inf. \par
-			\vspace{5pt}
-			\href{http://github.com/VicdeJuan/Apuntes}{Código en Github}
-		\end{flushright}
-	\end{minipage}
+	\if@showsignature
+		\begin{minipage}{0.5\textwidth} % Ahora la firmita.
+			\fontfamily{ppl}\selectfont
+			\begin{flushright}
+				\footnotesize
+				Apuntes UAM \par
+				Doble Grado Mat.Inf. \par
+				\vspace{5pt}
+				\href{http://github.com/VicdeJuan/Apuntes}{Código en Github}
+			\end{flushright}
+		\end{minipage}
+	\fi
 	\vspace{30pt}
 \end{titlepage}
 }
-
 \fi
 
 \newcommand{\compdate}{}
