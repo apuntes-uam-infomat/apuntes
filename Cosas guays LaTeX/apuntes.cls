@@ -7,6 +7,7 @@
 \newif\if@apuntestitlepage
 \newif\if@shortheader
 \@shortheaderfalse
+\newcommand{\organization}{UAM}
 
 \DeclareOption{nobuilddate}{%
 	\def\printbuilddate{}%
@@ -94,7 +95,10 @@
 			\fontfamily{ppl}\selectfont
 			\theauthor\par
 			\vspace{5pt}
-			\noindent{\small UAM - \thedate}
+			\noindent{%
+				\ifthenelse{\equal{\organization}{}}{}{\small \organization - }%
+				\thedate
+			}
 			% Esta cadena la configuramos arriba, se puede quitar con una opción.
 			\titlepagebuilddate
 			\let\and\@oldauthorand
@@ -126,7 +130,10 @@
 	\if@shortheader
 		\lhead{\small \itshape \thetitle}
 	\else
-		\lhead{\small \itshape \thetitle\, -\, \thedate\, -\, UAM}
+		\lhead{%
+			\small \itshape \thetitle\, -\, \thedate\,%
+			\ifthenelse{\equal{\organization}{}}{}{ -\, \organization}%
+		}
 	\fi
 	\rhead{\small \theauthor}
 	\cfoot{\thepage\ de \pageref{LastPage}}
