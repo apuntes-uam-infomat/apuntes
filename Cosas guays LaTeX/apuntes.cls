@@ -118,7 +118,7 @@
 			\theauthor\par
 			\vspace{5pt}
 			\noindent{%
-				\ifthenelse{\equal{\organization}{}}{}{\small \organization - }%
+				\ifthenelse{\equal{\organization}{}}{}{\small \organization\;- }%
 				\thedate
 			}
 			% Esta cadena la configuramos arriba, se puede quitar con una opción.
