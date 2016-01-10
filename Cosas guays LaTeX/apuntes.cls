@@ -66,50 +66,52 @@
 \if@apuntestitlepage % Nos piden la página de título, así que renovamos el comando \maketitle.
 \renewcommand{\maketitle}{
 \begin{titlepage}
-% Primera parte: el título en modo chulo con un margen en la parte superior
-\vspace*{0.1\textheight}
-\noindent
-\textcolor{titlepagecolor}{%
-	\begin{hyphenrules}{nohyphenation}%
-	\Huge{\textbf{\fontfamily{lmss}\selectfont\thetitle}}%
-	\end{hyphenrules}%
-}\par
-% Una línea que ocupe toda la página
-\noindent\makebox[\linewidth]{\color{titlepagecolor}\rule{1.1\paperwidth}{2pt}}\par
-\vspace{60pt} % Margen hasta el abstract
-\noindent
-\if@abstractset % Escribimos el abstract sólo si el usuario lo ha escrito.
-\begin{minipage}{0.6\linewidth}
-\setlength{\parskip}{5pt}
-\setlength{\parindent}{0pt}
-\textbf{\@abstracttitle}\par
-\small\@abstractbody
-\end{minipage}
-\fi
-\vfill  % Llenamos hasta el final de la página con espacio.
-\noindent
-\begin{minipage}{0.5\textwidth} % Dividimos en dos partes: Autores y la firmita.
-\begin{mdframed}[topline=false, rightline=false, bottomline=false, linewidth=1pt]
-\fontfamily{ppl}\selectfont
-\theauthor\par
-\vspace{5pt}
-\noindent{\small UAM - \thedate}
-\titlepagebuilddate % Esta cadena la configuramos arriba, se puede quitar con una opción.
-\let\and\@oldauthorand
-\end{mdframed}
-\end{minipage}
-~
-\begin{minipage}{0.5\textwidth} % Ahora la firmita.
-\fontfamily{ppl}\selectfont
-	\begin{flushright}
-	\footnotesize
-	Apuntes UAM \par
-	Doble Grado Mat.Inf. \par
-	\vspace{5pt}
-	\href{http://github.com/VicdeJuan/Apuntes}{Código en Github}
-	\end{flushright}
-\end{minipage}
-\vspace{30pt}
+	% Primera parte: el título en modo chulo con un margen en la parte superior
+	\vspace*{0.1\textheight}
+	\noindent
+	\textcolor{titlepagecolor}{%
+		\begin{hyphenrules}{nohyphenation}%
+		\Huge{\textbf{\fontfamily{lmss}\selectfont\thetitle}}%
+		\end{hyphenrules}%
+	}
+	\par
+	% Una línea que ocupe toda la página
+	\noindent\makebox[\linewidth]{\color{titlepagecolor}\rule{1.1\paperwidth}{2pt}}\par
+	\vspace{60pt} % Margen hasta el abstract
+	\noindent
+	\if@abstractset % Escribimos el abstract sólo si el usuario lo ha escrito.
+		\begin{minipage}{0.6\linewidth}
+			\setlength{\parskip}{5pt}
+			\setlength{\parindent}{0pt}
+			\textbf{\@abstracttitle}\par
+			\small\@abstractbody
+		\end{minipage}
+	\fi
+	\vfill  % Llenamos hasta el final de la página con espacio.
+	\noindent
+	\begin{minipage}{0.5\textwidth} % Dividimos en dos partes: Autores y la firmita.
+		\begin{mdframed}[topline=false, rightline=false, bottomline=false, linewidth=1pt]
+			\fontfamily{ppl}\selectfont
+			\theauthor\par
+			\vspace{5pt}
+			\noindent{\small UAM - \thedate}
+			% Esta cadena la configuramos arriba, se puede quitar con una opción.
+			\titlepagebuilddate
+			\let\and\@oldauthorand
+		\end{mdframed}
+	\end{minipage}
+	~
+	\begin{minipage}{0.5\textwidth} % Ahora la firmita.
+		\fontfamily{ppl}\selectfont
+		\begin{flushright}
+			\footnotesize
+			Apuntes UAM \par
+			Doble Grado Mat.Inf. \par
+			\vspace{5pt}
+			\href{http://github.com/VicdeJuan/Apuntes}{Código en Github}
+		\end{flushright}
+	\end{minipage}
+	\vspace{30pt}
 \end{titlepage}
 }
 
@@ -122,9 +124,9 @@
 \PrerenderUnicode{ÁáÉéÍíÓóÚúÑñ} % Para que salgan las tildes y demás mierdas en el título.
 \fancypagestyle{plain}{%
 	\if@shortheader
-	\lhead{\small \itshape \thetitle}
+		\lhead{\small \itshape \thetitle}
 	\else
-	\lhead{\small \itshape \thetitle\, -\, \thedate\, -\, UAM}
+		\lhead{\small \itshape \thetitle\, -\, \thedate\, -\, UAM}
 	\fi
 	\rhead{\small \theauthor}
 	\cfoot{\thepage\ de \pageref{LastPage}}
