@@ -25,7 +25,7 @@ En la práctica, hay algunas cosas algo más complicadas, pero básicamente así
 
 \paragraph{¿Esto es importante?} Algo sí, más que nada porque nos explica de dónde salen dos tipos problemas muy habituales. El primero son los relacionados con la expansión de comandos: \LaTeX\ no es como un lenguaje de programación donde primero se evalúan los argumentos y luego se le pasan a la función. Aquí es al revés: primero se desarrolla la función (el comando) y luego se procesan los argumentos. Y si en algún momento algo no cuadra (cosa probable) la compilación falla.
 
-La otra cuestión es algo que no hemos dicho explícitamente, pero que se puede ver: \TeX\ es un sistema de una sola pasada. Lee el fichero y va procesando según le llega, pero en ningún momento mira hacia atrás ni hacia delante\footnote{Por ejemplo, redefinir un comando a mitad del documento sólo afecta a partir de ese punto, no antes.}. El principal inconveniente es que a veces tendremos que recompilar el documento para que pille todos los datos, como las refrencias. Las referencias las escribe \LaTeX\ en un documento aparte cuando se las encuentra, así que si ponemos una referencia antes de declarar la etiqueta, no va a saber resolverlo. En la segunda pasada ya se encontrará esa etiqueta declarada en el archivo aparte así que ya podrá rellenar el comando \verb|\ref| correctamente.
+La otra cuestión es algo que no hemos dicho explícitamente, pero que se puede ver: \TeX\ es un sistema de una sola pasada. Lee el fichero y va procesando según le llega, pero en ningún momento mira hacia atrás ni hacia delante\footnote{Por ejemplo, redefinir un comando a mitad del documento sólo afecta a partir de ese punto, no antes.}. El principal inconveniente es que a veces tendremos que recompilar el documento para que pille todos los datos, como las referencias. Las referencias las escribe \LaTeX\ en un documento aparte cuando se las encuentra, así que si ponemos una referencia antes de declarar la etiqueta, no va a saber resolverlo. En la segunda pasada ya se encontrará esa etiqueta declarada en el archivo aparte así que ya podrá rellenar el comando \verb|\ref| correctamente.
 
 Para más información sobre cómo funciona \LaTeX, es recomendable echarle un ojo al libro \textit{\TeX\ for the Impatient} o \textit{The \TeX Book}.
 
@@ -390,10 +390,215 @@ Entre todas las cosas que permite hacer \LaTeX\, una de ellas es presentaciones 
 
 \section{Ampliando \LaTeX: Desarrollo de comandos, entornos, paquetes y clases}
 
-\subsection{Comandos}
+Una de las ventajas de \LaTeX\ es que nos permite ``programar'' nuestros documentos, creando nuevos comandos y entornos y así automatizar todo lo posible nuestra escritura. Lo malo es que la sintaxis no es la más cómoda del mundo, y tiene bastantes cosas algo impredecibles. En cualquier caso, aquí vamos a ver una introducción sencilla a la programación de comandos y entornos en \LaTeX.
 
-\subsection{Entornos}
+\subsection{Comandos y entornos}
+
+A estas alturas ya deberíamos conocer más o menos cómo va \LaTeX\ (y si no, léase el comienzo de este capítulo): nosotros escribimos comandos y el procesador los va expandiendo con los argumentos que le pasamos. Sólo nos falta saber cómo definir un comando, y eso es bastante sencillo.
+
+
+\cindex{newcommand}
+\begin{minted}{latex}
+% Definimos un nuevo comando
+\newcommand{\micomando}{Contenido del comando}
+
+% Si ahora escribimos esto:
+\micomando
+% En el documento aparecerá "Contenido del comando"
+
+% Los comandos pueden recibir argumentos. Para ello, usamos la sintaxis
+%   \newcommand{comando}[número de argumentos]{definición}
+% En la definición, los #1, #2, ..., #n se sustituirán por el argumento
+% en la posición correspondiente.
+\newcommand{\yosoy}[1]{Hola, soy #1}
+
+\yosoy{Guille} % -> "Hola, soy Guille"
+
+% Los comandos pueden aceptar un único argumento opcional. Para ello,
+% después del número de argumentos ponemos el valor que tendrá por defecto
+% el argumento. El argumento opcional siempre es el primero.
+\newcommand{\opcional}[2][]{Primero #1 y segundo #2}
+
+\opcional{dos} % -> Primero y segundo dos
+\opcional[uno]{dos} % -> Primero uno y segundo dos
+
+% El argumento opcional puede tener un valor por defecto
+\newcommand{\opcional}[2][tres]{Primero #1 y segundo #2}
+\opcional{dos} % -> Primero tres y segundo dos
+\end{minted}
+
+De una forma bastante similar podemos definir los entornos, que son los que empiezan con \verb|\begin{...}| y acaban con \verb|\end{...}|.
+
+\cindex{newenvironment}
+\begin{minted}{latex}
+% Sintaxis
+\newenvironment{test}{esto se sustituye en el \begin{}}{esto se sustituye en el \end{}}
+
+% Los argumentos siguen la misma sintaxis que para \newcommand.
+
+% Ejemplo: un entorno con argumento opcional
+\newenvironment{operacion}[1][]{\textsc{Operación #1}: }{\hline}
+
+% Si ponemos esto
+\begin{operacion}[prueba]
+\[ 32 + 4 = 8\]
+\end{operacion}
+
+% Se sustituye después por:
+\textsc{Operación prueba}: % La parte del \begin
+\[ 32 + 4 = 8 \]
+\hline % La parte del \end
+\end{minted}
+
+\cindex{renewcommand}
+Si por lo que sea el comando o entorno que queremos definir ya está definido, simplemente tendremos que usar \texttt{renewcommand} o \texttt{renewenvironment}, con la misma sintaxis que antes.
+
+\subsubsection{Manejo avanzado de argumentos}
+
+Como se puede ver, la definición de nuevos comandos es bastante sencilla. Lo único malo es que la gestión de los argumentos es un poco tirando a mala: en cuanto queramos tener varios argumentos opcionales o tengamos muchos parámetros, la implementación de \LaTeX\ se nos va a quedar corta.
+
+Para el primer problema, el paquete \index{xargs}\textit{xargs} da una solución: variantes \cindex{newcommandx}\texttt{newcommandx} y \cindex{newenvironmentx}\texttt{newenvironmentx}, que permiten definir múltiples argumentos opcionales. La sintaxis es muy sencilla y similar a la que acabamos de ver
+
+\begin{minted}{latex}
+% Sintaxis
+\newcommandx{\comando}[nargs][1=valor por defecto arg1, ...]{definicion}
+
+% Ejemplo:
+\newcommandx{\convs}[3][1=,2=n,3=\infty]{\xrightarrow[#2\to #3]{#1}}
+
+\convs % -> \xrightarrow{n \to \infty}{}
+\convs[c.s.] % -> \xrightarrow{n \to \infty}{c.s.}
+\convs[c.s.][x] % -> \xrightarrow{x \to \infty}{c.s.}
+\convs[c.s.][x][0] % -> \xrightarrow{x \to 0}{c.s.}
+\end{minted}
+
+\index{pgfkeys}
+El problema de tener muchos argumentos ya no se resuelve tan fácilmente. \href{http://tex.stackexchange.com/questions/34312/how-to-create-a-command-with-key-values}{Hay muchos paquetes} para poner argumentos en la forma \textit{clave = valor}. A mí personalmente me gusta \textit{pgfkeys}, así que pondré un ejemplo sencillo aquí:
+
+\begin{minted}{latex}
+% Primero se definen los argumentos
+\pgfkeys{
+	% Antes de nada, se agrupan en una "familia" las claves
+	% y le decimos a pgf que entramos a definir esa familia
+	/testkeys/.is family,
+	/testkeys,
+
+	% name será una clave, cuyo valor se guardará
+	% en el comando \aname
+	name/.store in = \aname,
+	name/.value required,
+
+	% Con .code podemos hacer que se ejecute un código
+	% cuando nos pasan el argumento codearg. #1 se sustituye
+	% por el valor correspondiente
+	counter/.code = {\setcounter{test}{#1}},
+
+	% Con .is choice podemos definir una serie de argumentos permitidos
+	enum/.is choice,
+	enum/true/.code = {\def\enumval{true}},
+	enum/false/.code = {\def\enumval{false}}
+
+	% Podemos definir un estilo "default" con valores por defect
+	default/.style =
+	  { name={empty}, enum=true, counter = 0}
+}
+
+% Ahora definimos el comando con un argumento opcional
+\newcommand{\testcommand}[1][]{
+	% Ejecutamos las claves opcionales, pasando primero "default"
+	% para que, si #1 está vacío, se ejecuten las opciones por defecto
+	\pgfkeys{/testkeys, default, #1}
+
+	% Ahora podemos usar los comandos que hemos definido antes:
+	El nombre es \aname, enum es \enumval y parece ser que tenemos
+	un contador que vale \arabic{test}.
+}
+
+% Ejemplo:
+\testcommand[name = test, counter = 2, enum = false]
+	% -> El nombre es test, enum es false y parece ser que tenemos
+	% un contador que vale 2
+
+\testcommand
+	% -> El nombre es empty, enum es true y parece ser que tenemos
+	% un contador que vale 0
+\end{minted}
+
+\subsubsection{Comandos de bajo nivel \TeX\ y expansión de argumentos}
+
+Justo en el ejemplo anterior, he puesto un comando que no hemos comentado: \verb|\def|. Lo he puesto más que nada como excusa para escribir esta sección. Ya voy avisando que nos estamos adentrando en cosas algo más técnicas de \LaTeX / \TeX\ y yo no tengo del todo lo claro lo que escribo aquí.
+
+\cindex{def}
+\verb|\def| es simplemente la forma de definir comandos en \TeX. Por decirlo de alguna forma, es un manejo a más bajo nivel que \LaTeX. En general, es recomendable usar \verb|\newcommand| porque es más robusto, hace algunas comprobaciones necesarias (como por ejemplo, que no estés redefiniendo un comando que ya existe) y es más fácil de usar. La ventaja que tiene \verb|\def| es que es más corto y para definir comandos sencillos, como en el ejemplo de arriba un \verb|\def\enumval{true}| es más cómodo.
+
+\cindex{let}
+Junto con \verb|\def|, me gustaría comentar el comando \verb|\let|, que también es bastante útil: nos permite darle un nombre alternativo a un comando. Digo que es especialmente útil porque con él podremos poner ``capas'' por encima de otros comandos ya existentes. Por ejemplo, supongamos que queremos redefinir el comando \verb|\section| para que, además de poner la sección, nos meta el título en el glosario con \verb|\index|. Tenemos que redefinir \verb|\section| pero no podemos eliminarlo del todo. Entonces haríamos algo así:
+
+\begin{minted}{latex}
+\let\oldsection\section % \oldsection tiene ahora el código de \section
+
+% Así que ya podemos redefinir \section
+\renewcommand{\section}[1]{
+	\index{#1} % Hacemos lo que queremos nosotros antes
+	\oldsection{#1} % Y ahora llamamos al comando \section de antes
+}
+\end{minted}
+
+\cindex{newif}
+Otra primitiva interesante de \TeX\ son las variables booleanas. Lo explico mejor con un ejemplo. Supongamos que queremos saber cuándo estamos en el apéndice del documento para que un comando cambie la salida. Entonces podríamos hacer algo así:
+
+\begin{minted}{latex}
+% En el preámbulo
+\newif\if@inappendix
+\@inappendixfalse % Por defecto estamos fuera del apéndice
+
+\let\oldappendix\appendix % Nos guardamos \appendix
+\renewcommand{\appendix}{ % Y lo redefinimos
+	\@inappendixtrue % Cambiamos la variable a true
+	\oldappendix % Y llamamos al comando \appendix viejo
+}
+
+
+% Ahora definimos el comando que sabe cuándo está en el apéndice
+\newcommand{\mycommand}{
+	\if@inappendix
+		Estamos en el apéndice
+	\else
+		No estamos en el apéndice
+	\fi
+}
+\end{minted}
+
+Y ya que estamos, voy a mencionar un tema peliagudo, que es el de expansión de argumentos y comandos. Como decíamos al principio de este capítulo, \LaTeX\ funciona expandiendo argumentos y sustituyendo cosas: primero expande el comando y luego sus argumentos, así todo en orden. A veces, eso puede llevarnos a fallos, y querremos que se expandan primero los argumentos y después el comando, o también cambiar el orden de expansión de formas un poco extrañas.
+
+Aquí es donde entran \verb|\expandafter|, \verb|\noexpand| y amigos similares, que controlan si el siguiente comando se expande o no. \href{http://tex.stackexchange.com/a/519/69094}{Esta respuesta de TeX.SX} explica más o menos bien cómo funcionan. Lo menciono aquí porque es importante saber que estas cosas existen, aunque personalmente todavía no he pasado del momento de programación aleatoria pegando \verb|\expandafter| y \verb|\noexpand| hasta que el comando funciona.
 
 \subsection{Paquetes y clases}
 
+Para poder reutilizar el código fácilmente, \LaTeX\ permite crear paquetes y clases de documentos. A grandes rasgos, no son más que archivos con comandos que se pegan ``a pelo'' en el documento en el que se incluyen. En ambos casos, eso sí, empiezan con una cabecera especial:
+
+\begin{minted}{latex}
+% Para clases (archivos .cls)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{nombreclase}[YYYY/MM/DD Descripción]
+
+% Para paquetes (archivos .sty)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{nombrepaquete}[YYYY/MM/DD Descripción]
+\end{minted}
+
+Cuando en un documento se incluye una clase con \verb|\documentclass| o un paquete con \verb|\usepackage|, el compilador de \LaTeX\ busca los correspondientes archivos \textit{.cls} y \textit{.sty} en los directorios de la instalación (a estos directorios mueve el script \textit{install} que tenemos en el repositorio las clases y paquetes que hemos creado), y también en el directorio donde está el documento \textit{.tex} que estemos compilando.
+
+Para más detalles sobre cómo escribir paquetes y clases de documentos, es muy recomendable leerse \href{https://latex-project.org/guides/clsguide.pdf}{\LaTeXe\ for class and package writers}.
+
 \subsection{Paquetes auxiliares para el desarrollo}
+
+Ya para acabar con este tema, pongo aquí una pequeña referencia de paquetes que son bastante útiles a la hora de desarrollar comandos. Recuerdo que se puede ver la documentación de cada uno de ellos en Internet o, desde la consola de comandos de tu sistema, con \textit{texdoc nombrepaquete}.
+
+\begin{itemize}
+\item \textit{etoolbox}: Varias herramientas que vienen bien para el desarrollo. Especialmente útiles los \textit{hooks} o ganchos para poner código al final o al principio del documento y otros entornos.
+\item \textit{ifthen}: Como su nombre indica, permite escribir fácilmente sentencias \textit{if-then-else}.
+\item \textit{mfirstuc}: Da un cmando para poner el primer carácter de una palabra en mayúsculas.
+\item \textit{xspace}: Provee el comando \verb|\xspace|, para poner espaciado correcto detrás de comandos matemáticos, evitando poner espacios de más o de menos cuando definimos algo.
+\item \textit{xstring}: Permite trabajar con cadenas, manipulándolas, comparándolas, etc.
+\end{itemize}
