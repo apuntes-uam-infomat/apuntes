@@ -40,6 +40,7 @@
 \RequirePackage{datetime}
 \RequirePackage{environ}
 \RequirePackage{pgfkeys}
+\RequirePackage[nottoc]{tocbibind}
 
 \if@removechapters
 	\numberwithin{equation}{subsection}
