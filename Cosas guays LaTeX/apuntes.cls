@@ -40,7 +40,7 @@
 \RequirePackage{datetime}
 \RequirePackage{environ}
 \RequirePackage{pgfkeys}
-\RequirePackage[nottoc]{tocbibind}
+\RequirePackage[nottoc]{tocbibind}% bibliografía y el índice no aparecen en el índice del pdf sin esta línea mágica. No sabemos qué hace, pero será mejor que tengas un buen motivo para quitarla
 
 \if@removechapters
 	\numberwithin{equation}{subsection}
