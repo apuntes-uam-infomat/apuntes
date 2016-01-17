@@ -176,5 +176,6 @@
 
 \captionsetup{style=base}
 \captionsetup[figure]{labelfont=bf,textfont=it}
+\captionsetup[table]{labelfont=bf,textfont=it}
 
 \makeindex
