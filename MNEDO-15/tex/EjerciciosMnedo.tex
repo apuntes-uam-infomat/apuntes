@@ -1217,6 +1217,93 @@ Probar que
 \end{itemize}
 \solution
 
+\doneby{Pedro}
+
+La parte inicial de este ejercicio, que nos muestra la idea a seguir, ya se ha visto en los apuntes. No obstante, repetimos aquí las cuentas para poder encauzar el ejercicio.
+
+\spart
+
+Considerando un método Runge-Kutta general podemos escribir el residuo como:
+\[R_n = y(x_{n+1})-y(x_n)-h \sum_{i=1}^sb_iK_i(x_n,y(x_n);h)\]
+
+Para escribirlo más comodamente definimos dos funciones:
+\[\begin{array}{l}
+F(h) = y(x_{n+1}) = y(x_n+h)\\
+G(h) = y(x_n)+h \sum_{i=1}^sb_iK_i(x_n,y(x_n),;h)
+\end{array}\]
+
+de modo que el residuo queda escrito como
+\[R_n=F(h)-G(h)\]
+
+Consideramos también un problema de valor inicial genérico de la forma:
+\[\begin{array}{l}
+y'=f(x,y(x))\\
+y(0)=y^0
+\end{array}\]
+
+Escribiendo el desarrollo de Taylor de la función $F(h)$ en torno a $x_n$ tenemos:
+\[F(h)=y(x_n)+hy'(x_n)+\frac{h}{2}y''(x_n)+\frac{h^3}{3!}y'''(ε_n) = \atop y(x_n)+hf+\frac{h^2}{2}\left(f_x+f_y\cdot f\right)+\frac{h^3}{3!}y'''(ε_n)\]
+
+donde tanto la función $f$ como sus derivadas están evaluadas en $(x_n,y(x_n))$.
+
+Por definición de $K_i$ tenemos
+\[K_i(x_n,y(x_n);h) = f\left(x_n+c_ih,y_n + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)\right)\]
+y derivando con respecto a $h$ tenemos:
+\[\frac{\partial K_i}{\partial h}(x_n,y(x_n);h) =c_if_x\left(x_n+c_ih,y(x_n) + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)+\atop f_y\left(x_n+c_ih,y(x_n)+h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)\]
+
+Si evaluamos ahora en $h=0$ tenemos
+\[\frac{\partial K_i}{\partial h}(x_n,y(x_n);0) = c_if_x\left(x_n,y(x_n)\right) + \sum_{j=1}^s a_{ij}f_y(x_n,y(x_n))f(x_n,y(x_n))\]
+
+Apoyándonos en esto es relativamente sencillo calcular el desarrollo de Taylor de $G(h)$\footnote{Desarrollamos sólamente el sumatorio, que es una suma de funciones $f$ evaluadas en distintos puntos}, con lo que obtenemos:
+\[G(h)=y(x_n)+h\sum_{i=1}^sb_if() + h^2\sum_{i=1}^sb_ic_if_x()+h^2\sum_{i,j=1}^sb_ia_{ij}f_y()+\varphi(x_n,y(x_n),h)h^3\]
+siendo $f() = f(x_n,y(x_n))$.
+
+Nuestro objetivo es calcular el residuo y estimarlo como $O(h^p)$ siendo así $p$ el orden del método. Como ya hicimos al principio del curso, vamos a restar los desarrollos de Taylor con lo que obtenemos:
+
+\[R_n=h\left(f-\sum_{i=1}^sb_if\right)+h^2\left(\frac{1}{2}f_x+\frac{1}{2}f_y\cdot f - \sum_{i=1}^sb_ic_if_x()-\sum_{i,j=1}^sb_ia_{ij}f_y()f()\right)+O(h^3)\]
+
+Si queremos que el residuo sea de orden 3 (y por tanto el método tenga orden de convergencia $2$) necesitamos que todos los términos distintos de $O(h^3)$ se cancelen en la fórmula del residuo.
+
+Así vemos que necesitamos:
+\begin{itemize}
+\item $\sum_{i=1}^sb_i = 1$, que ya nos garantizaba la consistencia
+\item $\sum_{i=1}^sb_ic_i = \frac{1}{2}$
+\item $\sum_{i,j=1}^sb_ia_{ij} = \frac{1}{2}$
+\end{itemize}
+
+Donde la última propiedad es trivial por la asumción de la condición suma.
+\spart
+
+Para forzar a que el orden de consistencia sea 3 tenemos que forzar que el orden del residuo sea 4, para lo que necesitamos desarrollar un paso más los desarrollos de Taylor anteriores. Así tenemos:
+
+\[F(h)=y(x_n)+hy'(x_n)+\frac{h}{2}y''(x_n)+\frac{h^3}{3!}y'''(ε_n) = \]
+\[= y(x_n)+hf+\frac{h^2}{2}\left(f_x+f_y\cdot f\right)+\frac{h^3}{3!}\left(f_{xx}+ f_{xy}\cdot f + f_{yx}\cdot f+f_{yy}\cdot f^2+ f_y\cdot f_x+f_y^2\cdot f \right) + \frac{h^4}{4!}y^{iv}(ε_n)\]
+
+Por otro lado:
+\small
+\[\frac{\partial^2 K_i}{\partial h^2}(x_n,y(x_n);h) =\frac{\partial}{\partial h} \left(c_if_x\left(x_n+c_ih,y(x_n) + h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h\right)+\atop f_y\left(x_n+c_ih,y(x_n)+h\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)\right)\sum_{j=1}^sa_{ij}K_j(x_j,y(x_j);h)\right)=\]
+\normalsize
+Para simplificar la notación vamos a realizar la derivada y evaluar en $h=0$ directamente, pues es lo que necesitamos para el desarrollo de Taylor.
+
+\[\frac{\partial^2 K_i}{\partial h^2}(x_n,y(x_n);0) = c_i^2f_{xx}+c_if_{xy}\sum_{j=1}^sa_{ij}f+\left(f_{yx}c_i+f_{yy}\sum_{j=1}^sa_{ij}f()\right)\sum_{j=1}^sa_{ij}f() + \atop f_y()\sum_{j=1}^sa_{ij}\left( c_if_x+\sum_{j=1}^sa_{ij}f_y\cdot f\right)\]
+
+Una vez tenemos esta derivada podemos escribir
+
+\[G(h)=y(x_n)+h\sum_{i=1}^sb_if() + h^2\sum_{i=1}^sb_ic_if_x()+h^2\sum_{i,j=1}^sb_ic_{ij}f_y()+ \frac{h^3}{2} \sum_{i=1}^sb_i c_i^2f_{xx}+\]
+\[+ \frac{h^3}{2} \sum_{i=1}^sb_i c_if_{xy}\sum_{j=1}^sa_{ij}f+\frac{h^3}{2} \sum_{i=1}^sb_i \left(f_{yx}c_i+ f_{yy}\sum_{j=1}^sa_{ij}f()\right)\sum_{j=1}^sa_{ij}f() + \atop \frac{h^3}{2} \sum_{i=1}^sb_i f_y()\sum_{j=1}^sa_{ij}\left( c_if_x+\sum_{j=1}^sa_{ij}f_y\cdot f\right) +\varphi(x_n,y(x_n),h)h^4\]
+
+Si ahora forzamos que los términos de $F(h)$ y $G(h)$ con $h^i$ para $i\neq 4$ deben ser iguales, obtenemos las relaciones pedidas en el enunciado.
+\begin{itemize}
+\item $\sum_{i=1}^sb_ic_i^2 = \frac{1}{3}$
+\item $\sum_{i,j=1}^sb_ic_ia_{ij}=\frac{1}{3!}$
+\end{itemize}
+además de las calculadas en el apartado anterior.
+
+También se obtienen otras relaciones, que deberán poder ser deducidas a partir de estas.
+
+\spart
+
+Este apartado requiere demasiadas cuentas.
 \end{problem}
 
 \begin{problem}[2]
@@ -1241,6 +1328,9 @@ Probar que las condiciones para que un método $RK$ sea de orden $3$ son \ref{eq
 Notar que \ref{eqn:C3} es equivalente a \ref{eqn:C3+} bajo la condición suma.
 \solution
 
+\doneby{Pedro}
+
+Este ejercicio se deduce inmediatamente de las cuentas realizadas en el ejercicio anterior ya que las hemos realizado sin simplificar en base a la condicicón suma. Basta con sacar el resto de ecuaciones necesarias.\footnote{En el ejercicio anterior no eran necesarias pues podían deducirse de las ya mostradas y la conidición de suma. Al no tener esta última condición, las relaciones dejan de ser triviales.}
 \end{problem}
 
 \begin{problem}[3]
@@ -1254,12 +1344,19 @@ Para estudiar el dominio de establidad debemos aplicar el método al problema $y
 \[y_{n+2}=\frac{1+\frac{8z}{12}}{1-\frac{5z}{12}}y_{n+1} - \frac{\frac{z}{12}}{1-\frac{5z}{12}}y_{n}\]
 
 Escribiendo el problema como matriz tenemos:
-\[\left(\begin{array}{c} y_{n+2} \\ y_{n+1}\end{array} \right) = \left(\begin{array}{cc} a(z) & b(z) \\ 1 & 0\end{array} \right)\left(\begin{array}{c} y_{n+1} \\ y_{n}\end{array} \right)\]
+\[\left(\begin{array}{c} y_{n+2} \\ y_{n+1}\end{array} \right) = \underbrace{\left(\begin{array}{cc} a(z) & b(z) \\ 1 & 0\end{array} \right)}_{A}\left(\begin{array}{c} y_{n+1} \\ y_{n}\end{array} \right)\]
 
 Con lo que el dominio de estabilidad estará formazo por aquellos valores de $z=λh$ que hacen que el determinante de la matriz esté acotado.
 
-Aunque el cálculo es tedioso y no lo haremos, esto pasa por calcular los autovalores y autovectores de la matriz y forzar a que los autovalores sean menores que $1$.
+Podemos simplificar la matriz escribiendo:
+\[A = \frac{1}{12-5z}\left(\begin{array}{cc} 12+8z & z \\ 12-5z & 0\end{array} \right)\]
 
+Al calcular los autovalores (restando λ a los elementos de la diagonal y calculando el determinante obtenemos:
+\[(12+8z-λ)(-λ)-12z+5z^2 = λ^2+λ(-12-8z)-12z+5z^2 = 0\]
+Resolviendo la ecuación tenemos:
+\[λ = \frac{12+8z \pm \sqrt{144+64z^2+88z+48z-20z^2}}{2}=\frac{12-8z \pm \sqrt{44z^2+136z+144}}{2}\]
+
+Repitiendo las cuentas que hemos hecho en diversos ejercicios, podemos ver que el método será $A$-estable si estos autovalores tienen módulo menor que 1.
 \end{problem}
 
 \begin{problem}[4]
