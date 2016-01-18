@@ -42,6 +42,10 @@
 \RequirePackage{pgfkeys}
 \RequirePackage[nottoc]{tocbibind}% bibliografía y el índice no aparecen en el índice del pdf sin esta línea mágica. No sabemos qué hace, pero será mejor que tengas un buen motivo para quitarla
 
+% Hacemos que el enlace al índice funcione bien.
+\let\oldindex\printindex
+\def\printindex{\clearpage\phantomsection\oldindex} % Simplemente hacemos que \printindex inserte un marcador de sección que se pueda enlazar
+
 \if@removechapters
 	\numberwithin{equation}{subsection}
 \fi
