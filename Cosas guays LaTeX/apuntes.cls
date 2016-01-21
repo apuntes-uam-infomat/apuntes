@@ -70,7 +70,6 @@
 	\global\let\@abstractbody\BODY	% Y nos lo guardamos.
 }
 
-\if@apuntestitlepage % Nos piden la página de título, así que renovamos el comando \maketitle.
 
 \newif\if@showsignature
 
@@ -92,7 +91,7 @@
 % opcionales.
 \newcommand{\titlesetup}[1]{\pgfkeys{/apntstitle, #1}} % Procesamos argumentos
 
-\renewcommand{\maketitle}{
+\newcommand{\fullpagetitle}{
 \begin{titlepage}
 	% Primera parte: el título en modo chulo con un margen en la parte superior
 	\vspace*{0.1\textheight}
@@ -147,6 +146,8 @@
 	\vspace{30pt}
 \end{titlepage}
 }
+\if@apuntestitlepage % Nos piden la página de título, así que renovamos el comando \maketitle.
+\let\maketitle\fullpagetitle
 \fi
 
 \newcommand{\compdate}{}
