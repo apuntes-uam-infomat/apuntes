@@ -40,6 +40,7 @@
 \RequirePackage{datetime}
 \RequirePackage{environ}
 \RequirePackage{pgfkeys}
+\RequirePackage{natbib}
 \RequirePackage[nottoc]{tocbibind}% bibliografía y el índice no aparecen en el índice del pdf sin esta línea mágica. No sabemos qué hace, pero será mejor que tengas un buen motivo para quitarla
 
 % Hacemos que el enlace al índice funcione bien.
