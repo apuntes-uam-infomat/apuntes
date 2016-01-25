@@ -54,7 +54,195 @@
 
 \section{Introducción a la optimización}
 
+Vamos a ver un ejemplo para entender qué nos va a mantener ocupados durante el curso.
+
+\begin{example}
+Una empresa produce pintura para interiores y para exteriores apartir de dos materias primas M1 y M2. 
+La siguiente tabla resume las cantidades necesarias de cada una por tonelada de pintura, la máxima cantidad disponible diaria y los beneficios por la venta
+(para cada tonelada de pintura)
+
+\begin{center}
+\begin{tabular}{cccc}
+Materia prima&Pint. exteriores&Pint. interiores&Disponibilidad\\\hline\hline
+M1&6&4&24\\
+M2&1&2&6\\\hline
+Beneficio&5&4&
+\end{tabular}
+\end{center}
+
+Según un estudio de mercado, la demanda diaria de pintura de
+interiores es, como mucho de 2 t y la de interiores no excede a la
+de exteriores en más de 1 t.
+
+El problema que queremos resolver es: \textbf{¿Qué cantidad de cada tipo de pintura se debe fabricar diariamente para maximizar el beneficio?}
+
+
+Queremos entonces maximizar $5x_1 + 4x_2$, con las siguientes restricciones:
+
+\begin{itemize}
+	\item $6x_1 + 4x_2 \leq 24$
+	\item $x_1 + 2x_2 \leq 6$
+	\item $x_2 \leq 2$
+	\item $x_2 \leq x_1 + 1$
+	\item $x_1 \geq 0, x_2 \geq 0$
+\end{itemize}
+
+
+Para tener algo de intuición, vamos a ver gráficamente el problema:
+
+\begin{center}
+\includepdf[scale=0.9,pages=10]{pdf/io-tema1-16.pdf}
+\end{center}
+
+
+Como queremos maximizar $z\equiv 5x_1+4x_2$. Para ello, podemos tomar $z = c, ∀c>0$ y vamos tomando conjuntos de nivel. Tomamos $\grad z = \begin{pmatrix}5\\4\end{pmatrix}$. Este vector $\grad z$ es el vector normal a las rectas (o conjuntos) de nivel.
+
+A ojo, vemos que el $c$ que maximiza $5x_1 + 4x_2 = c$ estará en la intersección de las restricciones $(1)$ y $(2)$.
+
+Veamoslo gráficamente:
+
+\begin{center}
+\includepdf[scale=0.9,pages=11]{pdf/io-tema1-16.pdf}
+\end{center}
+
+
+El punto solución es la solución del sistema:
+
+\[
+\left.\begin{array}{cc} 6\gor{x_1} + 4\gor{x_2} &= 24\\ \gor{x_1} + 2\gor{x_2} &= 6\end{array}\right\} \implies (\gor{x_1},\gor{x_2}) = (3,1.5)
+\]
+\end{example}
+
+
 \chapter{Conjuntos convexos y optimización lineal}
+
+Vamos a definir unos conceptos para poder hacer unas observaciones pertinentes al ejemplo resuelto (estos conceptos serán utilizados a lo largo del curso).
+
+
+\begin{defn}[Solución\IS factible]
+Cualquier punto que verifique todas las restricciones se llama solución factible.
+\end{defn}
+
+\begin{defn}[Conjunto\IS factible]
+El conjunto factible es el conjunto de todas las soluciones factibles (en el dominio de la función objetivo).
+\end{defn}
+
+\begin{defn}[Solución\IS factible óptima]
+La solución factible óptima es la solución factible para la que se optimiza el objetivo.
+\end{defn}
+
+\begin{defn}[Problema\IS convexo]
+Un problema de optimización es lineal si tanto la función objetivo como las funciones que definen las restricciones son lineales.
+\end{defn}
+
+
+\paragraph{Observaciones sobre el problema de la intruducción}
+\begin{itemize}
+	\item Este problema que hemos resuelto es un problema lineal, en el que además el conjunto factible es convexo (un poliedro).
+	\item Además, la solución coincide con uno de los vértices del conjunto factible.
+	\subitem En algún momento del curso veremos que siempre hay un vértice que es solución de un problema.
+	\item El vértice está definido por 2 restricciones que se satisfacen con igualdad (saturadas o activas en ese punto).
+	\item Un problema lineal puede tener una solución factible óptima única, puede tener infinitas soluciones o puede no tener solución.
+	\subitem En este problema tendríamos infinitas soluciones si la recta de nivel fuera paralela a alguna de las fronteras. En ese caso, toda la frontera sería solución.
+	\subitem 
+\end{itemize}
+
+Vamos a ver 3 ejemplos resolviéndolos gráficamente. Uno con una única solución (también en un vértice) otro con infinitas soluciones y un último ejemplo sin ninguna solución óptima.
+
+\begin{example}
+Maximizar $2x_1 + x_2$ con las restricciones: $x_1 + 3x_2 \leq 2$ y $x_1,x_2 \geq 0$.
+
+\begin{center}
+\includegraphics[scale=0.45]{img/io-intro_1.png}
+\end{center}
+
+Este problema tiene solución factible óptima única. Si desplazamos la recta de nivel en la dirección perpendicular, llegamos a la intersección con $C$.
+\end{example}
+
+\begin{example}
+Maximizar $z = 2x_1+x_2$ con las restricciones: $x_1+2x_2 \leq 2$ y $x_1,x_2\geq 0$
+.
+
+
+\begin{center}
+\includegraphics[scale=0.45]{img/io-intro_2.png}
+\end{center}
+
+
+Este problema tiene infinitas soluciones óptimas.
+\end{example}
+
+\begin{example}
+Maximizar $2x_1 + x_2$ con $-x_1+x_2\leq 1$, $x_2\leq 3$ y $x_1,x_2\geq 0$.
+
+
+\begin{center}
+\includegraphics[scale=0.45]{img/io-intro_3.png}
+\end{center}
+
+Este problema no tiene una solución óptima.
+\end{example}
+
+
+Vamos a ver otro ejemplo, el \concept{Problema\IS del transporte}
+\begin{example}
+Trasladar el producto desde donde se produce ($O_i$) hasta donde se demanda ($D_j$) minimizando el coste. 
+Cada $O_i$ produce una cantidad determinada $s_i$ y cada centro de demanda consume otra cantidad determinada $d_j$.
+Además, $\sum s_i = \sum d_i$.
+El coste de traslado desde $O_i$ hasta $D_j$, es $c_{ij}$. 
+
+El problema es determinar qué cantidades hay que trasladar desde $i$ hasta $j$ de forma que se minimice el coste total del transporte.
+
+
+Vamos a plantear el problema. Vamos a escribir la función objetivo, utilizando $x_{ij}$ como la cantidada que se transporta desde $O_i$ hasta $D_j$
+
+\[\min \sum_i \sum_j c_{ij}x_{ij} \]
+
+Con las siguientes restricciones dadas por el enunciado:
+
+\begin{itemize}
+	\item $x_{ij} \geq 0$
+	\item $\displaystyle\sum_j x_{ij} = s_i$
+	\item $\displaystyle\sum_i x_{ij} = d_j$
+\end{itemize}
+
+Aunque el algoritmo simplex que veremos lo resuelve, la estructura especial del problema hace posible la generación de algoritmos más eficientes. 
+Podríamos pensar en la red eléctrica en la que hay del orden de miles de productores y de miles de centrales consumidoras. 
+Minimizar costes es importante.
+\end{example}
+
+Vamos a ver otro ejemplo más, el \concept{Problema\IS de asignación}
+\begin{example}
+Hay que asignar n tareas a n trabajadores. Si se asigna la tarea $i$ al
+trabajador $j$ se incurre en un coste de $c_{ij}$.
+El problema es asignar las tareas a los trabajadores de manera que se minimice el coste.
+
+Podemos darnos cuenta que es el problema del transporte con las restrcciones $s_i = 1$ y $d_j = 1 ∀ij$
+
+Las variables de decisión son:
+
+\[x_{ij} = \left\{ \begin{array}{cc} 1, & \text{ se asigna i al trabajador j}\\0, & \text{ caso contrario}\end{array} \right. \]
+
+Queremos minimizar
+
+\[
+\min \sum_i \sum_j c_{ij} x_{ij}
+\]
+
+Con las siguientes restricciones:
+
+\begin{itemize}
+	\item $\displaystyle\sum_j x_{ij} = 1$
+	\item $\displaystyle\sum_i x_{ij} = 1$
+	\item $x_{ij}\in\{0,1\}$
+\end{itemize}
+
+\end{example}
+
+
+Estos ejemplos son problemas lineales que modelan flujos de transporte en redes, que es lo que veremos a continuación.
+
+
 
 \chapter{Funciones convezas y optimización convexa}
 
