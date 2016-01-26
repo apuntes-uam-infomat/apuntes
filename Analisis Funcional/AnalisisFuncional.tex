@@ -6,9 +6,10 @@
 
 % Paquetes adicionales
 \usepackage{enumitem}
+\usepackage{xfrac}
 
 \setlist{itemsep=1pt, topsep=5pt}
-
+\bibliographystyle{plainnat}
 % --------------------
 
 \begin{document}
@@ -21,7 +22,7 @@
 
 \section{Espacios métricos completos}
 
-Empezamos con la definición de espacios métricos.
+A lo largo de este curso, vamos a tratar de estudiar las funciones analíticamente, dando una estructura a espacios de funciones y manejándolas de forma abstracta. Una de esas formas en las que van a aparecer los espacios de funciones es la de espacios métricos. Por eso, como introducción a la asignatura veremos ciertos conceptos de topología sobre espacios métricos abstractos que nos servirán más adelante.
 
 \begin{defn}[Métrica] Una métrica $\dst$ en un espacio $X$ es una función $\appl{\dst}{X×X}{ℝ^+}$ que cumple las siguientes propiedades: \begin{enumerate}
 \item Simetría: $∀x,y ∈ x$ tenemos que $\dst (x,y) = \dst(y,x)$.
@@ -33,13 +34,33 @@ Empezamos con la definición de espacios métricos.
 \begin{defn}[Espacio\IS métrico] Un espacio topológico \stopl es un espacio métrico si la topología \topl está dada por una métrica $\dst$. Es decir, que $U ⊂ X$ es abierto ($U ∈ \topl$) si y sólo si $∀x ∈ U\; ∃δ>0$ con $\bola_δ(x) ⊂ U$, siendo $\bola_δ(x)$ la bola abierta\footnote{Por recordar, $\bola_r(x_0) = \set{x ∈ X \tq \dst(x,x_0) < r}$.} de radio δ centrada en $x$.
 \end{defn}
 
-Sobre espacios métricos podemos definir sucesiones, y a su vez ver cuáles de estas convergen para encontrar el espacio métrico completo. Normalmente, la definición de convergencia requiere saber el límite y demostrar que la sucesión converge a él. Sin embargo, hay otra noción de convergencia que podemos usar y que es más fácil de manejar, basada en sucesiones de Cauchy.
+Sobre espacios métricos podemos definir sucesiones, y a su vez ver cuáles de estas convergen para encontrar el espacio métrico completo. Normalmente, la definición de convergencia requiere saber el límite y demostrar que la sucesión converge a él.
 
-\begin{defn}[Sucesión\IS de Cauchy] Sea $\set{x_n}_{n≥1}$ una sucesión en $X$. Diremos que es de Cauchy si $∀ε> 0$ existe un $N ∈ ℕ$ tal que dados $m,n ≥N$, entonces $\dst(x_m, x_n) < ε$.
+\begin{defn}[Sucesión\IS convergente] Sea $\set{x_n}_{n≥1}$ una sucesión en un espacio métrico \sdst. Entonces diremos que $x_n$ tiene límite $x$ (equivalentemente, $\lim_{n\to ∞} x_n = x$) si $∀ε > 0$ existe un $N > 0$ tal que si $n ≥ N$ entonces $\dst(x,x_n) < ε$ o, en otras palabras, que $x_n ∈ \bola_ε (x)$.
 \end{defn}
+
+\begin{prop} Dado \sdst un espacio métrico, se cumple que si $x_n \convs x,y$, entonces $x = y$ (es decir, el límite es único). De forma equivalente, se cumple que la topología \topl inducida por la métrica es Hausdorff\footnote{Recordando Topología \citep{ApuntesTopologia}: Si $x≠y$ hay entornos de $x$ e $y$ con intersección vacía. En este caso, se demuestra como consecuencia de la desigualdad triangular.}.
+\end{prop}
+
+Sin embargo, hay otra noción de convergencia que podemos usar y que es más fácil de manejar, basada en sucesiones de Cauchy.
+
+\begin{defn}[Sucesión\IS de Cauchy] Sea $\set{x_n}_{n≥1}$ una sucesión en un espacio métrico \sdst. Diremos que es de Cauchy si $∀ε> 0$ existe un $N ∈ ℕ$ tal que dados $m,n ≥N$, entonces $\dst(x_m, x_n) < ε$.
+\end{defn}
+
+Lo interesante de esta definición es que es ``bastante'' equivalente a la definición de convergencia.
+
+\begin{prop} Si una sucesión $\set{x_n}_{n≥1}$ tiene límite, entonces es de Cauchy.
+\end{prop}
+
+\begin{proof} Sea $x = \lim_{n \to ∞} x_n$. Entonces, $∀ε > 0$ existe un $N > 0$ tal que si $n≥N$ entonces $\dst(x_n, x) ≤ \sfrac{ε}{2}$. Si tomamos $m,n≥N$, entonces usando la desigualdad triangular tenemos que $\dst(x_m, x_n) ≤ \dst(x_m, x) + \dst(x, x_n) ≤ ε$.
+\end{proof}
+
+Lo de ser ``bastante'' equivalente viene porque según el espacio que consideremos, no siempre se cumple que las sucesiones de Cauchy tengan límite. Sí se cumple lo siguiente:
 
 \begin{prop} Si \sdst es un espacio métrico y $x_n$ es una sucesión de Cauchy en $X$, entonces $x_n$ tiene a lo más un punto de acumulación en $X$.
 \end{prop}
+
+En cierto sentido, si tenemos sucesiones de Cauchy que no convergen en el espacio, es como si nos faltase algo: sabemos que esas sucesiones convergen a algo que se nos ha quedado fuera. En general, buscaremos trabajar con espacios en los que esto no ocurra.
 
 \begin{defn}[Espacio\IS métrico completo] Un espacio métrico \sdst se dice completo si toda sucesión de Cauchy tiene exactamente un punto de acumulación. En otras palabras, si toda sucesión de Cauchy converge en el espacio.
 \end{defn}
@@ -48,7 +69,45 @@ Por ejemplo, $ℝ$ con la distancia habitual es completo (toda sucesión de Cauc
 
 También es importante ver que la noción de convergencia es métrica, no topológica. Por ejemplo, $(0,1)$ y $ℝ$ son homeomorfos pero $(0,1)$ no es un espacio completo.
 
-\subsection{Teorema de categoría de Baire}
+Un ejemplo muy simple de espacio métrico $(ℝ^n, \dst(x,y) = \norm{x-y})$, que es completo. Una pequeña variante sería tomar $ℂ^n$, pero nada cambiaría esencialmente.
+
+Podemos construir espacios algo menos triviales. Sea $[a,b] ⊂ ℝ$ un intervalo cerrado y acotado. Consideramos $(C_{[a,b]}, \dst(f,g) = \norm{f-g}_∞)$ el espacio de funciones continuas de $[a,b]$ a $ℂ$ con la norma del supremo (esto es, $\norm{f}_∞ = \sup_{x ∈ [a,b]} \abs{f}$). Este es un espacio métrico completo. Además, se daría que $f_n \convs f$ en este espacio si y sólo si $\norm{f-f_n}_∞ \convs 0$ o, en otras palabras, si $f_n \convs f$ uniformemente en $[a,b]$.
+
+Un concepto relacionado con el de completitud es del de densidad.
+
+\begin{defn}[Conjunto\IS denso] Dado un espacio métrico \sdst y sea $Y ⊂ X$. Se dice que $Y$ es denso si para cualquier $x∈X$ y $∀ε > 0$ se cumple que $\bola_ε(x) ∩ Y ≠ ∅$.
+\end{defn}
+
+Como ejemplo canónico, $ℚ$ es denso en $ℝ$. También podemos ver que con $x_0 ∈ X$, entonces $Y = \set{x_0}^c = ℝ \setminus \set{x_0}$ es un abierto denso en $ℝ$.
+
+Vamos ahora con unas cuantas definiciones útiles para categorizar conjuntos en espacios topológicos.
+
+\begin{defn}[Conjunto\IS $F_σ$] Dado un espacio topológico \stopl y un conjunto $Y ⊂ X$, se dice que $Y$ es $F_σ$ si es una unión numerable de cerrados.
+\end{defn}
+
+\begin{defn}[Conjunto\IS $G_δ$] Dado un espacio topológico \stopl y un conjunto $Y ⊂ X$, se dice que $Y$ es $G_δ$ si es una intersección numerable de abiertos.
+\end{defn}
+
+Como observación, es fácil ver\footnote{Consecuencia de las leyes de DeMorgan.} que $Y ⊂ X$ es un $F_σ$ si y sólo si $Y^c$ es $G_δ$.
+
+\begin{defn}[Conjunto\IS diseminado] Dado \sdst un espacio métrico y $Y⊂ X$, se dice que es residual o diseminado si $\adh{X}^c$ es denso en $X$.
+\end{defn}
+
+\begin{defn}[Conjunto\IS de 1ª categoría de Baire] Dado \sdst un espacio métrico y $Y⊂ X$, se dice que $Y$ es de 1ª categoría de Baire si $Y$ es una unión numerable de conjuntos diseminados.
+\end{defn}
+
+\begin{defn}[Conjunto\IS de 2ª categoría de Baire] Dado \sdst un espacio métrico y $Y⊂ X$, se dice que $Y$ es de 2ª categoría de Baire si no es de 1ª categoría.
+\end{defn}
+
+Con esto, vamos a por el teorema más importante de este tema.
+
+\begin{theorem}[Teorema\IS de categoría de Baire] \label{thm:CategoriaBaire} Sea \sdst un espacio métrico completo. Entonces:
+
+\begin{enumerate}
+\item Si $\set{X_n}_{n≥1}$ es una colección numerable de subconjuntos de $X$ abiertos y densos, entonces la intersección de todos ellos es un $G_δ$ denso en $X$.
+\item $X$ es de segunda categoría. En particular, ningún espacio métrico completo se puede escribir como unión numerable de conjuntos diseminados.
+\end{enumerate}
+\end{theorem}
 
 \section{Espacios de Banach}
 
@@ -99,6 +158,9 @@ También es importante ver que la noción de convergencia es métrica, no topol�
 
 \chapter{Ejercicios}
 \input{tex/AnalisisFuncional_Ejs.tex}
+
+\nocite{brezis2010functional,reed1980methods,rudin1991functional,ApuntesVarReal}
+\bibliography{../Apuntes}{}
 
 \printindex
 \end{document}
