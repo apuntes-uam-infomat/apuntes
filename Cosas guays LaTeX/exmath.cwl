@@ -223,6 +223,7 @@
 \restr{arg0}{arg1}#m
 \bbs#m
 \crc#m
+\crc[1]#m
 \torus#m
 \torus[2]#m
 \disc#m
