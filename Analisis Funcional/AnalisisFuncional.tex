@@ -139,8 +139,63 @@ En otras palabras, lo que podemos decir con eso es que las funciones diferenciab
 \begin{defn}[Función\IS uniformemente continua] Sea \sdst un espacio métrico y $\appl{f}{X}{ℂ}$ continua. $f$ se dice uniformemente continua si y sólo si $∀ε>0$ existe un $δ>0$ tal que $\dst(x,y) < δ \implies \abs{f(x) - f(y)} <ε$, con δ escogido independientemente de $x$ e $y$.
 \end{defn}
 
-\begin{defn}[Familia\IS uniformemente equicontinua] Sea \sdst métrico y $\mathcal{F} ⊂ C(X)$ una familia de funciones continuas en $X$. Entonces $\mathcal{F}$ es una familia equicontinua si $∀ε>0\;∃δ>0$ tal que $\dst(x,y) < δ$ y $f ∈ \mathcal{F}$, entonces $\abs{f(x) - f(y)} < ε$.
+\begin{defn}[Familia\IS uniformemente equicontinua] \label{def:FamiliaUnifEquicont} Sea \sdst métrico y $\mathcal{F} ⊂ C(X)$ una familia de funciones continuas en $X$. Entonces $\mathcal{F}$ es una familia equicontinua si $∀ε>0\;∃δ>0$ tal que si $\dst(x,y) < δ$, entonces $\abs{f(x) - f(y)} < ε$ para toda función $f ∈ \mathcal{F}$.
 \end{defn}
+
+Vamos a hacer ahora la demostración rigurosa de esa proposición.
+
+\begin{prop} Hay un conjunto $G_δ$ denso de funciones $f ∈ C_{[0,1]}$ no diferenciables en ningún punto.
+\end{prop}
+
+Para la demostración, necesitamos un lema previo:
+
+\begin{lemma}\label{lem:ConvUnifConDiferenciables} Sea $f ∈ C_{[0,1]}$. Entonces existe una sucesión $\set{f_j}_{j≥1} ⊂ C^1_{[0,1]}$ (funciones continuas y diferenciables) con $\norm{f_j'}_∞ ≤ Cj$, con $0 < C < ∞$ independiente de $j$, y además $f_j \to f$ uniformemente.
+\end{lemma}
+
+\begin{proof}
+Fijamos $η ∈ C_c^1(ℝ)$ (continua, derivable y de soporte compacto) y con $\int η = 1$. Consideramos \[ η_j (x) = jη(jx) \], y entonces definimos $f_j = \bar{f} * η_j$, con $\bar{f}$ una extensión de $f$ a una función continua y de soporte compacto en $ℝ$.
+
+Es fácil ver que $f_j$ cumple las propiedades pedidas: es derivable (la derivada la podemos ``cargar'' a las $η_j$) y converge a $f$ por ser $η_j$ una familia de aproximaciones de la identidad\footnote{Ver \citep[Def. III.11]{ApuntesVarReal}: se trata de una familia de funciones con soporte cada vez más comprimido que convergen a la delta de Dirac, y que por lo tanto $f * η_j \convs[][j] f$.}.
+\end{proof}
+
+\begin{proof} Para $n = 1,2,\dotsc$ podemos construir conjuntos de la forma \[ E_n = \set{f∈ C_{[0,1]} \tq ∃t ∈ [0,1]\,, \abs{f(t) - f(s)} ≤ n\abs{t-s}\; ∀t,s ∈ [0,1]} \]
+
+% TODO: Cambiar t-t_0 por t-s para que quede claro qué estamos haciendo.
+Si $f ∈ C_{[0,1]}$ y es diferenciable en algún $t_0 ∈ (0,1)$, entonces $f ∈ E_n$ para algún $n$, ya que entonces existe un $δ>0$ tal que $\bola_δ(t_0) ⊂ [0,1]$, y por lo tanto si tomamos otro $t ∈ \bola_δ(t_0)\setminus\set{t_0}$, entonces la derivada existe y por lo tanto podemos acotar \[ \abs{\frac{f(t) - f(t_0)}{t - t_0}} ≤ M \implies \abs{f(t) - f(t_0)} ≤ M \abs{t-t_0} \]
+
+Por otra parte, si $t ∉ \bola_δ(t_0)$, entonces $\abs{t-t_0} ≥ δ > 0$ y podemos acotar igualmente usando la norma del supremo (como las funciones son continuas en un compacto, la norma del supremo es finita) \[ \abs{\frac{f(t) - f(t_0)}{t-t_0}} ≤ \frac{2 \norm{f}_∞}{δ} \]
+
+Juntando ambas cosas y tomando el máximo de las cotas, lo que hemos hecho ha sido demostrar que cualquier función que sea diferenciable en al menos un punto se puede acotar y por lo tanto que está en algún $E_n$ para un $n > \max \set{M, \frac{2\norm{f}_∞}{δ}}$.
+
+Así, lo que tenemos es que el conjunto de funciones diferenciables en algún punto es un subconjunto de $\bigcup_{n≥1}E_n$.
+
+Con esto, lo que vamos a ver es que los $E_n$ son cerrados y diseminados en $C_{[0,1]}$, y por lo tanto $E_n^c$ es un abierto denso.
+
+Para demostrar que $E_n$ es cerrado, tomamos $\set{f_j}_{j≥1}$ una sucesión en $E_n$ y $f_j \convs[][j] f$ en $C_{[0,1]}$. Queremos comprobar que $f ∈ E_n$, y para ello vemos primero que esa sucesión es una \nlref{def:FamiliaUnifEquicont}, esto es, que $∀ε > 0$ existe un $δ > 0$ tal que si $\abs{t-s} < δ$, entonces $\abs{f_j(t) -f_j(s)} < ε$ para cualquier $j$. Esto lo demostraremos más tarde.
+
+Como $f_j ∈ E_n$, $∃t_j ∈ [0,1]$ tal que $\abs{f_j(x) -f_j(t_j)} ≤ n\abs{x-t_j}\;∀x ∈ [0,1]$. Como $[0,1]$ es compacto, existe una subsucesión $\set{t_{j_k}}$ convergente a un cierto $t_0 ∈ [0,1]$. Consideramos entonces la subsucesión $g_k = f_{j_k}$, que tiene que converger a $f$ igual que lo hace $f_j$. Lo que hemos ganado es que en este caso los puntos $s_k = t_{j_k}$ convergen igualmente.
+
+Con esto podemos tratar de evaluar la diferencia entre $f(x)$ y $f(t_0)$. Podemos reescribirlo simplemente sumando y restando cosas, y después aplicando la desigualdad triangular: \begin{align*} &\hspace{-20pt}\abs{f(x) -f(t_0)} = \\
+&=\abs{f(x) - g_k(x) + g_k(x) - g_k(s_k) + g_k(s_k) - g_k(t_0) + g_k(t_0) - f(t_0)} \\
+&≤
+	\underbracket{\abs{f(x) - g_k(x)}}_{≤\norm{f-g_k}_∞}
++ 	\underbracket{\abs{g_k(x) - g_k(s_k)}}_{≤n\abs{x-s_k}}
++	\underbracket{\abs{g_k(s_k) -g_k(t_0)}}_{}
++ 	\underbracket{\abs{g_k(t_0) - f(t_0)}}_{≤\norm{f-g_k}_∞} \\
+&≤
+	\underbracket{2\norm{f-g_k}_∞}_{\to 0\; (g_k \to f\text{ unif.})}
++ 	\underbracket{\abs{g_k(s_k) - g_k(t_0)}}_{\to 0}
++ 	\underbracket{n\abs{x-s_k}}_{\to n\abs{x-t_0}} \\
+& \convs[][k] n\abs{x - t_0}
+\end{align*}, donde para decir que $\abs{g_k(s_k) - g_k(t_0)}$ usamos la equicontinuidad de la sucesión de funciones: sabemos que $∀ε > 0\;∃δ>0$ tal que si $\abs{x-t} < δ$ entonces $\abs{g_k(x) - g_k(t)} < ε$; por lo que si fijamos un $ε > 0$, como $s_k \to 0$ entonces $\abs{s_k - t_0} < δ$ para un $k$ lo suficientemente grande y finalmente $\abs{g_k (s_k) - g_k(t_0)} < ε$, por lo que haciendo tender ε a $0$ ya tenemos que esa resta se va a cero igualmente.
+
+Resumiendo: hemos probado que $\abs{f(x) - f(t_0)} \to n\abs{x-t_0}$, por lo que ese límite $f$ estará en $E_n$ igualmente, así que los $E_n$ son cerrados y por lo tanto sus complementarios $E_n^c$ son abiertos.
+
+Ahora consideramos $φ(x)$ la función que nos da la distancia de $x$ al entero más próximo. Analícamente, sería una función períodica de período uno que podemos definir en $[0,1]$ como \[ φ(x) = \begin{cases} x & 0 ≤ x ≤ \sfrac{1}{2} \\ \frac{1}{2} -x & \sfrac{1}{2} ≤ x ≤ 1 \end{cases} \]
+
+Para $λ>0$, sea $φ_λ (x) = \frac{1}{λ} φ(λ^2x)$, que cumple que $\norm{φ_λ}_∞ ≤ \frac{1}{2λ}\;∀λ>0$. Consideraremos entonces la sucesión $\tilde{f}_j = f_j + φ_{λ_j}$ con $λ_j \to ∞$ adecuadamente elegida.
+
+\end{proof}
 
 Ejemplo de módulo de continuidad y funciones Hölder continuas.
 
