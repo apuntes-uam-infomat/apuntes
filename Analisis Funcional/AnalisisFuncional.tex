@@ -7,6 +7,7 @@
 % Paquetes adicionales
 \usepackage{enumitem}
 \usepackage{xfrac}
+\usepackage{fancysprefs}
 
 \setlist{itemsep=1pt, topsep=5pt}
 \bibliographystyle{plainnat}
@@ -108,6 +109,40 @@ Con esto, vamos a por el teorema más importante de este tema.
 \item $X$ es de segunda categoría. En particular, ningún espacio métrico completo se puede escribir como unión numerable de conjuntos diseminados.
 \end{enumerate}
 \end{theorem}
+
+\begin{proof} Empezamos con la primera sentencia. Dados $x ∈ X$ y $ε > 0$, tenemos que probar\footnote{Complicándonos un poco la vida, porque no sabemos cuál es la intersección de todos los $X_n$ y por lo tanto no podemos ver directamente si es densa o no. Por ejemplo, podría ocurrir que la intersección de dos $X_n$ fuese vacía, así que no podemos decir simplemente que $\bola_ε(x) ∩ W$ es no vacía porque es no vacía con cada uno de los $X_n$.} que $\bola_ε(x) ∩ W ≠ ∅$, siendo $W = \bigcap X_n$; esto es, que $W$ es denso en $X$.
+
+Como $X_1$ es abierto y denso, entonces su intersección con $\bola_ε(x)$ es un abierto (por ser ambos abiertos) y no vacío (por ser $X_1$) denso. En este caso, existe un $x_1 ∈ X_1 ∩ \bola_ε(x)$. Además, por ser esa intersección abierta, existe un $r_1 > 0$ tal que $\adh{\bola_{r_1}(x_1)} ⊂ X_1 ∩ \bola_ε(x)$. Podemos suponer además $r_1 < 1$ (si no lo fuera, tomamos $r_1' = 0.5 · \min\set{1,r_1}$).
+
+De nuevo, como $X_2$ es abierto y denso, $X_2 ∩ \bola_{r_1}(x_1)$ es abierto y no vacío; y por lo tanto existen $x_2 ∈ X_2 ∩ \bola_{r_1}(x_1)$ y un $r_2 ∈ (0, \min\set{r_1, \sfrac{1}{2}})$ de modo que $\adh{\bola_{r_2}(x_2)} ⊂ X_2 ∩ \bola_{r_1}(x_1)$. Tras $n$ pasos análogos, elegimos puntos $x_1, \dotsc, x_n$ y radios $r_1, \dotsc, r_n$ que cumplen que $0 < r_i < \min\set{r_{i-1}, \sfrac{1}{i}}$ y con $\adh{\bola_{r_n}(x_n)} ⊂ X_n ∩ \bola_{r_{n-1}} (x_n)$.
+
+Aquí entra en juego el axioma de elección: de momento hemos cogido $n$ puntos pero queremos asumir que podemos cogerlos para toda la sucesión infinita.
+
+Si cogemos dos índices $i,j > n$, entonces sabemos que $x_i,x_j ∈ \bola_{r_n}(x_n)$, y por lo tanto que $\dst(x_i, x_j) < r_n$. Esto nos lleva a que la sucesión $\set{x_n}_{n≥1}$ es de Cauchy, y por ser \sdst completo el límite de la sucesión existe: $x_n \convs x'$.
+
+Como $x_i ∈ \adh{\bola_{r_n}(x_n)}\;∀i>n$, entonces $x'$ ha de estar en la intersección de todas las $\adh{\bola_{r_n}(x_n)}$, que en particular están metidas dentro de $X_n$. Por lo tanto, $x' ∈ \bigcap X_n = W$ y $x'∈\bigcap \adh{\bola_{r_n}}(x_n)$.
+
+Además, como $x' ∈ \adh{\bola_{r_1}(x_1)} ⊂ \bola_ε(x)$ lo que nos queda es que $\bola_ε(x) ∩ W ≠ ∅$ y por lo tanto la intersección de todos los $X_n$ es no vacía.
+\end{proof}
+
+\begin{corol} En un espacio métrico completo, la intersección de cualquier familia numerable de conjuntos $G_δ$ densos es otro $G_δ$ denso.
+\end{corol}
+
+
+\begin{proof} Sea $W ⊂ X$ un $G_δ$ y por lo tanto de la forma $W = \bigcap X_n$, con $X_n ⊂ X$ abiertos. Si $\set{W_n}_{n≥1}$ es una familia numerable de $G_δ$ en $X$ de la forma $W_m = \bigcap X_{m,n}$ abiertos, entonces simplemente vemos que \[\bigcap_{n≥1} W_n = \bigcap_{m≥1} \bigcap_{n≥1} X_{m,n} = \bigcap_{(m,n) ∈ ℕ×ℕ} X_{m,n} \], y como $ℕ×ℕ$ es numerable entonces el \nlref{thm:CategoriaBaire} nos dice que esa intersección es densa si lo es cada uno de esos conjuntos $W_n$.
+\end{proof}
+
+Una aplicación de esto es que nos permite probar la existencia de una función $f ∈ C_{[0,1]}$ no diferenciable en ningún punto $x ∈ [0,1]$. De hecho, hay un $G_δ$ denso en $C_{[0,1]}$ con esas características. Para ello, tomamos el espacio $C_{[0,1]}$ con la distancia del supremo.
+
+En otras palabras, lo que podemos decir con eso es que las funciones diferenciables son un conjunto despreciable (en el sentido topológico) dentro de todas las funciones continuas. Sin embargo, necesitaremos ver algunos conceptos nuevos para poder demostrarlo.
+
+\begin{defn}[Función\IS uniformemente continua] Sea \sdst un espacio métrico y $\appl{f}{X}{ℂ}$ continua. $f$ se dice uniformemente continua si y sólo si $∀ε>0$ existe un $δ>0$ tal que $\dst(x,y) < δ \implies \abs{f(x) - f(y)} <ε$, con δ escogido independientemente de $x$ e $y$.
+\end{defn}
+
+\begin{defn}[Familia\IS uniformemente equicontinua] Sea \sdst métrico y $\mathcal{F} ⊂ C(X)$ una familia de funciones continuas en $X$. Entonces $\mathcal{F}$ es una familia equicontinua si $∀ε>0\;∃δ>0$ tal que $\dst(x,y) < δ$ y $f ∈ \mathcal{F}$, entonces $\abs{f(x) - f(y)} < ε$.
+\end{defn}
+
+Ejemplo de módulo de continuidad y funciones Hölder continuas.
 
 \section{Espacios de Banach}
 
