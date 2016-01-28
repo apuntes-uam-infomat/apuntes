@@ -13,12 +13,14 @@
 \bibliographystyle{plainnat}
 % --------------------
 
+\newcommand{\Id}{\mop{Id}}
+
 \begin{document}
 \pagestyle{plain}
 
 % http://tex.stackexchange.com/a/14243
-\relpenalty=10000
-\binoppenalty=10000
+\relpenalty=9999
+\binoppenalty=9999
 
 \begin{abstract}
 Estos son los apuntes del curso de Geometría y Topología, del profesor Gabino González.
@@ -32,6 +34,8 @@ Estos son los apuntes del curso de Geometría y Topología, del profesor Gabino 
 % Contenido.
 
 \chapter{Conceptos básicos}
+
+\section{Variedades}
 
 En Geometría, los objetos que estudiamos se llaman ``variedades''. Veremos de distintos tipos (por ejemplo, en Geometría Diferencial \citep{ApuntesGeoDif} veíamos variedades diferenciables), aunque nosotros empezaremos con las topológicas.
 
@@ -115,9 +119,53 @@ p &\longmapsto p
 $M$ será $(ℝ,φ)$ y $N = (ℝ,α)$, con $φ$ la identidad y $α(t) = t^3$. Es obvio ver que $f$ es diferenciable (si hacemos la composición nos sale directamente). Ahora bien, si tomamos $\appl{f}{N}{M}$, ¿sigue siendo diferenciable? En este caso, si calculamos vemos que $φ ○ f ○ \inv{α}(t) = \sqrt[3]{t}$ pero esta aplicación no es diferenciable en $0$. Esto es lo mismo que decir que estos dos atlas en $ℝ$ no son compatibles: no definen la misma estructura. Sí serían compatibles si estuviésemos hablando sólo de variedades topológicas, porque sí que estamos ante un homomorfismo.
 \end{example}
 
+Una vez que hemos visto qué es una variedad, podemos ver cómo construir variedades combinándolas de distintas maneras.
+
+\subsection{Variedades producto}
+
+La primera opción para construir una variedad es el producto cartesiano, que ya conocemos de otro tipo de conjuntos.
+
+\begin{defn}[Variedad\IS producto] Sean $M^m$, $N^n$ variedades con sus respectivos atlas $A_1 = \set{(U_i, φ_i)}_{i ∈ I}$ y $A_2 = \set{(V_i, α_j)}_{j ∈ J}$. Entonces, la variedad producto es $M×N^{m+n}$ con atlas \[ A_1 × A_2 = \set{(U_i×V_j, φ_i × α_j)}_{(i,j) ∈ I × J} \]
+\end{defn}
+
+Un ejemplo sencillo es $\crc × ℝ$, una variedad con cartas de la forma $(φ_1 × α_1) = ((x,y), t)$, donde $(x,y)$ vienen de la carta de la circunferencia que hayamos escogido. En este caso, la variedad es $M = \set{(x,y,z) \tq x^2 + y^2 = 1}$, el cilindro, ya que podemos tomar $\appl{f}{M}{\crc × ℝ}$ es un difeomorfismo (se pueden hacer las cuentas pero son triviales).
+
+Otro es $\crc × \crc$, que nos podemos preguntar si es difeomorfa a $\crc[2]$, más que nada porque uno es un toro y otro una esfera. Sin embargo, un argumento más formal implicaría usar los grupos fundamentales\footnote{Ver \citep[Cap. III]{ApuntesTopologia}.}, ya que $π(\crc[2]) = \set{0}$, $π(\crc) = ℤ$ y por lo tanto $π(\crc × \crc) \simeq ℤ × ℤ$. Los grupos fundamentales no son isomorfos por lo que no puede haber difeomorfismo. Lo malo es que este argumento no nos vale para decir, por ejemplo, si $\crc[2] × \crc[3] \simeq \crc[5]$. En realidad, no sin siquiera homeomorfas, pero para saberlo tendremos que usar las cohomologías de De Rham (\fref{chap:CohomologiaDeRham}).
+
+Durante el curso, veremos más herramientas para saber si existen o no difeomorfismos entre variedades.
+
+\subsection{Variedad cociente}
+
+En las variedades también se puede aplicar el análogo del conjunto cociente. Eso sí, necesitaremos ciertas condiciones ``extra'' sobre la variedad.
+
+\begin{defn}[Variedad\IS cociente] Sea $M$ una variedad y sea $G < \mop{Diff}(M)$ un subgrupo de los difeomorfismos sobre $M$, tal que $\abs{G} < ∞$ y además $G$ actúa libremente en $M$ (esto es, que $∀g ∈ G$ distinta de la identidad y $∀x ∈ M$ se tiene que $g(x) ≠ x$).
+
+Entonces, definimos el espacio cociente $\quot{M}{G}$ a través de la relación de equivalencia \[ x \sim y \iff ∃g ∈ G \tq  y = g(x) \]
+
+La estructura de variedad se la damos considerando la proyección canónica \begin{align*}
+\appl{π}{M&}{\quot{M}{G}} \\
+x &\longmapsto [x]
+\end{align*} que a cada elemento le asigna su clase.
+\end{defn}
+
+Por ejemplo, si consideramos la variedad $M = \crc[2]$ y el grupo $G = \gen{J} = \set{\Id, J}$ con $J(x,y,z) = (-x,-y,-z)$. En este caso, $\projp^2 = \quot{\crc[2]}{\gen{J}}$. % TODO: Dibujito.
+
+Para darle la estructura de atlas, tomamos una carta $(U,φ_U)$ en $M$ tal que $U ∩ g(U) = \set{∅}\;∀g ∈ G$, por lo que $\appl{\restr{π}{U}}{U}{\quot{M}{G}}$ es un homeomorfismo sobre su imagen $π(U)$, luego biyectivo. Así, las cartas en $\quot{M}{G}$ son de la forma $\left(π(U), φ_U ○ \inv{\restr{π}{U}}\right)$.
+
+En este caso, nos podemos preguntar qué ocurre si $π(U) ∩ π(V) ≠ ∅$ para dos cartas $U,V$: ¿es $\left(φ_V ○ \inv{\restr{π}{V}}\right) ○ \left(\restr{π}{U} ○ \inv{φ_U} \right)$ diferenciable?
+
+La cuestión es que $\inv{\restr{π}{V}} ○ \restr{π}{U} = g ∈ G$ por la construcción de $g$\footnote{Si $π(x) = π(y)$, son de la misma clase y por lo tanto hay un difeomorfismo que lleva de $x$ a $y$.}, y por lo tanto nos queda que $φ_V ○  g ○ \inv{φ_U}$ es diferenciable.
+
+Un ejemplo muy común es $\projp^n = \quot{\crc[n]}{\gen{J}}$ para $n ∈ ℕ$, que son los espacios proyectivos reales de dimensión $n$.
+
+Esta teoría también funciona siempre que el grupo $G$ cumpla la segunda propiedad y además $∀x ∈ M$ exista un $U$ tal que $g(U) ∩ U = ∅$ $∀g ≠ \Id$.
+
+Otros ejemplos son $\quot{ℝ}{ℤ} \simeq \crc$ o $\quot{ℝ^2}{ℤ^2} \simeq \crc × \crc$. El último caso nos lleva al toro % TODO: Explicarlo un poco.
+
 \chapter{Espacios tangente y cotangente}
 
 \chapter{Cohomología de De Rham}
+\label{chap:CohomologiaDeRham}
 
 %% Apéndices (ejercicios, exámenes)
 \appendix
