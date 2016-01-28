@@ -209,6 +209,15 @@
 
 			Este problema con \concept{DUHAMEL} (la fuente externa se interpreta como una fuente de datos iniciales, se cambia el cero de la segunda ecuación de las anteriores) se puede interpretar como que tenemos una función que transporta el sistema.
 
+			\begin{figure}[hbtp]
+				\centering
+				\inputtikz{interseccionCaracteristica}
+				\caption{}
+				\label{fig:interseccionCaracteristica}
+			\end{figure}
+				
+			
+
 			$$\xi_t + v\xi_x = 0$$
 			$$\xi(x,s) = f(x,s)$$
 
@@ -237,6 +246,13 @@
 
 		No hemos tenido en cuenta que la velocidad de los coches no es totalmente proporcional a la densidad. Si ésta baja mucho, los coches llegan a pararse. Hay una densidad máxima donde el tráfico quedará totalmente estancado (los coches pegados).
 
+		\begin{figure}[hbtp]
+			\centering
+			\inputtikz{parabola}
+			\caption{}
+			\label{fig:parabola}
+		\end{figure}
+
 		Una función más realista sería una parábola. Si no hay coches no pasa ninguno, pero a partir de un punto cuantos más coches, menos rápido van, y menos pasan.
 
 		$$ q(u) = Au (B-u) = ABu - Au^{2} $$
@@ -249,5 +265,215 @@
 		La velocidad va a ser dependiente de la densidad.
 
 		Nos saldrán características cuya pendiente dependa del valor en el tiempo inicial. Si divergen no habrá problema, pero si convergen, habrá puntos donde rectas de densidad 2 (por ejemplo) cortarán con rectas de densidad 1. Esto se entiende como coches que van más rápido que se encuentran con coches que van más lentos y se ven obligados a frenar.
+
+
+		Para simplificar los cálculos de este modelo asumamos que $A = B = 1$. Por lo tanto ahora estudiaremos:
+
+		\begin{equation*}
+		\left\{
+		\begin{array}{l}
+		u_t + (1-2u)u_{x} = 0 \\
+		u(x, 0) = F(x) \quad \quad \text{dato}
+		\end{array}
+		\right.
+		\end{equation*}
+
+		Obtengamos las características (curvas de nivel para esa solución). Con la regla de la cadena tenemos:
+
+		$$u_x x' + u_t = 0 \text{ a lo largo de la característica}$$
+
+		Como $u = k$
+
+		$$x' = 1 - 2u = 1 - 2k$$
+
+		$$x = x_0 + (1-2k)t$$
+
+		Características:
+
+		\( x - (1-2k)t = x_0\quad,\quad k=F(x_0)  \label{eq:caracteristicas_realistas} \)
+
+		Me fijo en un punto en el instante inicial. Con el valor de ese punto calculamos la pendiente y con la pendiente calculamos la evolución. A lo largo de las caracterísitcas el valor del dato se mantiene. En este caso las caracteristicas no son paralelas.
+
+		\begin{figure}[hbtp]
+			\centering
+			\inputtikz{rectasDivergentes}
+			\caption{}
+			\label{fig:rectasDivergentes}
+		\end{figure}
+
+		Veamos algunos ejemplos:
+
+		\begin{example}[Semáforo]
+
+			$$F(x) =
+			\begin{cases}
+				1 & x > 0 \\
+				0 & x < 0
+			\end{cases}
+			$$
+
+			\begin{figure}[hbtp]
+				\centering
+				\inputtikz{semaforoCerrado}
+				\caption{Semáforo cerrado en $t=0$}
+				\label{fig:semaforoCerrado}
+			\end{figure}
+
+			Y en $t=0$ se abre el semáforo. 
+
+			En la sección izquierda: $\Rightarrow F = 1 \Rightarrow x + t = \text{Cte} \Rightarrow x = -t $.
+
+			En la derecha: $F = 0 \Rightarrow x-t = \x_0$.
+
+			\begin{figure}[hbtp]
+				\centering
+				\inputtikz{caracteristicasSemaforo}
+				\caption{}
+				\label{fig:caracteristicasSemaforo}
+			\end{figure}
+
+			Vemos que las características se abren y se separan desde $x=0$ hacia afuera.
+
+			Por lo tanto las características no nos dan información en la región $x \in (-t,t)$ ya que ninguna característica pasa por ellas.
+
+			\begin{figure}[hbtp]
+				\centering
+				\inputtikz{semaforoT}
+				\caption{Instante $t=T$}
+				\label{fig:semaforoT}
+			\end{figure}
+
+			Esto pasa porque no está definida la función en el $0$. Si lo estuviera podríamos intentar sacar infinitas características desde el 0 que rellenaran la zona en la que no tenemos información.
+
+		\end{example}
+
+		\begin{example}[Frenazo]
+
+			Imaginemos ahora dos zonas, una con densidad de coches baja y otra con densidad alta (se encuentran con un atasco)
+
+			\begin{figure}[hbtp]
+				\centering
+				\inputtikz{modeloAtasco}
+				\caption{}
+				\label{fig:modeloAtasco}
+			\end{figure}
+
+			$$F(x) =
+			\begin{cases}
+				1/5 & x < 0 \\
+				2/3 & x > 0
+			\end{cases}
+			$$
+
+			Dibujamos las características con \ref{eq:caracteristicas_realistas}.
+
+			\begin{figure}[hbtp]
+				\centering
+				\inputtikz{ondaChoque}
+				\caption{}
+				\label{fig:ondaChoque}
+			\end{figure}
+
+			Vemos en este dibujo casos en los que cuando recorremos una recta característica con valor $\frac{1}{5}$ nos encontramos con otra de valor $\frac{2}{3}$. Momento en el cual se produce el frenazo.
+
+			Fijando $T$ podemos mirar el valor de cada $x$ trazando su correspondiente característica. Ahí es donde nos encontraremos los puntos en los que las rectas cortan. La sucesión de puntos de corte en función de $t$ es la curva que nos interesa. Se corresponde a la función que dictamina como se van encendiendo las luces rojas de los coches según se van parando al llegar a un atasco.
+
+		\end{example}
+
+		Intentemos resolver ambos en general. Volvemos a la equación:
+
+		$$u_t +m [q(u)]_x = 0$$
+
+		Como tiene derivadas y nos impide trabajar con funciones con discontinuidades intentaremos ver el origen de esta hasta que no haya derivadas y no hayamos hecho hipótesis de regularidad. Esta ecuación venía de una integral:
+
+		$$\frac{1}{h} \int^{x+h}_{x} u_t + [q(u)]_x = 0$$
+
+		que a su vez venía de:
+
+		$$\frac{d}{dt} \int^{x+h}_{x} u = q(u(x))-q(u(x+h))$$
+
+		$u$ es $C^1$ a trozos con discontinuidad de salto en $x=s(t)$. Así que llegamos al problema:
+
+		\textbf{Hallar $s(t)$}
+
+		\begin{figure}[hbtp]
+			\centering
+			\inputtikz{discontinuidadAtasco}
+			\caption{}
+			\label{fig:discontinuidadAtasco}
+		\end{figure}
+
+		% A partir de aquí está bastante mal muy probablemente
+		
+
+		En el intervalo $[x_1,x_2]$:
+
+		$$\frac{d}{dt} \left[ \int^{s(t)}_{x_1} u(x,t) dx + \int^{x^2}_{s(t)} u(x,t) dx \right] = q(u(x_1)) - q(u(x_2))$$
+
+
+		$$ \text{¿ } \frac{d}{dt} \int^{s(t)}_{x_1} u(x,t) \dif x \text{ ?} $$
+
+		Tomemos:
+
+		$$G(z,t) = \int^z_{x_1}1 u(x,z) \dif x $$
+
+		$$G_z = u(z,t) $$
+
+		$$G_z = \int^{z}_{x_1} u_t(x,z) \dif x $$
+
+		$$\int^{s(t)}_{x_1} u(x,t) dt = G(s(t),t)$$
+
+
+		\textbf{Notación}
+
+		$$[u(s(t),t)]^{-} = \lim_{x \to s(t)^{-}} u(x, s(t)) $$
+
+		\textit{Queda para el lector hacer lo mismo con la otra integral.}
+
+		Si realizamos lo mismo con la otra integral llegamos a esta \textbf{conclusión}:
+
+		$$([u(s(t),t)]^{-} - [u(s(t),t)]^{+}) s'(t) +  \int^{s(t)}_{x_1} u_t(x,t) dx + \int^{x^2}_{s(t)} u_t(x,t) dx = q(u(x_1,t)) - q(u(x,t)) $$
+
+		Ahora llevamos $x_1$ y $x_2$ tender a $s(t)$.
+
+		Hacemos $x_1 \rightarrow s(t)^{-}$,$x_2 \rightarrow s(t)^{+}$.
+
+
+		\textbf{Resultado:}
+
+		$$(u(s(t),t)^{-} - u(s(t),t)^{+}) s'(t) = q(u(s(t),t)^{-}) - q(u(s(t),t)^{+})$$
+
+		$$s'(t) = \frac{q(u(s(t),t)^{-}) - q(u(s(t),t)^{+})}{u(s(t),t)^{-} - u(s(t),t)^{+}} $$
+
+		Lo cual resulta ser nuestra equación del shock.
+
+		(FALTA NOMBRE TEOREMA EXTRAÑO)
+
+		(DIBUJO DE LA ONDA DE SHOCK OTRA VEZ)
+
+		Para obtener la curva calculamos:
+
+		Salto en u: $2/3 - 1/5 = 7/15$
+
+		Salto en q: $2/3(1-2/3) - 1/5(1-1/5)$
+
+		$$q(u) = u (1-u)$$ = 2/9 - 4/25 = 14/225
+
+
+		Entonces:
+
+		$$s'(t) = \frac{\text{Salto q}}{\text{Salto u}} = \frac{\frac{14}{225}}{\frac{7}{15}} = \frac{14.15}{7.225} \equiv \alpha \quad(>0)$$
+
+		$$s(0) = 0 \Rightarrow s(t) = \alpha t $$
+
+		Por lo que la onda de choque sigue $x = s(t) = \alpha t$.
+
+		(DIBUJO RECTA)
+
+
+
+
+
+
 
 
