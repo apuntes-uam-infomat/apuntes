@@ -37,12 +37,37 @@
     tabsize=2
 }
 
+\newcommand{\goal}[1]{
+
+El \textbf{objetivo} del problema es:  #1}
+\newcommand{\restrictions}[6][]{
+
+	Las \textbf{restricciones} del problema son:
+
+	\begin{enumerate}
+		\ifthenelse{\equal{#1}{}}{}{\item #1}
+		\ifthenelse{\equal{#2}{}}{}{\item #2}
+		\ifthenelse{\equal{#3}{}}{}{\item #3}
+		\ifthenelse{\equal{#4}{}}{}{\item #4}
+		\ifthenelse{\equal{#5}{}}{}{\item #5}
+		\ifthenelse{\equal{#6}{}}{}{\item #6}
+	\end{enumerate}}
+
+
+\newenvironment{ioprob}{\begin{mdframed}}{\end{mdframed}}
+
 % Paquetes adicionales
 
 % --------------------
 
 \begin{document}
 \begin{abstract}
+Estos son apuntes del curso \textit{Investigación Operativa}. asignatura optativa de último curso del grado en Matemáticas. La asignatura ha sido impartida por \href{http://www.uam.es/joser.berrendero}{Jose Ramón Berrendero}. 
+
+
+Como material adicional en las clases disponíamos de apuntes de apoyo del profesor de donde se han obtenido la mayoría de las imágenes.
+
+Agradecemos además el trabajo de todos los compañeros y compañeras de clase que aportan sus comentarios, detección de erratas, corrección de ejercicios para aumentar la calidad de los apuntes.
 
 \end{abstract}
 \pagestyle{plain}
@@ -76,33 +101,28 @@ de exteriores en más de 1 t.
 
 El problema que queremos resolver es: \textbf{¿Qué cantidad de cada tipo de pintura se debe fabricar diariamente para maximizar el beneficio?}
 
-
-Queremos entonces maximizar $5x_1 + 4x_2$, con las siguientes restricciones:
-
-\begin{itemize}
-	\item $6x_1 + 4x_2 \leq 24$
-	\item $x_1 + 2x_2 \leq 6$
-	\item $x_2 \leq 2$
-	\item $x_2 \leq x_1 + 1$
-	\item $x_1 \geq 0, x_2 \geq 0$
-\end{itemize}
+\begin{ioprob}
+\goal{$\max 5x_1 + 4x_2$}
+\restrictions{$6x_1 + 4x_2 \leq 24$}{$x_1 + 2x_2 \leq 6$}{$x_2 \leq 2$}{$x_2 \leq x_1 + 1$}{$x_1 \geq 0, x_2 \geq 0$}
+\end{ioprob}
 
 
 Para tener algo de intuición, vamos a ver gráficamente el problema:
 
 \begin{center}
-\includepdf[scale=0.9,pages=10]{pdf/io-tema1-16.pdf}
+\includegraphics[scale=0.8]{tex/berrendero/tema1/_GraficoEjemplo1}
 \end{center}
 
 
-Como queremos maximizar $z\equiv 5x_1+4x_2$. Para ello, podemos tomar $z = c, ∀c>0$ y vamos tomando conjuntos de nivel. Tomamos $\grad z = \begin{pmatrix}5\\4\end{pmatrix}$. Este vector $\grad z$ es el vector normal a las rectas (o conjuntos) de nivel.
+Como queremos maximizar $z\equiv 5x_1+4x_2$. Para ello, podemos tomar $z = c, ∀c>0$ y vamos tomando conjuntos de nivel. 
+Tomamos $\grad z = \begin{pmatrix}5\\4\end{pmatrix}$. Este vector $\grad z$ es el vector normal a las rectas (o conjuntos) de nivel.
 
 A ojo, vemos que el $c$ que maximiza $5x_1 + 4x_2 = c$ estará en la intersección de las restricciones $(1)$ y $(2)$.
 
 Veamoslo gráficamente:
 
 \begin{center}
-\includepdf[scale=0.9,pages=11]{pdf/io-tema1-16.pdf}
+\includegraphics[scale=0.8]{tex/berrendero/tema1/_GraficoEjemplo2}
 \end{center}
 
 
@@ -115,136 +135,10 @@ El punto solución es la solución del sistema:
 
 
 \chapter{Conjuntos convexos y optimización lineal}
-
-Vamos a definir unos conceptos para poder hacer unas observaciones pertinentes al ejemplo resuelto (estos conceptos serán utilizados a lo largo del curso).
-
-
-\begin{defn}[Solución\IS factible]
-Cualquier punto que verifique todas las restricciones se llama solución factible.
-\end{defn}
-
-\begin{defn}[Conjunto\IS factible]
-El conjunto factible es el conjunto de todas las soluciones factibles (en el dominio de la función objetivo).
-\end{defn}
-
-\begin{defn}[Solución\IS factible óptima]
-La solución factible óptima es la solución factible para la que se optimiza el objetivo.
-\end{defn}
-
-\begin{defn}[Problema\IS convexo]
-Un problema de optimización es lineal si tanto la función objetivo como las funciones que definen las restricciones son lineales.
-\end{defn}
+\input{tex/io_sec1.tex}
 
 
-\paragraph{Observaciones sobre el problema de la intruducción}
-\begin{itemize}
-	\item Este problema que hemos resuelto es un problema lineal, en el que además el conjunto factible es convexo (un poliedro).
-	\item Además, la solución coincide con uno de los vértices del conjunto factible.
-	\subitem En algún momento del curso veremos que siempre hay un vértice que es solución de un problema.
-	\item El vértice está definido por 2 restricciones que se satisfacen con igualdad (saturadas o activas en ese punto).
-	\item Un problema lineal puede tener una solución factible óptima única, puede tener infinitas soluciones o puede no tener solución.
-	\subitem En este problema tendríamos infinitas soluciones si la recta de nivel fuera paralela a alguna de las fronteras. En ese caso, toda la frontera sería solución.
-	\subitem 
-\end{itemize}
-
-Vamos a ver 3 ejemplos resolviéndolos gráficamente. Uno con una única solución (también en un vértice) otro con infinitas soluciones y un último ejemplo sin ninguna solución óptima.
-
-\begin{example}
-Maximizar $2x_1 + x_2$ con las restricciones: $x_1 + 3x_2 \leq 2$ y $x_1,x_2 \geq 0$.
-
-\begin{center}
-\includegraphics[scale=0.45]{img/io-intro_1.png}
-\end{center}
-
-Este problema tiene solución factible óptima única. Si desplazamos la recta de nivel en la dirección perpendicular, llegamos a la intersección con $C$.
-\end{example}
-
-\begin{example}
-Maximizar $z = 2x_1+x_2$ con las restricciones: $x_1+2x_2 \leq 2$ y $x_1,x_2\geq 0$
-.
-
-
-\begin{center}
-\includegraphics[scale=0.45]{img/io-intro_2.png}
-\end{center}
-
-
-Este problema tiene infinitas soluciones óptimas.
-\end{example}
-
-\begin{example}
-Maximizar $2x_1 + x_2$ con $-x_1+x_2\leq 1$, $x_2\leq 3$ y $x_1,x_2\geq 0$.
-
-
-\begin{center}
-\includegraphics[scale=0.45]{img/io-intro_3.png}
-\end{center}
-
-Este problema no tiene una solución óptima.
-\end{example}
-
-
-Vamos a ver otro ejemplo, el \concept{Problema\IS del transporte}
-\begin{example}
-Trasladar el producto desde donde se produce ($O_i$) hasta donde se demanda ($D_j$) minimizando el coste. 
-Cada $O_i$ produce una cantidad determinada $s_i$ y cada centro de demanda consume otra cantidad determinada $d_j$.
-Además, $\sum s_i = \sum d_i$.
-El coste de traslado desde $O_i$ hasta $D_j$, es $c_{ij}$. 
-
-El problema es determinar qué cantidades hay que trasladar desde $i$ hasta $j$ de forma que se minimice el coste total del transporte.
-
-
-Vamos a plantear el problema. Vamos a escribir la función objetivo, utilizando $x_{ij}$ como la cantidada que se transporta desde $O_i$ hasta $D_j$
-
-\[\min \sum_i \sum_j c_{ij}x_{ij} \]
-
-Con las siguientes restricciones dadas por el enunciado:
-
-\begin{itemize}
-	\item $x_{ij} \geq 0$
-	\item $\displaystyle\sum_j x_{ij} = s_i$
-	\item $\displaystyle\sum_i x_{ij} = d_j$
-\end{itemize}
-
-Aunque el algoritmo simplex que veremos lo resuelve, la estructura especial del problema hace posible la generación de algoritmos más eficientes. 
-Podríamos pensar en la red eléctrica en la que hay del orden de miles de productores y de miles de centrales consumidoras. 
-Minimizar costes es importante.
-\end{example}
-
-Vamos a ver otro ejemplo más, el \concept{Problema\IS de asignación}
-\begin{example}
-Hay que asignar n tareas a n trabajadores. Si se asigna la tarea $i$ al
-trabajador $j$ se incurre en un coste de $c_{ij}$.
-El problema es asignar las tareas a los trabajadores de manera que se minimice el coste.
-
-Podemos darnos cuenta que es el problema del transporte con las restrcciones $s_i = 1$ y $d_j = 1 ∀ij$
-
-Las variables de decisión son:
-
-\[x_{ij} = \left\{ \begin{array}{cc} 1, & \text{ se asigna i al trabajador j}\\0, & \text{ caso contrario}\end{array} \right. \]
-
-Queremos minimizar
-
-\[
-\min \sum_i \sum_j c_{ij} x_{ij}
-\]
-
-Con las siguientes restricciones:
-
-\begin{itemize}
-	\item $\displaystyle\sum_j x_{ij} = 1$
-	\item $\displaystyle\sum_i x_{ij} = 1$
-	\item $x_{ij}\in\{0,1\}$
-\end{itemize}
-
-\end{example}
-
-
-Estos ejemplos son problemas lineales que modelan flujos de transporte en redes, que es lo que veremos a continuación.
-
-
-
-\chapter{Funciones convezas y optimización convexa}
+\chapter{Funciones convexas y optimización convexa}
 
 \chapter{Condiciones KKT y dualidad}
 
