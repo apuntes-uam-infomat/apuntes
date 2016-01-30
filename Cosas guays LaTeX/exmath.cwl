@@ -41,6 +41,8 @@
 \units{arg0}#m
 \app#m
 \obs#m
+\nota#m
+\notacion#m
 \gx#m
 \gs#m
 \gy#m
