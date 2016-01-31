@@ -97,7 +97,7 @@ Demuestra que las siguientes afirmaciones son equivalentes:
 
 \begin{problem}
 Sea $\K$ un cuerpo finito
-\ppart Demuestra que $\K$ es una extensión finita de $\field_p$ con $p = $char$(\K)$. Concluye que $|\K| = p^n$ para algún $n \geq 1$, $n \in \nat$.
+\ppart Demuestra que $\K$ es una extensión finita de $\field_p$ con $p = \mop{char} (\K)$. Concluye que $|\K| = p^n$ para algún $n \geq 1$, $n \in \nat$.
 \ppart Demuestra que el homomorfismo de Frobenius que eleva cada elemento a la potencia p es un isomorfismo. Concluye que $\K$ es un cuerpo perfecto.
 \ppart Demuestra que $\K$ es un cuerpo de descomposición para el polinomio $x^{p^n}-x$.
 
@@ -111,7 +111,72 @@ Sugerencia: usa el Teorema del elemento primitivo.
 
 Sugerencia: usa los dos apartados anteriores.
 \solution
+
+\doneby{Guille}
+
+Dado que no sé si esto lo hemos visto en la teoría, definimos la característica de un cuerpo y la extensión finita.
+
+\begin{defn}[Característica\IS de un cuerpo]
+Dado un cuerpo $(\K, +, ·)$, definimos su característica como el número de veces que tenemos que sumar la identidad multiplicativa consigo misma para tener la identidad de la suma. Esto es, si un cuerpo tiene $\mop{char} \K = p$, entonces $\underbracket{\one + \one + \dotsb + \one}_{p\text{ sumas}} = \zero$.
+\end{defn}
+
+\begin{defn}[Extensión\IS de cuerpos] \citep[Def. I.1]{apuntesGalois}
+Dados dos cuerpos $F$ y $E$ tales que $F⊆E$ diremos que $E$ es una extensión de $F$.
+
+Se escribe $F⊆E$ (obviamente) o también $E/F$.
+\end{defn}
+
+
+\begin{defn}[Grado\IS de una extensión] \citep[Def I.3]{apuntesGalois}
+Sea $E/F$ una extensión de cuerpos.
+El grado de la extensión es la dimensión de $E$ como espacio vectorial sobre $F$, es decir, \[[E:F] = \dim_FE \]
+\end{defn}
+
+Diremos que una extensión es una \concept{Extensión\IS finita} cuando su grado es finito.
+
+\spart
+
+Tenemos que demostrar que \K tiene un subanillo isomorfo a $ℤ_p$ (el hecho de que la extensión finita viene gratis por ser \K finito). Si la característica de \K es $p$, eso significa que $\underbracket{\one + \one + \dotsb + \one}_{p\text{ sumas}}= \zero$. Podemos considerar entonces $\gen{\one} = ℤ_p$, que es un cuerpo (trivial) y además es un subcuerpo de \K, ya que lo hemos generado con las sumas de $n$ veces la unidad, que por definición están en \K.
+
+Falta ahora demostrar que $\card\K = p^n$ para algún $n ≥ 1$. Esto lo sacamos de \citep[Ej. 1.4]{apuntesGalois}. Definimos un homorfismo de anillos $φ$ de la siguiente forma: \begin{align*} \appl{φ}{ℤ&}{K} \\
+α &\longmapsto α · \one
+\end{align*}
+
+Estudiemos el núcleo de φ. Son los elementos de $ℤ$ cuya imagen es la unidad en $\K$, esto es, tomando $n = \mop{char}(\K)$, \[ \ker φ = \set{a·n \tq a ∈ ℤ} = nℤ \]
+
+El segundo teorema de isomorfía de grupos\footnote{Ver magníficos apuntes de Pedro Valero de Estructuras Algebraicas \citep{apuntesEA}.} nos dice que existe un isomorfismo entre la imagen de $φ$ y el grupo cociente $\quot{ℤ}{\ker φ}$, al que llamaremos $γ$:
+
+\[ \appl{γ}{\quot{ℤ}{nℤ}}{\img φ ⊆ \K} \]
+
+Afirmamos que $n≠0$: $\K$ es finito y $\quot{ℤ}{0ℤ} = ℤ$, así que no puede existir un isomorfismo entre ambos.
+
+Afirmamos que $n$ es primo, y vamos a demostrarlo por reducción al absurdo. Supongamos $n = ab$. Si operamos en $\fd_n$, tenemos que $n\equiv 0 \mod n$ y entonces $ab=0$. Aplicamos $γ$ a ambos lados y tendríamos que $γ(a)·γ(b) = γ(0) = 0_\K$, contradicción ($\K$ es un cuerpo así que no puede tener divisores de $0$).
+
+Sea $p=n$, entonces \[ \mathbb{F}_p = \quot{ℤ}{nℤ}  \simeq \img φ \] es un subcuerpo de $\K$, luego $\K$ es un espacio vectorial sobre $\mathbb{F}_p$. Es decir, que si $[\K:\mathbb{F}_p] = m$, entonces $\{x₁, \dotsc, x_m\}$ es base de $\K$ sobre $\mathbb{F}_p$, luego \[ \card{\K} = \card{\fd_p}^{[\K:\fd_p]} = p^m\] para $m ≥ 1$, y ya tenemos lo que buscábamos.
+
+Una observación importante: el cuerpo finito de $n$ elementos \textbf{no es} $\quot{ℤ}{nℤ}$. Los enteros módulo $n$ sólo son un cuerpo cuando $n$ es primo. Es decir, que en general \[ \fd_n ≠ \quot{ℤ}{nℤ} \].
+
+Los cuerpos finitos hay que construirlos específicamente como el cociente de un cuerpo finito de orden primo con el ideal generado por un polinomio irreducible. Por ejemplo, podríamos preguntarnos si hay un cuerpo con 9 elementos. Existe, porque $9=3^2$.
+
+\spart
+
+A modo de nota, por ser $\K$ un cuerpo es un dominio de integridad (no tiene divisores de cero) y por lo tanto si tiene característica $p$, $p$ debe ser primo\footnote{Si tuviésemos que $p$ no es primo, lo podemos descomponer como producto factores primos $p = a_1·a_2\dotsb a_n$ con $a_i ≠ \one$. Entonces $\zero = p · \one = a_1\one · a_2 \one \dotsb a_n \one = \zero$, pero como no tenemos divisores de cero alguno de esos $a_i \one$ debe ser cero, y por lo tanto el cuerpo tiene característica $a_i$, con $a_i$ primo.}.
+
+
+Denotaremos el \concept{Homomorfismo\IS de Frobenius} como $φ(x) = x^p$. Probamos primero que es compatible con las operaciones. Vemos que \[ φ(a+b) = (a+b)^p = \sum_{n=0}^p \comb{p}{n} a^{p-n} b^n \], sin embargo, salvo para $n = 0$ y $n = p$, los coeficientes serán divisibles por $p$ y por lo tanto serán $0$. Entonces $φ(a+b) = a^p + b^p = φ(a) + φ(b)$, luego φ es compatible con la suma. La compatibilidad con el producto es trivial.
+
+Vamos a comprobar ahora que es biyectivo. Tenemos $a, b ∈ \K$ distintos, y supongamos que $φ(a) = φ(b)$. Entonces, $0 = φ(a) - φ(b) = φ(a-b) = (a-b)^p$. Ahora bien, por ser \K un cuerpo (y sin divisores de cero por lo tanto) sólo puede ser $a-b = 0$, por lo que $a$ y $b$ son iguales, contradicción.
+
+Por último, para que sea sobreyectivo tenemos que ver que para todo $a ∈ \K$ existe un $b ∈ \K$ tal que $φ(b) = a$. La cuestión es que como \K es un cuerpo finito y ya hemos demostrado que φ es inyectivo no queda otra opción: por el principio del palomar, si nos quitamos un elemento de la imagen de $φ$, habría un $c ∈ \K$ que es imagen de dos elementos de \K y entonces φ no sería inyectivo.
+
+La definición de \concept{Cuerpo\IS perfecto} es esta misma: que el homomorfismo de Frobenius es un automorfismo (isomorfismo consigo mismo).
+
+\spart
+
+Si $a∈\K$ es una raíz de $x^{p^n} - x$, entonces $a^{p^n} = a$ o equivalentemente $a^{p^n - 1} = \one$. Y no sé muy bien cómo seguir aquí.
+
 \end{problem}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Hoja 1: Anillos, ideales}
 
