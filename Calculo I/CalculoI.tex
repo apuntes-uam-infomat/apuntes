@@ -1,5 +1,8 @@
-\documentclass[nochap]{apuntes}
+\documentclass[palatino, nochap]{apuntes}
 
+\usepackage{fancysprefs}
+\usepackage{tikztools}
+\usetikzlibrary{arrows}
 %
 \author{Guillermo Julián Moreno}
 \date{2011/2012 - C1}
@@ -7,6 +10,9 @@
 %
 
 \begin{document}
+\begin{abstract}
+Apuntes de Cálculo I del curso 2011/2012, tomados en las clases del profesor Fernando Soria. Cubren límites, derivadas e integrales en una variable, junto con una cierta base matemática necesaria para poder manejar los conceptos.
+\end{abstract}
 
 \maketitle
 \newpage
@@ -16,50 +22,103 @@
 \newpage
 
 \section{Fundamentos}
+\label{sec:Fundamentos}
 
-\placeholder{Inducción}
+Una de las primeras cosas que diferencia las matemáticas de verdad de las matemáticas que uno pueda dar en el instituto o en carreras de ingeniería es que aquí nos interesan las razones. Queremos saber no sólo qué es lo que ocurre, sino también por qué. Nos interesa saber de dónde vienen los conceptos que manejamos, cómo se construyen y qué limitaciones tienen, para poder manejarlos nostoros a nuestra manera y poder construir sobre ello. Por eso, empezamos primero con una sección dedicada a los fundamentos necesarios para poder tratar el cálculo formalmente y no sólo como una colección de fórmulas sin sentido.
 
-\begin{theorem}[Binomio de Newton][Newton!Binomio]
-\[ (a+b)^k=\sum^k_{n=0}\comb{n}{k}a^nb^{n-k} \]
-\end{theorem}
+\subsection{Pruebas e inducción}
+
+La primera idea que necesitamos manejar es, sin duda, el concepto de prueba. En el fondo no es más que una serie de transformaciones que hacemos para asegurarnos de que una cierta hipótesis es cierta. Por ejemplo, si queremos probar que $2 · 3 = 6$ (y suponemos que no sabemos multiplicar), podemos decir que $2·3 = 2 + 2 + 2 = 6$. A lo largo del curso haremos muchas pruebas de este estilo: partimos de una base que aceptamos como cierta (en el ejemplo tonto que acabamos de poner, suponemos que una multiplicación de un número por $n$ es sumar ese número $n$ veces) y empezamos a desarrollar a partir de ahí hasta llegar a lo que queremos demostrar.
+
+Un tipo de prueba que a veces usaremos y que puede ser un poco contraintuitiva es la \concept{Inducción}. Son muy útiles cuando queremos demostrar que algo se cumple para todos los números naturales, porque nos permite llegar a esa prueba sin necesidad de andar probando para todos los números (cosa imposible, porque hay infinitos naturales). Vamos a ver un ejemplo con el \concept{Binomio\IS de Newton}.
+
+El binomio de Newton, que se estudia en Bachillerato\footnote{Salvo que por enésima vez se haya cambiado el programa de estudios de Bachillerato.}, nos da una fórmula para la potencia $n$-ésima de una suma: \begin{align*} (x+y)^n &= \sum_{k=0}^n \comb{n}{k}x^{n-k}y^k = \\
+&= \comb{n}{0} x^ny^0 + \comb{n}{1} x^{n-1}y^1 +  \dotsb + \comb{n}{n-1} x^1y^{n-1} + \comb{n}{n} x^0y^n \end{align*}, donde $\comb{n}{k}$ es un número combinatorio, dado por \[ \comb{n}{k} = \frac{n!}{k!(n-k)!} \]. Por si acaso, recordamos que $k!$ es lo que se llama un \concept{Factorial}, y es igual a la multiplicación de todos los números hasta $k$: $k! = k · (k-1) \dotsb 2 · 1$.
+
+Bien, ¿cómo demostrarmos el binomio de Newton? Hacer el desarrollo puede ser infernal, y no podemos probarlo para todos los $n$ posibles porque hay infinitos. Pero podemos darnos cuenta de una cosa muy tonta: $(x+y)^{n+1}= (x+y)  · (x+y)^{n}$. Si supiésemos que el binomio de Newton se cumple para un cierto $n$, entonces podríamos probarlo para $n + 1$ fácilmente, porque esa cuenta tiene pinta de ser sencilla de hacer. Si repetimos el mismo paso, podríamos hacerlo para $n+2$, después para $n+3$, y así sucesivamente. Es decir, que con probar que podemos pasar de $n$ a $n+1$, podemos deducir que se cumple para todos los $n$. Sólo nos falta, eso sí, saber que tenemos un punto de partida válido.
+
+Vamos a tratar de probar primero que tenemos el \textit{caso base}. Suponemos $n = 1$, y entonces vemos que efectivamente se cumple \[ x+y = \comb{1}{0} x^1y^0 + \comb{1}{1} x^0 y^1 = x + y\]
+
+Ahora que tenemos ese caso base, podemos tratar de probar que podemos dar el salto de $n$ a $n+1$ (esto es lo que se llama la \concept{Hipótesis\IS de inducción}). Suponemos entonces que ya lo tenemos probado para un cierto $n$, y operamos para ver si podemos demostrarlo para $n+1$. Decíamos antes que $(x+y)^{n+1} = (x+y)(x+y)^{n}$. Entonces tenemos que \begin{align*} (x+y)(x+y)^{n} &\eqreasonup{\text{Se cumple para } n} (x+y) · \sum_{k=0}^n \comb{n}{k}x^{n-k}y^k  =  \\
+&= x · \sum_{k=0}^n \comb{n}{k} x^{n-k}y^k + y · \sum_{k=0}^n \comb{n}{k} x^{n-k}y^k \\
+&= \sum_{k=0}^n \comb{n}{k} x^{n-k + 1}y^k + \sum_{k=0}^n \comb{n}{k} x^{n-k}y^{k+1}
+\end{align*}
+
+Para hacer esa suma, vamos a fijarnos en los coeficientes de los polinomios y sumarlos. En la suma de la izquierda, el coeficiente de $x^{n-k+1}y^{k}$ será $\comb{n}{k}$. En el de la derecha, será $\comb{n}{k-1}$, ya que $x^{n-(k-1)}y^{(k-1)+1} = x^{n-k+1}y^k$. Sumando ambos coeficientes nos queda que\footnote{Se trata de la identidad de Pascal, si uno no se fía puede sumar las fracciones y ver qué queda.} \[ \comb{n}{k} + \comb{n}{k-1} = \comb{n+1}{k} \]
+
+Por último, como tenemos todos los posibles monomios $x^{n+1}$, $x^ny^1$, etc, hasta $x^1y^n$ y $y^{n+1}$, nos queda efectivamente lo que estábamos buscando: \[ (x+y)^{n+1} =\sum_{k=0}^{n+1}\comb{n+1}{k} x^{n+1-k}y^{k}\] y ya está la prueba hecha, así que dejamos nuestro símbolo de ``demostrado'': \qed
 
 \subsection{Conjuntos}
 
-Un conjunto es una colección de elementos. Hay tres formas de definirlo:
+Una de las bases de las mátemáticas son los conjuntos, que no son más que colecciones de elementos. Hay tres formas de definirlo:
 
 \begin{enumerate}
-\item Enumerar los elementos: $A=\{a,b,c,...\}$.
-\item Operaciones con conjuntos: $A=B\cap C$.
-\item A través de una fórmula: $A=\{x\in B \tq P(x)\}$
+\item Enumerar los elementos: $A=\{a,b,c,\dotsc\}$.
+\item Operaciones con conjuntos: $A=B\cap C$ son los elementos que están en $B$ y en $C$.
+\item A través de una fórmula que ``filtre'' elementos de otro conjunto: $A=\{x\in B \tq x \text{ es par}\}$.
 \end{enumerate}
 
-\begin{defn}[Par ordenado]
-$(a, b)=\{\{a\},\{a,b\}\}$.
+La principal razón para limitarnos a definir los conjuntos así es para evitarnos paradojas como la de Russell. Si pudiésemos definir conjuntos sin construirlos o sin filtrar de conjuntos ya existentes, podríamos definir el conjunto $R$ de los conjuntos que no son miembros de sí mismos. Si $R$ está en $R$, entonces es un miembro de sí mismo y no puede estar en $R$. Por otra parte, si $R$ no está en $R$, entonces no es miembro de sí mismo y sí está en $R$. Como uno puede imaginar, este tipo de paradoja no es muy deseable si queremos hacer matemáticas estrictas que siempre funcionen.
+
+En la asignatura de Cálculo los conjuntos no nos interesarán de momento demasiado salvo por unos conceptos simples:
+
+\begin{defn}[Cardinal\IS de un conjunto] El cardinal de un conjunto es el número de elementos que contiene. Se denota por $\card{A}$.
 \end{defn}
 
-\begin{lemma}
-$(a,b)=(c,d) \dimplies (a=c) \y (b=d)$.
-\end{lemma}
+También querremos construir conjuntos como pares de elementos de uno y otro. Definiremos un par ordenado o \concept{Tupla} como $(a,b)$, y diremos que un par $(a,b)$ es igual a otro $(c,d)$ si y sólo si $a = c$ y $b = d$. A partir de esto, definimos el producto cartesiano:
 
 \begin{defn}[Producto cartesiano o directo][Producto\IS cartesiano]
-Sean $X$ e $Y$ dos conjuntos. Entonces $X\x Y=\{(a,b\}\tq a\in X\; b\in B\}$.
+Sean $X$ e $Y$ dos conjuntos. Entonces $X\x Y$ es el conjunto de tuplas con un elemento en $X$ y otro en $Y$. Formalmente, \[ X × Y =\set{(a,b)\tq a\in X\; b\in Y} \]
 
-Si $X$ e $Y$ son finitos, $\#(X\x Y) =\#X \cdot \#Y$
+Si $X$ e $Y$ son finitos, $\card{(X\x Y)} =\card{X} \cdot \card{Y}$
 \end{defn}
 
 \subsection{Sucesiones y límites}
 
-Una sucesión es una colección ordenada de números.
+El cálculo nos lleva a estudiar lo que pasa cuando nos acercamos mucho a un punto. Por ejemplo, la derivada mira qué le ocurre al valor de una función cuando avanzamos o retrocedemos muy poquito. Si primero avanzamos mucho y sucesivamente nos vamos moviendo menos, tendremos una serie de números, y querremos ver si se acercan a un determinado valor o si se van a tomar viento fresco y cada vez se separan más.
+
+Para poder comprender bien esos conceptos, estudiaremos las sucesiones $\set{x_n}_{n≥1} = x_1, x_2, \dotsc, x_n, \dotsc$, que no son más que colecciones ordenadas de números. Ese cierto número al que se acercan, si existe, se llama límite, y nos lleva a definir lo que es una serie convergente.
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\draw[->] (-0.1, 0) -- (9,0);
+\draw[->] (0,-0.1) -- (0,3);
+
+\fill[blue, fill opacity = 0.2] (8.5,1.8) rectangle (0, 1.2);
+
+\foreach[count=\i] \x in {0.8,1.6,...,8} {
+	\pgfmathsetmacro{\cnt}{2 * \i - 1}
+	\node[nodepoint, label={above:$x_{\pgfmathprintnumber{\cnt}}$}] at (\x, 0.6 / \x + 1.5) {};
+}
+\foreach[count=\i] \x in {0.8,1.6,...,8} {
+	\pgfmathsetmacro{\cnt}{2 * \i}
+	\node[nodepoint, label={below:$x_{\pgfmathprintnumber{\cnt}}$}] at (\x + 0.4, -0.6 / \x + 1.5) {};
+}
+
+\node[nodepoint, blue, label={right:$l$}] (L) at (8.5, 1.5) {};
+\draw[(-), blue] (8.5,1.8)  node[anchor = south west] {$\varepsilon$} -- (8.5,1.2);
+
+\end{tikzpicture}
+\caption{Ilustración de la convergencia: da igual lo pequeño que tomemos ε, porque a partir de un cierto $x_n$ todos los elementos siguientes se quedan dentro de la banda de ancho ε centrada en $l$.}
+\label{fig:Convergencia}
+\end{figure}
 
 \begin{defn}[Convergencia][Convergencia!de sucesiones]
-Una sucesión $x_n$ es convergente a $l$ (o tiene límite $l$) si $\forall \epsilon > 0 \;\exists n_0 \in \nat \tq \forall n > n_0 \;\abs{x_n -l} < \epsilon$.
+Una sucesión $x_n$ es convergente a $l$ (o tiene límite $l$) si $\forall \epsilon > 0 \;\exists n_0 \in \nat \tq \forall n > n_0 \;\abs{x_n -l} < \epsilon$. Esto es, si para cualquier ε que tomemos, por pequeño que sea, hay un cierto número $n_0$ para el cual cualquier elemento que vaya por detrás de $x_{n_0}$ está contenido en una banda de ancho $ε$ centrada en $l$ (ver \fref{fig:Convergencia}).
 
-$n_0$ suele depender del $\epsilon$ que tomemos.
+La notación es $\lim_{n\to ∞} x_n = l$. Hay que tener en cuenta que $n_0$ suele depender del $\epsilon$ que tomemos.
 \end{defn}
 
-\begin{theorem}[Teorema del Sandwich o principio de comparación][Teorema!del sándwich]
+Calcular ese límite require que tengamos ciertas herramientas. Una muy útil (por lo gráfico de su nombre) es el teorema del Sándwhich.
+
+\begin{theorem}[Teorema del Sándwich o principio de comparación][Teorema!del sándwich]
 Sean $a_n,\: b_n, \: c_n$ tres sucesiones, y $a_n\leq b_n \leq c_n \:\forall n$. Si $a_n$ y $c_n$ convergen al mismo límite $\alpha$, entonces $b_n$ tiene límite y es $\alpha$.
+
+En otras palabras, si podemos encerrar a una sucesión entre dos sucesiones que convergen a lo mismo, entonces tiene límite y es el mismo.
 \end{theorem}
+
+Los límites los podremos calcular también haciendo operaciones, como la suma o producto.
 
 \begin{prop}[Cálculo de límites]
 \[ \lim (a_n \pm b_n) = \lim a_n \pm \lim b_n \]
@@ -78,7 +137,7 @@ Una sucesión $\{a_n\}$ es de Cauchy si $\forall \epsilon > 0 \; \exists n_o \in
 \begin{defn}[Subsucesión] Dada una sucesión $\{x_n\}$ se dice que $\{y_k\}$ es una subsucesión de $\{x_n\}$ si existen índices $n_1 < n_2 < \cdots < n_k < \cdots$ tales que $y_k=x_{n_k}$.\end{defn}
 
 \begin{theorem}[Principio del palomar]
-Sean $A$ y $B$ dos conjuntos tales que $\#(A) < \#(B)$. No existe una aplicación inyectiva entre $A$ y $B$.
+Sean $A$ y $B$ dos conjuntos tales que $\card{(A}) < \card{(B})$. No existe una aplicación inyectiva entre $A$ y $B$.
 
 Es decir, si tenemos $m$ huecos y tenemos que meter $n>m$ elementos, en algún hueco hay más de un elemento.
 \end{theorem}
