@@ -3,6 +3,7 @@
 \pbreak#m
 \doneby{arg0}#m
 \approvedby{arg0}#m
+\noteby{arg0}{arg1}#m
 \mop{operacion}#m
 \imgref{referencia}#m
 \dimplies#m
