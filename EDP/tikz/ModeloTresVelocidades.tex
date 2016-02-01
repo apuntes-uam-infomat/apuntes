@@ -1,0 +1,32 @@
+\begin{tikzpicture}[scale = 2]
+\pgfmathsetmacro{\slope}{1.2} 	% Slope of the lines
+\pgfmathsetmacro{\zerolen}{1}   % Length of the region where F(x) = 0 (starts at x = 0)
+\pgfmathsetmacro{\onelen}{1} 	% Length of the region where F(x) = 1 (starts at x = \zerolen)
+
+\coordinate (XStart) at (-2.2, 0); 	% Left corner of X axis
+\coordinate (XEnd) at (2.2, 0);	 	% Right corner of Y axis
+
+\coordinate (R2XStart) at (-2,0);   % Start (on X axis) of region where F = 2
+\coordinate (R2XEnd) at (0,0); 		% End (on X axis) of region where F = 2
+\coordinate (R1XStart) at (\zerolen, 0);	 		% Same with F = 1
+\coordinate (R1XEnd) at (\zerolen + \onelen, 0);	% Same with F = 1
+\coordinate (Shock1) at (\zerolen, \slope * \zerolen);	% First end point of shock curve 1
+\coordinate (Shock2) at (\zerolen + \onelen, \slope * \onelen); % First end point of shock curve 2
+
+% Draw axis
+\draw[->] (XStart) -- (XEnd) node[right] {$x$};
+\draw[->] (0,-0.2) -- (0,1.5) node[above] {$t$};
+
+% Fill the corresponding regions
+\fill[pattern = north east lines, pattern color = orange] (R2XStart) -- (R2XEnd) -- (Shock1) -- cycle;
+\fill[pattern = vertical lines, pattern color = green!70!black!40!white] (R2XEnd) -- (Shock1) -- (R1XStart) -- cycle;
+\fill[pattern = north east lines, pattern color = red!40!white] (R1XStart) -- (Shock2) -- (R1XEnd) -- cycle;
+
+% Shock lines
+\draw[thick, red] (R1XEnd) -- (R1XStart) --
+	node[midway, right, fill = white, opacity = 0.5, text opacity = 1] {$x-t = 1$} (Shock2);
+
+\draw[thick, blue] (R2XEnd) --
+	node[midway, above, sloped, fill = white, opacity = 0.5, text opacity = 1] {$x = t$} (Shock1);
+
+\end{tikzpicture}
