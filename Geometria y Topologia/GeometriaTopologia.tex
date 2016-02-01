@@ -1,7 +1,7 @@
 \documentclass[palatino]{apuntes}
 
 \title{Geometría y Topología}
-\author{}
+\author{Guillermo Julián Moreno}
 \date{15/16 C2}
 
 % Paquetes adicionales
@@ -21,6 +21,7 @@
 % --------------------
 
 \newcommand{\Id}{\mop{Id}}
+\newcommand{\cln}{\colon\!}
 
 \begin{document}
 \pagestyle{plain}
@@ -168,7 +169,7 @@ Para darle la estructura de atlas, tomamos una carta $(U,φ_U)$ en $M$ tal que $
 
 En este caso, nos podemos preguntar qué ocurre si $π(U) ∩ π(V) ≠ ∅$ para dos cartas $U,V$: ¿es $\left(φ_V ○ \inv{\restr{π}{V}}\right) ○ \left(\restr{π}{U} ○ \inv{φ_U} \right)$ diferenciable?
 
-La cuestión es que $\inv{\restr{π}{V}} ○ \restr{π}{U} = g ∈ G$ por la construcción de $g$\footnote{Si $π(x) = π(y)$, son de la misma clase y por lo tanto hay un difeomorfismo que lleva de $x$ a $y$.}, y por lo tanto nos queda que $φ_V ○  g ○ \inv{φ_U}$ es diferenciable.
+La cuestión es que $\inv{\restr{π}{V}} ○ \restr{π}{U} = g ∈ G$ por la construcción de $g$\footnote{Si $π(x) = π(y)$, son de la misma clase y por lo tanto hay un difeomorfismo que lleva de $x$ a $y$.}, y por lo tanto nos queda que $φ_V ○  g ○ \inv{φ_U}$ es diferenciable así que la estructura de atlas que nos queda es compatible.
 
 Un ejemplo muy común es $\projp^n = \quot{\crc[n]}{\gen{J}}$ para $n ∈ ℕ$, que son los espacios proyectivos reales de dimensión $n$.
 
@@ -185,7 +186,39 @@ Otros ejemplos son $\quot{ℝ}{ℤ} \simeq \crc$ o $\quot{ℝ^2}{ℤ^2} \simeq \
 
 La relación de equivalencia que usamos para construir el espacio cociente nos dice que dos puntos $x,y ∈ ℝ^2$ pertenecen a la misma clase si existe un difeomorfismo $g ∈ ℤ^2$ tal que $g(x) = y$. En otras palabras, si tenemos un par $(m,n) ∈ ℤ^2$ tal que $(x_1 + m, x_2 + n) = (y_1, y_2)$, entonces $x = (x_1, x_2)$ y $y=(y_1, y_2)$ están relacionados, por lo que nuestro conjunto de clases de equivalencia son los puntos en $[0,1] × [0,1]$. Eso sí, con una peculiaridad: los bordes están ``unidos'', el de arriba con el de abajo y el de la izquierda con el de la derecha. Es decir, que topológicamente estamos ante un toro (ver \fref{fig:ToroEspacioCociente}).
 
+Si por otra parte trabajásemos con $\quot{ℝ}{ℤ}$, tendríamos algo similar: estaríamos identificando los dos bordes del intervalo $(0,1)$ y tendríamos una circunferencia. Para demostrarlo formalmente, tendríamos que definir una aplicación \begin{align*}
+\appl{f}{\quot{ℝ}{ℤ}&}{\crc} \\
+[x] &\longmapsto e^{2πix} = (\cos 2πx, \sin 2πx)
+\end{align*} y comprobar que es diferenciable, esto es, tenemos que comprobar que $\inv{φ_U} ○ f ○ α$ es diferenciable, teniendo que $φ_U$ es una carta de $\quot{ℝ}{ℤ}$, con $\inv{φ_U} = \restr{π}{U}$ la proyección canónica restringida a $U$; y $α(e^{2πiθ}) = 2πθ$ la otra carta. La composición sería obviamente $π ○ f ○ α = 2πx$ que es diferenciable.
+
+Otro ejemplo posible es ver si podemos definir un difeomorfismo entre $\projp^1$ y $\crc$ como $ρ(z) = z^2$, con $z ∈ ℂ$. Eso sí, sólo pasa con $n=1$: en general, $\projp^n \nsim \crc[n]$.
+
+\subsubsection{Espacios proyectivos}
+
+A través de la variedad cociente hemos hablado de espacios proyectivos. Vamos a definirlos bien:
+
+\begin{defn}[Espacio\IS proyectivo] Sea \kbb un cuerpo\footnote{En nuestro caso, $ℝ$ o $ℂ$}. Entonces definimos el plano proyectivo como \[ \mathbb{P}^n(\kbb) = \quot{\kbb^{n+1} \setminus \set{0}}{\sim}\] con $\sim$ la relación de equivalencia dada por $x \sim y \iff y = λx$ para algún $λ ∈ \kbb^*$.
+\end{defn}
+
+Cuando \kbb es $ℝ$ o $ℂ$, $\mathbb{P}^n(\kbb)$ es una variedad de dimensión $n$ o $2n$ respectivamente.
+
+Las cartas en el plano proyectivo son de la forma\footnote{Como notación, los dos puntos denotan clases de equivalencia, esto es, $[x_1\cln x_2] \equiv \set{\gor{x_1}, \gor{x_2}}$.} \[ U_k = \set{[x_1\cln x_2\cln \dotsb\cln x_k\cln \dotsb\cln x_n] ∈ \mathbb{P}^n(\kbb) \tq x_k ≠ 0} \]
+
+Este conjunto está bien definido. No lo estaría si estuviésemos diciendo que $x_k = 1$, por ejemplo, porque tendríamos que $[1\cln 1\cln 1] = [3\cln 3\cln 3]$ y no quedaría claro si está o no en el conjunto.
+
+Además, se ve fácilmente que $\bigcup_{k=0}^n U_k = \mathbb{P}^n(\kbb)$. Sólo nos queda definir una biyección \begin{align*}
+\appl{φ_k}{U_k&}{\kbb^n} \\
+[x_1\cln \dotsb\cln x_k\cln \dotsb\cln x_n] &\longmapsto \left(\frac{x_0}{x_k}, \dotsc, \frac{x_n}{x_k}\right)
+\end{align*}
+
+La inversa de $φ_k$ sería \[ \inv{φ_k}(y_1, \dotsc,y_n) = [y_1\cln \dotsb \cln y_{k-1} \cln 1 \cln y_{k+1}\cln \dotsb \cln y_n]\]
+
+Sólo nos queda comprobar que las funciones transición $\appl{φ_j ○ \inv{φ_k}}{\kbb^n \setminus \set{y_j = 0}}{\kbb^n \setminus \set{y_k = 0}}$ son diferenciables. Vemos que \[ (φ_j ○ \inv{φ_k})(y_1, \dotsc, y_n) = φ_j\left([y_1\cln \dotsb \cln y_{k-1} \cln 1 \cln y_{k+1}\cln \dotsb \cln y_n]\right) = \left(\frac{y_1}{y_j}, \dotsc, \frac{1}{y_j}, \dotsc, \frac{y_n}{y_j} \right)\], que efectivamente es diferenciable porque en el espacio de partida $y_j ≠ 1$.
+
+Así, tenemos que tanto $\mathbb{P}^n(ℝ)$ y $\mathbb{P}^n(ℂ)$ son variedades diferenciables, y en el caso complejo es incluso holomorfa.
+
 \chapter{Espacios tangente y cotangente}
+\label{chap:EspaciosTangenteyCotangente}
 
 \chapter{Cohomología de De Rham}
 \label{chap:CohomologiaDeRham}
