@@ -9,6 +9,7 @@
 \usepackage{tikztools}
 \usepackage{fancysprefs}
 \usepackage{tikz-3dplot}
+\usepackage{xfrac}
 
 \usetikzlibrary{arrows}
 \usetikzlibrary{patterns}
@@ -215,7 +216,70 @@ La inversa de $φ_k$ sería \[ \inv{φ_k}(y_1, \dotsc,y_n) = [y_1\cln \dotsb \cl
 
 Sólo nos queda comprobar que las funciones transición $\appl{φ_j ○ \inv{φ_k}}{\kbb^n \setminus \set{y_j = 0}}{\kbb^n \setminus \set{y_k = 0}}$ son diferenciables. Vemos que \[ (φ_j ○ \inv{φ_k})(y_1, \dotsc, y_n) = φ_j\left([y_1\cln \dotsb \cln y_{k-1} \cln 1 \cln y_{k+1}\cln \dotsb \cln y_n]\right) = \left(\frac{y_1}{y_j}, \dotsc, \frac{1}{y_j}, \dotsc, \frac{y_n}{y_j} \right)\], que efectivamente es diferenciable porque en el espacio de partida $y_j ≠ 1$.
 
-Así, tenemos que tanto $\mathbb{P}^n(ℝ)$ y $\mathbb{P}^n(ℂ)$ son variedades diferenciables, y en el caso complejo es incluso holomorfa.
+Así, tenemos que tanto $\mathbb{P}^n(ℝ) = \projp^n$ y $\mathbb{P}^n(ℂ) = \projcp^n$ son variedades diferenciables, y en el caso complejo es incluso holomorfa. Lo relevante de las variedades holomorfas es que son todas orientables. Esto nos sirve como excusa para introducir otro tipo de variedades.
+
+\subsection{Variedades orientables}
+
+\begin{defn}[Variedad\IS orientable] Una variedad $M$ es orientable si existe un atlas $A = \set{(U_i,φ_i)}_{i∈I}$ tal que $\abs{\Dif (φ_j○\inv{φ_i})} > 0$ para cualesquiera $j,i ∈ I$.
+\end{defn}
+
+Un atlas holomorfo siempre verificará la condición de orientabilidad por las ecuaciones de Cauchy-Riemann \citep[Sección III.2]{ApuntesVarCompI}. Definiendo $\appl{f = (φ_j○\inv{φ_i})}{ℂ}{ℂ}$ holomorfa, tenemos que $f = u + iv$ y entonces \[ \Dif f = \det \begin{pmatrix}
+u_x & u_y \\ v_x & v_y
+\end{pmatrix} \eqreasonup{Eq. CR} \det
+\begin{pmatrix}
+u_x & -v_x \\ v_x & u_x \end{pmatrix} = u_x^2 + v_x^2 > 0 \]
+
+Otro ejemplo interesante es $\quot{ℝ×(-a,a)}{ℤ}$, de tal forma que $n·(x,λ) = (x+n,λ)$. Es un cilindro (identificamos los dos lados de un rectángulo de anchura infinita y altura $2a$) y orientable.
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+\begin{tikzpicture}
+\fill[blue!20!white] (0, -0.8) rectangle (2, 0.8);
+\draw (-1,0) -- (3,0);
+\draw (0,-1) -- (0,1);
+
+\node[hnlin, label = {left:$a$}] at (0, 0.8) {};
+\node[hnlin, label = {left:$-a$}] at (0, -0.8) {};
+
+\draw[blue, thick, directed, |-|]  (2, 0.8) --  (2, -0.8);
+\draw[blue, thick, directed] (0, -0.8) -- (0,0.8);
+
+\end{tikzpicture}
+\caption{Representación de $\quot{ℝ×(-a,a)}{ℤ}$ con los lados identificados en sentido contrario.}
+\label{fig:CilindroNoOrientable}
+\end{wrapfigure}
+
+Ahora bien, si la relación de equivalencia la tomamos como $n·(x,λ) = (x+n, (-1)^nλ)$, esto es, que $(x,λ) \sim (x',λ')$ si y sólo si $x' = x + n$ y $λ' = (-1)^nλ$. Lo que nos queda es algo como lo de la \fref{fig:CilindroNoOrientable}, con los dos lados identificados pero en sentido contrario. En otras palabras, es una banda de Möbius.
+
+Con esto, podemos comprobar que efectivamente la banda de Möbius no es orientable. Sea $I = (-a, a)$, de tal forma que nuestra proyección sea \begin{align*} \appl{π}{ℝ×I&}{M} \\ (x,λ) &\longmapsto [(x,λ)]
+\end{align*}
+
+Consideramos ahora dos cartas $U_1 = (0,1) × I$ y $U_2 = (\sfrac{1}{2}, \sfrac{3}{2}) × I$ con respectivas funciones $φ_i = \inv{(\restr{π}{U_1})}$. Vemos ahora qué pasa con $φ_2 ○ \inv{φ_1}$, que tiene dominio $φ_1(π(U_1) ∩ π(U_2)) = \left( (0, \sfrac{1}{2}) × I\right) ∪ \left((\sfrac{1}{2}, 1) × I\right)$; e imagen $φ_2(π(U_1) ∪ π(U_2)) = \left( (\sfrac{1}{2}, 1) × I\right) ∪ \left((1, \sfrac{3}{2}) × I\right)$.
+
+Tomamos ahora un $(x,λ) ∈ (\sfrac{1}{2}, 1) × I$, y tenemos que coger un representante de su clase en la imagen: nos vale con el mismo $(x,λ)$. Sin embargo, si tomamos un $(x,λ) ∈ (0, \sfrac{1}{2}) × I$, su clase es $[x,λ]$. Ahora bien, ese mismo número no está en la imagen, así que tenemos que buscar otro representante, que será $(x+1, -λ)$ por cómo hemos definido la relación de equivalencia. El determinante de esta función será negativo, y por lo tanto tendremos un atlas no orientable.
+
+\begin{prop} Sea $M$ una variedad con un atlas con sólo dos cartas $(U_1, φ_1)$ y $(U_2, φ_2)$ tal que la intersección es un conexo. Entonces $M$ es orientable.
+\end{prop}
+
+\begin{proof} (Esbozo) Dado que los cambios de carta son difeomorfismos, el determinante de sus diferenciales no puede ser $0$ nunca. Dado que la intersección es conexa, no puede haber cambios de signo porque no se puede pasar por el $0$.
+\end{proof}
+
+\subsection{Grupos de Lie}
+
+Otra forma interesante de definir variedades es a través de los grupos de Lie, que nos permiten mezclar la geometría y el álgebra.
+
+\begin{defn}[Grupo\IS de Lie] \label{def:GrupoLie} Un grupo de Lie es un grupo $(G, \cdot)$ que admite una estructura de variedad diferenciable tal que las aplicaciones producto \begin{align*}
+\appl{\cdot}{G × G&}{G} \\
+(x,y) &\longmapsto x·y
+\end{align*}  e inversa \begin{align*}
+\appl{\inv{(·)}}{G&}{G} \\
+x &\longmapsto \inv{x}
+\end{align*} son diferenciables.
+\end{defn}
+
+Un ejemplo muy sencillo es $(ℝ^n, +)$, o también $(\quot{ℝ^n}{ℤ^n}, +)$. También podemos considerar a la circunferencia \crc como un grupo de Lie si lo tomamos como $\crc ⊂ (ℂ^*, ·)$, subgrupo de los complejos. En este caso, para el producto $f(e^{iθ},e^{iα}) = e^{iθ} · e^{iα} = e^{i(θ+α)}$ tendríamos que \[ φ_2(f(\inv{φ_1}(θ,α))) = φ_2(f(e^{iθ}, e^{iα})) = φ_2(e^{i(θ+α)}) = θ + α \] es efectivamente diferenciable. $\crc[3]$ también es un grupo de Lie, a través de los cuaterniones.
+
+Esto es interesante, principalmente porque la condición de poder dotar de estructura de gurpo a una variedad (o viceversa) es bastante restrictiva. De hecho, sólo las esferas $\crc$ y $\crc[3]$ tienen estructura de grupo de Lie.
 
 \chapter{Espacios tangente y cotangente}
 \label{chap:EspaciosTangenteyCotangente}
