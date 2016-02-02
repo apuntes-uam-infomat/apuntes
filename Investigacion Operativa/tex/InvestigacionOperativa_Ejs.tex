@@ -46,3 +46,69 @@ mínimo coste.
 
 
 \end{problem}
+
+
+\begin{problem}[9]
+
+Una propiedad conocida de la mediana de un conjunto de datos $y_i$ es que minimiza en $\theta$ el valor de $\sum y_i-\theta$. Plantea el problema de optimización como un problema lineal en forma estándar.
+\solution
+
+Queremos minimizar 
+\[\sum_{i=1}^n |y_i - \theta\]
+
+El procedimiento habitual podría ser derivar e igualar a 0, pero en este caso no es derivable. Vamos a ver que la solución es la mediana y vamos a demostrarlo de 2 maneras distintas.
+
+\begin{proof}
+Tomando una muestra de tamaño 2 y un punto interior de $\theta$ el objetivo a minimizar es:
+\[\sum |y_i - \theta| = \theta - y_{(1)} + y_{(2)}-\theta = y_{(2)} - y_{(1)}\]
+es decir, la longitud del intervalo.
+
+Tomando una muestra de tamaño $n$, vamos a verlo.
+
+Tomamos una serie de intervalos contenidos de la siguiente manera:
+
+\[ [y_{(1)},y_{(n)}] \subset  [y_{(2)},y_{(n-1)}] \subset [y_{(3)},y_{(n-2)}] \subset ... \subset [y_{(m)},y_{(n-m+1)}]\]
+
+Donde \[m=\left\{ \begin{array}{cc} \frac{n}{2} & n\text{ par}\\ ?? & n\text{ impar} \end{array}\right.\]
+Este es un razonamiento casi geométrico de porque la mediana minimiza.
+\end{proof}
+
+
+Ahora, vamos a contestar al enunciado, planteándolo como un problema de regresión.
+
+Definimos $x_i \equiv y_i - \theta = x_i^+ - x_i^-$ donde $x_i^+ = \max\{x_i,0\}$ y $x_i^- = \max\{-x_i,0\}$
+
+De esta manera, $\abs{x_i} = x_i^+ + x_i^-$. Con este truco, hemos conseguido modificar la función objetivo, que de esta manera es una función lineal.
+
+Nuestra función objetivo es:
+
+\[\min \sum_{i=1}^n x_1^+ + x_i^-\]
+
+Y el precio a pagar, es que necesitamos incluir una restricciones, con lo que:
+
+
+\begin{ioprob}
+\goal{\[\min \sum_{i=1}^n x_1^+ + x_i^-\]}
+\restrictions{$y_i = x_i^+ - x_i^- + \theta^+ + \theta^-$, $i=1,...,n$}{$x_i^+ \geq 0$}{$x_i^- \geq 0$}{$\theta_i^+ \geq 0$}{$\theta_i^+ \geq 0$}{}
+\end{ioprob}
+
+
+Vamos a escribirlo matricialmente.
+Las \textbf{variables de decisión} son $(x_1^+,...,x_n^+,x_1^-,...,x_n^-,\theta^+,\theta^-$. 
+
+\[c = (\underbrace{1,...,1}_{n},\underbrace{1,...,1}_{n},0,0)\]
+\[b = (y_1,...,y_n) \]
+\[A = \left( I | -I | 1_n | -1_n\right)\to \begin{array}{c}1_n = \begin{pmatrix}1\\1\\\vdots\\1\end{pmatrix}\\ I = \text{ identidad} \end{array}\]
+
+
+
+
+\obs{}
+¿Qué utilidad puede tener esto?
+Al tomar un modelo de regresión (una recta que pase por una nube de puntos) se suele tomar el criterio de "mínimos cuadrados", que es minimizar $\sum y_i-(β_0+β_1x_i)$ (siendo $β_0+β_1x$ el modelo de regresión). 
+Podríamos plantear un modelo de regresión con otro criterio, por ejemplo, el de minimizar el valor absoluto.
+
+
+
+
+\end{problem}
