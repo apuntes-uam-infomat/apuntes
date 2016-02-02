@@ -40,6 +40,8 @@
 \pb#m
 \pb[T]#m
 \units{arg0}#m
+\convx{arg0}#m
+\afin{arg0}#m
 \app#m
 \obs#m
 \nota#m

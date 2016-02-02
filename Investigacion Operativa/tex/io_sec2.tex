@@ -22,11 +22,11 @@ Vamos a pensar qué ocurre diferentes valores de $\theta$:
 
 En la figura $\ref{sec2:comb}$, vemos que la recta entera sería el conjunto afín entero, mientras que sólo el intervalo $\theta \in [0,1]$ sería el conjunto convexo. Formalmente,
 
-\begin{defn}[Conjunto afín]
+\begin{defn}[Conjunto\IS afín]
 Dados $x_1,x_2\in S$, S es un conjunto afín si $\theta x_1 + (1-\theta)x_2\in S$, para todo $\theta\in \mathbb{R}$.
 \end{defn}
 
-\begin{defn}[Conjunto convexo]
+\begin{defn}[Conjunto\IS convexo]
 Dados $x_1,x_2\in S$, S es un conjunto convexo si $\theta x_1 + (1-\theta)x_2\in S$, para todo $\theta\in [0,1]$.
 \end{defn}
 
@@ -50,22 +50,44 @@ Vamos a ver ejemplos de subconjuntos convexos.
 
 
 
+\subsection{Combinaciones convexas y afines}
 
-\textbf{Combinación afín} de $x_1,\ldots,x_k \in\mathbb{R}^n$:
+Hemos visto lo que son los conjuntos convexos, pero a la hora de trabajar, puede que el conjunto de datos con el que trabajamos, no sea convexo. ¿Tiene sentido hablar del "mínimo conjunto convexo" que contiene al conjunto con el que estamos trabajando? Vamos a verlo, pero para ello necesitamos definir qué es una combinación.
+
+\begin{defn}[Combinación\IS afín]
+
+Sean $x_1,\ldots,x_k \in\mathbb{R}^n$. Una combinación afín de $\{x_i\}$ es
 \[
 y = \lambda_1 x_1+\cdots +\lambda_k x_k,
 \]
 donde $\lambda_1+\cdots +\lambda_k=1$.
+\end{defn}
 
-\
 
-\textbf{Cierre afín} de $S$:
+En el caso de combinaciones convexas, tenemos alguna restricción más, ya que los conjuntos convexos son subconjuntos de conjuntos afines.
+
+\begin{defn}[Combinación\IS convexa] 
+Sean $x_1,\ldots,x_k \in\mathbb{R}^n$. Una combinación convexa de $\{x_i\}$ es
 \[
-\mbox{afin}(S) = \left\{\sum_{i=1}^k \lambda_i x_i:\, x_i\in S,\  \sum_{i=1}^k \lambda_i = 1\right\}.
+y = \lambda_1 x_1+\cdots +\lambda_k x_k,
 \]
+donde $\lambda_1+\cdots +\lambda_k=1$ y $\lambda_i \geq 0$, para todo $i=1,\ldots,n$.
+\end{defn}
 
+
+Ya tenemos los ingredientes para construir los \textbf{cierres}, es decir, los mínimos conjuntos convexos/afines que contienen a un conjunto.
+
+
+\begin{defn}[Cierre\IS afín] 
+Definimos $\afin{S}$, el cierre afín de un conjunto $S$ como
+\[
+\afin{S} = \left\{\sum_{i=1}^k \lambda_i x_i:\, x_i\in S,\  \sum_{i=1}^k \lambda_i = 1\right\}.
+\]
+\end{defn}
+
+\paragraph{Propiedades:}
 \begin{itemize}
-\item Un conjunto es afín si y solo $S=\mbox{afin}(S)$.
+\item Un conjunto es afín si y solo $S=\afin{S}$.
 
 \item Un conjunto es afín si y solo si es la traslación de un subespacio vectorial (único)
 
@@ -74,30 +96,40 @@ donde $\lambda_1+\cdots +\lambda_k=1$.
 
 
 
-% TODO: completar
+
+\begin{defn}[Cierre convexo]
+Definimos $\convx{S}$, el cierre convexo de un conjunto $S$ como
+\[
+\convx{S} = \left\{\sum_{i=1}^k \lambda_i x_i:\, x_i\in S,\ \lambda_i\geq 0,\ \sum_{i=1}^k \lambda_i = 1\right\}.
+\]
+\end{defn}
+
+\paragraph{Propiedades:}
+\begin{itemize}
+\item  S es convexo si y sólo si $S = \convx{S}$
+
+\begin{proof} Vamos a separar las implicaciones:
 
 
-Vamos a ver;
+$\impliedby)$:\\ $S = \convx{S} \implies S$ convexo es trivial, vamos a demostrar la otra implicación:
 
-\begin{prop}
-S es convexo si y sólo si $S = conv(S)$
-\end{prop}
+$\implies)$:\\ Queremos demostrar que si $S$ es convexo, $S\subset \convx{S}$ y $\convx{S}\subset S$. Es trivial que $S\subset\convx{S}$, asique vamos a ver la otra inclusión y vamos a demostrarlo por inducción sobre $k$. Sea
 
-\begin{proof}
-$\impliedby}$: $S = conv(S) \implies S$ convexo es trivial, vamos a demostrar la otra implicación:
+\[x = \sum^k λ_ix_ki$ con $x_i \in S,λ\geq0, \sum λ = 1\]
 
-$\implies)$: Vamos a demostrarlo por inducción:
+\subparagraph{Base:} $k=1$ es trivial.
 
-$x = \sum^k λ_ix_ki$ con $x_i \in S,λ\geq0, \sum λ = 1$
-
-Por inducción sobre $k$. 
-
-$k=1$ es cierto.
-
-Supongamos, sin pérdida de generalidad que $λ_{k+1} < 1$ y tomamos:
+\subparagraph{Paso:} Supongamos, sin pérdida de generalidad que $λ_{k+1} < 1$ y tomamos:
 \[\sum^{k+1} λ_ix_i = (1-λ_{k+1})\underbrace{\left(\frac{λ_1}{1-λ_{k+1}}x_1 + ... + \frac{λ_k}{1-λ_{k+1}}x_k \right)}_{(1)}+λ_{k+1}x_{k+1}\]
-$(1)$ es una combinación convexa, con lo que este paréntesis $\in S$. Por otro lado, ...
+$(1)$ es una combinación convexa, con lo que este paréntesis $\in S$. 
 
+Por otro lado, $(1-λ_{k+1})a + λ_{k+1}x_{k+1}$ es una combinación convexa, ya que $a,x_{k+1}\in S$ y ambos coeficientes cumplen las restricciones.
+
+Con ello, vemos que $\convx{S}\subset S$.
 \end{proof}
 
+
+\item $\convx{S}$ es el menor conjunto convexo que contiene a $S$
+
+\end{itemize}
 
