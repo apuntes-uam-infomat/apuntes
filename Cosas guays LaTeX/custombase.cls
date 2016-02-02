@@ -91,6 +91,7 @@
 
 \newcommand{\seprule}{{\color{gray} \noindent \hspace{40pt} \hrulefill~ \raisebox{-4pt}[10pt][10pt]{$\ast\quad\ast\quad\ast$}~ \hrulefill\hspace{40pt}}}
 
+\newcommand{\proofpart}[1]{\vspace{10pt}\hspace{-30pt}\rule[-0.5em]{150pt}{0.7pt}\hspace{-120pt}\textbf{#1}}
 
 %%%%% Listings UTF8 %%%%%
 \lstset{literate=%
