@@ -48,7 +48,7 @@
 \def\printindex{\clearpage\phantomsection\oldindex} % Simplemente hacemos que \printindex inserte un marcador de sección que se pueda enlazar
 
 \if@removechapters
-	\numberwithin{equation}{subsection}
+	\numberwithin{equation}{section}
 \fi
 
 %%%% Página de título superguay.
