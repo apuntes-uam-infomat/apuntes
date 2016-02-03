@@ -273,6 +273,66 @@ Finalmente, sólo tenemos que tomar $δ = \min \set{δ_1, δ_2}$, y entonces cum
 \begin{corol} Si $\set{f_n}_{n≥1} ⊂ C(X)$ es una familia de funciones continuas en un espacio métrico compacto \sdst, entonces si $f_n$ tiene algún punto de acumulación en $C(X)$ la familia es equiacotada y equicontinua.
 \end{corol}
 
+\begin{defn}[Punto\IS aislado] Dado \stopl un espacio topológico y $x_0 ∈ X$. Se dice que $x_0$ es aislado si existe un entorno $U$ de $x_0$ tal que $U = \set{x_0}$ o, en otras palabras, que $\set{x_0}$ es un abierto.
+\end{defn}
+
+\begin{theorem} Si \sdst es un espacio métrico completo y sin puntos aislados, entonces ningún conjunto denso y numerable puede ser un $G_δ$.
+\end{theorem}
+
+\begin{proof}
+La demostración la haremos por reducción al absurdo.  Sea $E = \set{x_k}_{k∈ℕ}$ numerable y denso en $X$. Supongamos además que $E$ es un $G_δ$, por lo que tenemos que es una intersección numerable de abiertos: \[ E = \bigcap_{n∈ℕ} V_n \], con $V_n$ conjuntos abiertos y densos (han de ser densos porque si no su intersección no sería densa).
+
+Sea $W_n = V_n \setminus \set{x_1, \dotsc, x_n}$. Como $X$ carece de puntos aislados, $\set{x_1, \dotsc, x_n}$ ha de ser cerrado, así que  entonces podemos escribir $W_n = V_n ∩ \set{x_1, \dotsc, x_n}^c$ con $\set{x_1, \dotsc, x_n}^c$ abierto para cualquier $n$ y además denso (el complementario de un único punto es abierto, y además denso por no tener $X$ puntos aislados, así que su unión finita también lo cumple).
+
+Consideramos la intersección de todos los $W_n$: \begin{align*} \bigcap_{n≥1} W_n &= \bigcap_{n≥1} (V_n ∩ \set{x_1, \dotsc, x_n}^c) = \left(\bigcap_{n>1} V_n\right) ∩ \left(\bigcap_{n≥1} \set{x_1, \dotsc, x_n}^c \right) \\ &= E ∩ \left(\bigcup_{n≥1}  \set{x_1, \dotsc, x_n}\right)^c = E ∩ E^c = ∅\end{align*}, contradicción con el \nref{thm:CategoriaBaire}.
+\end{proof}
+
+\begin{corol} Si \sdst es un espacio métrico completo y sin puntos aislados, entonces $X$ es no numerable.
+\end{corol}
+
+\begin{proof} La primera observación que tenemos que hacer es que si $X$ es métrico y carece de puntos aislados, entonces $X$ no es finito. Si lo fuese, como todo singlete $\set{x} ⊂ X$ es un cerrado y todo abierto $U$ habría de ser unión finita de singletes, entonces cualquier conjunto sería abierto y cerrado, lo que nos llevaría a deducir que $X$ tiene la topología discreta, incompatible con un espacio métrico.
+
+Podemos suponer entonces que $X$ es infinito. Si fuese numerable y por lo tanto pudiésemos escribirlo como $X = \set{x_k}_{k∈ℕ} = \bigcup_{k∈ℕ} \set{x_k}$, unión numerable de conjuntos cerrados y diseminados, que igual que antes contradice el Teorema de Baire.
+\end{proof}
+
+\begin{defn}[Espacio\IS separable] Sea \sdst un espacio métrico. Diremos que $X$ es separable si y sólo si existe un $E ⊂ X$ numerable y denso.
+\end{defn}
+
+Un ejemplo sencillo de espacio separable es $ℝ^n$, con $ℚ^n ⊂ ℝ^n$ como subconjunto denso y numerable. Pero también lo son las funciones continuas $C_{[a,b]}$ con la norma $\dst(f,g) = \norm{f-g}_∞$.
+
+\begin{defn}[Aplicación\IS contractiva] \label{def:ApplContractiva} Una aplicación $\appl{F}{(X, \dst_X)}{(Y, \dst_y)}$ se dice contractiva si $∀x_1, x_2 ∈ X$ se tiene que $\dst_Y(F(x_1), F(x_2)) < \dst_X(x_1, x_2)$.
+\end{defn}
+
+\begin{defn}[Aplicación\IS estrictamente contractiva] \label{def:ApplEstrContractiva} Una aplicación $\appl{F}{(X, \dst_X)}{(Y, \dst_y)}$ se dice contractiva si existe una constante $ 0 ≤ λ ≤ 1$ tal que $∀x_1, x_2 ∈ X$ con $x_1 ≠ x_2$ se tiene que $\dst_Y(F(x_1), F(x_2)) < λ \dst_X(x_1, x_2)$.
+\end{defn}
+
+\begin{theorem}[Teorema\IS del punto fijo de Banach] Sea \sdst un espacio métrico completo y $\appl{F}{X}{X}$ una \nlref{def:ApplContractiva}. Entonces $F$ tiene a lo más un punto fijo $x_0$ para el cual $F(x_0) = x_0$.
+
+Si además $F$ es estrictamente contractiva, entonces $F$ tiene exactamente un punto fijo.
+\end{theorem}
+
+\begin{proof} La existencia es sencilla de demostrar. Sean $x_0 ≠ x_1$ puntos fijos de $F$. En ese caso, $\dst(F(x_0), F(x_1)) < \dst(x_0, x_1)$ por ser $F$ contractiva, pero como ambos son puntos fijos nos queda que $\dst(x_0, x_1) < \dst(x_0, x_1)$, contradicción.
+
+Para demostrar la existencia cuando la aplicación es estrictamente contractiva, primero fijamos un $x_0 ∈ X$ y definimos \[ x^k = F^{(k)} (x_0),\qquad F^{(k)} = \underbracket{F ○ \dotsb ○ F}_{k \text{ veces}} \]
+
+Entonces, estudiamos la distancia entre dos puntos $x_{k+l}, x_k$. \begin{align}
+\dst(x_{k+l}, x_k) & = \dst(F^{(k-l)}(x_0), F^{(k)}(x_0)) \nonumber \\
+&≤ λ \dst (F^{(k+l-1)}(x_0), F^{(k-1)}(x_0)) ≤ \dotsb ≤ λ^k\dst (x_l, x_0) \label{eq:PtoFijoBanach:Cota1}
+\end{align}
+
+Usando la desigualdad podremos estimar esa distancia entre $x_l$ y $x_0$: \[ \dst(x_l, x_0) ≤ \dst(x_l, x_{l-1}) + \dst(x_{l-1}, x_0) ≤ \sum_{i = 0}^{l-1} \dst(x_{i+1}, x_{i})\], donde cada distancia se podrá estimar como $\dst(x_{i+1}, x_i) ≤ λ^{i} \dst(x_1, x_0)$, así que nos quedaría una suma infinita que podemos calcular por ser $λ ∈ [0,1)$ \[ \dst(x_l, x_0) ≤ \sum_{i = 0}^{l-1} \dst(x_{i+1}, x_{i}) ≤ \dst(x_1, x_0) \sum_{i=0}^{l-1} λ^i = \dst(x_1, x_0) \frac{1}{1-λ} \]
+
+Con esta cota y la de \eqref{eq:PtoFijoBanach:Cota1}, podemos decir que \[ \dst(x_{k+l}, x_l) ≤  \frac{λ^k}{1-λ} \dst(x_1, x_0)\quad ∀k,l ∈ ℕ \]
+
+Como $λ^k \convs[][k] 0$ por ser $λ ∈ [0,1)$, tenemos que la sucesión $\set{x_k}_{k≥1}$ es de Cauchy en $X$, y por ser este espacio completo existirá el límite $x = \lim x_k ∈ X$. Sólo nos falta ver que ese $x$ es un punto fijo.
+
+Lo primero es ver que, por ser $F$ contractiva, ha de ser continua. Además, la distancia también es continua como consecuencia de la desigualdad triangular.
+
+Con todo eso podemos escribir \[ \dst(F(x), x) = \lim_{k \to ∞} \dst(F(x_k), x_k) = \lim_{k\to ∞} \dst(x_{k+1}, x_k) \]
+
+Operando, podemos llegar a $\dst(x_{k+1}, x_k) ≤ λ^k \dst(x_1, x_0)$. Lo malo es que los límites no se llevan bien con las desigualdades. Por suerte, como tanto $λ$ como $\dst$ son positivas, podemos considerar simplemente el límite superior y entonces \[ \dst(F(x), x) ≤ \lim_{k\to ∞} \dst(x_{k+1}, x_k) ≤ \limsup_{k\to ∞} λ^k \dst(x_1, x_0) = 0\], por lo que $\dst(F(x), x) = 0$ y nos queda que $F(x) = x$.
+\end{proof}
+
 \section{Espacios de Banach}
 
 \subsection{Teorema de la acotación uniforme}
