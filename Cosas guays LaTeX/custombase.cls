@@ -65,6 +65,7 @@
 \RequirePackage{exmath}
 \RequirePackage{wrapfig} % Figuras flotantes
 \RequirePackage{MathUnicode} % Paquete para poder poner caracteres griegos y demás cosas raras.
+\RequirePackage{calc}	 % Cálculos de longitudes
 \RequirePackage{listings} % Para poner código.
 
 \if@removechapters
@@ -91,7 +92,14 @@
 
 \newcommand{\seprule}{{\color{gray} \noindent \hspace{40pt} \hrulefill~ \raisebox{-4pt}[10pt][10pt]{$\ast\quad\ast\quad\ast$}~ \hrulefill\hspace{40pt}}}
 
-\newcommand{\proofpart}[1]{\vspace{10pt}\hspace{-30pt}\rule[-0.5em]{150pt}{0.7pt}\hspace{-120pt}\textbf{#1}}
+\newlength{\@proofline}
+\newcommand{\proofpart}[1]{
+	\vspace{10pt}
+	\setlength{\@proofline}{\maxof{\widthof{\textbf{#1}} + 40pt}{150pt}}
+	\hspace{-30pt}\rule[-0.5em]{\@proofline}{0.7pt}
+	\hspace{-\@proofline}\hspace{25pt} % I don't know how to add lengths
+	\textbf{#1}
+}
 
 %%%%% Listings UTF8 %%%%%
 \lstset{literate=%
