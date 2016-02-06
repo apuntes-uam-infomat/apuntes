@@ -183,6 +183,7 @@
 \printtheorems#m
 \begin{proof}#
 \begin{expla}#
+\begin{defToUse}#
 \ctrig{angulo}#m
 \ceul{mod}{angulo}#m
 \i#m
