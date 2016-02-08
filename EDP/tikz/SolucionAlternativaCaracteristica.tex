@@ -1,0 +1,78 @@
+
+\begin{tikzpicture}[scale = 5]
+\draw (0,0,0) -- (1,0,0);
+\draw (0,0,0) -- (0,0.8,0);
+\draw (0,0,0) -- (0,0,1);
+
+\pgfmathsetmacro{\xstart}{0.2}
+\pgfmathsetmacro{\xend}{0.7}
+\pgfmathsetmacro{\zstart}{0.7}
+\pgfmathsetmacro{\zend}{0.2}
+\pgfmathsetmacro{\ybase}{0.5}
+
+\pgfmathsetmacro{\srfcUpperLeftX}{0.3}
+\pgfmathsetmacro{\srfcUpperLeftY}{0.6}
+\pgfmathsetmacro{\srfcUpperLeftZ}{0.7}
+\pgfmathsetmacro{\srfcHeight}{0.3}
+\pgfmathsetmacro{\srfcWidth}{0.4}
+\pgfmathsetmacro{\srfcDepth}{0.5}
+
+
+\draw[thin, orange]
+	(\xstart, 0, \zstart)
+	.. controls (\xstart, 0, \zend) and (\xend, 0, \zstart) ..
+	(\xend, 0, \zend);
+
+\draw[orange, name path = origcurve]
+	(\xstart, \ybase, \zstart)
+	.. controls (\xstart, \ybase, \zend) and (\xend, \ybase, \zstart) ..
+		node[pos = 0.7] (D2) {}
+	(\xend, \ybase, \zend);
+
+\begin{scope}
+\path[draw, clip]
+	(\srfcUpperLeftX, \srfcUpperLeftY, \srfcUpperLeftZ) to [bend left = 20]
+	(\srfcUpperLeftX + \srfcWidth, \srfcUpperLeftY - \srfcHeight, \srfcUpperLeftZ) --
+	(\srfcUpperLeftX + \srfcWidth, \srfcUpperLeftY - \srfcHeight, \srfcUpperLeftZ - \srfcDepth)
+		to[bend right = 20]
+	(\srfcUpperLeftX, \srfcUpperLeftY, \srfcUpperLeftZ - \srfcDepth)
+	 -- cycle;
+
+\shade[top color = green!70!black, bottom color = green!20!white, opacity = 0.5]
+	(\srfcUpperLeftX, \srfcUpperLeftY, \srfcUpperLeftZ) to [bend left = 20]
+	(\srfcUpperLeftX + \srfcWidth, \srfcUpperLeftY - \srfcHeight, \srfcUpperLeftZ) --
+	(\srfcUpperLeftX + \srfcWidth, \srfcUpperLeftY - \srfcHeight, \srfcUpperLeftZ - \srfcDepth)
+		to[bend right = 20]
+	(\srfcUpperLeftX, \srfcUpperLeftY, \srfcUpperLeftZ - \srfcDepth)
+	 -- cycle;
+\end{scope}
+
+\draw[gray]
+	(\srfcUpperLeftX, \srfcUpperLeftY, {\srfcUpperLeftZ - \srfcDepth / 2}) to [bend left = 20]
+		node[pos = 0.46] (I) {} node[pos = 0.7, nodepoint, gray] (D1) {}
+	(\srfcUpperLeftX + \srfcWidth, \srfcUpperLeftY - \srfcHeight, {\srfcUpperLeftZ - \srfcDepth / 2});
+
+\begin{scope}
+\clip
+	(\srfcUpperLeftX, \srfcUpperLeftY, {\srfcUpperLeftZ - \srfcDepth / 2}) to [bend left = 20]
+	(\srfcUpperLeftX + \srfcWidth, \srfcUpperLeftY - \srfcHeight, {\srfcUpperLeftZ - \srfcDepth / 2}) --
+	(\srfcUpperLeftX + \srfcWidth, \srfcUpperLeftY - \srfcHeight, \srfcUpperLeftZ - \srfcDepth)
+		to[bend right = 20]
+	(\srfcUpperLeftX, \srfcUpperLeftY, \srfcUpperLeftZ - \srfcDepth)
+	 -- cycle;
+
+\draw[orange]
+	(\xstart, \ybase, \zstart)
+	.. controls (\xstart, \ybase, \zend) and (\xend, \ybase, \zstart) ..
+	(\xend, \ybase, \zend);
+\end{scope}
+
+\node[nodepoint] at (I) {};
+
+\node[green!80!black, anchor = north west] at (\srfcUpperLeftX + \srfcWidth, \srfcUpperLeftY - \srfcHeight, \srfcUpperLeftZ - \srfcDepth) {$u(x,y)$};
+\node[orange, anchor = south west] at (\xend, \ybase, \zend) {$(x(s), y(s), z(s))$};
+
+\draw[shorten >= -0.08cm] (D1) -- node[midway, right] {$D(t)$} (D2);
+\node[nodepoint, orange] at (D2) {};
+
+\end{tikzpicture}

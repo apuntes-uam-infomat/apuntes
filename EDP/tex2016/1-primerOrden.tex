@@ -1,3 +1,4 @@
+% -*- root: ../EDP2016.tex -*-
 \chapter{Ecuaciones de primer orden}
 
 \section{Modelo de un atasco}
@@ -1073,20 +1074,65 @@
 
 	\end{example}
 
-
 % Lo que estamos viendo se puede encontrar en S. Salsa Partial Differential Equations in Action (Cap. 4)
 % AÑADIR A LA BIBLIOGRAFÍA
 
+% Clase 8/2/16.
 
+\subsection{Formalización}
 
+Vamos a tratar de formalizar lo que hemos visto hasta ahora. Tenemos una ecuación a resolver \[ a(x,y,u) u_x + b(x,y,u) u_y = c(x,y,u)\] con un dato \[ u(α(s), β(s)) = γ(s)\quad s∈[a,b]\], con $a,b,c,α,β,γ ∈ C^1$. El dato se puede tomar como dado a lo largo de una curva $Γ(s) = (α(s), β(s), γ(s))$ que ha de tener unas ciertas restricciones, principalmente que para cada valor de $x,y$ tenemos que tener un único valor de $z$ (no nos valen rectas verticales ni espirales, por ejemplo).
 
+El método de resolución es el método de las características. El primer paso es resolver el sistema característico en $t$ dado por \begin{align*}
+\dpd{x}{t} &= a(x,y,z) \\
+\dpd{y}{t} &= b(x,y,z) \\
+\dpd{z}{t} &= c(x,y,z) \\
+\eval{(x,y,z)}_{t=0} &= (α(s), β(s), γ(s))
+\end{align*}
 
+Este es un sistema de Ecuaciones diferenciales ordinarias, que sólo necesita que las funciones sean Lipschitz localmente. Esta condición viene gratis por ser $a,b,c ∈ C^1$, así que tenemos existencia y unicidad locales del sistema característico.
 
+El siguiente paso es considerar la aplicación \[ Φ(s,t) = (x(s,t), y(s,t), z(s,t))\] con las funciones que hemos obtenido previamente resolviendo el sistema característico. La pregunta es si Φ es una parametrización y por lo tanto describe una superficie. Para ello necesitamos que la diferencial $\Dif Φ$ tenga rango 2 y sea un homeomorfismo sobre su imagen.
 
+Dado que cuando nos alejamos del punto incial tenemos monstruos, lo que buscaremos es que las dos condiciones se cumplan sólo para $t$ pequeño. Esto nos permite no tener que verificar la condición de homeomorfismo sobre su imagen, ya que se cumple directamente para $t$ pequeño por la estructura de la curva dato Γ, que no tiene autointersecciones.
 
+Estudiamos ahora la diferencial de Φ para ver qué ocurre con la condición del rango: \[ \Dif Φ = \begin{pmatrix} \pd{x}{s} & \pd{y}{s} & \pd{z}{s} \\  \pd{x}{t} & \pd{y}{t} & \pd{z}{t} \end{pmatrix} \]
 
+Por continuidad, nos bastará ver que tiene rango máximo para $t = 0$, ya que nos dará directamente rango máximo en un entorno pequeño de $t$. Pero teniendo en cuenta el sistema característico, podemos simplficar y tenemos que \[ \eval[2]{\Dif Φ}_{t=0} = \begin{pmatrix}
+α' & β' & γ'  \\
+a(α, β, γ) & b(α,β,γ) & c(α,β,γ) \end{pmatrix}
+ \], por lo que podemos evaluar el rango sin tener que resolver el sistema, ya que la diferencial sólo depende de los coeficientes y de la curva dato.
 
+Una vez que sabemos que Φ define una superficie, necesitaremos despejar $z = u(x,y)$. Para eso necesitaremos el teorema de la función implícita \citep[Teorema II.5]{ApuntesAnalisisMat}, aunque en realidad sólo nos hace falta el teorema de la función inversa. Entonces, sólo tenemos que pedir que el determinante \( \left|\begin{matrix} a & b \\ α' & β' \end{matrix}\right| ≠ 0 \label{eq:CondTransversalidad} \) sea distinto de $0$. Es decir, que sólo comprobando esta \concept{Condición\IS de transversalidad} podremos resolver el paso 2 (garantiza que Φ define una superficie) y el paso 3 (podemos despejar $z = u(x,y)$).
 
+\begin{theorem} Supongamos que $a,b,c,α,β,γ ∈ C^1$. Si se verifica la condición de transversalidad \eqref{eq:CondTransversalidad} en todos los puntos de la curva dato, el problema tiene una solución $z = u(x,y)$ definida en \textbf{un entorno local} de cada punto, que se puede construir con las curvas características.
+\end{theorem}
+
+Sin embargo, esto no nos resuelve todos los problemas. Tenemos unicidad a través de este método, pero no sabemos si otro método nos puede dar otra solución distinta. Además, no sabemos qué pasa cuando la condición de transversalidad se estropea: ¿qué tipo de desastres aparecen?
+
+\subsubsection{Cuando la condición de transversalidad no se cumple}
+
+Suponemos que $s_0$ es un punto característico o singular, donde el determinante de \eqref{eq:CondTransversalidad} es cero. Aun así, podemos suponer que existe una solución $u ∈ C^1$ en un entorno de $Γ(s_0)$.
+
+Si el determinante es $0$, entonces $aβ' - α'b = 0$, así que tenemos que \begin{align*}
+aα'u_x + bα'u_y &= cα' \\
+aα'u_x + bα'u_y &= aγ'
+\end{align*} y por lo tanto $cα' = aγ'$, lo que nos lleva a que \[ \frac{a}{α'} = \frac{b}{β'} = \frac{c}{γ'} \]
+
+Si aun así tenemos solución, la única posibilidad que nos queda para tener solución $C^1$ es que el rango de la matriz $\Dif Φ$ sea $1$. Alternativamente, si el rango de $\Dif Φ$ es 2, no existe ninguna solución $u ∈ C^1$ en un entorno del punto característico.
+
+\subsubsection{¿Existen otras soluciones?}
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{SolucionAlternativaCaracteristica}
+\caption{Esquema de cómo resolver la situación cuando hay una solución alternativa (verde) a la definida por las curvas características (naranja).}
+\label{fig:SolucionesAlternativasCaracteristica}
+\end{figure}
+
+Vamos a demostrar que cualquier posible solución que coincida con un punto en la característica, entonces coincide completamente con la característica. Definiremos \[ D(t) = z(t) - u(x(t), y(t))\], donde $u$ es nuestra solución alternativa y $z$ la curva daracterística. Su derivada será \[ D'(t) = z'(t) - u_x(x(t), y(t)) x'(t) - u_y(x(t), y(t)) y'(t)\], que haciendo cuentas tendremos que \begin{align*} D'(t) &= c(x, y, D(t) + u(x,y)-u_x(x,y) a(x,y, D+u(x,y)) - u_yb(x,y, D + u(x,y)) \\
+&= F(t, D(t)) % Creo que no lo he copiado del todo bien
+\end{align*} simplificando un poco en el último paso, y sabiendo que $D(0) = 0$. En ese caso, volvemos a tener la expresión de la solución, así que el sistema \[ \begin{cases} D'= F(t,D) & \\ D(0) = 0 & \end{cases} \] tiene una solución única $D \equiv 0$ por el teorema de existencia y unicidad, luego $u$ contiene a la característica.
 
 
 
