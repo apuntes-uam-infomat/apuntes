@@ -1,5 +1,6 @@
 % -*- root: ../InvestigacionOperativa.tex -*-
 
+
 \section{Conjuntos convexos}
 
 Vamos a ver qué es un conjunto convexo como caso particular de conjuntos afines.  
@@ -235,7 +236,7 @@ Sea $y=\theta x_1+ (1-\theta)x_2$.
 \draw (6.5,2.5) node[point,above]{$\tilde{y}$};
 \draw (2,2) node[point,above]{$x_2$};
 \draw (2.5,2.5) node[point,above]{$\tilde{x_2}$};
-\node[point,above] at (0,2.5) {$x_1$} ;
+\node[point,above] at (2,2.5) {$x_1$} ;
 \draw (-1,2) node[point,left]{$\tilde{x_1}$};
 \end{tikzpicture}
 \end{figure}
@@ -312,4 +313,197 @@ Ahora, si sumamos las 3, por alguna razón obtenemos:
 Vamos a profundizar un poco en el resultado de este teorema:
 \textbf{¿Cómo queda la condición (\ref{eq.proyeccion}) cuando $S$ es un conjunto afín?}
 La aplicación $P:\mathbb{R}^n\to S$, que a cada $y$ le hace corresponder su proyección $P(y)$ sobre $S$, es continua.
+
+\subsection{Teoremas de separación}
+
+\begin{theorem}[Teorema\IS del hiperplano separador]
+
+Sea $S\subset\mathbb{R}^n$ un conjunto convexo, no vacío y cerrado. Sea $y\notin S$.
+Entonces $\exists p\in\mathbb{R}^n$, $p\neq 0$, y $\exists\alpha\in\mathbb{R}$ tales que el punto está a un lado, y el conjunto al otro, es decir $p^\top x\leq \alpha$, para todo $x\in S$ y $p^\top y > \alpha$.
+
+\end{theorem}
+
+
+\begin{proof}
+Sea $\gor{x}$ la proyección de $y$ sobre $S$ y definimos $p = y-\gor{x}$ y $\alpha = p^t\gor{x}$.
+
+\[
+p^tx = \underbrace{(y-\gx)^t(x-\gx)}_{\leq 0} + \underbrace{p^t\gx}_{0} \leq \alpha
+\]
+
+Por el otro lado,
+
+\[
+p^tx = \underbrace{(y-\gx)^t(y-\gx)}_{\norm{y-\gx}^2 > 0} + \underbrace{p^t\gx}_{\alpha} > \alpha
+\]
+
+
+Como vemos, esta demostración se basa en el teorema de la proyección.
+\end{proof}
+
+
+Sobre este teorema hay diversas versiones, dependiendo de las condiciones impuestas. Si en vez de considerarlo cerrrado lo consideráramos abierto, obtendríamos separación no estrcita. En este curso, utilizaremos únicamente esta versión del teorema.
+
+
+\begin{theorem}[Teorema\IS hiperplano separador]
+Sea $S\subset\mathbb{R}^n$ un conjunto convexo\footnote{En las diapositivas de la asignatura se incluye la condición de interior no vacío. Esta condición, en realidad no es necesaria porque cuando el interior es vacío, es un poco absurdo de aplicar, pero el teorema es cierto}. 
+Sea $\bar{x}\in \partial S$, la frontera de $S$. 
+
+Entonces existe $p\in\mathbb{R}^n$, $p\neq 0$, tal que $p^\top (x-\bar{x})\leq 0$, para todo $x\in S$.
+
+\end{theorem}
+
+
+
+\begin{proof}
+
+Vamos a aplicar el teorema anterior. Como el punto $x$ está en la frontera, podemos acercarnos a él desde fuera. 
+Si tenemos una sucesión de puntos $y_i$ que convergen a $x$, tenemos un hiperplano separador en cada $y_i$. Tomando límite, ese será el hiperplano soporte.
+
+Sea $\gx \in \partial S = \partial\gor{S}$. Además, $\int{S} = \int{\gor{S}}$
+
+\[∀k\in \nat \exists y_k \in B\left(\gx,\frac{1}{k}\right) \cap \gor{S}^C\]
+Por el teorema del hiperplano separador (\ref) existe $p_k$ con $\norm{p_k}$ tal que $p^t y_k > p^t x$ por el teorema anterior, $∀x\in S$.
+
+Como $\{ p : \norm{p}\}$ es un conjunto compacto, existe una subsucesión  de $p_k$  convergente a $p$.
+
+Haciendo $k\to \infty$, perdemos la desigualdad estricta y obtenemos:
+
+\[p^t\gx \geq p^tx \dimplies p^t(x-\gx) \leq 0\]
+
+\end{proof}
+
+
+\begin{theorem}[Teorema\IS de separación entre 2 convexos]
+
+Sean $S_1,S_2\subset \real^n$ convexos no vacíos y tal que $S_1\cap S_2  =\emptyset$.
+
+\textbf{Entonces} existe $p\in\real^n$, con $p≠0$ tal que:
+
+\[
+\inf{p^tx: x\in S_1} \geq \sup\{p^tx : x\in S_2\}
+\]
+
+\end{theorem}
+
+\begin{proof}
+La demostración es un ejercicio de la hoja.
+
+Tomando $S = \{x\in\real^n: x = x_1 - x_2, x_i \in S_i\}$.
+
+$S$ es convexo y $0 \not\in S$.
+
+Si $0\in\gor{S}$, aplicamos el primer teorema. Si $0\in\partial{S}$, aplicamos el segundo teorema
+\end{proof}
+
+
+\obs Aunque $S_1$ y $S_2$ sean cerrados, la desigualdad no tiene porqué ser estricta.
+
+
+
+
+\subsection{Teoremas de la alternativa}
+
+Ahora que ya hemos visto muchos conceptos generales, vamos a volver a los problemas de optimización.
+Una buena herramienta son estos teoremas, que nos ayudan a saber si un sistema tiene solución o no.
+
+\begin{lemma}[Lema\IS de Gordan]
+Sea $A$ una matriz $m\times n$. Entonces, uno y \textbf{sólamente uno} de los siguientes sistemas tiene solución.
+
+\begin{equation}
+Ax < 0\;,\; x\in\real^n
+\label{eq:Gordan_1}
+\end{equation}
+
+\begin{equation}
+A^tp = 0\;,\; p > 0
+\label{eq:Gordan_2}
+\end{equation}
+\end{lemma}
+
+
+Vamos a razonar geométricamente, qué tiene que ocurrir para que los 2 sistemas tuvieran solución. Sea $A = (a_1^t,a_2^t)^t$.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\draw (-2,0) -- (2,0);
+\draw (0,-2) -- (0,2);
+\draw[->] (0,0) -- (1,0) node[above] { $a_1$ }; 
+\draw[->] (0,0) -- (-1,0) node[above] { $a_2$ }; 
+\end{tikzpicture}
+\end{figure}
+
+En este caso, tenemos \[Ax < 0 \dimplies \left.\begin{array}{c}a_1^tx < 0\\a_2^tx<0\end{array}\right\} \to a_1 = -\alpha a_2\]
+
+
+Por alguna razón que no se muy bien, vemos que $A^tp$ no tiene solución.
+
+
+Antes de meternos con la demostración del teorema, vamos a ver qué relación tiene este resultado con los problemas de optimización que se supone que queremos aprender a resolver en esta asignatura.
+Pensemos en el problema:
+\begin{ioprob}
+\goal{$\min f(x)$}
+\restrictions{$g(x) \leq 0$}{}{}{}{}{}
+\end{ioprob}
+
+$\gor{x}$ es el mínimo local del problema $\dimplies$
+\[\left.\begin{array}{c}\not\exists d \tq \grad f(\gx)^td < 0 \\ \grad g(\gx)^td < 0\end{array}\right\} \to \exists p = \begin{pmatrix}p_1\\p_2\end{pmatrix} \tq p_1\grad f(\gx) + p_2 \grad g(\gx) = 0, p_i \geq 0\]
+
+\begin{proof}
+La parte fácil es la demostración de: \ref{eq:Gordan_1} tiene solución, entonces \ref{eq:Gordan_2} no tiene solución.
+
+Sea $\gx$ la solución de \ref{eq:Gordan_1} y supongamos que $\gor{p}$ es la solución de \ref{eq:Gordan_2}.
+
+Consideremos:
+\[\gor{p}^t A \gx = \underbrace{\gor{p}^t(A\gor{x})}_{<0} = \underbrace{(A^t\gor{p})^t\gor{x}}_{=0}\]
+
+No puede ser igual y menor que 0 al mismo tiempo.
+
+
+Vamos a ver que si \ref{eq:Gordan_1} no tiene solución, entonces \ref{eq:Gordan_2} sí la tiene. Aquí es donde entran los teoremas de separación.
+
+Sean \[S_1 = \{z\in\real^m: z=Ax, x\in\real^n\}\subset\real^m\]
+ \[S_2 = \{z\in\real^m: z<0\}\subset\real^m\]
+
+Estos 2 conjuntos son convexos\footnote{¿Por qué?} y por otro lado, $S_1 \cap S_2 = \emptyset$, ya que \ref{eq:Gordan_1} no tiene solución.
+
+Vemos que $\exists p ≠ 0$ tal que $p^tAx \geq p^tz, \forall x\in\real^n,z<0,z\in\real^m$
+
+
+$p$ resuelve \ref{eq:Gordan_2}. Supongamos que $p\not\geq0$ (por ejemplo $p_j < 0$).
+
+Consideramos: $z = -\lambda (0,\cdots,0,1,0,\cdots,0)$, con $\lambda > 0$.
+
+Entonces, $p^tAx \geq -\lambda p_j \convs[λ\to\infty]\infty$ y esto se da $\forall x\in\real^n$
+
+$x = -A^tp \to p^tAx = -\norm{A^tp}^2 \leq 0$
+
+Pero haciendo $z\to 0$, resulta que $p^tAx \geq 0 \forall x \implies -\norm{A^tp}\geq 0$.
+
+Como $\norm{A^tp} \geq 0$ y $\norm{A^tp} \leq 0$, deducimos que $\norm{A^tp} = 0$, con lo que \ref{eq:Gordan_2} tiene solución.
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
