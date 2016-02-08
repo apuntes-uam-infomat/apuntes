@@ -1,0 +1,358 @@
+\documentclass[palatino]{apuntes}
+
+\title{Geometría y Topología}
+\author{Guillermo Julián Moreno}
+\date{15/16 C2}
+
+% Paquetes adicionales
+\usepackage{enumitem}
+\usepackage{tikztools}
+\usepackage{fancysprefs}
+\usepackage{tikz-3dplot}
+\usepackage{xfrac}
+
+\usetikzlibrary{arrows}
+\usetikzlibrary{patterns}
+\usetikzlibrary{intersections}
+\usetikzlibrary{calc}
+\usetikzlibrary{fadings}
+
+\setlist{itemsep=1pt, topsep=5pt}
+\bibliographystyle{plainnat}
+% --------------------
+
+\newcommand{\Id}{\mop{Id}}
+\newcommand{\cln}{\colon\!}
+
+\begin{document}
+\pagestyle{plain}
+
+% http://tex.stackexchange.com/a/14243
+\relpenalty=9999
+\binoppenalty=9999
+
+\begin{abstract}
+Estos son los apuntes del curso de Geometría y Topología, del profesor Gabino González.
+\end{abstract}
+
+\maketitle
+
+
+\tableofcontents
+\newpage
+% Contenido.
+
+\chapter{Conceptos básicos}
+
+\section{Variedades}
+
+En Geometría, los objetos que estudiamos se llaman ``variedades''. Veremos de distintos tipos (por ejemplo, en Geometría Diferencial \citep{ApuntesGeoDif} veíamos variedades diferenciables), aunque nosotros empezaremos con las topológicas.
+
+\begin{defn}[Variedad\IS topológica] Una variedad topológica es un espacio topológico $M$ con las siguientes propiedades:
+\begin{enumerate}
+\item $M$ es $T_2$ (esto es, \concept{Hausdorff}: dos puntos distintos tienen entornos disjuntos).
+\item $∀p ∈ M$ admite un entorno $U$ y un homeomorfismo $\appl{φ_u}{U}{ℝ^N}$ (o $\bola^N$).
+
+Al par $(U,φ_u)$ se le llama \concept{Carta} para $p$. Si $φ_u(p) = 0$, se dice que la carta está centrada en $p$. A la colección de cartas se le llamará \concept{Atlas}.
+\item Si para cualquier par de cartas $(U,φ_u)$ y $(V,φ_v)$ la aplicación $$\appl{φ_v ○ \inv{φ_u}}{φ_u(U∩V)}{φ_v(U∩V)}$$ es difeomorfismo, estamos entonces ante una \concept{Variedad\IS diferenciable}.
+\end{enumerate}
+\end{defn}
+
+\begin{figure}[thbp]
+\centering
+\inputtikz{Cartas}
+\caption{Un esquema de las cartas de una variedad $M$ y cómo se comportan en la intersección.}
+\label{fig:Cartas}
+\end{figure}
+
+La dimensión de la variedad está dada por la dimensión de $ℝ$ a la que son homeomorfas las cartas. La cuestión es que no tenemos claro si eso está bien definido. En el caso diferenciable, la condición de difeomorfismo para la intersección de cartas implica que la dimensión de ambas cartas ha de ser la misma. En el caso topológico también está bien definido, aunque es más difícil de demostrar ya que dependemos de que no exista un homeomorfismo entre $ℝ^n$ y $ℝ^m$ con $n ≠ m$, que no es trivial.
+
+Un ejemplo sencillo de variedad es $M = \bola^N$, con $φ$ la identidad. Otro ejemplo es $\crc$ (la circunferencia), que es una variedad de dimensión 1, que no se puede dar con sólo una carta (la circunferencia no es homeomorfa a $ℝ$)\footnote{$\crc$ es compacta y $\real$ no, y como compacidad es propiedad topológica y los homeomorfismos las preservan, no pueden ser homeomorfas.}. Podríamos darla tomando las dos mitades superior e inferior usando senos y cosenos, y también podríamos hacer la proyección estereográfica (\ref{fig:ProyEstereo}) desde los polos norte y sur $(0,1), (0,-1)$ respectivamente sobre la recta real. En este caso, tendríamos las siguientes cartas: \[
+\begin{matrix}
+	\appl{α_1}{V_1 = \crc\setminus\set{(0,1)}&}{&ℝ} \\
+	p=(s,t) &\longmapsto& \frac{s}{1-t}
+\end{matrix}
+\qquad
+\begin{matrix}
+	\appl{α_1}{V_2 = \crc\setminus\set{(0,-1)}&}{&ℝ} \\
+	p=(s,t) &\longmapsto& \frac{s}{1+t}
+\end{matrix}\]
+
+\begin{figure}[hbtp]
+\inputtikz{ProyeccionCirc}
+\caption{Proyección estereográfica de la circunferencia.}
+\label{fig:ProyEstereo}
+\end{figure}
+
+Para comprobar si este atlas es diferenciable, tendríamos que mirar qué ocurre con $α_2 ○ \inv{α_1}$. Después de un montón de cuentas\footnote{Ver \fref{sec:proyeccion_estereografica_crc}.}, nos sale que efectivamente lo es ($α_2 ○ \inv{α_1} = \frac{1}{x}$) en el dominio en el que está definido (el cero no es un problema porque no está dentro del dominio).
+
+Trivialmente, podemos definir cuándo dos atlas son compatibles.
+
+\begin{defn}[Atlas\IS compatibles] Se dice que dos atlas $A_1, A_2$ son compatibles si $A_1 ∪ A_2$ es un atlas. Esto es, si y sólo si las cartas de $A_1$ son compatibles con las de $A_2$.
+\end{defn}
+
+Por ejemplo, podemos estudiar si los dos atlas que hemos visto para la circunferencia \crc son compatibles (recordamos que uno era el trigonométrico y otro la proyección estereográfica). Esto es equivalente a preguntarnos si $α_j ○ \inv{φ_i}$ son diferenciables. Se puede ver fácilmente que \[ α_1 ○ \inv{φ_1} (θ) = α_1(\cos θ, \sin θ) = \frac{\cos θ}{1 - \sin θ}\] que es diferenciable. Así podríamos hacerlo con el resto de combinaciones, y por lo tanto tenemos que ambos atlas dan la misma variedad.
+
+Como ejercicio, podríamos dar un atlas $A_3$ en \crc con cartas en forma de semicircunferencia y después comprobar que es compatible con los dos atlas de antes. Otro ejercicio más largo sería hacer lo análogo para $\crc[2]$.
+
+Una vez que tenemos ya definido qué es una variedad, el siguiente paso es saber si podemos hacer análisis ahí: si podemos definir aplicaciones diferenciables en ella o si podemos integrar una función. La segunda parte la veremos más adelante con las formas diferenciales, pero la primera la podemos estudiar ahora.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{ApplDiferenciable}
+\caption{Esquema de la definición de la aplicación diferenciable entre dos variedades en base a las cartas.}
+\label{fig:ApplDiferenciable}
+\end{figure}
+
+\begin{defn}[Aplicación\IS diferenciable] Una aplicación continua $\appl{f}{M}{N}$ entre dos variedades $M$ y $N$ es diferenciable si $∀p ∈ M$ con $f(p) = q ∈ N$ existe una carta $(U,φ_U)$ alrededor de $p$ y una carta $(V, φ_V)$ alrededor de $q$ tal que $f(U) ⊂ V$ y $\appl{φ_V○f ○ \inv{φ_U}}{\bola^m}{\bola^n}$ es diferenciable.
+\end{defn}
+
+Es importante ver que este concepto de diferenciabilidad no depende de las cartas elegidas para cada punto. Suponiendo que tenemos otras dos cartas $α_U, α_V$ alrededor de $p$ y $q$ tendríamos que \[ α_V ○ f ○ \inv{α_U} = (α_V ○\inv{φ_V}) ○ (φ_V ○ f ○ \inv{φ_U}) ○ (φ_U ○ \inv{α_U})\]
+
+Por compatibilidad de las cartas, $α_V○\inv{φ_V}$ y $φ_U ○ \inv{α_U}$ son diferenciables. Además, ya que hemos dicho que $f$ es diferenciable con las cartas $φ_U, φ_V$ luego $φ_V ○ f ○ \inv{φ_U}$ es diferenciable igualmente. Así, la composición de esas tres funciones es diferenciable.
+
+\begin{example} Vamos a definir una función entre variedades y ver si es diferenciable. No nos complicaremos mucho: \begin{align*}
+\appl{f}{\crc&}{\crc ⊂ ℂ} \\
+z &\longmapsto \conj{z}
+\end{align*}
+
+Haciendo los cálculos, vemos que \[ φ_1 ○ f ○ \inv{φ_1} (θ) = φ_1 ○ f(e^{iθ}) = φ_1(e^{-iθ}) = \begin{cases} -θ \\ -θ + 2θ \end{cases} \] que efectivamente es diferenciable.
+\end{example}
+
+
+\begin{example} Definimos ahora una función a priori menos interesante, la identidad: \begin{align*}
+\appl{f}{M&}{N} \\
+p &\longmapsto p
+\end{align*}
+
+$M$ será $(ℝ,φ)$ y $N = (ℝ,α)$, con $φ$ la identidad y $α(t) = t^3$. Es obvio ver que $f$ es diferenciable (si hacemos la composición nos sale directamente). Ahora bien, si tomamos $\appl{f}{N}{M}$, ¿sigue siendo diferenciable? En este caso, si calculamos vemos que $φ ○ f ○ \inv{α}(t) = \sqrt[3]{t}$ pero esta aplicación no es diferenciable en $0$. Esto es lo mismo que decir que estos dos atlas en $ℝ$ no son compatibles: no definen la misma estructura. Sí serían compatibles si estuviésemos hablando sólo de variedades topológicas, porque sí que estamos ante un homomorfismo.
+\end{example}
+
+Una vez que hemos visto qué es una variedad, podemos ver cómo construir variedades combinándolas de distintas maneras.
+
+\subsection{Variedades producto}
+
+La primera opción para construir una variedad es el producto cartesiano, que ya conocemos de otro tipo de conjuntos.
+
+\begin{defn}[Variedad\IS producto] Sean $M^m$, $N^n$ variedades con sus respectivos atlas $A_1 = \set{(U_i, φ_i)}_{i ∈ I}$ y $A_2 = \set{(V_i, α_j)}_{j ∈ J}$. Entonces, la variedad producto es $M×N^{m+n}$ con atlas \[ A_1 × A_2 = \set{(U_i×V_j, φ_i × α_j)}_{(i,j) ∈ I × J} \]
+\end{defn}
+
+Un ejemplo sencillo es $\crc × ℝ$, una variedad con cartas de la forma $(φ_1 × α_1) = ((x,y), t)$, donde $(x,y)$ vienen de la carta de la circunferencia que hayamos escogido. En este caso, la variedad es $M = \set{(x,y,z) \tq x^2 + y^2 = 1}$, el cilindro, ya que podemos tomar $\appl{f}{M}{\crc × ℝ}$ es un difeomorfismo (se pueden hacer las cuentas pero son triviales).
+
+Otro es $\crc × \crc$, que nos podemos preguntar si es difeomorfa a $\crc[2]$, más que nada porque uno es un toro y otro una esfera. Sin embargo, un argumento más formal implicaría usar los grupos fundamentales\footnote{Ver \citep[Cap. III]{ApuntesTopologia}.}, ya que $π(\crc[2]) = \set{0}$, $π(\crc) = ℤ$ y por lo tanto $π(\crc × \crc) \simeq ℤ × ℤ$. Los grupos fundamentales no son isomorfos por lo que no puede haber difeomorfismo. Lo malo es que este argumento no nos vale para decir, por ejemplo, si $\crc[2] × \crc[3] \simeq \crc[5]$. En realidad, no sin siquiera homeomorfas, pero para saberlo tendremos que usar las cohomologías de De Rham (\fref{chap:CohomologiaDeRham}).
+
+Durante el curso, veremos más herramientas para saber si existen o no difeomorfismos entre variedades.
+
+\subsection{Variedad cociente}
+
+En las variedades también se puede aplicar el análogo del conjunto cociente. Eso sí, necesitaremos ciertas condiciones ``extra'' sobre la variedad.
+
+\begin{defn}[Variedad\IS cociente] Sea $M$ una variedad y sea $G < \mop{Diff}(M)$ un subgrupo de los difeomorfismos sobre $M$, tal que $\abs{G} < ∞$ y además $G$ actúa libremente en $M$ (esto es, que $∀g ∈ G$ distinta de la identidad y $∀x ∈ M$ se tiene que $g(x) ≠ x$).
+
+Entonces, definimos el espacio cociente $\quot{M}{G}$ a través de la relación de equivalencia \[ x \sim y \iff ∃g ∈ G \tq  y = g(x) \]
+
+La estructura de variedad se la damos considerando la proyección canónica \begin{align*}
+\appl{π}{M&}{\quot{M}{G}} \\
+x &\longmapsto [x]
+\end{align*} que a cada elemento le asigna su clase.
+\end{defn}
+
+Por ejemplo, si consideramos la variedad $M = \crc[2]$ y el grupo $G = \gen{J} = \set{\Id, J}$ con $J(x,y,z) = (-x,-y,-z)$. En este caso, $\projp^2 = \quot{\crc[2]}{\gen{J}}$.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{EsferaPlanoProj}
+\caption{Paso de la esfera al plano proyectivo, con la proyección canónica π.}
+\label{fig:EsferaPlanoProj}
+\end{figure}
+
+Para darle la estructura de atlas, tomamos una carta $(U,φ_U)$ en $M$ tal que $U ∩ g(U) = \set{∅}\;∀g ∈ G$, por lo que $\appl{\restr{π}{U}}{U}{\quot{M}{G}}$ es un homeomorfismo sobre su imagen $π(U)$, luego biyectivo. Así, las cartas en $\quot{M}{G}$ son de la forma $\left(π(U), φ_U ○ \inv{\restr{π}{U}}\right)$.
+
+En este caso, nos podemos preguntar qué ocurre si $π(U) ∩ π(V) ≠ ∅$ para dos cartas $U,V$: ¿es $\left(φ_V ○ \inv{\restr{π}{V}}\right) ○ \left(\restr{π}{U} ○ \inv{φ_U} \right)$ diferenciable?
+
+La cuestión es que $\inv{\restr{π}{V}} ○ \restr{π}{U} = g ∈ G$ por la construcción de $g$\footnote{Si $π(x) = π(y)$, son de la misma clase y por lo tanto hay un difeomorfismo que lleva de $x$ a $y$.}, y por lo tanto nos queda que $φ_V ○  g ○ \inv{φ_U}$ es diferenciable así que la estructura de atlas que nos queda es compatible.
+
+Un ejemplo muy común es $\projp^n = \quot{\crc[n]}{\gen{J}}$ para $n ∈ ℕ$, que son los espacios proyectivos reales de dimensión $n$.
+
+Esta teoría también funciona siempre que el grupo $G$ cumpla la segunda propiedad y además $∀x ∈ M$ exista un $U$ tal que $g(U) ∩ U = ∅$ $∀g ≠ \Id$.
+
+Otros ejemplos son $\quot{ℝ}{ℤ} \simeq \crc$ o $\quot{ℝ^2}{ℤ^2} \simeq \crc × \crc$. Ambos son análogos: el primero lleva a la circunferencia y el segundo al toro. Es fácil de ver aunque hay que echarle un poco de imaginación: lo vamos a desarrollar con $\quot{ℝ^2}{ℤ^2}$. En este caso, consideramos $ℤ^2$ como el conjunto de los difeomorfismos en $ℝ^2$ de la forma $f(x,y) = (x+m, y+n)$ con $(m,n) ∈ ℤ^2$, que es obviamente un grupo que no fija puntos. En este caso, el hecho de que sea infinito no nos causa demasiados problemas.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{ToroEspacioCociente}
+\caption{Un gráfico para mostrar cómo $\quot{ℝ^2}{ℤ^2}$ es homeomorfo a un toro: la proyección canónica $π$ nos lleva al cuadrado $[0,1]×[0,1]$ con los bordes conectados (los del mismo color). Si pudiésemos ``moldear'' el cuadrado y pegar los bordes, estaríamos ante el toro.}
+\label{fig:ToroEspacioCociente}
+\end{figure}
+
+La relación de equivalencia que usamos para construir el espacio cociente nos dice que dos puntos $x,y ∈ ℝ^2$ pertenecen a la misma clase si existe un difeomorfismo $g ∈ ℤ^2$ tal que $g(x) = y$. En otras palabras, si tenemos un par $(m,n) ∈ ℤ^2$ tal que $(x_1 + m, x_2 + n) = (y_1, y_2)$, entonces $x = (x_1, x_2)$ y $y=(y_1, y_2)$ están relacionados, por lo que nuestro conjunto de clases de equivalencia son los puntos en $[0,1] × [0,1]$. Eso sí, con una peculiaridad: los bordes están ``unidos'', el de arriba con el de abajo y el de la izquierda con el de la derecha. Es decir, que topológicamente estamos ante un toro (ver \fref{fig:ToroEspacioCociente}).
+
+Si por otra parte trabajásemos con $\quot{ℝ}{ℤ}$, tendríamos algo similar: estaríamos identificando los dos bordes del intervalo $(0,1)$ y tendríamos una circunferencia. Para demostrarlo formalmente, tendríamos que definir una aplicación \begin{align*}
+\appl{f}{\quot{ℝ}{ℤ}&}{\crc} \\
+[x] &\longmapsto e^{2πix} = (\cos 2πx, \sin 2πx)
+\end{align*} y comprobar que es diferenciable, esto es, tenemos que comprobar que $\inv{φ_U} ○ f ○ α$ es diferenciable, teniendo que $φ_U$ es una carta de $\quot{ℝ}{ℤ}$, con $\inv{φ_U} = \restr{π}{U}$ la proyección canónica restringida a $U$; y $α(e^{2πiθ}) = 2πθ$ la otra carta. La composición sería obviamente $π ○ f ○ α = 2πx$ que es diferenciable.
+
+Otro ejemplo posible es ver si podemos definir un difeomorfismo entre $\projp^1$ y $\crc$ como $ρ(z) = z^2$, con $z ∈ ℂ$. Eso sí, sólo pasa con $n=1$: en general, $\projp^n \nsim \crc[n]$.
+
+\subsubsection{Espacios proyectivos}
+
+A través de la variedad cociente hemos hablado de espacios proyectivos. Vamos a definirlos bien:
+
+\begin{defn}[Espacio\IS proyectivo] Sea \kbb un cuerpo\footnote{En nuestro caso, $ℝ$ o $ℂ$}. Entonces definimos el plano proyectivo como \[ \mathbb{P}^n(\kbb) = \quot{\kbb^{n+1} \setminus \set{0}}{\sim}\] con $\sim$ la relación de equivalencia dada por $x \sim y \iff y = λx$ para algún $λ ∈ \kbb^*$.
+\end{defn}
+
+Cuando \kbb es $ℝ$ o $ℂ$, $\mathbb{P}^n(\kbb)$ es una variedad de dimensión $n$ o $2n$ respectivamente.
+
+Las cartas en el plano proyectivo son de la forma\footnote{Como notación, los dos puntos denotan clases de equivalencia, esto es, $[x_1\cln x_2] \equiv \set{\gor{x_1}, \gor{x_2}}$.} \[ U_k = \set{[x_1\cln x_2\cln \dotsb\cln x_k\cln \dotsb\cln x_n] ∈ \mathbb{P}^n(\kbb) \tq x_k ≠ 0} \]
+
+Este conjunto está bien definido. No lo estaría si estuviésemos diciendo que $x_k = 1$, por ejemplo, porque tendríamos que $[1\cln 1\cln 1] = [3\cln 3\cln 3]$ y no quedaría claro si está o no en el conjunto.
+
+Además, se ve fácilmente que $\bigcup_{k=0}^n U_k = \mathbb{P}^n(\kbb)$. Sólo nos queda definir una biyección \begin{align*}
+\appl{φ_k}{U_k&}{\kbb^n} \\
+[x_1\cln \dotsb\cln x_k\cln \dotsb\cln x_n] &\longmapsto \left(\frac{x_0}{x_k}, \dotsc, \frac{x_n}{x_k}\right)
+\end{align*}
+
+La inversa de $φ_k$ sería \[ \inv{φ_k}(y_1, \dotsc,y_n) = [y_1\cln \dotsb \cln y_{k-1} \cln 1 \cln y_{k+1}\cln \dotsb \cln y_n]\]
+
+Sólo nos queda comprobar que las funciones transición $\appl{φ_j ○ \inv{φ_k}}{\kbb^n \setminus \set{y_j = 0}}{\kbb^n \setminus \set{y_k = 0}}$ son diferenciables. Vemos que \[ (φ_j ○ \inv{φ_k})(y_1, \dotsc, y_n) = φ_j\left([y_1\cln \dotsb \cln y_{k-1} \cln 1 \cln y_{k+1}\cln \dotsb \cln y_n]\right) = \left(\frac{y_1}{y_j}, \dotsc, \frac{1}{y_j}, \dotsc, \frac{y_n}{y_j} \right)\], que efectivamente es diferenciable porque en el espacio de partida $y_j ≠ 1$.
+
+Así, tenemos que tanto $\mathbb{P}^n(ℝ) = \projp^n$ y $\mathbb{P}^n(ℂ) = \projcp^n$ son variedades diferenciables.
+
+El plano proyectivo complejo es interesante. Por ejemplo, podemos ver que $\projcp^1 \simeq ℂ^2 ∪ \set{∞} \simeq \crc[2]$. Otro aspecto interesante de $\projcp^n$ es que no sólo es diferenciable como comentábamos antes: también es holomorfa. Y lo relevante de las variedades holomorfas es que son todas orientables. Esto nos sirve como excusa para introducir otro tipo de variedades.
+
+\subsection{Variedades orientables}
+
+\begin{defn}[Variedad\IS orientable] Una variedad $M$ es orientable si existe un atlas $A = \set{(U_i,φ_i)}_{i∈I}$ tal que $\abs{\Dif (φ_j○\inv{φ_i})} > 0$ para cualesquiera $j,i ∈ I$.
+\end{defn}
+
+Un atlas holomorfo siempre verificará la condición de orientabilidad por las ecuaciones de Cauchy-Riemann \citep[Sección III.2]{ApuntesVarCompI}. Definiendo $\appl{f = (φ_j○\inv{φ_i})}{ℂ}{ℂ}$ holomorfa, tenemos que $f = u + iv$ y entonces \[ \Dif f = \det \begin{pmatrix}
+u_x & u_y \\ v_x & v_y
+\end{pmatrix} \eqreasonup{Eq. CR} \det
+\begin{pmatrix}
+u_x & -v_x \\ v_x & u_x \end{pmatrix} = u_x^2 + v_x^2 > 0 \]
+
+Otro ejemplo interesante es $\quot{ℝ×(-a,a)}{ℤ}$, de tal forma que $n·(x,λ) = (x+n,λ)$. Es un cilindro (identificamos los dos lados de un rectángulo de anchura infinita y altura $2a$) y orientable.
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+\begin{tikzpicture}
+\fill[blue!20!white] (0, -0.8) rectangle (2, 0.8);
+\draw (-1,0) -- (3,0);
+\draw (0,-1) -- (0,1);
+
+\node[hnlin, label = {left:$a$}] at (0, 0.8) {};
+\node[hnlin, label = {left:$-a$}] at (0, -0.8) {};
+
+\draw[blue, thick, directed, |-|]  (2, 0.8) --  (2, -0.8);
+\draw[blue, thick, directed] (0, -0.8) -- (0,0.8);
+
+\end{tikzpicture}
+\caption{Representación de $\quot{ℝ×(-a,a)}{ℤ}$ con los lados identificados en sentido contrario.}
+\label{fig:CilindroNoOrientable}
+\end{wrapfigure}
+
+Ahora bien, si la relación de equivalencia la tomamos como $n·(x,λ) = (x+n, (-1)^nλ)$, esto es, que $(x,λ) \sim (x',λ')$ si y sólo si $x' = x + n$ y $λ' = (-1)^nλ$. Lo que nos queda es algo como lo de la \fref{fig:CilindroNoOrientable}, con los dos lados identificados pero en sentido contrario. En otras palabras, es una banda de Möbius.
+
+Con esto, podemos comprobar que efectivamente la banda de Möbius no es orientable. Sea $I = (-a, a)$, de tal forma que nuestra proyección sea \begin{align*} \appl{π}{ℝ×I&}{M} \\ (x,λ) &\longmapsto [(x,λ)]
+\end{align*}
+
+Consideramos ahora dos cartas $U_1 = (0,1) × I$ y $U_2 = (\sfrac{1}{2}, \sfrac{3}{2}) × I$ con respectivas funciones $φ_i = \inv{(\restr{π}{U_1})}$. Vemos ahora qué pasa con $φ_2 ○ \inv{φ_1}$, que tiene dominio $φ_1(π(U_1) ∩ π(U_2)) = \left( (0, \sfrac{1}{2}) × I\right) ∪ \left((\sfrac{1}{2}, 1) × I\right)$; e imagen $φ_2(π(U_1) ∪ π(U_2)) = \left( (\sfrac{1}{2}, 1) × I\right) ∪ \left((1, \sfrac{3}{2}) × I\right)$.
+
+Tomamos ahora un $(x,λ) ∈ (\sfrac{1}{2}, 1) × I$, y tenemos que coger un representante de su clase en la imagen: nos vale con el mismo $(x,λ)$. Sin embargo, si tomamos un $(x,λ) ∈ (0, \sfrac{1}{2}) × I$, su clase es $[x,λ]$. Ahora bien, ese mismo número no está en la imagen, así que tenemos que buscar otro representante, que será $(x+1, -λ)$ por cómo hemos definido la relación de equivalencia. El determinante de esta función será negativo, y por lo tanto tendremos un atlas no orientable.
+
+\begin{prop} Sea $M$ una variedad con un atlas con sólo dos cartas $(U_1, φ_1)$ y $(U_2, φ_2)$ tal que la intersección es un conexo. Entonces $M$ es orientable.
+\end{prop}
+
+\begin{proof} (Esbozo) Dado que los cambios de carta son difeomorfismos, el determinante de sus diferenciales no puede ser $0$ nunca. Dado que la intersección es conexa, no puede haber cambios de signo porque no se puede pasar por el $0$.
+\end{proof}
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{OrientRP2}
+\caption{Demostración gráfica de la no-orientabilidad de $\projp^2$: el subconjunto $U$ es una banda de Möbius no orientable.}
+\label{fig:OrientRP2}
+\end{figure}
+
+Otra variedad de la cual podemos estudiar su orientabilidad es $\projp^2$, que topológicamente es equivalente a un disco con los puntos antipodales identificados (\fref{fig:OrientRP2}). En ese caso, podemos tomar un subconjunto $U$ que es equivalente a la banda de Möbius, que no es orientable y por lo tanto $\projp^2$ no puede serlo.
+
+\subsection{Grupos de Lie}
+
+Otra forma interesante de definir variedades es a través de los grupos de Lie, que nos permiten mezclar la geometría y el álgebra.
+
+\begin{defn}[Grupo\IS de Lie] \label{def:GrupoLie} Un grupo de Lie es un grupo $(G, \cdot)$ que admite una estructura de variedad diferenciable tal que las aplicaciones producto \begin{align*}
+\appl{\cdot}{G × G&}{G} \\
+(x,y) &\longmapsto x·y
+\end{align*}  e inversa \begin{align*}
+\appl{\inv{(·)}}{G&}{G} \\
+x &\longmapsto \inv{x}
+\end{align*} son diferenciables.
+\end{defn}
+
+Un ejemplo muy sencillo es $(ℝ^n, +)$, o también $(\quot{ℝ^n}{ℤ^n}, +)$. También podemos considerar a la circunferencia \crc como un grupo de Lie si lo tomamos como $\crc ⊂ (ℂ^*, ·)$, subgrupo de los complejos. En este caso, para el producto $f(e^{iθ},e^{iα}) = e^{iθ} · e^{iα} = e^{i(θ+α)}$ tendríamos que \[ φ_2(f(\inv{φ_1}(θ,α))) = φ_2(f(e^{iθ}, e^{iα})) = φ_2(e^{i(θ+α)}) = θ + α \] es efectivamente diferenciable. $\crc[3]$ también es un grupo de Lie, a través de los cuaterniones.
+
+Esto es interesante, principalmente porque la condición de poder dotar de estructura de gurpo a una variedad (o viceversa) es bastante restrictiva. De hecho, sólo las esferas $\crc$ y $\crc[3]$ tienen estructura de grupo de Lie.
+
+En el caso de $\crc[3]$, el grupo es el de los cuaterniones, las raíces cuartas de la unidad. Sus elementos serán de la forma $u = a + bi + cj + dk$, con $i, j, k$ raíces cuartas de la unidad. La norma será $\norm{u} = a^2 + b^2 + c^2 + d^2$; y las cuentas que querremos hacer será ver que si $u,v ∈ \crc[3]$ entonces $uv ∈ \crc[3]$ o, en otras palabras, que si $\norm{u} = \norm{v} = 1$ entonces $\norm{uv} = 1$. Las cuentas infernales para demostrar eso o la existencia del inverso las dejamos fuera porque son horribles.
+
+\subsection{Sumas conexas}
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{SumaConexa}
+\caption{Esquema de cómo realizar una suma conexa: se ``quitan'' dos entornos homeomorfos a una bola en ambas variedades y se ``pegan'' dos partes, uniendo los círculos oscuros y los claros.}
+\label{fig:SumaConexa}
+\end{figure}
+
+Las variedades también se pueden construir como suma de otras dos variedades.
+
+\begin{defn}[Suma\IS conexa] Sean $M_1^n, M_2^n$ dos variedades de dimensión $n$. Entonces, para dos cartas $φ_1$, $φ_2$ de $M_1$ y $M_2$ escogemos $p ∈ M_1,\,q∈M_2$ (los puntos de unión) y definimos \begin{align*}
+M_1^* = M_1 \setminus \inv{φ_1} (\adh{\bola_{\sfrac{1}{2}}(0)}) \\
+M_2^* = M_2 \setminus \inv{φ_2} (\adh{\bola_{\sfrac{1}{2}}(0)})
+\end{align*} con $φ_1, φ_2$ cartas respectivas centradas en $p$ y $q$. En la \fref{fig:SumaConexa}, estamos quitando la parte punteada de las variedades. Podemos establecer un homomorfismo entre esas dos bolas que hemos quitado dado por \[ α(ρ,θ) = \left(\frac{1}{ρ}, τ(θ)\right) \], usando coordenadas polares y $τ$ una transformación arbitraria (es decir, que podemos girar las variedades al pegarlas).
+
+Entonces podemos definir la relación que nos ``pega'' las variedades como \[ q_1 = \inv{φ_1}(ρ,θ) ∈ \inv{φ_1}(\bola_2 \setminus \adh{\bola_{\sfrac{1}{2}}}) \sim q_2 = \inv{φ_2}(α(ρ, θ)) ∈ \inv{φ_2}(\bola_2 \setminus \adh{\bola_{\sfrac{1}{2}}}) \] cuando estamos en la parte que identificamos, y trivial en el resto de puntos. Entonces podemos definir la suma conexa como
+\[ M_1 \# M_2 = \quot{M_1^* \cup M_2^*}{\sim} \] y sólo nos queda dar el atlas.
+
+Para los puntos que no estén en la parte que pegamos, usamos el atlas que ya venía de la variedad. Para los puntos comunes, pues damos otro atlas que no sé cuál es.
+\end{defn}
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{SumaConexaResultado}
+\caption{Resultado de la suma conexa de dos variedades}
+\label{fig:SumaConexaResultado}
+\end{figure}
+
+Lo interesante de la suma conexa es que si ambas variedades son orientables, entonces la suma conexa es orientable.
+
+Las sumas conexas también nos permiten definir un teorema de clasificación de superficies compactas.
+
+\begin{theorem}[Teorema\IS de clasificación de superficies compactas] Toda superficie orientable y compacta $S ≠ \crc[2]$ es una suma conexa de toros, y toda superficie compacta no orientable $M$ es una suma conexa de planos proyectivos.
+\end{theorem}
+
+El teorema se basa en la característica de Euler, que definimos a continuación:
+
+\begin{defn}[Característica\IS de Euler] Dada una variedad $M$, se define su característica de Euler como \[ χ(M) = V - A + C\] con $V, A, C$ los vértices, aristas y caras de una triangulación de $M$. \end{defn}
+
+Esta característica es una invariante topológica, y además no depende de la triangulación. Algo que se puede dejar como ejercicio es el hallar la característica de Euler de la suma conexa, que sale \[ χ(M_1 \# M_2) = χ(M_1) + χ(M_2) - 2 \]
+
+Para sacarlo, habría que tener en cuenta que cuando se unen dos variedades, lo hacemos quitando un triángulo. Es decir, que cogemos la suma de vértices, aristas y caras de ambas triangulaciones, pero quitamos tres aristas (un triángulo pasa a estar compartido), tres vértices que también pasan a estar compartidos y las dos caras desaparecen.
+
+\chapter{Espacios tangente y cotangente}
+\label{chap:EspaciosTangenteyCotangente}
+
+\chapter{Cohomología de De Rham}
+\label{chap:CohomologiaDeRham}
+
+%% Apéndices (ejercicios, exámenes)
+\appendix
+
+\chapter{Cálculos y otras explicaciones}
+\input{tex/GT_Calculos.tex}
+
+\chapter{Ejercicios}
+\input{tex/GeometriaTopologia_Ejs.tex}
+
+\bibliography{../Apuntes}{}
+\printindex
+\end{document}

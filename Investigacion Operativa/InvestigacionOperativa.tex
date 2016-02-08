@@ -1,0 +1,159 @@
+\documentclass[palatino,nochap]{apuntes}
+
+\title{Investigación Operativa}
+\author{Víctor de Juan Sanz}
+\date{15/16 C2}
+
+\lstset{
+    language=R,
+    basicstyle=\ttfamily
+}
+
+
+%%%%%%%%%%%%%%%  lstlisting style
+
+\tikzset{point/.style={insert path={ node[scale=2.5*sqrt(\pgflinewidth)]{.} }}}
+\usetikzlibrary{calc}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\newcommand{\goal}[1]{
+
+El \textbf{objetivo} del problema es:  #1}
+\newcommand{\restrictions}[6][]{
+
+	Las \textbf{restricciones} del problema son:
+
+	\begin{enumerate}
+		\ifthenelse{\equal{#1}{}}{}{\item #1}
+		\ifthenelse{\equal{#2}{}}{}{\item #2}
+		\ifthenelse{\equal{#3}{}}{}{\item #3}
+		\ifthenelse{\equal{#4}{}}{}{\item #4}
+		\ifthenelse{\equal{#5}{}}{}{\item #5}
+		\ifthenelse{\equal{#6}{}}{}{\item #6}
+	\end{enumerate}}
+
+
+\newenvironment{ioprob}{\begin{mdframed}}{\end{mdframed}}
+
+% Paquetes adicionales
+
+% --------------------
+\usetikzlibrary{patterns}
+
+\begin{document}
+\begin{abstract}
+Estos son apuntes del curso \textit{Investigación Operativa}. asignatura optativa de último curso del grado en Matemáticas. La asignatura ha sido impartida por \href{http://www.uam.es/joser.berrendero}{Jose Ramón Berrendero}. 
+
+
+Como material adicional en las clases disponíamos de apuntes de apoyo del profesor de donde se han obtenido la mayoría de las imágenes.
+
+Agradecemos además el trabajo de todos los compañeros y compañeras de clase que aportan sus comentarios, detección de erratas, corrección de ejercicios para aumentar la calidad de los apuntes.
+
+\end{abstract}
+\pagestyle{plain}
+\maketitle
+
+\tableofcontents
+\newpage
+% Contenido.
+
+\section{Introducción a la optimización}
+
+Vamos a ver un ejemplo para entender qué nos va a mantener ocupados durante el curso.
+
+\begin{example}
+Una empresa produce pintura para interiores y para exteriores apartir de dos materias primas M1 y M2. 
+La siguiente tabla resume las cantidades necesarias de cada una por tonelada de pintura, la máxima cantidad disponible diaria y los beneficios por la venta
+(para cada tonelada de pintura)
+
+\begin{center}
+\begin{tabular}{cccc}
+Materia prima&Pint. exteriores&Pint. interiores&Disponibilidad\\\hline\hline
+M1&6&4&24\\
+M2&1&2&6\\\hline
+Beneficio&5&4&
+\end{tabular}
+\end{center}
+
+Según un estudio de mercado, la demanda diaria de pintura de
+interiores es, como mucho de 2 t y la de interiores no excede a la
+de exteriores en más de 1 t.
+
+El problema que queremos resolver es: \textbf{¿Qué cantidad de cada tipo de pintura se debe fabricar diariamente para maximizar el beneficio?}
+
+\begin{ioprob}
+\goal{$\max 5x_1 + 4x_2$}
+\restrictions{$6x_1 + 4x_2 \leq 24$}{$x_1 + 2x_2 \leq 6$}{$x_2 \leq 2$}{$x_2 \leq x_1 + 1$}{$x_1 \geq 0, x_2 \geq 0$}
+\end{ioprob}
+
+
+Para tener algo de intuición, vamos a ver gráficamente el problema:
+
+\begin{center}
+\includegraphics[scale=0.8]{tex/berrendero/tema1/_GraficoEjemplo1}
+\end{center}
+
+
+Como queremos maximizar $z\equiv 5x_1+4x_2$. Para ello, podemos tomar $z = c, ∀c>0$ y vamos tomando conjuntos de nivel. 
+Tomamos $\grad z = \begin{pmatrix}5\\4\end{pmatrix}$. Este vector $\grad z$ es el vector normal a las rectas (o conjuntos) de nivel.
+
+A ojo, vemos que el $c$ que maximiza $5x_1 + 4x_2 = c$ estará en la intersección de las restricciones $(1)$ y $(2)$.
+
+Veamoslo gráficamente:
+
+\begin{center}
+\includegraphics[scale=0.8]{tex/berrendero/tema1/_GraficoEjemplo2}
+\end{center}
+
+
+El punto solución es la solución del sistema:
+
+\[
+\left.\begin{array}{cc} 6\gor{x_1} + 4\gor{x_2} &= 24\\ \gor{x_1} + 2\gor{x_2} &= 6\end{array}\right\} \implies (\gor{x_1},\gor{x_2}) = (3,1.5)
+\]
+\end{example}
+
+
+\chapter{Conjuntos convexos y optimización lineal}
+\input{tex/io_sec1.tex}
+
+
+\chapter{Funciones convexas y optimización convexa}
+\input{tex/io_sec2.tex}
+
+\chapter{Condiciones KKT y dualidad}
+
+\chapter{Aplicaciones}
+\section{Máquinas de vectores soporte}
+
+%% Apéndices (ejercicios, exámenes)
+\appendix
+
+\chapter{---}
+\input{tex/InvestigacionOperativa_Ejs.tex}
+\printindex
+\end{document}

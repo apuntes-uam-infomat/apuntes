@@ -1,0 +1,68 @@
+\begin{tikzpicture}[scale = 2.3]
+\pgfmathsetmacro{\slope}{1.2} 	% Slope of the lines
+\pgfmathsetmacro{\zerolen}{1}   % Length of the region where F(x) = 0 (starts at x = 0)
+\pgfmathsetmacro{\onelen}{1.5} 	% Length of the region where F(x) = 1 (starts at x = \zerolen)
+\pgfmathsetmacro{\twolen}{2}
+
+\coordinate (XStart) at (-2.2, 0); 	% Left corner of X axis
+\coordinate (XEnd) at (3, 0);	 	% Right corner of Y axis
+
+\coordinate (R2XStart) at (-\twolen,0);   % Start (on X axis) of region where F = 2
+\coordinate (R2XEnd) at (0,0); 		% End (on X axis) of region where F = 2
+\coordinate (R1XStart) at (\zerolen, 0);	 		% Same with F = 1
+\coordinate (R1XEnd) at (\zerolen + \onelen, 0);	% Same with F = 1
+\coordinate (Shock1) at (\zerolen, \slope * \zerolen);	% First end point of shock curve 1
+\coordinate (Shock2) at (\zerolen + \onelen, \slope * \onelen); % First end point of shock curve 2
+
+% Draw axis
+\draw[->] (XStart) -- (XEnd) node[right] {$x$};
+\draw[->] (0,-0.2) -- (0,2) node[above] {$t$};
+
+% Fill the corresponding regions
+\fill[pattern = north east lines, pattern color = orange] (R2XStart) -- (R2XEnd) -- (Shock1) to[bend left = 20] (Shock2) -- (0, \slope * \onelen) -- cycle;
+\fill[pattern = vertical lines, pattern color = green!70!black!40!white] (R2XEnd) -- (Shock1) -- (R1XStart) -- cycle;
+\fill[pattern = north east lines, pattern color = red!40!white] (R1XStart) -- (Shock2) -- (R1XEnd) -- cycle;
+\fill[pattern = horizontal lines, pattern color = gray] (R1XStart) -- (Shock1) to[bend left = 20] (Shock2) -- cycle;
+
+% Just a helper line to draw the node properly.
+\draw[orange, thick] (R2XStart) -- node[pos = 0.4, below, sloped, orange, fill = white, opacity = 0.5, text opacity = 1] {$x-2t = x_0$} (Shock1);
+
+\node (GCenter) at (\zerolen + \onelen / 5, \slope / 2) {};
+
+\node[gray] (GCenterForm) at (\zerolen + \onelen / 3 + 1, -0.5) {$u(x,t) = \dfrac{x-1}{t}$};
+
+\draw[gray, ->] (GCenter) to[bend right] (GCenterForm);
+
+% Shock lines
+\draw[thick, red] (R1XEnd) -- (R1XStart) --
+	node[midway, sloped, below, fill = white, opacity = 0.5, text opacity = 1] {$x-t = 1$} (Shock2);
+
+\draw[thick, blue] (R2XEnd) --
+	node[near start, above, sloped, fill = white, opacity = 0.5, text opacity = 1] {$x = s_1(t) = t$}
+	(Shock1);
+
+\draw[thick, blue!80!black] (Shock1) to[bend left = 20]
+	node[pos = 0.3, above, sloped] (S2) {}(Shock2);
+
+\node[blue!80!black] (S2Label) at (\zerolen + \onelen / 2, \slope * \onelen * 1.2) {$s_2(t) = 1 + 2t - 2\sqrt{t}$};
+
+\draw[->, blue!80!black] (S2) to[bend left] (S2Label);
+
+
+\node[vnlin, label={below:$1$}] at (\zerolen,0) {};
+\node[vnlin, label={below:$5$}] at (\zerolen + \onelen,0) {};
+\node[hnlin, label={left:$1$}] at (0,\slope) {};
+\node[hnlin, label={left:$4$}] at (0,\slope*\onelen) {};
+
+\node[nodepoint, blue!50!red] at (Shock2) {};
+\node[nodepoint, blue] at (Shock1) {};
+
+\draw[dashed] (\zerolen, 0) -- (Shock1) -- (0, \slope);
+\draw[dashed] (\zerolen+\onelen,0) -- (Shock2) -- (0,\slope*\onelen);
+
+\node[orange, fill = white, opacity = 0.5, text opacity = 1] at (-\twolen / 4, \slope * \onelen / 2) {$u(x,t) = 2$};
+\node[red, fill = white, opacity = 0.5, text opacity = 1] at (\onelen * 0.6 + \zerolen, \slope * \onelen * 0.1) {$u(x,t) = 1$};
+\node[green!70!black, fill = white, opacity = 0.5, text opacity = 1] at (\onelen * 0.4, \slope * \onelen * 0.1) {$u(x,t) = 0$};
+
+
+\end{tikzpicture}

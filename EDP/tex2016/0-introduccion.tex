@@ -1,0 +1,68 @@
+% -*- root: ../EDP2016.tex -*-
+\chapter{Introducción}
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{TransmisionCalor}
+\caption{Esquema de la varilla (en negro) aislada y conectada a dos bloques de hielo (temperatura 0)}.
+\label{fig:TransmisionCalor}
+\end{figure}
+
+El primer ejemplo que vamos a ver tiene que ver con la ecuación del calor y la solución de Fourier. Consideraremos una varilla de longitud $L$ aislada, y conectada con dos bloques de hielo. Llamaremos $u(x,t)$ a la temperatura en el punto $x$ en el instante $t$. Sabemos que en $t = 0$ tenemos una distribución inicial de temperatura, y en $t \to ∞$ tenemos que la temperatura será cero (no llega a fundir completamente los bloques de hielo).
+
+Como notación, escribiremos las derivadas parciales con subíndices: $u_t \equiv \pd{u}{t}$, $u_{xx} = \pd[2]{u}{x}$, y similar.
+
+Para estudiar el problema, vamos a ver que ocurre en el intervalo $[x, x+h]$. La temperatura, al final nos da una medida de la energía de los puntos. Si la sumamos en ese intervalo obtendremos una cantidad de calor acumulada en ese intervalo. Es decir, $\int_x^{x+h} u(s,t) \dif s$ es la cantidad de calor en el instante $t$ en $[x,x+h]$. Lo interesante es que esa cantidad de calor varía a lo largo del tiempo. Como la varilla está rodeada de aislante, la cantidad de calor sólo se puede estar perdiendo a través de los extremos.
+
+Suponemos que podemos meter la derivada dentro de la integral (habría que demostrarlo), así que podemos decir que \(  \od{}{t} \int_x^{x+h} u(s,t) \dif s = \int_x^{x+h} u_t(s,t) \dif s \label{eq:intro_1}\)
+
+La difusión de la temperatura será, según la ley de Newton, proporcional a la temperatura en el punto que estemos considerando\footnote{Como no somos físicos, la constante es 1.}. Si en el extremo derecho tenemos una derivada positiva (con respecto a x), estamos aportando calor al intervalo. Si tenemos derivada positiva en el extremo izquierdo, estamos perdiendo calor en el intervalo.
+
+Tenemos entonces que ese intercambio de calor es proporcional a \[u_x(x+h, t) - u_x(x,t)\]
+
+Por la regla de Barrow\footnote{Corolario del Teorema Fundamental del Cálculo} podemos decir que \[ u_x(x+h, t) - u_x(x,t) = \int_x^{x+h} u_{xx}(s,t) \dif s\]
+Con esto, hemos desarrollado el lado derecho de la ecuación \ref{eq:intro_1}, y pasando el lado derecho restando, combinando las integrales\footnote{Los límites de integración son los mismos así que lo podemos hacer.}, y multiplicando por $\frac{1}{h}$ (ahora veremos por qué) tenemos que
+\( \frac{1}{h} \int_{x}^{x+h} u_t(s,t) - u_{xx}(s,t) \dif s = 0 \label{eq:intro_2}\)
+
+Si definimos $$F(x) = \int_{0}^{x} u_t(s,t) - u_{xx}(s,t) \dif s $$ entonces \ref{eq:intro_2}, por definición de cociente incremental, es:
+\( \ref{eq:intro_2} = \frac{F(x+h) - F(x)}{h} = 0  \label{eq:intro_3}\)
+
+y aplicando el límite $h \to 0$ y por el TFC\footnote{Teorema Fundamental del Cálculo}, obtenemos que \ref{eq:intro_3} tiende a:
+\[ F'(x) = u_t(s,t) - u_{xx}(s,t) \]
+Luego como \ref{eq:intro_3} era igual a 0, tenemos que,
+\[ u_t(x,t) - u_{xx} (x,t) = 0, \forall x \in (0,1), \forall t > 0\]
+
+El problema que tendremos que resolver es entonces que
+$$u(0,t) = u(L,t) = 0 \text{ para } t > 0$$
+
+¿Cómo resolver esto? Buscaremos que $u(x,t) = X(x) · T(t)$, es decir, que podamos separar las variables. En ese caso, tenemos que la ecuación pasa a ser \[ u_t - u_{xx} = 0 \implies XT' - X''T = 0 \implies \frac{X''}{X} = \frac{T'}{T} \]
+
+La igualdad se debe cumplir $∀x ∈ (0,L)$ y $∀t > 0$. Tenemos a dos ecuaciones que dependen de dos variables distintas y que son iguales, luego debe existir un $λ ∈ ℝ$ tal que $\frac{X''}{X} = \frac{T'}{T} = λ$, y nos movemos al mundo de las ecuaciones ordinarias, llegando al sistema  \[ \begin{matrix} T' - λT = 0 \\ X'' - λX = 0 \end{matrix}\]
+
+El problema es que no sabemos qué es λ, así que tenemos que irnos al resto de condiciones del problema. Sabíamos que en los extremos la temperatura es 0, así que tenemos que añadir esas condiciones $X(0) = 0 = X(L)$. Sin embargo, lo que estudiábamos era el problema de Cauchy, en el que teníamos valores sobre la función y su derivada en el mismo punto. Este es un problema de contorno que se queda fuera del temario de EDO \cite{ApuntesEDO}. Como tenemos una solución trivial ($X = 0$), tendremos que buscar para qué valores de λ no se cumple el teorema de existencia y unicidad.
+
+Lo que sí sabemos resolver es ver qué tipo de soluciones tenemos para $X'' - λX = 0$. Para ello, resolvemos el polinomio característico. Para $λ = 0$, tenemos que $X(x) = a+bx$. Como $X(0) = 0 = a$, y $X(L) = bL = 0$, tenemos que $X = 0$ y no nos vale porque es una solución trivial.
+
+Buscamos ahora ver qué pasa con $λ > 0$. Podemos decir perfectamente que $λ = μ^2$. En este caso, tendríamos que las soluciones son $X(x) = ae^{μx} + be^{-μx}$. Sin embargo, las condiciones de contorno nos dirán que $a = b = 0$.
+
+Nos falta probar qué pasa con $λ < 0$. Igual que antes, ponemos $λ = -μ^2$. Repasando de nuevo el curso de EDO, tenemos que $X(x) = a \cos μx + b \sin μx$. Con las condiciones de contorno tenemos que $X(x) = b \sin μx$ y con la constante $μ = \frac{kπ}{L}$ para $k = 1,2,3,\dotsc$.
+
+Las soluciones serán entonces de la forma \[ X_k = b_k \sin (\frac{kπ}{L} x)\] correspondientes a los autovalores $λ_k = -\left(\frac{kπ}{L}\right)^2$. % \lambda < 0
+
+Por otra parte, miramos qué ocurre con $T$: resolviendo tenemos que $T_k(t) = c_k e^{λ_k t}$, así que las soluciones particulares de la ecuación del calor son \[ u_k(x,t) = a_k e^{-\left(\frac{kπ}{L}\right)^2t} \sin (\frac{kπ}{L} x) \]
+
+Pero no hemos terminado el problema: nos falta meter el dato inicial $u(x,0) = f(x)$. Por ejemplo, si $f(x) = 5 \sin (\frac{2π}{L} x)$ entonces $u(x,t) = 5 e^{-\left(\frac{2π}{L}\right)^2t} \sin (\frac{2π}{L} x)$.
+
+Como la ecuación es lineal, también podemos sacar la solución para funciones que sean sumas de senos; y utilizando la propiedad de que dadas dos soluciones particulares, si las sumamos también es solución, podemos llegar a la idea de Fourier.
+
+¿Nos vale con sumas de senos? La respuesta es que sí: Fourier dice que cualquier función se puede escribir como suma infinita de senos, y por lo tanto siempre podemos encontrar la solución: \[ f(x) = \sum_{k=1}^∞ a_k \sin \frac{kπ}{L} x\]
+
+La cuestión es que ahí nos encontramos con problemas:
+\begin{itemize}
+	\item La serie es alternada y no sabemos si converge.
+	\item No sabemos cómo se calculan los $a_k$.
+	\item No sabemos exactamente qué significa que una función sea igual a una serie infinita.
+	\item No sabemos si la derivada de la función es igual a la derivada de la derecha.
+\end{itemize}
+
+Todos estos problemas son los que motivan el análisis funcional y las matemáticas del siglo XIX. Nosotros los veremos en este curso en el \fref{chap:EcuacionesSegundoOrden}.

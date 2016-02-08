@@ -6,9 +6,12 @@
 
 % Paquetes adicionales
 \usepackage{enumitem}
+\usepackage{xfrac}
+\usepackage{fancysprefs}
+\usepackage{tikztools}
 
 \setlist{itemsep=1pt, topsep=5pt}
-
+\bibliographystyle{plainnat}
 % --------------------
 
 \begin{document}
@@ -21,7 +24,7 @@
 
 \section{Espacios métricos completos}
 
-Empezamos con la definición de espacios métricos.
+A lo largo de este curso, vamos a tratar de estudiar las funciones analíticamente, dando una estructura a espacios de funciones y manejándolas de forma abstracta. Una de esas formas en las que van a aparecer los espacios de funciones es la de espacios métricos. Por eso, como introducción a la asignatura veremos ciertos conceptos de topología sobre espacios métricos abstractos que nos servirán más adelante.
 
 \begin{defn}[Métrica] Una métrica $\dst$ en un espacio $X$ es una función $\appl{\dst}{X×X}{ℝ^+}$ que cumple las siguientes propiedades: \begin{enumerate}
 \item Simetría: $∀x,y ∈ x$ tenemos que $\dst (x,y) = \dst(y,x)$.
@@ -33,13 +36,33 @@ Empezamos con la definición de espacios métricos.
 \begin{defn}[Espacio\IS métrico] Un espacio topológico \stopl es un espacio métrico si la topología \topl está dada por una métrica $\dst$. Es decir, que $U ⊂ X$ es abierto ($U ∈ \topl$) si y sólo si $∀x ∈ U\; ∃δ>0$ con $\bola_δ(x) ⊂ U$, siendo $\bola_δ(x)$ la bola abierta\footnote{Por recordar, $\bola_r(x_0) = \set{x ∈ X \tq \dst(x,x_0) < r}$.} de radio δ centrada en $x$.
 \end{defn}
 
-Sobre espacios métricos podemos definir sucesiones, y a su vez ver cuáles de estas convergen para encontrar el espacio métrico completo. Normalmente, la definición de convergencia requiere saber el límite y demostrar que la sucesión converge a él. Sin embargo, hay otra noción de convergencia que podemos usar y que es más fácil de manejar, basada en sucesiones de Cauchy.
+Sobre espacios métricos podemos definir sucesiones, y a su vez ver cuáles de estas convergen para encontrar el espacio métrico completo. Normalmente, la definición de convergencia requiere saber el límite y demostrar que la sucesión converge a él.
 
-\begin{defn}[Sucesión\IS de Cauchy] Sea $\set{x_n}_{n≥1}$ una sucesión en $X$. Diremos que es de Cauchy si $∀ε> 0$ existe un $N ∈ ℕ$ tal que dados $m,n ≥N$, entonces $\dst(x_m, x_n) < ε$.
+\begin{defn}[Sucesión\IS convergente] Sea $\set{x_n}_{n≥1}$ una sucesión en un espacio métrico \sdst. Entonces diremos que $x_n$ tiene límite $x$ (equivalentemente, $\lim_{n\to ∞} x_n = x$) si $∀ε > 0$ existe un $N > 0$ tal que si $n ≥ N$ entonces $\dst(x,x_n) < ε$ o, en otras palabras, que $x_n ∈ \bola_ε (x)$.
 \end{defn}
+
+\begin{prop} Dado \sdst un espacio métrico, se cumple que si $x_n \convs x,y$, entonces $x = y$ (es decir, el límite es único). De forma equivalente, se cumple que la topología \topl inducida por la métrica es Hausdorff\footnote{Recordando Topología \citep{ApuntesTopologia}: Si $x≠y$ hay entornos de $x$ e $y$ con intersección vacía. En este caso, se demuestra como consecuencia de la desigualdad triangular.}.
+\end{prop}
+
+Sin embargo, hay otra noción de convergencia que podemos usar y que es más fácil de manejar, basada en sucesiones de Cauchy.
+
+\begin{defn}[Sucesión\IS de Cauchy] \label{def:SucesionCauchy} Sea $\set{x_n}_{n≥1}$ una sucesión en un espacio métrico \sdst. Diremos que es de Cauchy si $∀ε> 0$ existe un $N ∈ ℕ$ tal que dados $m,n ≥N$, entonces $\dst(x_m, x_n) < ε$.
+\end{defn}
+
+Lo interesante de esta definición es que es ``bastante'' equivalente a la definición de convergencia.
+
+\begin{prop} Si una sucesión $\set{x_n}_{n≥1}$ tiene límite, entonces es de Cauchy.
+\end{prop}
+
+\begin{proof} Sea $x = \lim_{n \to ∞} x_n$. Entonces, $∀ε > 0$ existe un $N > 0$ tal que si $n≥N$ entonces $\dst(x_n, x) ≤ \sfrac{ε}{2}$. Si tomamos $m,n≥N$, entonces usando la desigualdad triangular tenemos que $\dst(x_m, x_n) ≤ \dst(x_m, x) + \dst(x, x_n) ≤ ε$.
+\end{proof}
+
+Lo de ser ``bastante'' equivalente viene porque según el espacio que consideremos, no siempre se cumple que las sucesiones de Cauchy tengan límite. Sí se cumple lo siguiente:
 
 \begin{prop} Si \sdst es un espacio métrico y $x_n$ es una sucesión de Cauchy en $X$, entonces $x_n$ tiene a lo más un punto de acumulación en $X$.
 \end{prop}
+
+En cierto sentido, si tenemos sucesiones de Cauchy que no convergen en el espacio, es como si nos faltase algo: sabemos que esas sucesiones convergen a algo que se nos ha quedado fuera. En general, buscaremos trabajar con espacios en los que esto no ocurra.
 
 \begin{defn}[Espacio\IS métrico completo] Un espacio métrico \sdst se dice completo si toda sucesión de Cauchy tiene exactamente un punto de acumulación. En otras palabras, si toda sucesión de Cauchy converge en el espacio.
 \end{defn}
@@ -48,7 +71,334 @@ Por ejemplo, $ℝ$ con la distancia habitual es completo (toda sucesión de Cauc
 
 También es importante ver que la noción de convergencia es métrica, no topológica. Por ejemplo, $(0,1)$ y $ℝ$ son homeomorfos pero $(0,1)$ no es un espacio completo.
 
-\subsection{Teorema de categoría de Baire}
+Un ejemplo muy simple de espacio métrico $(ℝ^n, \dst(x,y) = \norm{x-y})$, que es completo. Una pequeña variante sería tomar $ℂ^n$, pero nada cambiaría esencialmente.
+
+Podemos construir espacios algo menos triviales. Sea $[a,b] ⊂ ℝ$ un intervalo cerrado y acotado. Consideramos $(C_{[a,b]}, \dst(f,g) = \norm{f-g}_∞)$ el espacio de funciones continuas de $[a,b]$ a $ℂ$ con la norma del supremo (esto es, $\norm{f}_∞ = \sup_{x ∈ [a,b]} \abs{f}$). Este es un espacio métrico completo. Además, se daría que $f_n \convs f$ en este espacio si y sólo si $\norm{f-f_n}_∞ \convs 0$ o, en otras palabras, si $f_n \convs f$ uniformemente en $[a,b]$.
+
+Un concepto relacionado con el de completitud es del de densidad.
+
+\begin{defn}[Conjunto\IS denso] Dado un espacio métrico \sdst y sea $Y ⊂ X$. Se dice que $Y$ es denso si para cualquier $x∈X$ y $∀ε > 0$ se cumple que $\bola_ε(x) ∩ Y ≠ ∅$.
+\end{defn}
+
+Como ejemplo canónico, $ℚ$ es denso en $ℝ$. También podemos ver que con $x_0 ∈ X$, entonces $Y = \set{x_0}^c = ℝ \setminus \set{x_0}$ es un abierto denso en $ℝ$.
+
+Vamos ahora con unas cuantas definiciones útiles para categorizar conjuntos en espacios topológicos.
+
+\begin{defn}[Conjunto\IS $F_σ$] Dado un espacio topológico \stopl y un conjunto $Y ⊂ X$, se dice que $Y$ es $F_σ$ si es una unión numerable de cerrados.
+\end{defn}
+
+\begin{defn}[Conjunto\IS $G_δ$] \label{def:ConjuntoGDelta} Dado un espacio topológico \stopl y un conjunto $Y ⊂ X$, se dice que $Y$ es $G_δ$ si es una intersección numerable de abiertos.
+\end{defn}
+
+Como observación, es fácil ver\footnote{Consecuencia de las leyes de DeMorgan.} que $Y ⊂ X$ es un $F_σ$ si y sólo si $Y^c$ es $G_δ$.
+
+\begin{defn}[Conjunto\IS diseminado] Dado \sdst un espacio métrico y $Y⊂ X$, se dice que es residual o diseminado si $\adh{X}^c$ es denso en $X$.
+\end{defn}
+
+\begin{defn}[Conjunto\IS de 1ª categoría de Baire] Dado \sdst un espacio métrico y $Y⊂ X$, se dice que $Y$ es de 1ª categoría de Baire si $Y$ es una unión numerable de conjuntos diseminados.
+\end{defn}
+
+\begin{defn}[Conjunto\IS de 2ª categoría de Baire] Dado \sdst un espacio métrico y $Y⊂ X$, se dice que $Y$ es de 2ª categoría de Baire si no es de 1ª categoría.
+\end{defn}
+
+Con esto, vamos a por el teorema más importante de este tema.
+
+\begin{theorem}[Teorema\IS de categoría de Baire] \label{thm:CategoriaBaire} Sea \sdst un espacio métrico completo. Entonces:
+
+\begin{enumerate}
+\item Si $\set{X_n}_{n≥1}$ es una colección numerable de subconjuntos de $X$ abiertos y densos, entonces la intersección de todos ellos es un $G_δ$ denso en $X$.
+\item $X$ es de segunda categoría. En particular, ningún espacio métrico completo se puede escribir como unión numerable de conjuntos diseminados.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof} Empezamos con la primera sentencia. Dados $x ∈ X$ y $ε > 0$, tenemos que probar\footnote{Complicándonos un poco la vida, porque no sabemos cuál es la intersección de todos los $X_n$ y por lo tanto no podemos ver directamente si es densa o no. Por ejemplo, podría ocurrir que la intersección de dos $X_n$ fuese vacía, así que no podemos decir simplemente que $\bola_ε(x) ∩ W$ es no vacía porque es no vacía con cada uno de los $X_n$.} que $\bola_ε(x) ∩ W ≠ ∅$, siendo $W = \bigcap X_n$; esto es, que $W$ es denso en $X$.
+
+Como $X_1$ es abierto y denso, entonces su intersección con $\bola_ε(x)$ es un abierto (por ser ambos abiertos) y no vacío (por ser $X_1$) denso. En este caso, existe un $x_1 ∈ X_1 ∩ \bola_ε(x)$. Además, por ser esa intersección abierta, existe un $r_1 > 0$ tal que $\adh{\bola_{r_1}(x_1)} ⊂ X_1 ∩ \bola_ε(x)$. Podemos suponer además $r_1 < 1$ (si no lo fuera, tomamos $r_1' = 0.5 · \min\set{1,r_1}$).
+
+De nuevo, como $X_2$ es abierto y denso, $X_2 ∩ \bola_{r_1}(x_1)$ es abierto y no vacío; y por lo tanto existen $x_2 ∈ X_2 ∩ \bola_{r_1}(x_1)$ y un $r_2 ∈ (0, \min\set{r_1, \sfrac{1}{2}})$ de modo que $\adh{\bola_{r_2}(x_2)} ⊂ X_2 ∩ \bola_{r_1}(x_1)$. Tras $n$ pasos análogos, elegimos puntos $x_1, \dotsc, x_n$ y radios $r_1, \dotsc, r_n$ que cumplen que $0 < r_i < \min\set{r_{i-1}, \sfrac{1}{i}}$ y con $\adh{\bola_{r_n}(x_n)} ⊂ X_n ∩ \bola_{r_{n-1}} (x_n)$.
+
+Aquí entra en juego el axioma de elección: de momento hemos cogido $n$ puntos pero queremos asumir que podemos cogerlos para toda la sucesión infinita.
+
+Si cogemos dos índices $i,j > n$, entonces sabemos que $x_i,x_j ∈ \bola_{r_n}(x_n)$, y por lo tanto que $\dst(x_i, x_j) < r_n$. Esto nos lleva a que la sucesión $\set{x_n}_{n≥1}$ es de Cauchy, y por ser \sdst completo el límite de la sucesión existe: $x_n \convs x'$.
+
+Como $x_i ∈ \adh{\bola_{r_n}(x_n)}\;∀i>n$, entonces $x'$ ha de estar en la intersección de todas las $\adh{\bola_{r_n}(x_n)}$, que en particular están metidas dentro de $X_n$. Por lo tanto, $x' ∈ \bigcap X_n = W$ y $x'∈\bigcap \adh{\bola_{r_n}}(x_n)$.
+
+Además, como $x' ∈ \adh{\bola_{r_1}(x_1)} ⊂ \bola_ε(x)$ lo que nos queda es que $\bola_ε(x) ∩ W ≠ ∅$ y por lo tanto la intersección de todos los $X_n$ es no vacía.
+\end{proof}
+
+\begin{corol} En un espacio métrico completo, la intersección de cualquier familia numerable de conjuntos $G_δ$ densos es otro $G_δ$ denso.
+\end{corol}
+
+
+\begin{proof} Sea $W ⊂ X$ un $G_δ$ y por lo tanto de la forma $W = \bigcap X_n$, con $X_n ⊂ X$ abiertos. Si $\set{W_n}_{n≥1}$ es una familia numerable de $G_δ$ en $X$ de la forma $W_m = \bigcap X_{m,n}$ abiertos, entonces simplemente vemos que \[\bigcap_{n≥1} W_n = \bigcap_{m≥1} \bigcap_{n≥1} X_{m,n} = \bigcap_{(m,n) ∈ ℕ×ℕ} X_{m,n} \], y como $ℕ×ℕ$ es numerable entonces el \nlref{thm:CategoriaBaire} nos dice que esa intersección es densa si lo es cada uno de esos conjuntos $W_n$.
+\end{proof}
+
+Una aplicación de esto es que nos permite probar la existencia de una función $f ∈ C_{[0,1]}$ no diferenciable en ningún punto $x ∈ [0,1]$. De hecho, hay un $G_δ$ denso en $C_{[0,1]}$ con esas características. Para ello, tomamos el espacio $C_{[0,1]}$ con la distancia del supremo.
+
+En otras palabras, lo que podemos decir con eso es que las funciones diferenciables son un conjunto despreciable (en el sentido topológico) dentro de todas las funciones continuas. Sin embargo, necesitaremos ver algunos conceptos nuevos para poder demostrarlo.
+
+\begin{defn}[Función\IS uniformemente continua] \label{def:FuncionUnifCont} Sea \sdst un espacio métrico y $\appl{f}{X}{ℂ}$ continua. $f$ se dice uniformemente continua si y sólo si $∀ε>0$ existe un $δ>0$ tal que $\dst(x,y) < δ \implies \abs{f(x) - f(y)} <ε$, con δ escogido independientemente de $x$ e $y$.
+\end{defn}
+
+\begin{defn}[Familia\IS uniformemente equicontinua] \label{def:FamiliaUnifEquicont} Sea \sdst métrico y $\mathcal{F} ⊂ C(X)$ una familia de funciones continuas en $X$. Entonces $\mathcal{F}$ es una familia equicontinua si $∀ε>0\;∃δ>0$ tal que si $\dst(x,y) < δ$, entonces $\abs{f(x) - f(y)} < ε$ para toda función $f ∈ \mathcal{F}$.
+\end{defn}
+
+Vamos a hacer ahora la demostración rigurosa de esa proposición.
+
+\begin{prop} \label{prop:ConjDensoNoDifs} Hay un conjunto $G_δ$ denso de funciones $f ∈ C_{[0,1]}$ no diferenciables en ningún punto.
+\end{prop}
+
+Para la demostración, necesitamos un lema previo:
+
+\begin{lemma}\label{lem:ConvUnifConDiferenciables} Sea $f ∈ C_{[0,1]}$. Entonces existe una sucesión $\set{f_j}_{j≥1} ⊂ C^1_{[0,1]}$ (funciones continuas y diferenciables) con $\norm{f_j'}_∞ ≤ Cj$, con $0 < C < ∞$ independiente de $j$, y además $f_j \to f$ uniformemente.
+\end{lemma}
+
+\begin{proof}[\Fref{lem:ConvUnifConDiferenciables}]
+Fijamos $η ∈ C_c^1(ℝ)$ (continua, derivable y de soporte compacto) y con $\int η = 1$. Consideramos \[ η_j (x) = jη(jx) \], y entonces definimos $f_j = \bar{f} * η_j$, con $\bar{f}$ una extensión de $f$ a una función continua y de soporte compacto en $ℝ$.
+
+Es fácil ver que $f_j$ cumple las propiedades pedidas: es derivable (la derivada la podemos ``cargar'' a las $η_j$) y converge a $f$ por ser $η_j$ una familia de aproximaciones de la identidad\footnote{Ver \citep[Def. III.11]{ApuntesVarReal}: se trata de una familia de funciones con soporte cada vez más comprimido que convergen a la delta de Dirac, y que por lo tanto $f * η_j \convs[][j] f$.}.
+\end{proof}
+
+\begin{proof} [\Fref{prop:ConjDensoNoDifs}] Para demostrar esta proposición, primero vamos a construir el conjunto de las funciones diferenciables en algún punto. Sobre este conjunto, fácil de manejar, demostraremos que es cerrado y que su complementario es denso, demostrando así que las funciones no diferenciales en ningún punto es un conjunto denso e intersección de abiertos.
+
+\proofpart{$f$ derivable $∈ E_n$}
+
+Para $n = 1,2,\dotsc$ podemos construir conjuntos de la forma \[ E_n = \set{f∈ C_{[0,1]} \tq ∃t ∈ [0,1]\,, \abs{f(t) - f(s)} ≤ n\abs{t-s}\; ∀t,s ∈ [0,1]} \]
+
+Si $f ∈ C_{[0,1]}$ y es diferenciable en algún $s ∈ (0,1)$, podemos probar que $f ∈ E_n$ para algún $n$.
+
+Como $f$ es derivable en $s$, existe un $δ>0$ con $\bola_δ(s) ⊂ [0,1]$ para el cual la derivada está definida. Así, si tomamos otro $t ∈ \bola_δ(s)\setminus\set{s}$, podemos acotar \[ \abs{\frac{f(t) - f(s)}{t - s}} ≤ M \implies \abs{f(t) - f(s)} ≤ M \abs{t-s} \]
+
+Por otra parte, si $t ∉ \bola_δ(s)$, entonces $\abs{t-s} ≥ δ > 0$ y podemos acotar igualmente usando la norma del supremo (como las funciones son continuas en un compacto, la norma del supremo es finita) \[ \abs{\frac{f(t) - f(s)}{t-s}} ≤ \frac{2 \norm{f}_∞}{δ} \]
+
+Juntando ambas cosas y tomando el máximo de las cotas, lo que hemos hecho ha sido demostrar que cualquier función que sea diferenciable en al menos un punto se puede acotar y por lo tanto que está en algún $E_n$ para un $n > \max \set{M, \frac{2\norm{f}_∞}{δ}}$.
+
+Así, lo que tenemos es que el conjunto de funciones diferenciables en algún punto es un subconjunto de $\bigcup_{n≥1}E_n$.
+
+Con esto, lo que vamos a ver es que los $E_n$ son cerrados y diseminados en $C_{[0,1]}$, y por lo tanto $E_n^c$, que es el conjunto de funciones no diferenciables en ningún punto, es un abierto denso.
+
+\proofpart{$E_n$ es cerrado}
+
+Para demostrar que $E_n$ es cerrado, tomamos $\set{f_j}_{j≥1}$ una sucesión en $E_n$ y $f_j \convs[][j] f$ en $C_{[0,1]}$. Queremos comprobar que $f ∈ E_n$, y para ello vemos primero que esa sucesión es una \nlref{def:FamiliaUnifEquicont}, esto es, que $∀ε > 0$ existe un $δ > 0$ tal que si $\abs{t-s} < δ$, entonces $\abs{f_j(t) -f_j(s)} < ε$ para cualquier $j$. Esto lo demostraremos más tarde.
+
+Como $f_j ∈ E_n$, $∃t_j ∈ [0,1]$ tal que $\abs{f_j(x) -f_j(t_j)} ≤ n\abs{x-t_j}\;∀x ∈ [0,1]$. Como $[0,1]$ es compacto, existe una subsucesión $\set{t_{j_k}}$ convergente a un cierto $s ∈ [0,1]$. Consideramos entonces la subsucesión $g_k = f_{j_k}$, que tiene que converger a $f$ igual que lo hace $f_j$. Lo que hemos ganado es que en este caso los puntos $s_k = t_{j_k}$ convergen igualmente.
+
+Con esto podemos tratar de evaluar la diferencia entre $f(x)$ y $f(t_0)$. Podemos reescribirlo simplemente sumando y restando cosas, y después aplicando la desigualdad triangular: \begin{align*} &\hspace{-20pt}\abs{f(x) -f(t_0)} = \\
+&=\abs{f(x) - g_k(x) + g_k(x) - g_k(s_k) + g_k(s_k) - g_k(t_0) + g_k(t_0) - f(t_0)} \\
+&≤
+	\underbracket{\abs{f(x) - g_k(x)}}_{≤\norm{f-g_k}_∞}
++ 	\underbracket{\abs{g_k(x) - g_k(s_k)}}_{≤n\abs{x-s_k}}
++	\underbracket{\abs{g_k(s_k) -g_k(t_0)}}_{}
++ 	\underbracket{\abs{g_k(t_0) - f(t_0)}}_{≤\norm{f-g_k}_∞} \\
+&≤
+	\underbracket{2\norm{f-g_k}_∞}_{\to 0\; (g_k \to f\text{ unif.})}
++ 	\underbracket{\abs{g_k(s_k) - g_k(t_0)}}_{\to 0}
++ 	\underbracket{n\abs{x-s_k}}_{\to n\abs{x-t_0}} \\
+& \convs[][k] n\abs{x - t_0}
+\end{align*}, donde para decir que $\abs{g_k(s_k) - g_k(t_0)}$ usamos la equicontinuidad de la sucesión de funciones: sabemos que $∀ε > 0\;∃δ>0$ tal que si $\abs{x-t} < δ$ entonces $\abs{g_k(x) - g_k(t)} < ε$; por lo que si fijamos un $ε > 0$, como $s_k \to 0$ entonces $\abs{s_k - t_0} < δ$ para un $k$ lo suficientemente grande y finalmente $\abs{g_k (s_k) - g_k(t_0)} < ε$, por lo que haciendo tender ε a $0$ ya tenemos que esa resta se va a cero igualmente.
+
+Resumiendo: hemos probado que $\abs{f(x) - f(t_0)} \to n\abs{x-t_0}$, por lo que ese límite $f$ estará en $E_n$ igualmente, así que los $E_n$ son cerrados y por lo tanto sus complementarios $E_n^c$ son abiertos.
+
+\proofpart{$E_n^c$ es denso}
+
+Ahora consideramos $φ(x)$ la función que nos da la distancia de $x$ al entero más próximo. Analíticamente, sería una función períodica de período uno que podemos definir en $[0,1]$ como \[ φ(x) = \begin{cases} x & 0 ≤ x ≤ \sfrac{1}{2} \\ \frac{1}{2} -x & \sfrac{1}{2} ≤ x ≤ 1 \end{cases} \]
+
+Es fácil ver que si $x,y ∈ I_k = \left[\frac{1 + k}{2}, \frac{1 + k + 1}{2}\right]$ con $k ∈ℤ$, entonces $\abs{φ(x) - φ(y)} = \abs{x-y}$.
+
+Podemos definir adicionalmente para $λ>0$ funciones $φ_λ (x) = \frac{1}{λ} φ(λ^2x)$, que cumple que $\norm{φ_λ}_∞ ≤ \frac{1}{2λ}\;∀λ>0$. Estas funciones lo que hacen es aumentar las oscilaciones (φ es una especie de diente de sierra) y reducir su magnitud. En estas funciones,se cumple que si $\abs{x-y} ≤ \frac{1}{2λ^2}$ con $λ^2x , λ^2y ∈ I_k$, entonces \[ \abs{φ_λ(x) - φ_λ(y)} = \frac{1}{λ} \abs{λ^2x - λ^2y} = λ\abs{x-y} \]
+
+Con estas funciones, queremos ver que si $λ_j > C_{j+n}$ entonces $f_j + φ_{λ_j} ∉ E_n$. Si que si tenemos $\abs{x-y} ≤ \frac{1}{2λ^2}$ entonces \begin{align*}
+\abs{(f_j + φ_{λ_j})(x) - (f_j + φ_{λ_j})(y)} &= \abs{(φ_{λ_j} (x) - φ_{λ_j}(y)) + (f_j(x) - f_j(y))} \\
+&≥ \underbracket{\abs{φ_{λ_j} (x) - φ_{λ_j}(y)}}_{= λ_j\abs{x-y}} - \underbracket{\abs{f_j(x) - f_j(y))}}_{C_{j+n}\abs{x-y} \text{ TVM}} \\
+&≥ (λ_j - C_j)\abs{x-y}
+\end{align*}
+
+Por lo tanto, cuando $j \to ∞$, $λ_j \to ∞$ y no podemos encontrar nunca un $n$ tal que $f_j + φ_{λ_j} ∈ E_n$.
+
+Tenemos que $f_j \to f$ uniformemente en $[0,1]$, e igualmente $φ_{λ_j} \to 0$ uniformemente en $[0,1]$. Con esto, podemos definir $f_j + φ_{λ_j} ∈ E_n^c$, que converge uniformemente a $f$ en $[0,1]$ y por lo tanto hemos demostrado que $E_n^c$ es denso, y con esto acabamos la demostración.
+\end{proof}
+
+\subsection{Teorema de Ascoli-Arzelá y temas relacionados}
+
+El teorema de Ascoli-Arzelá nos dará una caracterización de los conjuntos compactos en espacios de funciones. Para verlo, primero veremos ciertas caracterizaciones de funciones continuas.
+
+\begin{lemma}[Lema\IS de Weierstrass] \label{lem:Weierstrass} Sea \sdst un espacio métrico compacto y $\appl{f}{X}{ℝ}$ continua. Entonces existe una cierta función $\appl{φ}{[0,∞)}{[0,∞)}$ no decreciente y con la propiedad de que $φ(t) \searrow 0$ cuando $t \searrow 0$ (esto es, $φ(t)$ va monótonamente a $0$ cuando $t$ va monótonamente a $0$), de modo que $∀x,y ∈ X$ tengamos que $\abs{f(x) - f(y)} ≤ φ(\dst(x,y))$.
+
+En particular, $f$ es una \nlref{def:FuncionUnifCont}.
+\end{lemma}
+
+Con esto podemos ver una aprte del lema de Ascoli-Arzelá.
+
+\begin{lemma}[Lema\IS de Ascoli-Arzelá] \label{lem:AscoliArzela} Sea \sdst un espacio métrico compacto y $\set{f_n}_{n≥1}$ una sucesión de funciones continuas que convergen uniformemente en $X$. Entonces la familia de todas esas funciones es una \nlref{def:FamiliaUnifEquicont} y equiacotada.
+
+Es decir, que $∀ε>0$ existe un $δ>0$ tal que $∀n ∈ ℕ$ se cumple que si $\dst(x,y) ≤ δ$, entonces $\abs{f_n(x) - f_n(y)} ≤ ε$ (equicontinuidad).
+
+Además, también existe una constante $C < ∞$ tal que $\norm{f_n}_∞ ≤ C\;∀n$ o, equivalentemente, que $\sup_{n≥1} \norm{f_n}_∞ < ∞$ (equiacotación).
+\end{lemma}
+
+\begin{proof}
+
+\proofpart{Equiacotación}
+
+Obvio: tenemos una sucesión convergente en un espacio métrico, luego ha de ser acotada.
+
+\proofpart{Equicontinuidad}
+
+Sea $f = \lim_{n\to ∞} f_n$. Por ser la convergencia uniforme y las $f_n$ continuas, tenemos que $f$ es continua en $X$. Por el \nref{lem:Weierstrass}, tenemos que además $f$ es uniformemente continua.
+
+Sean $x,y ∈ X$ y $n ∈ ℕ$: vamos a ver que podemos controlar $\abs{f_n(x) - f_n(y)}$ en función de la distancia entre $x$ e $y$. Podemos reescribir y agrupar: \begin{align}
+\abs{f_n(x) - f_n(y)} &= \abs{f_n(x) - f(x) + f(x) - f(y) + f(y) - f_n(y)} \nonumber \\
+&≤
+	\underbracket{\abs{f_n(x) - f(x)}}_{\norm{f - f_n}_∞}
++ 	\abs{f(x) - f(y)}
++	\underbracket{\abs{f(y) - f_n(y)}}_{\norm{f-f_n}_∞} \nonumber \\
+&≤ 2\norm{f-f_n}_∞ + \abs{f(x) -f(y)} \label{eq:LemAscoliArzela:Cota1}
+\end{align}
+
+Vamos a acotar los dos sumandos. Para $\abs{f(x)-f(y)}$, dado $f$ es uniformemente continua, tenemos que $∀ε > 0$ existe un $δ_1>0$ tal que si $\dst(x,y) ≤ δ$, entonces $\abs{f(x) - f(y)} ≤ \sfrac{ε}{3}$.
+
+Por el otro lado, como $f_n \to f$ uniformemente en $X$, tenemos que $\norm{f - f_n}_∞ \to 0$. Así, podremos hacer $\norm{f-f_n}_∞$ todo lo pequeño que queramos. Formalmente, para todo $ε> 0$ podremos tomar un $N$ suficientemente grande, tal que si $n ≥ N$ tengamos que $\norm{f - f_n}_∞ ≤ \sfrac{ε}{3}$.
+
+Sólo nos queda juntar ambas cotas para acotar \eqref{eq:LemAscoliArzela:Cota1}. Es decir, hemos demostrado que $∀ε>0$, existen $δ_1 > 0$ y $N > 0$ tales que si $n≥N$ y $\dst(x,y) ≤ δ_1$ tenemos que \[2\norm{f-f_n}_∞ + \abs{f(x) -f(y)} ≤ 2 · \sfrac{ε}{3} + \sfrac{ε}{3} = ε \]
+
+Hemos demostrado la equicontinuidad para un conjunto infinito de funciones, aunque nos hemos dejado unas cuantas por el camino: hemos dicho que se cumple para $n ≥ N$, nos hemos dejado una cantidad finita de funciones $\set{f_1, \dotsc, f_N}$ para las que no hemos demostrado la equicontinuidad.
+
+La cuestión es que son una cantidad finita de funciones continuas en $X$, así por el \nref{lem:Weierstrass} son además uniformemente continuas. Esto será suficiente, ya que toda familia finita de funciones uniformemente continuas es equicontinua.
+
+Para demostrarlo, vemos que  $∀ε>0$ y $∀n = 1, \dotsc, N$, la continuidad uniforme de cada función nos dice que existe un $δ(ε,n)$ tal que si $\dst(x,y) ≤ δ(ε,n)$, entonces $\abs{f_n(x) - f_n(y)} ≤ ε$. Lo que haremos será tomar el mínimo de esos $δ(ε,n)$ de cada función \[ δ_2 = δ(ε) = \min_{1≤n≤N} δ(ε,n) > 0 \], cosa que podemos hacer sin problemas por considerar sólo una cantidad finita.
+
+Finalmente, sólo tenemos que tomar $δ = \min \set{δ_1, δ_2}$, y entonces cumpliremos la condición de equicontinuidad: si $\dst(x,y) ≤ δ$, hemos demostrado que $\abs{f_n(x) - f_n(y)} ≤ ε$.
+\end{proof}
+
+\begin{corol} Si $\set{f_n}_{n≥1} ⊂ C(X)$ es una familia de funciones continuas en un espacio métrico compacto \sdst, entonces si $f_n$ tiene algún punto de acumulación en $C(X)$ la familia es equiacotada y equicontinua.
+\end{corol}
+
+\begin{defn}[Punto\IS aislado] Dado \stopl un espacio topológico y $x_0 ∈ X$. Se dice que $x_0$ es aislado si existe un entorno $U$ de $x_0$ tal que $U = \set{x_0}$ o, en otras palabras, que $\set{x_0}$ es un abierto.
+\end{defn}
+
+\begin{theorem} Si \sdst es un espacio métrico completo y sin puntos aislados, entonces ningún conjunto denso y numerable puede ser un $G_δ$.
+\end{theorem}
+
+\begin{proof}
+La demostración la haremos por reducción al absurdo.  Sea $E = \set{x_k}_{k∈ℕ}$ numerable y denso en $X$. Supongamos además que $E$ es un $G_δ$, por lo que tenemos que es una intersección numerable de abiertos: \[ E = \bigcap_{n∈ℕ} V_n \], con $V_n$ conjuntos abiertos y densos (han de ser densos porque si no su intersección no sería densa).
+
+Sea $W_n = V_n \setminus \set{x_1, \dotsc, x_n}$. Como $X$ carece de puntos aislados, $\set{x_1, \dotsc, x_n}$ ha de ser cerrado, así que  entonces podemos escribir $W_n = V_n ∩ \set{x_1, \dotsc, x_n}^c$ con $\set{x_1, \dotsc, x_n}^c$ abierto para cualquier $n$ y además denso (el complementario de un único punto es abierto, y además denso por no tener $X$ puntos aislados, así que su unión finita también lo cumple).
+
+Consideramos la intersección de todos los $W_n$: \begin{align*} \bigcap_{n≥1} W_n &= \bigcap_{n≥1} (V_n ∩ \set{x_1, \dotsc, x_n}^c) = \left(\bigcap_{n>1} V_n\right) ∩ \left(\bigcap_{n≥1} \set{x_1, \dotsc, x_n}^c \right) \\ &= E ∩ \left(\bigcup_{n≥1}  \set{x_1, \dotsc, x_n}\right)^c = E ∩ E^c = ∅\end{align*}, contradicción con el \nref{thm:CategoriaBaire}.
+\end{proof}
+
+\begin{corol} Si \sdst es un espacio métrico completo y sin puntos aislados, entonces $X$ es no numerable.
+\end{corol}
+
+\begin{proof} La primera observación que tenemos que hacer es que si $X$ es métrico y carece de puntos aislados, entonces $X$ no es finito. Si lo fuese, como todo singlete $\set{x} ⊂ X$ es un cerrado y todo abierto $U$ habría de ser unión finita de singletes, entonces cualquier conjunto sería abierto y cerrado, lo que nos llevaría a deducir que $X$ tiene la topología discreta, incompatible con un espacio métrico.
+
+Podemos suponer entonces que $X$ es infinito. Si fuese numerable y por lo tanto pudiésemos escribirlo como $X = \set{x_k}_{k∈ℕ} = \bigcup_{k∈ℕ} \set{x_k}$, unión numerable de conjuntos cerrados y diseminados, que igual que antes contradice el Teorema de Baire.
+\end{proof}
+
+\begin{defn}[Espacio\IS separable] Sea \sdst un espacio métrico. Diremos que $X$ es separable si y sólo si existe un $E ⊂ X$ numerable y denso.
+\end{defn}
+
+Un ejemplo sencillo de espacio separable es $ℝ^n$, con $ℚ^n ⊂ ℝ^n$ como subconjunto denso y numerable. Pero también lo son las funciones continuas $C_{[a,b]}$ con la norma $\dst(f,g) = \norm{f-g}_∞$.
+
+\begin{defn}[Aplicación\IS contractiva] \label{def:ApplContractiva} Una aplicación $\appl{F}{(X, \dst_X)}{(Y, \dst_y)}$ se dice contractiva si $∀x_1, x_2 ∈ X$ se tiene que $\dst_Y(F(x_1), F(x_2)) < \dst_X(x_1, x_2)$.
+\end{defn}
+
+\begin{defn}[Aplicación\IS estrictamente contractiva] \label{def:ApplEstrContractiva} Una aplicación $\appl{F}{(X, \dst_X)}{(Y, \dst_y)}$ se dice contractiva si existe una constante $ 0 ≤ λ ≤ 1$ tal que $∀x_1, x_2 ∈ X$ con $x_1 ≠ x_2$ se tiene que $\dst_Y(F(x_1), F(x_2)) < λ \dst_X(x_1, x_2)$.
+\end{defn}
+
+\begin{theorem}[Teorema\IS del punto fijo de Banach] Sea \sdst un espacio métrico completo y $\appl{F}{X}{X}$ una \nlref{def:ApplContractiva}. Entonces $F$ tiene a lo más un punto fijo $x_0$ para el cual $F(x_0) = x_0$.
+
+Si además $F$ es estrictamente contractiva, entonces $F$ tiene exactamente un punto fijo.
+\end{theorem}
+
+\begin{proof} La existencia es sencilla de demostrar. Sean $x_0 ≠ x_1$ puntos fijos de $F$. En ese caso, $\dst(F(x_0), F(x_1)) < \dst(x_0, x_1)$ por ser $F$ contractiva, pero como ambos son puntos fijos nos queda que $\dst(x_0, x_1) < \dst(x_0, x_1)$, contradicción.
+
+Para demostrar la existencia cuando la aplicación es estrictamente contractiva, primero fijamos un $x_0 ∈ X$ y definimos \[ x^k = F^{(k)} (x_0),\qquad F^{(k)} = \underbracket{F ○ \dotsb ○ F}_{k \text{ veces}} \]
+
+Entonces, estudiamos la distancia entre dos puntos $x_{k+l}, x_k$. \begin{align}
+\dst(x_{k+l}, x_k) & = \dst(F^{(k-l)}(x_0), F^{(k)}(x_0)) \nonumber \\
+&≤ λ \dst (F^{(k+l-1)}(x_0), F^{(k-1)}(x_0)) ≤ \dotsb ≤ λ^k\dst (x_l, x_0) \label{eq:PtoFijoBanach:Cota1}
+\end{align}
+
+Usando la desigualdad podremos estimar esa distancia entre $x_l$ y $x_0$: \[ \dst(x_l, x_0) ≤ \dst(x_l, x_{l-1}) + \dst(x_{l-1}, x_0) ≤ \sum_{i = 0}^{l-1} \dst(x_{i+1}, x_{i})\], donde cada distancia se podrá estimar como $\dst(x_{i+1}, x_i) ≤ λ^{i} \dst(x_1, x_0)$, así que nos quedaría una suma infinita que podemos calcular por ser $λ ∈ [0,1)$ \[ \dst(x_l, x_0) ≤ \sum_{i = 0}^{l-1} \dst(x_{i+1}, x_{i}) ≤ \dst(x_1, x_0) \sum_{i=0}^{l-1} λ^i = \dst(x_1, x_0) \frac{1}{1-λ} \]
+
+Con esta cota y la de \eqref{eq:PtoFijoBanach:Cota1}, podemos decir que \[ \dst(x_{k+l}, x_l) ≤  \frac{λ^k}{1-λ} \dst(x_1, x_0)\quad ∀k,l ∈ ℕ \]
+
+Como $λ^k \convs[][k] 0$ por ser $λ ∈ [0,1)$, tenemos que la sucesión $\set{x_k}_{k≥1}$ es de Cauchy en $X$, y por ser este espacio completo existirá el límite $x = \lim x_k ∈ X$. Sólo nos falta ver que ese $x$ es un punto fijo.
+
+Lo primero es ver que, por ser $F$ contractiva, ha de ser continua. Además, la distancia también es continua como consecuencia de la desigualdad triangular.
+
+Con todo eso podemos escribir \[ \dst(F(x), x) = \lim_{k \to ∞} \dst(F(x_k), x_k) = \lim_{k\to ∞} \dst(x_{k+1}, x_k) \]
+
+Operando, podemos llegar a $\dst(x_{k+1}, x_k) ≤ λ^k \dst(x_1, x_0)$. Lo malo es que los límites no se llevan bien con las desigualdades. Por suerte, como tanto $λ$ como $\dst$ son positivas, podemos considerar simplemente el límite superior y entonces \[ \dst(F(x), x) ≤ \lim_{k\to ∞} \dst(x_{k+1}, x_k) ≤ \limsup_{k\to ∞} λ^k \dst(x_1, x_0) = 0\], por lo que $\dst(F(x), x) = 0$ y nos queda que $F(x) = x$.
+\end{proof}
+
+\begin{defn}[Conjunto\IS relativamente compacto] Sea \stopl un espacio topológico y sea $K ⊂ X$ un subconjunto de $K$. $K$ se dice relativamente compacto si $\adh{K}$ es compacto.
+\end{defn}
+
+Por ejemplo, $ℚ ∩ [0,1]$ es relativamente compacto: si lo cerramos, nos queda $[0,1]$ que es compacto en $ℝ$.
+
+\begin{defn}[Conjunto\IS totalmente acotado] \label{def:ConjTotalmenteAcotado} Sea \sdst un espacio métrico y $K ⊂ X$. Se dice que $K$ está totalmente acotado si y sólo si $∀ε > 0$ existe una sucesión $x_1, \dotsc, x_N ∈ X$ tales que $K ∈ \bigcup_{j=1}^N \bola_ε(x_j)$.
+\end{defn}
+
+Es fácil ver que si un conjunto es totalmente acotado, está también acotado. Además, en $ℝ^n$ con la métrica usual, un conjunto acotado es equivalente a ser totalmente acotado y a ser relativamente compacto.
+
+No es difícil de demostrar: si $K ⊂ ℝ^n$ es acotado, entonces existe un $0 < R < ∞$ tal que $K ⊆ \bola_R (0) ⊆ \adh{\bola_R(0)}$. Como $\adh{\bola_R(0)}$ es compacta, para cualquier recubrimiento por bolas de radio $ε$ podremos encontrar un subrecubrimiento finito y por lo tanto estará totalmente acotado. Por otra parte, si ya está acotado, su cierre será cerrado y por lo tanto compacto en $ℝ^n$, luego $K$ es relativamente compacto.
+
+La idea de que un conjunto en $ℝ^n$ es compacto si es cerrado y acotado tiene una generalización a espacios métricos genéricos.
+
+\begin{theorem}[Teorema\IS de Heine-Borel] \label{thm:HeineBorel} Sea \sdst un espacio métrico completo y $K ⊂ X$. Entonces $K ⊂ X$ es compacto si y sólo si es cerrado y totalmente acotado.
+\end{theorem}
+
+\begin{proof}
+
+\proofpart{Compacto $\implies$ cerrado y tot. acotado}
+
+Si $K$ es compacto, entonces podemos construir un recubrimiento abierto $U = \set{\bola_ε(x_k)}_{x_k ∈ K}$ del que, por compacidad, podemos extraer un subrecubrimiento finito tal que $K ⊂ \bigcup_{k = 1}^N \bola_ε x_k$, luego $K$ es totalmente acotado.
+
+Por otra parte, si $K$ es compacto entonces también es cerrado. Si no lo fuese, podríamos construir una sucesión de Cauchy $\set{x_k}_{k ∈ ℕ} ⊆ K$ con límite $x ∈ X$ ($X$ es completo) pero $x ∉ K$. En ese caso, sea $δ_k = \dst(x, x_k)$ y consideramos el conjunto $U = \set{\bola_{\sfrac{δ_k}{2}} (x_k)}$. Puede no ser un recubrimiento, pero siempre podremos completarlo a un recubrimiento trivialmente, cuidándonos de no coger conjuntos que ya hayamos cubierto.
+
+La cuestión es que de este recubrimiento no podemos quitarnos nada, porque si lo hiciésemos nos dejaríamos elementos fuera del recubrimiento.
+
+
+\proofpart{Compacto $\impliedby$ cerrado y tot. acotado}
+
+Si $K$ es cerrado y totalmente acotado, consideramos $\set{x_n}_{n≥1}$ una sucesión $K$. Queremos probar que existe una subsucesión convergente $\set{x_{n_j}}_{n≥1}$ convergente a un $x ∈ K$.
+
+Por ser $K$ totalmente acotado, entonces existe una serie de puntos $y_1^1, \dotsc, y_{N_1}^1 ∈ X$ tales que $K ⊂ \bigcup_{j=1}^{N_1} \bola_1 (y_j^1)$.
+
+Podemos ver que existe alguna bola entre las anteriores que contiene infinitos términos de la sucesión $\set{x_n}$. Digamos que esa bola es $\bola_1(y_1^1)$.
+
+Ahora, $K ∩ \bola_1(y_1^1)$ sigue siendo totalmente acotado, ya que $k$ lo es, así que podemos repetir el procedimiento con una serie de puntos $y_1^2, \dotsc, y_{N_2}^2 ∈ X$ con $K ∩ \bola_1(y_1^1)⊂ \bigcup_{j=1}^{N_2} \bola_{\sfrac{1}{2}} (y_j^2)$ y tal que $\bola_{\sfrac{1}{2}} (y_1^2)$ contiene infinitos términos de la sucesión.
+
+Así, encontraremos tras $n$ pasos una sucesión de puntos $z_i = y_1^i$ con $i = 1, \dotsc, n$ tal que $K ∩ \bola_1(z_1) ∩ \dotsb ∩ \bola_{\sfrac{1}{n}} (z_n)$ contiene infinitos términos de la sucesión $\set{x_n}$.
+
+Para cada $j ∈ ℕ$, escogemos $x_{n_j} ∈ K ∩ \bola_1(z_1) ∩ \dotsb ∩ \bola_{\sfrac{1}{j}} (z_j)$. Si $k, j ∈ℕ$ y $k > j$, entonces $x_{n_j}, x_{n_k} ∈ \bola_{\sfrac{1}{j}} (z_j)$ luego $\dst(x_{n_j}, x_{n_k}) < \sfrac{2}{j}$, que tiende a cero cuando $j\to ∞$. Por tanto, esta sucesión que hemos generado es de Cauchy en $X$, por lo tanto convergente a $x$ por ser $X$ completo.
+
+Por otra parte, $x_{n_j} ∈ K$ y como $K$ lo suponemos cerrado, $x ∈ K$. Luego hemos generado una subsucesión convergente a un elemento de $K$, y entonces $K$ es compacto. Nota: en algún momento tendrá que explicar que esta es una caracterización de compactos en espacios métricos, que es que podemos extraer una subsucesión convergente en el compacto de toda sucesión en él.
+
+\end{proof}
+
+\begin{theorem}[Teorema\IS de Ascoli-Arzelá] \label{thm:AscoliArzela} Sea \sdst un espacio métrico compacto, y sea $C(X)$ el espacio de funciones continuas en $X$ con la norma del supremo: $\dst(f,g) = \norm{f -g}_∞ = \sup_{x∈X} \abs{f(x) - g(x)}$. Consideramos una familia $\mathcal{F} ⊂ C(X)$ de funciones. $\mathcal{F}$ será relativamente compacta si y sólo si es equiacotada y equicontinua (\fref{def:FamiliaUnifEquicont}).
+\end{theorem}
+
+\begin{proof}
+
+\proofpart{Necesidad}
+
+Si $\set{f_n}_{n≥1}$ es una sucesión en $\mathcal{F}$ y este conjunto es relativamente compacto, entonces existe una subsucesión $\set{f_{n_j}}_{j≥1}$ convergente en $C(X)$. Aplicando el \nref{lem:AscoliArzela}, deducimos que esa subsucesión es una familia equicontinua y equiacotada. Si $\mathcal{F}$ no fuera igualmente equiacotada y equicontinua, podríamos elegir a priori una sucesión $\set{f_n}$ de manera que se violara equiacotación y equicontinuidad.
+
+\proofpart{Suficiencia}
+
+Sea $\mathcal{F}$ una familia semiacotada y equicontinua. Para ver que $\mathcal{F}$ es relativamente compacta, basta ver que es totalmente acotada usando que $C(X)$ es completo y aplicando el \nref{thm:HeineBorel}.
+
+Fijamos $ε > 0$. Puesto que $\mathcal{F}$ es equicontinua, $∀x ∈ X$ existe un cierto $δ_x > 0$ tal que $\abs{f(x) -f(y)} < \frac{ε}{4}$ si $\dst(x,y) < δ_x$ para cualquier $f ∈ \mathcal{F}$.
+
+Ahora, por compacidad de $X$, podemos dar puntos $x_1, \dotsc, x_n ∈ X$ tales que $X$ está contenido en la unión de bolas $\bola_{δ_j} (x_j)$, donde $δ_j = δ_{x_j}$. Si $y ∈ \bola_{δ_j} (x_j)$, entones inmediatamente $\abs{f(x) - f(x_j)} ≤ \sfrac{ε}{4}$.
+
+Sea $F = \set{f(x_i) \tq 1 ≤ j ≤ N, \, f ∈ \mathcal{F}} ⊂ ℂ$. Dado que $\mathcal{F}$ es equiacotada, entonces $F ⊂ ℂ$ ha de ser acotado igualmente. Entonces, como en $ℂ$ acotado implica totalmente acotado, existen $z_1, \dotsc, z_k ∈ ℂ$ tales que $F ⊂ \bigcup \bola_{\sfrac{ε}{4}} (z_k)$.
+
+\end{proof}
 
 \section{Espacios de Banach}
 
@@ -99,6 +449,9 @@ También es importante ver que la noción de convergencia es métrica, no topol�
 
 \chapter{Ejercicios}
 \input{tex/AnalisisFuncional_Ejs.tex}
+
+\nocite{brezis2010functional,reed1980methods,rudin1991functional,ApuntesVarReal}
+\bibliography{../Apuntes}{}
 
 \printindex
 \end{document}

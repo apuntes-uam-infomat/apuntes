@@ -3,6 +3,7 @@
 \pbreak#m
 \doneby{arg0}#m
 \approvedby{arg0}#m
+\noteby{arg0}{arg1}#m
 \mop{operacion}#m
 \imgref{referencia}#m
 \dimplies#m
@@ -39,8 +40,12 @@
 \pb#m
 \pb[T]#m
 \units{arg0}#m
+\convx{arg0}#m
+\afin{arg0}#m
 \app#m
 \obs#m
+\nota#m
+\notacion#m
 \gx#m
 \gs#m
 \gy#m
@@ -178,6 +183,7 @@
 \printtheorems#m
 \begin{proof}#
 \begin{expla}#
+\begin{defToUse}#
 \ctrig{angulo}#m
 \ceul{mod}{angulo}#m
 \i#m
@@ -223,6 +229,7 @@
 \restr{arg0}{arg1}#m
 \bbs#m
 \crc#m
+\crc[1]#m
 \torus#m
 \torus[2]#m
 \disc#m
@@ -244,6 +251,7 @@
 \tc[Id. superior][Id. inferior]{arg3}#m
 \tc[Id. superior][Id. inferior][máx superior]{arg3}#m
 \projp#m
+\projcp#m
 \lie{arg0}#m
 \tgs#m
 \tgsd#m

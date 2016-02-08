@@ -214,4 +214,279 @@
 	\end{scope}
 }
 
+%%% Manifold shapes for nodes. Example: \node[draw, manifold 1, minimum height = 3pt, minimum width = 5pt] at ...
+
+% Create some basic variables to hold some offsets.
+\newlength{\mnf@xoff@vert}
+\newlength{\mnf@yoff@vert}
+\newlength{\mnf@xoff@horiz}
+\newlength{\mnf@yoff@horiz}
+
+\pgfdeclareshape{manifold 1}{
+	\savedanchor\centerpoint\pgfpointorigin
+
+	% Set some anchor points taking into account min height and width.
+	\savedanchor\upperrightcorner{
+		\setlength{\pgf@yc}{\pgfshapeminheight}
+		\ifdim\pgf@y<.5\pgf@yc
+    		\pgf@y=.5\pgf@yc
+  		\fi
+  		\setlength{\pgf@xc}{\pgfshapeminwidth}
+		\ifdim\pgf@x<.5\pgf@xc
+    		\pgf@x=.5\pgf@xc
+  		\fi
+	}
+
+	\savedanchor\lowerrightcorner{
+		\setlength{\pgf@yc}{\pgfshapeminheight}
+		\ifdim\pgf@y>-.5\pgf@yc
+			\pgf@y=-.5\pgf@yc
+  		\fi
+  		\setlength{\pgf@xc}{\pgfshapeminwidth}
+		\ifdim\pgf@x<.5\pgf@xc
+    		\pgf@x=.5\pgf@xc
+  		\fi
+	}
+
+	% Define anchor points (borders) of the shape.
+	\anchor{center}{\centerpoint}
+
+	\anchor{south}{\lowerrightcorner\pgf@x=0pt \pgf@y=0.7\pgf@y}
+	\anchor{north}{\upperrightcorner\pgf@x=0pt \pgf@y=1.3\pgf@y}
+	\anchor{east} {\lowerrightcorner\pgf@y=0pt \pgf@x=0.7\pgf@x}
+	\anchor{west} {\lowerrightcorner\pgf@y=0pt \pgf@x=-1.3\pgf@x}
+	\anchor{south east}{\lowerrightcorner}
+	\anchor{north east}{\upperrightcorner}
+	\anchor{north west}{\pgfpointscale{-1}{\lowerrightcorner}}
+	\anchor{south west}{\pgfpointscale{-1}{\upperrightcorner}}
+
+	\anchorborder{\centerpoint}
+
+	\anchorborder{%
+		% Call a function that computes a border point. Since this
+		% function will modify dimensions like \pgf@x, we must move them to
+		% other dimensions.
+		\@tempdima=\pgf@x
+		\@tempdimb=\pgf@y
+		\pgfpointborderrectangle
+			{\pgfpoint{\@tempdima}{\@tempdimb}}
+			{\pgfpointscale{1}{\upperrightcorner}}
+	}
+
+	% Draw the shape.
+	\backgroundpath{
+		% Store the coordinates (x,y) of the upper right corner
+		% Don't use \pgf@xa or \pgf@xb because they seem to get overwritten
+		\upperrightcorner 	\pgf@xc=\pgf@x \pgf@yc=\pgf@y
+
+		% Calculate the "bending" amount of the sides, based on the width and
+		% height of the node.
+		\setlength{\mnf@xoff@vert}{\pgfshapeminwidth}
+		\mnf@xoff@vert=0.2\mnf@xoff@vert
+
+		\setlength{\mnf@yoff@vert}{\pgfshapeminheight}
+		\mnf@yoff@vert=0.3\mnf@yoff@vert
+
+		\setlength{\mnf@xoff@horiz}{\pgfshapeminwidth}
+		\mnf@xoff@horiz=0.3\mnf@xoff@horiz
+
+		\setlength{\mnf@yoff@horiz}{\pgfshapeminheight}
+		\mnf@yoff@horiz=0.2\mnf@yoff@horiz
+
+		% Draw using bezier curves.
+		\pgfpathmoveto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+		\pgfpathcurveto
+			{\pgfpoint{\pgf@xc - \mnf@xoff@vert}{\pgf@yc - \mnf@yoff@vert}}
+			{\pgfpoint{\pgf@xc - \mnf@xoff@vert}{- \pgf@yc + \mnf@yoff@vert}}
+			{\pgfpoint{\pgf@xc}{-\pgf@yc}}
+
+		\pgfpathcurveto
+			{\pgfpoint{\pgf@xc - \mnf@xoff@horiz}{-\pgf@yc + \mnf@yoff@horiz}}
+			{\pgfpoint{-\pgf@xc + \mnf@xoff@horiz}{- \pgf@yc + \mnf@yoff@horiz}}
+			{\pgfpoint{-\pgf@xc}{-\pgf@yc}}
+
+		\pgfpathcurveto
+			{\pgfpoint{-\pgf@xc - \mnf@xoff@vert}{-\pgf@yc + \mnf@yoff@vert}}
+			{\pgfpoint{-\pgf@xc - \mnf@xoff@vert}{\pgf@yc - \mnf@yoff@vert}}
+			{\pgfpoint{-\pgf@xc}{\pgf@yc}}
+
+		\pgfpathcurveto
+			{\pgfpoint{-\pgf@xc + \mnf@xoff@horiz}{\pgf@yc + \mnf@yoff@horiz}}
+			{\pgfpoint{\pgf@xc - \mnf@xoff@horiz}{\pgf@yc + \mnf@yoff@horiz}}
+			{\pgfpoint{\pgf@xc}{\pgf@yc}}
+	}
+}
+
+\pgfdeclareshape{manifold 2}{
+	% Same syntax as above command, I'm not going to comment it again.
+	\savedanchor\centerpoint\pgfpointorigin
+
+	\savedanchor\upperrightcorner{
+		\setlength{\pgf@yc}{\pgfshapeminheight}
+		\ifdim\pgf@y<.5\pgf@yc
+    		\pgf@y=.5\pgf@yc
+  		\fi
+  		\setlength{\pgf@xc}{\pgfshapeminwidth}
+		\ifdim\pgf@x<.5\pgf@xc
+    		\pgf@x=.5\pgf@xc
+  		\fi
+	}
+
+	\anchor{center}{\centerpoint}
+
+	\anchor{south}{\upperrightcorner\pgf@x=0pt \pgf@y=0.87\pgf@y}
+	\anchor{north}{\upperrightcorner\pgf@x=0pt \pgf@y=-0.87\pgf@y}
+	\anchor{east} {\upperrightcorner\pgf@y=0pt \pgf@x=\pgf@x}
+	\anchor{west} {\upperrightcorner\pgf@y=0pt \pgf@x=-0.93\pgf@x}
+	\anchor{south east}{\upperrightcorner\pgf@y=-\pgf@y \pgf@x=0.7\pgf@x}
+	\anchor{north east}{\upperrightcorner}
+	\anchor{north west}{\upperrightcorner \pgf@x=-0.7\pgf@x}
+	\anchor{south west}{\upperrightcorner\pgf@y=-\pgf@y \pgf@x=-\pgf@x}
+
+	\anchorborder{\centerpoint}
+
+	\anchorborder{%
+		% Call a function that computes a border point. Since this
+		% function will modify dimensions like \pgf@x, we must move them to
+		% other dimensions.
+		\@tempdima=\pgf@x
+		\@tempdimb=\pgf@y
+		\pgfpointborderrectangle
+			{\pgfpoint{\@tempdima}{\@tempdimb}}
+			{\pgfpointscale{1}{\upperrightcorner}}
+	}
+
+	\backgroundpath{
+		\upperrightcorner 	\pgf@xc=\pgf@x \pgf@yc=\pgf@y
+
+		\setlength{\mnf@xoff@vert}{\pgfshapeminwidth}
+		\mnf@xoff@vert=0.05\mnf@xoff@vert
+
+		\setlength{\mnf@yoff@vert}{\pgfshapeminheight}
+		\mnf@yoff@vert=0.3\mnf@yoff@vert
+
+		\setlength{\mnf@xoff@horiz}{\pgfshapeminwidth}
+		\mnf@xoff@horiz=0.3\mnf@xoff@horiz
+
+		\setlength{\mnf@yoff@horiz}{\pgfshapeminheight}
+		\mnf@yoff@horiz=0.5\mnf@yoff@horiz
+
+		\pgfpathmoveto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+		\pgfpathcurveto
+			{\pgfpoint{\pgf@xc}{\pgf@yc - \mnf@yoff@vert}}
+			{\pgfpoint{\pgf@xc + \mnf@xoff@vert}{- \pgf@yc + \mnf@yoff@vert}}
+			{\pgfpoint{0.7\pgf@xc}{-\pgf@yc}}
+
+		\pgfpathcurveto
+			{\pgfpoint{0.7\pgf@xc - \mnf@xoff@horiz}{-\pgf@yc + \mnf@yoff@horiz}}
+			{\pgfpoint{-\pgf@xc + \mnf@xoff@horiz}{- \pgf@yc - \mnf@yoff@horiz}}
+			{\pgfpoint{-\pgf@xc}{-\pgf@yc}}
+
+		\pgfpathcurveto
+			{\pgfpoint{-\pgf@xc}{-\pgf@yc + \mnf@yoff@vert}}
+			{\pgfpoint{-\pgf@xc + \mnf@xoff@vert}{\pgf@yc - \mnf@yoff@vert}}
+			{\pgfpoint{-0.7\pgf@xc}{\pgf@yc}}
+
+		\pgfpathcurveto
+			{\pgfpoint{-0.7\pgf@xc + \mnf@xoff@horiz}{\pgf@yc - \mnf@yoff@horiz}}
+			{\pgfpoint{\pgf@xc - \mnf@xoff@horiz}{\pgf@yc + \mnf@yoff@horiz}}
+			{\pgfpoint{\pgf@xc}{\pgf@yc}}
+	}
+}
+
+\pgfdeclareshape{region 1}{
+	\inheritsavedanchors[from=rectangle] % this is nearly a rectangle
+	\inheritanchorborder[from=rectangle]
+	\inheritanchor[from=rectangle]{center}
+	\inheritanchor[from=rectangle]{north}
+	\anchor{south}{
+		\northeast
+		\pgf@x=0\pgf@x
+		\pgf@y=-\pgf@y
+	}
+	\anchor{west}{
+		\northeast
+		\pgf@y=0.1\pgf@y
+		\pgf@x=-1.37\pgf@x
+	}
+	\inheritanchor[from=rectangle]{east}
+
+	% ... and possibly more
+	\backgroundpath{% this is new
+		\northeast \pgf@xc=\pgf@x \pgf@yc=\pgf@y
+
+		\pgfpathmoveto{\pgfpoint{\pgf@xc}{0pt}}
+		\pgfpathcurveto
+			{\pgfpoint{\pgf@xc}{-0.5\pgf@yc}}
+			{\pgfpoint{0.5\pgf@xc}{-\pgf@yc}}
+			{\pgfpoint{0pt}{-\pgf@yc}}
+		\pgfpathcurveto
+			{\pgfpoint{-2\pgf@xc}{-\pgf@yc}}
+			{\pgfpointorigin}
+			{\pgfpoint{-\pgf@xc}{0pt}}
+		\pgfpathcurveto
+			{\pgfpoint{-2\pgf@xc}{0pt}}
+			{\pgfpoint{-\pgf@xc}{\pgf@yc}}
+			{\pgfpoint{0pt}{\pgf@yc}}
+
+		\pgfpathcurveto
+			{\pgfpoint{\pgf@xc}{1\pgf@yc}}
+			{\pgfpoint{\pgf@xc}{0pt}}
+			{\pgfpoint{\pgf@xc}{0pt}}
+		\pgfpathclose
+	}
+}
+
+\pgfdeclareshape{region 2}{
+	\inheritsavedanchors[from=rectangle] % this is nearly a rectangle
+	\inheritanchorborder[from=rectangle]
+	\inheritanchor[from=rectangle]{center}
+	\anchor{north}{
+		\northeast
+		\pgf@x=0\pgf@x
+		\pgf@y=0.85\pgf@y
+	}
+	\anchor{south}{
+		\northeast
+		\pgf@x=0\pgf@x
+		\pgf@y=-0.85\pgf@y
+	}
+	\anchor{west}{
+		\northeast
+		\pgf@y=0\pgf@y
+		\pgf@x=-0.78\pgf@x
+	}
+	\anchor{east}{
+		\northeast
+		\pgf@y=-0.1\pgf@y
+		\pgf@x=1.08\pgf@x
+	}
+
+	% ... and possibly more
+	\backgroundpath{% this is new
+		\southwest \pgf@xc=\pgf@x \pgf@yc=\pgf@y
+
+		\pgfpathmoveto{\pgfpoint{\pgf@xc}{0pt}}
+		\pgfpathcurveto
+			{\pgfpoint{\pgf@xc}{-0.5\pgf@yc}}
+			{\pgfpoint{0.5\pgf@xc}{-\pgf@yc}}
+			{\pgfpoint{0pt}{-\pgf@yc}}
+		\pgfpathcurveto
+			{\pgfpoint{-2\pgf@xc}{-\pgf@yc}}
+			{\pgfpointorigin}
+			{\pgfpoint{-\pgf@xc}{0pt}}
+		\pgfpathcurveto
+			{\pgfpoint{-2\pgf@xc}{0pt}}
+			{\pgfpoint{-\pgf@xc}{\pgf@yc}}
+			{\pgfpoint{0pt}{\pgf@yc}}
+
+		\pgfpathcurveto
+			{\pgfpoint{\pgf@xc}{1\pgf@yc}}
+			{\pgfpoint{\pgf@xc}{0pt}}
+			{\pgfpoint{\pgf@xc}{0pt}}
+		\pgfpathclose
+	}
+}
+
+
 \makeatother
