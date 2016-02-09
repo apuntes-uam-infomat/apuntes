@@ -1,11 +1,61 @@
 % -*- root: ../Neurocomputacion.tex -*-
 \section{Redes neuronales sencillas para clasificación de patrones}
 \subsection{Redes Hebb}
+A lo largo de esta sección es frecuente encontrar tablas donde se muestran los resultados calculados por diferentes redes neuronales al estudiar ciertas entradas. Aunque se asume que la neurona de salida deberá devolver valores de tipo binario o bipolar según el valor de activación supere o no el umbral, en las tablas mostraremos por lo general el valor que ha recibido esa neurona de salida.
+
+Esta decisión se debe a que facilita la comprensión del ejercicio y la comparación de este valor con el umbral es una tarea trivial que puede hacer el lector sobre la marcha.
 
 \begin{problem}[1]
-Aplica la regla de Hebb a los patrones de entrenamiento que definen la función XOR.
-
+Apply the Hebb rule to the training patterns that define the XOR function.
 \solution
+
+Las \concept{redes neuronales Hebb} se caracterizan por la presencia de $n$ neuronas de entrada, una de salida y una neurona especial, conocida como ``bias'' que actúa como una neurona de entrada que siempre recibe el valor 1.
+
+El entrenamiento de estas neuronas parte de la inicialización a 0 de todos los pesos de la red. Tras esto, y por cada vector de entrenamiento, ajustamos los pesos de la red según la ecuación:
+\begin{equation}\label{eq:hebbRule}
+w_i=w_i+x_iy
+\end{equation}
+
+siendo $y$ el valor esperado en la neurona de salida que estamos ajustando.
+
+Si nuestra red tuviera varias neuronas de salida para cada una de ellas deberíamos aplicar el mismo procedimiento.
+
+Ahora debemos ver como serán los datos de entrenamiento que definen la función XOR, que están recogidos en la siguiente tabla:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{A} & \textbf{B} & \textbf{A XOR B}\footnote{Consideramos los valores de salida con una codificación bipolar ya que esta red no es capaz de aprender nada de aquellos patrones de entrenamiento con output nulo} \\
+\hline
+-1 & -1 & -1 \\
+-1 & 1 & 1 \\
+1 & -1 & 1 \\
+1 & 1 & -1 \\
+\hline
+\end{tabular}
+\end{center}
+
+Es evidente ver que nuestra red tendrá un total de 4 neuronas siendo una de ellas la neurona de salida, por lo que nuestro vector de pesos inicializado será:
+\[w = (0,0,0) \text{ siendo } w_0 \text{ el peso asociado al ``bias''}\]
+
+Aplicando la ecuación \ref{eq:hebbRule} obtenemos el siguiente resultado:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Entrada} & \textbf{Vector de pesos antes} & \textbf{Vector de pesos despues} \\
+$(x_1,x_2,y)$ & $(b,x_1,x_2)$ & $(b,x_1,x_2)$\\
+\hline
+(-1,-1,-1) & (0,0,0) & (-1,1,1)\\
+(-1,1,1) & (-1,1,1) & (0,0,2)\\
+(1,-1,1) & (0,0,2) & (1,1,1)\\
+(1,1,-1) & (1,1,1) & (0,0,0)\\
+\hline
+\end{tabular}
+\end{center}
+
+No obtenemos un resultado válido puesto que la regla de Hebb sólo permite entrenar redes neuronales para problemas \concept{linealmente separables}, esto es, problemas en los que los puntos del espacio (en este caso un plano) que tienen salida positiva y los que tienen salida negativa pueden separarse linealmente.
+
+En este caso concreto los puntos a estudiar ocupan los vértices de un cuadrado siendo los vértices opuestos\footnote{Al hablar de vértices opuestos de un cuadrado nos referimos a vértices diagonalmente opuestos.} los que dan el mismo valor de salida. Evidentemente, no hay ninguna linea que dibujar en el plano que me separe vértices de un cuadrado en dos bloques dejando los opuestos en el mismo lado de la línea.
+
 
 \end{problem}
 
@@ -16,25 +66,34 @@ for which weights exist, as long as bipolar representation is used and a bias is
 
 \solution
 
+Las dos funciones lógicas que no pueden ser representadas mediante una red Hebb son el XOR y su negado.
+
+La demostración de este hecho se basa en la idea comentada al final del ejercicio anterior. Si tenemos los 4 vértices de un cuadrado y queremos dividirlos en dos grupos por medio de una linea recta esta linea deberá, lógicamente, atravesar el cuadrado. Una vez comenzamos a dibujar la recta, esta deberá atravesar un lado del cuadrado, separando los dos vértices contiguos en distintos grupos.
+
+Es evidente comprobar que no hay forma de prolongar esta recta (no importa que pendiente tomemos) de forma que los dos vértices restantes queden cada uno al lado de su opuesto.
+
 \end{problem}
 
 \begin{problem}[3]
- Consider character recognition using the Hebb rule. In Example 2.8, the "X" and
+\ppart Consider character recognition using the Hebb rule. In Example 2.8, the "X" and
 "0" used for training differed in all but four components. Show that the net will
 respond correctly to an input vector formed from either the "X" or the "0" with
 up to 20 components missing. (Whether it responds correctly, of course, is based on
 your knowing which pattern you started with-you might prefer an "I don't know"
-response. However, since the net input to the output unit is smaller the more com-
-ponents are missing, the "degree of certainty" of the response can also be judged.)
-Mistakes involve one or more pixels switching from the value in the original
+response. However, since the net input to the output unit is smaller the more components are missing, the "degree of certainty" of the response can also be judged.)
+
+\ppart Mistakes involve one or more pixels switching from the value in the original
 training pattern to the opposite value. Show that at approximately 10 mistakes, the
 net will be seriously confused. (The exact number depends on whether any of the
 mistakes occur in the pixels where the training patterns differ.)
 Example 2.8 could be rephrased as an example of distinguishing the pattern X
-from not-X (rather than specifically detecting X versus 0). Another pattern (for not-
-X) that might be added to the net is:
+from not-X (rather than specifically detecting X versus 0). Another pattern (for not X) that might be added to the net is:
 
-Find the new weights to store this pattern together with the two patterns used in
+\begin{center}
+\includegraphics[width=0.3\textwidth]{img/pattern.png}
+\end{center}
+
+\ppart Find the new weights to store this pattern together with the two patterns used in
 Example 2.8. (You can work from the weights in the example.) What does the bias
 value tell you? How does the ability of the net to respond to noisy (missing or mis-
 taken) data change as you add more patterns to the net? (You will probably need to
@@ -42,27 +101,115 @@ try more patterns of your own choosing in order to form a good conjecture to ans
 this question.)
 
 \solution
+Atendiendo al ejemplo mencionado podemos observar que la idea consiste en escribir la cadena de símbolos que representa cada letra como un vector de 25 coordenadas, que será el input de nuestra red de Hebb.
 
+Tras el breve proceso de entrenamiento (descrito en el ejemplo) se obtienen los pesos de las diferentes conexiones. Finalmente, podemos ver que la red considerará que ha leído una $X$ siempre que:
+\[Σ = \begin{array}{ccccc}
+2x_1& -2x_2 & -2x_3 & -2x_4 & +2x_5 +\\
+-2x_6 & + 2x_7 &  & + 2x_9 &- 2x_{10} +\\
+-2x_{11} & & +2x_{13} & & -2x_{15} + \\
+-2x_{16} & +2x_{17} & & +2x_{19} & -2x_{20} + \\
++2x_{21} & -2x_{22} & -2x_{23} & -2x_{24} & +2x_{25} \\
+\end{array} > 0\]
+
+También nos indica el enunciado que, en caso de leer una $X$ perfecta, la suma anterior tiene valor $Σ=42$.
+
+Es cómodo notar que, en esta ocasión, con la distribución de los pesos que acabamos de mostrar, las entradas que tendrán valor $1$ al leer la $X$ tienen pesos positivos y las que se activarán al leer el $O$ tienen valores negativos.
+\spart
+El primer apartado del problema nos pide comprobar que, aunque haya 20 casillas perdidas (es decir, 20 valores de entrada con valor 0), seguimos pudiendo detectar que se trataba de una $X$ (o de un $O$ respectivamente).
+
+Basta con ver que cada dato que nos falte, salvo si es uno de los 4 valores asociados a un peso nulo, el valor de la neurona de salida decrece en dos unidades. Puesto que $Σ=42$, hasta 20 casillas sin información son toleradas, puesto que $Σ=42-2\cdot 20 > 0$\footnote{De hecho podrían faltar datos de incluso 24 casillas, si estas casillas son las adecuadas. No obstante, de forma general sólo podemos garantizar la correctitud de la red a la hora de clasificar el input si no faltan más de 20 datos}.
+\spart
+Por otro lado, es sencillo notar que un fallo en un valor, salvo en los casos en que el peso asociado a la neurona que lee ese valor es 0, implica una reducción en el valor de la neurona de salida de 4 unidades. Queda claro por tanto que $Σ=42-4\cdot 10>0$ por lo que hasta 10 errores son tolerados.
+
+El mismo razonamiento partiendo de $Σ=-42$ que se ve aumentado con cada pérdida de información/error puede hacerse para el caso en que la entrada sea un $O$.
+
+\spart
+Vamos a completar ahora el entrenamiento de la red con el nuevo patrón que se nos proporciona. Recordando que el aprendizaje en las redes Hebb se lleva a cabo según la ecuación \ref{eq:hebbRule}, es sencillo comprobar que tras el último paso del entrenamiento tendremos:
+\[Σ = -1 + \begin{array}{ccccc}
++3x_1& -1x_2 & -3x_3 & -1x_4 & +3x_5 +\\
+-1x_6 & + 1x_7 & +x_8 & + 1x_9 &- 1x_{10} +\\
+-1x_{11} & -x_{12} & +1x_{13} & -x_{14} & -1x_{15} + \\
+-3x_{16} & +3x_{17} & +x_{18} & +3x_{19} & -3x_{20} + \\
++1x_{21} & -1x_{22} & -1x_{23} & -1x_{24} & +1x_{25} \\
+\end{array}\]
+
+Podemos comprobar que tras este entrenamiento el valor de la neurona de salida tras leer el patrón $X$ es $Σ=35$, con lo que se ha reducido la capacidad de detectar errores y fallos a la hora de clasificar el patrón $X$.
+
+En general, a medida que añadamos patrones distintos de $X$ para el entrenamiento, habrá más distribuciones para las que el resultado Σ deba ser negativo. Por tanto cada vez menos ruido será necesario para hacer que la red clasifique mal un patrón $X$.
 \end{problem}
 
 \begin{problem}[4]
-Create more letters, or different versions of X's and D's, for more training or testing
+Create more letters, or different versions of X's and O's, for more training or testing
 of the Hebb net.
 
-
 \solution
+
+Vamos a comprobar el resultado devuelto por la red al analizar los siguientes patrones:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Patrón} & \textbf{Clasificación} \\
+\hline
+ . \# \# \#  . & \\
+\#  . \#  . \# & \\
+\# \#  . \# \# & -35. No es una $X$\\
+\#  . \#  . \# & \\
+ . \# \# \#  . & \\
+\hline
+\#  .  .  .  . & \\
+ . \#  .  .  . & \\
+ .  . \#  .  . & 10. Se trata de una $X$ \\
+ .  .  . \#  . & \\
+ .  .  .  . \# & \\
+\hline
+\end{tabular}
+\end{center}
 
 \end{problem}
 
 \begin{problem}[5]
 \ppart Using the Hebb rule, find the weights required to perform the following classi-
-fications: Vectors (I, I, I, 1) and ( - 1, 1, - 1, -1) are members of the class (and
-therefore have target value 1); vectors (I, 1, 1, - 1) and (I, - 1, - 1, 1) are not
+fications: Vectors (1, 1, 1, 1) and ( - 1, 1, - 1, -1) are members of the class (and
+therefore have target value 1); vectors (1, 1, 1, - 1) and (1, - 1, - 1, 1) are not
 members of the class (and have target value -1).
 \ppart Using each of the training x vectors as input, test the response of the net.
-
-
 \solution
+
+\spart
+El proceso de entrenamiento de la red, que se realiza según la fórmula \ref{eq:hebbRule} queda ilustrado en la siguiente tabla:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Target} & \textbf{Pesos antes} & \textbf{Bias antes} & \textbf{Pesos después} & \textbf{Bias después} \\
+\hline
+(1,1,1,1)    & 1  & (0,0,0,0) & 0 & (1,1,1,1) & 1\\
+(-1,1,-1,-1) & 1  & (1,1,1,1) & 1 & (0,2,0,0) & 2\\
+(1,1,1,-1)   & -1 & (0,2,0,0) & 2 & (-1,1,-1,1) & -1\\
+(1,-1,-1,1)  & -1 & (-1,1,-1,1) & -1 & (-2,2,0,0) & 0\\
+\hline
+\end{tabular}
+\end{center}
+
+\spart
+Vamos a comprobar que el entrenamiento ha funcionado, para ello debemos comprobar que el producto escalar del vector de pesos por el traspuesto del input nos da un valor positivo para aquellos input de la primera clase y negativo para los de la segunda.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Target} & \textbf{Resultado} \\
+\hline
+(1,1,1,1)    & 1  & 0 \\
+(-1,1,-1,-1) & 1  & 4 \\
+(1,1,1,-1)   & -1 & 0 \\
+(1,-1,-1,1)  & -1 & -4 \\
+\hline
+\end{tabular}
+\end{center}
+
+Podemos concluir que no se trata de un problema lineal puesto que el entrenamiento no da un resultado satisfactorio ni si quiera para los propios datos de entrenamiento.
 
 \end{problem}
 
@@ -71,14 +218,13 @@ members of the class (and have target value -1).
 and targets) to bipolar form to find the weight matrix. Apply this procedure to
 find the weights to store the following classifications:
 \begin{center}
-s(l) = (1,0, 1), t(1) = 1\\
+s(1) = (1,0, 1), t(1) = 1\\
 s(2) = (1, 1,0), t(2) = 0
 \end{center}
 \ppart Using the binary step function (with threshold 0) as the output unit's activation
 function, test the response of your network on each of the binary training patterns.
 \ppart Using the bipolar step function (with threshold 0) as the output unit's activation
-function, convert the training patterns to bipolar form and test the network re-
-sponse again.
+function, convert the training patterns to bipolar form and test the network response again.
 \ppart Test the response of your network on each of the following noisy versions of the
 bipolar form of the training patterns:
 \begin{center}
@@ -89,6 +235,71 @@ Which of the responses are correct, which are incorrect, and which are indefinit
 (undetermined)?
 
 \solution
+\spart
+Una vez más procedemos a entrenar una red de Hebb basándonos en datos de entrenamiento dados en forma bipolar. El resultado queda recogido en la siguiente tabla:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Target} & \textbf{Pesos antes} & \textbf{Bias antes} & \textbf{Pesos después} & \textbf{Bias después} \\
+\hline
+(1,-1,1) & 1  & (0,0,0) & 0 & (1,-1,1) & 1\\
+(1,1,-1) & -1 & (1,-1,1) & 1 & (0,-2,2) & 0\\
+\hline
+\end{tabular}
+\end{center}
+
+\spart
+La red que acabamos de crear opera sobre los input dados (en binario) como muestra la siguiente tabla
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Target} & \textbf{Resultado} \\
+\hline
+(1,0,1) & 1  & 2\\
+(1,1,0) & 0 & -2\\
+\hline
+\end{tabular}
+\end{center}
+Con lo que parece que el resultado obtenido es satisfactorio.
+
+\spart
+Operando sobre los datos de entrada en formato bipolar tenemos:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Target} & \textbf{Resultado} \\
+\hline
+(1,-1,1) & 1 &  4\\
+(1,1,-1) & 0 & -4\\
+\hline
+\end{tabular}
+\end{center}
+Con lo que parece que el resultado obtenido es satisfactorio.
+
+\spart
+Operando sobre los datos de entrada en formato bipolar tenemos:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Target} & \textbf{Resultado} \\
+\hline
+(0,-1,1)   &  1 & 4 \\
+(0, 1, -1) & -1 & -4 \\
+(0, 0, 1)  &  1 & 2 \\
+(0,0, -1)  & -1 & -2\\
+(0, 1,0)   & -1 & -2\\
+(0, -1,0)  &  1 & 2\\
+(1, 0, 1)  &  1 & 2\\
+(1,0, -1)  & -1 & -2\\
+(1, -1,0)  &  1 & 2\\
+(1,0, 0)   &  ? & 0 \\
+(1, 1,0)   & -1 & -2\\
+(1, 1, 1)  &  ? & 0\\
+\hline
+\end{tabular}
+\end{center}
+
+Los resultados esperados (columna Target) los he deducido buscando el vecino más próximo. Podemos comprobar que los resultados esperados coinciden exactamente con los obtenidos.
 
 \end{problem}
 
