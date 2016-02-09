@@ -3,15 +3,20 @@
 
 \section{Modelo de un atasco}
 
+	\begin{figure}[thbp]
+	\centering
+	\inputtikz{CarrilCoches}
+	\caption{Un modelo simplificado de cómo se mueven los coches en un carril.}
+	\label{fig:CochesCarril}
+	\end{figure}
+
 	Vamos a empezar con un modelo sencillo. Observemos el fenómeno del embotellamiento fantasma, el cual tiene una ecuación bastante sencilla. Veamos como se generan esos atascos y como se disipan.
 
 	Estudiaremos una función que nos de la densidad de coches en un punto, en el tiempo.
 
 	$$u(x,t) = \text{densidad}$$
 
-	Observemos un modelo muy simple en el que solo hay un carril y los coches fluyen solo en una dirección.
-
-	(DIBUO DE LA RECTA CON FLECHA HACIA LA DERECHA)
+	Observemos un modelo muy simple en el que solo hay un carril y los coches fluyen solo en una dirección, como en la \fref{fig:CochesCarril}.
 
 	La variación en el número de coches de un intervalo será:
 	\[ \od{}{t} \int^{x+h}_{x} u(s,t) \dif s = \int^{x+h}_{x} u_t(s,t) \dif s \]
@@ -24,15 +29,22 @@
 	\begin{equation*}
 	\left\{
 	\begin{array}{rl}
-	u_t + [q(u)]_{x} =&\! 0 \\
-	u(x, 0) =&\! F(x) \quad \quad \text{dato}
+	u_t + [q(u)]_{x} =&\!\!\! 0 \\
+	u(x, 0) =&\!\!\! F(x) \quad \quad \text{dato}
 	\end{array}
 	\right.
 	\end{equation*}
 
 	Ahora debemos probar distintas funciones $q$ y tratar de resolver el sistema.
 
-	\subsection{Modelo básico}
+	\subsection{Modelo básico: flujo proporcional a la densidad}
+
+		\begin{figure}[hbtp]
+		\centering
+		\inputtikz{CochesModeloLineal}
+		\caption{Con un modelo de flujo proporcional a la densidad, los coches simplemente se desplazan manteniendo la misma densidad.}
+		\label{fig:CochesModeloLineal}
+		\end{figure}
 
 		Tomando $q(u) = cu$.
 
@@ -46,9 +58,7 @@
 		\end{equation*}
 
 
-		Esta ecuación dice que el flujo es proporcional a la densidad. Implica que los coches se mueven con velocidad constante, a más velocidad más flujo y viceversa. Si en el instante inicial tenemos una función de la densidad respecto de las zonas del tramo, según pasa el tiempo la densidad se irá desplazando hacia la derecha manteniendo la misma forma.
-
-		(DIBUJO)
+		Esta ecuación dice que el flujo es proporcional a la densidad. Implica que los coches se mueven con velocidad constante, a más velocidad más flujo y viceversa. Si en el instante inicial tenemos una función de la densidad respecto de las zonas del tramo, según pasa el tiempo la densidad se irá desplazando hacia la derecha manteniendo la misma forma (\fref{fig:CochesModeloLineal}).
 
 		\textbf{Comprobación:}
 
@@ -75,16 +85,16 @@
 
 
 
-	\subsection{Otro ejemplo}
+	\subsection{Modelo básico 2: Flujo proporcional cuando la curva dato no es una recta}
 
-		Imaginemos un río con una velocidad constante, en el que a partir de un punto realizamos un vertido. El río tiene velocidad $v$ y en $x=0$ realizaremos una contaminación $\beta(t)$. En $t=0$ consideraremos que está limpio.
+		Imaginemos un río con una velocidad constante, en el que a partir de un punto realizamos un vertido. El río tiene velocidad $v$ y en $x=0$ realizaremos una contaminación $\beta(t)$. En $t=0$ consideraremos que está limpio. Usamos el mismo modelo que antes, pero con la peculiaridad de que la curva dato la estamos dando de otra forma: antes dábamos el dato inicial como lo que ocurría cuando $t = 0$. Aquí, damos una curva dato para $t > 0$ y $x > 0$.
 
-		Tenemos las ecuaciones:
-
-		$$u_t + vu_x = 0$$
-		$$u(x,0) = 0 \quad (x>0) $$
-		$$u(0,t) = \beta(t), t>0$$
-
+		En este caso, las ecuaciones que tenemos son las siguientes:
+		\begin{align*}
+		u_t + vu_x &= 0 \\
+		u(x,0) &= 0 \qquad x>0 \\
+		u(0,t) &= \beta(t)\quad t>0 \\
+		\end{align*}
 
 		Resolvemos el problema igual que antes, buscamos los conjuntos de nivel que serán rectas como nos ha salido antes. Vamos a buscar esas rectas.
 
@@ -94,6 +104,13 @@
 
 		Las características saldrían \(x-vt = \text{Cte}(=x_0) \label{eq:rio_vcte}\).
 
+		\begin{figure}[hbtp]
+			\centering
+			\inputtikz{ContaminacionRio}
+			\caption{La zona roja indica contaminación, y la zona verde implica río limpio. Ambas están divididas por la recta $x - vt = 0$, que indica cuándo una zona del río se contamina. La curva dato está dada en las zonas marcadas en azul y naranja.}
+			\label{fig:ContaminacionRio}
+		\end{figure}
+
 		Esas son nuestras rectas conjuntos de nivel, que en este caso indicarían el frente de la contaminación, el límite a partir del cual el río sigue limpio.
 
 		$$u(x,t) =
@@ -102,13 +119,6 @@
 				\beta(t - \frac{x}{v}) & (x-vt) < 0
 			\end{cases}
 		$$
-
-		\begin{figure}[hbtp]
-			\centering
-			\inputtikz{ContaminacionRio}
-			\caption{}.
-			\label{fig:ContaminacionRio}
-		\end{figure}
 
 		El valor de $u(x,t)$ cuando $x-vt < 0$, se obtiene utilizando \ref{eq:rio_vcte} y tomando el punto de corte de la recta $x-c \cdot t=k$ que pasa por $(0,t^*)$:
 
@@ -122,9 +132,9 @@
 		Por lo que
 		$$u(x,t) = \beta(t^*) = \beta(t - \frac{x}{v}), \quad \text{ cuando } x - vt < 0$$
 
-		De esto obtenemos una función de x en función del tiempo que nos permite saber cuándo una parte del río se contamina.
+		De esto obtenemos una función de $x$ en función del tiempo que nos permite saber cuándo una parte del río se contamina.
 
-	\subsection{Ejemplo más avanzado}
+	\subsection{Modelo avanzado: Río con descomposición biológica}
 
 		Supongamos que existe descomposición biológica:
 
@@ -238,16 +248,16 @@
 
 	\subsection{Modelo de tráfico más realista}
 
-		No hemos tenido en cuenta que la velocidad de los coches no es totalmente proporcional a la densidad. Si ésta baja mucho, los coches llegan a pararse. Hay una densidad máxima donde el tráfico quedará totalmente estancado (los coches pegados).
-
-		\begin{figure}[hbtp]
+		\begin{wrapfigure}{r}{0.4\textwidth}
 			\centering
 			\inputtikz{parabola}
-			\caption{}
+			\caption{El flujo no es lineal con respecto a la densidad: si hay muchos coches, acaban parándose.}
 			\label{fig:parabola}
-		\end{figure}
+		\end{wrapfigure}
 
-		Una función más realista sería una parábola. Si no hay coches no pasa ninguno, pero a partir de un punto cuantos más coches, menos rápido van, y menos pasan.
+		No hemos tenido en cuenta que la velocidad de los coches no es totalmente proporcional a la densidad. Si ésta baja mucho, los coches llegan a pararse. Hay una densidad máxima donde el tráfico quedará totalmente estancado (los coches pegados).
+
+		Una función más realista sería una parábola (\fref{fig:parabola}). Si no hay coches no pasa ninguno, pero a partir de un punto cuantos más coches, menos rápido van, y menos pasan.
 
 		$$ q(u) = Au (B-u) = ABu - Au^{2} $$
 
