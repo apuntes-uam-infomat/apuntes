@@ -1,7 +1,14 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{ejercicios}[2015/09/08 Clase para entregas de ejercicios]
 
+\newif\if@headernames
+
+\DeclareOption{noheadernames}{\@headernamesfalse}
+\DeclareOption{headernames}{\@headernamestrue}
+
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
+
+\ExecuteOptions{headernames}
 \ProcessOptions\relax
 
 \LoadClass[10pt,a4paper,palatino,noprobframes]{custombase}
@@ -21,6 +28,10 @@
 
 \fancypagestyle{plain}{%
 	\lhead{\small \itshape \thetitle}
-	\rhead{\small \theauthor}
+	\if@headernames
+		\rhead{\small \theauthor}
+	\else
+		\rhead{}
+	\fi
 	\cfoot{\thepage\ / \pageref{LastPage}}
 }
