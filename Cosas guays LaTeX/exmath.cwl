@@ -298,3 +298,4 @@
 \spn#m
 \densein#m
 \fourier#m
+\hash#m
