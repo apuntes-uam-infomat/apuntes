@@ -1,1 +1,218 @@
 % -*- root: ../Economia.tex -*-
+\section{Modelos de un período}
+\begin{problem}[1]
+El subyacente $S$ vale hoy 60 \texteuro y el modelo que hemos definido prevé, para el tiempo siguiente, un nivel alto en 65 \texteuro y un nivel bajo en 55 \texteuro. El tipo libre de riesgo para el período es del 3\%.
+\ppart Calcular la probabilidad riesgo neutro del estado alto de la economía.
+\ppart Calcular el valor de una put con precio de ejercicio en 60 \texteuro.
+\ppart Misma pregunta si el tipo libre de riesgo, para la composición continua, es ahora del 6\% y el tiempo hasta vencimiento es de seis meses.
+
+\solution
+
+\spart
+
+La situación que descibe el problema puede representarse mediante el siguiente diagrama:
+
+\begin{minipage}{0.48\textwidth}
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  %\tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+  \node[state] (A)                    {$S_0$};
+  \node[state] (B) [above right of=A] {$aS_0$};
+  \node[state] (C) [below right of=A] {$bS_0$};
+
+
+  \path (A) edge node {q} (B)
+  		    edge node {1-q} (C);
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+Siendo en este caso concreto
+\[\begin{array}{l}
+S_0 = 60 \\
+aS_0 = 65 \implies a = 1.08 \\
+bS_0 = 55 \implies b = 0.92
+\end{array}\]
+\end{minipage}
+
+Lo primero que debemos hacer es calcular la probabilidad riesgo neutro, que es aquella que hace que se cumpla la conidición de martingala.
+
+La condición de martingala se escribe como:
+\[V_0(\varphi) = \tilde{V}_0(\varphi) = \esp[Q]{\tilde{V}_1(\varphi)}\]
+
+Vamos a forzar que se cumpla esta conidción para despejar el valor de $q$ que buscamos. Para ello suponemos la estrategia trivial $\varphi=(\varphi_1) =(1)$.
+
+\[\esp[Q]{\tilde{V}_1(\varphi)} = \frac{q\cdot aS_0 + (1-q)\cdot bS_0}{S_1^0} = \frac{65q + (1-q)55}{1+r} = \frac{10q+55}{1.03}\]
+
+Por otro lado sabemos que $V_0(\varphi) = 60$ con lo que igualando llegamos a:
+\[\frac{10q+55}{1.03} = 60 \implies 10q = 6.8 \implies q = 0.68 \]
+
+\spart
+
+Una \concept{put} es un contrato que da el derecho a vender en tiempo 1 una acción de $S$ por $K$ euros.
+
+Suponiendo que no hubiera ningún tipo de tasa ni impuesto extra que pagar (suposición que no es cierta en los mercados reales) el precio o coste de una put puede calcularse como su valor en el instante $t=0$.
+
+Teniendo los mismos estados del apartado anterior con sus mismos valores y siendo el precio de ejercicio $K=60$ \texteuro (el precio al que garantizamos vender en el futuro) podemos ver que en el estado alto tenemos un valor $X(ω_1)=0$ y en el caso bajo $X(ω_2)=K-bS_0$.
+
+Conociendo las probabilidades riesgo neutras, que calculamos en el aprtado anterior, podemos calcular el valor inicial de la put con la misma fórmula usada en el apartado anterior:
+\[P_0 = V_0(\varphi) = \tilde{V}_0(\varphi) = \esp[Q]{\tilde{V}_1(\varphi)} = (1-q) \frac{K-bS_0}{1+r} = 0.32 \cdot \frac{60-55}{1.03}=1.55\]
+
+\spart
+
+Hasta ahora lo que hemos visto es que tenemos un tipo de interes simple que consiste en que nos perstan una cantidad $X$ con un interés $r$ y al final del ejercicio devolvemos la cantidad prestada más los intereses, es decir, ent $t=1$ pagamos
+\[(1+r)X\]
+
+No obstante, podríamos considerar que en el instante $t=1/2$ pagamos los intereses correspondientes a 6 meses y en $t=1$ pagamos los intereses de los segundos 6 meses y, además, devolvemos todo el préstamos inicial. En esta ocasión estaríamos pagando
+\[\left(1+\frac{r}{2}\right)^2\]
+
+En general, si dividimos los pagos en $n$ plazos estamos pagando
+\[\left( 1 + \frac{r}{n} \right)^n\]
+
+Es sencillo ver que si extendemos esta distribución de prestamos hasta considerar intervalos infinitamente pequeños llegamos a una \concept{comosición continua} donde la función que mide lo que debemos pagar se corresponde con una exponencial. Es decir, tendiendo $n$ al infinito lo que estamos pagando es:
+\[e^{rt}\cdot X\]
+
+Por tanto, lo único que debemos hacer para trabajar en este tipo de casos es sutituir las operaciones que realizábamos con respecto a $1+r$ al trabajar con precios descontados, por las mismas operaciones respecto a $e^{rt}$.
+
+Puesto que estamos considerando vencimiento de 6 meses tendremos:
+\[P_0 = V_0(\varphi) = \tilde{V}_0(\varphi) = \esp[Q]{\tilde{V}_1(\varphi)} = (1-q) \frac{K-bS_0}{e^{rt}} = 0.32 \cdot \frac{60-55}{e^{0.06\cdot 0.5}}=1.55\]
+\end{problem}
+
+\begin{problem}[2]
+El subyacente $S$ vale hoy 10 \texteuro y el model definido prevé, para el tiempo siguiente, un nivel alto en 12 \texteuro y un nivel bajo en 9 \texteuro. El tipo libre de riesgo para el período es del 10\%. Consideramos un derivado $X$ que pagará el cuadrado del valor $S_1$ a vencimineto.
+
+\ppart ¿Cuál es la cartera de cobertura para dicho derivado?
+\ppart Calcular el valor de dicho derivado en 0.
+\ppart Calcular el valor de una call sobre este derivado con un precio de ejercicio de 100.
+\ppart Un segundo análisis le lleva a pensar que los dos estados futuros del modelo han de ser 10.5 y 9.5 (permaneciendo inalterado el tipo libre de riesgo). ¿Es el nuevo modelo viable (libre de arbitrajes)? [Intenta calcular la probabilidad riesgo neutro del estado alto]
+
+\solution
+
+\spart
+
+La \concept{cartera de cobertura} no es más que aquella que a vencimiento nos garantiza los mismos resultados que el derivado que queremos cubrir.
+
+Tenemos por ahora un derivado $S^0$ que es la \concept{cuenta bancaria} que tiene un interés fijo y conocido; y el activo descrito por el enunciado, $S$, que llamaremos $S^1$ que sigue el siguiente esquema
+
+\begin{minipage}{0.48\textwidth}
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  %\tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+  \node[state] (A)                    {$S_0^1$};
+  \node[state] (B) [above right of=A] {$aS_0^1$};
+  \node[state] (C) [below right of=A] {$bS_0^1$};
+
+
+  \path (A) edge node {q} (B)
+  		    edge node {1-q} (C);
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+Siendo en este caso concreto
+\[\begin{array}{l}
+S_0^1 = 10 \\
+aS_0^1 = 12 \implies a = 1.2 \\
+bS_0^1 = 9 \implies b = 0.9
+\end{array}\]
+\end{minipage}
+
+La estrategia de cobertura será aquella $\varphi=(\varphi_0,\varphi_1)$ compuesta por los activos $S^0$ y $S^1$ que, a vencimiento, nos da los mismos resultados que el activo $X$. Para encontrar esta cartera simplemente debemos resolver la ecuación:
+\[\left\{ \begin{array}{l}
+\varphi_0(1.1) + \varphi_1\cdot 12 = 144 \\
+\varphi_0(1.1) + \varphi_1\cdot 9 = 81
+\end{array}\right. \implies \varphi_1 = 21 \text{ y } \varphi_0 = -98.18\]
+
+\spart
+
+Para conocer el valor de este derivado en $t=0$ necesitamos conocer cuál es la probabilidad de que se de cada suceso de los planteados para $t=1$.
+
+Vamos a centrarnos en el activo $S^1$ que conocemos. Puesto que \textbf{suponemos que estamos trabajando en una economía libre de arbitrajes} sabemos que existe la \concept{probabilidad riesgo neutro}, que es aquella que garantiza que el valor de precios descontados de una cartera coincida con su valor inicial. Es decir:
+\[V_0(\varphi) = \tilde{V}_0(\varphi) = \esp[Q]{\tilde{V}_1(\varphi)}\]
+
+Por tanto, para conocer esta probabilidad sólamente tenemos que resolver la ecuación:
+\[10 =  \frac{q\cdot aS_0 + (1-q)\cdot bS_0}{S_1^0} =  \frac{q\cdot 12 + (1-q)\cdot 9}{1.1} = \frac{3q + 9}{1.1} \implies q=0.67\]
+
+Una vez conocemos esta probabilidad, podemos calcular el valor del derivado como valor descontado esperado del mismo:
+\[V_0(X) = \frac{qX(ω_1) + (1-q)X(ω_2)}{1+r} = \frac{0.67\cdot 144 + 0.33\cdot 81}{1.1} = 112\]
+
+\spart
+
+Una \concept{call} es un contrato que da derecho a comprar un producto $S$ por $K$ euros en tiempo $t=1$.
+
+En esta ocasión tenemos un precio $K=100$ \texteuro. Para calcular su precio lo único que debemos hacer es considerarlo como un derivado más y aplicar el mismo razonamiento que empleamos al final del apartado anterior.
+
+Con probabilidad $q$ estaremos en el estado alto, por lo que compraremos el derivado de precio 144 \texteuro por los 100 \texteuro acordados en la call. Por otro lado, si estamos en el estado bajo de la economía, optamos por no comprar con lo que no perdemos nada. Por tanto tenemos $X(ω_1)=aS^1_0-K$ y $X(ω_2)=0$. Así tenemos:
+
+\[C_0 = \frac{qX(ω_1) + (1-q)X(ω_2)}{1+r} = \frac{0.67(144-100)}{1.1} = 26.8\]
+
+\spart
+
+Con la nueva situación descrita, y siguiendo la indicación del enunciado, tratamos de calcular la probabilidad riesgo neutro correspondiente. Así tenemos:
+\[10 = \frac{10.5q + (1-q)9.5}{1+r} = \frac{q+9.5}{1.1}\implies q=1.5 \]
+
+Evidentemente esta situación no es posible puesto que $q$ es una probabilidad, que no puede ser mayor que 1. Veamos cómo estudiar esta situación.
+
+Si nos fijamos podemos observar que en el estado alto de este activo tenemos un valor menor que el correspondiente a la cuenta bancaria. Aquí surge el arbitraje: nos ponemos en corto con el activo $S$, es decir, vendemos $n$ acciones de $S$ que aún no hemos comprado. El dinero ganado con esta puesta en corto, $10\cdot n$ \texteuro, lo metemos en una cuenta bancaria con tipo libre de riesgo $1.1$.
+
+En $t=1$ debemos comprar las acciones de $S$ al precio que estén para entregarlas que seguro será menor que la cantidad que tenemos en el banco. Por tanto, estamos ganando dinero sin riesgo alguno.
+\end{problem}
+
+\begin{problem}[3]
+El subyacente $S$ vale hoy 10 \texteuro y el modelo que hemos definido prevé, para el tiempo siguiente, un nivel alto en 12 \texteuro y un nivel bajo en 8 \texteuro. El tipo libre de riesgo para el período es del 5\%. Calcular el valor de una call de precio de ejercicio 11 \texteuro:
+\ppart Por no arbitraje
+
+\ppart Por valoración riesgo neutro.
+\solution
+
+Empezamos calculando la probabilidad riesgo neutro asociada al estado alto de este modelo. Nuevamente, reutilizamos las fórmulas y los conceptos de los dos ejercicios anteriores. Así tenemos
+\[10 = \frac{12q + (1-q)8}{1.05} = \frac{4q+8}{1.05} \implies q=0.63\]
+
+\spart
+
+Vamos a buscar la estrategia de cobertura de este activo que es la call. Así tenemos que resolver el siguiente sistema:
+
+\[\left\{ \begin{array}{l}
+\varphi_0(1.05) + \varphi_1\cdot 12 = 1 \\
+\varphi_0(1.05) + \varphi_1\cdot 8 = 0
+\end{array}\right. \implies \varphi_1 = 0.25 \text{ y } \varphi_0 = -1.9\]
+
+Puesto que estamos bajo la suposición de que nos movemos en una economía libre de arbitrajes, el precio inicial de esta estrategia debe coincidir con el previo actual del activo $X$ (la call).
+
+Así tenemos:
+\[C_0 = V_0(\varphi) = \frac{\varphi_0(1+r) + q(\varphi_1 \cdot 12) + (1-q)(\varphi_1\cdot 8)}{1+r} = -1.9 + \frac{0.63 \cdot 0.25\cdot 12 + 0.37 \cdot 0.25 \cdot 8}{1.05}\]
+\[C_0 = 0.6\]
+\spart
+
+Una vez conocemos la probabilidad riesgo neutro podemos calcular el precio de la call como sigue:
+\[C_0 = q\cdot \frac{aS_0 - K}{1+r} = 0.63 \frac{12-11}{1.05} = 0.6\]
+
+Como era de esperar los dos procedimientos nos llevan a la obtención del mismo precio.
+\end{problem}
+
+\begin{problem}[7]
+El economista francés Maurice Allais ha sido uno de los primeros en describir situaciones en las cuales el comportamiento de los agentes no es racional. Después de esto, todo un área, el de las \textbf{finanzas comportamentales}, se ha ido desarrollando y consolidando. Consideremos las dos situaciones siguientes:
+
+\begin{enumerate}
+\item Un grupo de individuos recibe 1000  y debe elegir una de las dos loterías siguientes:
+\begin{enumerate}
+\item[a] Una ganancia segura de 500
+\item[b] Una lotería que tiene probabilidad 0.5 de dar 1000 y 0.5 de dar 0.
+\end{enumerate}
+
+\item Un grupo de individuos recibe 2000 y debe elegir una de las dos loterías siguientes:
+\begin{enumerate}
+\item[a] Una pérdida segura de 500
+\item[b] Una lotería que tiene probabilidad 0.5 de perder 1000 y 0.5 de perder 0.
+\end{enumerate}
+\end{enumerate}
+
+\ppart Comprobar que, dadas las condiciones iniciales, ambas loterías conducen a los mismos resultados.
+
+Como curiosidad, cabe destacar que por lo general la gente opta por la opción a) en el primer caso y por la opción b) en el segundo.
+\solution
+\end{problem}
