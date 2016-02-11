@@ -29,6 +29,8 @@
 	\@shortheadertrue
 }
 
+\DeclareOption{bibnumbers}{\PassOptionsToPackage{numbers}{natbib}}
+
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{custombase}}
 
 \ExecuteOptions{titlepage}
