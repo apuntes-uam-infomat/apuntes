@@ -665,10 +665,41 @@ El número de puntos extremos de $S$ es finito
 Elegir una base, que es elegir $n$ columnas de las $m$ posibles. Esto, como mucho se puede hacer como mucho de $\begin{pmatrix}n\\m\end{pmatrix}$ formas distintas.
 \end{proof}
 
+
+
+\begin{prop}
+$S$ tiene al menos un punto extremo.
+\end{prop}
+\begin{proof}
+Sea $x = (x_1,...,x_k,0,...,0)'$, con $x_i > 0,\; i=1,...,k$
+
+Si las columnas correspondientes a las variables positivas ($a_1,...,a_k$) son linealmente independientes, completamos con las que nos hagan falta para formar una base. 
+Entonces $\{x_k\}$ es una solución factible básica, ya que:
+\[Ax = (B,N)x = Bx_B = b \to x_B = B^{-1}b\geq 0 \to SFB\]
+ Al ser $SFB$ tenemos que son puntos extremos.
+
+ En caso de que las columnas correspondientes a las variables positivas ($a_1,...,a_k$) no sean linealmente independientes, vamos a ver qué ocurre utilizando un argumento similar al de la demostración del teorema de Caratheodory. 
+
+ \[(a_1,...,a_k) \to \exists λ_1,...,λ_k \tlq \sum a_iλ_i = 0\]
+
+ Definimos \[\tilde{x} = \left\{\begin{array}{cc} x_i - αλ_i & i=1,..., k\\0& i=k+1,...,n\end{array}\right.\]
+
+Buscamos que $\tilde{x}$ para que sea un punto extremo, es decir, que cumpla $A\tilde{x} = b$, con $\tilde{x} \geq 0$. Para ello, tenemos que \[A\tilde{x} = b = \sum_{i}^k(x_i - αλ_i)a_i = \sum x_ia_i \underset{=}{(1)} b\]
+
+ $(1)$ se debe a que estamos en un conjunto factible.
+
+Ahora sólo tenemos que definir $α$, e igualmente que en el teorema de Cara.., tomamos:
+\[α = \min{\frac{x_i}{λ_i}, λ_i>0}\equiv \frac{x_r}{λ_r}\]
+
+Y ahora repetiríamos el proceso, hasta quedarnos con un conjunto de $\{x_l\}$  tales que sus correspondientes columnas en $A$ sean linealmente independiente.
+\end{proof}
+
+
 \obs Recordamos que en esta sección estamos tomando $S=\{x:\, Ax=b, x\geq 0\}$ \ref{subsec:AppOptLin}.
 
 
 \begin{example}
+
 \begin{ioprob}
 \goal{$\min -x_1 + 2x_2$}
 \restrictions{$x_1+2x_2 \leq 2$}{$2x_1 + x_2\leq 1$}{$x_1\geq 0$}{$x_2\geq 0$}{}{}
@@ -684,12 +715,18 @@ Elegir una base, que es elegir $n$ columnas de las $m$ posibles. Esto, como much
 \end{tikzpicture}
 \end{figure}
 
+Añadimos las variables de holgura para pasarlo a forma normal estándar.
+
+\begin{ioprob}
+\goal{$\min -x_1 + 2x_2$}
+\restrictions{$x_1+2x_2+x_3 \eq 2$}{$2x_1 + x_2 + x_4\eq 1$}{$x_1,x_2,x_3,x_4 \geq 0$}{}{}{}
+\end{ioprob}
 
 En este caso, tenemos:
 
 \[A = \begin{pmatrix}1&2&1&0\\2&1&0&1\end{pmatrix}\;\; b = \begin{pmatrix}2\\1\end{pmatrix}\]
 
-Operamos: \[B = \begin{pmatrix}1&2\\2&1\end{pmatrix} \to B^{-1}b = \begin{pmatrix}\rfrac{-1}{3}&\rfrac{2}{3}\\\rfrac{2}{3}&\rfrac{-1}{3}\end{pmatrix}\begin{pmatrix}2\\1\end{pmatrix} = \begin{pmatrix}0\\1\end{pmatrix}\]
+Operamos, tomando $B = \{a_1,a_2\}$: \[B = \begin{pmatrix}1&2\\2&1\end{pmatrix} \to B^{-1}b = \begin{pmatrix}\rfrac{-1}{3}&\rfrac{2}{3}\\\rfrac{2}{3}&\rfrac{-1}{3}\end{pmatrix}\begin{pmatrix}2\\1\end{pmatrix} = \begin{pmatrix}0\\1\end{pmatrix}\]
 
 Hemos obtenido entonces:
 
@@ -697,7 +734,114 @@ Hemos obtenido entonces:
 
 Algo de soluciones degeneradas en este caso.
 
+Vamos a ver que ocurre si tomamos las otras bases:
+
+	\[B = \{a_1,a_3\} = \begin{pmatrix}1&1\\2&0\end{pmatrix} \to B^{-1}b = \begin{pmatrix}\rfrac{1}{2}\\\rfrac{3}{2}\end{pmatrix} \geq 0\]
+	Entonces, tenemos $x = (\rfrac{1}{2},0,\rfrac{3}{2},0)$. 
+
+	Es importante en este caso, darse cuenta de que no son las primeras variables las principales y el resto las que son 0. 
+
+	\[B = \{a_1,a_4\} = \begin{pmatrix}1&0\\2&1\end{pmatrix} \to B^{-1}b = \begin{pmatrix}2\\-3\end{pmatrix} \not\geq 0\]
+	En este caso, no tenemos una solución factible básica.
+
+	 \[B = \{a_2,a_3\} = \begin{pmatrix}2&1\\1&0\end{pmatrix} \to B^{-1}b = \begin{pmatrix}1\\0\end{pmatrix} \not\geq 0\]
+	 Teniendo $x = (0,1,0,0)$. En este caso, hemos obtenido la misma solución degenerada.
+
+
 \obs La notación es realmente importante pillarla bien porque el algoritmo de Simplex la utiliza mucho.
 
+$B$ = básicas. $N$ = No básicas.
 \end{example}
 
+
+\paragraph{Introducción al teorema:}
+
+Tenemos $S = \{x : Ax = b, x\geq 0\}$. Queremos las direcciones tales que
+
+\[A(x+λd) = b ∀λ>0 \dimplies Ad = 0\]
+\[x+λd\geq 0 ∀λ>0 \dimplies d\geq 0\]
+
+
+Tomamos $α>0$ en la coordenada $j$ de las coordenadas no básicas (coordenadas de $N$). Entonces, construimos:
+
+\[d = \begin{pmatrix}-αB^{-1}a_j\\\hline 0\\\vdots\\ α\\ \vdots\\0\end{pmatrix} \]
+
+
+\begin{theorem}[Caracterización\IS direcciones extremas]
+Sea $d\in\real^n$ una dirección.
+
+$d$ es una dirección extrema sí y sólo si $A = (B,N)$, donde $B$ es una matriz $m\times m$ básica, de manera que $B^{-1}a_j\leq 0$ para alguna de las columnas $a_j$ de $N$. Además,para algún $α>0$  
+\[d = \begin{pmatrix}-αB^{-1}a_j\\e_j\end{pmatrix}\]
+
+donde $e_j = (\underbrace{0,...,0}_{j-1},1,0,...,0)$.
+\end{theorem}
+
+\begin{proof}
+%% TODO:
+Las demostraciones se dejan como ejercicio ya que son parecidas a la demostración del teorema de caracterización de puntos extremos.
+\end{proof}
+
+\begin{example}
+
+\[S = \{(x_1,x_2)\in\mathbb{R}^2:\, x_2-x_1\leq 1,\, x_2\leq 2,\, x_1\geq 0,\, x_2\geq 0\}\]
+
+Vamos a calcular sus direcciones extremas. Lo primero es escribirlo en forma estándar
+
+\begin{ioprob} 
+\restrictions{$-x_1 + x_2 + x_3 = 1$}{$x_2+x_4 = 2$}{$x_i\geq 0$}{}{}{}
+\end{ioprob}
+
+La matriz $A$ es:
+
+\[A = \begin{pmatrix}-1&1&1&0\\0&1&0&1\end{pmatrix}\; b = \begin{pmatrix}1\\2\end{pmatrix}\]
+
+Vamos a dibujarlo para verlo:
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\fill[green!70!black!20!white] (0,0) -- (0,1) -- (2,2)  -- (4,2) -- (4,0) -- (0,0);
+\draw (-2,0) -- (2,0);
+\draw (0,-2) -- (0,2);
+\draw (0,0) -- (0,1) -- (2,2)  -- (4,2);
+\draw (0,0) -- (4,0);
+\end{tikzpicture}
+\end{figure}
+
+
+Vamos a ver varios ejemplos de tomar varias bases:
+
+\[
+B = \{a_1,a_2\}, a_j = a_3 \to ... \to d = \begin{pmatrix}1\\0\\\hline1\\0\end{pmatrix}
+\]
+Encontramos la dirección extrema.
+
+Podemos tomar otra columna no básica, y ver qué obtenemos:
+\[
+B = \{a_1,a_2\}, a_j = a_4 \to ... \to d = \begin{pmatrix}\vdots\end{pmatrix}
+\]
+
+Esta base no ha sido elegida arbitrariamente. Aunque no tiene porqué ser la única base posible.
+\end{example}
+
+\begin{example}
+Vamos a ver un ejemplo en $\real^3$. Tomamos $x_1 + x_2 = 1$, con $x_i \geq 0$.
+
+Vamos a dibujarlo para verlo:
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\draw[thick,->] (0,0,0) -- (0,3.5,0) node[anchor=north west]{$z$};
+\draw[thick,->] (0,0,0) -- (4,0,0) node[anchor=north east]{$y$};
+\draw[thick,->] (0,0,0) -- (0,0,3.5) node[anchor=west]{$x$};
+\draw[fill=green!70!black!20!white,opacity=0.6] (2,3,0) -- (2,0,0) -- (0,0,2) -- (0,3,2);
+\node[nodepoint,label={above:$\rfrac{a_1}{b}$}] at (2,0,0) {};
+\node[nodepoint,label={below:$\rfrac{a_2}{b}$}] at (0,0,2) {};
+\end{tikzpicture}
+\end{figure}
+
+
+
+
+\end{example}
