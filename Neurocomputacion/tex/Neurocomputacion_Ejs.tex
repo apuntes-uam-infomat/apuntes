@@ -309,16 +309,90 @@ Los resultados esperados (columna Target) los he deducido buscando el vecino má
 Graph the changes in separating lines as they occur in Example 2.12.
 \solution
 
+Puesto que en esta ocasión el umbral es $\theta = 0$ sólo tendremos que dibujar una linea en cada iteración.
+
+Por comodidad copiamos aquí la tabla que aparece en el ejemplo indicado, que recoge la evolución de los pesos de un perceptrón que está siendo entrenado para reconocer la función AND. El entrenamiento se realiza con entradas y salidas bipolares.
+
+
+\begin{minipage}{0.4\textwidth}
+\begin{center}
+\begin{tabular}{|c|ccc|}
+\hline
+\textbf{Iteración} & & \textbf{Pesos} & \\
+& $ω_1$ & $ω_2$ & $b$ \\
+\hline
+1 & 1 & 1 & 1\\
+\hline
+2 & 0 & 2 & 0\\
+\hline
+3 & 1 & 1 & -1\\
+\hline
+4 & 1 & 1 & -1\\
+\hline
+5 & 1 & 1 & -1\\
+\hline
+6 & 1 & 1 & -1\\
+\hline
+7 & 1 & 1 & -1\\
+\hline
+8 & 1 & 1 & -1 \\
+\hline
+\end{tabular}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.58\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+axis y line=center,
+axis x line=middle,
+axis equal,
+grid=none,
+xmax=5,xmin=-5,
+ymin=-5,ymax=5,
+xlabel=$ω_1$,ylabel=$ω_2$,
+xtick=\empty,
+ytick=\empty,
+width=10cm,
+anchor=center,
+]
+\addplot[no marks, color=red, very thick] {-x-1} ;
+\addplot[no marks, color=blue, very thick] {0} ;
+\addplot[no marks, color=green, very thick] {-x+1} ;
+\addlegendentry{Iteración 1}
+\addlegendentry{Iteración 2}
+\addlegendentry{Iteración >3}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+En los tres casos representados, el semiplano de aceptación es el que se encuentra por encima de la linea divisoria.
 \end{problem}
 
 \begin{problem}[8]
 Explore the influence of the value of the learning rate on the speed of convergence
 of perceptron learning:
-\ppart Consider different values of a in Example 2.12; explain your results.
+\ppart Consider different values of α in Example 2.12; explain your results.
 \ppart Modify the proof of the perceptron learning rule convergence theorem to include
 an arbitrary learning rate a.
 \solution
 
+\spart
+
+El ejemplo 2.12 se caracteriza por el empleo de un umbral $\theta = 0$. En este caso concreto, la modificación del valor α no tiene ningún efecto en la velocidad de convergencia del proceso de aprendizaje.
+
+Para convencerse de ello basta con observar que lo único que nos importa es si el valor de salida de la red es mayor, menor o igual que 0. Puesto que empezamos con los pesos inicializados a 0, el efecto de cambiar α por un valor distinto simplemente modifica el valor neto obtenido en cada iteración pero no altera en absoluto la salida bipolar de la red.
+
+La tabla representada en el ejemplo seguiría siendo la misma aunque los pesos aparecerían multiplicados por α, sea cual sea su valor (considerándolo siempre positivo)
+
+\spart
+
+Puesto que $ω(0)=0$ podemos tomar la demostración del libro y redefinir las funciones \textbf{w} y \textbf{x} empleadas en la demostración como: \textbf{w}$_2$ = α $\cdot$ \textbf{w}; \textbf{x}$_2$ = α $\cdot$ \textbf{x}.
+
+El mínimo mencionado sigue existiendo (aunque ahora será un poco más pequeño, cosa que no nos afecta) y las desigualdades se mantienen.
+
+Además, como seguimos considerando $\theta = 0$, la salida de la red neuronal en cada iteración no se ve alterada por la ponderación de los pesos (ni de los coeficientes de entrada). Así la desigualdad: \textbf{x}(k-1)$\cdot$\textbf{w}(k-1) $\leq 0$ empleada para reflejar la existencia de un error en la predicción de un valor del entrenamiento sigue manteniéndose con las nuevas  \textbf{x}$_2$ y \textbf{y}$_2$ puesto que el cambio de α no altera el signo de ningún valor.
 \end{problem}
 
 \begin{problem}[9]
@@ -331,9 +405,10 @@ W2 exist such that
 \begin{center}
 (1)$w_1$ + (1)$w_2$ > $\theta $ > 0,\\
 (1)$w_1$ + (0)$w_2$ < $-\theta $ < 0,\\
-(0)$w_1$ + (1)$w_2$ < $-\theta $ - 0
+(0)$w_1$ + (1)$w_2$ < $-\theta $ < 0
 \end{center}
 \solution
+
 
 \end{problem}
 
@@ -343,13 +418,87 @@ for the perceptron.
 
 \solution
 
+Sin tuviéramos $b=0$, tal y como está descrito el ejemplo 2.11, tendríamos siempre dos rectas de la forma:
+\[y_1=ax+0.2 \text{ y } y_2 = bx - 0.2\]
+
+El punto $(0,0)$ cumplirá siempre $y_1>0$ y $y_2<0$ por lo que no podrá ser clasificado correctamente.
+
+Obviando este problema, vamos a ver qué ocurre con los otros puntos. Si existieran los valores $a$ y $b$ que dan lugar a las rectas descritas anteriormente, tendríamos:
+\[\begin{array}{l}
+1 > a+0.2 \\
+1 > b-0.2 \\
+a+0.2 > 0 \\
+b-0.2 > 0 \\
+0.2 > 1 \\
+-0.2 > 1\\
+\end{array}\]
+donde las ecuaciones se obtienen al forzar que los puntos $(1,1), (1,0)$ y $(0,1)$ tengan los signos adecuados.
+
+Finalmente, aunque las cuatro primeras ecuaciones dan lugar a la posibilidad de existir las rectas $y_1$ y $y_2$\footnote{Como es lógico puesto que si ignoramos el origen y uno de los puntos que se encuentran sobre los ejes es trivial ver que toda recta con pendiente menor que 1 (o mayor, según que punto del eje estemos ignorando) actúa como linea divisoria}, las dos últimas ecuaciones son inconsistentes.
+
 \end{problem}
 
 \begin{problem}[11]
  Repeat Example 2.11, and show that there is no change in the training process if
-9 = O. Show that the separating line is
+$\theta = 0$. Show that the separating line is
 \[x_2=-\frac{2}{3}x_1+\frac{4}{3}\]
 \solution
+
+Es evidente que el cambio en el valor de $\theta$ indicado no cambia nada puesto que el valor calculado por la red, así como los pesos van a tener siempre valores enteros. Por tanto el único valor calculado por la red que de lugar a un output de 0 es el propio 0. Para el resto de valores calculados por la red, el output coincidirá con el signo del valor calculado.
+
+Vamos a constuir la tabla correspondiente para ver cómo se comporta la red con $\theta = 0$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Pesos antes} &  \textbf{Bias antes} & \textbf{Out} & \textbf{Target} & \textbf{Pesos después} & \textbf{Bias después} \\
+\hline
+( 1 , 1 , 1 ) & ( 1 , 1 ) &  1  &  0  &  1  & ( 1 , 1 ) &  1  \\
+( 1 , 0 , 1 ) & ( 0 , 1 ) &  0  &  1  &  -1  & ( 0 , 1 ) &  0  \\
+( 0 , 1 , 1 ) & ( 0 , 0 ) &  -1  &  1  &  -1  & ( 0 , 0 ) &  -1  \\
+( 0 , 0 , 1 ) & ( 0 , 0 ) &  -1  &  -1  &  -1  & ( 0 , 0 ) &  -1  \\
+( 1 , 1 , 1 ) & ( 1 , 1 ) &  0  &  -1  &  1  & ( 1 , 1 ) &  0  \\
+( 1 , 0 , 1 ) & ( 0 , 1 ) &  -1  &  1  &  -1  & ( 0 , 1 ) &  -1  \\
+( 0 , 1 , 1 ) & ( 0 , 0 ) &  -2  &  0  &  -1  & ( 0 , 0 ) &  -2  \\
+( 0 , 0 , 1 ) & ( 0 , 0 ) &  -2  &  -1  &  -1  & ( 0 , 0 ) &  -2  \\
+( 1 , 1 , 1 ) & ( 1 , 1 ) &  -1  &  -1  &  1  & ( 1 , 1 ) &  -1  \\
+( 1 , 0 , 1 ) & ( 0 , 1 ) &  -2  &  0  &  -1  & ( 0 , 1 ) &  -2  \\
+( 0 , 1 , 1 ) & ( 0 , 1 ) &  -2  &  -1  &  -1  & ( 0 , 1 ) &  -2  \\
+( 0 , 0 , 1 ) & ( 0 , 1 ) &  -2  &  -1  &  -1  & ( 0 , 1 ) &  -2  \\
+( 1 , 1 , 1 ) & ( 1 , 2 ) &  -1  &  -1  &  1  & ( 1 , 2 ) &  -1  \\
+( 1 , 0 , 1 ) & ( 0 , 2 ) &  -2  &  0  &  -1  & ( 0 , 2 ) &  -2  \\
+( 0 , 1 , 1 ) & ( 0 , 1 ) &  -3  &  0  &  -1  & ( 0 , 1 ) &  -3  \\
+( 0 , 0 , 1 ) & ( 0 , 1 ) &  -3  &  -1  &  -1  & ( 0 , 1 ) &  -3  \\
+( 1 , 1 , 1 ) & ( 1 , 2 ) &  -2  &  -1  &  1  & ( 1 , 2 ) &  -2  \\
+( 1 , 0 , 1 ) & ( 1 , 2 ) &  -2  &  -1  &  -1  & ( 1 , 2 ) &  -2  \\
+( 0 , 1 , 1 ) & ( 1 , 1 ) &  -3  &  0  &  -1  & ( 1 , 1 ) &  -3  \\
+( 0 , 0 , 1 ) & ( 1 , 1 ) &  -3  &  -1  &  -1  & ( 1 , 1 ) &  -3  \\
+( 1 , 1 , 1 ) & ( 2 , 2 ) &  -2  &  -1  &  1  & ( 2 , 2 ) &  -2  \\
+( 1 , 0 , 1 ) & ( 1 , 2 ) &  -3  &  0  &  -1  & ( 1 , 2 ) &  -3  \\
+( 0 , 1 , 1 ) & ( 1 , 2 ) &  -3  &  -1  &  -1  & ( 1 , 2 ) &  -3  \\
+( 0 , 0 , 1 ) & ( 1 , 2 ) &  -3  &  -1  &  -1  & ( 1 , 2 ) &  -3  \\
+( 1 , 1 , 1 ) & ( 2 , 3 ) &  -2  &  0  &  1  & ( 2 , 3 ) &  -2  \\
+( 1 , 0 , 1 ) & ( 1 , 3 ) &  -3  &  0  &  -1  & ( 1 , 3 ) &  -3  \\
+( 0 , 1 , 1 ) & ( 1 , 2 ) &  -4  &  0  &  -1  & ( 1 , 2 ) &  -4  \\
+( 0 , 0 , 1 ) & ( 1 , 2 ) &  -4  &  -1  &  -1  & ( 1 , 2 ) &  -4  \\
+( 1 , 1 , 1 ) & ( 2 , 3 ) &  -3  &  -1  &  1  & ( 2 , 3 ) &  -3  \\
+( 1 , 0 , 1 ) & ( 2 , 3 ) &  -3  &  -1  &  -1  & ( 2 , 3 ) &  -3  \\
+( 0 , 1 , 1 ) & ( 2 , 2 ) &  -4  &  0  &  -1  & ( 2 , 2 ) &  -4  \\
+( 0 , 0 , 1 ) & ( 2 , 2 ) &  -4  &  -1  &  -1  & ( 2 , 2 ) &  -4  \\
+( 1 , 1 , 1 ) & ( 3 , 3 ) &  -3  &  0  &  1  & ( 3 , 3 ) &  -3  \\
+( 1 , 0 , 1 ) & ( 2 , 3 ) &  -4  &  0  &  -1  & ( 2 , 3 ) &  -4  \\
+( 0 , 1 , 1 ) & ( 2 , 3 ) &  -4  &  -1  &  -1  & ( 2 , 3 ) &  -4  \\
+( 0 , 0 , 1 ) & ( 2 , 3 ) &  -4  &  -1  &  -1  & ( 2 , 3 ) &  -4  \\
+( 1 , 1 , 1 ) & ( 2 , 3 ) &  -4  &  1  &  1  & ( 2 , 3 ) &  -4  \\
+( 1 , 0 , 1 ) & ( 2 , 3 ) &  -4  &  -1  &  -1  & ( 2 , 3 ) &  -4  \\
+( 0 , 1 , 1 ) & ( 2 , 3 ) &  -4  &  -1  &  -1  & ( 2 , 3 ) &  -4  \\
+( 0 , 0 , 1 ) & ( 2 , 3 ) &  -4  &  -1  &  -1  & ( 2 , 3 ) &  -4  \\
+\hline
+\end{tabular}
+\end{center}
+
+Una vez hemos realizado todo el proceso de aprendizaje, es sencillo obtener la linea divisoria como:
+\[x_1+3x_2-4 = 0 \implies x_2 = \frac{2}{3}x_1+\frac{4}{3}\]
 
 \end{problem}
 
