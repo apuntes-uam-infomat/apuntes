@@ -26,7 +26,7 @@
 }
 
 \DeclareOption{spanish}{
-	\def\@babel@load{\RequirePackage[spanish,es-noquoting,es-noshorthands]{babel}}
+	\def\@babel@load{\RequirePackage[spanish,es-noquoting,es-noshorthands,es-tabla]{babel}}
 }
 
 \DeclareOption{noprobframes}{\PassOptionsToPackage{\CurrentOption}{exmath}}
@@ -114,4 +114,11 @@
 {É}{{\'O}}1
 {Ú}{{\'U}}1
 }
+
+
+\RequirePackage{caption}
+
+\captionsetup{style=base}
+\captionsetup[figure]{labelfont=bf,textfont=it}
+\captionsetup[table]{labelfont=bf,textfont=it,name=Tabla}
 

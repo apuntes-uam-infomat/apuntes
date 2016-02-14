@@ -180,10 +180,4 @@
 
 \newcommand{\placeholder}[1]{\begin{framed}\textit{\textbf{A rellenar:} #1}\end{framed}}
 
-\RequirePackage{caption}
-
-\captionsetup{style=base}
-\captionsetup[figure]{labelfont=bf,textfont=it}
-\captionsetup[table]{labelfont=bf,textfont=it}
-
 \makeindex
