@@ -816,7 +816,7 @@ B = \{a_1,a_2\}, a_j = a_3 \to ... \to d = \begin{pmatrix}1\\0\\\hline1\\0\end{p
 \]
 Encontramos la dirección extrema.
 
-Podemos tomar otra columna no básica, y ver qué obtenemos:
+Podemos tomar otra columna no básica, y ver qué obtenemos:view
 \[
 B = \{a_1,a_2\}, a_j = a_4 \to ... \to d = \begin{pmatrix}\vdots\end{pmatrix}
 \]
@@ -840,8 +840,185 @@ Vamos a dibujarlo para verlo:
 \node[nodepoint,label={below:$\rfrac{a_2}{b}$}] at (0,0,2) {};
 \end{tikzpicture}
 \end{figure}
-
-
-
-
 \end{example}
+
+Seguimos caracterizando direcciones extremas.
+
+\begin{prop}
+El número de direcciones extremas es finito. En concreto,
+\[\{\#\text{ direcciones extremas} \leq \comb{n}{m}(n-m)\]
+\end{prop}
+
+Vamos a ver un teorema, que de momento nos vamos a creer hasta que veamos el simplex.
+
+\label{thm:representacion}
+\begin{theorem}[Teorema\IS de representación]
+ Sean $x_1,\ldots,x_k$ los puntos extremos de $S$ y sean $d_1,\ldots,d_\ell$ sus direcciones extremas. Entonces,
+\[
+x\in S \Leftrightarrow x = \sum_{i=1}^k \lambda_i x_i + \sum_{j=1}^\ell
+ \mu_j d_j,
+\]
+donde $\lambda_i\geq 0$, $\mu_j\geq 0$, $\sum_{i=1}^k \lambda_i=1$.
+\end{theorem}
+
+En otras palabras, el conjunto se puede expresar como el cierre convexo de los vértices más una 
+combinación lineal positiva de las direcciones extremas.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\fill[green!70!black!20!white] (0,0) -- (2,0) -- (0,2)  --  (0,0);
+\draw[thick,->] (0,0) -- (0,3.5) node[anchor=north west]{$y$};
+\draw[thick,->] (0,0) -- (4,0) node[anchor=north east]{$x$};
+\draw[thick,->] (2,0) -- (4,1);
+\draw[thick,->] (0,2) -- (1,4);
+\draw[thin] (2,0) -- (6,2);
+\draw[thin] (0,2) -- (2,6);
+\end{tikzpicture}
+\caption{Podemos "rellenar" el conjunto entero desplazando el cierre convexo a lo largo de las direcciones extremas}
+\end{figure}
+
+
+
+
+
+
+
+\section{Programación lineal}
+
+Por el teorema de representación \ref{thm:representacion}, el problema lineal:
+
+
+\begin{ioprob}
+\goal{$\min c^\top x$}
+\restrictions{$Ax=b$}{$x\geq 0$}{}{}{}{}
+\end{ioprob}
+
+es equivalente a: 
+
+\begin{ioprob}
+\goal{$\min c^\top \left[\sum_{i=1}^k \lambda_i x_i + \sum_{j=1}^\ell \mu_j d_j\right]$}
+\restrictions{$\sum_{i=1}^k \lambda_i=1$}{$\lambda_i\geq 0,\ i=1,\ldots,k$}{$\mu_j\geq 0,\ j=1,\ldots,\ell$}{}{}
+\end{ioprob}
+
+donde $x_1,\ldots, x_k$ son los puntos extremos del conjunto factible y  $d_1,\ldots,d_\ell$ son sus direcciones extremas.
+
+
+
+\[\exists j c^td_j < 0 \to \text{ no existe solución}\]
+
+Por la afirmación anterior, vamos a suponer que $c^td_i ∀i < l$. Entonces, es óptimo fijar $µ_i = 0∀i<l$. De esta manera, obtenemos el problema:
+\begin{ioprob}
+\goal{$\min c^\top \left[\sum_{i=1}^k \lambda_i x_i \right]$}
+\restrictions{$\sum_{i=1}^k \lambda_i=1$}{$\lambda_i\geq 0,\ i=1,\ldots,k$}{$\mu_j\geq 0,\ j=1,\ldots,\ell$}{}{}
+\end{ioprob}
+
+Sea $j$ tal que $c^tx_j = \min{c^tx_i : i = 1,..., k}$. Entonces, es óptimo $λ_j = 1, λ_i = 0 ∀i≠j$.
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\fill[green!70!black!20!white] (0,0) -- (0,1) -- (2,2)  -- (4,2) -- (4,0) -- (0,0);
+\draw (-2,0) -- (2,0);
+\draw (0,-2) -- (0,2);
+\draw (0,0) -- (0,1) -- (2,2)  -- (4,2);
+\draw (0,0) -- (4,0);
+\draw[->] (0,0) -- (1,1) node[above]{$c$};
+\end{tikzpicture}
+\end{figure}
+
+
+¿Puede haber 2 soluciones factibles óptimas? En este caso, tendríamos $x_i$ y $x_j$ extremos tal que $c^tx_i = c^t = x_j = \min\{c^tx_i \}$. En este caso tenemos que $c^t(x_i - x_j) = 0 \to c\perp (x_i-x_j)$. En este caso, estamos en
+
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\fill[green!70!black!20!white] (0,0) -- (0,2) -- (1,2)  -- (2,1) -- (2,0) -- (0,0);
+\draw (0,0) -- (0,2) -- (1,2)  -- (2,1) -- (2,0) -- (0,0);
+\draw (-2.7,0) -- (2.7,0);
+\draw (0,-2.7) -- (0,2.7);
+\draw[->] (0,0) -- (1,1) node[above]{$c$};
+\end{tikzpicture}
+\caption{En este caso, existen muchas soluciones factibles óptimas Todas las del segmento.}
+\end{figure}
+
+
+ 
+\begin{theorem}[Teoremafundamental\IS de la programación lineal]
+
+\end{theorem}
+  
+\subsection{Algoritmo del simplex.}
+
+
+El algoritmo de simplex es un algoritmo de fuerza bruta.
+
+Tenemos $B^{-1}b = \bar{b} \dimplies B\bar{b} = b$. Vemos que $\bar{b}$ es el vector $b$ en la base $B$.
+
+El valor objetivo inicial es $\bar{z} = c^t\gor{x} = c^t_B\gor{x}_B = c^t_B\bar{b}$. Este es el valor objetivo que queremos mejorar. Vamos a tener que ponerlo todo en términos de la base $B$, entonces escribimos 
+-
+\[Ax = b \dimplies Bx_B + Nx_N = b \dimplies x_B + B^{-1}Nx_N = \bar{b}\dimplies x_B = \bar{B} - B^{-1}NX_n \]
+Hemos expresado las coordenadas básicas de cualquier punto factible en términos de la base $B$.
+
+\obs \[Ax = b \dimplies Bx_B + Nx_N = b \] Es reescribirlo separando en parte básica ($B$) y parte no básica ($N$).
+
+
+Finalizada la observación, vamos a ver el valor objetivo en cualquier punto factible $x=(x_B^\top,x_N^\top)^\top$:
+\begin{align*}
+z &= c_B^\top (\bar{b}-B^{-1} N x_N)+c^\top_N x_N =
+ \bar{z}-(c_B^\top B^{-1} N - c_N^\top)x_N\\
+  &=\bar{z}- \sum_{j\in N} (z_j-c_j)x_j,
+\end{align*}
+donde $z_j = c_B^\top B^{-1} a_j:= c_B^\top y_j$.
+
+A las coordenadas de cada columna no básica en función de la base, lo llamamos $y_j$ (aunque debería llevar $\gor{y}$, no se la ponemos). Es decir 
+\[y_j=B^{-1} a_j\Leftrightarrow a_j = y_{1j} a_1+\cdots + y_{mj}a_m\]
+
+
+\[
+z = \bar{z}- \sum_{j\in N} (z_j-c_j)x_j.
+\]
+
+
+¿Qué ocurre si $z_j-c_j\leq 0$, para todo $j\in N$? Ocurre que entonces a $\bar{z}$ le sumamos algo, con lo que no mejoramos el valor objetivo, con lo que hemos llegado al óptimo.
+
+
+En caso de no ser así, vamos a incluir en $B$ una variable de $N$. Llamaremos $x_k$ la variable no básica que incluimos como básica, y llamamos $x_r$ a la variable básica que dejar de ser básica ¿ya que $B$ se mantiene constante en dimensión? 
+Vamos a ver el criterio de entrada y de salida.
+
+Sea $k \in N$ (no básico) tal que $z_k - c_k \ge 0$. En caso de haber varios $k$'s, tomamos el más alto, de tal manera que reduzcamos el valor objetivo lo más posible \footnote{Puede darse el caso de que en esta variable que reduce el valor objetivo no poodamos movernos casi porque estemos muy cerca del borde del conjunto}
+
+
+El nuevo valor objetivo es: $\hat{z} =  \bar{z} - (z_k-c_k)\alpha$. Vamos a escribir el nuevo $\bar{b}$
+
+\[A\hat{x} = b \dimplies B\hat{x_B} + αNe_k \overset{\dimplies}{B^{-1}\times ...} \hat{x_B} + αy_k = \bar{b}\]
+De esta manera, hemos llegado a $\hat{x_B} = \bar{b} - αy_k$ y $\hat{X_{N}} = αe_k$. Reescribiendo esta ecuación, podemos escribir:
+
+
+\[\hat{x} = \bar{x} + \alpha\comb{-y_k}{e_k} \geq 0,\ \text{ donde }\ y_k=B^{-1}a_k\]
+
+%\textcolor{red}{$\bar{b}$ se ha convertido en $\bar{x}$. No entiendo bien porqué es lo mismo.}
+
+¿Qué ocurre con $y_k \leq 0$? Estamos en el caso que no tiene solución, ya que podemos aumentar $α$ todo lo que queramos.
+
+
+Además, para que $\hat{x}$ sea factible también hace falta $\hat{x}\geq 0$:
+\[
+\hat{x}_B\geq 0\Leftrightarrow\bar{b}-\alpha y_k\geq 0\Leftrightarrow \alpha \leq \frac{\bar{b}_i}{y_{ik}},
+\]
+para todo $i=1,\ldots,m$ tal que $y_{ik}>0$.
+
+
+
+\subsubsection{Ejemplos.}
+  
+  
+\subsubsection{La tabla del simplex. Pivoteo.}
+  
+  
+\subsubsection{Método de las dos fases.}
+  
+\subsection{Optimización lineal con {\tt R}}
+ 
