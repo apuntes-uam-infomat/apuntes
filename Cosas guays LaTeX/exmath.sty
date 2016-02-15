@@ -275,7 +275,6 @@
 	\message{Using section numbering for theorems and definitions}
 \fi
 
-
 \newtheorem{ilemma}[thm]{Lema}
 \newtheorem{itheorem}[thm]{Teorema}
 \newtheorem{corol}[thm]{Corolario}
@@ -395,12 +394,24 @@
 		\renewcommand{\label@hook}{}}
 }
 
+\def\@restore@itemlabels{
+	\renewcommand{\labelenumi}{\alph{enumi}. }
+	\renewcommand{\theenumi}{\alph{enumi}}
+}
+
 \newenvironmentx{defn}[2][1=, 2=None]{  % 1O: titulo; 2O: indice;
 	\vspace{15 pt}
 	\set@labelname{#1}
 	\noindent \refstepcounter{def} \textit{Definici\'{o}n \thedef}
+	\renewcommand{\labelenumi}{\alph{enumi}. }
+	\renewcommand{\theenumi}{\thedef\ - (\alph{enumi})}
 	\concept[#2]{#1}.\itshape}
-	{\vspace{2 pt}}
+	{\vspace{2 pt}\@restore@itemlabels}
+
+\def\@set@theorem@itemlabels{
+	\renewcommand{\labelenumi}{\alph{enumi}. }
+	\renewcommand{\theenumi}{\thethm\ - (\alph{enumi})}
+}
 
 \newenvironmentx{prop}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
 	\vspace{2pt}
@@ -413,9 +424,9 @@
 		{}
 		{\ithm{#1}}
 	\toggle@IS@print %IGN
-
+	\@set@theorem@itemlabels
 	\begin{iprop}[#1]}
-	{\end{iprop}}
+	{\end{iprop}\@restore@itemlabels}
 
 \newenvironmentx{theorem}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
 	\vspace{2pt}
@@ -428,10 +439,11 @@
 		{}
 		{\ithm{#1}}
 	\toggle@IS@print %IGN
+	\@set@theorem@itemlabels
 	\begin{framed}
 
 	\begin{itheorem}[#1]}
-	{\end{itheorem}\end{framed}}
+	{\end{itheorem}\end{framed}\@restore@itemlabels}
 
 
 \newenvironmentx{lemma}[2][1=, 2=None]{ % 1O: titulo; 2O: indice;
@@ -445,8 +457,9 @@
 		{}
 		{\ithm{#1}}
 	\toggle@IS@print %IGN
+	\@set@theorem@itemlabels
 	\begin{ilemma}[#1]}
-	{\end{ilemma}}
+	{\end{ilemma}\@restore@itemlabels}
 
 
 \newcommand{\concept}[2][None]{\toggle@IS@print\textbf{#2}% IGN
