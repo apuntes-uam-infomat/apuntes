@@ -409,15 +409,6 @@ W2 exist such that
 \end{center}
 \solution
 
-
-\end{problem}
-
-\begin{problem}[10]
-Show that small initial weights still allow for any position of the initial decision line
-for the perceptron.
-
-\solution
-
 Sin tuviéramos $b=0$, tal y como está descrito el ejemplo 2.11, tendríamos siempre dos rectas de la forma:
 \[y_1=ax+0.2 \text{ y } y_2 = bx - 0.2\]
 
@@ -435,6 +426,16 @@ b-0.2 > 0 \\
 donde las ecuaciones se obtienen al forzar que los puntos $(1,1), (1,0)$ y $(0,1)$ tengan los signos adecuados.
 
 Finalmente, aunque las cuatro primeras ecuaciones dan lugar a la posibilidad de existir las rectas $y_1$ y $y_2$\footnote{Como es lógico puesto que si ignoramos el origen y uno de los puntos que se encuentran sobre los ejes es trivial ver que toda recta con pendiente menor que 1 (o mayor, según que punto del eje estemos ignorando) actúa como linea divisoria}, las dos últimas ecuaciones son inconsistentes.
+
+\end{problem}
+
+\begin{problem}[10]
+Show that small initial weights still allow for any position of the initial decision line
+for the perceptron.
+
+\solution
+
+
 
 \end{problem}
 
@@ -509,21 +510,61 @@ functions:
 or
 \[f=\left\{ \begin{array}{ll}1 & \text{ if net } \geq \theta \\ -1 & \text{otherwise} \end{array}\right.\]
 or
-\[f=\left\{ \begin{array}{ll}1 & \text{ if net } \geq \theta \\ 0 & \text{if} -\theta < \text{net} < \theta \\ -1 & \text{ if net } < -\theta\end{array}\right.\]
+\[f=\left\{ \begin{array}{ll}1 & \text{ if net } \geq \theta \\ 0 & \text{if} -\theta < \text{net} < \theta \\ -1 & \text{ if net } \leq -\theta\end{array}\right.\]
 \solution
+
+Considerando que estamos trabajando con un perceptrón (no lo especifica el enunciado pero estamos en la sección de problemas asociados al perceptrón) tendremos una función de activación (una vez hayamos entrenado la red) de la forma:
+\[y = f(ω_0b + \sum_{i=1}^nω_ix_i) \]
+
+Con las dos primeras funciones proporcionadas podemos resolver exactamente los mismos problemas. Lo que cambia es la codificación de la clasificación negativa por parte de la red. En estos casos podremos resolver todos aquellos problemas que sean linealmente separables.
+
+En cuanto a la tercera función tendremos que los puntos estudiados se clasifican en tres tipos, según el valor de la neurona de salida respecto al umbral establecido. Esto nos permite resolver todos aquellos problemas que puedan separarse mediante dos rectas paralelas.
+
+Por ejemplo, la función XOR, que no es separable, puede ser representada por un perceptrón que emplee una función como la tercera dada. Para ello basta con asociar la salida 1 y la salida -1 con la misma clasificación del patrón entrenado.
+
+En el caso de la puerta lógica XOR que acabamos de mencionar tendríamos como solución:
+\[y=f(-b + x_1+x_2) \text{ siendo } ω =0.5\]
 
 \end{problem}
 
 \begin{problem}[13]
- Even for 9 == 0, the perceptron learning rule prevents the correct classification of a
-point on the dividing line (which is better than assigning it arbitrarily to either side
-of the line). If 9 < a (the learning rate), does the exact value of 9 matter? Does it
-matter if 9 > a? Does it make a difference whether we start with all initial weights
+ Even for $\theta= 0$, the perceptron learning rule prevents the correct classification of a point on the dividing line (which is better than assigning it arbitrarily to either side
+of the line). If $\theta < α$ (the learning rate), does the exact value of $\theta$ matter? Does it matter if $\theta > α?$ Does it make a difference whether we start with all initial weights
 equal to 0, as in Examples 2.11-2.13, or with other values (small random numbers,
 for instance)?
 
 \solution
 
+El proceso de aprendizaje del perceptrón consiste en reajustar los pesos de la red \textbf{cuando se produzca un error en la predicción} según la fórmula:
+\[ω_i = ω_i + αtx_i, \text{ siendo } t \text{ la salida esperada}\]
+
+Esta regla sólo se aplica en los siguientes casos:
+\[\begin{array}{lll}
+\sum_{i=0}^nω_ix_i < -\theta & \text{ y } & t\geq 0 \\
+\theta \geq \sum_{i=0}^nω_ix_i \geq - \theta & \text{ y } & \abs{t}> 0 \\
+\sum_{i=0}^nω_ix_i > \theta & \text{ y } & t\leq 0
+\end{array}\]
+
+Podemos obviar aquellos casos en los que $t=0$ puesto que en esos casos no se produce ningún aprendizaje por lo que las preguntas planteadas por el enunciado carecen de sentido.
+
+En el primer caso, tras corregir los pesos, ante la misma entrada, tendremos:
+\[\sum_{i=0}^nω_ix_i + \sum_{i=0}^nαtx_i^2 \]
+siendo
+\[ \theta  k\leq  \sum_{i=0}^nαtx_i^2 \leq  αk\]
+donde $k$ es el número de valores $x_i$ no nulos.
+
+Es sencillo comprobar que en este caso la red aprende y almacena los pesos necesarios para clasificar correctamente el patrón sobre el que acaba de errar.
+
+Por tanto, el valor de $\theta$ no es importante siempre y cuando se mantenga la relación con α.
+
+Por otro lado, si $\theta > α$ tendríamos:
+\[ α  k\leq  \sum_{i=0}^nαtx_i^2 \leq  \theta k\]
+
+En este caso, sin importar el valor de $\theta$ no se produce ningún aprendizaje puesto que la red volverá a fallar ante el mismo ejemplo. (Se produce cierto aprendizaje puesto que el error es ``menor'' pero todavía harán falta más iteraciones para que la red aprenda a trabajar sobre este ejemplo.)
+
+En el tercer caso el resultado es análogo al que acabamos de analizar, puesto que cambia la desigualdad y el signo de $t$.
+
+Para el caso intermedio, en el que la red clasifica el patrón como clase 0,
 \end{problem}
 
 \begin{problem}[14]
