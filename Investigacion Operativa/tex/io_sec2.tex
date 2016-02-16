@@ -1036,7 +1036,81 @@ para todo $i=1,\ldots,m$ tal que $y_{ik}>0$.
 
 \subsubsection{Ejemplos.}
 
+\begin{example}
 
+Vamos a aplicar el algoritmo de Simplex (aunque todavía no está formalmente muy definido) al problema:
+
+
+\begin{ioprob}
+\goal{$\max\{3x_1 + x_2 + 2x_3\}$}
+\restrictions{$2x_1+x_2+x_3 \leq 2$}{$x_1 + 2x_2 + 3x_3\leq 5$}{$2x_1+2x_2+x_3\leq 6$}{$x_1\geq 0,\ x_2\geq 0,\ x_3\geq 0$}{}{}
+\end{ioprob}
+
+
+Pasamos primero a la forma estándar:
+
+\begin{ioprob}
+\goal{$\min\{-3x_1 - x_2 - 2x_3\}$}
+\restrictions{$2x_1+x_2+x_3 + x_4 = 2$}{$x_1 + 2x_2 + 3x_3 +  x_5 = 5$}{$2x_1+2x_2+x_3 + x_6 = 6$}{$x_i\geq 0,\ i=1,\ldots,6.$}{}{}
+\end{ioprob}
+
+
+ 
+La solución factible básica inicial: $\bar{x}=(0,0,0,2,5,6)^\top$, para la que el objetivo es $\bar{z}=0$.
+
+Tomamos:
+\[B = \{a_4,a_5,a_6\} = I\]
+\[\bar{b} = (2,5,6)^t \]
+\[\bar{x} = (0,0,0,2,5,6) \]
+\[c_B = (0,0,0)^t\]
+
+\[
+\begin{array}{cc}
+y_1 = (2,1,2)' & z_1 - c_1 = c^t_By_1 - c_1 = 0 - (-3) = 3\\
+y_2 = (1,2,2)' & z_2 - c_2 = c^t_By_2 - c_2 = 0 - (-1) = 1\\
+y_3 = (1,3,2)' & z_3 - c_3 = c^t_By_3 - c_3 = 0 - (-2) = 2
+\end{array}
+\]
+
+Ahora, incluimos $x_1$ ya que es la que más mejora el objetivo. Le corresponde $y_1$. ¿Cuánto podemos aumentar $x_1$? Pues sólo podemos aumentarlo:
+
+\[ α = \min\{\rfrac{2}{2},\rfrac{5}{1},\rfrac{6}{2} \} = 1\]
+
+Como el mínimo corresponde a la primera restricción, la variable que sale es la primera variable de la base, es decir $x_4$.
+
+Ahora, en vez de invertir la matriz, vamos a utilizar el \textbf{pivote}\footnote{Ya lo veremos formalmente más adelante}, que consiste en obtener $(1,0,0)$ en la variable interesante, obteniendo:
+
+\begin{align*}
+2x_1+x_2+x_3 + x_4 &= 2   \\
+x_1 + 2x_2 + 3x_3 +  x_5 &= 5  \\
+2x_1+2x_2+x_3 + x_6 &= 6 
+\end{align*}
+
+Vamos a calcular:
+\[
+\begin{array}{cc}
+y_? =  & z_2 - c_2 = c^t_By_2 - c_2 = (-3,0,0)\begin{pmatrix}\rfrac{1}{2}\\\rfrac{3}{2}\\\rfrac{5}{2}\end{pmatrix} - (-1) = -\rfrac{1}{2}\\
+y_2 = (1,2,2)' & z_3- c_3 = c^t_By_3 - c_3 = (-3,0,0)\begin{pmatrix}\rfrac{1}{5}\\\rfrac{5}{2}\\0 \end{pmatrix} - (-2) = \rfrac{1}{2}\\
+y_3 = (1,3,2)' & z_4 - c_4 = c^t_By_4 - c_4 = .. = -\rfrac{3}{2}
+\end{array}
+\]
+
+La mayor (y además, la única positiva) es $x_3$. Esta es la variable que entra en la base.
+
+Como $y_3 > 0$, vamos a tener solución. Si $y_3 < 0$, podríamos aumentar todo lo que quisiéramos $x_3$ mejorando siempre el objetivo. Ahora, calculamos $α$
+
+\[α = \min\left\{\frac{1}{\rfrac{1}{2}}, \frac{4}{\rfrac{5}{2}}\right\} = \frac{8}{5}\]
+
+La variable que sale es la que tiene de coeficiente de $x_3 = \rfrac{8}{5}$, es decir, $x_5$.
+
+Ya hemos hecho 2 iteraciones del algoritmo y son suficientes. Pero ahora, nos surge la duda, ¿vamos a acabar en algún momento?
+Si todos los $\bar{b}$ son positivos, entonces siempre tendremos solución. Si en algún caso tenemos $\bar{b}_r = 0 \implies α=0$. Esto provoca que tengamos bases distintas que den lugar a la misma solución.
+Esto se da cuando hay degeneración. ¿Cómo solucionarlo? Pues otra posibilidad es cambiar el criterio de entrada y salida de variable. La \concept{regla\IS de Bland} consiste en escoger la variable de menor índice. 
+No vamos a ver la demostración porque es muy engorrosa, pero esta regla nos da una solución óptima incluso con el caso degenerado.
+\end{example}
+
+
+  
 \subsubsection{La tabla del simplex. Pivoteo.}
 
 
