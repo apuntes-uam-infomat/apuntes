@@ -386,9 +386,11 @@ Para las variedades, haremos algo parecido. Iremos primero a por lo fácil: ¿en
 
 El siguiente paso será definir esos ``vectores gradiente'', que aplicaremos a vectores tangentes a la variedad. Esa ``aplicación'' se puede considerar como una aplicación lineal, y entonces el espacio de vectores gradiente será el espacio cotangente (que denotaremos por $\tgsd_p M$).
 
+\section{Espacio tangente}
+
 \textit{Nota: Las dos secciones siguientes son una mezcla de lo que dio Gabino en clase y de lo que hay en \citep[Capítulo I]{ApuntesGeoDif}.}
 
-\subsection{Espacio tangente definido por medio de curvas}
+\subsection{Definición por medio de curvas}
 
 ¿Cómo definimos el espacio tangente a una variedad? Una primera aproximación puede ser tomar un punto $p ∈ M$, y una parametrización $φ$ de un entorno de $p$. Por ejemplo, cogemos la esfera y entonces podemos tomar las derivadas parciales: \( \tgs_p \crc[2] = \gen{\pd{φ}{x}, \pd{φ}{y}} = \gen{(1,0, \sfrac{-a}{c}), (0, 1, \sfrac{-b}{c})} \label{eq:EspTgEsfera} \)
 
@@ -405,7 +407,7 @@ La primera pregunta que podemos hacernos es si esta definición de $\tgs_p M$ de
 
 Con esta definición, se puede probar que $\tgs_p M$ es un espacio vectorial. La cuestión es ver de qué dimensión es, y la definición que hemos dado no nos va a ayudar demasiado.
 
-\subsection{Espacio tangente definido por medio de derivaciones}
+\subsection{Definición por medio de derivaciones}
 
 Ahora vamos a tomar un enfoque algo distinto. Sabemos qué queremos hacer, que es derivar funciones, así que vamos a tratar de dar una definición lo más minimalista posible de la derivada.
 
@@ -436,7 +438,7 @@ Una vez que hemos emulado las direcciones en las que podemos definir las derivad
 \[ \tgs_p U ≝ \set{\appl{D}{\mathcal{A}_p}{ℝ}\tq D \text{ es derivación }} \]
 \end{defn}
 
-Un ejemplo es ver que, si tomamos una función $\appl{f}{M}{ℝ}$ y una carta inversa $\inv{φ}(t_1, \dotsc, t_n)$ entonces $\eval[2]{\pd{}{x_i}}_p$ es una derivación que se aplica de la siguiente forma:
+Un ejemplo es ver que, si tomamos una función $\appl{f}{M}{ℝ}$ y una carta $\inv{φ}(t_1, \dotsc, t_n) \equiv (x_1, \dotsc, x_m)$ entonces $\eval[2]{\pd{}{x_i}}_p$ es una derivación que se aplica de la siguiente forma:
 \[ \eval{\dpd{}{x_i}}_p (f) ≝ \eval{\dpd{f○\inv{φ}}{t_i}}_{φ(p)}\]
 
 Además, las derivaciones son una base de el espacio tangente.
@@ -466,6 +468,41 @@ Debe ocurrir que $v(x_j) = a_j$. Sea $\appl{λ}{U_p}{ℝ}$ una función arbitrar
 ¿Qué pasa con el cambio de coordenadas? En este caso, podeoms hacer cuentas y las cosas funcionan bien:\[ \eval{\dpd{}{y_j}}_p = \sum_{i=1}^n \eval{\dpd{x_i}{y_j}}_p · \eval{\dpd{}{x_i}}_p \]
 
 Se puede demostrar además que este espacio tangente es equivalente al que definimos mediante curvas.
+
+\subsection{Aplicaciones entre variedades y sus diferenciales}
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{AplicacionYDiferencial}
+\caption{Ilustración de la diferencial de una aplicación entre variedades: nos lleva vectores tangentes a la variedad origen a vectores tangentes a la variedad de destino.}
+\label{fig:AplicacionYDiferencial}
+\end{figure}
+
+La definición del espacio tangente nos permite empezar a hablar de la diferencial de aplicaciones entre variedades.
+
+\begin{defn}[Diferencial\IS de una aplicación] Sean $M^m$, $N^n$ dos variedades de dimensión $m$ y $n$ respectivamente, y sea $\appl{f}{M}{N}$ una aplicación entre ellas. Entonces, dado un punto $p ∈ M$, se define la diferencial de $f$ en $p$ como la aplicación lineal dada por \begin{align*}
+\appl{\eval[1]{\dif f}_p}{\tgs_p M&}{\tgs_{f(p)} N} \\
+D &\longmapsto \eval[1]{\dif f}_{p} (D)
+\end{align*}, donde $\eval[1]{\dif f}_{p} (D)$ será una derivación de $\tgs_{f(p)} N$ dada por lo siguiente:
+\begin{align*}
+\appl{\eval[1]{\dif f}_{p} (D)}{\mathcal{A}_{f(p), N} &}{ℝ} \\
+g &\longmapsto D(g ○ f)
+\end{align*}
+\end{defn}
+
+Aunque esta definición de diferencial la hayamos hecho desde las derivaciones, podemos ver que si lo hubiésemos hecho con curvas nos habría salido lo mismo. Si consideramos una curva $\appl{c}{(-ε, ε)}{M}$ con $c(0) = p$, sabemos que $c'(0) ∈ \tgs_p M$. En ese caso, la diferencial será \[ \eval[1]{\dif f}_p (c'(0)) = (f○c)'(0)\] como uno podría esperar.
+
+Vamos a ver ahora una serie de proposiciones para trasladar ciertas propiedades habituales de la derivada a esta definición de la diferencial que hemos dado.
+
+\begin{prop} Dada una variedad $M$ conexa y una aplicación diferenciable $\appl{f}{M}{N}$, si se cumple que $\difp \equiv 0\; ∀p ∈ M$, entonces $f$ es constante.
+\end{prop}
+
+\begin{proof} Queremos ver que si $f(x_0) = y_0$ para algún $x_0 ∈ M$, entonces $f(x) = y_0$ para todo $x ∈ M$. Esto es exactamente lo mismo que decir que $\inv{f}(y_0) = M$.
+
+Ahora bien, como el conjunto $\set{y_0}$ es cerrado, su imagen inversa por $f$ (que por ser diferenciable es continua) ha de ser un cerrado.
+
+Por otra parte, como en $x_0$ la diferencial se anula, entonces $f$ es constante en un entorno de $x_0$, luego creo que funciona todo bien.
+\end{proof}
 
 \chapter{Cohomología de De Rham}
 \label{chap:CohomologiaDeRham}

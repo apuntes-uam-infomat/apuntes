@@ -301,3 +301,6 @@
 \densein#m
 \fourier#m
 \hash#m
+\difp#m
+\difp[f]#m
+\difp[f][p]#m
