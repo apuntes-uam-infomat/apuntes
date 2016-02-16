@@ -366,41 +366,83 @@ Podemos ver, por ejemplo, la triangulación del toro para calcular su caracterí
 \chapter{Espacios tangente y cotangente}
 \label{chap:EspaciosTangenteyCotangente}
 
-\textit{Nota: Un desarrollo formal de lo del espacio contangente está en \citep[Capítulo I]{ApuntesGeoDif}}.
+\section{Introducción y definición}
 
-¿Cómo definimos el espacio tangente? Tomamos un punto $p ∈ M$, y una parametrización $α$ de un entorno de $p$. Por ejemplo, cogemos la esfera y entonces $\tgs_p \crc[2] = \gen{\pd{α}{x}, \pd{α}{y}} = \gen{(1,0, \sfrac{-a}{c}), (0, 1, \sfrac{-b}{c})} ⊆ ℝ^3$.
+\begin{figure}[hbtp]
+\centering
+\inputtikz{EspacioTangenteIntroduccion}
+\caption{Pongamos que queremos definir el cambio de temperatura (la variación de color azul a rojo) en cada punto $p$ de la curva $α$. Para eso necesitamos definir la dirección en la que nos movemos y también algún tipo de ``derivada'' que nos dé la variación en función de esa dirección. Estas necesidades dan lugar a las definiciones de espacio tangente y cotangente.}
+\end{figure}
 
-Ahora bien, para hacer esto estamos apoyándonos en el hecho de que la esfera está en $ℝ^3$. ¿Qué hacemos si cogemos otra variedad abstracta, como $\projp^4$?
+Una vez que ya hemos definido lo que es una variedad, lo más probable es que nos interese hacer algún tipo de cálculos de derivadas sobre ella. Por ejemplo, podemos querer ver cómo varía una función a lo largo de una curva definida en la variedad.
 
-Volviendo al ejemplo, podemos expresar el espacio tangente como \[ \tgs_p \crc[2] = \set{α'(0) ∈ ℝ^3 \tq \appl{α}{(-ε, ε)}{\crc[2]}, \, α(0) = p} \]
+El problema es cómo definir la derivada. Si tenemos una variedad de dimensión 2 dentro de $ℝ^3$, una curva $α(t) = (x(t), y(t), z(t))$ tendrá tres derivadas parciales, pero eso no tiene sentido porque nosotros estamos trabajando en 2 dimensiones: no puede haber tres derivadas.
 
-Si tomamos $f(x,y,z) = x^2 + y^2 + z^2 - 1$, entonces $\crc[2] = \inv{f}(0)$. Por lo tanto, decir que $α(-ε, ε) ⊆ \crc[2]$ es equivalente a decir que $f(α(t)) = 0$ para $t ∈ (-ε, ε)$. Calculando su derivada, \[ 0 = (f ○ α)'(0) = \eval[2]{\Dif f}_{α(0) = p} · \eval[2]{\Dif α}_{0} = (2a, 2b, 2c) · α'(0) \], luego $α'(0)$ es ortogonal a $(a,b,c)$, y precisamente el espacio de los vectores ortogonales a $(a,b,c)$ es lo que habíamos definido antes como $\tgs_p \crc[2]$. Esto sí nos permitirá definir correctamente el espacio tangente a una variedad, aunque tendremos que sortear de alguna forma el hecho de que no sabemos derivar en espacios abstractos. Para ello, nos basaremos en las cartas y en los entornos de cada punto homeomorfos a $ℝ^n$, donde sí sabemos derivar.
+Necesitamos cambiar algo, crear algún tipo de estructura que nos permita hacer derivadas y poder trabajar cómodamente sin preocuparnos en exceso de en qué espacio ambiente estamos o cómo hemos ``incrustado'' nuestra variedad.
+
+Para entenderlo, podemos fijarnos en qué es lo que hacemos cuando derivamos una función definida en, por ejemplo, $ℝ^2$. Lo primero que hacemos es sacar el gradiente como $\grad F = \left(\pd{F}{x}, \pd{F}{y}\right)$, pero no nos vale con eso. Lo que queremos es saber la variación de $F$ en una dirección en concreto, así que multiplicamos por un vector.
+
+Para las variedades, haremos algo parecido. Iremos primero a por lo fácil: ¿en qué direcciones nos podemos mover cuando estamos metidos en una variedad? Está claro que no podemos salirnos de esa variedad a través de vectores normales (perpendiculares) a ella, así que sólo nos queda ir por vectores tangentes. Esto nos llevará a definir el espacio tangente, que denotaremos por $\tgs_p M$.
+
+El siguiente paso será definir esos ``vectores gradiente'', que aplicaremos a vectores tangentes a la variedad. Esa ``aplicación'' se puede considerar como una aplicación lineal, y entonces el espacio de vectores gradiente será el espacio cotangente (que denotaremos por $\tgsd_p M$).
+
+\textit{Nota: Las dos secciones siguientes son una mezcla de lo que dio Gabino en clase y de lo que hay en \citep[Capítulo I]{ApuntesGeoDif}.}
+
+\subsection{Espacio tangente definido por medio de curvas}
+
+¿Cómo definimos el espacio tangente a una variedad? Una primera aproximación puede ser tomar un punto $p ∈ M$, y una parametrización $φ$ de un entorno de $p$. Por ejemplo, cogemos la esfera y entonces podemos tomar las derivadas parciales: \( \tgs_p \crc[2] = \gen{\pd{φ}{x}, \pd{φ}{y}} = \gen{(1,0, \sfrac{-a}{c}), (0, 1, \sfrac{-b}{c})} \label{eq:EspTgEsfera} \)
+
+Ahora bien, para hacer esto estamos apoyándonos en el hecho de que la esfera está en $ℝ^3$. ¿Qué hacemos si cogemos otra variedad abstracta, como $\projp^4$, y la metemos en otro espacio? Necesitamos una forma de definirlo independientemente del espacio ambiente. Ahora bien, el ejemplo que hemos puesto nos puede servir. Una forma, más bien poco rigurosa, de expresar el espacio tangente, sería darlo como el conjunto de los posibles vectores tangentes a curvas que pasan por $p$, tal que \[ \tgs_p \crc[2] = \set{α'(0) ∈ ℝ^3 \tq \appl{α}{(-ε, ε)}{\crc[2]}, \, α(0) = p} \] para $ε$ pequeño, donde α son curvas definidas en la esfera.
+
+Un cálculo rápido nos permite ver que estamos cerca de lo que buscamos. Si tomamos $f(x,y,z) = x^2 + y^2 + z^2 - 1$, entonces $\crc[2] = \inv{f}(0)$. Por lo tanto, decir que $α(-ε, ε) ⊆ \crc[2]$ es equivalente a decir que $f(α(t)) = 0$ para $t ∈ (-ε, ε)$. Calculando su derivada, \[ 0 = (f ○ α)'(0) = \eval[2]{\Dif f}_{α(0) = p} · \eval[2]{\Dif α}_{0} = (2a, 2b, 2c) · α'(0) \], luego $α'(0)$ es ortogonal a $(a,b,c)$, y precisamente el espacio de los vectores ortogonales a $(a,b,c)$ es lo que habíamos definido antes como $\tgs_p \crc[2]$.
+
+Por lo tanto, esto sí nos permitirá definir correctamente el espacio tangente a una variedad, aunque tendremos que sortear de alguna forma el hecho de que no sabemos derivar en espacios abstractos. Para ello, nos basaremos en las cartas y en los entornos de cada punto homeomorfos a $ℝ^n$, donde sí sabemos derivar.
 
 \begin{defn}[Espacio\IS tangente] Sea $M$ una variedad diferenciable y sea $p ∈ M$. Definimos el espacio tangente a $M$ en el punto $p$ como el espacio cociente \[ \tgs_p M = \quot{\set{\appl{α}{(-ε, ε)}{M} \tq α(0) = p}}{\sim} \] con $\sim$ la relación de equivalencia dada por \[ α \sim β \iff (φ ○ α)'(0) = (φ ○ β)'(0)\] con $φ$ una carta de $p$. Los vectores de $\tgs_p M$ se escriben como $[α]$ o $α'(0)$, aunque esto es sólo notación ya que la derivada en la variedad no tiene demasiado sentido.
 \end{defn}
 
 La primera pregunta que podemos hacernos es si esta definición de $\tgs_p M$ depende de la carta elegida. Es decir, que si la derivada coincide con una carta, coincide también para cualquier otra carta. Bueno, la respuesta es que sí si hacemos unas cuantas operaciones (obviamente).
 
-Con esta definición, se puede probar que $\tgs_p M$ es un espacio vectorial. La cuestión es ver de qué dimensión es. Daremos una definición alternativa de espacio tangente que nos permitirá entender mejor la dimensión.
+Con esta definición, se puede probar que $\tgs_p M$ es un espacio vectorial. La cuestión es ver de qué dimensión es, y la definición que hemos dado no nos va a ayudar demasiado.
 
-Primero, definimos $θ_{p,M} = \set{\appl{f}{U}{ℝ} \tq p ∈ U, f\text{ diferenciable}}$. Esto no es un espacio vectorial porque los entornos no son equivalentes. Construimos una relación de equivalencia dada por \[ (f_1, U_1) \sim (f_2, U_2) \iff f_1 = f_2\text{ en }W ⊂ U_1 ∩ U_2 \], y denotaremos $Θ_{p,M} = \quot{θ_{p,M}}{\sim}$. Lo bueno es que aquí sí podemos sumar, tomando el entorno abierto más pequeño en el que estén definidas ambas. De hecho, es un anillo local (ver \citep{ApuntesAlgebraConmutativa}). Entonces, definiremos el vector tangente que tiene sabor a derivada\footnote{¿A qué saben las derivadas? ¿De qué color es el cielo? ¿Qué estoy haciendo con mi vida?.}
-s
+\subsection{Espacio tangente definido por medio de derivaciones}
 
-\begin{defn}[Vector\IS tangente] Un vector tangente $v$ en $p ∈ M$ es una derivación lineal de $Θ_{p,M}$, es decir:
+Ahora vamos a tomar un enfoque algo distinto. Sabemos qué queremos hacer, que es derivar funciones, así que vamos a tratar de dar una definición lo más minimalista posible de la derivada.
+
+Lo primero que hacemos es definirnos el espacio de funciones sobre el que vamos a trabajar. Simplemente pediremos funciones definidas en un entorno de $p ∈ M$, y entonces definiremos \[ A_{p,M} = \set{\appl{f}{U}{ℝ} \tq p ∈ U,\, f ∈ C^∞} \], cuyos elementos serán los pares $(f,U)$ de las funciones y el entorno en el que están definidas.
+
+Normalmente, los espacios de funciones tienen estructura de espacio vectorial, lo cual nos vendría muy bien en esta definición. Pero tenemos un problema, y es que no sabemos exactamente cómo podemos sumar dos funciones que están definidas en conjuntos distintos. Por suerte, esto se puede salvar definiendo una relación de equivalencia: \[ (f_1, U_1) \sim (f_2, U_2) \iff f_1 = f_2\text{ en }W ⊂ U_1 ∩ U_2 \], que está bien definida por ser los $U$ entornos abiertos que contienen a $p$.
+
+Ahora podemos definir \[ \mathcal{A}_{p,M} = \quot{A_{p,M}}{\sim} \], que es un espacio vectorial y un anillo local (ver \citep{ApuntesAlgebraConmutativa}). Y con esto no sólo nos hemos quitado el problema de no saber sumar funciones, sino que además hemos metido muy, muy sutilmente el concepto de derivada: si dos funciones son equivalentes, entonces son iguales en un entorno de $p$, y por lo tanto tendrán la misma derivada en $p$. Luego podremos definir las derivadas, que aquí llamaremos derivaciones.
+
+\begin{defn}[Derivación] \label{def:Derivacion} Una derivación en $p$ es una aplicación
+\begin{align*}
+\appl{D}{\mathcal{A}_p&}{ℝ} \\
+f &\longmapsto D(f)
+\end{align*}
+
+Queremos que esta función conserve de alguna forma la noción de derivada en una dirección, así que buscaremos varias propiedades:
+
 \begin{enumerate}
-\item $\appl{v}{Θ_{p,M}}{ℝ}$ es lineal.
-\item \label{prp:LeibnizVectorTg} $v(f·g) = f(p) · v(g) + g(p)·v(f)$.
+	\item $D$ es lineal.
+	\item $D(λ) = 0$, donde $λ$ es una función constante $λ(x) = λ ∈ ℝ$.\footnote{En realidad, esta propiedad es consecuencia de las otras dos pero viene bien tenerla presente.}
+	\item \label{prp:LeibnizVectorTg} Si esto se parece a una derivada, además de definir cómo se derivan las sumas\footnote{Por esto forzamos que $D$ sea lineal.} definiremos cómo se derivan los productos, según la regla de Leibniz: \[ D(f·g) = f · D(g) + D(f) · g\]
 \end{enumerate}
 \end{defn}
 
-Dejamos como ejercicio ver que $v(c) = 0$ si $c$ es constante (la idea es que $7 = 1 · 7$) y aplicamos lo del análogo de la regla de Leibniz (\fref{prp:LeibnizVectorTg}). También querremos ver un ejemplo de un $v$ en libertad. Queremos fotos! Cogemos cartas y cosas y esta clase está siendo un tanto surrealista. Pero bueno, que sí, que sale, que me lo creo. Mañana (lo dudo porque no tenemos clase) hará nosequé con nosequécosa.
+Una vez que hemos emulado las direcciones en las que podemos definir las derivadas, ahora sí podemos definir el espacio tangente:
 
-Como ejercicio, tenemos que ver que $\eval[2]{\pd{}{x_i}}_p$ es una derivación, y además
+\begin{defn}[Espacio\IS tangente] Diremos que el espacio tangente a $p$ en $U$ se define como
+\[ \tgs_p U ≝ \set{\appl{D}{\mathcal{A}_p}{ℝ}\tq D \text{ es derivación }} \]
+\end{defn}
+
+Un ejemplo es ver que, si tomamos una función $\appl{f}{M}{ℝ}$ y una carta inversa $\inv{φ}(t_1, \dotsc, t_n)$ entonces $\eval[2]{\pd{}{x_i}}_p$ es una derivación que se aplica de la siguiente forma:
+\[ \eval{\dpd{}{x_i}}_p (f) ≝ \eval{\dpd{f○\inv{φ}}{t_i}}_{φ(p)}\]
+
+Además, las derivaciones son una base de el espacio tangente.
 
 \begin{prop} $\set{\eval[2]{\pd{}{x_1}}_p, \dotsc,\eval[2]{\pd{}{x_n}}_p}$ es una base de $\tgs_p M$. En particular, $\dim \tgs_p M = \dim M$.
 \end{prop}
-
-\[ \eval{\dpd{}{x_i}}_p (λ) ≝ \pd{λ○\inv{φ}}{t_i}_{φ(p)}\]
 
 \begin{proof}
 
@@ -421,9 +463,9 @@ Debe ocurrir que $v(x_j) = a_j$. Sea $\appl{λ}{U_p}{ℝ}$ una función arbitrar
 
 \end{proof}
 
-¿Qué pasa con el cambio de coordenadas? Bueno, pues que hay un cambio de coordenadas y parece que el infierno se abre ante nosotros y lo que nos queda es que \[ \eval{\dpd{}{y_j}}_p = \sum_{i=1}^n \eval{\dpd{x_i}{y_j}}_p · \eval{\dpd{}{x_i}}_p \]
+¿Qué pasa con el cambio de coordenadas? En este caso, podeoms hacer cuentas y las cosas funcionan bien:\[ \eval{\dpd{}{y_j}}_p = \sum_{i=1}^n \eval{\dpd{x_i}{y_j}}_p · \eval{\dpd{}{x_i}}_p \]
 
-El espacio tangente es equivalente si lo definimos mediante curvas. Esto tengo que mejorarlo muchísísísísimo porque está siendo un caos absoluto.
+Se puede demostrar además que este espacio tangente es equivalente al que definimos mediante curvas.
 
 \chapter{Cohomología de De Rham}
 \label{chap:CohomologiaDeRham}
