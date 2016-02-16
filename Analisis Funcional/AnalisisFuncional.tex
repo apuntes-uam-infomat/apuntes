@@ -420,7 +420,7 @@ Ahora, si tenemos $f,g ∈ \mathcal{F}_φ$ y $x ∈ \bola_{δ_j} (x_j)$ para alg
 
 Ejemplo: $C^1([a,b])$ con norma supremo.
 
-\begin{defn}[Norma] Sea $V$ un espacio vectorial sobre un cuerpo \kbb (para nosotros, $\kbb = ℝ$ o $ℂ$). Una función $\appl{\norm{\cdot}}{V}{ℝ^+ = [0,∞)}$ es una norma si cumple las siguientes propiedades:
+\begin{defn}[Norma] \label{def:Norma} Sea $V$ un espacio vectorial sobre un cuerpo \kbb (para nosotros, $\kbb = ℝ$ o $ℂ$). Una función $\appl{\norm{\cdot}}{V}{ℝ^+ = [0,∞)}$ es una norma si cumple las siguientes propiedades:
 
 \begin{enumerate}
 \item \textbf{Homogeneidad}: $∀x ∈ V$ y $∀λ∈\kbb$, $\norm{λx} = \abs{λ}\norm{x}$.
@@ -473,20 +473,19 @@ Por ejemplo, $C^1([a,b])$ con norma $\norm{f}_V = \norm{f}_∞ + \norm{f'}_∞$ 
 
 Como era de esperar, $L^p(X)$ es un espacio de Banach para cualquier $1 ≤ p ≤ ∞$, aunque lo demostraremos más tarde.
 
-\begin{defn}[Morfismo\IS de espacios normados] Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados y sea $\appl{T}{V}{W}$ lineal, con $T ∈ \mathcal{L}_{\mathrm{alg}} (V, W)$. Si $T$ es continua, entonces $T$ es un morfismo de espacios normados. El espacio de todos estos morfismos es $\mathcal{L}(V, W) = \set{T ∈ \mathcal{L}_{\mathrm{alg}} (V, W) \tq T \text{ continua}}$.
+\begin{defn}[Morfismo\IS de espacios normados] Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados y sea $\appl{T}{V}{W}$ lineal, con $T ∈ \mathcal{L}_{\mathrm{alg}} (V, W)$. Si $T$ es continua, entonces $T$ es un morfismo de espacios normados. El espacio de todos estos morfismos es \( \mathcal{L}(V, W) = \set{T ∈ \mathcal{L}_{\mathrm{alg}} (V, W) \tq T \text{ continua}} \label{eq:EspApplLinealesConts} \)
 \end{defn}
 
-\begin{prop} Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados sobre un mismo cuerpo \kbb. Sea $A ∈  \mathcal{L}_{\mathrm{alg}} (V, W)$ aplicación lineal entre $V$ y $W$. Entonces son sequivalentes:
+\begin{prop} Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados sobre un mismo cuerpo \kbb. Sea $A ∈  \mathcal{L}_{\mathrm{alg}} (V, W)$ aplicación lineal entre $V$ y $W$. Entonces son equivalentes:
 
 \begin{enumerate}
-\item  $A ∈ \mathcal{L}(V,W)$.
+\item $A ∈ \mathcal{L}(V,W)$.
 \item $A$ es continua en $0 ∈ V$.
 \item $A$ es continua en todo $V$.
-\item $∃ C < ∞$ independiente de $v ∈ V$ tal que $\norm{A(v)}_W ≤ C\norm{v}_V$.
+\item \label{prp:LinealEspNormados:Cota} $∃ C < ∞$ independiente de $v ∈ V$ tal que $\norm{A(v)}_W ≤ C\norm{v}_V$.
 \end{enumerate}
-
-Además, $\mathcal{L}(V,W)$ es normado si definimos \[ \norm{A} ≝ \sup_{v∈V} \setminus \set{0} \frac{\norm{A(v)}_W}{\norm{v}_V} \], y si $W$ es Banach entonces $(\mathcal{L}(V,W), \norm{·})$ también lo es.
 \end{prop}
+
 
 \begin{proof}
 
@@ -496,7 +495,51 @@ Que $A ∈ \mathcal{L}(V,W)$ implica que sea continua en $0 ∈ V$ es obvio. Vam
 
 Como $A$ es continua en $0$, si $v \to 0$ entonces $A(v) \to 0$. Sea ahora $v_0 ∈ V$ arbitrario. Entonces vamos a demostrar que $A(v) \to A(v_0)$ si $v\to v_0$. Lo que vemos es que \[ \dst_W(A(v), A(v_0)) = \norm{A(v) - A(v_0)} \eqreasonup{Linealidad} \norm{A(v-v_0)}_W \] que tiende hacia cero cuando $v \to v_0$, y como $A$ es continua en $0$ ya lo tenemos.
 
+\proofpart{$A$ continua en todo $V \implies A$ acotada}
+
+Consideramos $U = \bola_1(0) ⊂ W$, un abierto de $W$ que, por ser $\appl{A}{V}{W}$ continua, su preimagen $\inv{A}(U)$ es abierto en $V$. A su vez, es un entorno de $0 ∈ V$, ya que $A(0) = 0$ por ser lineal.
+
+Entonces, por ser entorno abierto de $0$, podemos encontrar un $ρ > 0$ tal que $\bola_ρ(0) ⊂ \inv{A}(U)$.  Por lo tanto, un vector $v ∈ \bola_ρ(0)$ deberá tener su imagen en $U$. En otras palabras, si $\norm{v}_V < ρ$ entonces $\norm{A(v)}_W < 1$.
+
+Ya casi hemos probado lo que queríamos, pero sólo para $v ∈ \bola_ρ(0)$: necesitamos expandirlo más. Lo bueno es que por ser lineal vamos a poder hacerlo, pagando con una constante.
+
+Sea $v ∈ V\setminus\set{0}$ y $v' = t\frac{v}{\norm{v}_V}$, con $0 < t < ρ$. Por homogeneidad de la norma \[ \norm{v'}_V = \norm{t \frac{v}{\norm{v}_V}}_V = \frac{t}{\norm{v}_V} \norm{v}_V = t < ρ\], es decir, $v' ∈ \bola_ρ(0)$.
+
+En ese caso, podemos aplicar la cota de antes y tenemos que \[ 1 > \norm{A(v')}_W \eqexpl{$A$ lineal} \norm{\frac{t}{\norm{v}_V} A(v)}_W = \frac{t}{\norm{v}_V} \norm{A(v)}_W  \]
+
+Lo que nos queda es que $\norm{A(v)}_W < \frac{1}{t} \norm{v}_V$ y, haciendo tender $t \to ρ_-$ por la izquierda, tendremos que \[ \norm{A(v)}_W ≤ C \norm{v}_V\] con $C = \inv{ρ}$. Esto se cumple incluso aunque $v = 0$, así que hemos probado esta implicación.
+
+\proofpart{$A$ acotada $\implies A$ continua}
+
+Una vez hemos demostrado que $A$ está acotada, entonces la continuidad sigue de manera sencilla: si $\norm{v - v'}_V < ε$, entonces \[ \norm{A(v) - A(v')}_W = \norm{A(v-v')}_W ≤ C\norm{v-v'}_V \] y nuestro $δ$ de la definición continuidad es $δ = Cε$.
+
 \end{proof}
+
+\begin{prop} \label{prop:NormaEspacioAppLineales} Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados sobre un mismo cuerpo \kbb. Entonces $\mathcal{L}(V,W)$\footnote{Aplicaciones lineales y continuas de $V$ en $W$, ver \eqref{eq:EspApplLinealesConts}.} es normado si definimos \( \norm{A} ≝ \sup_{v∈V \setminus \set{0}} \frac{\norm{A(v)}_W}{\norm{v}_V} \label{eq:NormaEspacioAppLineales} \)
+\end{prop}
+
+\begin{proof} La acotación de $A ∈ \mathcal{L}(V,W)$ (\fref{prp:LinealEspNormados:Cota}) nos da directamente que esa norma está bien definida, ya que \[ \norm{A(v)}_W ≤ C\norm{v}_V \implies \frac{\norm{A(v)}_W}{\norm{v}_V} ≤ C < ∞ \quad ∀v ≠ 0\]
+
+Tenemos que comprobar ahora las propiedades de la norma (ver \fref{def:Norma}). El producto por un escalar es sencillo, viendo que $(λA)(v) = λ · A(v)$ y que sale fuera de la norma y del supremo como $\abs{λ}$.
+
+La desigualdad triangular también sale, aunque yo no lo voy a copiar y lo dejo como ejercicio al lector, porque sale muy fácil. Y la positividad igual.
+\end{proof}
+
+\begin{prop} Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados sobre un mismo cuerpo \kbb. Entonces, si $W$ es Banach entonces $\mathcal{L}(V,W)$ también lo es con la norma definida en \eqref{eq:NormaEspacioAppLineales}.
+\end{prop}
+
+\begin{proof} Sea $\set{A_n}_{n≥1}$ una sucesión de Cauchy en $\mathcal{L}(V,W)$. Pretendemos definir el límite $A_n \to A$ como \[ A(v) = \lim_{n \to ∞} A_n(v) \]
+
+Para ver que esta definición tiene sentido lo que juega un papel fundamental es ver que el espacio de llegada, $W$, es un espacio de Banach. Dado $v ∈ V$, entonces \[ \norm{A_n(v) - A_m(v)}_W = \norm{(A_n - A_m) (v)}_W \eqexpl[≤]{\eqref{eq:NormaEspacioAppLineales}} \norm{A_n - A_m} \norm{v}_V \]
+
+Como $\set{A_n}_{n≥1}$ es de Cauchy en $\mathcal{L}(V,W)$, podemos hacer $\norm{A_n - A_m}$ tan pequeño como queramos (y $\norm{v}_V$ es constante, por lo que no afecta) así que tendremos que $\set{A_n(v)}_{n≥1}$ es de Cauchy igualmente. Por último, como $W$ es completo, $\set{A_n(v)}_{n≥1}$ converge a $A(v)$ para todo $v ∈ V$.
+
+Nos falta, eso sí, ver que este $A$ que hemos definido es lineal y acotado, es decir, que $A ∈ \mathcal{L}(V,W)$. La linealidad es fácil de ver y se deja como ejercicio. Para la acotación, vamos a hacerlo ahora.
+
+Usamos primero que $\sup_n \norm{A_n} < ∞$.
+
+\end{proof}
+
 
 \section{Teorema de la acotación uniforme}
 
