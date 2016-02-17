@@ -536,10 +536,71 @@ Como $\set{A_n}_{n≥1}$ es de Cauchy en $\mathcal{L}(V,W)$, podemos hacer $\nor
 
 Nos falta, eso sí, ver que este $A$ que hemos definido es lineal y acotado, es decir, que $A ∈ \mathcal{L}(V,W)$. La linealidad es fácil de ver y se deja como ejercicio. Para la acotación, vamos a hacerlo ahora.
 
-Usamos primero que $\sup_n \norm{A_n} < ∞$.
+Queremos demostrar primero que $\sup_n \norm{A_n} < ∞$, es decir, que $∃C < ∞$ tal que $\norm{A_n} ≤ C$ para cualquier $n$.
 
+Por ser $A_n$ de Cauchy, existe un $N$ tal que $\norm{A_n - A_m} ≤ 1$ si $m,n ≥ N$. Entonces por un lado tenemos que  \[ \norm{A_n} = \norm{(A_n - A_N) + A_N} ≤ \norm{A_N} + \norm{A_n - A_N} ≤ 1 + \norm{A_N} = C_1 \] si $n ≥ N$, y por el otro que si $1 ≤ n < N$ entonces \[ \norm{A_n} ≤ \max_{1 ≤ i < N} \norm{A_i} = C_2 \], así que juntando ambas cotas tenemos que en general \[ \norm{A_n} ≤ \max \set{C_1, C_2} = C \]
+
+Con esto, podemos probar que $A$ está acotado. Sea $x ∈ V$, entonces \[ \norm{A(x)}_W = \norm{\lim_{n \to ∞} A_n(x)}_W = \lim_{n\to ∞} \norm{A(x)}_W \]
+
+No hay problema en sacar el límite fuera de la norma porque la norma es Lipschitz continua (ver un ejercicio de las hojas).
+
+Ahora podemos usar que $\norm{A(x)}_W ≤ \norm{A_n}_{\mathcal{L}(V,W)} · \norm{x}_V ≤ C \norm{x}_V$. Nos hemos quitado la dependencia de $n$ y nos queda \[ \norm{A(x)}_W ≤ C \norm{x}_V \implies \norm{A} ≤ C\], por lo que $A$ está acotado. La cota $C$ se podría afinar un poco, aunque no lo vamos a probar, con \[ \norm{A} ≤ \limsup_{n \to ∞} \norm{A_n} \]
 \end{proof}
 
+\begin{corol} Tanto si $\kbb = ℝ$ ó $ℂ$, el espacio $V^* = \mathcal{L}(V, \kbb)$ es un espacio de Banach.
+\end{corol}
+
+Ese $V^*$ es, tal y como la notación indica, el espacio dual topológico.
+
+\begin{defn}[Espacio\IS dual topológico] Dado un espacio normado $V$ sobre $\kbb$, se define el espacio dual topológico como \[ V^* = \mathcal{L}(V, \kbb) = \set{\appl{T}{V}{\kbb} \tq T\text{ lineal, continua}} \]
+\end{defn}
+
+\begin{defn}[Producto\IS de dualidad] Sea $V$ un espacio normado sobre \kbb, y sean $v ∈ V$ y $v ∈ V^*$. Entonces se define el producto dualidad como \begin{align*}
+\appl{\pesc{·,·}}{V^* × V&}{\kbb} \\
+\pesc{v^*, v} &\longmapsto v^*(v)
+\end{align*}, que es una aplicación bilineal.
+\end{defn}
+
+En particular, como $\pesc{·,v}$ es lineal en $V^*$ fijado un $v ∈ V$, esto define una inyección canónica entre $V$ y $(V^*)^* = V^{**}$, que no depende de la base que elijamos en estos espacios.
+
+Otra observación, que nos vendrá bien para cuando estudiemos el Teorema de Hahn-Banach en la \fref{sec:TeoremaHahnBanach}, es que el producto de dualidad es una aplicación bilineal y acotada. La acotación se ve rápidamente: \[ \abs{\pesc{v^*, v}} = \abs{v^*(v)} ≤ \norm{v^*}_{\mathcal{L}(V, \kbb)} \norm{u}_V = \norm{v^*}_{V^*} \norm{v}_V \]
+
+De ahí también se puede deducir que la norma del operador $\appl{i}{V}{V^{**}}$ de la inyección canónica que comentábamos antes es $\norm{i} ≤ 1$.
+
+\begin{defn}[Norma\IS dominante] Consideremos $V$ un espacio vectorial sobre un cuerpo $\kbb$ y dos normas $\norm{·}_A$, $\norm{·}_B$ en $V$. Diremos que $\norm{·}_A$ domina a $\norm{·}_B$ si cuando $\norm{v}_A \to 0$, entonces $\norm{v}_B \to 0$.
+\end{defn}
+
+\begin{defn}[Norma\IS equivalente] Dos normas son equivalentes si una domina a la otra y viceversa, es decir, que $\norm{v}_A \to 0 \iff \norm{v}_B \to 0$.
+\end{defn}
+
+Esta noción cualitativa de equivalencia tiene un análogo cuantitativo:
+
+\begin{prop} Sea $V$ normado y sean $\norm{·}_A$ y $\norm{·}_B$ dos normas en él. Son equivalentes
+\begin{enumerate}
+\item La norma $\norm{·}_A$ domina a $\norm{·}_B$.
+\item Existe una constante $C < ∞$ tal que $∀x ∈ V$ se cumple que $\norm{x}_B ≤ C\norm{x}_A$
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+
+La implicación \textit{b $\implies$ a} es trivial, así que vamos a demostrarlo al otro lado. Definimos dos espacios $X = (V, \norm{·}_B)$, $Y = (V, \norm{·}_A)$ y una aplicación identidad $I$ de $X$ en $Y$. Entonces $\norm{·}_A$ domina a $\norm{·}_B$ si y sólo si $I$ es continua.
+
+Usando la \fref{prp:LinealEspNormados:Cota}, esto equivale a que exista una $C < ∞$ tal que $\norm{I(v)}_B ≤ C \norm{v}_A$, y como $\norm{I(v)}_B = \norm{v}_B$ ya tenemos la demostración.
+\end{proof}
+
+Una observación rápida es que si $\norm{·}_A$ domina a $\norm{·}_B$, entonces la topología generada por la norma de $A$ es más fina, esto es, $\topl_B ⊂ \topl_A$.
+
+\begin{example} Tomamos $V = C^1([a,b])$, funciones continuas y con derivada continua en $[a,b]$. Podemos definir dos normas \begin{align*}
+\norm{f}_A &= \norm{f}_∞ + \norm{f'}_∞ \\
+\norm{f}_B &= \norm{f}_∞
+\end{align*}
+
+Claramente la norma $A$ domina a la norma $B$, pero a la inversa no se cumple.
+\end{example}
+
+\begin{prop} La topología inducida en $V$ por una norma es compatible con la estructura del espacio vectorial.
+\end{prop}
 
 \section{Teorema de la acotación uniforme}
 
@@ -548,6 +609,7 @@ Usamos primero que $\sup_n \norm{A_n} < ∞$.
 \section{Teorema de la gráfica cerrada}
 
 \section{Teorema de Hahn-Banach}
+\label{sec:TeoremaHahnBanach}
 
 \chapter{Dualidad en espacios de Banach}
 
