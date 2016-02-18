@@ -599,8 +599,70 @@ Una observación rápida es que si $\norm{·}_A$ domina a $\norm{·}_B$, entonce
 Claramente la norma $A$ domina a la norma $B$, pero a la inversa no se cumple.
 \end{example}
 
-\begin{prop} La topología inducida en $V$ por una norma es compatible con la estructura del espacio vectorial.
+\begin{prop} Sea $(V, \norm{·})$ un espacio normado, entonces la topología es compatible con la estructura de espacio vectorial de $V$ sobre \kbb:
+
+\begin{enumerate}
+\item La topología inducida por la norma es una topología Hausdorff\footnote{Esto es, podemos separar dos puntos distintos con abiertos disjuntos. Lo que viene siendo una topología razonable, vamos.}.
+\item La aplicación suma $x+y$ para $x,y ∈ V$ es continua en $V × V$ con la topología producto.
+\item La multiplicación por un escalar $λv$ con $λ ∈ \kbb$, $v ∈ V$ es continua en $\kbb × V$
+\item Para $a ∈ V$, la traslación $T_a(u) = a+ v$ es un homeomorfismo\footnote{Esto es un ejercicio en las hojas, ver cuál.} en $V$. % TODO.
+\item Dado $λ ∈ \kbb \setminus \set{0}$, el escalado $M_λ(v) = λv$ es un homeomorfismo en $V$.
+\end{enumerate}
 \end{prop}
+
+\begin{proof}
+
+\proofpart{Continuidad de la suma}
+
+En $V × V$ podemos dar una norma que induce la topología producto: \[ \norm{(u,v)}_{V×V} = \max \set{\norm{u}, \norm{v}}\]
+
+Con esto, podemos ver cuánto vale la norma producto de la suma dados $(u,v)$ $(u', v')$ cuando esos elementos están cerca.
+
+Si tomamos $ε > 0$ y $\norm{u-u'}_V, \norm{v-v'}_V < \sfrac{ε}{2}$, entonces según la definición de la norma nos queda que $\norm{(u,v) - (u',v')}_{V×V} < \sfrac{ε}{2}$. Por otra parte, acotamos en la imagen y vemos que
+\[ \norm{(u+v)-(u'+v')}_V = \norm{(u-u') + (v-v')}_V ≤ \norm{u-u'}_V + \norm{v-v'}_V < ε \], por lo que la suma es continua.
+
+\proofpart{Continuidad del producto por un escalar}
+
+Haciendo cuentas con $(λ,v), (λ', v') ∈ \kbb × V$ tenemos que \begin{align*}
+\norm{λv - λ'v'}_V &= \norm{(λv-λ'v) + (λ'v - λ'v')}_V \\
+	&≤ \norm{λv - λ'v}_V + \norm{λ'v - λ'v'}_V \\
+	&= \norm{(λ-λ')v}_V + \norm{λ'(v-v')}_V \\
+	&= \abs{λ-λ'}\norm{v}_V + \abs{λ'}\norm{v-v'}_V
+\end{align*}, que podemos hacer tan pequeño como queramos si $\abs{λ-λ'}$ y $\norm{v-v'}_V$ son suficientemente pequeños, luego el producto por escalar es continuo.
+
+\end{proof}
+
+Queremos dar un criterio que nos sirva para decidir cuándo un espacio normado es de Banach, que nos servirá para cuando veamos el espacio cociente.
+
+\begin{prop} Sea $X = (V, \norm{·})$ un espacio normado. Entonces $X$ es de Banach si y sólo si, dada una sucesión $\set{x_n}_{n≥1} ⊂ V$ con suma finita ($\sum_{n≥1} \norm{x_n} < ∞$), se cumple que la sucesión dada por \[ v_N = \sum_{n=1}^N x_n \] converge en $V$.
+\end{prop}
+
+\begin{proof}
+
+Vamos a tratar de ver que la sucesión es de Cauchy y por lo tanto converge si $X$ es completo. Dados $N, N'$ con $N ≤ N'$, vemos que \[ \norm{v_N - v_{N'}} = \norm{\sum_{n=1}^{N'}x_n - \sum_{n=1}^N x_n} = \norm{\sum_{N < n ≤N'} x_n} ≤ \sum_{N<n≤N'} \norm{x_n} ≤ \sum_{n> N} \norm{x_n} \], que tenderá a cero cuando $N \to ∞$ dado que suponemos que la suma de todos los $x_n$ es finita.
+
+Por lo tanto, $v_N$ es efectivamente de Cauchy y si $X$ es completo, $v_N$ converge en $X$.
+
+Por ser $\set{v_n}_{n≥1}$ de Cauchy, existe un $N_1$ tal que $∀n ≥ N_1$, se tiene que $\norm{v_n - v_{N_1}} < \sfrac{1}{2}$. Igualmente, existe un $N_2 > N_1$ tal que $∀n ≥ N_2$, entonces se cumple que $\norm{v_n - v_{N_2}} ≤ \left(\sfrac{1}{2}\right)^2$.
+
+En general, si se han elegido $N_1 < N_2 < \dotsb < N_k$ y términos $v_{N_1}, v_{N_2}, \dotsc, v_{N_k}$ de la sucesión de los $v_N$, tomamos $v_{N_{k+1}}$ tal que $\norm{v_n - v_{N_{k+1}}} ≤ \left(\sfrac{1}{2}\right)^{k+1}$.
+
+Sea ahora $x_k = v_{N_{k+1}} - v_{N_k}$ para $k = 1, 2, \dotsc$. Por construcción, las normas de esos elementos son $\norm{x_k} ≤ \sfrac{1}{2^k}$, y por lo tanto \[ S=  \sum_{k≥1} \frac{1}{2^k} = 1 < ∞\], luego $S_N = \sum_{k=1}^N x_k$ converge.
+
+Lo cierto es que no tengo muy claro por dónde está llevando la demostración así que yo simplemente voy a copiar y espero que en algún momento esto sea salvable.
+
+Pero \[ S_N = \sum_{k=1}^N (v_{N_{k+1}} - v_{N_k})\] es una serie telescópica, y entonces $S_k = v_{N_{k+1}} - V_{N_1}$, luego $V_{N_{k+1}} = S_k + v_{N_1}$, donde $S_k$ converge a $S$ y $v_{N_1}$ es un vector fijo, luego la subsucesión $\set{v_{N_k}}_{k≥1}$ es convergente en $X$.
+\end{proof}
+
+\begin{theorem}[Principio\IS de acotación uniforme de Banach-Stainhaus] Sea $\set{T_α}_{α∈A}$ un subconjunto de $\mathcal{L}(X,Y)$, donde $X$ es Banach e $Y$ es normado. Entonces, o bien las aplicaciones lineales $T_α$ están uniformemente acotadas (es decir, $∃C < ∞$ tal que $∀α ∈ A$ se tiene que $\norm{T_α} ≤ C$), o bien existe un cierto conjunto\footnote{Recordamos la definición de \nref{def:ConjuntoGDelta}: intersección numerable de abiertos.} $G_δ$ denso en $X$, que llamaremos $B$, tal que \[ \sup_{α ∈ A} \norm{T_α(x)}_Y = ∞ \quad ∀x ∈ B \]
+\end{theorem}
+
+\begin{proof}
+Para $n = 1,2, \dotsc$ consideraremos un conjunto \[ V_n = \set{x ∈ X \tq  \sup_{α∈A} \norm{T_α(x)}_Y > n} \]
+
+Cada uno de estos conjuntos será un abierto.
+
+\end{proof}
 
 \section{Teorema de la acotación uniforme}
 
