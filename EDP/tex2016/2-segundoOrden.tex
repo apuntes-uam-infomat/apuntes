@@ -3,4 +3,578 @@
 
 \section{Método de separación de variables}
 
+	Al empezar el curso ya vimos un ejemplo: la ecuación del calor en una dimensión con datos de contorno Dirichlet homogéneos.
+
+	\begin{example}{1. Ecuación de calor con contorno Dirichlet}
+		\[
+		\begin{cases}
+		u_t + u_xx = 0 & x \in (0,L), \quad t > 0 \\
+		u(0,t) = u(L,t) = 0 & t > 0 \\
+		u(x,0) = f(x) & x \in [0,L]
+		\end{cases}
+		\]
+
+		La ecuación del medio es el dato de contorno de Dirichlet homogéneo, es decir, que especifica el dato en los extremos.
+
+		Llegamos con separación de variables a que la solución del problema podía ser escrita como:
+
+		\[ u(x,t) \eqexpl{?} \sum^{\infty}_{k=1} a_k e^{-(\frac{k\pi}{L})^2 t} \sin \left( \frac{k\pi}{L} x \right) \]
+		donde
+		\[ f(x) \eqexpl{?} \sum^{\infty}_{k=1} a_k \sin \left( \frac{k\pi}{L}x \right) \]
+	\end{example}
+
+
+	\begin{example}{2. Ecuación de calor con contorno de Neumann}
+
+		\[
+		\begin{cases}
+		u_t + u_{xx} = 0 & x \in (0,L), t > 0 \\
+		u(0,t) = u(L,t) = 0 \\
+		u(x,0) = f(x) \in [0,L]
+		\end{cases}
+		\]
+
+		Esta condición indica que no hay flujo de calor entre la varilla y cualquier punto fuera, incluidos los extremos. Esperamos que al final, cuando el tiempo tienda a infinito el calor se haya distribuido a lo largo de la varilla y la temperatura sea constante a lo largo de esta. El valor de esto probablemente sea el promedio.
+
+		Empecemos con el método de separación de variables. Buscamos $u(x,t) = X(t) T(t)$ que sea solución de la ecuación con el contorno (el dato inicial se tratará después).
+
+
+		\[
+		\begin{array}{l}
+			0 = u_t - u_xx = T' X - T X'' \\
+			0 = u_x (0,t) = T(t) X'(0) \\
+			0 = u_x (t,t) = T(t) X'(L)
+		\end{array}
+		\]
+
+		De lo que obtenemos:
+
+		\[ \frac{T'(t)}{T(t)} = \frac{X''(x)}{X'(x)} \quad \forall x, \forall t \]
+
+		A esta proporción la podemos llamar $\lambda$:
+
+		\[ \frac{T'}{T} = \frac{X''}{X'} = \lambda \in \mathbb{R} \]
+
+		% Método general?
+		Resolvemos la EDO en X:
+
+		\[
+		\left\{ \begin{array}{l}
+		X'' = \lambda X \\
+		X'(0) = X'(L) = 0
+		\end{array} \right. \quad\quad \text{(problema de controno)}
+		\]
+
+		Veamos carios casos en función de $\lambda$:
+
+		\begin{itemize}
+			\item $\lambda = 0$
+
+				Cuando $\lambda = 0 \Rightarrow X'' = 0$. Así que tenemos que $X'$ tiene que ser constante y $X$ lineal. Pero además los datos iniciales nos indican el valor de $X'$, al ser constante.
+
+				\[ \left.
+				\begin{array}{l}
+					X(x) = a + bx \\
+					\left.
+					\begin{array}{r}
+						X'(x) = b \\
+						X'(0) = X'(L) = 0
+					\end{array} \right\} \Rightarrow b = 0
+				\end{array} \right\} \Rightarrow X \equiv a \]
+
+				Tiene una solución no trivial que es $\lambda = 0, X=a_0$.
+
+			\item $\lambda > 0$ con $\lambda = \mu^2$, $\mu \in \mathbb{R}$
+
+				Lo cual nos lleva a una EDO de orden 2, que se resolvería con el polinomio característio.
+
+				\[ \text{Las soluciones siguen } \left\{
+				   \begin{array}{l}
+				   	X(x) = a e^{\mu x} \\
+				   	X'(x) = \mu (ae^{\mu x} - be^{-\mu x})
+				   \end{array} \right.
+				\]
+
+				\[ \left. \begin{array}{l}
+					0 = X'(0) \Rightarrow \mu(a - b) = 0 \\
+					0 = X'(L) \Rightarrow \mu(a e^{\mu L} - b e^{-\mu L}) = 0
+				\end{array} \right\}
+					\Rightarrow … \Rightarrow a = b = 0
+				\]
+
+
+			\item $\lambda < 0$ con $\lambda = - \mu^2$
+
+				Aquí volvemos a emplear el polinomio característico pero llegaremos a soluciones complejas.
+
+			 	\[ \text{Solución} \left\{
+				   \begin{array}{l}
+				   	X(x) = a \cos(\mu x ) + b \sin( \mu x) \\
+				   	X'(x) = -a \mu \sin(\mu x) + b \mu \cos(\mu x)
+				   \end{array} \right.
+				\]
+
+			 	\[
+			 		\begin{array}{l}
+			 		0 = X'(0) = b \mu \\
+			 		0 = X'(L)
+			 		\end{array} \Rightarrow b = 0 \Rightarrow \left\{ \begin{array}{l}
+			 			X(x) = + a \cos (\mu x ) \\
+			 			X'(x) = -a \mu \sin (\mu x)
+			 		\end{array} \right.
+			 	\]
+
+			 	De lo que obtenemos que
+
+			 	\[0 = X'(L) = -a \mu \sin(\mu L) \Rightarrow \mu L = k \pi , \quad k = 1,2,…\]
+
+
+
+		\end{itemize}
+
+		Conclusión:
+
+				\begin{align*}
+					\lambda_0 = 0\quad & \quad X_0 = a_0 \\
+					\lambda_k = - \left(\frac{k\pi}{L}\right)^2\quad & \quad X_k(x) = a_k \cos \frac{k \pi}{L}x
+				\end{align*}
+
+			 	EDO para T (para las $\lambda$ encontradas antes)
+
+			 	\[\lambda_0 = 0 \Rightarrow T'_0 \equiv 0 \Rightarrow T_0 \equiv \lambda_0\]
+			 	\[\lambda_k = - \left(\frac{k\pi}{L}\right)^2 \Rightarrow T'_k = \left(\frac{k\pi}{L}\right)^2 T_k \Rightarrow T_k (t) = \lambda_k e^{-\left(\frac{k\pi}{L}\right)^2 t} \]
+
+			 	Soluciones particulares:
+
+			 	\[u_0(x,t) = A_0, \quad u_k (x,t) = A_k e^{-\left(\frac{k \pi}{L} \right)^2 t} \cos \left( \left( \frac{k \pi}{L}\right) x \right) \]
+
+			 	Dato inicial: $u(x,0) = f(x)$
+
+			 	Idea: $u(x,t) \eqexpl{?} A_0 + \sum\limits_{k=1}^{\infty} A_k e^{- \left( \frac{k \pi}{L} \right)^2 t}  \cos \left( \frac{k \pi}{L} x \right)$
+
+			 	Pero claro, no sabemos calcular $A_k$. ¿O como calculamos la convergencia? ¿Cómo calculamos las derivadas?
+
+
+		\end{example}
+
+
+		\begin{example}{3: Cuerda vibrante}
+
+			Veamos una cuerda de guitarra en tensión. La guitarra está atada en los extremos y la altura sobre el eje horizontal es $u$.
+
+			\begin{figure}[thbp]
+			\centering
+			\inputtikz{cuerdaGuitarra}
+			\caption{}
+			\label{fig:cuerdaGuitarra}
+			\end{figure}
+
+
+			\[  \begin{array}{l}
+				u_{tt} - u_{xx} = 0 \quad \text{ 2º orden \quad 2 datos } \\
+				u(0,t) = u(L,t) = 0 \quad \text{Dirichlet}\\
+				u(x,0) = f(x) \\
+				u_t(x,0) = g(x)
+				\end{array}
+			\]
+
+			Por separación de variables. Buscamos un $u(x,t) = X(t) T(t)$, solución de la ecuación con el contorno:
+
+			\[ 0 = u_{tt} - u_{xx} = T'' X - T X''\]
+			\[ \frac{T''}{T} = \frac{X''}{X} = \lambda \in \mathbb{R}\]
+
+			EDO para $X$:
+
+			\[\begin{cases}
+				X'' = \lambda X \\
+				X(0) = X(L) = 0
+			\end{cases}
+			\]
+
+			Vemos que ha cambiado respecto al sistema anterior en que la última ecuación ya no relaciona las derivadas de $X$ sino  $X$.
+
+			\begin{itemize}
+				\item $\lambda = 0$
+
+					\[
+					\left\{
+					\begin{array}{l}
+					X(x) = a + bx \\
+					X(0) = 0 = X(L)
+					\end{array}
+					\right.
+					\Rightarrow
+					a = 0 = b
+					\]
+
+				\item $\lambda > 0$ con $\lambda = \mu^2$
+
+					\[
+					\left\{
+					\begin{array}{l}
+					X(x) = ae^{\mu x} + be^{-\mu x} \\
+					X(0) = 0 = X(L)
+					\end{array}
+					\right.
+					\Rightarrow … \Rightarrow
+					a = b = 0
+					\]
+
+				\item $\lambda < 0$ con $\lambda = -\mu^2$
+
+					\[
+					\left\{
+					\begin{array}{l}
+					X(x) = a\cos(\mu x) + b\sin(\mu x) \\
+					X(0) = 0 = X(L)
+					\end{array}
+					\right.
+					\Rightarrow X(0) = a \Rightarrow X(x) = b \sin(\mu x)
+					\]
+
+					\[ \Rightarrow X(L) = 0 = b \sin (\mu L) \Rightarrow \mu = \frac{k \pi}{L}\]
+
+			\end{itemize}
+
+			Con lo que llegamos a las soluciones no triviales:
+
+			\[\lambda_k = - (\frac{k\pi}{L})^2, \quad X_k(x) = b_k \sin \left(\frac{k\pi}{L} \right) x\]
+
+
+			Una vez que resolvemos la EDO para $X$, la resolvemos para $T$:
+
+			\[T'' = \lambda T\]
+
+			Es similar a la X así que tenemos:
+
+			\[T''_k = - (\frac{k\pi}{L})^2 T_k \Rightarrow T_k (t) = \alpha_k \cos\left( \frac{k \pi}{L} t \right) + \beta_k \sin \left( \frac{k \pi}{L}t \right)\]
+
+			Con lo que llegamos a las soluciones particulares:
+
+			\[u_k(x,t) = A_k \cos \left(\frac{k\pi}{L} t\right) \sin \left(\frac{k\pi}{L}x\right) + B_k \sin \left(\frac{k\pi}{L}t\right)  \sin \left(\frac{k\pi}{L}x\right) \]
+
+			Idea: Buscar
+
+			\[u(x,t) \eqexpl{?} \sum_{k=1}^{\infty} A_k \cos \left(\frac{k\pi}{L} t\right) \sin \left(\frac{k\pi}{L} x  \right)+ B_k \sin \left(\frac{k\pi}{L}t \right) \sin \left(\frac{k\pi}{L}  x \right)\]
+
+			Datos iniciales:
+
+			\[ f(x) = u(x,0) \eqexpl{?} \sum^{\infty}_{k=1} A_k \sin \left(\frac{k\pi}{L} x  \right)\]
+
+			Suponiendo que derivada e integral conmutan:
+
+			\[ u_t (x,t) \eqexpl{?} \sum_{k} - A_k \left(\frac{k\pi}{L} \right) \sin \left(\frac{k\pi}{L}t \right) \sin \left(\frac{k\pi}{L}x \right) + B_k \left(\frac{k\pi}{L} \right) \cos \left(\frac{k\pi}{L}t \right) \sin \left(\frac{k\pi}{L}x \right)
+			\]
+
+			\[g(x) = u_t(x,0) \eqexpl{?} \sum_k B_k  \left(\frac{k\pi}{L} \right) \sin \left(\frac{k\pi}{L}x \right)\]
+
+		\end{example}
+
+
+		\begin{example}{4: Ondas con condiciones periódicas}
+
+			Estudiemos, por ejemplo, las olas en altamar. No tenemos un contorno fijo como antes, así que vamos a buscar soluciones que sean periódicas en los extremos. En este caso tendremos dos condiciones. Llamadas condiciones de periodicidad. Hemos puesto dos porque lo observamos en segundo orden:
+
+			\[u(-L,t) = u(L,t), \forall t\]
+			\[u_x(-L,t) = u_x(L,t), \forall t\]
+
+			El problema nos queda así:
+
+			\[  \begin{array}{l}
+				u_tt - u_xx = 0 \quad x  \in (-L,L), t>0\\
+				u(-L,t) = u(L,t), \forall t\\
+				u_x(-L,t) = u_x(L,t), \forall t \\
+				u(x,0) = f(x) \\
+				u_t(x,0) = g(x)
+				\end{array}
+			\]
+
+			Separamos variables:
+			\[ \frac{T''}{T} = \frac{X''}{X} = \lambda \in \mathbb{R}\]
+
+			EDO para $X$:
+
+			\[\left\{\begin{array}{l}
+				X'' = \lambda X \in (-L,L) \\
+				X(-L) = X(L) \\
+				X'(-L) = X'(L)
+			\end{array}
+			\right. \]
+
+			\begin{itemize}
+				\item $\lambda = 0$
+
+					\[\left\{\begin{array}{l}
+						X = a+bx \\
+						X'(x) = b \\
+						X(-L) = X(L) \Rightarrow a + b(-L) = a + bL \Leftrightarrow b = 0
+					\end{array}
+					\right. \]
+
+					Si $b = 0$ entonces la $a$ será arbitraria. $\Rightarrow \lambda_0 = 0$, $ x_0 \equiv a \in \mathbb{R}$
+
+
+				\item $\lambda > 0$ con $\lambda = \mu^2$
+
+					\[\left\{\begin{array}{l}
+						X(x) = ae^{\mu x} + b e^{-\mu x} \\
+						X'(x) = a\mu e^{\mu x} - b \mu e^{-\mu x}
+					\end{array}
+					\right. \Rightarrow a = b = 0 \]
+
+
+				\item $\lambda < 0$ con $\lambda = -\mu^2$
+
+					\[ X (x) = a \cos \mu x + b \sin \mu x \]
+
+					% Revisado hasta aquí
+
+					\[\text{2 caminos: }\left\{\begin{array}{l}
+						\text{ ver que es un }
+					\end{array}
+					\right. \]
+			\end{itemize}
+
+			\[ X(-L) = X(L)\]
+			\[ X'(L) = X'(L)\]
+
+			Ajustamos $\mu$ para que $X$ sea periódica con periodo $2L k \Rightarrow … \Rightarrow \mu = \frac{k \pi}{L}$. Donde $2L$ es la longitud del intervalo. Por lo que llegamos a las soluciones:
+
+			\[
+			\lambda_k = -(frac{k\pi}{L})^2\quad\quad X_k = a_k \cos frac{k\pi}{L} x + b_k \sin frac{k\pi}{L} x
+			\]
+
+			EDO para $T$:
+
+			(RELLENAR BASTANTE)
+
+
+			Tenemos soluciones particulares:
+
+			\[u_0(x,t) = a_0 + b_0t\]
+
+			% lo siento mucho si hay una errata en estas fórmula y te toca editarlas.
+
+			\begin{align*}
+			u_k(x,t) = &\left(A_k \cos \left( \frac{k \pi}{L} t \right) + B_k \sin \left( \frac{k \pi}{L} t \right) \right) \\
+			\cdot &\left(A_k \cos \left( \frac{k \pi}{L} x \right) + B_k \sin \left( \frac{k \pi}{L} x \right) \right)
+			\end{align*}
+			\begin{align*}
+			u_k(x,t) = &\left(A_k \cos \left( \frac{k \pi}{L} x \right) + B_k \sin \left( \frac{k \pi}{L} x \right) \right) \cos \left( \frac{k \pi}{L} t \right)\\
+			+ &\left(C_k \cos \left( \frac{k \pi}{L} x \right) + D_k \sin \left( \frac{k \pi}{L} x \right) \right) \sin \left( \frac{k \pi}{L} t \right)
+			\end{align*}
+
+
+
+
+			\[u_k(x,t) = T_k(t) X_k(t) \quad (k=0,1,2,…)\]
+
+
+			y soluciones en forma de serie:
+
+			\[ u(x,t) = u_0 + \sum_k u_k \]
+
+			\begin{align*}
+				u(x,t) = A_0 + C_0 t &\sum^{\infty}_{k=1} \left(A_k \cos \left( \frac{k \pi}{L} x \right) + B_k \sin \left( \frac{k \pi}{L} x \right) \right) \cos \left( \frac{k \pi}{L} t \right)\\
+				+ &\sum^{\infty}_{k=1} \left(C_k \cos \left( \frac{k \pi}{L} x \right) + D_k \sin \left( \frac{k \pi}{L} x \right) \right) \sin \left( \frac{k \pi}{L} t \right)
+			\end{align*}
+
+			En $t = 0$
+
+			\[f(x) = u(x,0) = A_0 + \sum_{k} A_k \cos \left( \frac{k \pi}{L} x \right) + B_k \sin \left( \frac{k \pi}{L} x \right) \]
+
+			\[g(x) = u_t (x,0) = C_0 + \sum_{k} \left(\frac{k \pi}{L}\right) \left( C_k \cos \left( \frac{k \pi}{L} x \right) + D_k \sin \left( \frac{k \pi}{L} x \right)\right) \]
+
+
+		\end{example}
+
+		De 4 ejemplos hemos obtenido la misma solución:
+
+		\[ f(x) = \sum_{k=1}^{\infty} b_k \sin \left( \frac{k \pi}{L} x \right), \quad x \in (0,L) \]
+
+		\[ f(x) = a_0 + \sum^{\infty}_{k=1} a_k \cos \left( \frac{k \pi}{L} x \right), \quad x \in (0,L) \]
+
+		\(
+		f(x) \qeq a_0 + \sum^{\infty}_{k=1} a_k \cos \left( \frac{k \pi}{L} x \right) + b_x \sin \left( \frac{k \pi}{L} x \right), \quad x \in (-L,L)
+		\)
+
+		Ésta última es combinación de las dos anteriores, y nos lleva al problema que queremos resolver. ¿Es una solución?, y en ese caso: ¿Es única?.
+
+		\textbf{Recordemos:}
+
+		\[
+		\left. \begin{array}{r}
+			\cos (a + b) = \cos a \cos b - \sin a \sin b \\
+			\cos (a - b) = \cos a \cos b + \sin a \sin b \\
+		\end{array} \right\} \Rightarrow \left\{ \begin{array}{l}
+			\cos a \cos b = \frac{1}{2} (\cos (a+b) + \cos (a-b)) \\
+			\sin a \sin b = \frac{1}{2} (\cos (a-b) - \cos (a+b))
+		\end{array} \right.
+		\]
+
+		\[
+		\left. \begin{array}{r}
+			\sin (a + b) = \sin a \cos b + \cos a \sin b \\
+			\sin (a - b) = \sin a \cos b - \cos a \sin b \\
+		\end{array} \right\} \Rightarrow \left\{ \begin{array}{l}
+			\sin a \cos b = \frac{1}{2} \{\sin (a+b) + \sin(a-b)\}
+		\end{array} \right.
+		\]
+
+		Con esto simplificamos (asumiendo ciertas regularidades de las integrales) las expresiones que obteníamos anteriormente y llegamos a la \concept{fórmula de D'Alembert}:
+
+		\(
+		u(x,t) = \frac{1}{2} \left\{ f(x+t) + f(x-t) \right\} + \frac{1}{2} \int^{x+t}_{x-t} g(s) ds  \label{eq:DALEMBERT}\)
+
+		Su interpretación es:
+
+		Supangamos $g=0$ y $u(x,t) = \frac{1}{2} \{ f(x+t) + f(x-t)\} $
+
+		(DIBUJITOS!!! y una explicación no vendría mal)
+
+	\subsection{Convergencia}
+
+	\[ \sum^{\infty}_{k=1} \Phi_k(x) \eqexpl{?} f(x) \]
+
+	¿Cómo calculamos el límite de esa suma?
+
+	\[ \lim_{n \rightarrow \infty} \sum^{n}_{k=1} \Phi_k(x) \eqexpl{?} f(x) \]
+
+	Denotamos $f_n(x)$ como:
+
+	\[
+	f_n(x) = \sum^{n}_{k=1} \Phi_k(x)
+	\]
+
+	Transformamos entonces nuestra pregunta en:
+
+	\[ \lim_{n \rightarrow \infty} f_n(x) \eqexpl{?} f(x) \]
+
+	\subsubsection{Convergencia puntual}
+
+		Empezamos con la convergencia puntual.
+
+		Asumiendo que la sucesión de funciones $f_n$ están definidas en $(a,b)$.
+
+		Fijamos $x_0 \in (a,b) \rightarrow \underbrace{ \{f_n(x_0)\}_{n \in \mathbb{N} }}_{\text{sucesión de números}} \subset \mathbb{R} $
+
+		\[ \liminft{n} f_n(x_0) = f(x_0) \quad \text{ y repetimos el procedimiento }\forall x_0 \in (a,b)\]
+
+		\begin{defn}{convergencia puntual}
+
+			$ f_n \rightarrow f $ puntualmente  en $(a,b) \iffdef $ para todo $x \in (a,b)$, dato $\epsilon > 0$ podemos encontrar $n_0$, tal que si $n > n_0$, entonces $|f_n(x) - f(x)| < \epsilon$.
+
+			\begin{obs}
+				$n_0$ es una función de $\epsilon$ y $x$: $n_0 = n_0(\epsilon, x)$
+			\end{obs}
+
+		\end{defn}
+
+		\begin{example}{1}
+
+			\[
+			f_n(x) = \begin{cases}
+			1 - nx & x \in [0, \frac{1}{n}]\\
+			0 & x \in [\frac{1}{n},1]
+			\end{cases} \quad \text{ lo cual es continuo }\forall n
+			\]
+
+			(DIBUJOS)
+
+
+			\[
+			\lim_{n \rightarrow \infty} f_n(x) = \begin{cases}
+			1 & x = 0\\
+			0 & x \neq 0
+			\end{cases} \quad \text{ lo cual no es contínuo }
+			\]
+
+		\end{example}
+
+		\begin{example}{2}
+
+		(DIBUJO PICUDO)
+
+
+
+		\end{example}
+
+
+	\subsubsection{Convergencia uniforme}
+
+		\begin{defn}{Convergencia uniforme}
+
+			$\{f_n\}$ converge a $f$ uniformemente en $(a,b) \Leftrightarrow$ para todo $\epsilon > 0$, podemos encontrar $u_0 = u_0(\epsilon)$ tal que si $n \geq n_0$ entonces $|f_n(x) - f(x)| < \epsilon$, $\forall x \in (a,b)$.
+
+			Lo que lleva a que \[
+				\sup_{x \in (a,b)} |f_n(x) - f(x)| < \epsilon
+			\]
+			\[
+			\left.||f_n - f||_{\infty}\right|_{(a,b)} < \epsilon
+			\]
+
+			\textbf{Interpretación geométrica}
+
+			Tenemos una banda de tamaño $2\epsilon$, que restringe toda la gráfica de la función f.
+
+		\end{defn}
+
+		\begin{theorem}
+
+			Supongamos que $f_n \rightarrow f$ uniformemente en $(a,b)$.
+
+			\begin{itemize}
+				\item $f_n$ continuas en $(a,b) \Rightarrow f$ continua en $(a,b)$
+
+				\item $f_n$ integrables, $(a,b)$ acotado
+
+				\[\int^{b}_{a} f(x) dx = \lim_{n \rightarrow \infty} \int^{b}_{a} f_n(x) dx \]
+			\end{itemize}
+
+		\end{theorem}
+
+
+	\subsubsection{Convergencia en $L^2$}
+
+		\begin{defn}{Convergencia en $L^2$}
+
+			$L^2((a,b)) = \{$ funciones integrables en $(a,b)$ tales que $\int\limits_{a}^{b} |f(x)|^2 dx < \infty \}$
+
+			\begin{itemize}
+				\item Norma: $||f||_2 = \left( \int^{b}_{a} |f|^2 dx \right)^{\frac{1}{2}}$
+
+				\item Producto escalar asociado: $<f,g> = \int\limits^b_a f(x) g(x) dx $
+
+				\item $f_n \eqexpl[\rightarrow]{$L^2$} f \Leftrightarrow ||f_n - f||_2 \convs 0 $
+			\end{itemize}
+
+			Por lo que podemos entender $L^2$ como el cierre del conjunto de las funciones continuas en $(a,b)$ respecto a la norma 2 ($||\,||_2$).
+
+			Entonces si $f \in L^2$, $\exists \{f_n\} \subset \{$ contínuas $\}$, tales que $f_n \eqexpl[\rightarrow]{$L^2$}f$.
+		\end{defn}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Series de Fourier}

@@ -167,6 +167,8 @@
 \ithm{arg0}#m
 \set@labelname{arg0}#m
 \label@hook#m
+\labelenumi#m
+\theenumi#m
 \begin{defn}#
 \begin{defn}[titulo]#
 \begin{defn}[titulo][indice]#
@@ -299,3 +301,6 @@
 \densein#m
 \fourier#m
 \hash#m
+\difp#m
+\difp[f]#m
+\difp[f][p]#m

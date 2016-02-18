@@ -1490,7 +1490,7 @@ Un espacio vectorial equipado con un producto escalar definido así será lo que
 
 Por ejemplo, $\ell^2(ℤ)$ con el producto escalar $\pesc{a,b} = \sum a_i b_i$ en $ℝ$ es un espacio de Hilbert. Recordamos que \[ \ell^2(ℤ) = \set{\appl{a}{ℤ}{ℝ\text{ ó } ℂ} \tq \sum \abs{a_i}^2 < ∞} \]
 
-Los espacios de Banach $L^p$ en general no son espacios Hilbert, salvo si $p=2$. Por ejemplo, $L^2(ℂ, μ)$ es un espacio de Hilbert, con el producto escalar dado por \[ \pesc{f,g} = \int_{ℝ^N} f \conj{g} \dif μ \]
+Los espacios de Banach $L^p$ en general no son espacios Hilbert, salvo si $p=2$. Por ejemplo, $L^2(ℂ, μ)$ es un espacio de Hilbert, con el producto escalar dado por \( \pesc{f,g}_{L^2} = \int_{ℝ^N} f \conj{g} \dif μ \label{eq:ProdEscalarL2}\)
 
 Los espacios de probabilidad dados por $(X, \algb{X}, \mathbb{P})$ con $\mathbb{P}(X) = 1$ también dan un espacio de Hilbert \[ L_0^2 = \set{f ∈ L^2(X,\algb{X}, \mathbb{P}(X)) \tq \fint f = 0} \] con el producto escalar dado por la covarianza de las funciones.
 
@@ -1742,16 +1742,21 @@ Una vez vista una ``ligera'' introducción a lo que significa Fourier, vamos a i
 
 Vamos a estudiar las funciones de la forma $e_n(x) = e^{2πi nx}$. Es fácil ver que integrando, \( \int_0^1 e_n(x) \dif x = \begin{cases} 0 & n ≠ 0 \\ 1 & n = 0 \end{cases} \label{eq:IntBaseEn} \), y que por lo tanto nos dice que $\pesc{e_0, e_n}_{L^2} = 0$ para $n ≠ 1$, ya que $e_0 = 1$.
 
-Querremos demostrar que esas funciones $e_n$ son un sistema ortogonal. Para ello necesitamos demostrar que $\pesc{e_n, e_m}_{L^2} = 0$, pero \[ \pesc{e_n, e_m}_{L^2} = \int_0^1 e^{2πinx} e^{2πimx} \dif x = \int_0^1 e^{2πi(m+n)x} \dif x = \int_0^1 e_{m+n}(x) \dif x \eqexpl{\eqref{eq:IntBaseEn}} 0 \]
+Querremos demostrar que esas funciones $e_n$ son un sistema ortogonal. Para ello necesitamos demostrar que $\pesc{e_n, e_m}_{L^2} = 0$, pero sale muy sencillo recordando la definición del producto escalar que dimos en \eqref{eq:ProdEscalarL2}: \begin{align*}
+\pesc{e_n, e_m}_{L^2} &= \int_0^1 e^{2πinx} e^{-2πimx} \dif x = \int_0^1 e^{2πi(m-n)x} \dif x = \\
+&= \int_0^1 e_{m+n}(x) \dif x \eqexpl{\eqref{eq:IntBaseEn}} \begin{cases} 1 & n = m \\ 0 & n ≠ m \end{cases}
+\end{align*}
 
 Ahora queremos ver que con lo que estamos trabajando es en realidad un sistema ortogonal (ortonormal de hecho) completo (\fref{def:SOC}), es decir, que $\spn_H \set{e_n} = H = L^2(0,1)$. Para eso, necesitaremos definir los núcleos de Fejer.
 
-\begin{defn}[Núcleos\IS de Fejer] Los núcleos de Fejer son una sucesión $F_n$ que convergen en algún sentido a la delta de Dirac $δ_0$. Son funciones no negativas, con integral $1$, periódicas en $(0,1)$ y que cumplen que \[ F_n * \ind_I \convs \ind_I \]. Su expresión es \[ F_n(x) = \frac{1}{n} \sum_{k=0}^{n-1} D_k(x) = \frac{1}{n} \left(\frac{\sin \sfrac{nx}{2}}{\sin \sfrac{x}{2}}\right)^2 \], donde $D_k$ son los \concept{Núcleos\IS de Dirichlet} dados por \[ D_k(x) = \sum_{s=-k}^k e^{2πisx}\], que aunque no son positivos al promediarlos salen no negativos y con las propiedades que les pedíamos.
+\begin{defn}[Núcleos\IS de Fejer] Los núcleos de Fejer son una sucesión $F_n$ que convergen en algún sentido a la delta de Dirac $δ_0$. Son funciones no negativas, con integral $1$, periódicas en $(0,1)$ y que cumplen que \[ F_n * \ind_I \convs \ind_I \]
+
+Su expresión es \[ F_n(x) = \frac{1}{n} \sum_{k=0}^{n-1} D_k(x) = \frac{1}{n} \left(\frac{\sin \sfrac{nx}{2}}{\sin \sfrac{x}{2}}\right)^2 \], donde $D_k$ son los \concept{Núcleos\IS de Dirichlet} dados por \[ D_k(x) = \sum_{s=-k}^k e^{2πisx}\], que aunque no son positivos al promediarlos salen no negativos y con las propiedades que les pedíamos.
 \end{defn}
 
 Nos preguntamos ahora si, dados los coeficientes de Fourier \( \hat{f}_k = \pesc{e_k, f}_{L^2} = \int_0^1 f(x) e^{2πi kx} \dif x \label{eq:RepresFourier} \) se cumple que \[ \sum_{k=-∞}^{+∞} \hat{f}_k e^{2πi kx} = f(x) \] en casi todo punto.
 
-Para demostrarlo, primero aproximaremos la característica de un interfvalo con los núcleos de Fejer. Por linealidad, esa aproximación nos valdrá para una suma finita de intervalos.
+Para demostrarlo, primero aproximaremos la característica de un intervalo con los núcleos de Fejer. Por linealidad, esa aproximación nos valdrá para una suma finita de intervalos.
 
 Los conjuntos Lebesgue-medibles se aproximan con sumas finitas de intervalos, así que por linealidad podemos aproximar las funciones simples como $\sum e_n \ind_{I_n}$, y eso nos lleva a que las funciones simples son densas en $L^2$. Zas. Hemos probado que los polinomios son densos en $L^2$, y de hecho sabemos qué polinomios son.
 

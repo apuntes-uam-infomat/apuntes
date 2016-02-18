@@ -197,7 +197,8 @@ Como era de esperar los dos procedimientos nos llevan a la obtención del mismo 
 \begin{problem}[4]
 La ausencia de oportunidades de arbitraje es una de las exigencias más fuertes que se le pueden hacer al modelo. Una exigencia primera es la ley de un único precio: el modelo no puede asignar dos precios distintos a un mismo subyacente o derivado por una cuestión elemental de consistencia.
 
-\ppart Comprobar que un modelo con $S_0 = 10$ y $S_1(ω_1)=S_1(ω_2)=12$ no satisface la ley de único precio.
+\ppart Comprobar que un modelo con $S_0 = 10$ y $S_1(ω_1)=S_1(ω_2)=12$ no satisface la ley de único precio, siendo $r=0.1$.
+% Comenté este ejercicio con el profesor y concluimos que era necesario un valor de r que no proporciona el enunciado. Nos inventamos un valor que tuviera sentido.
 
 \ppart ¿Puede dar otro ejemplo?
 \solution
@@ -205,13 +206,9 @@ La ausencia de oportunidades de arbitraje es una de las exigencias más fuertes 
 \spart
 Considerando el activo $S$ descrito en el enunciado, vamos a comprobar cuál es el precio actual de ese activo, atendiendo a sus precios de futuro tanto en el estado alto como en el bajo.
 
-\[S_0 = \frac{qS_1(ω_1) + (1-q)S_1(ω_2)}{1+r} = \frac{12}{1+r}\]
+\[S_0 = \frac{qS_1(ω_1) + (1-q)S_1(ω_2)}{1+r} = \frac{12}{1.1}=10.9\]
 
-En este caso nos falta conocer el interés del activo de riesgo neutro, aunque lo podemos calcular suponiendo que el model satisfaciese la ley de único precio. En ese caso tendríamos:
-\[10 = \frac{12}{1+r} \implies 10 + 10r = 12 \implies r = 0.2\]
-es decir, el rendimiento de la cuenta bancaria sería del 20 \%.
-
-Es evidente que este rendimiento no se aproxima, ni de lejos, a la realidad por lo que el valor $S_0$ que calculásemos una vez conocido $r$ no sería igual al valor actual del activo. Por tanto tendríamos dos precios para el mismo subyacente.
+Es evidente comprobar que este precio inicial no se corresponde con $S_0=10$ por lo que la ley de único precio no se satisface.
 
 \spart
 
@@ -231,7 +228,7 @@ S_2(ω_2) = 8
 \begin{problem}[5]
 Se dice que una estrategia $\tilde{\varphi}$ domina a otra estrategia $\varphi$ $(\varphi \prec \tilde{\varphi})$ si $V_0=\tilde{V}_0$ y $V_1(w) < \tilde{V}_1(ω)$ para todo $ω \in Ω$.
 
-\ppart Comprobar que en un modelo con $S_0=10$ y $S_1(ω_1)=12$ y $S_1(ω_2) = 8$ con $r=1\%$ $\varphi=(10,-1)$ es una estrategia dominante,
+\ppart Comprobar que en un modelo con $S_0=10$ y $S_1(ω_1)=12$ y $S_1(ω_2) = 8$ con $r=1$ $\varphi=(10,-1)$ es una estrategia dominante,
 
 \ppart Demostrar, sin embargo, que se cumple la ley de un precio.
 
@@ -239,33 +236,36 @@ Se dice que una estrategia $\tilde{\varphi}$ domina a otra estrategia $\varphi$ 
 \solution
 
 \spart
+\doneby{Pedro}
 
-La relación entre $V_0$ y $V_1$ viene dada por la condición de martingala:
-\[V_0 = \frac{qV_1(ω_1)+(1-q)V_1(ω_2)}{1+r}\]
+La estrategia $\varphi = (10,-1)$ tiene un valor inicial:
+\[V_0(\varphi)=10-1\cdot 10 = 0\]
+
+Para garantizar que la estrategia es dominante debemos comprobar que cualquier otra estrategia con valor inicial 0 tiene valores finales (tanto en el estado alto como en el bajo) menores que $V_1(\varphi(ω))$.
+
+Dados los activos con los que estamos trabajando (la cuenta sin riesgo y $S$), toda estrategia que tenga valor 0 en $t=0$ será de la forma:
+\[\varphi_a = (10a, -a) \text{ con } a \in \ent\]
+
+Para la estrategia dada por el enunciado tenemos:
+\[\left\{ \begin{array}{l}
+V_1(\varphi(ω_1))= 10(1+r) -12  = 8\\
+V_1(\varphi(ω_2))= 10(1+r) - 8 = 12
+\end{array}\right.\]
+
+Por otro lado, para una estrategia $\varphi_a$ cualquiera tendremos:
+\[\left\{ \begin{array}{l}
+V_1(\varphi_a(ω_1))= a\cdot 10(1+r) -a\cdot 12  = a\cdot 8\\
+V_1(\varphi_a(ω_2))= a\cdot 10(1+r) - a\cdot 8 = a\cdot 12
+\end{array}\right.\]
+
+Es obvio en este casi que la estrategia no es dominante puesto que el precio inicial es 0. Por tanto, cualquier estrategia múltiplo de la dada tendrá valores múltiplos de la estrategia inicial tanto en el estado alto como en el bajo.
+
+No obstante, la estrategia es equivalente a la inicial y no existe otra posible estrategia con coste inicial nulo que no sea de la forma $\varphi_a$. Quizás por eso pueda considerarse estrategia dominante.
+
+\spart
 
 
-En este caso concreto tenemos:
-\[V_0 = \frac{10\cdot (1+r) - 12 \cdot q - (1-q)\cdot 8}{1+r} = 10-\frac{12q+(1-q)8}{1.01} = 10 - \frac{4q +8}{1.01}\]
 
-Cualquier otra estrategia de este modelo consistirá en comprar o vender $a$ acciones del activo $S^0$ y $b$ acciones del activo $S^1$.
-
-Para garantizar que la estrategia $\varphi$ es dominante debemos estudiar aquellas estrategias con precio inicial $V_0$, es decir:
-\[a+10b = 10 - \frac{4q +8}{1.01} \implies 1.01a+10.1b-10.1=-4q-8 \implies q = \frac{2.1-1.01a-10.1b}{4}\]
-
-Tal estrategia tendrá un precio final:
-\[V_1(\varphi') = 1.01a + 4bq+8b\]
-La estrategia $\varphi$ tendrá un precio final:
-\[V_1(\varphi)=10.1 -4q-8\]
-
-Para comparar ambos valores sustituimos la $q$ por su valor expresado en función de $a$ y $b$:
-\[\begin{array}{l}
-V_1(\varphi') = 1.01a+2.1b-1.01ab-10.1b^2 +8b = 1.01a+10.1b-1.01ab-10.1b^2 \\
-V_1(\varphi) = 10.1-2.1+1.01a+10.1b - 8 = 1.01a + 10.1b
-\end{array}\]
-\[V_1(\varphi)>V_1(\varphi') \iff V_1(\varphi)-V_1(\varphi') > 0 \iff 1.01ab + 10.1b^2 > 0 \iff b(1.01a+10.1b) > 0\]
-Empleando de nuevo la ecuación que relaciona la $q$ con los valores de $a$ y $b$ tenemos:
-\[V_1(\varphi)>V_1(\varphi')  \iff b(-4q+2.1) > 0\]
-puesto que $q$ es una probabilidad, sabemos que $q \in (0,1) \implies -4q+2.1>0$. Por tanto necesitamos que $b>0$
 \end{problem}
 
 \begin{problem}[6]
@@ -276,6 +276,24 @@ Consideremos ahora el modelo con $S_0=10$ y $S_1(ω_1)=12$ y $S_1(ω_2)=10$ con 
 \ppart Deducir de ello que no hay estrategias dominantes
 \ppart Explicar la aparente contradicción entre los apartados a) y b)
 \solution
+\doneby{Pedro}
+
+\spart
+
+Recordemos que un arbitraje no era más que la posibilidad de ganar dinero sin arriesgar. En este caso la estrategia $\varphi=(0,1)$ ya constituye un arbitraje pues ganamos 2 con probabilidad $q$ y nos quedamos como estamos en caso contrario.
+
+\spart
+
+Para que el proceso de precios descontados sea una martingala necesitamos que:
+\[V_0(\varphi) = \esp[q]{\tilde{V}_1(\varphi)}\equiv \varphi_1+10\varphi_2 = (10\varphi_1+12\varphi_2)Q(ω_1) + (\varphi_1 +10\cdot  \varphi_2)Q(ω_2)\]
+
+que es obviamente cierto puesto que $Q(w_1)=0$ y $Q(ω_2)=1$.
+
+\spart
+
+\spart
+
+El apartado b) está cambiando el modelo en el que trabajamos puesto que dejamos de tener dos estados en $t=1$ para tener sólo 1, puesto que la probabilidad de uno de ellos es 0.
 
 \end{problem}
 
