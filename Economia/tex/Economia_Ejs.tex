@@ -330,3 +330,134 @@ Para empezar podemos ver que la esperanza de las cuatro diferentes opciones es l
 \end{array}\]
 
 \end{problem}
+
+\section{Árboles binomiales}
+
+\begin{problem}[1]
+El subyacente $S$ vale hoy 10 y su dinámica está descrita por un árbol binomial recombinante de cuatro periodos a un horizonte temporal de 6 meses. La volatilidad del subyacente es del 25\% y el tipo libre de riesgo para el periodo es del 5.5 \% (composición continua)
+
+\ppart Calcular la \textbf{call look back} cuyo flujo final es $S_4-\min\{S_i/ i\leq 4\}$.
+
+\ppart Misma pregunta para la \textbf{put lookback} cuyo flujo final es $\max\{S_i / i \leq 4\}-S_4$.
+\solution
+
+Los datos que conocemos nada más leer el enunciado son:
+\[S_0=10, \ T=0.5, \ Δt = 0.125, \ σ=0.25, \ R_c=0.055\]
+
+El arbol binomial en esta situación es:
+\begin{center}
+\begin{tikzpicture}
+[   cnode/.style={draw=black,fill=#1,minimum width=3mm,circle},
+]
+\node[] (A) at (0,0) {$S_0$};
+\node[] (B) at (2,1) {$aS_0$};
+\node[] (C) at (2,-1) {$bS_0$};
+\node[] (D) at (4,2) {$a^2S_0$};
+\node[] (E) at (4,0) {$S_0$};
+\node[] (F) at (4,-2) {$b^2S_0$};
+\node[] (G) at (6,3) {$a^3S_0 $};
+\node[] (H) at (6,1) {$aS_0 $};
+\node[] (I) at (6,-1) {$bS_0 $};
+\node[] (J) at (6,-3) {$b^3S_0 $};
+
+\draw[->] (A) -- (B);
+\draw[->] (A) -- (C);
+\draw[->] (B) -- (D);
+\draw[->] (B) -- (E);
+\draw[->] (C) -- (E);
+\draw[->] (C) -- (F);
+\draw[->] (D) -- (G);
+\draw[->] (D) -- (H);
+\draw[->] (E) -- (H);
+\draw[->] (E) -- (I);
+\draw[->] (F) -- (I);
+\draw[->] (F) -- (J);
+
+
+\end{tikzpicture}
+\end{center}
+
+Con los datos del enunciado podemos calcular los valores de $a$ y $b$ mostrados en el esquema, así como la probabilidad de que se de cada suceso. Tomando las fórmulas vistas en los apuntes tenemos:
+\[a=e^{σΔt} = 1.03, \ b = \frac{1}{a} = 0.97, \ p = \frac{e^{r_cΔt}-b}{a-b}=0.61\]
+
+\spart
+Queremos conocer el valor de la call descrita por el enunciado para lo que calcularemos el valor de dicha call en el futuro y mediante un proceso de precios descontados la traeremos al presente.
+
+Puesto que el valor del activo depende del camino seguido por el desarrollo del mismo, la expresión para el valor futuro queda algo más rara que en otras ocasiones. Así tenemos:
+\[V_6(X) = p^3(a^3S_0-S_0)+2p^2(1-p)(aS_0-S_0)+p^2(1-p)(aS_0-bS_0)+(1-p)^2p(bS_0-b^2S_0)\]
+
+Puesto que conocemos todas las variables que participan en esta ecuación, lo primero que haremos será calcular su valor, de manera que conocemos el valor medio esperado del activo $X$ en $t=T=6$ meses.
+
+\[V_6(X) = 0.21+0.087+0.08+0.023 = 0.4\]
+
+Para descontar el precio simplemente tenemos que dividirlo entre $e^{r_cΔt}$ siendo $Δt$ el incremento total de tiempo entre los intervalos en los que movemos el dinero. Así tenemos:
+\[V_0(X) = V_6(X)\cdot e^{-0.055\cdot 0.3}=0.39\]
+
+\spart
+
+Respecto al caso anterior la diferencia radica en el valor final asociado al activo, pues este se comporta de manera distinta respecto al recorrido seguido. Esto repercutirá en el valor actual del mismo. Vamos a realizar las cuentas.
+
+\[V_6(X) = p^2(1-p)(a^2-a)S_0+p(1-p)^2(a-b)S_0+2p(1-p)^2(1-b)S_0+(1-p)^3(1-b^3)S_0=\atop 0.045 + 0.088 + 0.056 + 0.053 = 0.245\]
+Finalmente tenemos:
+\[V_0(X) = V_6(X)\cdot e^{-0.055\cdot 0.3} = 0.24\]
+\end{problem}
+
+\begin{problem}[2]
+Consideramos un subyacente $S$ que vale hoy 12 y cuya dinámica está descrita por un árbol binomial recombinante de 10 períodos mensuales. LA volatilidad del subyacente es del 25\% y el tipo libre de riesgo para el periodo es del 3.5 \% (composición continua). SEa $a$ el coeficiente correspondiente del árbol binomial.
+
+\ppart Calcular el valor de una call europea con una berrrera up-and-out en el nivel $a^8S_0$.
+\ppart ¿Qué se puede decir de la opción barrera up-and-in de similares características?
+\ppart Calcular el valor de una put europea con una barrera down-and-in en el nivel $a^{-8}S_0$.
+\ppart ¿Qué se puede decir de una opción barrera down-and-in de similares características?
+\ppart Calcular el precio de una opción barrera digital que paga $1$ a vencimiento si l abarrera ha sido alcanzada.
+\ppart Calcular el precio de una opción de barrera digital que paga $1$ a vencimiento si la barrera ha sido alcanzada
+\ppart Calcular el precio de una opción barrera digital que paga $1$ cuando la barrera ha sido alcanzada.
+\solution
+
+\end{problem}
+
+\begin{problem}[3]
+El subyacente $S$ vale hoy 10 y su dinámica está descrita por un árbol binomial recombinante de seis períodos a un horizonte temporal de medio año. La volatilidad del subyacente es del 28\% y el tipo libre de riesto para el período es del 53\% (composición continua).
+\ppart Calcular el precio de una call asiática de media artimética con precio de ejercicio 10
+\ppart Misma pregunta para la call de media geométrica
+\ppart Qué vale la opción cuyo flujo final viene dado por:
+\[(S_0-\frac{1}{6}\sum_{i=1}^6S_i)^+\]
+\solution
+
+\end{problem}
+
+\begin{problem}[4]
+Se considera el subyacente del problema anterior
+\ppart Calcular el valor de la opción digital \textbf{cash-or-nothing} que paga $1$ cuando el subyacente esté por encima de $S_0$ a vencimiento.
+\ppart Calcular el valor de la opción digital \textbf{asset-or-nothing} que paga una unidad de subyacente a vencimiento cuando este esté por encima de $S_0$.
+\solution
+
+\end{problem}
+
+\begin{problem}[5]
+Consideramos un modelo discreto para la dinámica del activo $S$ con $N$ períodos. Sean $C_0$ el valor en 0 de una call de precio de ejercicio $K$, y vencimiento $T$, y $r_c$ el tipo libre de riesgo para composición continua.
+\ppart Demostrar que necesariamente $C_0\geq S_0-Ke^{-r_cT}-D$ siendo $D$ el valor actual de los dividentos futuros dle subyacente. [sugerencia: suponer que no es así y construir un arbitraje]
+
+\ppart Deducir de ello que, en el árbol binomial, para todo instante $n$, se verifica que $C_n\geq S_n-K(1+r)^{-(N-n)}-D_n$, siendo aquí $D_n$ el valor en $n$ de los dividendos futuros.
+
+\ppart Concluir que, para una call, si el subyacente no paga dividendos, nunca interesa ejercer la opción antes de vencimiento.
+
+\ppart Consideramos ahora el caso de una put de valor $P_n$. Usar la paridad call put para escribir la condición de ejercicio como:
+\[K-S_n > C_n-S_n + K(1+r)^{-(N-n)}\]
+
+\ppart Deducir de ello que una CNS de ejercicio es que tengamos:
+\[\frac{K\cdot r}{(1+r)^{(N-n)}}> C_n\]
+\solution
+
+\end{problem}
+
+\begin{problem}[6]
+Usar la fórmula de Cox-Rubinstein y la paridad call-put:
+\[C_0=S_0 \phi(n_0,N,q')-\frac{K}{(1+r)^n}\phi(n_0,N,q), \ \ C_0-P_0=S_0-\frac{K}{(1+r)^N}\]
+para obtener la f'ormula de valoración de la put
+\[P_0=\frac{K}{(1+r)^N}\phi(n_0,N,q)-S_0\phi(n_0,N,q')\]
+siendo
+\[\phi(n_0,N,q)=P(X<n_0) \text{ para } X \approx B(N,q)\]
+\solution
+
+\end{problem}
