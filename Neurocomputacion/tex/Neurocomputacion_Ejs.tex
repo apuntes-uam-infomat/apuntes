@@ -709,6 +709,34 @@ Construct a multilayer net with two hidden units that will learn a given (binary
 
 \solution
 
+Supongamos que la entrada dada es el vector $\va=(a_1,...,a_n)$ con $a_i\in\{0,1\}$. En estas condiciones y según lo descrito en el enunciado la primera neurona escondida tendrá como función de activación:
+\[z_1=f(y_{\text{in}})=\left\{\begin{array}{lll}
+1 & si & y_{\text{in}} \geq \sum_i a_i \\
+0 & si & y_{\text{in}} < \sum_i a_i
+\end{array}\right. \text{ siendo } y_{\text{in}} = \sum_{i=1}^nx_ia_i\]
+donde el vector $\vx=(x_1,...,x_n)$ representa la entrada de la red.
+
+Para la segunda neurona de la capa intermedia suponemos que los pesos serán los mismos que para la primera neurona de esta misma capa\footnote{Hacemos esta suposición puesto que el enunciado no especifica nada}. Así tendremos:
+\[z_2=f(y_{\text{in}})=\left\{\begin{array}{lll}
+1 & si & y_{\text{in}} \leq \sum_i a_i \\
+0 & si & y_{\text{in}} > \sum_i a_i
+\end{array}\right. \text{ siendo } y_{\text{in}} = \sum_{i=1}^nx_ia_i\]
+
+La neurona de la salida de la red vendrá definida por:
+\[y=f(y_{\text{in}})=\left\{\begin{array}{lll}
+1 & si & y_{\text{in}} \geq 2 \\
+0 & si & y_{\text{in}} < 2
+\end{array}\right. \text{ siendo } y_{\text{in}} = z_1+z_2\]
+
+La primera parte del ejercicio consiste en convencernos de que esta red acpeta única y exclusivamente al vector $\va$, clasificándolo como clase $1$, y rechaza todos los demás vectores.
+
+Es sencillo comprobar que la neurona $z_i$ sólo se activará si tenemos una entrada binaria que tenga, al menos, tantos $1$s como el vector $\va$ y los tenga colocados en las mismas posiciones.
+
+Por otro lado, la neurona $z_2$ sólo se activará si tenemos, como mucho, tantos $1$s como en el patrón dado y están dispuestos en las mismas posiciones.
+
+Queda claro así que la combinación de ambas neuronas nos permite detectar exáctamente si estamos leyendo el input $\va$ o no.
+
+Combinando $p$ redes neuronales como la que acabamos de describir y combinando sus salidas mediante una función OR estaremos filtrando todos los patrones que coincidan con alguno de los $\va_i$ patrones que hayamos usado para construir las $p$ redes.
 \end{problem}
 
 \begin{problem}[18]
@@ -717,6 +745,49 @@ The XOR function can be represented as
 Construct a MADALINE to implement this formulation of XOR, and compare it with
 the MADALINE in Example 2.21.
 \solution
+
+\begin{center}
+
+\begin{tikzpicture}
+[   cnode/.style={draw=black,fill=#1,minimum width=3mm,circle},
+]
+\node[draw, circle, inner sep = 0.3cm] (A) at (0,1) {$x_1$};
+\node[draw, circle, inner sep = 0.3cm] (B) at (0,-1) {$x_2$};
+\node[draw, circle, inner sep = 0.3cm] (C) at (4,1) {$z_1$};
+\node[draw, circle, inner sep = 0.3cm] (D) at (4,-1) {$z_2$};
+\node[draw, circle, inner sep = 0.3cm] (E) at (8,0) {$y$};
+
+
+\draw[->, red] (A) -- (C);
+\draw[->, blue] (A) -- (D);
+\draw[->, red] (B) -- (C);
+\draw[->, blue] (B) -- (D);
+
+\draw[->, green] (C) -- (E);
+\draw[->, green] (D) -- (E);
+
+\end{tikzpicture}
+
+\end{center}
+
+
+Para la neurona $z_1$ tenemos:
+\[z_1=f(y_{\text{in}})=\left\{\begin{array}{lll}
+1 & si & y_{\text{in}} \geq 1 \\
+0 & si & y_{\text{in}} < 1
+\end{array}\right. \text{ siendo } y_{\text{in}} = x_1+x_2\]
+
+Para la neurona $z_2$ tenemos:
+\[z_2=f(y_{\text{in}})=\left\{\begin{array}{lll}
+1 & si & y_{\text{in}} \geq 2 \\
+0 & si & y_{\text{in}} < 2
+\end{array}\right. \text{ siendo } y_{\text{in}} = x_1+x_2\]
+
+Por último, para la neurona $y$ tenemos:
+\[y=f(y_{\text{in}})=\left\{\begin{array}{lll}
+1 & si & y_{\text{in}} \geq 0 \\
+0 & si & y_{\text{in}} < 0
+\end{array}\right. \text{ siendo } y_{\text{in}} = z_1-z_2-1\]
 \end{problem}
 
 \begin{problem}[19]
@@ -724,6 +795,29 @@ Using the delta rule, find the weights required to perform the following classif
 Vectors (1, 1, 1, 1) and (-1, 1, - 1, - 1) are members of the class (and therefore
 have target value 1); vectors (1, 1, 1, - 1) and (1, - 1, - 1, 1) are not members of
 the class (and have target value -1). Use a learning rate of .5 and starting weights
-of O. Using each of the training x vectors as input, test the response of the net.
+of 0. Using each of the training x vectors as input, test the response of the net.
 \solution
+
+La regla delta mencionada en el enunciado no es más que la regla de ajuste de pesos empleado en el proceso de aprendizaje de la red neuronal Adaline.
+
+La siguiente tabla recoge los resultados obtenidos durante este proceso de aprendizaje
+\small
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Pesos antes} &  \textbf{Bias antes} & \textbf{Out} & \textbf{Target} & \textbf{Pesos después} & \textbf{Bias después} \\
+\hline
+(1,1,1,1,1) & (0.00,0.00,0.00,0.00) & 0.00 & 1 & 1 & (0.50,0.50,0.50,0.50) & 0.50\\
+(-1,1,-1,-1,1) & (0.50,0.50,0.50,0.50) & 0.50 & -1 & 1 & (-0.25,1.25,-0.25,-0.25) & 1.25\\
+(1,1,1,-1,1) & (-0.25,1.25,-0.25,-0.25) & 1.25 & 1 & -1 & (-1.88,-0.38,-1.88,1.38) & -0.38\\
+(1,-1,-1,1,1) & (-1.88,-0.38,-1.88,1.38) & -0.38 & 1 & -1 & (-3.06,0.81,-0.69,0.19) & -1.56\\
+(1,1,1,1,1) & (-3.06,0.81,-0.69,0.19) & -1.56 & -1 & 1 & (-0.41,3.47,1.97,2.84) & 1.09\\
+(-1,1,-1,-1,1) & (-0.41,3.47,1.97,2.84) & 1.09 & 1 & 1 & (-0.83,3.89,1.55,2.42) & 1.52\\
+(1,1,1,-1,1) & (-0.83,3.89,1.55,2.42) & 1.52 & 1 & -1 & (-3.18,1.54,-0.80,4.77) & -0.84\\
+(1,-1,-1,1,1) & (-3.18,1.54,-0.80,4.77) & -0.84 & 1 & -1 & (-3.69,2.05,-0.29,4.26) & -1.35\\
+(1,1,1,1,1) & (-3.69,2.05,-0.29,4.26) & -1.35 & 1 & 1 & (-3.68,2.06,-0.28,4.27) & -1.34\\
+\hline
+\end{tabular}
+\end{center}
+\normalsize
 \end{problem}
