@@ -469,7 +469,7 @@ Debe ocurrir que $v(x_j) = a_j$. Sea $\appl{λ}{U_p}{ℝ}$ una función arbitrar
 
 Se puede demostrar además que este espacio tangente es equivalente al que definimos mediante curvas.
 
-\subsection{Aplicaciones entre variedades y sus diferenciales}
+\section{Aplicaciones entre variedades}
 
 \begin{figure}[hbtp]
 \centering
@@ -478,7 +478,15 @@ Se puede demostrar además que este espacio tangente es equivalente al que defin
 \label{fig:AplicacionYDiferencial}
 \end{figure}
 
-La definición del espacio tangente nos permite empezar a hablar de la diferencial de aplicaciones entre variedades.
+Una vez que tenemos la definición del espacio tangente, ya podemos empezar a estudiar aplicaciones entre variedades y discutir condiciones sobre su ``derivada'' o, como la llamaremos en geometría, su diferencial. Eso sí, antes tenemos que definir bien qué entendemos por una aplicación diferenciable entre variedades.
+
+
+\begin{defn}[Función\IS diferenciable] \label{def:FuncionDiferenciableVariedades} Sea $\appl{f}{M}{N}$ una aplicación entre variedades diferenciables. Decimos que es una \textbf{función diferenciable} si para toda carta $(U_i, Φ_i)$  en $X$ y para toda carta $(V_j, Ψ_j)$ en $Y$, la composición $Ψ_j ○ F ○ \inv{Φ_i}$ es diferenciable ($C^∞$) entre abiertos de $ℝ^n$ y $ℝ^m$ en todo punto donde está definida.
+
+Esto es lo mismo que decir que $F$ es compatible con las cartas.
+\end{defn}
+
+A partir de esto, ya podemos definir qué es la diferencial de estas aplicaciones:
 
 \begin{defn}[Diferencial\IS de una aplicación] Sean $M^m$, $N^n$ dos variedades de dimensión $m$ y $n$ respectivamente, y sea $\appl{f}{M}{N}$ una aplicación entre ellas. Entonces, dado un punto $p ∈ M$, se define la diferencial de $f$ en $p$ como la aplicación lineal dada por \begin{align*}
 \appl{\eval[1]{\dif f}_p}{\tgs_p M&}{\tgs_{f(p)} N} \\
@@ -492,9 +500,9 @@ g &\longmapsto D(g ○ f)
 
 Aunque esta definición de diferencial la hayamos hecho desde las derivaciones, podemos ver que si lo hubiésemos hecho con curvas nos habría salido lo mismo. Si consideramos una curva $\appl{c}{(-ε, ε)}{M}$ con $c(0) = p$, sabemos que $c'(0) ∈ \tgs_p M$. En ese caso, la diferencial será \[ \eval[1]{\dif f}_p (c'(0)) = (f○c)'(0)\] como uno podría esperar.
 
-Vamos a ver ahora una serie de proposiciones para trasladar ciertas propiedades habituales de la derivada a esta definición de la diferencial que hemos dado.
+Otra de las cosas que uno podría esperar es que una derivada nula implica función constante. Sólo necesitaremos una condición extra, que es la conexión de la variedad.
 
-\begin{prop} Dada una variedad $M$ conexa y una aplicación diferenciable $\appl{f}{M}{N}$, si se cumple que $\difp \equiv 0\; ∀p ∈ M$, entonces $f$ es constante.
+\begin{prop} \label{prop:DiferencialNulaFuncConstante} Dada una variedad $M$ conexa y una aplicación diferenciable $\appl{f}{M}{N}$, si se cumple que $\difp \equiv 0\; ∀p ∈ M$, entonces $f$ es constante.
 \end{prop}
 
 \begin{proof} Queremos ver que si $f(x_0) = y_0$ para algún $x_0 ∈ M$, entonces $f(x) = y_0$ para todo $x ∈ M$. Esto es exactamente lo mismo que decir que $\inv{f}(y_0) = M$.
@@ -504,18 +512,38 @@ Ahora bien, como el conjunto $\set{y_0}$ es cerrado, su imagen inversa por $f$ (
 Por otra parte, como en $x_0$ la diferencial se anula, entonces $f$ es constante en un entorno de $x_0$, luego creo que funciona todo bien.
 \end{proof}
 
-\begin{example} Sea $\appl{f}{M}{ℝ}$ con $p ∈ M$ un máximo o mínimo local. Entonces $p$ es un punto crítico y, como suele ser habitual, $\difp \equiv 0$.
+También podemos ver si aquí tenemos igualmente que la diferencial se anula en máximos o mínimos. Como es de esperar, no tenemos problemas con eso.
 
-Se puede ver sencillo: si $f ○ \inv{φ}$ tiene un máximo en $φ(p)$ para una carta φ de $p$, entonces $\Dif (f ○ \inv{φ}) \equiv 0$. En otras palabras, \[ 0 = \eval[2]{\dpd{f ○ \inv{φ}}{t_k}}_{φ(p)} ≝ \eval[2]{\dpd{f}{x_k}}_p ∀k \implies \difp = 0\]
-\end{example}
+\begin{prop} Sea $\appl{f}{M}{ℝ}$ con $p ∈ M$ un máximo o mínimo local. Entonces $p$ es un \concept{Punto\IS crítico} y $\difp \equiv 0$.
+\end{prop}
 
-Vamos a considerar ahora una aplicación $\appl{f}{M}{N}$ $C^∞$.
+\begin{proof} Si $f ○ \inv{φ}$ tiene un máximo en $φ(p)$ para una carta φ de $p$, entonces $\Dif (f ○ \inv{φ}) \equiv 0$. En otras palabras, \[ 0 = \eval[2]{\dpd{f ○ \inv{φ}}{t_k}}_{φ(p)} ≝ \eval[2]{\dpd{f}{x_k}}_p ∀k \implies \difp = 0\]
+\end{proof}
 
-\begin{defn}[Inmersión] Si $\appl{\difp}{\tgs_p M}{\tgs_{f(p)} N}$ es inyectiva $∀p ∈ M$ entonces es una inmersión.
+\subsection{Inmersiones y subvariedades}
+
+Un caso especial de aplicaciones entre variedades son las que nos permiten meter variedades en otras de una forma más o menos regular. A su vez, esto nos dará lugar a poder definir qué es una subvariedad, es decir, de qué forma podemos dar estructura de variedad a un subconjunto de otra variedad.
+
+En general, consideraremos ahora una aplicación $\appl{f}{M}{N}$, $f ∈ C^∞$ (infinitamente diferenciable). La primera definición es la de inmersión, que es una forma de meter una variedad dentro de otra.
+
+\begin{defn}[Inmersión] Si $\appl{\difp}{\tgs_p M}{\tgs_{f(p)} N}$ es inyectiva $∀p ∈ M$ entonces es una inmersión. Equivalentemente, $f$ es inmersión si y sólo si \[ \mop{rango} \difp  = \dim M\]
 \end{defn}
 
-\begin{defn}[Subvariedad] Se dice que $(M,f)$ es un subvariedad si $f$ es una inmersión inyectiva.
+La condición de que la diferencial sea inyectiva nos permite evitarnos casos en los que el espacio tangente ``colapse''. En el ejemplo de la \fref{fig:FuncionNoInmersion} se puede ver cuando $y = 0$ que el espacio tangente, que en teoría nos tiene que decir todas las direcciones en las que podemos movernos sin salir de la variedad, se convierte en una recta. El trabajar con inmersiones nos permitirá asegurarnos de que el espacio tangente nunca nos va a dejar encerrados en sólo una parte de la variedad.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{FuncionNoInmersion}
+\caption{La aplicación $f(x,y) = (x, y^2)$ es una aplicación que nos mete el plano dentro de $ℝ^2$, pero no es una inmersión por los puntos donde $y = 0$.}
+\label{fig:FuncionNoInmersion}
+\end{figure}
+
+Con sólo una pequeña restricción más, podemos definir lo que es una subvariedad. Simplemente querremos asegurarnos de que cada punto en la variedad destino es imagen de un único punto en la variedad origen. Es decir, buscaremos que la función sea inyectiva.
+
+\begin{defn}[Subvariedad] Dados $M ⊂ N$ y $f$ la identidad, se dice que $(M,f)$ es un subvariedad de $N$ si $f$ es una inmersión inyectiva.
 \end{defn}
+
+Por último, queremos tener alguna noción que nos permita decir que una aplicación mete una variedad dentro de otra sin cambiarla esencialmente. Esto es lo que llamaremos un embedding o incrustación:
 
 \begin{defn}[Embedding] Si $f$ tiene diferencial inyectiva, es inyectiva y homeomorfismo sobre su imagen, entonces es un \textit{embedding} o incrustación.
 \end{defn}
@@ -528,12 +556,21 @@ t &\longmapsto (\cos t, \sin t)
 Sin embargo, si tomásemos $\appl{f}{\crc[1]}{ℝ^2}$ con $f$ la identidad y una carta en polares para $\crc[1]$, entoncess sí es inmersión y subvariedad.
 \end{example}
 
+También nos interesará estudiar un concepto equivalente al de las proyecciones, que aquí llamaremos submersiones.
+
 \begin{defn}[Submersión] Si $f$ es suprayectiva y la diferencial también es suprayectiva.
 \end{defn}
 
-Nota: Poner aquí el ejemplo del pez de GeoDif. Glugluglugluglgugluglugluglugluglugluglugluglug.
+La \concept{Fibración\IS de Hopf} es un ejemplo interesante que nos da una proyección de la hiperesfera $\crc[3]$ en la esfera de $\crc[2]$.
 
-\begin{example}[Fibración de Hopf] Definimos \begin{align*}
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = 0.8\textwidth]{img/Hopf_Fibration.png}
+\caption{Una representación de la fibración de Hopf, que lleva cada circunferencia de $\crc[3]$ a un punto en $\crc[2]$. Imagen vía \href{http://nilesjohnson.net/hopf.html}{Niles Johnson}, que tiene alguna animación chula sobre el tema.}
+\label{fig:FibracionHopf}
+\end{figure}
+
+ Definimos \begin{align*}
 ℂ^2 \setminus \set{0} ⊃ \set{(z,w) \tq \abs{z}^2 + \abs{w}^2 = 1 } & \longmapsto \projcp^1 \equiv \crc[2] \\
 (z,w) &\longmapsto [z:w]
 \end{align*}, que es una submersión, si cogemos la inversa con la norma y un montón de cuentas a las que no veo demasiado sentido.
@@ -544,8 +581,7 @@ Y bueno, el grupo fundamental sí que distingue que $\crc[2] × \crc[1] \not\sim
 
 Más cuentas. El H2 será de dimensión dos, tralarí tralará. Ok.
 
-Por cierto, no vamos a usar estas cosas que hemos dicho hoy. Pues perfecto.
-\end{example}
+Por cierto, no vamos a usar estas cosas que hemos dicho hoy. Pues perfecto. Si alguien tiene ánimos que lo arregle.
 
 \chapter{Cohomología de De Rham}
 \label{chap:CohomologiaDeRham}
