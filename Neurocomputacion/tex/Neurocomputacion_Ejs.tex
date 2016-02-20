@@ -565,29 +565,51 @@ would have on the binary representation of the AND function in Example 2.11.
 
 \solution
 
-No he sido capaz de encontrar en internet (sin pagar) la información de la referencia mencionada. No obstante, entiendo que se trata de modificar el algoritmo de aprendizaje del perceptrón de forma que las neuronas activas se potencien y las inactivas reduzcan su valor en caso de error.
+Según el libro: ``Principles of Neurodynamics'' un sistema de aprendizaje como el descrito en el enunciado es un sistema \textbf{gamma}, que se define en el libro como sigue:
 
-Para implementarlo y generar la siguiente tabla, consideramos que el incremento en cada neurona activa será inversamente proporcional al número de neuronas activas. Del mismo modo el decremento en las entradas inactivas será inversamente proporcional al número de neuronas inactivas.
+\begin{defn}[Sistema Gamma]
+El sistema de aprendizaje gamma es una regla que dicta cómo modificar los pesos de las conexiones que llegan a una determinada neurona de tal forma que a todas las conexiones activas sufren la misma variación manteniendo la suma total de las conexiones constante.
+
+Por tanto, la misma cantidad total que se ha sumado se divide entre la cantidad de neuronas inactivas y se resta a cada conexión lo correspondiente.
+
+La fórmula empleada es:
+\[Δ ω_{ij}(t)=\left(v_{ij}(t)-\frac{\sum_i v_{ij}(t)}{N_j}\right)α\]
+donde $v_{ij}(t)$ tiene valor $1$ si la conexión estaba activada en el instante $t$ y $0$ en caso contrario. $N_j$ es el número de conexiones que llegan a la neurona que estamos estudiando.
+\end{defn}
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
 \textbf{Input} & \textbf{Pesos antes} &  \textbf{Bias antes} & \textbf{Out} & \textbf{Target} & \textbf{Pesos después} & \textbf{Bias después} \\
 \hline
-( 1 , 1 , 1 ) & ( 0 , 0 ) &  0  &  0  &  1  & ( 0 , 0 ) &  0  \\
-( 1 , 0 , 1 ) & ( 0 , 0 ) &  0  &  0  &  -1  & ( -0.5 , 1.0 ) &  -0.5  \\
-( 0 , 1 , 1 ) & ( -0.5 , 1.0 ) &  -0.5  &  1  &  -1  & ( 0.5 , 0.5 ) &  -1.0  \\
-( 0 , 0 , 1 ) & ( 0.5 , 0.5 ) &  -1.0  &  -1  &  -1  & ( 0.5 , 0.5 ) &  -1.0  \\
-( 1 , 1 , 1 ) & ( 0.5 , 0.5 ) &  -1.0  &  0  &  1  & ( 0.5 , 0.5 ) &  -1.0  \\
-( 1 , 0 , 1 ) & ( 0.5 , 0.5 ) &  -1.0  &  -1  &  -1  & ( 0.5 , 0.5 ) &  -1.0  \\
-( 0 , 1 , 1 ) & ( 0.5 , 0.5 ) &  -1.0  &  -1  &  -1  & ( 0.5 , 0.5 ) &  -1.0  \\
+(1,1,1) & (0.34,0.42) & 0.085 & 1 & 1 & (0.34,0.42) & 0.085\\
+(1,0,1) & (0.34,0.42) & 0.085 & 1 & -1 & (0.0067,1.0867) & -0.248\\
+(0,1,1) & (0.0067,1.0867) & -0.248 & 1 & -1 & (0.67,0.75) & -0.58167\\
+(0,0,1) & (0.67,0.75) & -0.58167 & -1 & -1 & (0.67,0.75) & -0.58167\\
+(1,1,1) & (0.67,0.75) & -0.58167 & 1 & 1 & (0.67,0.75) & -0.58167\\
+(1,0,1) & (0.67,0.75) & -0.58167 & 0 & -1 & (0.34,1.42) & -0.915\\
+(0,1,1) & (0.34,1.42) & -0.915 & 1 & -1 & (1.0067,1.0867) & -1.248\\
+(0,0,1) & (1.0067,1.0867) & -1.248 & -1 & -1 & (1.0067,1.0867) & -1.248\\
+(1,1,1) & (1.0067,1.0867) & -1.248 & 1 & 1 & (1.0067,1.0867) & -1.248\\
+(1,0,1) & (1.0067,1.0867) & -1.248 & -1 & -1 & (1.0067,1.0867) & -1.248\\
+(0,1,1) & (1.0067,1.0867) & -1.248 & 0 & -1 & (1.67,0.75) & -1.58167\\
+(0,0,1) & (1.67,0.75) & -1.58167 & -1 & -1 & (1.67,0.75) & -1.58167\\
+(1,1,1) & (1.67,0.75) & -1.58167 & 1 & 1 & (1.67,0.75) & -1.58167\\
+(1,0,1) & (1.67,0.75) & -1.58167 & 0 & -1 & (1.34,1.42) & -1.915\\
+(0,1,1) & (1.34,1.42) & -1.915 & -1 & -1 & (1.34,1.42) & -1.915\\
+(0,0,1) & (1.34,1.42) & -1.915 & -1 & -1 & (1.34,1.42) & -1.915\\
+(1,1,1) & (1.34,1.42) & -1.915 & 1 & 1 & (1.34,1.42) & -1.915\\
+(1,0,1) & (1.34,1.42) & -1.915 & -1 & -1 & (1.34,1.42) & -1.915\\
+(0,1,1) & (1.34,1.42) & -1.915 & -1 & -1 & (1.34,1.42) & -1.915\\
+(0,0,1) & (1.34,1.42) & -1.915 & -1 & -1 & (1.34,1.42) & -1.915\\
+
 \hline
 \end{tabular}
 \end{center}
 
-Si he entendido bien el problema, la red siempre actualiza los pesos manteniendo su suma constante. Por tanto lo que suma a un peso de una conexión activa tiene que restarlo de algún peso de una conexión inactiva.
+Por la propia definición de la regla, es claro que debemos establecer los pesos iniciales de manera aleatoria puesto que si inicializamos todos a $0$, nunca podríamos predecir adecuadamente el valor de la puerta AND, ya que en el único caso en que debe vale $1$ obtendríamos 0.
 
-Esto hace que la red no pueda aprender de las situaciones en que todas neuronas de input están activas ni cuando todas están inactivas (este segundo caso nunca se da debido al bias). Por tanto, la red aprende de los otros tres patrones posibles en la AND pero no del patrón que da el valor verdadero.
+En este caso se ha tomado un valor α=-1, decisión tomada debido a las pruebas realizadas con resultados erróneos.
 \end{problem}
 
 \begin{problem}[15]
@@ -638,10 +660,46 @@ Al escribir el error cuadrático medio, nuestras incógnitas son los pesos y es 
 Apoyándose en esta idea es sencillo llegar al algoritmo que describe el proceo de aprendizaje de las redes Adaline. Aplicando el algoritmo a los problemas mencionados obtenemos las siguientes soluciones:
 
 \begin{itemize}
-\item Función lógica AND NOR usando entradas y salidas binarias.
+\item Función lógica AND NOT usando entradas binarias.
 
-\item Función lógica OR empleando entradas y salidas binarias.
 
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Pesos antes} &  \textbf{Bias antes} & \textbf{Out} & \textbf{Target} & \textbf{Pesos después} & \textbf{Bias después} \\
+\hline
+(1,1,1) & (0.48,0.295) & 0.055 & 1 & -1 & (-1.35,-1.535) & -1.775\\
+(1,0,1) & (-1.35,-1.535) & -1.775 & -1 & 1 & (2.775,-1.535) & 2.35\\
+(0,1,1) & (2.775,-1.535) & 2.35 & 1 & -1 & (2.775,-3.35) & 0.535\\
+(0,0,1) & (2.775,-3.35) & 0.535 & 1 & -1 & (2.775,-3.35) & -1.0\\
+(1,1,1) & (2.775,-3.35) & -1.0 & -1 & -1 & (3.35,-2.775) & -0.425\\
+(1,0,1) & (3.35,-2.775) & -0.425 & 1 & 1 & (1.425,-2.775) & -2.35\\
+(0,1,1) & (1.425,-2.775) & -2.35 & -1 & -1 & (1.425,1.35) & 1.775\\
+(0,0,1) & (1.425,1.35) & 1.775 & 1 & -1 & (1.425,1.35) & -1.0\\
+(1,1,1) & (1.425,1.35) & -1.0 & 1 & -1 & (-1.35,-1.425) & -3.775\\
+(1,0,1) & (-1.35,-1.425) & -3.775 & -1 & 1 & (4.775,-1.425) & 2.35\\
+(0,1,1) & (4.775,-1.425) & 2.35 & 1 & -1 & (4.775,-3.35) & 0.425\\
+(0,0,1) & (4.775,-3.35) & 0.425 & 1 & -1 & (4.775,-3.35) & -1.0\\
+(1,1,1) & (4.775,-3.35) & -1.0 & 1 & -1 & (3.35,-4.775) & -2.425\\
+(1,0,1) & (3.35,-4.775) & -2.425 & 1 & 1 & (3.425,-4.775) & -2.35\\
+\hline
+\end{tabular}
+\end{center}
+
+\item Función lógica OR empleando entradas binarias.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Pesos antes} &  \textbf{Bias antes} & \textbf{Out} & \textbf{Target} & \textbf{Pesos después} & \textbf{Bias después} \\
+\hline
+(1,1,1) & (0.225,0.06) & 0.21 & 1 & 1 & (0.73,0.565) & 0.715\\
+(1,0,1) & (0.73,0.565) & 0.715 & 1 & 1 & (0.285,0.565) & 0.27\\
+(0,1,1) & (0.285,0.565) & 0.27 & 1 & 1 & (0.285,0.73) & 0.435\\
+(0,0,1) & (0.285,0.73) & 0.435 & 1 & 0 & (0.285,0.73) & 0.0\\
+(1,1,1) & (0.285,0.73) & 0.0 & 1 & 1 & (0.27,0.715) & -0.015\\
+\hline
+\end{tabular}
+\end{center}
 
 \end{itemize}
 \end{problem}
