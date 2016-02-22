@@ -9,6 +9,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows,automata}
 \usepackage{eurosym}
+\usepackage{listings}
 
 \let\oldeuro\euro
 \renewcommand{\texteuro}{\oldeuro\xspace}
@@ -43,5 +44,103 @@ Estas prácticas se desarrollarán en excel, por ser lo más utilizado en los ba
 
 \chapter{Ejercicios}
 \input{tex/Economia_Ejs.tex}
+
+\chapter{Scripts de python}
+\section{Árboles binomiales}\label{sec:arbolBin}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% Custom colors
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\lstset{language=Python,
+	basicstyle=\ttm,
+	otherkeywords={self},             % Add keywords here
+	keywordstyle=\ttb\color{deepblue},
+	emph={MyClass,__init__},          % Custom highlighting
+	emphstyle=\ttb\color{deepred},    % Custom highlighting style
+	stringstyle=\color{deepgreen},
+	frame=tb,                         % Any extra options here
+	showstringspaces=false,
+    tabsize=4,
+    breaklines=true
+}
+
+
+\begin{lstlisting}
+#! /usr/bin/python
+import math
+import random
+
+def computeValueSTMinusMin(path, a, b, p, S0):
+	prob = 1
+	value = S0
+	minimum = S0
+
+	for i in path:
+		if i == a:
+			prob = prob * p
+		elif i == b:
+			prob = prob *(1-p)
+		else:
+			print "Some error occurs"
+
+		value = value * i
+		if value < minimum:
+			minimum = value
+
+	return (value - minimum) * prob
+
+
+def computeValueMaxMinusST(path, a, b, p, S0):
+	prob = 1
+	value = S0
+	maximum = S0
+
+	for i in path:
+		if i == a:
+			prob = prob * p
+		elif i == b:
+			prob = prob *(1-p)
+		else:
+			print "Some error occurs"
+
+		value = value * i
+		if value > maximum:
+			maximum = value
+
+	return (maximum - value) * prob
+
+
+def compute_future_value_binary_tree(a,b,p,T,S0,func):
+	trajectory = []
+
+	trajectory.append([a])
+	trajectory.append([b])
+
+	finalValue = 0
+
+	for path in trajectory:
+		if len(path) == T:
+			finalValue = finalValue + func(path, a, b, p, S0)
+		else:
+			pathA = list(path)
+			pathA.append(a)
+			pathB = list(path)
+			pathB.append(b)
+			trajectory.append(pathA)
+			trajectory.append(pathB)
+
+
+	return finalValue
+
+
+print compute_future_value_binary_tree(1.09,0.92,0.52,4,10,computeValueMaxMinusST)
+\end{lstlisting}
+
 \printindex
 \end{document}
