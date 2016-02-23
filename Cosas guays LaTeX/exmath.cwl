@@ -5,6 +5,7 @@
 \approvedby{arg0}#m
 \noteby{arg0}{arg1}#m
 \todoby{arg0}#m
+\inclass#m
 \mop{operacion}#m
 \imgref{referencia}#m
 \dimplies#m
