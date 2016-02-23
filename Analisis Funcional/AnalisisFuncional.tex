@@ -659,19 +659,57 @@ Dado que ya hemos demostrado que ambas aplicaciones son continuas y la biyectivi
 
 \end{proof}
 
-\begin{theorem}[Principio\IS de acotación uniforme de Banach-Stainhaus] Sea $\set{T_α}_{α∈A}$ un subconjunto de $\mathcal{L}(X,Y)$, donde $X$ es Banach e $Y$ es normado. Entonces, o bien las aplicaciones lineales $T_α$ están uniformemente acotadas (es decir, $∃C < ∞$ tal que $∀α ∈ A$ se tiene que $\norm{T_α} ≤ C$), o bien existe un cierto conjunto\footnote{Recordamos la definición de \nref{def:ConjuntoGDelta}: intersección numerable de abiertos.} $G_δ$ denso en $X$, que llamaremos $B$, tal que \[ \sup_{α ∈ A} \norm{T_α(x)}_Y = ∞ \quad ∀x ∈ B \]
+\section{Teorema de la acotación uniforme}
+
+\begin{theorem}[Teorema\IS de acotación uniforme de Banach-Stainhaus] Sea $\set{T_α}_{α∈A}$ un subconjunto de $\mathcal{L}(X,Y)$, donde $X$ es Banach e $Y$ es normado. Entonces, o bien las aplicaciones lineales $T_α$ están uniformemente acotadas (es decir, $∃C < ∞$ tal que $∀α ∈ A$ se tiene que $\norm{T_α} ≤ C$), o bien existe un cierto conjunto\footnote{Recordamos la definición de \nref{def:ConjuntoGDelta}: intersección numerable de abiertos.} $G_δ$ denso en $X$, que llamaremos $B$, tal que \[ \sup_{α ∈ A} \norm{T_α(x)}_Y = ∞ \quad ∀x ∈ B \]
 \end{theorem}
 
 \begin{proof}
 Para $n = 1,2, \dotsc$ consideraremos un conjunto \[ V_n = \set{x ∈ X \tq  \sup_{α∈A} \norm{T_α(x)}_Y > n} \]
 
-Cada uno de estos conjuntos será un abierto.
+Cada uno de estos conjuntos será un abierto, y lo vamos a demostrar. Cojamos $x ∈ V_n$. Entonces $∃ α_0 ∈ A$ tal que $\norm{T_{α_0}(x)}_Y > n$. Como $T_{α_0}$ es acotado, entonces existe un cierto $δ > 0$ tal que si $x' ∈ \bola_δ(x)$ se tiene que $\norm{T_{α_0}(x')} > n$.
+
+Justificamos la existencia de ese δ. Por una parte, podemos hacer una estimación superior: \[ \norm{T_{α_0} (x) - T_{α_0} (x')}_Y = \norm{T_{α_0}(x-x')}_Y ≤ \norm{T_{α_0}} \norm{x-x'}_X \]
+
+Por otra, \[ \norm{T_{α_0}(x')}_Y = \norm{T_{α_0}(x) - T_{α_0}(x-x')}_Y ≥ \norm{T_{α_0} (x)}_Y - \norm{T_{α_0}(x-x')}_Y ≥ \norm{T_{α_0}(x)} - \norm{T_{α_0}}{x - x'}_X > n\] si $\norm{T_{α_0}(x)} - \norm{T_{α_0}}\norm{x-x'}_X > n$ lo que ocurre si y sólo si $\norm{T_{α_0}}{x-x'} < \norm{T_{α_0}(x)} - n > 0$ lo que ocurre si $\norm{T_{α_0}} ≠ 0$. O algo así.
+
+Pero entonces o que tenemos es que $\sup_{α ∈ A} \norm{T_α(x')} > n$ luego $x' ∈ V_n$ y $V_n$ es abierto.
+
+Con esto, vamos a ver que pasa en dos casos posibles: que haya un conjunto no denso o que todos sean densos.
+
+Supongamos que $∃N$ tal que $V_N$ no es denso. Entonces $V_N$ evita una cierta bola cerrada $\adh{\bola_r}(x_0)$ con $\adh{\bola_r}(x_0) ⊂ V_N^c$ para algún $x_0 ∈ X$ y $r > 0$.  Si $x ∈ \adh{\bola_r}(x_0)$ y $α_0 ∈ A$, entonces $N ≥ \sup_{α∈A} \norm{T_α(x)}_Y ≥ \norm{T_{α_0}(x)}_Y$, que podemos escribir como \[ \norm{T_{α_0}(x)}_Y = \norm{T_{α_0}(x_0 + (x-x_0))}_Y = \norm{T_{α_0}(x_0) + T_{α_0}(x-x_0)} ≥ \norm{T_{α_0}(x_0)} - \norm{T_{α_0}(x-x_0)} \implies \norm{T_{α_0}(x-x_0)}_Y ≤ 2N\]
+
+Hacemos el cambio de variables $x-x_0 = y$ y entonces $x ∈ \adh{\bola_r}(x_0) \implies y ∈ \adh{\bola_r}(0)$, y entonces $∀y ∈ \adh{\bola_r}(x_0)$ $\norm{T_{α_0}(y)}_Y ≤ 2N$.
+
+Sea ahora $z ∈ X$ arbitrario, $z = \norm{z}_X · z'$ con $z' ∈ \adh{\bola_1}(0)$, y $z = \frac{1}{4} \norm{z}_X · z''$ con $z'' ∈ \adh{\bola_r}(0)$ de tal forma que $\frac{1}{r} z'' = z'$. Esto nos dice que \[ T_{α_0}(z) = T_{α_0} \left(\frac{1}{r} \norm{z}_X z''\right) = \frac{1}{r} \norm{z}_X T_{α_0}(z'') \] y tomando normas nos queda que \[ \norm{T_{α_0}(z)}_X = \frac{1}{r} \norm{z}_X \norm{T_{α_0} (z'')}_X ≤ \frac{2N}{r} \norm{z}_X \] lo que nos dice que $\norm{T_{α_0}} ≤ \frac{2N}{r}$  para cualquier $α_0 ∈ A$.
+
+Si por otra parte todo $V_n$ es denso, entonces por el \nref{thm:CategoriaBaire} la intersección es un $G_δ$ denso en $X$, y aquí es donde usamos que $X$ es Banach.
 
 \end{proof}
 
-\section{Teorema de la acotación uniforme}
+\begin{corol} Si $\set{T_α}_{α∈A} ⊂ \mathcal{L}(X,Y)$ con $X$ Banach e $Y$ normado, entonces la familia $\set{T_α}$ está uniformemente acotada si $\sup_{α ∈ A} \norm{T_α(x)}_Y < ∞ \;∀x ∈ X$.
+\end{corol}
+
+Lo interesante de este teorema es la posibilidad de extraer información global (acotación uniforme) a partir de información puntual.
+
 
 \section{Teorema de la aplicación abierta}
+
+\begin{theorem}[Teorema\IS de la aplicación abierta] Sean $X$ e $Y$ Banach y $T ∈ \mathcal{L}(X,Y)$ sobreyectiva. Entonces:
+
+\begin{enumerate}
+\item $∃δ >0 $ tal que $T(\bola_1(0)) ⊃ \bola_δ(0)$.
+\item $T$ es una aplicación abierta, es decir, que si $U ⊂ X$ es abierto entonces $T(U) ⊂ Y$ lo es igualmente.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Primero vamos a demostrar que si $T$ es sobreyectiva, existe una cierta constante $c > 0$ tal que $\adh{T(\bola_1(0))} ⊃ \bola_{2c}(0)$.
+
+Sea $Y_n = n\adh{T(\bola_1(0))} = \adh{T(\bola_n(0))}$ por ser $T$ lineal\footnote{Hay que pensar bien cómo funciona el intercambiarlo con el cierre.}, con $Y_n ⊂ Y$ para $n ∈ ℕ$.
+
+Y ahora, puesto que $T$ es sobreyectiva, dado $y ∈ Y$ existe un $x ∈ X$ con $T(x) = y$. Si $\norm{x}_X < n$, entonces $y ∈ T(\bola_n(0))$ por definición. Lo que esto nos dice es que la unión \[ \bigcup_{n≥1} T(\bola_n(0)) = Y \] de forma simplemente algebraica. Como $Y$ es completo, por el \nref{thm:CategoriaBaire} esto implica que existe un $N$ tal que $\mop{int} \adh{T(\bola_n(0))} ≠ ∅$. A su vez, esto implica que existe una cierta cantidad $c$ positiva $y_0 ∈ Y$ con $\bola_{4c} (y_0) ⊂ \adh{T(\bola_n(0))}$.
+\end{proof}
 
 \section{Teorema de la gráfica cerrada}
 
