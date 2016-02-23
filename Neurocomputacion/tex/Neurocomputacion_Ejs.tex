@@ -832,19 +832,205 @@ La siguiente tabla recoge los resultados obtenidos durante este proceso de apren
 Find the new weights when the net illustrated in Figure 6.12 is presented the input pattern (0, 1) and the target output is 1. Use a learning rate of $α = 0.25$, and the binary sigmoid activation function.
 
 \solution
+
+No hay más que seguir el algoritmo de entrenamiento para el perceptrón multicapa, descrito en el libro en las páginas 294, 295 y 296. En nuestro caso sólo tenemos un patrón de entrenamiento por lo que sólo deberemos realizar los pasos 3-8.
+
+\begin{enumerate}
+\item \textbf{Feedforward}
+\begin{enumerate}
+\item Asignamos a las neuronas de entrada los valores corresponientes al patrón dado:
+\[x_1 = 0, \ x_2 = 1\]
+\item Calculamos la salida de cada una de las neuronas de la capa intermedia:
+\[\left\{ \begin{array}{l}
+z_1 = f(0.4 -0.2) = f(0.2) = 0.55 \\
+z_2 = f(0.6+0.3) =f(0.9) = 0.71
+\end{array}\right.\]
+\[\text{siendo }f(x) = \frac{1}{1+e^{-x}} \]
+
+\item Calculamos el resultado para la neurona de salida
+\[y_{in} = f(-0.3+0.5\cdot 0.55 + 0.1 \cdot 0.71)=f(0.046) = 0.51\]
+\end{enumerate}
+\item \textbf{Backpropagation of error}
+\begin{enumerate}
+\item Calculamos el valor δ de la neurona de salida
+\[δ = (t-y_{in})f'(y_{in}) = (1-y_{in})f(y_{in})(1-f(y_{in})) = 0.12\]
+Calculamos tambien la variación de peso que deberemos aplicar a las conexiones que llegan hasta esta neurona:
+\[\left\{ \begin{array}{l}
+Δw_1= αδz_1 = 0.017 \\
+Δw_2= αδz_2 = 0.021 \\
+Δw_0= αδ = 0.03
+\end{array}\right.\]
+
+\item Cada neurona oculta calcula su $δ_j$ como suma ponderada de los valores δ que llegan hasta ella, multiplicada por la derivada. En este caso:
+\[\left\{ \begin{array}{l}
+δ_1= ω_1 δ \cdot f'(z_1)= 0.06 \cdot 0.2475 = 0.015\\
+δ_2= ω_2 δ \cdot f'(z_2)= 0.012 \cdot 0.205 = 0.0025
+\end{array}\right.\]
+
+Calculamos la variación de peso que deberemos aplicar a las conexiones que llegan hasta cada neurona:
+\[\left\{ \begin{array}{l}
+Δv_{11}= αδ_1x_1 = 0 \\
+Δv_{21}= αδ_1x_2 = 0.00375 \\
+Δv_{01}= αδ_1 = 0.00375 \\
+Δv_{12}= αδ_2x_1 = 0 \\
+Δv_{22}= αδ_2x_2 = 0.000625 \\
+Δv_{02}= αδ_2 = 0.000625
+\end{array}\right.\]
+\end{enumerate}
+\item \textbf{Update weights and biases}
+\begin{enumerate}
+\item Atendiendo a los incrementos calculados en los pasos anteriores tenemos los siguientes valores resultantes para los pesos:
+\[\left\{ \begin{array}{l}
+v_{11} = 0.7 \\
+v_{21} = -0.1963 \\
+v_{01} = 0.40375 \\
+v_{12} = -0.4 \\
+v_{22} = 0.300625 \\
+v_{02} = 0.600625 \\
+w_1    = 0.517 \\
+w_2    = 0.221 \\
+w_0    = - 0.27
+\end{array}\right.\]
+\end{enumerate}
+\end{enumerate}
 \end{problem}
 
 \begin{problem}[2]
 Find the new weights when the net illustrated in Figure 6.12 is presented the input pattern (-1, 1) and the target output is 1. Use a learning rate of $α = 0.25$, and the bipolar sigmoid activation function.
 
 \solution
+
+Repetimos los pasos del ejercicio anterior con diferentes valores de entrada. Cabe destacar que la función de activación empleada en esta ocasión es distinta al problema anterior.
+
+\begin{enumerate}
+\item \textbf{Feedforward}
+\begin{enumerate}
+\item Asignamos a las neuronas de entrada los valores corresponientes al patrón dado:
+\[x_1 = -1, \ x_2 = 1\]
+\item Calculamos la salida de cada una de las neuronas de la capa intermedia:
+\[\left\{ \begin{array}{l}
+z_1 = f(0.4 -0.2-0.7) = f(-0.5) = -0.25\\
+z_2 = f(0.6+0.3+0.4) =f(1.3) = 0.57
+\end{array}\right.\]
+\[\text{siendo }f(x) = \frac{2}{1+e^{-x}} -1 \]
+
+\item Calculamos el resultado para la neurona de salida
+\[y_{in} = f(-0.3-0.5\cdot 0.25 + 0.1 \cdot 0.57)=f(-0.37) = -0.18\]
+\end{enumerate}
+\item \textbf{Backpropagation of error}
+\begin{enumerate}
+\item Calculamos el valor δ de la neurona de salida
+\[δ = (t-y_{in})f'(y_{in}) = (1-y_{in})\frac{1}{2}(1+f(y_{in}))(1-f(y_{in})) = 0.57\]
+Calculamos tambien la variación de peso que deberemos aplicar a las conexiones que llegan hasta esta neurona:
+\[\left\{ \begin{array}{l}
+Δw_1= αδz_1 = -0.1425 \\
+Δw_2= αδz_2 = 0.0812 \\
+Δw_0= αδ = 0.1425
+\end{array}\right.\]
+
+\item Cada neurona oculta calcula su $δ_j$ como suma ponderada de los valores δ que llegan hasta ella, multiplicada por la derivada. En este caso:
+\[\left\{ \begin{array}{l}
+δ_1= ω_1 δ \cdot f'(z_1)= 0.13\\
+δ_2= ω_2 δ \cdot f'(z_2)= 0.02
+\end{array}\right.\]
+
+Calculamos la variación de peso que deberemos aplicar a las conexiones que llegan hasta cada neurona:
+\[\left\{ \begin{array}{l}
+Δv_{11}= αδ_1x_1 = -0.0325 \\
+Δv_{21}= αδ_1x_2 = 0.0325 \\
+Δv_{01}= αδ_1 = 0.0325 \\
+Δv_{12}= αδ_2x_1 = -0.005 \\
+Δv_{22}= αδ_2x_2 = 0.005 \\
+Δv_{02}= αδ_2 = 0.005
+\end{array}\right.\]
+\end{enumerate}
+\item \textbf{Update weights and biases}
+\begin{enumerate}
+\item Atendiendo a los incrementos calculados en los pasos anteriores tenemos los siguientes valores resultantes para los pesos:
+\[\left\{ \begin{array}{l}
+Δv_{11}= αδ_1x_1 = 0.6675 \\
+Δv_{21}= αδ_1x_2 = -0.1675 \\
+Δv_{01}= αδ_1 = 0.4325 \\
+Δv_{12}= αδ_2x_1 = -0.405 \\
+Δv_{22}= αδ_2x_2 = 0.305 \\
+Δv_{02}= αδ_2 = 0.605 \\
+w_1    = 0.3575 \\
+w_2    = 0.1812 \\
+w_0    = -0.1575
+\end{array}\right.\]
+\end{enumerate}
+\end{enumerate}
+
 \end{problem}
 
 \begin{problem}[3]
 Find the new weights when the net illustrated in Figure 6.12 is presented the input pattern (0, 1) and the target output is 0.8. Use a learning rate of $α = 0.25$, and the binary sigmoid activation function.
 
 \solution
+
+En esta ocasión estamos ante una modificación del ejercicio 1 de esta sección en el que ha cambiado el valor esperado de la neurona.
+
+\begin{enumerate}
+\item \textbf{Feedforward}
+\begin{enumerate}
+\item Asignamos a las neuronas de entrada los valores corresponientes al patrón dado:
+\[x_1 = 0, \ x_2 = 1\]
+\item Calculamos la salida de cada una de las neuronas de la capa intermedia:
+\[\left\{ \begin{array}{l}
+z_1 = f(0.4 -0.2) = f(0.2) = 0.55 \\
+z_2 = f(0.6+0.3) =f(0.9) = 0.71
+\end{array}\right.\]
+\[\text{siendo }f(x) = \frac{1}{1+e^{-x}} \]
+
+\item Calculamos el resultado para la neurona de salida
+\[y_{in} = f(-0.3+0.5\cdot 0.55 + 0.1 \cdot 0.71)=f(0.046) = 0.51\]
+\end{enumerate}
+\item \textbf{Backpropagation of error}
+\begin{enumerate}
+\item Calculamos el valor δ de la neurona de salida
+\[δ = (t-y_{in})y_{in}(1-y_{in}) = 0.0725\]
+Calculamos tambien la variación de peso que deberemos aplicar a las conexiones que llegan hasta esta neurona:
+\[\left\{ \begin{array}{l}
+Δw_1= αδz_1 = 0.00997 \\
+Δw_2= αδz_2 = 0.0129 \\
+Δw_0= αδ    = 0.0181
+\end{array}\right.\]
+
+\item Cada neurona oculta calcula su $δ_j$ como suma ponderada de los valores δ que llegan hasta ella, multiplicada por la derivada. En este caso:
+\[\left\{ \begin{array}{l}
+δ_1= ω_1 δ \cdot z_1(1-z_1)= 0.0363 \cdot 0.2475 = 0.00898\\
+δ_2= ω_2 δ \cdot z_2(1-z_2)= 0.00725 \cdot 0.205 = 0.00149
+\end{array}\right.\]
+
+Calculamos la variación de peso que deberemos aplicar a las conexiones que llegan hasta cada neurona:
+\[\left\{ \begin{array}{l}
+Δv_{11}= αδ_1x_1 = 0 \\
+Δv_{21}= αδ_1x_2 = 0.00225 \\
+Δv_{01}= αδ_1    = 0.00225 \\
+Δv_{12}= αδ_2x_1 = 0 \\
+Δv_{22}= αδ_2x_2 = 0.000373 \\
+Δv_{02}= αδ_2    = 0.000373
+\end{array}\right.\]
+\end{enumerate}
+\item \textbf{Update weights and biases}
+\begin{enumerate}
+\item Atendiendo a los incrementos calculados en los pasos anteriores tenemos los siguientes valores resultantes para los pesos:
+\[\left\{ \begin{array}{l}
+v_{11} = 0.7 \\
+v_{21} = -0.19775 \\
+v_{01} = 0.40225 \\
+v_{12} = -0.4 \\
+v_{22} = 0.300373 \\
+v_{02} = 0.600373 \\
+w_1    = 0.50997 \\
+w_2    = 0.1129 \\
+w_0    = - 0.2819
+\end{array}\right.\]
+\end{enumerate}
+\end{enumerate}
 \end{problem}
+
+
 
 \begin{problem}[4]
 Find the new weights when the net illustrated in Figure 6.12 is presented the input pattern (-1, 1) and the target output is 0.8. Use a learning rate of $α = 0.25$, and the bipolar sigmoid activation function.
