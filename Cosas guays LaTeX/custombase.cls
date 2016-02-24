@@ -90,7 +90,7 @@
     allcolors=blue!60!black
 }
 
-\newcommand{\seprule}{{\color{gray} \noindent \hspace{40pt} \hrulefill~ \raisebox{-4pt}[10pt][10pt]{$\ast\quad\ast\quad\ast$}~ \hrulefill\hspace{40pt}}}
+\newcommand{\seprule}[1][$\ast\quad\ast\quad\ast$]{{\color{gray} \noindent \hspace{40pt} \hrulefill~ \raisebox{-4pt}[10pt][10pt]{#1}~ \hrulefill\hspace{40pt}}}
 
 \newlength{\@proofline}
 \newcommand{\proofpart}[1]{
