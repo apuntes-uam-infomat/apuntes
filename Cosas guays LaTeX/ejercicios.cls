@@ -35,3 +35,5 @@
 	\fi
 	\cfoot{\thepage\ / \pageref{LastPage}}
 }
+
+\setlength{\parskip}{5pt}
