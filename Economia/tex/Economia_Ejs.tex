@@ -341,8 +341,6 @@ El subyacente $S$ vale hoy 10 y su dinámica está descrita por un árbol binomi
 \ppart Misma pregunta para la \textbf{put lookback} cuyo flujo final es $\max\{S_i / i \leq 4\}-S_4$.
 \solution
 
-\doneby{Pedro}
-
 Los datos que conocemos nada más leer el enunciado son:
 \[S_0=10, \ T=0.5, \ Δt = 0.125, \ σ=0.25, \ R_c=0.055\]
 
@@ -361,6 +359,11 @@ El arbol binomial en esta situación es:
 \node[] (H) at (6,1) {$aS_0 $};
 \node[] (I) at (6,-1) {$bS_0 $};
 \node[] (J) at (6,-3) {$b^3S_0 $};
+\node[] (K) at (8,4) {$a^4S_0$};
+\node[] (L) at (8,2) {$a^2S_0$};
+\node[] (M) at (8,0) {$S_0$};
+\node[] (N) at (8,-2) {$b^2S_0$};
+\node[] (O) at (8,-4) {$b^4S_0$};
 
 \draw[->] (A) -- (B);
 \draw[->] (A) -- (C);
@@ -374,34 +377,91 @@ El arbol binomial en esta situación es:
 \draw[->] (E) -- (I);
 \draw[->] (F) -- (I);
 \draw[->] (F) -- (J);
+\draw[->] (G) -- (K);
+\draw[->] (G) -- (L);
+\draw[->] (H) -- (L);
+\draw[->] (H) -- (M);
+\draw[->] (I) -- (M);
+\draw[->] (I) -- (N);
+\draw[->] (J) -- (N);
+\draw[->] (J) -- (O);
 
 
 \end{tikzpicture}
 \end{center}
 
 Con los datos del enunciado podemos calcular los valores de $a$ y $b$ mostrados en el esquema, así como la probabilidad de que se de cada suceso. Tomando las fórmulas vistas en los apuntes tenemos:
-\[a=e^{σΔt} = 1.03, \ b = \frac{1}{a} = 0.97, \ p = \frac{e^{r_cΔt}-b}{a-b}=0.61\]
+\[a=e^{σ\sqrt{Δt}} = 1.09, \ b = \frac{1}{a} = 0.92, \ p = \frac{e^{r_cΔt}-b}{a-b}=0.52\]
 
 \spart
-Queremos conocer el valor de la call descrita por el enunciado para lo que calcularemos el valor de dicha call en el futuro y mediante un proceso de precios descontados la traeremos al presente.
+Puesto que el valor de la call descrita en el enunciado depende del camino seguido, debemos estudiar los 16 posibles caminos para estudiar, en cada caso, cuál es el valor final del activo. La siguiente tabla recoge los resultados obtenidos:
 
-Puesto que el valor del activo depende del camino seguido por el desarrollo del mismo\footnote{La descripción del valor final del activo implica tener en cuenta los precios por los que ha pasado el mismo en su desarrollo puesto que su valor es el valor final menos el mínimo que haya alcanzado}, la expresión para el valor futuro queda algo más rara que en otras ocasiones. Así tenemos:
-\[V_6(X) = p^3(a^3S_0-S_0)+2p^2(1-p)(aS_0-S_0)+p^2(1-p)(aS_0-bS_0)+(1-p)^2p(bS_0-b^2S_0)\]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Trayectoria} & \textbf{Probabilidad} & \textbf{Valor del activo} & \textbf{Valor del derivado}\\
+\hline
+aaaa & $p^4$        & $a^4S_0$ & $a^4S_0-S_0$ \\
+aaab & $p^3(1-p)$   & $a^2S_0$ & $a^2S_0-S_0$ \\
+aaba & $p^3(1-p)$   & $a^2S_0$ & $a^2S_0-S_0$ \\
+aabb & $p^2(1-p)^2$ & $S_0$ & $0$ \\
+abaa & $p^3(1-p)$   & $a^2S_0$ & $a^2S_0-S_0$ \\
+abab & $p^2(1-p)^2$ & $S_0$ & $0$ \\
+abba & $p^2(1-p)^2$ & $S_0$ & $S_0-bS_0$ \\
+abbb & $p(1-p)^3$   & $b^2S_0$ & $0$ \\
+baaa & $p^3(1-p)$   & $a^2S_0$ & $a^2S_0-bS_0$ \\
+baab & $p^2(1-p)^2$ & $S_0$ & $S_0-bS_0$ \\
+baba & $p^2(1-p)^2$ & $S_0$ & $S_0-bS_0$ \\
+babb & $p(1-p)^3$   & $b^2S_0$ & $0$ \\
+bbaa & $p^2(1-p)^2$ & $S_0$ & $S_0-b^2S_0$ \\
+bbab & $p(1-p)^3$   & $b^2S_0$ & $0$ \\
+bbba & $p(1-p)^3$   & $b^2S_0$ & $b^2S_0-b^3S_0$ \\
+bbbb & $(1-p)^4$    & $b^4S_0$ & $0$ \\
+\hline
+\end{tabular}
+\end{center}
 
-Puesto que conocemos todas las variables que participan en esta ecuación, lo primero que haremos será calcular su valor, de manera que conocemos el valor medio esperado del activo $X$ en $t=T=6$ meses.
+Para calcular el valor futuro de este activo simplemente tenemos que multiplicar el valor del derivado por la probabilidad de alcanzar ese valor y sumar los resultados.
 
-\[V_6(X) = 0.21+0.087+0.08+0.023 = 0.4\]
+Con un script de python, que puede encontrarse en el apéndice \ref{sec:arbolBin}, calculamos el valor de este activo en el instante final y obtenemos:
+\[V_T(X) = 1.18\]
 
-Para descontar el precio simplemente tenemos que dividirlo entre $e^{r_cΔt}$ siendo $Δt$ el incremento total de tiempo entre los intervalos en los que movemos el dinero. Así tenemos:
-\[V_0(X) = V_6(X)\cdot e^{-0.055\cdot 0.3}=0.39\]
+Una vez tenemos este valor, podemos traerlo al presente dividiendo entre $e^{r_cΔt}$, que en este caso sería $e^{0.055\cdot 0.5}$, con lo que obtenemos:
+\[V_0(X) = 1.14\]
 
 \spart
 
-Respecto al caso anterior la diferencia radica en el valor final asociado al activo, pues este se comporta de manera distinta respecto al recorrido seguido. Esto repercutirá en el valor actual del mismo. Vamos a realizar las cuentas.
+Con el mismo razonamiento del apartado anterior tenemos:
 
-\[V_6(X) = p^2(1-p)(a^2-a)S_0+p(1-p)^2(a-b)S_0+2p(1-p)^2(1-b)S_0+(1-p)^3(1-b^3)S_0=\atop 0.045 + 0.088 + 0.056 + 0.053 = 0.245\]
-Finalmente tenemos:
-\[V_0(X) = V_6(X)\cdot e^{-0.055\cdot 0.3} = 0.24\]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Trayectoria} & \textbf{Probabilidad} & \textbf{Valor del activo} & \textbf{Valor del derivado}\\
+\hline
+aaaa & $p^4$        & $a^4S_0$ & $0$ \\
+aaab & $p^3(1-p)$   & $a^2S_0$ & $a^3S_0-a^2S_0$ \\
+aaba & $p^3(1-p)$   & $a^2S_0$ & $0$ \\
+aabb & $p^2(1-p)^2$ & $S_0$ & $a^2S_0-S_0$ \\
+abaa & $p^3(1-p)$   & $a^2S_0$ & $0$ \\
+abab & $p^2(1-p)^2$ & $S_0$ & $aS_0-S_0$ \\
+abba & $p^2(1-p)^2$ & $S_0$ & $aS_0-S_0$ \\
+abbb & $p(1-p)^3$   & $b^2S_0$ & $aS_0-b^2S_0$ \\
+baaa & $p^3(1-p)$   & $a^2S_0$ & $0$ \\
+baab & $p^2(1-p)^2$ & $S_0$ & $aS_0-S_0$ \\
+baba & $p^2(1-p)^2$ & $S_0$ & $0$ \\
+babb & $p(1-p)^3$   & $b^2S_0$ & $S_0-b^2S_0$ \\
+bbaa & $p^2(1-p)^2$ & $S_0$ & $0$ \\
+bbab & $p(1-p)^3$   & $b^2S_0$ & $S_0-b^2S_0$ \\
+bbba & $p(1-p)^3$   & $b^2S_0$ & $S_0-b^2S_0$ \\
+bbbb & $(1-p)^4$    & $b^4S_0$ & $S_0-b^4S_0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+A partir de esta tabla podemos calcular sin problema el valor futuro del derivado combinando la segunda y la cuarta columna. Una vez tenemos esto, como en el apartado anterior, simplemente lo traemos al presente multiplicando por $e^{-0.055\cdot 0.5}$
+
+Empleando de nuevo el script \ref{sec:arbolBin} tenemos:
+\[V_T(X) = 0.90 \implies V_0(X) = 0.88\]
 \end{problem}
 
 \begin{problem}[2]
