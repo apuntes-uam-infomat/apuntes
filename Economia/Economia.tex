@@ -134,8 +134,88 @@ def computeValueCallBarreraUp_Out(path, a, b, p, S0, barrera, K,):
 
 		value = value * i
 
-	return (value - S0) * prob
+	if (value - S0) >= 0:
+		return (value - S0) * prob
+	else:
+		return 0
 
+
+def computeValueCallBarreraUp_In(path, a, b, p, S0, barrera, K,):
+	prob = 1
+	value = S0
+	flag = False
+
+	for i in path:
+		if value >= barrera:
+			flag = True
+			print "IN"
+		elif i == a:
+			prob = prob * p
+		elif i == b:
+			prob = prob *(1-p)
+		else:
+			print "Some error occurs"
+
+		value = value * i
+
+	if flag:
+		if (value - S0) >= 0:
+			return (value - S0) * prob
+		else:
+			return 0
+	else:
+		return 0
+
+
+def computeValuePutBarreraDown_Out(path, a, b, p, S0, barrera, K,):
+	prob = 1
+	value = S0
+
+	for i in path:
+		if value <= barrera:
+			value = 0
+			print "OUT"
+			break
+		elif i == a:
+			prob = prob * p
+		elif i == b:
+			prob = prob *(1-p)
+		else:
+			print "Some error occurs"
+
+		value = value * i
+
+	if (S0 - value) >= 0:
+		return (S0 - value) * prob
+	else:
+		return 0
+
+
+def computeValuePutBarreraDown_In(path, a, b, p, S0, barrera, K,):
+	prob = 1
+	value = S0
+	flag = False
+
+	for i in path:
+		if value <= barrera:
+			flag = True
+			print "IN"
+		elif i == a:
+			prob = prob * p
+		elif i == b:
+			prob = prob *(1-p)
+		else:
+			print "Some error occurs"
+
+		value = value * i
+
+	if flag:
+		if (S0 - value) >= 0:
+			return (S0 - value) * prob
+		else:
+			return 0
+	else:
+		return 0
 
 def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
 	trajectory = []
@@ -160,9 +240,13 @@ def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
 	return finalValue
 
 
-print compute_future_value_binary_tree(1.09,0.92,0.52,4,10,computeValueMaxMinusST, 1, 1)
-
 print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarreraUp_Out, 1.08**8*12, 12)
+
+print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarreraUp_In, 1.08**8*12, 12)
+
+print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_Out, 1.08**(-8)*12, 12)
+
+print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_In, 1.08**(-8)*12, 12)
 \end{lstlisting}
 
 \printindex
