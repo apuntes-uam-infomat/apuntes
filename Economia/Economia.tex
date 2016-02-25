@@ -116,14 +116,13 @@ def computeValueMaxMinusST(path, a, b, p, S0, barrera, K):
 	return (maximum - value) * prob
 
 
-def computeValueCallBarreraUp_Out(path, a, b, p, S0, barrera, K,):
+def computeValueCallBarreraUp_Out(path, a, b, p, S0, barrera, K):
 	prob = 1
 	value = S0
 
 	for i in path:
 		if value >= barrera:
 			value = 0
-			print "OUT"
 			break
 		elif i == a:
 			prob = prob * p
@@ -140,7 +139,7 @@ def computeValueCallBarreraUp_Out(path, a, b, p, S0, barrera, K,):
 		return 0
 
 
-def computeValueCallBarreraUp_In(path, a, b, p, S0, barrera, K,):
+def computeValueCallBarreraUp_In(path, a, b, p, S0, barrera, K):
 	prob = 1
 	value = S0
 	flag = False
@@ -148,7 +147,6 @@ def computeValueCallBarreraUp_In(path, a, b, p, S0, barrera, K,):
 	for i in path:
 		if value >= barrera:
 			flag = True
-			print "IN"
 		elif i == a:
 			prob = prob * p
 		elif i == b:
@@ -167,14 +165,13 @@ def computeValueCallBarreraUp_In(path, a, b, p, S0, barrera, K,):
 		return 0
 
 
-def computeValuePutBarreraDown_Out(path, a, b, p, S0, barrera, K,):
+def computeValuePutBarreraDown_Out(path, a, b, p, S0, barrera, K):
 	prob = 1
 	value = S0
 
 	for i in path:
 		if value <= barrera:
 			value = 0
-			print "OUT"
 			break
 		elif i == a:
 			prob = prob * p
@@ -191,7 +188,7 @@ def computeValuePutBarreraDown_Out(path, a, b, p, S0, barrera, K,):
 		return 0
 
 
-def computeValuePutBarreraDown_In(path, a, b, p, S0, barrera, K,):
+def computeValuePutBarreraDown_In(path, a, b, p, S0, barrera, K):
 	prob = 1
 	value = S0
 	flag = False
@@ -199,7 +196,6 @@ def computeValuePutBarreraDown_In(path, a, b, p, S0, barrera, K,):
 	for i in path:
 		if value <= barrera:
 			flag = True
-			print "IN"
 		elif i == a:
 			prob = prob * p
 		elif i == b:
@@ -216,6 +212,38 @@ def computeValuePutBarreraDown_In(path, a, b, p, S0, barrera, K,):
 			return 0
 	else:
 		return 0
+
+
+def computeValueCallAsiatica(path, a, b, p, S0, barrera, K):
+	prob = 1
+	value = S0
+	media = S0
+	string = ""
+
+	for i in path:
+		if value <= barrera:
+			flag = True
+		elif i == a:
+			prob = prob * p
+			string = string + "a"
+		elif i == b:
+			prob = prob *(1-p)
+			string = string + "b"
+		else:
+			print "Some error occurs"
+
+		value = value * i
+		media = media + value
+
+	media = media / len(path)
+
+	if (media - K) >= 0:
+		print string, " & ",  str("{:.4f}".format(media-K)), " & ", str("{:.4f}".format(prob)), " \\\\"
+		return (media - K) * prob
+	else:
+		print string, " & 0 & ", str("{:.4f}".format(prob)), " \\\\"
+		return 0
+
 
 def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
 	trajectory = []
@@ -247,6 +275,8 @@ print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarre
 print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_Out, 1.08**(-8)*12, 12)
 
 print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_In, 1.08**(-8)*12, 12)
+
+print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueCallAsiatica, 0, 10)
 \end{lstlisting}
 
 \printindex
