@@ -1197,7 +1197,160 @@ Ahora ya hemos terminado, porque la última fila ya no tiene valores positivo. A
 
 \end{example}
 
-\subsubsection{Método de las dos fases.}
+\subsubsection{Fórmulas de actualización de la tabla}
+
+Vamos a describir la manera de actualizar la tabla de una manera más rigurosa y formal. 
+
+\textbf{Notación:} Tomamos todos los $*_k$ como lo referente a la variable que entra en la base y todos los $*_r$, como lo referente a la variable que sale.
+
+
+
+\paragraph{Valores $y_{ij}$}
+\[a_k &= y_{1k}a_1 +\cdots + y_{rk}a_r + \cdots + y_{mk} a_m\]
+De aquí despejamos $a_r$ y ¿reescribimos en la nueva base?
+\begin{align*}
+a_r &= -\frac{y_{1k}}{y_{rk}}a_1-\cdots + \frac{1}{y_{rk}}a_k - \cdots - \frac{y_{1k}}{y_{rk}}a_m\\
+a_j &= \left(y_{1j} - \frac{y_{1k}}{y_{rk}} y_{rj}\right)a_1 + \cdots + \frac{y_{rj}}{y_{rk}}a_k + \cdots + \left(y_{mj} - \frac{y_{mk}}{y_{rk}} y_{rj}\right)a_m
+\end{align*}
+
+
+\begin{align*}
+\hat{y}_{ij} &= y_{ij} - \frac{y_{rj}}{y_{rk}}y_{ik}, \ \ \mbox{si}\ i\neq r, \\
+\hat{y}_{rj} &= \frac{y_{rj}}{y_{rk}}
+\end{align*} 
+
+\paragraph{Columna de la izquierda}
+
+\begin{align*}
+\hat{x}_i &= \bar{b}_i - \alpha y_{ik} = \bar{b}_i - \frac{\bar{b}_r}{y_{rk}} y_{ik}\\
+\hat{x}_k &= \alpha = \frac{\bar{b}_r}{y_{rk}}.
+\end{align*}
+
+\paragraph{Última fila:}
+Teníamos la fórmula:
+
+\[z_j = c^t_B B^{-1}a_j = c_B^ty_j\]
+
+Desarrollando el producto escalar, quitando el sumando en $r$ y añadiendo el sumando en $k$.
+\begin{align*}
+\hat{z}_j - \hat{c}_j &= \sum_{r\neq i=1}^m c_i \hat{y}_{ij} + c_k\hat{y}_{rj} - c_j=
+\sum_{i=1}^m c_i \left(y_{ij} - \frac{y_{rj}}{y_{rk}}y_{ik}\right) + c_k\frac{y_{rj}}{y_{rk}} - c_j \\
+&= \sum_{i=1}^m c_i y_{ij} - c_j -  \frac{y_{rj}}{y_{rk}} \sum_{i=1}^m c_i y_{ik} + c_k\frac{y_{rj}}{y_{rk}} = (z_j-c_j) - \frac{y_{rj}}{y_{rk}} (z_k-c_k)
+\end{align*}
+
+
+\subsection{Método de las dos fases.}
+
+Sabemos resolver un problema de optimización lineal partiendo de que hay un punto inicial a partir del cual iteramos. 
+A partir de ahí, tenemos una base con la que trabajar. 
+Para cuando encontramos un problema en el que no tenemos tan fácilmente una base, o algún otro problema como un conjunto factible vacío, este método es útil para estos casos.
+
+
+Es un método útil para:
+
+\begin{itemize}
+\item Encontrar una solución factible básica inicial.
+
+\item Detectar si el conjunto factible es  vacío.
+
+\item Detectar si hay restricciones redundantes.
+\end{itemize}
+
+
+Vamos a introducir variables artificiales\footnote{no variables de holgura} y vamos a minimizar su suma.
+
+Tenemos el problema $(P)$  y el problema $(PA)$
+
+\begin{ioprob}
+\textbf{$(PA)$}
+\goal{$\min e^tx_a\;\;\; e=(1,1,...,1)^t$}
+\restrictions{$Ax + Ix_a = b$}{$x\geq 0$}{$x_a≥0$}{}{}{}
+\end{ioprob}
+
+De esta manera, al introducir las variables artificiales, tenemos una base obvia, la identidad para las variables artificiales añadidas.
+
+Posibles soluciones $\gor{x_a}$ una solución:
+
+\begin{itemize}
+	\item $\gor{x_a} ≠ 0 \implies (P)$ no es factible.
+	\begin{proof}
+		Sea $(\gor{x},\underbrace{0}_{\in\real^m})$, una solución de $(P)$. En este caso, tenemos:
+
+		\[A\gor{x} + I·0 = b\]
+
+		Es factible para $(PA)$. Además $(\gor{x},0)≥0$.
+
+		Aquí tenemos una contradicción. Por ser $\gor{x}$ solución factible de $(PA)$, tenemos que $e^t·0=0 < e^tx_a ≠ 0$.
+	\end{proof}
+	\item $\gor{x_a} = 0$ 
+
+	Tenemos 2 posibilidades:
+	\subitem ninguna de las variables artificiales forman parte de la base solución. 
+
+	De esta manera, ya hemos encontrado una base con las variables legítimas\footnote{pertenecientes al problema original} que permitiría empezar con el algoritmo simplex.
+	Simplemente eliminamos las variables artificiales obtenidas y la base que hemos obtenido sigue siendo base.
+
+	\subitem En caso de tener soluciones degeneradas, con varias bases que representan el mismo punto, se nos pueden haber colado variables artificiales en la base. 
+
+	Este caso, lo solucionamos eliminando la variable artificial que se nos haya colado e introducimos la de legítima. Al haber degeneración, estas bases dan lugar al mismo punto. 
+
+	Para eliminar la variable artificial, pivoteamos como siempre. Aquí todavía puede ocurrir un monstruo más. ¿Qué ocurre si el valor con el que pivotear es 0? 
+	Esto se da cuando hay restricciones redundantes. Las restricciones no son linealmente independientes, es decir, $\rg(A)$ no es máximo.
+
+\end{itemize}
+
+\begin{example}
+\begin{center}
+\begin{tabular}{lr}
+minimizar & $4x_1 + x_2 + x_3$ \\
+	 &  \\
+s.a. & $2x_1+x_2+2x_3 =4 $    \\
+	 & $3x_1 + 3x_2 + x_3= 3$  \\
+	 & $x_1\geq 0,\ x_2\geq 0,\ x_3\geq 0$
+\end{tabular}
+\end{center}
+
+Vamos a calcular el primer elemento de la última fila:
+\[z_j - c_j = c^t_By_j - c_j \overset{j=1}{=} (1,1)\begin{pmatrix}2\\3\end{pmatrix}-0 = 5\]
+\end{example}
+
+
+\begin{example}
+
+\begin{center}
+\begin{tabular}{lr}
+minimizar & $-x_1 + 2x_2 -3x_3$ \\
+	 &  \\
+s.a. & $x_1+x_2+x_3 =6 $    \\
+	 & $-x_1 + x_2 + 2x_3  = 4$  \\
+	 & $2x_2 + 3x_3  = 10$  \\
+	 & $x_3  \leq 2$  \\
+	 & $x_i\geq 0$
+\end{tabular}
+\end{center}
+
+Variables de holgura:
+\begin{center}
+\begin{tabular}{lr}
+minimizar & $-x_1 + 2x_2 -3x_3 + x_4$ \\
+	 &  \\
+s.a. & $x_1+x_2+x_3 =6 $    \\
+	 & $-x_1 + x_2 + 2x_3  = 4$  \\
+	 & $2x_2 + 3x_3  = 10$  \\
+	 & $x_3 + x_4  = 2$  \\
+	 & $x_i\geq 0$
+\end{tabular}
+\end{center}
+
+
+Tabla inicial de la primera fase:
+
+\begin{tabular}{ccccc}
+c&1
+\end{tabular}
+
+
+\end{example}
 
 \subsection{Optimización lineal con {\tt R}}
 
