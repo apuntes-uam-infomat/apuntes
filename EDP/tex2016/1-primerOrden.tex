@@ -12,13 +12,9 @@
 
 	Vamos a empezar con un modelo sencillo. Observemos el fenómeno del embotellamiento fantasma, el cual tiene una ecuación bastante sencilla. Veamos como se generan esos atascos y como se disipan.
 
-	Estudiaremos una función que nos de la densidad de coches en un punto, en el tiempo.
+	Estudiaremos una función $u(x,t)$ que nos dará la densidad de coches en un punto $x$ y en un momento $t$.
 
-	$$u(x,t) = \text{densidad}$$
-
-	Observemos un modelo muy simple en el que solo hay un carril y los coches fluyen solo en una dirección, como en la \fref{fig:CochesCarril}.
-
-	La variación en el número de coches de un intervalo será:
+	Primero, observamos un modelo muy simple en el que solo hay un carril y los coches fluyen solo en una dirección, como en la \fref{fig:CochesCarril}. La variación en el número de coches de un intervalo será:
 	\[ \od{}{t} \int^{x+h}_{x} u(s,t) \dif s = \int^{x+h}_{x} u_t(s,t) \dif s \]
 
 	Esto equivale a al número de coches que entran por $x$ menos los que salen por $x + h$. Es decir, tenemos un flujo $q(u, x, t)$. Si suponemos que nos fijamos en un instante lo suficientemente pequeño en un tramo pequeño podemos asumir que depende solo de $u$. En ese caso, si $q > 0$ el flujo sería hacia la derecha.
@@ -26,14 +22,14 @@
 	\]
 
 	Por lo tanto, tendremos sistemas del tipo:
-	\begin{equation*}
+	\begin{equation}
 	\left\{
 	\begin{array}{rl}
 	u_t + [q(u)]_{x} =&\!\!\! 0 \\
 	u(x, 0) =&\!\!\! F(x) \quad \quad \text{dato}
 	\end{array}
-	\right.
-	\end{equation*}
+	\right. \label{eq:ModeloAtasco}
+	\end{equation}
 
 	Ahora debemos probar distintas funciones $q$ y tratar de resolver el sistema.
 
@@ -46,42 +42,37 @@
 		\label{fig:CochesModeloLineal}
 		\end{figure}
 
-		Tomando $q(u) = cu$.
-
-		\begin{equation*}
+		Tomando $q(u) = cu$ en \eqref{eq:ModeloAtasco}, nuestro sistema se convierte en
+		\begin{equation}
 		\left\{
 		\begin{array}{l}
 		u_t + cu_x = 0 \\
 		u(x,0) = F(x)
 		\end{array}
-		\right.
-		\end{equation*}
-
+		\right. \label{eq:ModeloBasico}
+		\end{equation}
 
 		Esta ecuación dice que el flujo es proporcional a la densidad. Implica que los coches se mueven con velocidad constante, a más velocidad más flujo y viceversa. Si en el instante inicial tenemos una función de la densidad respecto de las zonas del tramo, según pasa el tiempo la densidad se irá desplazando hacia la derecha manteniendo la misma forma (\fref{fig:CochesModeloLineal}).
 
-		\textbf{Comprobación:}
-
-		$$ u(x,t) = F(x-ct) $$
-		$$ u_x(x,t) = F'(x-ct)$$
-		$$u_t(x,t) = F'(x-ct)*(-c)$$
-
-		$$ \{ u_t + cu_x = … = 0 \quad\quad u(x,0) = F(x) \} $$
+		Podemos comprobar esta idea intuitiva. Si lo que hacemos es ``desplazar'' la densidad, entonces lo que tenemos es que $u(x,t) = F(x-ct)$. Vamos a comprobar que la ecuación \eqref{eq:ModeloBasico} sigue cumpliéndose con esta definición. Primero derivamos \[ u_x(x,t) = F'(x-ct) \qquad u_t(x,t) = F'(x-ct) · (-c) \] y luego sustituyendo nos queda directamente: \begin{align*}
+			u_t + c·u_x &= 0 \\
+			-c·F'(x-ct) + c·F(x-ct) &= 0
+		\end{align*}
 
 		\subsubsection{Representación gráfica}
 
+			Para entender mejor el problema lo que haremos será dibujarlo, con un método que nos valdrá para muchos otros problemas. La idea es dibujar los ``conjuntos de nivel'' de la solución, y para eso usaremos el concepto \concept{Curva\IS característica}, curvas a lo lago de las cuales el dato (en este caso, la densidad) se mantiene constante.
 
-			$$u(x,t) = \text{Cte.}$$
-			$$F(x - ct) = \text{Cte.}$$
+			En este problema, el dato inicial de densidad se propaga con velocidad $ct$, luego lo que tendremos son rectas $x - ct = k$.
 
-			Conclusión: $x-ct = k$.
+			Si lo hiciésemos sustituyendo en las ecuaciones nos saldría lo mismo: si $u(x,t)$ es constante, también lo es $F(x-ct)$ y esto en general sólo ocurrirá cuando $x - ct = k$. En cualquiera de los dos casos, el dibujo sería algo parecido al de la \fref{fig:ConjNivelCochesSimple}.
 
-
-			Las soluciones dependiendo de k se desplazan por el plano siguiendo una recta de inclinación $c$. Siguiendo una fórmula del tipo $x-ct = k$. Con esto se puede obtener como avanzan los datos (densidades) respecto de un instante inicial.
-
-			Esto son los conjuntos de nivel de las soluciones.
-
-			(DIBUJO)
+			\begin{figure}
+			\centering
+			\inputtikz{ConjNivelCochesSimple}
+			\caption{Las rectas diagonales son las curvas características, y en cada región se mantiene la misma densidad que había en el primer momento $t = 0$.}
+			\label{fig:ConjNivelCochesSimple}
+			\end{figure}
 
 
 
@@ -166,41 +157,39 @@
 
 	\subsubsection{Modelo general}
 
-		Vamos a generalizar el modelo. Nuestras ecuaciones serán \[
+		Vamos a tratar de unir todo lo que tenemos hasta ahora. En todos los casos (el del atasco y los dos del río) nuestras ecuaciones han sido de la forma \[
 		\begin{cases}
 		u_t + vu_x = f(x,t) \\
 		u(x,0) = F(x) \\
 		\end{cases} \]
 
-		Al no haber constante, la solución no va a ser constante a lo largo de las características, que siguen existiendo. En el caso $f = 0$ éstas daban la solución, pero ahora van a influir.
+		Cuando $f \not\equiv 0$ lo que nos ocurría es que la solución no es constante a lo largo de las características, aunque seguirán estando ahí y las podremos usar para hacernos una idea del problema.
+
+		¿Cómo solucionamos el problema? Hay dos posibilidades.
 
 		\paragraph{Solución 1}
+			La primera idea es hacer un cambio de variables para funcionar en una única variable, $z = x-vt$, que hace más sencillo observar la variación temporal. Sustituyendo más, tenemos que \begin{align*}
+			x &= z + vt\\
+			W(z,t) &= u(z+vt, t)
+			\end{align*}
 
-			Cambio de variables:
-			$$z = x-vt$$
+			Para reconstruir $W$ (y por tanto la solución) lo que vamos a hacer es fijarnos en que la solución en un punto depende del dato inicial en ese punto y luego de cómo ha evolucionado a lo largo del tiempo. En símbolos y formulitas, \[ W(z,t) = W(z,0) + \int_{0}^τ W_t(z,τ) \dif τ \]
 
-			Lo cual hace más sencillo observar la variación temporal. Continuamos el cambio:
-			$$x = z + vt$$
-			$$W(z,t) = u(z+vt, t)$$
+			No parece que hayamos avanzado mucho, pero si calculamos $W_t$ \[
+				W_t(z,t) = u_x(z + vt, t)v + u_t(z+vt, t) = f(z + vt, t)
+			\] ahora podemos integrar y esperar que nos salga algo interesante. De hecho, lo hace:
+			\[ W(z,t) = W(z,0) + \int^{t}_{0} f(z+v\tau, \tau)\dif\tau \]
 
-			Entonces queremos estudiar la variación de $W$ respecto del tiempo:
+			Si ahora sustituimos de vuelta $W$ y deshacemos el cambio de variable $z = x -vt$ nos queda que \begin{align*}
+			W(z,t) &= W(z,0) + \int^{t}_{0} f(z+v\tau, \tau)\dif\tau \\
+			u(z + vt, t) &= u(z,0) + \int^{t}_{0} f(z+v\tau, \tau) \dif \tau \\
+			u(x,t) &= u(x-vt,0)+ \int^{t}_{0} f(x-v(t-\tau),\tau) \dif \tau
+			\end{align*}, donde $u(x-vt,0) = F(x-vt)$.
 
-			$$W_t(z,t) = u_x(z + vt, t)v + u_t(z+vt, t) = f(z + vt, t)$$
-
-			Integramos:
-			$$W(z,t) = W(0,t) + \int^{t}_{0} f(z+v\tau, \tau) d\tau $$
-
-			Lo que se entiende como el dato inicial más la suma de las aportaciones de esta función $f$ en el tiempo pasado. Ahora deshacemos el cambio de variable:
-
-			$$u(z + vt, t) = u(z,0) + \int^{t}_{0} f(z+v\tau, \tau) d\tau$$
-			$$z = x-vt$$
-			$$u(x,t) = u(x-vt,0)+ \int^{t}_{0} f(x-v(t-\tau),\tau) d\tau$$
-
-			(donde $u(x-vt,0) = F(x-vt)$)
-
-			Esto es un milagro ya que tiene una fórmula explícita, que es poco común en EDOs y EDPs.
+			Esto es un milagro ya que tiene una fórmula explícita, que es poco común en EDOs y EDPs. Es posible encontrar algo mejor.
 
 		\paragraph{Solución 2}
+			%% TODO (gjulianm): Iba a ponerme a buscar Duhamel pero tengo mucho sueño y no entiendo qué me quiere decir Wikipedia, así que lo dejo para luego.
 
 			Vamos a descomponer el sistema en 2. Dos soluciones en las que cada una va a ser solución de dos partes del problema que nos interesan. Una del dato inicial y otra del resto.
 			$$u = \phi + \psi$$
@@ -262,7 +251,7 @@
 			\label{fig:parabola}
 		\end{wrapfigure}
 
-		No hemos tenido en cuenta que la velocidad de los coches no es totalmente proporcional a la densidad. Si ésta baja mucho, los coches llegan a pararse. Hay una densidad máxima donde el tráfico quedará totalmente estancado (los coches pegados).
+		En los ejemplos anteriores de tráfico no hemos tenido en cuenta que la velocidad de los coches no es totalmente proporcional a la densidad. Si ésta baja mucho, los coches llegan a pararse. Hay una densidad máxima donde el tráfico quedará totalmente estancado (los coches pegados).
 
 		Una función más realista sería una parábola (\fref{fig:parabola}). Si no hay coches no pasa ninguno, pero a partir de un punto cuantos más coches, menos rápido van, y menos pasan.
 
