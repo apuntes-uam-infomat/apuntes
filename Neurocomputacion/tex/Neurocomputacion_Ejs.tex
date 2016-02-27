@@ -1092,9 +1092,9 @@ v_{01} =  0.427866\\
 v_{12} =  -0.40399\\
 v_{22} =  0.303991\\
 v_{02} =  0.603991\\
-w0     =  -0.18141\\
-w1     =  0.470957\\
-w2     =  0.167788
+w_0     =  -0.18141\\
+w_1     =  0.470957\\
+w_2     =  0.167788
 \end{array}\right.\]
 \end{enumerate}
 \end{enumerate}
@@ -1118,7 +1118,142 @@ A neural network is being trained on the data for XOR problem. The architecture 
 \ppart Repeat for the input vector (1, 0).
 \ppart Interpret the differences between the weight changes on the connection to the output unit and the weight changes to the hidden units in parts a and b.
 \solution
+
+\spart
+
+Una vez más, llevamos a cabo los pasos correspondientes del proceso de entrenamiento del perceptrón multicapa.
+
+\begin{enumerate}
+\item \textbf{Feedforward}
+\begin{enumerate}
+\item Asignamos a las neuronas de entrada los valores corresponientes al patrón dado:
+\[x_1 = 0, \ x_2 = 1\]
+\item Calculamos la salida de cada una de las neuronas de la capa intermedia:
+\[\left\{ \begin{array}{l}
+z_1 = f(2+9.2) = f(11.2) = 0.999\\
+z_2 = f(8.8-0.1) =f(8.7) = 0.999
+\end{array}\right.\]
+\[\text{siendo }f(x) = \frac{1}{1+e^{-x}}\]
+
+\item Calculamos el resultado para la neurona de salida
+\[y_{in} = f(-0.8-4.5\cdot 0.999 + 5.3 \cdot 0.999)=f(-0.0008) = 0.4999\]
+\end{enumerate}
+\item \textbf{Backpropagation of error}
+\begin{enumerate}
+\item Calculamos el valor δ de la neurona de salida
+\[δ = (t-y_{in})f'(y_{in}) = (1-y_{in})f(y_{in})(1-f(y_{in})) = 0.125\]
+Calculamos tambien la variación de peso que deberemos aplicar a las conexiones que llegan hasta esta neurona:
+\[\left\{ \begin{array}{l}
+Δw_1= αδz_1 = 0.03126 \\
+Δw_2= αδz_2 = 0.03126 \\
+Δw_0= αδ = 0.03126
+\end{array}\right.\]
+
+\item Cada neurona oculta calcula su $δ_j$ como suma ponderada de los valores δ que llegan hasta ella, multiplicada por la derivada. En este caso:
+\[\left\{ \begin{array}{l}
+δ_1= ω_1 δ \cdot f'(z_1)= -7.695\\
+δ_2= ω_2 δ \cdot f'(z_2)= 0.000110
+\end{array}\right.\]
+
+Calculamos la variación de peso que deberemos aplicar a las conexiones que llegan hasta cada neurona:
+\[\left\{ \begin{array}{l}
+Δv_{11}= αδ_1x_1 = 0.000001924\\
+Δv_{21}= αδ_1x_2 = -0.0\\
+Δv_{01}= αδ_1    = -0.00000192\\
+Δv_{12}= αδ_2x_1 = 0.0\\
+Δv_{22}= αδ_2x_2 = 0.000027593\\
+Δv_{02}= αδ_2    = 0.000027593
+\end{array}\right.\]
+
+
+\end{enumerate}
+\item \textbf{Update weights and biases}
+\begin{enumerate}
+\item Atendiendo a los incrementos calculados en los pasos anteriores tenemos los siguientes valores resultantes para los pesos:
+\[\left\{ \begin{array}{l}
+v_{11} =    -2.0\\
+v_{21} =    9.19999807633\\
+v_{01} =    1.99999807633\\
+v_{12} =    4.3\\
+v_{22} =    8.80002759291\\
+v_{02} =    -0.0999724070945\\
+w_0     =  -0.768737173636\\
+w_1     =  -4.46873760112\\
+w_2     =  5.33125761929
+\end{array}\right.\]
+
+\end{enumerate}
+\end{enumerate}
+
+\spart
+
+Tomando ahora el vector de entrada $(1,0)$ obtenemos:
+
+\begin{enumerate}
+\item \textbf{Feedforward}
+\begin{enumerate}
+\item Asignamos a las neuronas de entrada los valores corresponientes al patrón dado:
+\[x_1 = 1, \ x_2 = 0\]
+\item Calculamos la salida de cada una de las neuronas de la capa intermedia:
+\[\left\{ \begin{array}{l}
+z_1 = f(2-2) = f(0) = 0.5\\
+z_2 = f(4.3-0.1) =f(4.2) = 0.985
+\end{array}\right.\]
+\[\text{siendo }f(x) = \frac{1}{1+e^{-x}}\]
+
+\item Calculamos el resultado para la neurona de salida
+\[y_{in} = f(-0.8-4.5\cdot 0.5 + 5.3 \cdot 0.985)=f(2.17) = 0.8977\]
+\end{enumerate}
+\item \textbf{Backpropagation of error}
+\begin{enumerate}
+\item Calculamos el valor δ de la neurona de salida
+\[δ = (t-y_{in})f'(y_{in}) = (1-y_{in})f(y_{in})(1-f(y_{in})) = -0.0094\]
+Calculamos tambien la variación de peso que deberemos aplicar a las conexiones que llegan hasta esta neurona:
+\[\left\{ \begin{array}{l}
+Δw_1= αδz_1 = 0.00117 \\
+Δw_2= αδz_2 = 0.00231 \\
+Δw_0= αδ = 0.002349
+\end{array}\right.\]
+
+\item Cada neurona oculta calcula su $δ_j$ como suma ponderada de los valores δ que llegan hasta ella, multiplicada por la derivada. En este caso:
+\[\left\{ \begin{array}{l}
+δ_1= ω_1 δ \cdot f'(z_1)= -0.0106\\
+δ_2= ω_2 δ \cdot f'(z_2)= 0.000725
+\end{array}\right.\]
+
+Calculamos la variación de peso que deberemos aplicar a las conexiones que llegan hasta cada neurona:
+\[\left\{ \begin{array}{l}
+Δv_{11}= αδ_1x_1 = -0.0026432\\\
+Δv_{21}= αδ_1x_2 = -0.0\\
+Δv_{01}= αδ_1    = -0.0026433\\
+Δv_{12}= αδ_2x_1 = 0.00018126\\
+Δv_{22}= αδ_2x_2 = 0.0\\
+Δv_{02}= αδ_2    = 0.00018126
+\end{array}\right.\]
+
+\end{enumerate}
+\item \textbf{Update weights and biases}
+\begin{enumerate}
+\item Atendiendo a los incrementos calculados en los pasos anteriores tenemos los siguientes valores resultantes para los pesos:
+\[\left\{ \begin{array}{l}
+v_{11} =   -2.00264327978 \\
+v_{21} =   9.2 \\
+v_{01} =   1.99735672022 \\
+v_{12} =   4.30018125974 \\
+v_{22} =   8.8 \\
+v_{02} =   -0.0998187402577 \\
+w_0     = -0.79765041797 \\
+w_1     = -4.49882520898 \\
+w_2     = 5.30231486923
+\end{array}\right.\]
+\end{enumerate}
+\end{enumerate}
+
 \end{problem}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/figure6-13.png}
+\end{center}
 
 \begin{problem}[7]
 Explore the role of the weights in backpropagation training by finding weights that are reasonable in size, but for which very little learning will occur. For example, in Exercise 1 of this section, if $v_{02}+v_{22}\approx 0$, then $z_2 \approx 0$ so that $Δw_{21}\approx 0$, even if an error occurs at the output unit. Are there combinations of other weights for which very little
