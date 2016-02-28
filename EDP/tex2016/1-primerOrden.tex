@@ -1,7 +1,7 @@
 % -*- root: ../EDP2016.tex -*-
 \chapter{Ecuaciones de primer orden}
 
-\section{Modelo de un atasco}
+	\section{Planteamiento del problema}
 
 	\begin{figure}[thbp]
 	\centering
@@ -31,9 +31,9 @@
 	\right. \label{eq:ModeloAtasco}
 	\end{equation}
 
-	Ahora debemos probar distintas funciones $q$ y tratar de resolver el sistema.
+	Ahora debemos probar distintas funciones $q$ y tratar de resolver el sistema. Eso será precisamente lo que haremos a lo largo de este capítulo.
 
-	\subsection{Modelo básico: flujo proporcional a la densidad}
+	\section{Modelos básicos: flujo proporcional a la densidad}
 	\label{sec:ModeloBasicoFlujoProporcional}
 
 		\begin{figure}[hbtp]
@@ -60,7 +60,7 @@
 			-c·F'(x-ct) + c·F(x-ct) &= 0
 		\end{align*}
 
-		\subsubsection{Representación gráfica}
+		\subsection{Representación gráfica: Curvas características}
 
 			Para entender mejor el problema lo que haremos será dibujarlo, con un método que nos valdrá para muchos otros problemas. La idea es dibujar los ``conjuntos de nivel'' de la solución, y para eso usaremos el concepto \concept{Curva\IS característica}, curvas a lo lago de las cuales el dato (en este caso, la densidad) se mantiene constante.
 
@@ -77,7 +77,7 @@
 
 
 
-	\subsection{Modelo básico 2: Flujo proporcional cuando la curva dato no es una recta}
+	\subsection{Cuando la curva dato no es una recta}
 
 		Imaginemos un río con una velocidad constante, en el que a partir de un punto realizamos un vertido. El río tiene velocidad $v$ y en $x=0$ realizaremos una contaminación $\beta(t)$. En $t=0$ consideraremos que está limpio. Usamos el mismo modelo que antes, pero con la peculiaridad de que la curva dato la estamos dando de otra forma: antes dábamos el dato inicial como lo que ocurría cuando $t = 0$. Aquí, damos una curva dato para $t > 0$ y $x > 0$.
 
@@ -130,8 +130,6 @@
 
 	De momento, hemos considerado sólo modelos en los que el flujo que entraba en un segmento era igual al que salía por otro lado. Sin embargo, ¿qué ocurre cuando además tenemos algún tipo de descomposición externa? Veámoslo primero con un ejemplo, siguiendo el modelo anterior del río.
 
-	\subsubsection{Ejemplo: Río con descomposición biológica}
-
 		Supongamos que existe descomposición biológica, de tal forma que en cada punto del río hay bacterias que ``quitan'' una parte de la contaminación proporcional (coeficiente γ) al flujo. En ese caso, el sistema de ecuaciones es \[
 		\begin{cases}
 		u_t + vu_x = -\gamma u \\
@@ -156,7 +154,8 @@
 		Hay que comprobar cuál es el efecto del término de descomposición biológica ($-\gamma u$).¿ $ W(x,0)$, $ W(0,t)$?. Esto queda como ejercicio al lector.
 
 
-	\subsubsection{Modelo general}
+	\subsection{Modelo general para flujo lineal}
+	\label{sec:ModeloGeneral}
 
 		Vamos a tratar de unir todo lo que tenemos hasta ahora. En todos los casos (el del atasco y los dos del río) nuestras ecuaciones han sido de la forma \[
 		\begin{cases}
@@ -168,7 +167,8 @@
 
 		¿Cómo solucionamos el problema? Hay dos posibilidades.
 
-		\paragraph{Solución 1}
+		\subsubsection{Cambio de variable}
+
 			La primera idea es hacer un cambio de variables para funcionar en una única variable, $z = x-vt$, que hace más sencillo observar la variación temporal. Sustituyendo más, tenemos que \begin{align*}
 			x &= z + vt\\
 			W(z,t) &= u(z+vt, t)
@@ -181,62 +181,60 @@
 			\] ahora podemos integrar y esperar que nos salga algo interesante. De hecho, lo hace:
 			\[ W(z,t) = W(z,0) + \int^{t}_{0} f(z+v\tau, \tau)\dif\tau \]
 
-			Si ahora sustituimos de vuelta $W$ y deshacemos el cambio de variable $z = x -vt$ nos queda que \begin{align*}
-			W(z,t) &= W(z,0) + \int^{t}_{0} f(z+v\tau, \tau)\dif\tau \\
-			u(z + vt, t) &= u(z,0) + \int^{t}_{0} f(z+v\tau, \tau) \dif \tau \\
-			u(x,t) &= u(x-vt,0)+ \int^{t}_{0} f(x-v(t-\tau),\tau) \dif \tau
-			\end{align*}, donde $u(x-vt,0) = F(x-vt)$.
+			Si ahora sustituimos de vuelta $W$ y deshacemos el cambio de variable $z = x -vt$ nos queda que \begin{align}
+			W(z,t) &= W(z,0) + \int^{t}_{0} f(z+v\tau, \tau)\dif\tau \nonumber \\
+			u(z + vt, t) &= u(z,0) + \int^{t}_{0} f(z+v\tau, \tau) \dif \tau \nonumber \\
+			u(x,t) &= u(x-vt,0)+ \int^{t}_{0} f(x-v(t-\tau),\tau) \dif \tau \label{eq:ModeloCombinado}
+			\end{align}, donde $u(x-vt,0) = F(x-vt)$.
 
 			Esto es un milagro ya que tiene una fórmula explícita, que es poco común en EDOs y EDPs. Es posible encontrar algo mejor.
 
-		\paragraph{Solución 2}
+		\subsubsection{Principio de Duhamel}
+		\label{sec:PrincipioDuhamel}
 
-			Para hallar la solución en este caso, lo que vamos a hacer va a ser separarla: por un lado tendremos una solución que nos dará la dependencia del dato inicial, y por otro la depedencia de la aportación externa. Tendremos entonces que \[ u = \varphi + \psi \], lo que nos crea dos sistemas:
+			Una segunda solución es aplicar el \concept{Principio de Duhamel}, que se basa un poco en la misma idea que antes: que el valor de $u$ en un punto depende de cómo ha ido evolucionando a lo largo del tiempo, y a ese resultado se le puede sumar el dato inicial (la suma de soluciones es solución).
+
+			Tendremos entonces que \[ u = \varphi + \psi \], lo que nos crea dos sistemas:
 			\begin{align*}
 			\varphi_t + v\varphi_x &= 0 	& \psi_t + v\psi_x &= f(x,t) \\
 			\varphi(x,0) &= F(x)		& \psi(x,0) & = 0
 			\end{align*}
 
-			El primero ya lo hemos resuelto en la \fref{sec:ModeloBasicoFlujoProporcional}, y la solución era $φ(x,t) = F(x - vt)$.
+			La comprobación de que ambos sistemas son equivalentes es trivial y se deja como ejercicio para el lector.
 
-			El segundo problema se resuelve con el \concept{Principio\IS de Duhamel} (la fuente externa se interpreta como una fuente de datos iniciales, se cambia el cero de la segunda ecuación de las anteriores) se puede interpretar como que tenemos una función que transporta el sistema.
+			El primer sistema ya lo hemos resuelto en la \fref{sec:ModeloBasicoFlujoProporcional}, y la solución era $φ(x,t) = F(x - vt)$. Para el segundo, aplicaremos la idea que hemos visto antes, que es ver que el valor de la solución en un punto dependerá de la aportación externa que ha habido en él a lo largo del tiempo. Lo malo es que no podemos simplemente integrar $f$, que sería la idea evidente.
 
-			\begin{figure}[hbtp]
-				\centering
-				\inputtikz{interseccionCaracteristica}
-				\caption{}
-				\label{fig:interseccionCaracteristica}
-			\end{figure}
+			Lo que ocurre es que hay una función, que llamaremos ξ y que, por así decirlo, ``transporta'' las aportaciones externas. Dependerá de $x$ y de $t$, el momento en el espacio y tiempo en el que queremos saber la aportación externa, pero también de otro parámetro $s$, que será el ``momento'' en el que aparece la aportación externa que estamos considerando. Por ejemplo, cuando $t = s$ la aportación externa viene dada por $f(x,t)$, luego ha de ser $ξ(x,s; s) = f(x,s)$.
 
+			Esta función también tiene que cumplir la ecuación anterior $ξ_t + v ξ_x = 0$\footnote{No me preguntéis por qué.}, luego el sistema que tenemos es \( \begin{cases}
+			ξ_t + vξ_x = 0 \\
+			ξ(x,s;s) = f(x,s)
+			\end{cases} \label{eq:SistemaDuhamel} \)
 
+			Como decíamos, la función ξ transporta las aportaciones externas, luego \( ξ(x,t; s) = f(x_0, s) \label{eq:DuhamelExpr1} \), donde $x_0$ es el punto donde ``surgió'' esta aportación externa, que dependerá del punto $x$ que consideramos y también del tiempo que ha pasado ($s-t$).
 
-			$$\xi_t + v\xi_x = 0$$
-			$$\xi(x,s) = f(x,s)$$
-
-			Continuamos:
-			\(\xi(x,t) = f(x^*,s) \label{eq:modelo_aportacion_externa_1}\)
-			$$
+			Por suerte para nosotros, el sistema \eqref{eq:SistemaDuhamel} sabemos resolverlo: en él, las soluciones son constantes a lo largo de las rectas características. Y como $ξ(x,t;s) = f(x_0, s) = ξ(x,s;s)$, tenemos que $(x,t)$ y $(x_0, s)$ tienen que estar en la misma recta. Así podemos sacar $x_0$:
+			\[
 			\begin{rcases}
-				x-vt = k \\
-				x^* - vs = k
+				x-vt = k\\
+				x_0 - vs = k
 			\end{rcases}
-			 \rightarrow x-vt = x^* - vs
-			$$
-			\( x-v(t-s) = x^{*} \label{eq:modelo_aportacion_externa_2} \)
+			 \implies x-vt = x_0 - vs \implies
+			x_0 = x-v(t-s) \]
 
-			Y sustituimos \ref{eq:modelo_aportacion_externa_2} en \ref{eq:modelo_aportacion_externa_1}
-			$$\xi(x,t) = f(x - v(t-s), s)$$
-
+			Tal y como habíamos conjeturado al principio, ese punto inicial depende del que estamos considerando y de la diferencia de tiempo $s-t$. Sustituyendo ahora en \eqref{eq:DuhamelExpr1} tenemos la solución para $ξ$:
+			\[ \xi(x,t) = f(x - v(t-s), s) \]
 
 			Tenemos la solución correspondiente de un aporte instantáneo en el punto $t$. Por lo tanto la solución será la suma de todos los aportes instantáneos:
+			\[  \psi(x,t) = \int^{t}_{0} f(x-v(t-s),s) \dif s \]
 
-			$$\Rightarrow \psi(x,t) = \int^{t}_{0} f(x-v(t-s),s) \dif s $$
+			Sólo falta sumar ambas soluciones para tener la solución final, que será \(
+			u(x,t) = F(x-vt) + \int_0^t f(x-v(t-s),s) \dif s \label{eq:SolDuhamel} \)
 
 			Aunque hemos hecho un montón de asunciones que tendremos que comprobar en algún momento.
 
-			\noteby{Guille}{¿Es cosa mía o ambas soluciones llevan a lo mismo, a integrar la $f$ de $0$ a $t$?}
-
-	\subsection{Modelo de tráfico más realista}
+	\section{Modelos con flujo no lineal}
+	\label{sec:ModeloTraficoRealista}
 
 		\begin{wrapfigure}{r}{0.4\textwidth}
 			\centering
@@ -256,7 +254,6 @@
 		La velocidad va a ser dependiente de la densidad, así que nos saldrán características cuya pendiente dependa del valor en el tiempo inicial. Si divergen no habrá problema, pero si convergen habrá puntos donde rectas de densidad 2 (por ejemplo) cortarán con rectas de densidad 1. Esto se entiende como coches que van más rápido que se encuentran con coches que van más lentos y se ven obligados a frenar.
 
 		Para simplificar los cálculos de este modelo asumamos que $A = B = 1$. Por lo tanto ahora estudiaremos:
-
 		\begin{equation*}
 			\left\{
 			\begin{array}{l}
@@ -328,9 +325,10 @@
 		\end{example}
 
 		\begin{example}[Frenazo]
-			\begin{wrapfigure}{r}{0.4\textwidth}
+			\begin{wrapfigure}[10]{r}{0.4\textwidth}
 				\centering
 				\inputtikz{modeloAtasco}
+				\vspace{-10pt}
 				\caption{Dato de densidad para $t=0$ en el modelo del atasco.}
 				\label{fig:modeloAtasco}
 			\end{wrapfigure}
@@ -356,7 +354,7 @@
 
 		\end{example}
 
-		\subsection{Soluciones generalizadas}
+		\subsection{Soluciones generalizadas. Ecuación de Rankine-Hugoniot}
 
 		Intentemos resolver ambos en general. Volvemos a la ecuación \[ u_t +m [q(u)]_x = 0 \]
 
@@ -412,9 +410,9 @@
 		Ahora sólo falta acercar $x_1$ y $x_2$ a la discontinuidad con $x_1 \to s(t)^{-}$, y $x_2 \to s(t)^{+}$; y ver qué pasa. Las integrales se irán a cero al hacer el intervalo de integración cada vez más pequeño y el \textbf{resultado} será el siguiente:
 
 		\[ \left[ u(s(t),t)^{-} - u(s(t),t)^{+} \right] · s'(t) = q(u(s(t),t)^{-}) - q(u(s(t),t)^{+}) \] con
-		\[ s'(t) = \frac{q(u(s(t),t)^{-}) - q(u(s(t),t)^{+})}{u(s(t),t)^{-} - u(s(t),t)^{+}} \]
+		\( s'(t) = \frac{q(u(s(t),t)^{-}) - q(u(s(t),t)^{+})}{u(s(t),t)^{-} - u(s(t),t)^{+}} \label{eq:DerivadaOndaChoque} \)
 
-		En otras palabras, que la variación de la curva de choque $s$ (llamada \concept{Ecuación\IS de Rankine - Hugoniot}) es el cociente entre el salto en el flujo $q$ y el salto en la densidad $u$. Esta curva es precisamente la queque es precisamente la que vimos en la figura \ref{fig:ondaChoque}.
+		En otras palabras, que la variación de la curva de choque $s$ (llamada \concept{Ecuación\IS de Rankine - Hugoniot}) es el cociente entre el salto en el flujo $q$ y el salto en la densidad $u$. Esta curva es precisamente la que vimos en la figura \ref{fig:ondaChoque}.
 
 		Vamos a obtener la fórmula explicitamente. El salto en $u$ es $\frac{2}{3} - \frac{1}{5} = \frac{7}{15}$, y en $q$ es $\frac{2}{3} (1-\frac{2}{3}) - \frac{1}{5}(1-\frac{1}{5})$ y por lo tanto
 		\[ q(u) = u (1-u) = \frac{2}{9} - \frac{4}{25} = \frac{14}{225} \]
@@ -422,18 +420,18 @@
 		Finalmente, sustituimos y vemos que \[
 		s'(t) = \frac{\text{Salto q}}{\text{Salto u}} = \frac{\frac{14}{225}}{\frac{7}{15}} = \frac{14.15}{7.225} \equiv \alpha \quad(>0) \]
 
-		Como $s(0) = 0$, la ecuación de la curva será \[
-		s(t) = \alpha t \],
-		por lo que la onda de choque sigue $x = s(t) = \alpha t$.
-
 		\begin{wrapfigure}[10]{r}{0.4\textwidth}
 			\centering
+			\vspace{-15pt}
 			\inputtikz{OndaChoqueRPM}
 			\vspace{-10pt}
 			\caption{Con nuestro modelo, tendremos dos regiones $R^-$, $R^+$ y una onda de choque $s(t)$ que las separa.}
 			\label{fig:OndaChoqueRPM}
 		\end{wrapfigure}
 
+		Como $s(0) = 0$, la ecuación de la curva será \[
+		s(t) = \alpha t \],
+		por lo que la onda de choque sigue $x = s(t) = \alpha t$.
 
 			Resumiendo un poco, lo que hemos logrado ha sido ver esto:
 
@@ -488,13 +486,13 @@
 				\end{figure}
 
 				Así, llegaríamos a la siguiente expresión general para un tiempo $T$ fijo
-				\[ u(x,T) =
+				\( u(x,T) =
 				\begin{cases}
 					1 & x \leq -T \\
 					\frac{1}{2} \left(1 - \frac{x}{T}\right) & -T < x < T \\
 					0 & x \geq T
-				\end{cases}
-				\]
+				\end{cases} \label{eq:SolucionRarefaccion}
+				\)
 
 				A esto se le llama la \concept{Onda\IS de rarefacción}. Este resultado no depende de la aproximación que tomemos de $F_\epsilon$, solo que sea continua ya que con el paso al límite la función desaparece.
 			\end{example}
