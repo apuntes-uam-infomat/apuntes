@@ -3,11 +3,11 @@
 \chapter{Ecuaciones de segundo orden. Series de Fourier}
 \label{chap:EcuacionesSegundoOrden}
 
-\section{Método de separación de variables}
+\section{Método de separación de variables}\index{Ecuación! del calor}
 
 	Al empezar el curso ya vimos un ejemplo: la ecuación del calor en una dimensión con datos de contorno Dirichlet homogéneos.\index{Método!separación de variables}
 
-	\begin{example}{1. Ecuación de calor con contorno Dirichlet}
+	\begin{example}{1. Ecuación del calor con contorno Dirichlet}
 		\[
 		\begin{cases}
 		u_t - u_{xx} = 0 & x \in (0,L), \quad t > 0 \\
@@ -269,7 +269,7 @@
 
 		% clase 2016/02/16
 
-		\begin{example}{4: Ondas con condiciones periódicas}
+		\begin{example}{4: Ondas con condiciones periódicas}\index{Ecuación!de ondas}\label{ec:ondas}
 
 			Estudiemos, por ejemplo, las olas en alta mar. No tenemos un contorno fijo como antes, así que vamos a buscar soluciones que sean periódicas en los extremos. En este caso tendremos dos condiciones, llamadas condiciones de periodicidad\index{Condición! de periodicidad}. Hemos puesto dos porque lo observamos en segundo orden:
 
@@ -773,7 +773,7 @@
 
 		Veamos que herramienta vamos a utilizar para calcular este límite:
 
-		\begin{defn}[Criterio\IS de Weierstrass]
+		\begin{defn}[Criterio\IS de Weierstrass]\label{defn:criterio_Weierstrass}
 
 			Supongamos que tenemos $\{\Phi_k\}$ sucesión de funciones en $(a,b)$, tales que para cada $k$, existe $M_k \in \real$ con $|\Phi_k(x)| \leq M_k$, $\forall x \in (a,b)$.
 
@@ -1001,14 +1001,31 @@
 			\obs En $\real^3$, esto equivale al teorema de Pitágoras, pero nos falta ver el $\geq$.
 
 		% clase 2016/02/23
+		\subsubsection{Cálculos en $\cplex$}
+			De manera rápida, vamos a resumir los cálculos anteriores en $\cplex$, que aunque son parecidos, difieren en detalles.
 
-			% Fáltan los cálculos en \cplex
+			Comencemos definiendo las sumas parciales:
+			$$S_n f = \sum\limits_{\abs{k}<n} <f, \Phi_k>\Phi_k$$
+			Primero, calculemos el cuadrado de su norma:
+			\begin{gather*}
+			\|S_n f\|^2 = <S_n f, S_n f> = \int_{-L}^{L} \sum\limits_{\abs{k}<n} <f, \Phi_k>\Phi_k \cdot \gor{\sum\limits_{\abs{j}<n} <f, \Phi_j>\Phi_j} \ ds \eqreasonup{agrupar sumas y suma finita conmuta con integral}\\
+			= \sum\limits_{\abs{k},\abs{j}<n} <f, \Phi_k> \gor{<f, \Phi_j>} \int_{-L}^{L} \underbrace{\Phi_k \gor{\Phi_j}}_{<\Phi_k, \Phi_j>} \ ds \eqreasonup{$<\Phi_k, \Phi_j> = \delta_{kj}$} \sum\limits_{\abs{k}<n} <f, \Phi_k> \gor{<f, \Phi_k>} \eqreasonup{def norma en $\cplex$} \\
+			= \sum\limits_{\abs{k}<n} \| <f, \Phi_k> \|^2
+			\end{gather*}
+
+			Ahora vemos si la distancia a $f$ está acotada:
+			$$0 \leq \| f - S_n f\|_2^2 = \|f\|^2 - \sum\limits_{\abs{k}<n} \| <f, \Phi_k> \|^2$$
+			Lo cual implica que
+			$$\sum\limits_{\abs{k}<n} \| <f, \Phi_k> \|^2 \leq \|f\|^2 \ \forall n \convs \sum\limits_{k=-\infty}^{k=\infty} \| <f, \Phi_k> \|^2 \eqreasonup[\leq]{\text{Bessel}} \|f\|^2 \eqreasonup[<]{f \in L^2} \infty$$
+
+			{\bf Conclusión:}
+			Si $f \in L^2$, entonces la norma del producto escalar de f por los elementos de la base $\Phi_k$ tiende a 0.
 
 			Por lo que podemos introducir una versión del lema de Riemann-Lebesgue:
 
 			\begin{lemma}{Riemman-Lebesgue}
 
-				\[ f \in L^2 \Rightarrow |<f, \Phi_k>| \rightarrow_{k \to \infty} 0\]
+				\[ f \in L^2 \Rightarrow |<f, \Phi_k>| \convs[ ][k][\infty] 0\]
 
 			\end{lemma}
 
@@ -1019,14 +1036,13 @@
 
 	\subsection{Resumen}
 
-
 		\subsubsection*{Convergencia uniforme}
 
 			\begin{itemize}
 				\item Sistema trigonométrico (o exponencial complejo).
 				\item $f \in C^2$ periódica
 				\item No identificamos el límite
-				\item Decrecimiento coeficientes en función de la regularidad de f
+				\item Los coeficientes decaen en función de la regularidad de f
 			\end{itemize}
 
 		\subsubsection*{Convergencia $L^2$}
@@ -1035,93 +1051,127 @@
 				\item Resultados válidos para cualquier sistema ortonormal $\{ \Phi_x \}$
 				\item $f \in L^2$
 				\item No identificamos el límite
-				\[\text{falta probar }\|S_N f\|_2 \lim_{N \to \infty} \|f\|_2\]
-				\item Desigualdad de Bessel y Lema de Riemman-Lebesgue
+				\[\text{falta probar }\|S_N f\|_2 \convs \lim_{N \to \infty} \|f\|_2\]
+				\item Hay que utilizar la Desigualdad de Bessel y el Lema de Riemman-Lebesgue
 
 			\end{itemize}
 
-		Tenemos un problema con estas convergencias en cuanto a que ninguna nos permite identificar el límite.
+		Tenemos un problema con estas convergencias en cuanto a que ninguna nos permite identificar el límite. Vamos a dar un pequeño rodeo para llegar a demostrar lo que queremos.
 
-		Además tenemos \textbf{otro problema:}
-
-		\[u_{xx} + u_{yy} = 0 \text{ en } x^2 + y^2 < 1 \]
-		\[u(x,y) = f(x,y) \text{ en } x^2 + y^2 = 1 \text{  (f regular)}\]
-
-		Observémoslo en coordenadas polares:
-
+		Comencemos con un ejemplo, planteando otro \textbf{problema distinto:}
 		\begin{align*}
-		 r^2 = x^2 + y^2  &\rightarrow rr_x = -x , r_x = \frac{x}{r} \eqexpl{$x = r \cos \theta $} \cos \theta \\
-		 \tan \theta = \frac{y}{x} &\rightarrow \frac{1}{\cos^2 \theta} \theta_x = \frac{-y}{x^2}, \theta_x = \frac{-y \cos^2\theta}{x^2} \eqexpl{$y = r \sin \theta$} \frac{-r \sin \theta \cos^2 \theta}{r^2 \cos^2 \theta} = \frac{- \sin \theta}{r}
+			\begin{cases*}
+				u_{xx} + u_{yy} = 0 & \text{ en } x^2 + y^2 < 1\\
+				u(x,y) = f(x,y) & \text{ en } x^2 + y^2 = 1
+			\end{cases*}
+		\end{align*}
+		Con f tan regular como necesitemos.
+
+		Hacemos el cambio a coordenadas polares:
+		\begin{align*}
+		 r^2 = x^2 + y^2  &\rightarrow rr_x = x , \quad r_x = \frac{x}{r} \eqreasonup{$x = r \cos \theta $} \cos \theta \\
+		 \tan \theta = \frac{y}{x}  &\rightarrow \frac{1}{\cos^2 \theta} \theta_x = \frac{-y}{x^2}, \quad \theta_x = \frac{-y \cos^2\theta}{x^2} \eqreason{$y = r \sin \theta, x = r \cos \theta$} \frac{-r \sin \theta \cos^2 \theta}{r^2 \cos^2 \theta} = \frac{- \sin \theta}{r}
+		\end{align*}
+		Tenemos:
+		\begin{align*}
+			W(r, \theta) &= u(r \cos \theta, r \sin \theta)\\
+			u_x &= W_r \cdot r_x + W_\theta \cdot \theta_x
+		\end{align*}
+		Sustituyendo $r_x$ y $\theta_x$ en $u_x$:
+		\begin{align*}
+			u_x = W_r \cdot \cos \theta + W_\theta \cdot \frac{- \sin \theta}{r}
+		\end{align*}
+		Ahora podemos calcular $u_{xx}$:
+		$$ u_{xx} = (W_r \cdot \cos \theta + W_\theta \cdot \frac{- \sin \theta}{r})_x \ r_x + (W_r \cdot \cos \theta + W_\theta \cdot \frac{- \sin \theta}{r})_\theta \ \theta_x$$
+
+		Se deja como ejercicio para el lector el resto de cuentas y repetir el procedimiento para obtener $u_y$ y $u_{yy}$. Al final obtenemos:
+		$$ u_{xx} + u_{yy} = 0 = \dots = W_{rr} + \frac{1}{r}W_r + \frac{1}{r^2}W_{\theta\theta}$$
+		Con \textbf{dato}:
+		\[ u(x,y) = f(x,y), \text{ si } x^2 + y^2 = 1\]
+		Luego
+		\[ \underbrace{u(1 \cdot \cos \theta,1 \cdot \sin \theta)}_{W(1,\theta)} = f(\cos \theta, \sin \theta) \equiv g(\theta)\]
+
+		Queremos resolver:
+		\begin{align*}
+			\begin{cases*}
+			W_{rr} + \frac{1}{r} W_r + \frac{1}{r^2} W_{\theta \theta} = 0 & 0 < r < 1 \\
+			W(1, \theta) = g(\theta) & \theta \in (-\pi,\pi)
+			\end{cases*}
 		\end{align*}
 
-		(FALTAN COSAS)
-
-
-		\textbf{dato}
-
-		\[ u(x,y) = f(x,y), \text{ si } x^2 + y^2 = 1\]
-
-		\[ u(\underbrace{\cos \theta}_{W(1,\theta)}, \sin \theta) = f(\cos \theta, \sin \theta) \equiv g(\theta)\]
-
-		Queremos resolver;
-
-		\[ W_rr = \frac{1}{r} W_r + \frac{1}{r^2} W_{\theta \theta} = 0 \quad 0 < r < 1, \theta \in (-\pi, \pi)\]
-
-		\[W(1, \theta) = g(\theta), \quad \theta \in (-\pi,\pi) \]
-
 		\begin{itemize}
-			\item $W$ continua en $r=0$
+			\item Necesitamos que $W$ sea continua en $r=0$
 			\item $W$ es $2\pi$-periódica en $\theta$
 		\end{itemize}
 
-		Usamos el método de separación de variables, es decir, buscamos $w(r, \theta) = R(r)\cdot \Phi(\theta)$.
-
+		Usamos el método de separación de variables, es decir, buscamos $$W(r, \theta) = R(r)\cdot \Phi(\theta)$$
+		Vamos a sustituir en el sistema:
 		\[R''\Phi + \frac{R'}{r}\Phi + \frac{R}{r^2} \Phi'' = 0 \]
-
+		Y operamos
 		\[ - \left( R'' \Phi + \frac{R'}{r}\Phi \right) = \frac{R}{r^2} \Phi'' \Rightarrow \underbrace{\frac{(r^2R''+rR')}{R}}_{\text{Función de }r} = \underbrace{\frac{\Phi''}{\Phi}}_{\text{Función de }\theta} = \lambda \in \real \]
 
-		(FALTAN DOS APUNTES SOBRE ESTO)
+		Luego necesitamos que
+		\begin{itemize}
+			\item $R$ continua en 0
+			\item $\Phi$ $2\pi$-periódica
+		\end{itemize}
 
 
-		EDO en $\Phi$
-		\[
-		\begin{cases}
-			\Phi'' = \lambda \Phi & \theta \in (-\pi, \pi) \\
-			\Phi & 2\pi \text{ periódica }
-		\end{cases}\]
+		EDO en $\Phi$ (Ecuación de ondas)
+		\begin{align*}
+			\begin{cases}
+				\Phi'' = \lambda \Phi & \theta \in (-\pi, \pi) \\
+				\Phi & 2\pi \text{ periódica }
+			\end{cases}
+		\end{align*}
 
+		Como esta es la ecuación de ondas \ref{ec:ondas}, podemos plantar la solución:
+		\begin{align*}
+			\begin{cases*}
+				\lambda_0 = 0,& \Phi_0 = c \in \real\\
+				\lambda_k = -(\frac{\pi k}{L})^2 \eqreason{\pi=L} -k^2, & \Phi_k = A_k \cos (k\theta) + B_k \sin (k\theta)\\
+				\lambda_k > 0 & \text{NO hay solución}
+			\end{cases*}
+		\end{align*}
+		Volvemos a la EDO en $r$ para ver sus soluciones a partir de las de $\Phi$:
+		\begin{align*}
+			\lambda_0 = 0 \implies & r\cdot R_0'' + R'_0 = 0\\
+			& r\cdot R_0'' = - R'_0\\
+			& \frac{R''_0}{R'_0} = \frac{-1}{r} \text{ (integramos) }\\
+			& \ln(R'_0) = - \ln(r) + C \text{ (exponenciamos) }\\
+			& R'_0 = \frac{A}{r}, \quad A \in \real \text{ (integramos) }\\
+			& R_0 = A \cdot \ln(r) + B, \quad A,B \in \real
+		\end{align*}
+		Como $R_0(r)$ debe estar acotada y continua en 0, tenemos que $A = 0$, luego $$W_{0}(r, \theta) = A_0$$
 
-		(FALTAA)
+		Vamos a ver qué ocurre con $\lambda_k = -k^2$:
 
+		\[r^2 R''_k + r R'_k - k^2 R_k = 0 \quad \text{\bf Ecuación de Euler}\]\index{Ecuación! de Euler}
+		Recordemos cómo se resuelve: buscamos soluciones de la forma
+		\begin{align*}
+			R_k &= r^\alpha \\
+			R'_k &= \alpha r^(\alpha - 1) \\
+			R''_k &= \alpha(\alpha-1)r^(\alpha - 2)
+		\end{align*}
+		Sustituimos en la ecuación original:
+		\[ 0 = r^\alpha [\alpha(\alpha -1)+ \alpha - k^2] = r^\alpha [\alpha^2 - k^2] \]
+		Y obtenemos que las raíces del polinomio característico son $\alpha = ± k$.
 
+		Luego la solución quedaría:
+		\[ R_k(r) = \alpha_k r^k + \beta_k r^{-k} \]
+		Donde $\beta_k r^{-k}$ tiende a 0 porque buscamos soluciones continuas, luego acotadas.
 
+		Finalmente, obtenemos que
+		$$W_k(r, \theta) = r^k (A_k \cos(k\cdot \theta) + B_k \sin(k\cdot \theta))$$
 
-
-
-
-
-
-
-		Vamos a ver que ocurre con $\lambda_k = -k^2$:
-
-		% A lo mejor un concept o algo aqui no vendría mal
-		\[r^2 R''_k + r R'_k - k^2 R_k = 0 \quad \text{Ecuación de Euler}\]
-
-		Buscamos $R_k = r^\alpha$, $rR'_k = \alpha r^\alpha$, $r^2 R''_k = \alpha(\alpha-1)r^\alpha$.
-
-		\[ 0 = r^\alpha [\alpha(\alpha -1)+ \alpha - k^2] = r^\alpha [\alpha^2 - k^2] \Rightarrow \alpha = ± k \]
-
-		\[ R_k(r) = \alpha_k r^k + \underbrace{\beta_k r^{-k}}_{tiende a 0}  \]
-
-
-		Candidato a solución:
-
-		\[\frac{A0}{2} + \sum_{k=1} r^k \{A_k \cos(k \theta) + B_k \sin(k\theta)\}   \]
+		Luego nuestro {\bf candidato a solución}:
+		\[\frac{A_0}{2} + \sum_{k=1} r^k \{A_k \cos(k \theta) + B_k \sin(k\theta)\}   \]
 
 		Dato: $W(1,\theta) = g(\theta)$.
 
-		Necesitamos:
+		Observamos que esta solución es buena porque si $r<1$, por el criterio de Weierstrass (\ref{defn:criterio_Weierstrass}), converge uniformemente en $[-\pi, \pi]$.
 
+		Necesitamos:
 		\[ g(\theta) \qeq \frac{x_0}{2} + \sum_{k = 1}^{\infty} A_k \cos(k \theta) + B_k \sin(k \theta) \]
 
 		Debe ser entonces:
@@ -1137,14 +1187,14 @@
 		\begin{obs}
 			\[ |A_0|, |A_k|, |B_k| < \frac{1}{\pi} \int_{-\pi}^{\pi} |g(s)| ds \]
 
-			Si además tenemos en cuenta el criterio de Weierstrass, tenemos que hay convergencia uniforme en $[-\pi,\pi]$ para $r<1$ de la serie.
+			No necesitamos propiedades de regularidad, nos basta con que $g$ sea integrable.
 		\end{obs}
 
 		Podemos definir:
 
 		\( W(r,\theta) = \frac{A_0}{2} + \sum_k r^k(a_k \cos(k \theta) + B_k \sin(k\theta)) \label{eq:serieW} \)
 
-		Pero llegados aquí nos preguntamos:
+		Pero llegados aquí, nos preguntamos:
 
 		\begin{itemize}
 			\item ¿$W$ es solución?
@@ -1152,31 +1202,33 @@
 		\end{itemize}
 
 
-		Vamos a pasar de la serie a una fórmula, suma de una progresión geométrica para poder operar mejor.
-
+		La suerte que tenemos es que es una serie geométrica en $\cplex$, que con $r<1$ no solo converge, sino que podemos escribir la solución.
 
 		Pasamos a notación compleja:
+		\begin{align*}
+			\alpha_k &= \frac{1}{2\pi} \int_{-\pi}^{\pi} g(s) e^{-iks} ds \\
+			\alpha_k &= \frac{A_k - iB_k}{2} \\
+			\alpha_{-k} &= \frac{A_k + iB_k}{2}
+		\end{align*}
 
-		\[
-		\begin{array}{l}
-			\alpha_k = \frac{1}{2\pi} \int_{-\pi}^{\pi} g(s) e^{-iks} ds \\
-			\alpha_k = \frac{A_k - iB_k}{2} \\
-			\alpha_{-k} = \frac{A_k + iB_k}{2}
-		\end{array}
-		\]
+		Podemos reescribir \eqref{eq:serieW} entonces como:
 
-		Podemos reescribir la sucesión entonces como:
-
-		\[W(r, \theta) = \eqref{eq:serieW} = \alpha_0 + \sum_{k=1}^{\infty} r^k \left( \alpha_k e^{ik\theta} + \alpha_{-k} e^{-ik\theta} \right) \]
-
-		\[ = \sum_{k=0}^{\infty} \alpha_k r^k e^{ik\theta} + \sum_{k=0}^{\infty} \alpha_{-k} r^k e^{-ik\theta} \]
-
-
-		\[ = \sum_{k=-\infty}^{\infty} \underbrace{\left( \frac{1}{2\pi} \int_{-\pi}^{\pi} g(s) e^{-iks} ds \right)}_{\leq \frac{1}{2\pi} \int_{-\pi}^{\pi} |g(s)| ds < C} r ^{|k|} \underbrace{e^{ik\theta}}_{|e^{ik\theta}| \leq 1} \]
+		\begin{align*}
+		W(r, \theta) &= \alpha_0 + \sum_{k=1}^{\infty} r^k \left( \alpha_k e^{ik\theta} + \alpha_{-k} e^{-ik\theta} \right)\\
+%
+		&= \sum_{k=0}^{\infty} \alpha_k r^k e^{ik\theta} + \sum_{l=1}^{\infty} \alpha_{-l} r^l e^{-il\theta} \quad (\text{Cambio: } k = -l)\\
+%
+		&= \sum_{k=0}^{\infty} \alpha_k r^k e^{ik\theta} + \sum_{k=-\infty}^{-1} \alpha_{k} r^{\abs{k}} e^{ik\theta} = \sum_{k=-\infty}^{\infty} \alpha_{k} r^{\abs{k}} e^{ik\theta}\\
+%
+		&= \sum_{k=-\infty}^{\infty} \underbrace{\left( \frac{1}{2\pi} \int_{-\pi}^{\pi} g(s) e^{-iks} ds \right)}_{\leq \frac{1}{2\pi} \int_{-\pi}^{\pi} |g(s)| ds < C} r ^{|k|} \underbrace{e^{ik\theta}}_{|e^{ik\theta}| \leq 1}\\
+%
+		&\leq C r^{|k|}
+		\end{align*}
+		Donde hemos aplicado el criterio de Weierstrass \ref{defn:criterio_Weierstrass}.
 
 
-		\[ \leq C r^{|k|}, \text{ si } r < 1, \sum_k Cr^{|k|} < \infty  \]
-
+		% Clase 2016/02/24
+% \quad \text{ si } r < 1, \sum_k Cr^{|k|} < \infty
 
 		Con lo que tenemos convergencia uniforme de (ALGO)
 
