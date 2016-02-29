@@ -2,6 +2,7 @@
 \chapter{Ecuaciones de primer orden}
 
 	\section{Planteamiento del problema}
+	\label{sec:PlanteamientoPrimerOrden}
 
 	\begin{figure}[thbp]
 	\centering
@@ -77,7 +78,8 @@
 
 
 
-	\subsection{Cuando la curva dato no es una recta}
+	\subsection{Modelo con curvas dato alternativas}
+		\label{sec:CurvaDatoRara}
 
 		Imaginemos un río con una velocidad constante, en el que a partir de un punto realizamos un vertido. El río tiene velocidad $v$ y en $x=0$ realizaremos una contaminación $\beta(t)$. En $t=0$ consideraremos que está limpio. Usamos el mismo modelo que antes, pero con la peculiaridad de que la curva dato la estamos dando de otra forma: antes dábamos el dato inicial como lo que ocurría cuando $t = 0$. Aquí, damos una curva dato para $t > 0$ y $x > 0$.
 
@@ -716,12 +718,12 @@
 
 		Pero a nivel físico esto no tiene sentido ya que significaría coches acelerando instantáneamente. Por eso es por lo que añadimos esta restricción física obligando a que ese tipo de areas se rellenen con una onda de rarefacción.
 
-		El contrario, por supuesto, si que tiene más sentido físico.
+		El contrario, por supuesto, si que tiene más sentido físico\footnote{Si no recuerdo mal, el sentido físico era coches estrellándose contra un muro. No es un caso que estemos especialmente interesados en estudiar, creo.}.
 
 		Para solucionar esta dualidad de soluciones se podría añadir un término de viscosidad, pero eso convertiría nuestro sistema en uno de segundo orden que todavía no podemos resolver.
 
 		\textbf{Ejercicio interesante}
-
+			% TODO: Completar esto.
 			$$u_t + uu_x = 0$$
 			$$u(x,0) = F(x) $$
 
@@ -746,79 +748,51 @@
 			Lo que vamos a ver según avanza el tiempo es que el escalón en $F(x)$ va a ir reduciéndose hasta ser completamente vertical y empezar la onda de choque.
 
 
-\section{Caso general}
+\section{Caso general: Problema de Cauchy}
 
-	Vamos a realizar un cambio de notación. A partir de ahora las variables van a ser $x$ e $y$. Vamos a tratar ecuaciones casi lineales de primer orden:
+	De momento hemos estudiado casos bastante específicos. De hecho, ya el planteamiento inicial (\fref{sec:PlanteamientoPrimerOrden}) era muy concreto, estudiando un problema que se podía entender como un flujo a lo largo del tiempo, con ese flujo dependiendo de la densidad. Ahora bien, como buenos matemáticos, nos interesaría encontrar un caso general para ecuaciones de primer orden.
 
-	\begin{equation*}
-		\left\{
-			\begin{array}{l}
-			a(x,y,u)u_x + b(x,y,u)u_y = C(x,y,u) \\
-			\text{dato}
-			\end{array}
-		\right.
-	\end{equation*}
+	Lo primero es olvidarnos del ``tiempo'', y simplemente tomar dos variables genéricas $x,y$ para evitar confusiones. Así, nuestras ecuaciones serán de la forma \(
+		a(x,y,u)u_x + b(x,y,u)u_y = c(x,y,u) \label{eq:PrimerOrdenGenerica}
+	\)
 
-	Hasta ahora el dato siempre (excepto en un ejemplo)%poner referencia aquí
-	había sido siempre $u(x,0) = F(x)$. En general conoceremos la solución del dato a lo largo de una curva $(\alpha(s),\beta{s})$:
+	¿Y qué hacemos con el dato? Hasta ahora siempre lo habíamos dado a lo largo de la recta $t = 0$ (salvo en el ejemplo de la \fref{sec:CurvaDatoRara}). Sin embargo, es una condición demasiado restrictiva, así que en general tomaremos la solución del dato a lo largo de una curva genérica $(\alpha(s),\beta(s))$. Así, nuestro dato será
+	\[ u(\alpha(s),\beta{s}) = \Gamma(s) \]
 
-	$$ u(\alpha(s),\beta{s}) = \gamma{s} $$
+	¿Cómo resolvemos este sistema? La idea será ``propagar'' la solución dada en la curva dato siguiendo la ecuación diferencial. En cierto modo es parecido a lo que hacíamos con las características, aunque esta vez necesitaremos más artillería matemática.
 
-	Entonces, sea $u(x,y)$ solución:
+	Partiendo de que $u(x,y)$ es una solución a nuestro sistema, consideraremos su gráfica $S = \set{(x,y,z) ∈ ℝ^3 \tq z = u(x,y)}$. Esta gráfica no es más que el conjunto de nivel 0 de la aplicación \[ Φ(x,y,z) = u(x,y) - z\]
 
-	Sea $s = \{(x,y,z) / z = u(x,y)\}$ su gráfica
+	Ahora vamos a por un truco/idea feliz: sabemos que el gradiente es perpendicular a los conjuntos de nivel, por lo que en particular $\grad Φ \perp S$. Ese gradiente es fácil de calcular: \[ \grad Φ = \left(u_x, u_y, -1\right)\]
 
-	Sea $\Phi(x,y,z) = u(x,y) - z$.
+	Y aquí es donde viene la segunda ocurrencia: darnos cuenta de que $\grad Φ$ y $(a, b, c)$ son dos vectores perpendiculares, donde $a$, $b$ y $c$ eran los coeficientes de nuestra ecuación \eqref{eq:PrimerOrdenGenerica}. La comprobación se hace con una simple cuenta, ya que simplemente volvemos a la ecuación de nuevo: \[ \pesc{(u_x, u_y, -1), (a, b, c)} = au_x + bu_y - c = 0 \]
 
-	$s = \{$ Conjunto de nivel 0 de $ \Phi \}$
+	La conclusión es que el vector $(a(p),b(p),c(p))$ es tangente a nuestra superficie solución, con $p ∈ S$. En otras palabras, que podemos reconstruir una curva solución $α ⊂ S$ con $α' = (a,b,c)$.
 
-	Como sabemos que el gradiente es perpendicular al espacio tangente ($\nabla \Phi \perp S$).
-
-	\begin{equation*}
-		\left.
-		\begin{array}{rl}
-			au_x + bu_y = C \\
-			\nabla \Phi = (u_x, u_y, -1)
-		\end{array}
-		\right\} (u_x,u_y, -1) \perp (a,b,c)
-	\end{equation*}
-
-	\begin{equation*}
-		\left.
-		\begin{array}{rl}
-			x' = a \\
-			y' = b \\
-			z' = c
-		\end{array}
-		\right\} \text{Curva}
-	\end{equation*}
-
-	$(x,y,z)$ con tangente $(a,b,c)$ en cada punto.
-
-	\textbf{es decir:} $(a(p),b(p),c(p)) \in T_pS$, dado $p$ punto de la superficie.
-
-
-	Resolvemos la ecuación ordinaria obteniendo una curva de cada una de los datos iniciales. Una vez obtenidas estas curvas, si todo va bien, podremos ensamblarlas en una superficie parametrizable. Deberemos probar que esta superficie se puede escribir como una gráfica de una función, pero no nos valdrá con eso, tendremos que probar que se puede escribir como función de $x$ e $y$.
+	Así, podremos resolver la ecuación ordinaria obteniendo una curva de cada una de los datos iniciales. Una vez obtenidas estas curvas, si todo va bien, podremos ensamblarlas en una superficie parametrizable. Deberemos probar que esta superficie se puede escribir como una gráfica de una función, pero no nos valdrá con eso, tendremos que probar que se puede escribir como función de $x$ e $y$.
 
 	De lo que aprendimos en EDO\footnote{jajajajaja} sabemos encontrar curvas con una tangente dada. ¿Pero podemos aplicarlo para obtener superficies?
 
+	Antes de seguir con la formalización, lo que haremos será ver unas cuantas cuentas para entrar en situación.
+
+	\subsection{Ejemplos y cuentas previos}
+
 	Empecemos con un ejemplo:
 
-	\begin{example}{1}
-
+	\begin{example}[Problema de Cauchy]
+		Partimos del siguiente sistema:
 		\begin{equation*}
 			\left\{
 			\begin{array}{l}
 				xu_x - yu_y = u - y \\
-				\text{Dato: }\quad u(s^2,s) = s \quad (s > 0)
+				u(s^2,s) = s \quad (s > 0)
 			\end{array}
-			\right. \text{  Problema de Cauchy}
+			\right.
 		\end{equation*}
 
 		Interpretación geométrica. En cada $(x,y,z)$ el vector tangente debe ser $(\underbrace{x}_{a},\underbrace{-y}_{b},\underbrace{z-y}_{c})$
 
-		\textbf{Curvas}
-
+		Hallamos las \textbf{curvas solución:}
 		\begin{equation*}
 			\left.
 			\begin{array}{rl}
@@ -834,42 +808,27 @@
 			\end{array}
 		\end{equation*}
 
+		Resolvemos usando el método del factor integrante y llegamos a \[ C = z_0 - \frac{y_0}{2} \], de tal forma que nuestra curva viene dada por la ecuación
+		\begin{align*}
+			x(t) &= x_0 e^t \\
+			y(t) &= y_0 e^{-t} \\
+			z(t) &= \frac{y_0}{2} e^{-t} + (z_0 - \frac{y_0}{2})e^t
+		\end{align*}, donde los valores iniciales vienen dados por la curva dato: \[ (x_0,y_0,z_0) = (s^2,s,s) \]
 
-		Resolvemos usando el método del factor integrante y llegamos a:
-
-		(FALTAN LOS PASOS)
-
-		$$C = z_0 - \frac{y_0}{2}$$
-
-		\begin{equation*}
-			\begin{array}{l}
-				x = x_0 e^t \\
-				y = y_0 e^{-t} \\
-				z = \frac{y_0}{2} e^{-t} + (z_0 - \frac{y_0}{2})e^t
-			\end{array}
-		\end{equation*}
-
-		$$(x_0,y_0,z_0) = (s^2,s,s)$$
-
-		Que puesto en función de $s$ y de $t$:
-
-		\begin{equation*}
-			\left\{
-			\begin{array}{l}
-				x = s^2 e^t \\
-				y = se^{-t} \\
-				z = \frac{s}{2}e^{-t} + \frac{s}{2}e^{t}
-			\end{array}
-			\right.
-		\end{equation*}
-
-		Con lo que llegamos a la siguiente definición de la superficie.
-
-		$$ \Phi(s,t) = (s^2e^t, se^{-t}, \frac{s}{2}(e^t + e^{-t}))$$
+		Poniendo todo en función de $s$ y $t$, llegamos a
+		\begin{align*}
+		x(s,t) &= s^2 e^t \\
+		y(s,t) &= se^{-t} \\
+		z(s,t) &= \frac{s}{2}e^{-t} + \frac{s}{2}e^{t}
+		\end{align*}
+		que nos permite dar una definición para la superficie:
+		\[
+			\Phi(s,t) = \left(s^2e^t, se^{-t}, \frac{s}{2}(e^t + e^{-t}) \right )
+		\]
 
 		Debemos comprobar si este objeto es realmente una superficie y si nos sirve, es decir, responder a las siguientes preguntas:
 
-		\begin{itemize}
+		\begin{itemize}[itemsep = 1pt]
 			\item ¿$\Phi$ describe una superficie parametrizada?
 			\item ¿Podemos despejar $z=u(x,y)$?
 		\end{itemize}
@@ -1019,7 +978,7 @@ El siguiente paso es considerar la aplicación \[ Φ(s,t) = (x(s,t), y(s,t), z(s
 
 Dado que cuando nos alejamos del punto inicial tenemos monstruos, lo que buscaremos es que las dos condiciones se cumplan sólo para $t$ pequeño. Esto nos permite no tener que verificar la condición de homeomorfismo sobre su imagen, ya que se cumple directamente para $t$ pequeño por la estructura de la curva dato Γ, que no tiene autointersecciones.
 
-Estudiamos ahora la diferencial de Φ para ver qué ocurre con la condición del rango: \[ \Dif Φ = \begin{pmatrix} \pd{x}{s} & \pd{y}{s} & \pd{z}{s} \\  \pd{x}{t} & \pd{y}{t} & \pd{z}{t} \end{pmatrix} \]
+Estudiamos ahora la diferencial de Φ para ver qué ocurre con la condición del rango: \[ \Dif Φ = \begin{pmatrix} \dpd{x}{s} & \dpd{y}{s} & \dpd{z}{s} \\ & & \\ \dpd{x}{t} & \dpd{y}{t} & \dpd{z}{t} \end{pmatrix} \]
 
 Por continuidad, nos bastará ver que tiene rango máximo para $t = 0$, ya que nos dará directamente rango máximo en un entorno pequeño de $t$. Pero teniendo en cuenta el sistema característico, podemos simplificar y tenemos que \[ \eval[2]{\Dif Φ}_{t=0} = \begin{pmatrix}
 α' & β' & γ'  \\
@@ -1067,7 +1026,7 @@ Podemos hacer un experimento mental: cogemos una curva transversal a la curva an
 
 La conclusión de todo esto es que el problema no estaría bien propuesto porque sus soluciones no tendrían mucho sentido.
 
-\subsection{Algunos ejemplos}
+\subsection{Más ejemplos}
 
 	\begin{example}{1}
 		\[\left\{ \begin{array}{l} uu_x + u_y = 0 \\ u(x,0) = F(x) \end{array}\right.\]
