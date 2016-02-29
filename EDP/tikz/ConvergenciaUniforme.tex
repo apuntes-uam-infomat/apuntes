@@ -1,14 +1,39 @@
 
-\begin{tikzpicture}
-\draw[->] (-0.5,0) -- (5,0);
-\draw[->] (0, -0.5) -- (0, 3);
+
+\begin{tikzpicture}[scale=1.5,declare function={
+	wav_sl(\x,\ofst) = 0.3 * \x + 1 + \ofst + 0.2 * sin(3 * \x r);
+	wav_pert(\x,\a,\b) = \a * cos(7* \x r) + \b * sin(\x r) * cos(\x * 5 r);
+}]
+\draw[->] (-0.1,0) -- (5,0);
+\draw[->] (0,-0.1) -- (0,3);
+
+\fill[draw=none,domain=0.8:4.2,smooth,variable=\x,green!50!white, fill=green!10]
+	(0.8, {wav_sl(0.8,-0.5)}) -- plot ({\x}, {wav_sl(\x,0.5)}) -- (4.2, {wav_sl(4.2,-0.5)})
+	plot ({5 - \x}, {wav_sl(5 - \x,-0.5)});
 
 
-\fill[blue, fill opacity = 0.2] (1,2.5) .. controls (3,2.5) and (2,1.5) .. (4,1.5) -- (4, 0.5)
-	.. controls (2, 0.5) and (3, 1.5) .. (1, 1.5) -- cycle;
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!10] plot ({\x}, {wav_sl(\x,-0.2) + wav_pert(\x,0.15,0.1)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!20] plot ({\x}, {wav_sl(\x,0.2) + wav_pert(\x,0.132,-0.07)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!40] plot ({\x}, {wav_sl(\x,0.07) + wav_pert(\x,0.05,-0.01)});
+\draw[thick,domain=0.7:4.3,smooth,variable=\x,blue!80] plot ({\x}, {wav_sl(\x,0) + wav_pert(\x,0.01,0.04)});
 
-\draw[blue, thick] (1,2) .. controls (3,2) and (2,1) .. (4,1) node[right] {$f$};
+\draw[very thick,domain=0.8:4.2,smooth,variable=\x,black] plot ({\x}, {wav_sl(\x,0)});
+\draw[thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {wav_sl(\x,0.5)});
+\draw[thick,domain=0.8:4.2,smooth,variable=\x,green!50!white] plot ({\x}, {wav_sl(\x,-0.5)});
 
-\draw[(-)] (0.8, 1.5) -- node[midway, left] {$2\varepsilon$} (0.8, 2.5);
 
+\node[draw, circle, fill=white, inner sep=1.5pt] (M) at (2, {wav_sl(2,0)}) {};
+\node[draw, circle, fill=white, inner sep=1.5pt] (U) at (2, {wav_sl(2,0.5)}) {};
+\node[draw, circle, fill=white, inner sep=1.5pt] (L) at (2, {wav_sl(2,-0.5)}) {};
+
+\node[hnlin, label=left:{$f(x)$}] (MO) at (0, {wav_sl(2,0)}) {};
+\node[hnlin, label=left:{$f(x) + ε$}] (UO) at (0, {wav_sl(2,0.5)}) {};
+\node[hnlin, label=left:{$f(x) - ε$}] (LO) at (0, {wav_sl(2,-0.5)}) {};
+
+\draw[-] (U) -- (M) -- (L);
+
+\draw[dashed,gray] (UO) -- (U);
+\draw[dashed,gray] (MO) -- (M);
+\draw[dashed,gray] (LO) -- (L);
 \end{tikzpicture}
+
