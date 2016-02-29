@@ -236,8 +236,9 @@
 	\section{Modelos con flujo no lineal}
 	\label{sec:ModeloTraficoRealista}
 
-		\begin{wrapfigure}{r}{0.4\textwidth}
+		\begin{wrapfigure}{R}{0.4\textwidth}
 			\centering
+			\vspace{-15pt}
 			\inputtikz{parabola}
 			\caption{El flujo no es lineal con respecto a la densidad: si hay muchos coches, acaban parándose.}
 			\label{fig:parabola}
@@ -263,10 +264,11 @@
 			\right.
 		\end{equation*}
 
-		\begin{wrapfigure}{r}{0.4\textwidth}
+		\begin{wrapfigure}{R}{0.4\textwidth}
 			\centering
-			\vspace{10pt}
+			\vspace{-15pt}
 			\inputtikz{rectasDivergentes}
+			\vspace{-15pt}
 			\caption{La solución se propaga en rectas cuya pendiente depende del valor del dato inicial $F(x)$.}
 			\label{fig:rectasDivergentes}
 		\end{wrapfigure}
@@ -280,12 +282,12 @@
 		Para ver qué casos posibles hay (por ejemplo, ¿qué pasa cuando se cortan dos rectas características?) vamos a ver algunos ejemplos según el valor de $F(x)$.
 
 		\begin{example}[Semáforo] \label{ejm:Semaforo}
-			\begin{wrapfigure}[7]{r}{0.4\textwidth}
+			\begin{wrapfigure}[8]{L}{0.4\textwidth}
 				\centering
 				\vspace{-15pt}
 				\inputtikz{semaforoCerrado}
 				\vspace{-15pt}
-				\caption{Semáforo cerrado en $t=0$.}
+				\caption{Semáforo cerrado inicialmente.}
 				\label{fig:semaforoCerrado}
 			\end{wrapfigure}
 
@@ -325,7 +327,7 @@
 		\end{example}
 
 		\begin{example}[Frenazo]
-			\begin{wrapfigure}[10]{r}{0.4\textwidth}
+			\begin{wrapfigure}[10]{R}{0.4\textwidth}
 				\centering
 				\inputtikz{modeloAtasco}
 				\vspace{-10pt}
@@ -420,7 +422,7 @@
 		Finalmente, sustituimos y vemos que \[
 		s'(t) = \frac{\text{Salto q}}{\text{Salto u}} = \frac{\frac{14}{225}}{\frac{7}{15}} = \frac{14.15}{7.225} \equiv \alpha \quad(>0) \]
 
-		\begin{wrapfigure}[10]{r}{0.4\textwidth}
+		\begin{wrapfigure}[10]{R}{0.4\textwidth}
 			\centering
 			\vspace{-15pt}
 			\inputtikz{OndaChoqueRPM}
@@ -459,7 +461,7 @@
 
 				Las características son las curvas $(x(t),t)$ tales que $u(x(t),t) = k$, que ya habíamos calculado y quedaban $x - (1-2k)t = x_0$, donde $x_0$ era el punto de partida y $k = F(x_0)$ el valor que se propagaba. El dibujo al que llegábamos era el de la \fref{fig:caracteristicasSemaforo2}.
 
-				\begin{wrapfigure}{l}{0.3\textwidth}
+				\begin{wrapfigure}{L}{0.3\textwidth}
 					\centering
 					\inputtikz{FEpsilon}
 					\caption{Usaremos esta aproximación para saltarnos la discontinuidad}
@@ -498,39 +500,31 @@
 			\end{example}
 
 
-	\subsection{Cambio de variables. Ecuación de Burgers}
+	\subsection{Cambio de variables. Burgers}
 
-		Dados:
+		Vamos a ver otro método para la resolución de este tipo de sistemas. Partimos de la ecuación
+		\[ u_t + [q(u)]_x = 0 \quad (q \in C^2) \]
 
-		$$ u_t + [q(u)]_x = 0 \quad (q \in C^2) $$
+		La derivada del flujo con respecto a $x$ tendrá la forma $[q(u)]_x = V(u) u_x$, de tal forma que podemos convertir nuestra ecuación en \(
+		u_t + V(u)u_x = 0 \label{eq:burgers1} \), sobre la que podemos realizar el siguiente cambio de variables
+		\begin{align*}
+		W &= V(u) \\
+		W_t &= V'(u) \cdot u_t \\
+		W_x &= V'(u) \cdot u_x
+		\end{align*} y ver qué ecuación cumple $W$.
 
-		$$u_t + V(u)u_x = 0 $$
+		¿Qué es lo que hemos hecho? Hemos pasado a escribir la ecuación en términos de una variable que es la ``velocidad''. Esta velocidad es la velocidad de $u$, la velocidad a la que se propaga la densidad. No tenemos que entenderla como la velocidad de los coches.
 
-		Realizamos un cambio de variables:
+		Por ejemplo, imaginemos un mapa de tráfico en el que se ve la densidad del tráfico con colores. La $W$ es la velocidad a las que esas manchas de color se desplazan, no los coches en sí. Están relacionadas pero no son lo mismo.
 
-		$$W = V(u)$$
-		$$W_t = V'(u) \cdot u_t$$
-		$$W_x = V'(u) \cdot u_x$$
+		Para hallar el sistema que cumple $W$, lo que hacemos es multiplicar \eqref{eq:burgers1} por $V'(u)$ a ambos lados y ver qué nos sale:
+		\begin{align}
+		u_t + V(u)u_x &= 0 \nonumber \\
+		u_t · V'(u) + V(u) u_x · V'(u) &= 0 \nonumber \\
+		W_t + W · W_x &= 0 \label{eq:Burgers}
+		\end{align}
 
-		Y vamos a ver que función cumple $W$. Lo que hacemos es pasar a escribir la ecuación en términos de una variable que es la ``velocidad'' (CUIDADO CON LA INTUICIÓN), al contrario que antes, que era de la densidad. Esta velocidad es la velocidad de $u$, la velocidad a la que se propaga la densidad. No tenemos que entenderla como la velocidad de los coches.
-
-		Imaginemos un mapa de tráfico en el que se ve la densidad del tráfico con colores. La $W$ es la velocidad a las que esas manchas de color se desplazan, no los coches en sí. Están relacionadas pero no son lo mismo.
-
-		Completemos el sistema anterior con $W$:
-
-		\(u_t + V(u) u_x = 0\quad\quad (u \equiv \text{densidad}) \label{eq:burgers1}\)
-
-		$$\underbrace{V'(u) u_t}_{W_t} + \underbrace{V(u)}_{W} * \underbrace{V'(u) u_x}_{W_x} = 0 \quad (\text{Multiplicando \ref{eq:burgers1} por }V'(u))$$
-
-		\( W_t + WW_x = 0 \label{eq:Ecuación de Burgers} \)
-
-
-
-		\begin{itemize}
-			\item En este caso es homogénea al ser $0$ el término independiente.
-			\item Si $\neq 0$ diremos que es no homogénea.
-			\item Si $ = \epsilon W_{xx}$ entonces diremos que es viscosa.
-		\end{itemize}
+		En este caso, la ecuación es una \concept{Ecuación\IS homogénea} ya que el término independiente es $0$. Si no fuese nulo, estaríamos ante una \concept{Ecuación\IS no homogénea}, y si el término independiente fuese $\epsilon W_{xx}$ su nombre sería una \concept{Ecuación\IS viscosa}.
 
 		\begin{example}
 			\[u_t + (1-2u) u_x = 0
@@ -557,13 +551,12 @@
 		\subsubsection{Flujo asociado a la ecuación de Burgers}
 
 			Expresemos ahora $q$ en función de la ecuación de Burgers.
+			\begin{gather}
+			W_t + WW_x = W_t + [q_B(w)]_x = 0 \nonumber \\
+			q_{B} = \frac{W^2}{2} \label{eq:FlujoBurgers}
+			\end{gather}
 
-			$$W_t + WW_x = W_t + [q_B(w)]_x = 0$$
-
-			$$q_{B} = \frac{W^2}{2}$$
-
-
-		\subsubsection{Características en la ec. de Burgers}
+		\subsubsection{Características en la ecuación de Burgers}
 
 			$$W(x(t),t) = k$$
 
@@ -576,33 +569,41 @@
 			\begin{figure}[hbtp]
 				\centering
 				\inputtikz{CaracteristicasBurger}
-				\caption{}
+				\caption{Características en la ecuación de Burguers}
 				\label{fig:CaracteristicasBurger}
 			\end{figure}
 
 			Con $W(x,0) = F(x)$.
 
-		\begin{example}{Zona central de atasco}
+		\begin{example}[Zona central de atasco]
 
-			Dada la ecuación de Burgers:
-
-			$$u_t + u u_x = 0$$
-
-			Dato inicial:
-
-			$u(x,0) = F(x)$ con $F(x)$ definida como:
-
-			\begin{figure}[hbtp]
+			\begin{wrapfigure}[8]{R}{0.4\textwidth}
 				\centering
 				\inputtikz{FTresVelocidades}
-				\caption{}
+				\caption{Dato inicial de velocidad para este atasco.}
 				\label{fig:FTresVelocidades}
-			\end{figure}
+			\end{wrapfigure}
+
+			Vamos a estudiar un flujo de tráfico algo más complicado: coches que vienen rápido, se paran y luego siguen un poco más lento. Nuestro sistema es el siguiente: \[
+				\begin{cases}
+					u_t + u u_x = 0 \\
+					u(x,0) = F(x)
+				\end{cases}
+			\]
+
+			Nuestro dato inicial $F(x)$ estará definido como en la \fref{fig:FTresVelocidades}: \[
+				F(x) = \begin{cases}
+					2 & x ∈ [-2, 0) \\
+					0 & x ∈ [0, 1) \\
+					1 & x ∈ [1, 2)
+				\end{cases}
+			\]
+
 
 			% Hemos revisado hasta aquí
 
 
-			Vemos que los que vengan de la izquierda con velocidad 2 se encontrarán con la zona de velocidad 0 en la que tendrán que parar. Con lo que surgirá una onda de choque entre esas dos secciones. A su vez, entre la parte de velocidad 0 y la parte de velocidad 1 surgirá una onda de rarefacción ya que la parte con más velocidad ``huirá'' de la anterior. Esto ocurre para tiempos pequeños pero habrá que ver como evoluciona el sistema.
+			Vemos que los que vengan de la izquierda con velocidad 2 se encontrarán con la zona de velocidad 0 en la que tendrán que parar, con lo que surgirá una onda de choque entre esas dos secciones. A su vez, entre la parte de velocidad 0 y la parte de velocidad 1 surgirá una onda de rarefacción ya que la parte con más velocidad ``huirá'' de la anterior. Esto ocurre para tiempos pequeños pero habrá que ver como evoluciona el sistema.
 
 			Las características son:
 
@@ -611,69 +612,45 @@
 			Va a ocurrir en algún punto que la onda de choque llegue hasta la zona delimitada por la onda de rarefacción. La onda de choque depende de los valores a ambos lados de esta. Cuando ocurra este suceso la onda de choque estará definida por otra ecuación. Y si en algún momento llega a confluir con la primera característica de la sección de velocidad 1 obtendrá otra forma.
 
 
-			Empecemos por \textbf{tiempos pequeños}:
-
-			Onda de choque que parte de $x=0$.
-
-			$$R-H \Rightarrow s' = \frac{\text{salto q}}{\text{salto u}} = \frac{\text{salto }\frac{u^2}{2}}{\text{salto }u} = \frac{\frac{4}{2} - 0}{2-0} = 1 $$
+			Empecemos por \textbf{tiempos pequeños}. La onda de choque que parte de $x=0$ estará definida por la ecuación de Rankine-Hugoniot \eqref{eq:DerivadaOndaChoque}:
+			\[ s_1' = \frac{\text{salto q}}{\text{salto u}} = \frac{\text{salto }\frac{u^2}{2}}{\text{salto }u} = \frac{\frac{4}{2} - 0}{2-0} = 1 \]
 
 			Esa será la derivada de nuestra onda de choque, que al ser constante es la pendiente. La onda será:
+			\[ s_1(t) = t \]
 
-			$$s(t) = t$$
+			Por otra parte, necesitamos calcular la rarefacción del salto entre la zona de coches parados y la de coches que se mueven con velocidad $1$. Para eso  usamos el truco de tomar las aproximaciones por $F_ε$ continuas, y nos sale lo siguiente
+			\begin{gather*}
+			x-k_\epsilon t = x_\epsilon \\
+			u_\epsilon (x,t) = k_\epsilon = F_\epsilon (x_\epsilon) \\
+			x_\epsilon \convs[][ε][0] 1 \Rightarrow x - kt = 1
+			\end{gather*}
 
-			Nos queda entonces calcular la rarefación en $x=1$:
+			Con lo que obtenemos la onda de rarefación desde $x=1$, que será la zona gris en la \fref{fig:ModeloTresVelocidades}.
+			\[ \frac{x-1}{t} = k = u(x,t) \]
 
-			$$x-k_\epsilon t = x_\epsilon$$
+			Con esto hemos obtenido qué pasa hasta $t = 1$. La onda de choque la hemos calculado con el salto, pero teníamos datos del lado derecho. Ahora la condición de salto cambia dependiendo del punto ya que dependerá del valor de la onda de rarefacción en ese punto.
 
-			$$u_\epsilon (x,t) = k_\epsilon = F_\epsilon (x_\epsilon)$$
+			Obvservamos \textbf{t = 1}. Tenemos una nueva onda de choque $s_2$ que parte del punto $(x=1, t=1)$. El flujo, que podemos calcular según la ecuación \eqref{eq:FlujoBurgers}, será $q(u) = \frac{u^2}{2}$. Con esto ya podemos calcular los saltos:
+			\begin{align*}
+			u^{-} &= 2			 & u^{+} &= \frac{s_2-1}{t} \\
+			q^{-} &= \frac{4}{2} & q^{+} &= \frac{(\frac{s_2-1}{t})^2}{2}
+			\end{align*}
 
-			$$x_\epsilon \rightarrow_{\epsilon \rightarrow 0} 1 \Rightarrow x - kt = 1 \Rightarrow $$
+			Ahora usando de nuevo la ecuación de Rankine-Hugoniot, sacamos la ecuación de la segunda onda de choque:
+			\[  s'_2 = \frac{\frac{1}{2}[4 - (\frac{s_2 - 1}{t})^2 ]}{2-(\frac{s_2 - 1}{t})} = \frac{\frac{1}{2}(2 + (\frac{s_2 - 1}{t}))}{1} = 1 + \frac{s_2}{2t} - \frac{1}{2t} \] con un dato inicial (el punto de partida de la onda) dado por \[
+			s_2(1) = 1 \]
 
-			Con lo que obtenemos la onda de rarefación desde $x=1$:
+			Esto nos lleva a una ecuación diferencial de primer orden lineal \[ s_2' - \frac{s_2}{2t} = 1 - \frac{1}{2t} \] que podemos resolver multiplicando por un factor integrante: \[ \rho s_2' - \frac{\rho}{2t} s_2 = \rho · \left(1 - \frac{1}{2t}\right) \] esperando que el lado izquierdo sea $(ρs_2)'$ para poder resolverlo fácilmente.
 
-			$$\Rightarrow 	\frac{x-1}{t} = k = u(x,t)$$
+			Continuamos resolviendo para comprobarlo. Primero sacamos el factor integrante: \[ \rho' = \frac{-\rho}{2t} \implies … \implies \rho(t) = \frac{1}{\sqrt{t}} \]
 
-			Eso nos deja un modelo así:
-
-			\begin{figure}[hbtp]
-				\centering
-				\inputtikz{ModeloTresVelocidades}
-				\caption{}
-				\label{fig:ModeloTresVelocidades}
-			\end{figure}
-
-			Con esto hemos obtenido que pasa hasta $t = 1$. La onda de choque la hemos calculado con el salto, pero teníamos datos del lado derecho. Ahora la condición de salto cambia dependiendo del punto ya que dependerá del valor de la onda de rarefacción en ese punto.
-
-			Ahora observemos \textbf{t = 1}
-
-			Tenemos una nueva onda de choque $s_2$ que parte del punto $(x=1, t=1)$.
-
-			Dado $q = \frac{u^2}{2}$
-
-			$$u^{-} = 2, u^{+} = \frac{s_2-1}{t}$$
-			$$q^{-} = \frac{4}{2}, q^{+} = \frac{(\frac{s_2-1}{t})^2}{2}$$
-
-			$$ \text{Rankine-Hugoniot: } s'_2 = \frac{\frac{1}{2}[4 - (\frac{s_2 - 1}{t})^2 ]}{2-(\frac{s_2 - 1}{t})} = \frac{\frac{1}{2}(2 + (\frac{s_2 - 1}{t}))}{1} = 1 + \frac{s_2}{2t} - \frac{1}{2t}$$
-
-			$$s_2(t = 1) = 1$$
-
-			Con lo que llegamos a una ecuación diferencial de primer orden lineal:
-
-			$$s' - \frac{s_2}{2t} = 1 - \frac{1}{2t}$$
-			$$  \underbrace{\rho s' - \frac{\rho}{2t} s_2}_{\eqexpl{?} (\rho s)' } = \rho(1 - \frac{1}{2t})$$
-
-			Continuamos resolviendo para comprobarlo:
-
-			$$\rho' = \frac{-\rho}{2t} \rightarrow … \rightarrow \rho(t) = \frac{1}{\sqrt{t}}$$
-
-			$$(\frac{s_2}{\sqrt{t}})' = \frac{1}{\sqrt{t}} ( 1 - \frac{1}{2t}) = t^{-1/2} - \frac{1}{2} t^{-3/2}$$
+			Ahora tratamos de obtener la derivada de $(ρs_2)'$: \
+			\[ \left(\frac{s_2}{\sqrt{t}}\right)' = \frac{1}{\sqrt{t}} \left( 1 - \frac{1}{2t}\right) = t^{-1/2} - \frac{1}{2} t^{-3/2} \]
 
 			$$\frac{s_2}{\sqrt{t}} = \frac{t^{1/2}}{1/2} - \frac{1}{2} \frac{t^{-1/2}}{-1/2} = 2t^{1/2} + t^{-1/2} + C$$
 			$$ s_2 = 2t + 1 + C \sqrt{t} $$
 			$$ s(1) = 1 \implies C = -2 $$
 			$$ x = s_2 (t) = 1 + 2t - 2 \sqrt{t} $$
-
-			(DIBUJO IMAGINANDO S3)
 
 			Y ahora pasamos a calcular $s_3$, la curva de choque al pasar la curva a tocar la zona roja. La curva de choque habrá atravesado completamente la zona de rarefacción y podremos calcularla por el salto otra vez al tener información de las características de la zonas iniciales $x>1$.
 
@@ -692,9 +669,14 @@
 
 			$$s_3(t) = \frac{3}{2} t - 1$$
 
-			(DIBUJO COMPLETO CON ZONAS COLOREADAS)
 
-			(COMPLEMENTAR CON DIBUJO DE u RESPECTO DE x en t1 y t2)
+			\begin{figure}[hbtp]
+				\centering
+				\inputtikz{ModeloTresVelocidades}
+				\caption{Resultado final del modelo de tres velocidades}
+				\label{fig:ModeloTresVelocidades}
+			\end{figure}
+
 
 			% 2016/02/02
 
