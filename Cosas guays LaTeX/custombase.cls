@@ -79,6 +79,11 @@
 	}
 \fi
 
+% Ajustes para que no haya demasiados cortes de palabras
+\pretolerance=7000
+\tolerance=500
+\emergencystretch=3pt
+
 % Números en las subsecciones
 \setcounter{secnumdepth}{3}
 \def\thechapter{\Roman{chapter}}
