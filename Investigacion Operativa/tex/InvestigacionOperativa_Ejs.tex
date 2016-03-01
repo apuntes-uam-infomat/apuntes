@@ -691,3 +691,153 @@ Los teoremas de caracterización nos daban una condición de existencia de soluc
 En cuanto al $c$, simplemente con cambiarlo de signo se revienta todo.
 
 \end{problem}
+
+\begin{problem}[5]
+
+\ppart Supongamos que $S≠Ø$ y que para un cierto vector no nulo d ≥ 0, $d∈\real^n$ , se verifica $Ad = 0$ ¿Puede asegurarse entonces que existe un vector $c≠0$ tal que el problema tiene solución
+óptima no acotada?
+
+\ppart ¿Puede ocurrir que una solución óptima tenga más de m componentes estrictamente positivas?
+
+\ppart Si $\gor{x}\in S$ tiene exactamente m componentes estrictamente positivas, ¿puede asegurarse que $\gor{x}$ es un punto extremo de S?
+
+
+
+\solution
+
+\spart 
+Como $S≠Ø$, tenemos $\gor{x}\in S$ y tal que $\gor{x} + λd\in S ∀λ>0$.
+
+Esto quiere decir que hay una dirección extrema, en la que a lo largo de ella, nunca salimos del conjunto factible.
+Podemos tomar cualquier $c$ tal que $c^\top d<0$, por ejemplo $c=-d$
+
+\spart Sí puede ocurrir
+
+\spart Sabemos que punto extremo $\dimplies$ solución factible básica. No puede asegurarse, ya que podemos fijar $n-m$ coordenadas iguales a $0$. Si las otras $m$ no forman una base, no podemos despejar para tener un punto extremo. Por ejemplo:
+
+
+\begin{ioprob}
+\goal{}
+\restrictions{$x_1+x_3+x_4 = 1$}{$x_2+x_3+x_4=1$}{$x_i≥0$}{}{}{}
+\end{ioprob}
+
+En este problema tenemos $n=4$ y $m=2$. El punto $p = \left(0,0,\rfrac{1}{2},\rfrac{1}{2}\right)$ tiene exactamente 2 coordenadas positivas. No es una $SFB$ por lo que no es un punto extremo.
+
+No es una $SFB$ porque $a_3 = a_4 = \begin{pmatrix}1\\1\end{pmatrix}$, por lo que $\{a_3,a_4\}$ no forman una base.
+
+\end{problem}
+
+
+\begin{problem}[6]
+
+\ppart Calcula la matriz $A$ y el vector $b$.
+
+\ppart Supongamos que el vector de costes $c = (1, 3, 1, 0, 0)$ se reemplaza por $c^\top = c + λγ$, siendo λ un número no negativo e $γ = (1, 1, 1, 0, 0)$. ¿Para qué valores de λ sigue siendo solución óptima $x = (12, 0, 0, 0, 16)$ ?
+
+\solution
+
+\spart 
+
+Cada columna $y_j = B^{-1}a_j$. Si conociéramos $B^{-1}$, ya tendríamos todo. Vamos a descubrir $B$.
+
+\[
+	\left.\begin{array}{c}
+		y_4 = B^{-1}\begin{pmatrix}1\\0\end{pmatrix} = \begin{pmatrix}1\\1\end{pmatrix}\\
+		y_5 = B^{-1}\begin{pmatrix}0\\1\end{pmatrix} = \begin{pmatrix}0\\1\end{pmatrix}
+	\end{array}\right\} \implies B^{-1} = \begin{pmatrix}1&0\\1&1\end{pmatrix} \implies B = \begin{pmatrix}1&0\\-1&1\end{pmatrix}
+\]
+
+Ahora podemos calcular:
+
+\[
+	a_j = By_j \implies 
+	\left\{ 
+		\begin{array}{c}
+			a_2 = \begin{pmatrix}4\\2\end{pmatrix}\\
+			a_3 = \begin{pmatrix}3\\-1\end{pmatrix}\\
+		\end{array}
+	\right.
+\]
+
+Con esto:
+
+\[
+	A = 
+		\begin{pmatrix}
+			1&4&3&1&0\\
+			-1&2&-1&0&1
+		\end{pmatrix}
+\]
+
+\textbf{Otra posibilidad} 
+
+\[
+	\begin{pmatrix} 1&4&3&1&0 \\ 0&6&2&1&1 \end{pmatrix} \overset{Gauss}{\to} \left(\begin{array}{c|c} Λ \begin{array}{cc}1&0\\0&1\end{array}\end{array}\right) = A
+\]
+
+\spart Su ek problema es de maximización, la tabla es óptima si $z_j - c_j ≥ 0 ∀j∈ℕ$.
+
+El caso general, para un $\gamma$ dado sería:
+
+\begin{align*}
+	\hat{z_j} - \hat{c_j} = \hat{c}^\top y_j - \hat{c}_j &= (c^t_B + λ\gamma_B)'y_j - (c_j + λ\gamma_j) = (c_B^\top y_j - c_j) + λ(\gamma^\top_By_j - \gamma_B) =
+\end{align*}
+\begin{align*}
+	 \underbrace{(z_j - c_j)}_{≥0} + λ(\gamma_By_j - γ_j) &\overset{?}{≥} 0 ∀j∈ℕ
+\end{align*}
+
+Mientras se mantenga la desigualdad, tendremos solución óptima. 
+
+Si $∀j∈ℕ$, entonces la desigualdad se mantiene ya que $(\gamma_By_j - γ_j) ≥ 0 $. Además, se mantiene $∀λ$.
+
+Si $∃j∈ℕ\tq γ_b^\top y_j - γ_j < 0$, entonces $λ$ no puede tomar cualquier valor positivo. Como máximo, $λ = \min\{\text{algo}\}$. ¿Cuánto podemos aumentar $λ$? 
+
+\[λ ≤ \min\left\{  \frac{z_j - c_j}{-(γ_B^\top y_j - γ_j)} \right\}\]
+
+Para este caso concreto (en el que estamos maximizando y no minimizando, con lo que hay un signo que no cambiamos)
+
+\[
+	γ_B = (1,0)' \to
+	(1,0)y_j - γ_j = 
+	\begin{pmatrix}
+		4-1 = 1\\
+		3-1 = 2\\
+		1-0 = 1
+	\end{pmatrix}
+\]
+
+
+\end{problem}
+
+
+\begin{problem}[7]
+
+Este es un problema de examen (ligeramente cambiado)
+
+
+\solution
+
+\begin{table}
+\centering
+\begin{tabular}
+
+\end{tabular}
+\end{table}
+
+a≥0 (está en la pizarra pero no se de donde sale)-
+
+\spart 
+
+En este caso, $z_j - c_j = -c_j$, si $a_j∈B$
+
+Por otro lado:
+\[ z_2 - c_2 = -b ≤ 0 \implies b≥0\]
+\[ z_3 - c_3 = -e ≤ 0 \implies e≥0\]
+
+\spart $b<0$ para que mejore al aumentar y $c,d≤0$ para que podamos aumentar todo lo que queramos. 
+
+\textbf{¿Y si $b=0$?}
+
+\spart $b,e≥0$ para que sea óptima y para tener una dirección extrema, necesitamos $c,d≤0$.
+
+\end{problem}
