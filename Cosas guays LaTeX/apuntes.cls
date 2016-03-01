@@ -73,6 +73,8 @@
 	\global\let\@abstractbody\BODY	% Y nos lo guardamos.
 }
 
+\def\and{\!,\ }
+\renewcommand{\author}[1]{\def\theauthor{#1}}
 
 \newif\if@showsignature
 
@@ -122,6 +124,7 @@
 	\begin{minipage}{0.5\textwidth} % Dividimos en dos partes: Autores y la firmita.
 		\begin{mdframed}[topline=false, rightline=false, bottomline=false, linewidth=1pt]
 			\fontfamily{ppl}\selectfont
+			\def\and{\\}
 			\theauthor\par
 			\vspace{5pt}
 			\noindent{%
@@ -130,8 +133,7 @@
 			}
 			% Esta cadena la configuramos arriba, se puede quitar con una opción.
 			\titlepagebuilddate
-			\let\and\@oldauthorand
-		\end{mdframed}
+			\end{mdframed}
 	\end{minipage}
 	~
 	\if@showsignature
