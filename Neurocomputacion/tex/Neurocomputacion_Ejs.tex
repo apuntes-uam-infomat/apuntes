@@ -1,9 +1,6 @@
 % -*- root: ../Neurocomputacion.tex -*-
 \section{Redes neuronales sencillas para clasificación de patrones}
 \subsection{Redes Hebb}
-A lo largo de esta sección es frecuente encontrar tablas donde se muestran los resultados calculados por diferentes redes neuronales al estudiar ciertas entradas. Aunque se asume que la neurona de salida deberá devolver valores de tipo binario o bipolar según el valor de activación supere o no el umbral, en las tablas mostraremos por lo general el valor que ha recibido esa neurona de salida.
-
-Esta decisión se debe a que facilita la comprensión del ejercicio y la comparación de este valor con el umbral es una tarea trivial que puede hacer el lector sobre la marcha.
 
 \begin{problem}[1]
 Apply the Hebb rule to the training patterns that define the XOR function.
@@ -54,7 +51,7 @@ $(x_1,x_2,y)$ & $(b,x_1,x_2)$ & $(b,x_1,x_2)$\\
 
 No obtenemos un resultado válido puesto que la regla de Hebb sólo permite entrenar redes neuronales para problemas \concept{linealmente separables}, esto es, problemas en los que los puntos del espacio (en este caso un plano) que tienen salida positiva y los que tienen salida negativa pueden separarse linealmente.
 
-En este caso concreto los puntos a estudiar ocupan los vértices de un cuadrado siendo los vértices opuestos\footnote{Al hablar de vértices opuestos de un cuadrado nos referimos a vértices diagonalmente opuestos.} los que dan el mismo valor de salida. Evidentemente, no hay ninguna linea que dibujar en el plano que me separe vértices de un cuadrado en dos bloques dejando los opuestos en el mismo lado de la línea.
+En este caso concreto, los puntos a estudiar ocupan los vértices de un cuadrado siendo los vértices opuestos\footnote{Al hablar de vértices opuestos de un cuadrado nos referimos a vértices diagonalmente opuestos.} los que dan el mismo valor de salida. Evidentemente, no hay ninguna linea recta en el plano que separe vértices de un cuadrado en dos bloques dejando los opuestos en el mismo lado de la línea.
 
 
 \end{problem}
@@ -71,6 +68,8 @@ Las dos funciones lógicas que no pueden ser representadas mediante una red Hebb
 La demostración de este hecho se basa en la idea comentada al final del ejercicio anterior. Si tenemos los 4 vértices de un cuadrado y queremos dividirlos en dos grupos por medio de una linea recta esta linea deberá, lógicamente, atravesar el cuadrado. Una vez comenzamos a dibujar la recta, esta deberá atravesar un lado del cuadrado, separando los dos vértices contiguos en distintos grupos.
 
 Es evidente comprobar que no hay forma de prolongar esta recta (no importa que pendiente tomemos) de forma que los dos vértices restantes queden cada uno al lado de su opuesto.
+
+La misma idea nos permite ver cláramente que cualquier otra selección de vértices de un cuadrado da lugar a un problema linealmente separable.
 
 \end{problem}
 
@@ -91,7 +90,7 @@ from not-X (rather than specifically detecting X versus 0). Another pattern (for
 
 \begin{center}
 % TODO: Meter esta imagen.
-% \includegraphics[width=0.3\textwidth]{img/pattern.png}
+\includegraphics[width=0.3\textwidth]{img/pattern.png}
 \end{center}
 
 \ppart Find the new weights to store this pattern together with the two patterns used in
@@ -102,6 +101,8 @@ try more patterns of your own choosing in order to form a good conjecture to ans
 this question.)
 
 \solution
+
+
 Atendiendo al ejemplo mencionado podemos observar que la idea consiste en escribir la cadena de símbolos que representa cada letra como un vector de 25 coordenadas, que será el input de nuestra red de Hebb.
 
 Tras el breve proceso de entrenamiento (descrito en el ejemplo) se obtienen los pesos de las diferentes conexiones. Finalmente, podemos ver que la red considerará que ha leído una $X$ siempre que:
@@ -115,18 +116,20 @@ Tras el breve proceso de entrenamiento (descrito en el ejemplo) se obtienen los 
 
 También nos indica el enunciado que, en caso de leer una $X$ perfecta, la suma anterior tiene valor $Σ=42$.
 
-Es cómodo notar que, en esta ocasión, con la distribución de los pesos que acabamos de mostrar, las entradas que tendrán valor $1$ al leer la $X$ tienen pesos positivos y las que se activarán al leer el $O$ tienen valores negativos.
+En esta ocasión, con la distribución de los pesos que acabamos de mostrar, las entradas que tendrán valor $1$ al leer la $X$ tienen pesos positivos y las que se activarán al leer el $O$ tienen valores negativos.
+
 \spart
 El primer apartado del problema nos pide comprobar que, aunque haya 20 casillas perdidas (es decir, 20 valores de entrada con valor 0), seguimos pudiendo detectar que se trataba de una $X$ (o de un $O$ respectivamente).
 
-Basta con ver que cada dato que nos falte, salvo si es uno de los 4 valores asociados a un peso nulo, el valor de la neurona de salida decrece en dos unidades. Puesto que $Σ=42$, hasta 20 casillas sin información son toleradas, puesto que $Σ=42-2\cdot 20 > 0$\footnote{De hecho podrían faltar datos de incluso 24 casillas, si estas casillas son las adecuadas. No obstante, de forma general sólo podemos garantizar la correctitud de la red a la hora de clasificar el input si no faltan más de 20 datos}.
+Basta con ver que cada \textbf{dato que nos falte}, salvo si es uno de los 4 valores asociados a un peso nulo, el valor de la neurona de salida decrece en dos unidades. Puesto que $Σ=42$, hasta 20 casillas sin información son toleradas, puesto que $Σ=42-2\cdot 20 > 0$\footnote{De hecho podrían faltar datos de incluso 24 casillas, si estas casillas son las adecuadas. No obstante, de forma general sólo podemos garantizar la correctitud de la red a la hora de clasificar el input si no faltan más de 20 datos}.
+
 \spart
-Por otro lado, es sencillo notar que un fallo en un valor, salvo en los casos en que el peso asociado a la neurona que lee ese valor es 0, implica una reducción en el valor de la neurona de salida de 4 unidades. Queda claro por tanto que $Σ=42-4\cdot 10>0$ por lo que hasta 10 errores son tolerados.
+Por otro lado, es sencillo notar que un \textbf{fallo en un valor}, salvo en los casos en que el peso asociado a la neurona que lee ese valor es 0, implica una reducción en el valor de la neurona de salida de 4 unidades. Queda claro por tanto que $Σ=42-4\cdot 10>0$ por lo que hasta 10 errores son tolerados.
 
 El mismo razonamiento partiendo de $Σ=-42$ que se ve aumentado con cada pérdida de información/error puede hacerse para el caso en que la entrada sea un $O$.
 
 \spart
-Vamos a completar ahora el entrenamiento de la red con el nuevo patrón que se nos proporciona. Recordando que el aprendizaje en las redes Hebb se lleva a cabo según la ecuación \ref{eq:hebbRule}, es sencillo comprobar que tras el último paso del entrenamiento tendremos:
+Vamos a completar ahora el entrenamiento de la red con el nuevo patrón que se nos proporciona. Recordando que el aprendizaje en las redes Hebb se lleva a cabo según la ecuación \ref{eq:hebbRule}, es sencillo comprobar que, tras el último paso del entrenamiento, tendremos:
 \[Σ = -1 + \begin{array}{ccccc}
 +3x_1& -1x_2 & -3x_3 & -1x_4 & +3x_5 +\\
 -1x_6 & + 1x_7 & +x_8 & + 1x_9 &- 1x_{10} +\\
@@ -171,8 +174,7 @@ Vamos a comprobar el resultado devuelto por la red al analizar los siguientes pa
 \end{problem}
 
 \begin{problem}[5]
-\ppart Using the Hebb rule, find the weights required to perform the following classi-
-fications: Vectors (1, 1, 1, 1) and ( - 1, 1, - 1, -1) are members of the class (and
+\ppart Using the Hebb rule, find the weights required to perform the following classifications: Vectors (1, 1, 1, 1) and ( - 1, 1, - 1, -1) are members of the class (and
 therefore have target value 1); vectors (1, 1, 1, - 1) and (1, - 1, - 1, 1) are not
 members of the class (and have target value -1).
 \ppart Using each of the training x vectors as input, test the response of the net.
@@ -252,26 +254,12 @@ Una vez más procedemos a entrenar una red de Hebb basándonos en datos de entre
 \spart
 La red que acabamos de crear opera sobre los input dados (en binario) como muestra la siguiente tabla
 \begin{center}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Input} & \textbf{Target} & \textbf{Resultado} \\
+\textbf{Input} & \textbf{Target} & \textbf{Resultado} & \textbf{Clasificación}\\
 \hline
-(1,0,1) & 1  & 2\\
-(1,1,0) & 0 & -2\\
-\hline
-\end{tabular}
-\end{center}
-Con lo que parece que el resultado obtenido es satisfactorio.
-
-\spart
-Operando sobre los datos de entrada en formato bipolar tenemos:
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-\textbf{Input} & \textbf{Target} & \textbf{Resultado} \\
-\hline
-(1,-1,1) & 1 &  4\\
-(1,1,-1) & 0 & -4\\
+(1,0,1) & 1  & 2 & 1\\
+(1,1,0) & 0 & -2 & 0\\
 \hline
 \end{tabular}
 \end{center}
@@ -280,27 +268,41 @@ Con lo que parece que el resultado obtenido es satisfactorio.
 \spart
 Operando sobre los datos de entrada en formato bipolar tenemos:
 \begin{center}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Input} & \textbf{Target} & \textbf{Resultado} \\
+\textbf{Input} & \textbf{Target} & \textbf{Resultado} & \textbf{Clasificación}\\
 \hline
-(0,-1,1)   &  1 & 4 \\
-(0, 1, -1) & -1 & -4 \\
-(0, 0, 1)  &  1 & 2 \\
-(0,0, -1)  & -1 & -2\\
-(0, 1,0)   & -1 & -2\\
-(0, -1,0)  &  1 & 2\\
-(1, 0, 1)  &  1 & 2\\
-(1,0, -1)  & -1 & -2\\
-(1, -1,0)  &  1 & 2\\
-(1,0, 0)   &  ? & 0 \\
-(1, 1,0)   & -1 & -2\\
-(1, 1, 1)  &  ? & 0\\
+(1,-1,1) & 1 &  4 & 1\\
+(1,1,-1) & 0 & -4 & -1\\
+\hline
+\end{tabular}
+\end{center}
+Con lo que parece que el resultado obtenido es satisfactorio.
+
+\spart
+Operando sobre los datos de entrada en formato bipolar tenemos:
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Input} & \textbf{Target} & \textbf{Resultado} & \textbf{Clasificación}\\
+\hline
+(0,-1,1)   &  1 & 4  & 1\\
+(0, 1, -1) & -1 & -4  & -1\\
+(0, 0, 1)  &  1 & 2  & 1\\
+(0,0, -1)  & -1 & -2 & -1\\
+(0, 1,0)   & -1 & -2 & -1\\
+(0, -1,0)  &  1 & 2 & 1\\
+(1, 0, 1)  &  1 & 2 & 1\\
+(1,0, -1)  & -1 & -2 & -1\\
+(1, -1,0)  &  1 & 2 & 1\\
+(1,0, 0)   &  ? & 0  & 1\\
+(1, 1,0)   & -1 & -2 & -1\\
+(1, 1, 1)  &  ? & 0 & 1\\
 \hline
 \end{tabular}
 \end{center}
 
-Los resultados esperados (columna Target) los he deducido buscando el vecino más próximo. Podemos comprobar que los resultados esperados coinciden exactamente con los obtenidos.
+Los resultados esperados (columna Target) los he deducido buscando el vecino más próximo. Podemos comprobar que los resultados esperados coinciden exactamente con los obtenidos salvo, lógicamente, en los casos donde no hay un resultado esperado claro.
 
 \end{problem}
 
@@ -376,7 +378,7 @@ Explore the influence of the value of the learning rate on the speed of converge
 of perceptron learning:
 \ppart Consider different values of α in Example 2.12; explain your results.
 \ppart Modify the proof of the perceptron learning rule convergence theorem to include
-an arbitrary learning rate a.
+an arbitrary learning rate α.
 \solution
 
 \spart
@@ -389,11 +391,55 @@ La tabla representada en el ejemplo seguiría siendo la misma aunque los pesos a
 
 \spart
 
-Puesto que $ω(0)=0$ podemos tomar la demostración del libro y redefinir las funciones \textbf{w} y \textbf{x} empleadas en la demostración como: \textbf{w}$_2$ = α $\cdot$ \textbf{w}; \textbf{x}$_2$ = α $\cdot$ \textbf{x}.
+Vamos a imitar la demostración del libro con el cambio dado en el enunciado.
 
-El mínimo mencionado sigue existiendo (aunque ahora será un poco más pequeño, cosa que no nos afecta) y las desigualdades se mantienen.
+Consideramos, como se hace en la demostración del libro, el conjunto de entrenamiento, $F$, formado por lo patros de entrenamiento con salida esperada $1$ y la negación de los patrones de entrenamiento con salida esperada $-1$. Así, todos los patrones de $F$ tienen salida esperada $1$.
 
-Además, como seguimos considerando $\theta = 0$, la salida de la red neuronal en cada iteración no se ve alterada por la ponderación de los pesos (ni de los coeficientes de entrada). Así la desigualdad: \textbf{x}(k-1)$\cdot$\textbf{w}(k-1) $\leq 0$ empleada para reflejar la existencia de un error en la predicción de un valor del entrenamiento sigue manteniéndose con las nuevas  \textbf{x}$_2$ y \textbf{y}$_2$ puesto que el cambio de α no altera el signo de ningún valor.
+Definimos como $\vec{w}^*$ el vector de pesos solución, cuya existencia suponemos. Así:
+\begin{equation}\label{eq:vectorPesosSol}
+\forall \vx \in F, \ \vec{w}^*\cdot \vx > 0
+\end{equation}
+
+Empezamos con un vector de pesos nulo $\vec{w}(0)=\vec{0}$. Con cada patrón de entrenamiento, si se produce un error la modificación producida sobre los pesos, esta será de la forma:
+\[\vec{w}(i) = \vec{w}(i-1)+α\cdot \vx(i-1)\]
+
+Cuando iteremos sobre todos los patrones de entrenamiento tendremos:
+\[\vec{w}(k) = \vec{w}(0) + α\cdot \sum_{i=0}^{k-1} \vec{w}(i)\]
+donde estamos iterando sobre aquellos patrones de entrenamiento que produjeron un error.
+
+De la ecuación \ref{eq:vectorPesosSol}, sabiendo que el conjunto de patrones de entrenamiento es finito, podemos deducir que existe
+\[m=\min\{\vx \cdot \vec{w}^*\}\]
+La existencia de este mínimo nos permite escribir:
+\[\vec{w}(k)\cdot \vec{w}^* = \vec{w}(0)\cdot \vec{w}^*+αkm\]
+puesto que $\vx(i)\cdot \vec{w}^* \geq m \ \forall i$.
+
+Empleando ahora la desigualdad de Cauchy-Schwartz podemos escribir
+\begin{equation}\label{eq:Dif1}
+\norm{\vec{w}(k)}^2 \geq \frac{(\vec{w}(k)\cdot \vec{w}^*)^2}{\norm{\vec{w}^*}^2} \geq  \frac{(\vec{w}(0)\cdot \vec{w}^*+αkm)^2}{\norm{\vec{w}^*}^2}
+\end{equation}
+
+Ahora vamos a comprobar que el valor $k$ no puede ser arbitrariamente grande. Consideramos
+\[\vec{w}(k)=\vec{w}(k-1)+\vx(k-1)\]
+sabiendo que
+\[\vx(k-1)\cdot \vec{w}(k-1) \leq 0\]
+podemos ver que
+\[\norm{\vec{w}(k)}^2 \leq \norm{\vec{w}(k-1)}^2 + \norm{\vx(k-1)}^2\]
+
+Siendo $M=\max_{\vx \in F}\{\norm{\vx}^2\}$ tenemos
+
+\begin{equation}\label{eq:Dif2}
+\begin{array}{lll}
+\norm{\vec{w}(k)}^2 & \leq & \norm{\vec{w}(k-1)}^2+\norm{\vx(k-1)}^2\\
+ & \leq & \norm{\vec{w}(k-2)}^2 + \norm{\vx(k-2)}^2 + \norm{\vx(k-1)}^2\\
+ & & \vdots \\
+ & \leq & \norm{\vec{w}(0)}^2 + \norm{\vx(0)}^2 + \cdots + \norm{\vx(k-1)}^2\\
+ & \leq & \norm{\vec{w}(0)}^2 + kM
+\end{array}
+\end{equation}
+
+Combinando las desigualdades \ref{eq:Dif1} y \ref{eq:Dif2} y considerando que el vector de pesos inicial es nulo tenemos
+\[\frac{(αkm)^2}{\norm{\vec{w}^*}^2} \leq k M \implies k \leq \frac{M\norm{\vec{w}^*}^2}{m^2α}\]
+
 \end{problem}
 
 \begin{problem}[9]
@@ -516,7 +562,7 @@ or
 \solution
 
 Considerando que estamos trabajando con un perceptrón (no lo especifica el enunciado pero estamos en la sección de problemas asociados al perceptrón) tendremos una función de activación (una vez hayamos entrenado la red) de la forma:
-\[y = f(ω_0b + \sum_{i=1}^nω_ix_i) \]
+\[y = f\left(ω_0b + \sum_{i=1}^nω_ix_i\right) \]
 
 Con las dos primeras funciones proporcionadas podemos resolver exactamente los mismos problemas. Lo que cambia es la codificación de la clasificación negativa por parte de la red. En estos casos podremos resolver todos aquellos problemas que sean linealmente separables.
 
@@ -525,7 +571,7 @@ En cuanto a la tercera función tendremos que los puntos estudiados se clasifica
 Por ejemplo, la función XOR, que no es separable, puede ser representada por un perceptrón que emplee una función como la tercera dada. Para ello basta con asociar la salida 1 y la salida -1 con la misma clasificación del patrón entrenado.
 
 En el caso de la puerta lógica XOR que acabamos de mencionar tendríamos como solución:
-\[y=f(-b + x_1+x_2) \text{ siendo } ω =0.5\]
+\[y=f(-b + x_1+x_2) \text{ siendo } \theta =0.5\]
 
 \end{problem}
 
