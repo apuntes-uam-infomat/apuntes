@@ -303,4 +303,39 @@ Podemos hacer la siguiente estimación: \[
 
 \spart
 
+Si $f ∈ C[0,1]$, entonces $\norm{λ_f}_{X^*} ≥ \norm{f}_1$. Supongamos que $f ∈ C[0,1]$ y $f \not\equiv 0$. Consideramos \[ g (x) = \sign f(x) = \begin{cases} \frac{\abs{f(x)}}{f(x)} & f(x) ≠ 0 \\ 0 & f(x) = 0 \end{cases} \]
+
+Entonces \[ λ_f(g) = \int_0^1 f(x) \sign f(x) \dif x = \int_0^1 \abs{f(x)} \dif x = \norm{f}_1 \]
+
+Además, como $f \not \equiv 0$, $g(x) ≠ 0$ y $\abs{g(x)} = 1$, si $g(x) ≠ 0$, por lo que $\norm{g}_∞ = 1$ y entonces \[ \frac{\abs{λ_f (g)}}{\norm{g}_∞} = \frac{\norm{f}_1}{1} = \norm{f}_1 \implies \norm{λ_f}_{X^*} ≥ \norm{f}_1 \]
+
+Ahora bien, tenemos un problema con esto, y es que $g$ no es continua y por lo tanto $g ∉ X$. Para arreglar el argumento vamos a regularizar $g$ con $\set{θ_t}_{t>0}$ una serie de  \textit{mollifiers}\footnote{\nref{def:AproxIdentidad}}. Para construirlos, fijamos $θ ∈ C_c(ℝ)$ par con $\sop θ ⊆ [-1, 1]$, $\norm{θ}_1 = 1$ y $θ ≥ 0$; y entonces \[ θ_t(x) = \frac{θ(\inv{t} x)}{t} \]
+
+Tenemos que ampliar la definición de $g$ a $ℝ$, así que lo que haremos será extenderla con ceros a todo $ℝ$. Definimos entonces ahora \[ g_t = g * θ_t = \int_{ℝ} g(y) θ_t(x-y) \dif x\]
+
+Supongamos adicionalmente que $\sop f ⊆ [ε, 1-ε]$ para cierto $0 < ε < \sfrac{1}{2}$, y que entonces tendremos $\sop g = \sop f$. Ahora vemos que $\sop g_t = \sop g + \sop θ_t = [ε - t, 1 - ε +t] ⊂ [0,1]$ si $0 < t ≤ ε$.
+
+Calculamos ahora $λ_f(g_t)$ con $t ∈ (0,ε]$, ya que esta $g_t$ siempre será continua para $t > 0$. \begin{align*}
+λ_f(g_t) &= \int_0^1 f(x) (g * θ_t)(x) \dif x = \\
+	&= \int_{ℝ} f(x) (g * θ_t)(x) \dif x = \\
+	&= \int_ℝ f(x) \left(\int_{ℝ} g(y) θ_t(x-y) \dif y \right) \dif x = \\
+	&= \int_{ℝ} g(y) \left(\int_{ℝ} f(x) \underbracket{θ_t (x-y)}_{ = θ_t(y-x)} \dif x \right) \dif y = \\
+	&= \int_{ℝ} g(y) (f*θ_t)(y) \dif y
+\end{align*}
+
+Como $f ∈ C[0, 1]$, entonces $f * θ_t \convs[L^∞][t][0] f$, luego podemos la integral converge igualmente: \[ \int_{ℝ} g(y) (f*θ_t)(y) \dif y \convs[][t][0] \int_{ℝ} g(y) f(y) \dif y \], así  que $λ_f(g_t) \convs[][t][0] λ_f (g) = \norm{f}_1$. Entonces \[ \norm{λ_f}_{X^*} ≥ \frac{\abs{λ_f(g_t)}}{\norm{g_t}_∞} \quad ∀t > 0\], ya que la definición del supremo era que  \[ \norm{λ_f}_{X^*} = \sup_{g ∈ X \setminus\set{0}} \frac{\abs{λ_f(g)}}{\norm{g}_X} \]
+
+Lo único que nos falta ver es que $\norm{g_t}_∞ \convs[][t][0] 1$. Sabemos que $\norm{g_t}_∞ ≤ \norm{g}_∞ = 1$, como consecuecnia de que $θ ≥ 0$ y $\norm{θ}_1 = 1$. Pero si $f \not \equiv 0$, entonces $g$ es de módulo $1$ y continua en cualquier abierto donde $f ≠ 0$, y entonces $g_t(x) \convs[][t][0] g(x)$. Para verlo, si $g$ es continua en $x$ pues sale, y si no el módulo es exactamente $1$, y juntándolo tenemos que la norma infinito converge hacia uno cuando $t$ se hace pequeñito. Y juntando de nuevo esto con otra cosa, juraría que lo de la norma de antes, entonces nos queda que \[ \norm{λ_f}_{X^*} ≥ \liminf_{t \to 0} \frac{\abs{λ_f(g_t)}}{\norm{g_t}_∞} = \frac{\liminf_{t \to 0} \abs{λ_f(g_t)}}{\liminf_{t \to 0} \norm{g_t}_∞} = \norm{f}_1 \]
+
+Y ya casi lo hemos probado si $\sop f ∈ [ε, 1-ε]$. Nos queda probarlo para el último caso de $f ∈ C[0,1]$. Sea $ε > 0$. Consideramos $f_ε $ como una versión truncada, formalmente \[ f_ε(x) = \begin{cases}
+f(x) & x ∈ [ε, 1-ε] \\
+f(ε)\left(1 - 2\frac{ε-x}{ε}\right) & x ∈ [\sfrac{ε}{2}, ε] \\
+f(1-ε)\left(1 - 2\frac{1-ε-x}{1-ε}\right) & x ∈ [1- ε, 1- \sfrac{ε}{2}] \\
+0 & x ∈ [0, \sfrac{ε}{2}] ∪ [ 1- \sfrac{ε}{2}, 1]
+\end{cases}
+\]
+
+Vamos a ver entonces que \[ \norm{f-f_ε}_1 ≤ \dotsb ≤ 2ε\norm{f}_1 \], y entonces podemos escribir \[ λ_f(g) = λ_{f_ε}(g) + λ_{f-f_ε}(g) \], y como $\abs{λ_{f-f_ε}(g)} ≤ \norm{f-f_ε}\norm{g}_1 \convs[][ε][0] 0$, y luego \[\norm{λ_f}_{X^*} = \norm{λ_{f-f_ε} + λ_{f_ε}} ≥ \norm{λf_ε}_{X^*} - \norm{λ_{f-f_ε}}_{X^*} = \norm{f_ε}_1 - \norm{f - f_ε}_1 \convs[][ε][0] \norm{f} \], y esto ya sí termina la prueba cuando $f$ es continua. La idea sería la misma si tuviésemos $f ∈ L^1[0,1]$, que es lo que queríamos probar, usando una aproximación por continuas.
+
+
 \end{problem}
