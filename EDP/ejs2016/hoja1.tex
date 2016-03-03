@@ -24,72 +24,163 @@
 	El \nref{sec:PrincipioDuhamel} nos dice que la solución al sistema viene dada por la siguiente ecuación: \[ u(x,t) = F(x-vt)+ \int^{t}_{0} f(x-v(t-\tau),\tau) \dif \tau \]
 
 	En concreto, como $u(x,0) = F(x) = 0$, eso que nos quitamos. Para encontrar la solución explícita, integramos:
-	\begin{align*}
-	\int_0^t f(x-v(t-τ), τ) \dif τ &=
+	\begin{gather*}
+	\int_0^t f(x-v(t-τ), τ) \dif τ =
 		\int_0^t e^τ \sin (x - v(t-τ)) \dif τ = \\
-	&= \int_0^t e^τ \frac{e^{i(x-v(t-τ))} - e^{-i(x-v(t-τ))}}{2i} \dif τ = \\
-	&= \int_0^t \frac{e^{τi(x-v(t-τ))} - e^{-τi(x-v(t-τ))}}{2i} \dif τ = \\
-	&= \left(\frac{(ix - ivt + 2iτv) e^{τi(x-v(t-τ))} + (ix - ivt + 2iτv) e^{-τi(x-v(t-τ))}}{2i}\right|_{τ = 0}^t = \\
-	&= \frac{(x -vt + 2tv)(e^{tix} + e^{τix})}{2} + \frac{(x-vt)(e^{0} + e^{-0})}{2} = \\
-	&= (x + vt) \cos tx + x - vt
-	\end{align*}
+	= \int_0^t e^τ \frac{e^{i(x-v(t-τ))} - e^{-i(x-v(t-τ))}}{2i} \dif τ = \\
+	= \int_0^t \frac{e^{τ + i(x-v(t-τ))} - e^{τ - i(x-v(t-τ))}}{2i} \dif τ = \\
+	= \frac{1}{2i} \left(\frac{e^{τ + i(x-v(t-τ))}}{1 + iv} - \frac{ e^{τ - i(x-v(t-τ))}}{1 - iv}\right|_{τ = 0}^t = \\
+	= \frac{1}{2i} \left(e^τ\frac{(1-iv) e^{i(x-v(t-τ))} - (1+iv) e^{- i(x-v(t-τ))}}{1 + v^2}\right|_{τ=0}^t = \\
+	= \left(e^τ \frac{e^{i(x-v(t-τ))} - e^{- i(x-v(t-τ))}}{(1+v^2)2i} - ve^τ\frac{e^{i(x-v(t-τ))} + e^{- i(x-v(t-τ))}}{(1+v^2)2} \right|_{τ = 0}^t = \\
+	= \left(\frac{e^τ}{1+v^2} \left(\sin (x-v(t-τ)) - v\cos (x-v(t-τ))\right) \right|_{τ = 0}^t = \\
+	= \frac{e^t}{1+v^2}(\sin x - v\cos x) - \frac{1}{1+v^2}(\sin  (x-vt) - v\cos (x-vt))
+	\end{gather*}
 
 	\noteby{Guille}{Siento usar notación compleja pero estoy demasiado cansado como para hacer integrales de mierrrrrda. Tampoco estoy seguro de que esté bien.}
 
 	\spart
 
+	Resuelto en la \fref{sec:CurvaDatoRara}.
+
 \end{problem}
 
-\begin{problem}[2]
-
-	Resolver la ecuación de Burgers $u_t + uu_x = 0$ con dato inicial:
-
-	$$ g(x) =
+\begin{problem}[2] Resolver la ecuación de Burgers $u_t + uu_x = 0$ con dato inicial:
+	\[ g(x) =
 	\begin{cases}
 		1 & x \leq 0 \\
 		1-x & 0 < x < 1 \\
 		0 & x \geq 1
-	\end{cases}$$
+	\end{cases} \]
 
 	\solution
 
+	\begin{figure}[hbtp]
+	\centering
+	\inputtikz{Hoja1_E2}
+	\caption{Características del problema 2.}
+	\label{fig:Hoja1:E2}
+	\end{figure}
+
+	\textit{Nota: Resuelto por Kike.}
+
+	En una ecuación de Burgers, las características siguen siendo $x-F(x_0) t = x_0$. Lo que parece que ocurre es lo de la \fref{fig:Hoja1:E2}, que todas las características dan a intersecar en $(x,t) = (1,1)$.
+
+	Primero vemos qué ocurre en la región naranja, en la que las rectas son \begin{align*}
+	x - (1 - x_0) t  &= x_0 \\
+	t &= \frac{x - x_0}{1-x_0}
+	\end{align*}
+
+	En $(x,t)$, $u$ tendrá el valor dado por la característica que pase por ese punto. Simplemente despejando, tendremos que \[ x_0 = \frac{x-t}{1-t} \], por lo que en esa región tendremos \[ u(x,t) = g\left(\frac{x-t}{1-t}\right) \]
+
+	Nos falta ver la onda de choque a partir del punto $(1,1)$. Obtenemos la ecuación según Rankine-Hugoniot \eqref{eq:DerivadaOndaChoque}, recordando que el flujo es $q(u) = \frac{u^2}{2}$, y que el salto será entre las zonas verde y roja. Tendremos que \begin{align*}
+	s'(t) &= \frac{\frac{1}{2}}{1} = \frac{1}{2} \\
+	s(t) &= \frac{1}{2}t + c
+	\end{align*}
+
+	Como $s(1) = 1$, tiene que ser $c = \frac{1}{2}$. Nos queda una pendiente de $2$ y tenemos el dibujo de la \fref{fig:Hoja1:E2} con las soluciones dadas por las características.
+
 \end{problem}
 
-\begin{problem}[3]
-
-	Resolver la ecuación de Burgers $u_t + uu_x = 0$ con dato inicial:
-
-	$$ g(x) =
+\begin{problem}[3] Resolver la ecuación de Burgers $u_t + uu_x = 0$ con dato inicial:
+	\[ g(x) =
 	\begin{cases}
 		0 & x < 0 \\
 		1-x & 0 < x < 1 \\
 		0 & x > 1
-	\end{cases}$$
+	\end{cases} \]
 
 	\solution
 
+	\doneby{Guille}
+
+	\textit{Nota: El enunciado está mal copiado con respecto a lo que hay en las hojas, pero lo dejo así por pereza de cambiarlo.}
+
+	Estamos en un caso parecido al del problema anterior (sólo cambia el dato inicial), aunque esta vez vamos a tener un pequeño problema con una zona sin definir bien, la que sale de $x = 0$. En esa región intermedia tendremos que usar el truco de las aproximaciones $F_ε$, de tal forma que tendremos características $x - k_ε t = x_ε$ y por lo tanto \[ k_ε = \frac{x - x_ε}{t} \convs[][ε][0] \frac{x}{t} \]
+
+	Por lo tanto, en la región intermedia tenemos que el valor es \[ u(x,t) = \frac{x}{t} \]
+
+	Esto ya nos permite calcular la ecuación la onda de choque con Rankine-Hugoniot. El flujo asociado es $q(u) = \frac{u^2}{2}$ de nuevo, así que \begin{align*}
+	s'(t) &= \frac{\frac{s^2}{2t^2} - 0}{\frac{s}{t} - 0} = \frac{s}{2t} \\
+	s(t) &= 2t· s'(t) \\
+	s(t) &= c \sqrt{t}
+	\end{align*}
+
+	Como la onda de choque tiene que empezar en $s(t) = 1$, $c = 1$ y nuestra ecuación es $s(t) = \sqrt{t}$. El dibujo de características quedaría como en la \fref{fig:Hoja1:E3}.
+
+	\begin{figure}[hbtp]
+	\centering
+	\inputtikz{Hoja1_E3}
+	\caption{Características del problema 3.}
+	\label{fig:Hoja1:E3}
+	\end{figure}
+
 \end{problem}
 
-\begin{problem}[4]
-
-	Tráfico en un tunel. Un modelo bastante realista del tráfico en un tunel muy largo es el siguiente:
-
+\begin{problem}[4] Un modelo bastante realista del tráfico en un túnel muy largo es el siguiente:
 	$$v(\rho) =
 	\begin{cases}
 		v_m & 0 \leq \rho \leq \rho_c \\
 		\lambda \log (\frac{\rho_m}{\rho}) & \rho_c \leq \rho \leq \rho_m
 	\end{cases}$$
 
-	donde $\rho(x,t)$ es la densidad del tráfico y $v(\rho)$ la velocidad, $v_m$ es la velocidad máxima, $\rho_m$ es la densidad máxima, y $\lambda = v_m /(\log (\rho_m / \rho_c))$.
+	donde $\rho(x,t)$ es la densidad del tráfico y $v(\rho)$ la velocidad de los coches, $v_m$ es la velocidad máxima, $\rho_m$ es la densidad máxima, y $\lambda = v_m /(\log (\rho_m / \rho_c))$.
 
-	Observar que $v$ es una función continua, incluyendo el punto $\rho_c = \rho_m e^{-v_m / \lambda}$, y que $\rho_c$ representa una densidad crítica, pues si $\rho \leq \rho_c$ los coches pueden alcanzar una velocidad máxima $v_m$. Supongamos que el dato inicial del problema es $\rho = \rho_m$, $x<0$, y $\rho = 0$, $x > 0$ (pensar en un semáforo a la entrada del tunel, que se abre en el instante $t = 0$).
+	Observar que $v$ es una función continua, incluyendo el punto $\rho_c = \rho_m e^{-v_m / \lambda}$, y que $\rho_c$ representa una densidad crítica, pues si $\rho \leq \rho_c$ los coches pueden alcanzar una velocidad máxima $v_m$. Supongamos que el dato inicial del problema es $\rho = \rho_m$, $x<0$, y $\rho = 0$, $x > 0$ (pensar en un semáforo a la entrada del túnel, que se abre en el instante $t = 0$).
 
 	\ppart Determinar densidad y velocidad como función del tiempo.
-	\ppart Dibujar en el plano $x - t$ la trayectoria de un coche que en el instante inicial está en el punto $x_0 < 0$, y calcular el tiempo que tarda en entrar en el tunel.
+	\ppart Dibujar en el plano $x - t$ la trayectoria de un coche que en el instante inicial está en el punto $x_0 < 0$, y calcular el tiempo que tarda en entrar en el túnel.
 
 	\solution
 
 	\spart
+
+	Aplicando los \href{https://moodle.uam.es/pluginfile.php/910610/mod_resource/content/1/Problema4.pdf}{comentarios de Azorero}, tenemos que el flujo es $q(ρ) = v(ρ) · ρ$. Nuestro sistema será
+	\[
+	\begin{cases}
+		ρ_t + [q(ρ)]_x = 0 \\
+		ρ(x,0) = F(x)
+	\end{cases}\] con \[ F(x) = \begin{cases} ρ_m & x < 0 \\ 0 & x ≥ 0 \end{cases} \]
+
+	Podemos calcular la derivada del flujo. El caso peculiar es cuando $ρ_c ≤ ρ ≤ ρ_m$, así que operamos \[ [q(ρ)]_x = [ρ λ \left(\log ρ_m - \log ρ\right)]_x = λ(ρ_x \log ρ_m - ρ · \frac{ρ_x}{ρ} - ρ_x \log ρ) \] de tal forma que la derivada final es \[ [q(ρ)]_x = \begin{cases}
+	v_m ρ_x & 0 ≤ ρ ≤ ρ_c \\
+	λρ_x\left(\log \frac{ρ_m}{ρ} - 1\right) & ρ_c ≤ ρ ≤ ρ_m \end{cases}
+	\]
+
+	Tratamos de resolverlo por características, así que vamos a tratar de ver qué ocurre cuando $ρ(x,t) = k$ constante. Derivando, $ρ_xx' + ρ_t = 0$, y viendo el sistema anterior tiene que ser $x' = v_m$ cuando $0 ≤ ρ ≤ ρ_c$ y $x' = λ(\log \frac{ρ_m}{ρ} - 1)$ cuando $ρ_c ≤ ρ ≤ ρ_m$. Por lo tanto, las rectas características estarán dadas por \begin{align*}
+	x - v_m t = x_0 & \quad x_0 > 0 \\
+	x + tλ = x_0 & \quad x_0 < 0
+	\end{align*}
+
+	Hay que tener en cuenta que $λ > 0$ (sólo hay que hacer las cuentas) así que tenemos rectas características que divergen. Tenemos entonces una zona en la que no sabemos qué pasa.
+
+	Para eso aplicamos el método de las aproximaciones por $F_ε$ continuas para quitarnos el salto en $0$. Lo que nos sale es lo siguiente. Las características serán \[ x - \frac{[q(k_ε)]_x}{ρ_x} t = x_ε\]
+
+	El problema es que esta ecuación depende del valor mismo de $k_ε$, tal y como veíamos en la ecuación anterior para $[q(ρ)]_x$. Lo que vamos a hacer es sacarlo en los casos y ver cuál nos vale. Primero, cuando $0 ≤ k_ε ≤ ρ_c$, tenemos que \[
+	x - v_m t = x_ε \convs[][ε][0] x - v_m t = 0
+	\]
+
+	Esta no nos sirve de mucho porque nos da la característica del otro lado y no nos permite ver cuánto vale $ρ$, así que vamos a por la otra, cuando $ρ_c ≤ k_ε ≤ ρ_m$.
+	\begin{align*}
+	x - λ t (\log \frac{ρ_m}{k_ε} - 1) &= x_ε \\
+	\log ρ_m - \log k_ε - 1 &= \frac{x_ε - x}{λt} \\
+	\log k_ε &= \log ρ_m - 1 - \frac{x_ε - x}{λt} \\
+	k_ε &= ρ_m e^{- \left(1 + \frac{x_ε - x}{λt}\right)}
+	\end{align*}
+
+	Haciendo converger $ε \to 0$ nos queda que \[ ρ(x,t) = \frac{ρ_m}{e^{1 + \frac{x}{λt}}} \]
+
+	Creo, aunque no estoy del todo seguro, que habría que ver exactamente la zona en la que estamos trabajando, es decir, ver cuándo $ρ ≥ ρ_c$. Sustituyendo, \begin{align*}
+	ρ_c &≥ \frac{ρ_m}{e^{1 + \frac{x}{λt}}} \\
+	ρ_m e^{-\frac{v_m}{λ}} &≥ \frac{ρ_m}{e^{1 + \frac{x}{λt}}}\\
+	e^{-\frac{v_m}{λ}} &≥ e^{-1 - \frac{x}{λt}} \\
+	\frac{v_m}{λ} &≥ 1 + \frac{x}{λt} \\
+	v_m &≥ λ + \frac{x}{t} \\
+	v_m - λ &≥ \frac{x}{t} \\
+	t &≥ \frac{x}{v_m - λ}
+	\end{align*}
+
+	Así, la zona en la que nos valdrá esta cosa será cuando se cumpla esa ecuación, y en el resto tendremos que hacer algo de magia que nos ha explicado hoy Azorero y que ya copiaré aquí en algún momento.
+
 	\spart
 
 
@@ -108,9 +199,17 @@
 \end{problem}
 
 \begin{problem}[7]
-	Resolver la ecuación $u_x + 3y^{2/3} u_y = 2$ sujeta a la condición inicial $u(x,0) = \phi(x)$.
+	Resolver la ecuación $u_x + 3y^{2/3} u_y = 2$ sujeta a la condición inicial $u(x,0) = φ(x)$.
 
 	\solution
+
+	Calculamos primero el determinante, y vemos que \[ \det \begin{pmatrix} a & b \\ α' & β' \end{pmatrix} = \det \begin{pmatrix} 1 & 3y^{\frac{2}{3}} \\ 1 & 0 \end{pmatrix}\], que es nulo en todos los puntos de la curva dato ($y = 0$). La única forma de que esto tenga solución es que la diferencial $\Dif Φ$ tenga rango uno. Entonces \[ \Dif Φ = \begin{pmatrix} 1 & 0 & 2 \\ 1 & 0 & φ' \end{pmatrix}\], luego la única posibilidad es que $φ' = 2$ y entonces $φ(x) = 2x + C$.
+
+	Pasamos a resolver \begin{align*}
+	x' = 1 					&\implies x(t) = t + s \\
+	y' = 3y^{\frac{2}{3}} 	&\implies y(t) = t^3 \\
+	z' = 2 					&\implies z(t) = 2t + 2s
+	\end{align*}, y entonces la solución es \[ Φ(s,t) = (t+ s, t^3, 2t + 2s) \]
 \end{problem}
 
 \begin{problem}[8]
@@ -151,14 +250,46 @@
 	\ppart Encontrar una función $u = u(x,y)$ que resuelva el problema de Cauchy $(x + y^2)u_x + yu_y + (\frac{x}{y} - y) u = 1$, $u(x,1) = 0, x \in \mathbb{R}$.
 	\ppart Comprobar si se cumple la condición de transversalidad.
 	\ppart Dibujar las proyecciones sobre el plano $(x,y)$ de la condiciones inicial y de las características que emanan de los puntos $(2,1,0)$ y $(0,1,0)$.
-	\ppart ¿Ésta la solución obtenida en (a) definida en el origen $(x,y) = (0,0)$? ¿Contradice esto al teorema de la existencia-unicidad?
+	\ppart ¿Está la solución obtenida en (a) definida en el origen $(x,y) = (0,0)$? ¿Contradice esto al teorema de la existencia-unicidad?
 
 	\solution
 
 	\spart
+
+	La condición de transversalidad la comprobamos en el siguiente apartado, aquí hacemos simplemente cuentas a ver qué sale. Resolvemos primero en $y$: \[ y'(t) = y(t) \implies y = Ce^t \]
+
+	Cuando $t = 0$, $y = 1$ luego $C = 1$ y entonces $y(t) = e^t$. Podemos sustituir ahora para resolver $x$: \[ x'(t) = x(t) + e^{2t} \implies x(t) = c e^t+ e^{2t} \], y como $x(0) = s$, entonces la ecuación es $x(t) = (s-1) e^t + e^{2t}$.
+
+	Sólo falta resolver la $z$, así que vamos a por ello: \[ z'(t) = 1 - z\left(\frac{x}{y} -y\right) = 1 - z((s-1) + e^t - e^t) = 1 - z(s-1) \]
+
+	Resolvemos por separación de variables e integramos \[ t = \int_0^z \frac{1}{1 - λ(s-1)} \dif λ  + C = \eval{\frac{-1}{s-1} \log (1 - λ(s-1))}_{λ = 0}^z + C = \frac{-1}{s-1} \log (1 - z(s-1)) + C \]
+
+	Como $z(s) = 0$, sustituimos y entonces $C = 0$. Ahora sólo nos queda despejar la $z$ (yuju): \begin{align*}
+	t &= \frac{-1}{s-1} \log (1 - z(s-1)) \\
+	e^{-(s-1)t} &= 1 - z(s-1) \\
+	z(s-1) &= 1 - e^{-(s-1)t} \\
+	z &= \frac{1 - e^{(1-s)t}}{s-1}
+	\end{align*}
+
 	\spart
+
+	Comprobamos condición de transversalidad: \( \det \begin{pmatrix} (x+y^2) & y \\ 1 & 0 \end{pmatrix} = y ≠ 0 \label{eq:H1:E12:Trans} \) por ser nuestra curva dato $y = 1$.
+
 	\spart
+
+	El dibujo está en la \fref{fig:Hoja1:E12}.
+
+	\begin{figure}
+	\centering
+	\inputtikz{Hoja1_E12}
+	\caption{Dibujo de las características que salen de $(2,1,0)$ (naranja) y de $(0,1,0)$ (verde).}
+	\label{fig:Hoja1:E12}
+	\end{figure}
+
 	\spart
+
+	No están definidas en el origen, y no contradice a nada porque en $(0,0)$ no se cumpliría la condición de transversalidad de \eqref{eq:H1:E12:Trans}.
+
 \end{problem}
 
 

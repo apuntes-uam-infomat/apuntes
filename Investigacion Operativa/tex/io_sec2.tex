@@ -913,6 +913,58 @@ combinación lineal positiva de las direcciones extremas.
 \end{figure}
 
 
+\begin{proof}
+Para entender bien esta demostración, es importante estar familiarizado con la notación y con conceptos que, a esta altura, tal vez el lector no está muy familiarizado. 
+
+Podría ser recomendable dejar esta demostración para después de interiorizar el simplex, ya que se utiliza durante la demostración.
+
+
+Sea $C$ un conjunto construido como:
+\[
+C = \{x\in\mathbb{R}^n:\, x = \sum_{i=1}^k \lambda_i x_i + \sum_{j=1}^\ell
+ \mu_j d_j,\ \lambda_i\geq 0,\ \mu_j\geq 0,\ \sum_{i=1}^k \lambda_i=1\}
+\]
+
+Es fácil ver que $C≠Ø$, $C$ convexo y cerrado y además $C\subset S$.
+Ahora tenemos que probar que $S\subset C$ y vamos a hacerlo por reducción al absurdo.
+
+Para probar $S\subset C$, supongamos que existe $z\in S$ con $z\notin C$.
+
+Existe $p\in\mathbb{R}^n$ ($p\neq 0$) y $\alpha \in\mathbb{R}$ tales que $p^\top z>\alpha$ y $p^\top x\leq \alpha$ para todo $x\in C$. 
+Como consecuencias, 
+\begin{align*}
+p^\top d_j &\leq 0 
+p^\top x_i &\leq \alpha \Rightarrow p^\top z > p^\top x_i,\ i=1,\ldots,k
+\end{align*}
+
+Sea $\bar{x}$ el punto extremo tal que $p^\top \bar{x} =\max_i p^\top x_i$.
+
+Consideramos la partición $A=(B,N)$ en parte básica y no básica correspondiente  a $\bar{x}$.
+
+Se comprueba \[0 < p^\top z- p^\top \bar{x}=(p_N^\top - p_B^\top B^{-1} N) z_N\], lo que implica que para algún $j>m$ se tiene $z_j>0$ y $p_j-p_B^\top B^{-1} a_j>0$.
+
+Se demuestra  que $y_j:= B^{-1}a_j\nleq 0$. (Por reducción al absurdo ya que si $y_j\leq 0$, entonces $d_j= {-y_j\choose e_j}$ es una dirección extrema y por tanto $p_j-p_B^\top B^{-1}a_j\leq 0$.)
+
+
+Definimos el vector
+\[
+x = {\bar{b}\choose 0} + \alpha {-y_j\choose e_j},
+\]
+donde $\bar{b} = B^{-1}b$ y $\alpha =\min\left\{\frac{\bar{b}_i}{y_{ij}}:\, y_{ij}>0 \right\}:= \frac{\bar{b}_r}{y_{rj}}>0$.
+
+
+Comprobamos $x\in S$, $x_r=0$, $x_j>0$. 
+
+Las columnas $a_1,a_2,\ldots,a_{r-1},a_{r+1},a_j$
+son linealmente independientes, es decir, $x$ es un punto extremo de $S$.
+
+
+Pero $p^\top x = p^\top \bar{x} + \alpha (p_j-p_B^\top B^{-1}a_j)> p^\top \bar{x}$.
+
+Una contradicción ya que habíamos supuesto $p^\top \bar{x} =\max_i p^\top x_i$.
+
+\end{proof}
+
 
 
 
@@ -1394,15 +1446,12 @@ Posibles soluciones $\gor{x_a}$ una solución:
 \end{itemize}
 
 \begin{example}
-\begin{center}
-\begin{tabular}{lr}
-minimizar & $4x_1 + x_2 + x_3$ \\
-	 &  \\
-s.a. & $2x_1+x_2+2x_3 =4 $    \\
-	 & $3x_1 + 3x_2 + x_3= 3$  \\
-	 & $x_1\geq 0,\ x_2\geq 0,\ x_3\geq 0$
-\end{tabular}
-\end{center}
+Este ejemplo se encuentra más desarrollado en las traspas.
+
+\begin{ioprob}
+\goal{$4x_1 + x_2 + x_3$}
+\restrictions{$2x_1+x_2+2x_3 =4 $ }{$3x_1 + 3x_2 + x_3= 3$}{$x_1\geq 0,\ x_2\geq 0,\ x_3\geq 0$}{}{}{}
+\end{ioprob}
 
 Vamos a calcular el primer elemento de la última fila:
 \[z_j - c_j = c^\top_By_j - c_j \overset{j=1}{=} (1,1)\begin{pmatrix}2\\3\end{pmatrix}-0 = 5\]
@@ -1440,11 +1489,28 @@ s.a. & $x_1+x_2+x_3 =6 $    \\
 Tabla inicial de la primera fase:
 
 \begin{tabular}{ccccc}
-c&1
 \end{tabular}
-
-
 \end{example}
+
+\begin{example}
+Ejemplo dado impreso en clase.
+\end{example}
+
+\paragraph{Vamos a profundizar}
+$L:$ Legítimo.
+$A:$ Artificial.
+$N: No$.
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c||ccccc}
+&&LB&LNB&ANB&AB\\\hline\hline
+LB&$\gor{b_1}$&I&$R_1$&$R_3$&0\\
+AB&0&0&$R_2$&$R_4$&I
+\end{tabular}
+\end{table}
+
+El caso raro en el que no podemos pivotear porque tenemos un $0$, se da cuando $R_2 = 0$.
+
 
 \subsection{Optimización lineal con {\tt R}}
 

@@ -2,6 +2,7 @@
 \chapter{Ecuaciones de primer orden}
 
 	\section{Planteamiento del problema}
+	\label{sec:PlanteamientoPrimerOrden}
 
 	\begin{figure}[thbp]
 	\centering
@@ -77,7 +78,8 @@
 
 
 
-	\subsection{Cuando la curva dato no es una recta}
+	\subsection{Modelo con curvas dato alternativas}
+		\label{sec:CurvaDatoRara}
 
 		Imaginemos un río con una velocidad constante, en el que a partir de un punto realizamos un vertido. El río tiene velocidad $v$ y en $x=0$ realizaremos una contaminación $\beta(t)$. En $t=0$ consideraremos que está limpio. Usamos el mismo modelo que antes, pero con la peculiaridad de que la curva dato la estamos dando de otra forma: antes dábamos el dato inicial como lo que ocurría cuando $t = 0$. Aquí, damos una curva dato para $t > 0$ y $x > 0$.
 
@@ -236,8 +238,9 @@
 	\section{Modelos con flujo no lineal}
 	\label{sec:ModeloTraficoRealista}
 
-		\begin{wrapfigure}{r}{0.4\textwidth}
+		\begin{wrapfigure}{R}{0.4\textwidth}
 			\centering
+			\vspace{-15pt}
 			\inputtikz{parabola}
 			\caption{El flujo no es lineal con respecto a la densidad: si hay muchos coches, acaban parándose.}
 			\label{fig:parabola}
@@ -263,10 +266,11 @@
 			\right.
 		\end{equation*}
 
-		\begin{wrapfigure}{r}{0.4\textwidth}
+		\begin{wrapfigure}{R}{0.4\textwidth}
 			\centering
-			\vspace{10pt}
+			\vspace{-15pt}
 			\inputtikz{rectasDivergentes}
+			\vspace{-15pt}
 			\caption{La solución se propaga en rectas cuya pendiente depende del valor del dato inicial $F(x)$.}
 			\label{fig:rectasDivergentes}
 		\end{wrapfigure}
@@ -280,12 +284,12 @@
 		Para ver qué casos posibles hay (por ejemplo, ¿qué pasa cuando se cortan dos rectas características?) vamos a ver algunos ejemplos según el valor de $F(x)$.
 
 		\begin{example}[Semáforo] \label{ejm:Semaforo}
-			\begin{wrapfigure}[7]{r}{0.4\textwidth}
+			\begin{wrapfigure}[8]{L}{0.4\textwidth}
 				\centering
 				\vspace{-15pt}
 				\inputtikz{semaforoCerrado}
 				\vspace{-15pt}
-				\caption{Semáforo cerrado en $t=0$.}
+				\caption{Semáforo cerrado inicialmente.}
 				\label{fig:semaforoCerrado}
 			\end{wrapfigure}
 
@@ -325,7 +329,7 @@
 		\end{example}
 
 		\begin{example}[Frenazo]
-			\begin{wrapfigure}[10]{r}{0.4\textwidth}
+			\begin{wrapfigure}[10]{R}{0.4\textwidth}
 				\centering
 				\inputtikz{modeloAtasco}
 				\vspace{-10pt}
@@ -420,7 +424,7 @@
 		Finalmente, sustituimos y vemos que \[
 		s'(t) = \frac{\text{Salto q}}{\text{Salto u}} = \frac{\frac{14}{225}}{\frac{7}{15}} = \frac{14.15}{7.225} \equiv \alpha \quad(>0) \]
 
-		\begin{wrapfigure}[10]{r}{0.4\textwidth}
+		\begin{wrapfigure}[10]{R}{0.4\textwidth}
 			\centering
 			\vspace{-15pt}
 			\inputtikz{OndaChoqueRPM}
@@ -459,7 +463,7 @@
 
 				Las características son las curvas $(x(t),t)$ tales que $u(x(t),t) = k$, que ya habíamos calculado y quedaban $x - (1-2k)t = x_0$, donde $x_0$ era el punto de partida y $k = F(x_0)$ el valor que se propagaba. El dibujo al que llegábamos era el de la \fref{fig:caracteristicasSemaforo2}.
 
-				\begin{wrapfigure}{l}{0.3\textwidth}
+				\begin{wrapfigure}{L}{0.3\textwidth}
 					\centering
 					\inputtikz{FEpsilon}
 					\caption{Usaremos esta aproximación para saltarnos la discontinuidad}
@@ -499,38 +503,31 @@
 
 
 	\subsection{Cambio de variables. Ecuación de Burgers}
+	\label{sec:EcuacionBurgers}
 
-		Dados:
+		Vamos a ver otro método para la resolución de este tipo de sistemas. Partimos de la ecuación
+		\[ u_t + [q(u)]_x = 0 \quad (q \in C^2) \]
 
-		$$ u_t + [q(u)]_x = 0 \quad (q \in C^2) $$
+		La derivada del flujo con respecto a $x$ tendrá la forma $[q(u)]_x = V(u) u_x$, de tal forma que podemos convertir nuestra ecuación en \(
+		u_t + V(u)u_x = 0 \label{eq:burgers1} \), sobre la que podemos realizar el siguiente cambio de variables
+		\begin{align*}
+		W &= V(u) \\
+		W_t &= V'(u) \cdot u_t \\
+		W_x &= V'(u) \cdot u_x
+		\end{align*} y ver qué ecuación cumple $W$.
 
-		$$u_t + V(u)u_x = 0 $$
+		¿Qué es lo que hemos hecho? Hemos pasado a escribir la ecuación en términos de una variable que es la ``velocidad''. Esta velocidad es la velocidad de $u$, la velocidad a la que se propaga la densidad. No tenemos que entenderla como la velocidad de los coches.
 
-		Realizamos un cambio de variables:
+		Por ejemplo, imaginemos un mapa de tráfico en el que se ve la densidad del tráfico con colores. La $W$ es la velocidad a las que esas manchas de color se desplazan, no los coches en sí. Están relacionadas pero no son lo mismo.
 
-		$$W = V(u)$$
-		$$W_t = V'(u) \cdot u_t$$
-		$$W_x = V'(u) \cdot u_x$$
+		Para hallar el sistema que cumple $W$, lo que hacemos es multiplicar \eqref{eq:burgers1} por $V'(u)$ a ambos lados y ver qué nos sale:
+		\begin{align}
+		u_t + V(u)u_x &= 0 \nonumber \\
+		u_t · V'(u) + V(u) u_x · V'(u) &= 0 \nonumber \\
+		W_t + W · W_x &= 0 \label{eq:Burgers}
+		\end{align}
 
-		Y vamos a ver que función cumple $W$. Lo que hacemos es pasar a escribir la ecuación en términos de una variable que es la ``velocidad'' (CUIDADO CON LA INTUICIÓN), al contrario que antes, que era de la densidad. Esta velocidad es la velocidad de $u$, la velocidad a la que se propaga la densidad. No tenemos que entenderla como la velocidad de los coches.
-
-		Imaginemos un mapa de tráfico en el que se ve la densidad del tráfico con colores. La $W$ es la velocidad a las que esas manchas de color se desplazan, no los coches en sí. Están relacionadas pero no son lo mismo.
-
-		Completemos el sistema anterior con $W$:
-
-		\(u_t + V(u) u_x = 0\quad\quad (u \equiv \text{densidad}) \label{eq:burgers1}\)
-
-		$$\underbrace{V'(u) u_t}_{W_t} + \underbrace{V(u)}_{W} * \underbrace{V'(u) u_x}_{W_x} = 0 \quad (\text{Multiplicando \ref{eq:burgers1} por }V'(u))$$
-
-		\( W_t + WW_x = 0 \label{eq:Ecuación de Burgers} \)
-
-
-
-		\begin{itemize}
-			\item En este caso es homogénea al ser $0$ el término independiente.
-			\item Si $\neq 0$ diremos que es no homogénea.
-			\item Si $ = \epsilon W_{xx}$ entonces diremos que es viscosa.
-		\end{itemize}
+		En este caso, la ecuación es una \concept{Ecuación\IS homogénea} ya que el término independiente es $0$. Si no fuese nulo, estaríamos ante una \concept{Ecuación\IS no homogénea}, y si el término independiente fuese $\epsilon W_{xx}$ su nombre sería una \concept{Ecuación\IS viscosa}.
 
 		\begin{example}
 			\[u_t + (1-2u) u_x = 0
@@ -557,13 +554,12 @@
 		\subsubsection{Flujo asociado a la ecuación de Burgers}
 
 			Expresemos ahora $q$ en función de la ecuación de Burgers.
+			\begin{gather}
+			W_t + WW_x = W_t + [q_B(w)]_x = 0 \nonumber \\
+			q_{B} = \frac{W^2}{2} \label{eq:FlujoBurgers}
+			\end{gather}
 
-			$$W_t + WW_x = W_t + [q_B(w)]_x = 0$$
-
-			$$q_{B} = \frac{W^2}{2}$$
-
-
-		\subsubsection{Características en la ec. de Burgers}
+		\subsubsection{Características en la ecuación de Burgers}
 
 			$$W(x(t),t) = k$$
 
@@ -576,104 +572,87 @@
 			\begin{figure}[hbtp]
 				\centering
 				\inputtikz{CaracteristicasBurger}
-				\caption{}
+				\caption{Características en la ecuación de Burguers}
 				\label{fig:CaracteristicasBurger}
 			\end{figure}
 
 			Con $W(x,0) = F(x)$.
 
-		\begin{example}{Zona central de atasco}
+		\begin{example}[Zona central de atasco]
 
-			Dada la ecuación de Burgers:
-
-			$$u_t + u u_x = 0$$
-
-			Dato inicial:
-
-			$u(x,0) = F(x)$ con $F(x)$ definida como:
-
-			\begin{figure}[hbtp]
+			\begin{wrapfigure}[8]{R}{0.4\textwidth}
 				\centering
 				\inputtikz{FTresVelocidades}
-				\caption{}
+				\caption{Dato inicial de velocidad para este atasco.}
 				\label{fig:FTresVelocidades}
-			\end{figure}
+			\end{wrapfigure}
+
+			Vamos a estudiar un flujo de tráfico algo más complicado: coches que vienen rápido, se paran y luego siguen un poco más lento. Nuestro sistema es el siguiente: \[
+				\begin{cases}
+					u_t + u u_x = 0 \\
+					u(x,0) = F(x)
+				\end{cases}
+			\]
+
+			Nuestro dato inicial $F(x)$ estará definido como en la \fref{fig:FTresVelocidades}: \[
+				F(x) = \begin{cases}
+					2 & x ∈ [-2, 0) \\
+					0 & x ∈ [0, 1) \\
+					1 & x ∈ [1, 2)
+				\end{cases}
+			\]
+
 
 			% Hemos revisado hasta aquí
 
 
-			Vemos que los que vengan de la izquierda con velocidad 2 se encontrarán con la zona de velocidad 0 en la que tendrán que parar. Con lo que surgirá una onda de choque entre esas dos secciones. A su vez, entre la parte de velocidad 0 y la parte de velocidad 1 surgirá una onda de rarefacción ya que la parte con más velocidad ``huirá'' de la anterior. Esto ocurre para tiempos pequeños pero habrá que ver como evoluciona el sistema.
+			Vemos que los que vengan de la izquierda con velocidad 2 se encontrarán con la zona de velocidad 0 en la que tendrán que parar, con lo que surgirá una onda de choque entre esas dos secciones. A su vez, entre la parte de velocidad 0 y la parte de velocidad 1 surgirá una onda de rarefacción ya que la parte con más velocidad ``huirá'' de la anterior. Esto ocurre para tiempos pequeños pero habrá que ver como evoluciona el sistema.
 
 			Las características son:
-
-			$$x - kt = x_0 \text{ con } F(x_0) = k$$
+			\[ x - kt = x_0 \text{ con } F(x_0) = k \]
 
 			Va a ocurrir en algún punto que la onda de choque llegue hasta la zona delimitada por la onda de rarefacción. La onda de choque depende de los valores a ambos lados de esta. Cuando ocurra este suceso la onda de choque estará definida por otra ecuación. Y si en algún momento llega a confluir con la primera característica de la sección de velocidad 1 obtendrá otra forma.
 
 
-			Empecemos por \textbf{tiempos pequeños}:
-
-			Onda de choque que parte de $x=0$.
-
-			$$R-H \Rightarrow s' = \frac{\text{salto q}}{\text{salto u}} = \frac{\text{salto }\frac{u^2}{2}}{\text{salto }u} = \frac{\frac{4}{2} - 0}{2-0} = 1 $$
+			Empecemos por \textbf{tiempos pequeños}. La onda de choque que parte de $x=0$ estará definida por la ecuación de Rankine-Hugoniot \eqref{eq:DerivadaOndaChoque}:
+			\[ s_1' = \frac{\text{salto q}}{\text{salto u}} = \frac{\text{salto }\frac{u^2}{2}}{\text{salto }u} = \frac{\frac{4}{2} - 0}{2-0} = 1 \]
 
 			Esa será la derivada de nuestra onda de choque, que al ser constante es la pendiente. La onda será:
+			\[ s_1(t) = t \]
 
-			$$s(t) = t$$
+			Por otra parte, necesitamos calcular la rarefacción del salto entre la zona de coches parados y la de coches que se mueven con velocidad $1$. Para eso  usamos el truco de tomar las aproximaciones por $F_ε$ continuas, y nos sale lo siguiente
+			\begin{gather*}
+			x-k_\epsilon t = x_\epsilon \\
+			u_\epsilon (x,t) = k_\epsilon = F_\epsilon (x_\epsilon) \\
+			x_\epsilon \convs[][ε][0] 1 \Rightarrow x - kt = 1
+			\end{gather*}
 
-			Nos queda entonces calcular la rarefación en $x=1$:
+			Con lo que obtenemos la onda de rarefación desde $x=1$, que será la zona gris en la \fref{fig:ModeloTresVelocidades}.
+			\[ \frac{x-1}{t} = k = u(x,t) \]
 
-			$$x-k_\epsilon t = x_\epsilon$$
+			Con esto hemos obtenido qué pasa hasta $t = 1$. La onda de choque la hemos calculado con el salto, pero teníamos datos del lado derecho. Ahora la condición de salto cambia dependiendo del punto ya que dependerá del valor de la onda de rarefacción en ese punto.
 
-			$$u_\epsilon (x,t) = k_\epsilon = F_\epsilon (x_\epsilon)$$
+			Obvservamos \textbf{t = 1}. Tenemos una nueva onda de choque $s_2$ que parte del punto $(x=1, t=1)$. El flujo, que podemos calcular según la ecuación \eqref{eq:FlujoBurgers}, será $q(u) = \frac{u^2}{2}$. Con esto ya podemos calcular los saltos:
+			\begin{align*}
+			u^{-} &= 2			 & u^{+} &= \frac{s_2-1}{t} \\
+			q^{-} &= \frac{4}{2} & q^{+} &= \frac{(\frac{s_2-1}{t})^2}{2}
+			\end{align*}
 
-			$$x_\epsilon \rightarrow_{\epsilon \rightarrow 0} 1 \Rightarrow x - kt = 1 \Rightarrow $$
+			Ahora usando de nuevo la ecuación de Rankine-Hugoniot, sacamos la ecuación de la segunda onda de choque:
+			\[  s'_2 = \frac{\frac{1}{2}[4 - (\frac{s_2 - 1}{t})^2 ]}{2-(\frac{s_2 - 1}{t})} = \frac{\frac{1}{2}(2 + (\frac{s_2 - 1}{t}))}{1} = 1 + \frac{s_2}{2t} - \frac{1}{2t} \] con un dato inicial (el punto de partida de la onda) dado por \[
+			s_2(1) = 1 \]
 
-			Con lo que obtenemos la onda de rarefación desde $x=1$:
+			Esto nos lleva a una ecuación diferencial de primer orden lineal \[ s_2' - \frac{s_2}{2t} = 1 - \frac{1}{2t} \] que podemos resolver multiplicando por un factor integrante: \[ \rho s_2' - \frac{\rho}{2t} s_2 = \rho · \left(1 - \frac{1}{2t}\right) \] esperando que el lado izquierdo sea $(ρs_2)'$ para poder resolverlo fácilmente.
 
-			$$\Rightarrow 	\frac{x-1}{t} = k = u(x,t)$$
+			Continuamos resolviendo para comprobarlo. Primero sacamos el factor integrante: \[ \rho' = \frac{-\rho}{2t} \implies … \implies \rho(t) = \frac{1}{\sqrt{t}} \]
 
-			Eso nos deja un modelo así:
-
-			\begin{figure}[hbtp]
-				\centering
-				\inputtikz{ModeloTresVelocidades}
-				\caption{}
-				\label{fig:ModeloTresVelocidades}
-			\end{figure}
-
-			Con esto hemos obtenido que pasa hasta $t = 1$. La onda de choque la hemos calculado con el salto, pero teníamos datos del lado derecho. Ahora la condición de salto cambia dependiendo del punto ya que dependerá del valor de la onda de rarefacción en ese punto.
-
-			Ahora observemos \textbf{t = 1}
-
-			Tenemos una nueva onda de choque $s_2$ que parte del punto $(x=1, t=1)$.
-
-			Dado $q = \frac{u^2}{2}$
-
-			$$u^{-} = 2, u^{+} = \frac{s_2-1}{t}$$
-			$$q^{-} = \frac{4}{2}, q^{+} = \frac{(\frac{s_2-1}{t})^2}{2}$$
-
-			$$ \text{Rankine-Hugoniot: } s'_2 = \frac{\frac{1}{2}[4 - (\frac{s_2 - 1}{t})^2 ]}{2-(\frac{s_2 - 1}{t})} = \frac{\frac{1}{2}(2 + (\frac{s_2 - 1}{t}))}{1} = 1 + \frac{s_2}{2t} - \frac{1}{2t}$$
-
-			$$s_2(t = 1) = 1$$
-
-			Con lo que llegamos a una ecuación diferencial de primer orden lineal:
-
-			$$s' - \frac{s_2}{2t} = 1 - \frac{1}{2t}$$
-			$$  \underbrace{\rho s' - \frac{\rho}{2t} s_2}_{\eqexpl{?} (\rho s)' } = \rho(1 - \frac{1}{2t})$$
-
-			Continuamos resolviendo para comprobarlo:
-
-			$$\rho' = \frac{-\rho}{2t} \rightarrow … \rightarrow \rho(t) = \frac{1}{\sqrt{t}}$$
-
-			$$(\frac{s_2}{\sqrt{t}})' = \frac{1}{\sqrt{t}} ( 1 - \frac{1}{2t}) = t^{-1/2} - \frac{1}{2} t^{-3/2}$$
+			Ahora tratamos de obtener la derivada de $(ρs_2)'$: \
+			\[ \left(\frac{s_2}{\sqrt{t}}\right)' = \frac{1}{\sqrt{t}} \left( 1 - \frac{1}{2t}\right) = t^{-1/2} - \frac{1}{2} t^{-3/2} \]
 
 			$$\frac{s_2}{\sqrt{t}} = \frac{t^{1/2}}{1/2} - \frac{1}{2} \frac{t^{-1/2}}{-1/2} = 2t^{1/2} + t^{-1/2} + C$$
 			$$ s_2 = 2t + 1 + C \sqrt{t} $$
 			$$ s(1) = 1 \implies C = -2 $$
 			$$ x = s_2 (t) = 1 + 2t - 2 \sqrt{t} $$
-
-			(DIBUJO IMAGINANDO S3)
 
 			Y ahora pasamos a calcular $s_3$, la curva de choque al pasar la curva a tocar la zona roja. La curva de choque habrá atravesado completamente la zona de rarefacción y podremos calcularla por el salto otra vez al tener información de las características de la zonas iniciales $x>1$.
 
@@ -692,9 +671,14 @@
 
 			$$s_3(t) = \frac{3}{2} t - 1$$
 
-			(DIBUJO COMPLETO CON ZONAS COLOREADAS)
 
-			(COMPLEMENTAR CON DIBUJO DE u RESPECTO DE x en t1 y t2)
+			\begin{figure}[hbtp]
+				\centering
+				\inputtikz{ModeloTresVelocidades}
+				\caption{Resultado final del modelo de tres velocidades}
+				\label{fig:ModeloTresVelocidades}
+			\end{figure}
+
 
 			% 2016/02/02
 
@@ -734,12 +718,12 @@
 
 		Pero a nivel físico esto no tiene sentido ya que significaría coches acelerando instantáneamente. Por eso es por lo que añadimos esta restricción física obligando a que ese tipo de areas se rellenen con una onda de rarefacción.
 
-		El contrario, por supuesto, si que tiene más sentido físico.
+		El contrario, por supuesto, si que tiene más sentido físico\footnote{Si no recuerdo mal, el sentido físico era coches estrellándose contra un muro. No es un caso que estemos especialmente interesados en estudiar, creo.}.
 
 		Para solucionar esta dualidad de soluciones se podría añadir un término de viscosidad, pero eso convertiría nuestro sistema en uno de segundo orden que todavía no podemos resolver.
 
 		\textbf{Ejercicio interesante}
-
+			% TODO: Completar esto.
 			$$u_t + uu_x = 0$$
 			$$u(x,0) = F(x) $$
 
@@ -764,79 +748,52 @@
 			Lo que vamos a ver según avanza el tiempo es que el escalón en $F(x)$ va a ir reduciéndose hasta ser completamente vertical y empezar la onda de choque.
 
 
-\section{Caso general}
+\section{Caso general: Problema de Cauchy}
+	\label{sec:ProblemaCauchy}
 
-	Vamos a realizar un cambio de notación. A partir de ahora las variables van a ser $x$ e $y$. Vamos a tratar ecuaciones casi lineales de primer orden:
+	De momento hemos estudiado casos bastante específicos. De hecho, ya el planteamiento inicial (\fref{sec:PlanteamientoPrimerOrden}) era muy concreto, estudiando un problema que se podía entender como un flujo a lo largo del tiempo, con ese flujo dependiendo de la densidad. Ahora bien, como buenos matemáticos, nos interesaría encontrar un caso general para ecuaciones de primer orden.
 
-	\begin{equation*}
-		\left\{
-			\begin{array}{l}
-			a(x,y,u)u_x + b(x,y,u)u_y = C(x,y,u) \\
-			\text{dato}
-			\end{array}
-		\right.
-	\end{equation*}
+	Lo primero es olvidarnos del ``tiempo'', y simplemente tomar dos variables genéricas $x,y$ para evitar confusiones. Así, nuestras ecuaciones serán de la forma \(
+		a(x,y,u)u_x + b(x,y,u)u_y = c(x,y,u) \label{eq:PrimerOrdenGenerica}
+	\)
 
-	Hasta ahora el dato siempre (excepto en un ejemplo)%poner referencia aquí
-	había sido siempre $u(x,0) = F(x)$. En general conoceremos la solución del dato a lo largo de una curva $(\alpha(s),\beta{s})$:
+	¿Y qué hacemos con el dato? Hasta ahora siempre lo habíamos dado a lo largo de la recta $t = 0$ (salvo en el ejemplo de la \fref{sec:CurvaDatoRara}). Sin embargo, es una condición demasiado restrictiva, así que en general tomaremos la solución del dato a lo largo de una curva genérica $(\alpha(s),\beta(s))$. Así, nuestro dato será
+	\[ u(\alpha(s),\beta(s)) = \gamma(s) \]
 
-	$$ u(\alpha(s),\beta{s}) = \gamma{s} $$
+	¿Cómo resolvemos este sistema? La idea será ``propagar'' la solución dada en la curva dato siguiendo la ecuación diferencial. En cierto modo es parecido a lo que hacíamos con las características, aunque esta vez necesitaremos más artillería matemática.
 
-	Entonces, sea $u(x,y)$ solución:
+	Partiendo de que $u(x,y)$ es una solución a nuestro sistema, consideraremos su gráfica $S = \set{(x,y,z) ∈ ℝ^3 \tq z = u(x,y)}$. Esta gráfica no es más que el conjunto de nivel 0 de la aplicación \[ Φ(x,y,z) = u(x,y) - z\]
 
-	Sea $s = \{(x,y,z) / z = u(x,y)\}$ su gráfica
+	Ahora vamos a por un truco/idea feliz: sabemos que el gradiente es perpendicular a los conjuntos de nivel, por lo que en particular $\grad Φ \perp S$. Ese gradiente es fácil de calcular: \[ \grad Φ = \left(u_x, u_y, -1\right)\]
 
-	Sea $\Phi(x,y,z) = u(x,y) - z$.
+	Y aquí es donde viene la segunda ocurrencia: darnos cuenta de que $\grad Φ$ y $(a, b, c)$ son dos vectores perpendiculares, donde $a$, $b$ y $c$ eran los coeficientes de nuestra ecuación \eqref{eq:PrimerOrdenGenerica}. La comprobación se hace con una simple cuenta, ya que simplemente volvemos a la ecuación de nuevo: \[ \pesc{(u_x, u_y, -1), (a, b, c)} = au_x + bu_y - c = 0 \]
 
-	$s = \{$ Conjunto de nivel 0 de $ \Phi \}$
+	La conclusión es que el vector $(a(p),b(p),c(p))$ es tangente a nuestra superficie solución, con $p ∈ S$. En otras palabras, que podemos reconstruir una curva solución $α ⊂ S$ con $α' = (a,b,c)$.
 
-	Como sabemos que el gradiente es perpendicular al espacio tangente ($\nabla \Phi \perp S$).
-
-	\begin{equation*}
-		\left.
-		\begin{array}{rl}
-			au_x + bu_y = C \\
-			\nabla \Phi = (u_x, u_y, -1)
-		\end{array}
-		\right\} (u_x,u_y, -1) \perp (a,b,c)
-	\end{equation*}
-
-	\begin{equation*}
-		\left.
-		\begin{array}{rl}
-			x' = a \\
-			y' = b \\
-			z' = c
-		\end{array}
-		\right\} \text{Curva}
-	\end{equation*}
-
-	$(x,y,z)$ con tangente $(a,b,c)$ en cada punto.
-
-	\textbf{es decir:} $(a(p),b(p),c(p)) \in T_pS$, dado $p$ punto de la superficie.
-
-
-	Resolvemos la ecuación ordinaria obteniendo una curva de cada una de los datos iniciales. Una vez obtenidas estas curvas, si todo va bien, podremos ensamblarlas en una superficie parametrizable. Deberemos probar que esta superficie se puede escribir como una gráfica de una función, pero no nos valdrá con eso, tendremos que probar que se puede escribir como función de $x$ e $y$.
+	Así, podremos resolver la ecuación ordinaria obteniendo una curva de cada una de los datos iniciales. Una vez obtenidas estas curvas, si todo va bien, podremos ensamblarlas en una superficie parametrizable. Deberemos probar que esta superficie se puede escribir como una gráfica de una función, pero no nos valdrá con eso, tendremos que probar que se puede escribir como función de $x$ e $y$.
 
 	De lo que aprendimos en EDO\footnote{jajajajaja} sabemos encontrar curvas con una tangente dada. ¿Pero podemos aplicarlo para obtener superficies?
 
+	Antes de seguir con la formalización, lo que haremos será ver unas cuantas cuentas para entrar en situación.
+
+	\subsection{Ejemplos y cuentas previos}
+
 	Empecemos con un ejemplo:
 
-	\begin{example}{1}
-
+	\begin{example}[Problema de Cauchy]
+		Partimos del siguiente sistema:
 		\begin{equation*}
 			\left\{
 			\begin{array}{l}
 				xu_x - yu_y = u - y \\
-				\text{Dato: }\quad u(s^2,s) = s \quad (s > 0)
+				u(s^2,s) = s \quad (s > 0)
 			\end{array}
-			\right. \text{  Problema de Cauchy}
+			\right.
 		\end{equation*}
 
 		Interpretación geométrica. En cada $(x,y,z)$ el vector tangente debe ser $(\underbrace{x}_{a},\underbrace{-y}_{b},\underbrace{z-y}_{c})$
 
-		\textbf{Curvas}
-
+		Hallamos las \textbf{curvas solución:}
 		\begin{equation*}
 			\left.
 			\begin{array}{rl}
@@ -852,42 +809,27 @@
 			\end{array}
 		\end{equation*}
 
+		Resolvemos usando el método del factor integrante y llegamos a \[ C = z_0 - \frac{y_0}{2} \], de tal forma que nuestra curva viene dada por la ecuación
+		\begin{align*}
+			x(t) &= x_0 e^t \\
+			y(t) &= y_0 e^{-t} \\
+			z(t) &= \frac{y_0}{2} e^{-t} + (z_0 - \frac{y_0}{2})e^t
+		\end{align*}, donde los valores iniciales vienen dados por la curva dato: \[ (x_0,y_0,z_0) = (s^2,s,s) \]
 
-		Resolvemos usando el método del factor integrante y llegamos a:
-
-		(FALTAN LOS PASOS)
-
-		$$C = z_0 - \frac{y_0}{2}$$
-
-		\begin{equation*}
-			\begin{array}{l}
-				x = x_0 e^t \\
-				y = y_0 e^{-t} \\
-				z = \frac{y_0}{2} e^{-t} + (z_0 - \frac{y_0}{2})e^t
-			\end{array}
-		\end{equation*}
-
-		$$(x_0,y_0,z_0) = (s^2,s,s)$$
-
-		Que puesto en función de $s$ y de $t$:
-
-		\begin{equation*}
-			\left\{
-			\begin{array}{l}
-				x = s^2 e^t \\
-				y = se^{-t} \\
-				z = \frac{s}{2}e^{-t} + \frac{s}{2}e^{t}
-			\end{array}
-			\right.
-		\end{equation*}
-
-		Con lo que llegamos a la siguiente definición de la superficie.
-
-		$$ \Phi(s,t) = (s^2e^t, se^{-t}, \frac{s}{2}(e^t + e^{-t}))$$
+		Poniendo todo en función de $s$ y $t$, llegamos a
+		\begin{align*}
+		x(s,t) &= s^2 e^t \\
+		y(s,t) &= se^{-t} \\
+		z(s,t) &= \frac{s}{2}e^{-t} + \frac{s}{2}e^{t}
+		\end{align*}
+		que nos permite dar una definición para la superficie:
+		\[
+			\Phi(s,t) = \left(s^2e^t, se^{-t}, \frac{s}{2}(e^t + e^{-t}) \right )
+		\]
 
 		Debemos comprobar si este objeto es realmente una superficie y si nos sirve, es decir, responder a las siguientes preguntas:
 
-		\begin{itemize}
+		\begin{itemize}[itemsep = 1pt]
 			\item ¿$\Phi$ describe una superficie parametrizada?
 			\item ¿Podemos despejar $z=u(x,y)$?
 		\end{itemize}
@@ -1037,7 +979,7 @@ El siguiente paso es considerar la aplicación \[ Φ(s,t) = (x(s,t), y(s,t), z(s
 
 Dado que cuando nos alejamos del punto inicial tenemos monstruos, lo que buscaremos es que las dos condiciones se cumplan sólo para $t$ pequeño. Esto nos permite no tener que verificar la condición de homeomorfismo sobre su imagen, ya que se cumple directamente para $t$ pequeño por la estructura de la curva dato Γ, que no tiene autointersecciones.
 
-Estudiamos ahora la diferencial de Φ para ver qué ocurre con la condición del rango: \[ \Dif Φ = \begin{pmatrix} \pd{x}{s} & \pd{y}{s} & \pd{z}{s} \\  \pd{x}{t} & \pd{y}{t} & \pd{z}{t} \end{pmatrix} \]
+Estudiamos ahora la diferencial de Φ para ver qué ocurre con la condición del rango: \[ \Dif Φ = \begin{pmatrix} \dpd{x}{s} & \dpd{y}{s} & \dpd{z}{s} \\ & & \\ \dpd{x}{t} & \dpd{y}{t} & \dpd{z}{t} \end{pmatrix} \]
 
 Por continuidad, nos bastará ver que tiene rango máximo para $t = 0$, ya que nos dará directamente rango máximo en un entorno pequeño de $t$. Pero teniendo en cuenta el sistema característico, podemos simplificar y tenemos que \[ \eval[2]{\Dif Φ}_{t=0} = \begin{pmatrix}
 α' & β' & γ'  \\
@@ -1046,7 +988,7 @@ a(α, β, γ) & b(α,β,γ) & c(α,β,γ) \end{pmatrix}
 
 Una vez que sabemos que Φ define una superficie, necesitaremos despejar $z = u(x,y)$. Para eso necesitaremos el teorema de la función implícita \citep[Teorema II.5]{ApuntesAnalisisMat}, aunque en realidad sólo nos hace falta el teorema de la función inversa. Entonces, sólo tenemos que pedir que el determinante \( \left|\begin{matrix} a & b \\ α' & β' \end{matrix}\right| ≠ 0 \label{eq:CondTransversalidad} \) sea distinto de $0$. Es decir, que sólo comprobando esta \concept{Condición\IS de transversalidad} podremos resolver el paso 2 (garantiza que Φ define una superficie) y el paso 3 (podemos despejar $z = u(x,y)$).
 
-\begin{theorem} Supongamos que $a,b,c,α,β,γ ∈ C^1$. Si se verifica la condición de transversalidad \eqref{eq:CondTransversalidad} en todos los puntos de la curva dato, el problema tiene una solución $z = u(x,y)$ definida en \textbf{un entorno local} de cada punto, que se puede construir con las curvas características.
+\begin{theorem} \label{thm:Transversalidad} Supongamos que $a,b,c,α,β,γ ∈ C^1$. Si se verifica la condición de transversalidad \eqref{eq:CondTransversalidad} en todos los puntos de la curva dato, el problema tiene una solución $z = u(x,y)$ definida en \textbf{un entorno local} de cada punto, que se puede construir con las curvas características.
 \end{theorem}
 
 Sin embargo, esto no nos resuelve todos los problemas. Tenemos unicidad a través de este método, pero no sabemos si otro método nos puede dar otra solución distinta. Además, no sabemos qué pasa cuando la condición de transversalidad se estropea: ¿qué tipo de desastres aparecen?
@@ -1085,7 +1027,7 @@ Podemos hacer un experimento mental: cogemos una curva transversal a la curva an
 
 La conclusión de todo esto es que el problema no estaría bien propuesto porque sus soluciones no tendrían mucho sentido.
 
-\subsection{Algunos ejemplos}
+\subsection{Más ejemplos}
 
 	\begin{example}{1}
 		\[\left\{ \begin{array}{l} uu_x + u_y = 0 \\ u(x,0) = F(x) \end{array}\right.\]
