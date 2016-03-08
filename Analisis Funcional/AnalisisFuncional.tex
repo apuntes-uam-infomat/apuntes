@@ -791,7 +791,7 @@ Sea $X = (V, \norm{·}_∞)$ un espacio normado sobre \kbb, $E ⊂ V$ un subespa
 
 Buscaremos $E' \subsetneq E$ y $\appl{λ'}{E'}{\kbb}$ lineal, de tal forma que $\restr{λ'}{E} = λ$ y además $\abs{λ'(x)} ≤ \norm{λ}_{E^*} \norm{x}_X$ cuando $x ∈ E'$.
 
-\begin{lemma} Si $E \subsetneq V$ y $x_0 ∉ E$, entonces $λ$ admite una extensión con las propiedades anteriores al subespacio \[ E' = E + \spn \set{x_0} = \set{x ∈ V \tq x = x_1 + μ x_0,\,\,x_1 ∈ E, μ ∈ \kbb} \]
+\begin{lemma} \label{lem:ExtensionSpan} Si $E \subsetneq V$ y $x_0 ∉ E$, entonces $λ$ admite una extensión con las propiedades anteriores al subespacio \[ E' = E + \spn \set{x_0} = \set{x ∈ V \tq x = x_1 + μ x_0,\,\,x_1 ∈ E, μ ∈ \kbb} \]
 \end{lemma}
 
 \begin{proof}
@@ -815,8 +815,46 @@ Como $u(x) = \Re λ(x)$, entonces $\norm{u(x)} ≤ \norm{λ(x)} \implies \norm{u
 \end{proof}
 
 
-\begin{theorem}[Teorema\IS de Hahn-Banach]
+\begin{theorem}[Teorema\IS de Hahn-Banach] Sea $(V, \norm{·}_V)$ un espacio vectorial normado, ya sea sobre los reales o complejos, y $E ⊂ V$ un subespacio sobre el cual está definido un funcional lineal acotado $λ ∈ E^*$.
+
+Entonces λ admite una extensión Λ a un funcional lineal acotado en $V$ tal que $\restr{Λ}{E} = λ$. Además, $∀x ∈ V$, se cumple que \[ \abs{Λ(x)} ≤ \norm{λ}_{E^*} \norm{x}_V \]
 \end{theorem}
+
+\begin{proof} Por el \fref{lem:ExtensionSpan}, si $E$ es un subespacio propio de $V$ el operador λ admite extensiones a espacios $E' = E + \spn \set{x_0}$, con $x_0 ∉ E$, y además conservando la norma.
+
+Consideramos ahora la familia de pares formados por subespacios $S$ de $V$ que contienen a $E$ y extensiones Λ de $λ$ en esos subespacios que mantienen la norma de $λ$, esto es, \[ \mathcal{U} = \set{(Λ, S) \tq E ⊆ S \overset{e.v.}{⊂} V, \; Λ ∈ S^*,\, \norm{Λ}_{S^*} = \norm{λ}_{E^*}, \, \restr{Λ}{E} = λ } \]
+
+Es trivial ver que $\mathcal{U}$ no es vacío sencillamente porque $(λ,E) ∈ \mathcal{U}$.
+
+Vamos a definir un orden parcial en $\mathcal{U}$. Diremos que $(Λ, S) ≤ (Λ', S')$ si y sólo si $S ⊂ S'$ y $\restr{Λ'}{S} = Λ$. Para la demostración de que es un orden parcial sólo hay que ver que si $(Λ,S) ≤ (Λ', S')$ y $(Λ', S') ≤ (Λ'', S'')$ entonces $(Λ,S) ≤ (Λ'', S'')$, cosa que es bastante trivial; y la antisimetría\footnote{$(Λ,S) ≤ (Λ', S'), \; (Λ,S) ≥ (Λ', S') \implies (Λ,S) = (Λ', S')$.} también es trivial.
+
+Sea ahora $\mathcal{P} ⊂ \mathcal{U}$ un conjunto totalmente ordenado. Este conjunto admite una cota superior en $\mathcal{U}$, y vamos a demostrarlo. Para ello definimos \[ \tilde{S} = \bigcup_{(Λ,S) ∈ \mathcal{P}} S \]
+
+Se puede ver que $\tilde{S}$ es un subespacio de $V$. Para ello, tomamos $x,y ∈ \tilde{S}$. Entonces, $∃S_1, S_2 \overset{e.v.}{⊂} V$ tales que $x ∈ S_1,\, y∈ S_2$. Como $\mathcal{P}$ está totalmente ordenado, o bien $S_1 ⊂ S_2$ o bien $S_2 ⊂ S_1$. Suponemos sin pérdida de generalidad que $S_1 ⊂ S_2$. Entonces $x,y ∈ S_2$ y por lo tanto $x + y ∈ S_2 ⊂ \tilde{S}$ por ser $S_2$ subespacio vectorial
+
+Del mismo modo, se puede demostrar que si $x ∈ \tilde{S}$ y $α ∈ \kbb$, entonces $α x ∈ \tilde{S}$, así que efectivamente $\tilde{S}$ es un subsespacio vectorial de $V$.
+
+Definimos ahora el funcional \begin{align*}
+\appl{\tilde{Λ}}{\tilde{S}&}{\kbb} \\
+x & \longmapsto Λ(x) \quad \text{si } x ∈ S,\, (Λ, S) ∈ \mathcal{P}
+\end{align*}
+
+Lo primero que hay que hacer es comrpobar que está bien definido. No es difícil de ver: de nuevo como tenemos un subconjunto totalmente acotado, tenemos que en cualquier punto todos los Λ van a coincidir por ser uno la restricción de otro.
+
+Con esto, está claro que $(\tilde{Λ}, \tilde{S})$ es un maximal de $\mathcal{P}$. Así, podemos aplicar el lema de Zorn y por lo tanto $\mathcal{U}$ admite elementos maximales respecto de un orden.
+
+Si $(Λ_0, S_0)$ es un elemento maximal de $\mathcal{U}$, para probar Hahn-Banach basta probar que $S_0 = V$.  Supongamos que no lo es, de tal forma que $∃x_0 ∈ V \setminus S_0$. Procediendo como en el \fref{lem:ExtensionSpan}, podría construir $(Λ_1, S_1) \gneq (Λ_0, S_0)$ con $S_1 = S_0 + \spn \set{x_1}$, pero esto contradice la maximalidad de $(Λ_0, S_0)$.
+\end{proof}
+
+\subsection{Consecuencias del Teorema de Hahn-Banach}
+
+\begin{prop} Dado $X= (V, \norm{·}_V)$ un espacio normado, entonces la inyección canónica $\appl{i}{X}{X^{**}}$ es isométrica.
+\end{prop}
+
+\begin{defn}[Espacio\IS reflexivo] Si $\appl{i}{V}{V^{**}}$ es una isometría sobreyectiva, se dice que $X = (V, \norm{·})$ es reflexivo.
+\end{defn}
+
+Por ejemplo, los espacios $L^p$ con $1 < p < ∞$ son reflexivos.
 
 \chapter{Dualidad en espacios de Banach}
 
