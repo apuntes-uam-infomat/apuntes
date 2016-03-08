@@ -1458,13 +1458,16 @@ Calculamos la variación de peso que deberemos aplicar a las conexiones que lleg
 Para la única red multicapa que hemos estudiado hasta el momento hay una diferencia más, aparte de la existencia de una capa intermedia de neuronas. Para el \textbf{perceptrón multicapa} las neuronas intermedias y la de salida tienen función de activación continua con lo que el valor emitido puede ser cualquiera dentro de un intervalo.
 
 Para un percpetrón multicapa con salida binaria la función de activación suele ser
-\[f(x) = \frac{1}{1+e^{-x}}\]
+\[f(x) = \frac{1}{1+e^{-x}}, \text{ conocida como sigmoidal binaria}\]
 mientras que si la salida es bipolar suele tomarse la función de activación de la forma
-\[f(x) = \frac{2}{1+e^{-x}}+1\]
+\[f(x) = \frac{2}{1+e^{-x}}+1, \text{ conocida como sigmoidal bipolar}\]
 
 En general es necesario emplear funciones continuas cuyo recorrido varíe desde 0 hasta 1, en el caso de salida binaria, o desde -1 hasta 1, para el caso de salida bipolar.
 
-En concreto se emplean funciones como las mencionadas anteriormente puesto que su derivada evaluada en un punto $x_0$ puede calcularse cómodamente a partir de la evaluación de la función en ese mismo punto. Así, a la hora de calcular $f'(z\_in_j)$ no tenemos que realizar ninguna evaluación de función, ya que $f(z\_in_j)$ ya se calculó previamente. La importancia de este detalle radica en el hecho de que evaluar funciones es uno de los procesos más costosos (y por tanto más lentos) que puede realizar un ordenador, por lo que conviene evitarlos.
+En concreto se emplean funciones como las mencionadas anteriormente puesto que su derivada evaluada en un punto $x_0$ puede calcularse cómodamente a partir de la evaluación de la función en ese mismo punto. Así, a la hora de calcular $f'(z\_in_j)$ no tenemos que realizar ninguna evaluación de función, ya que $f(z\_in_j)$ ya se calculó previamente. La importancia de este detalle radica en el hecho de que evaluar funciones es uno de los procesos más costosos (y por tanto más lentos) que puede realizar un ordenador, por lo que conviene evitarlos. Así tenemos
+\[f'(x) = f(x) (1-f(x)), \text{ para la sigmoidal binaria}\]
+y
+\[f'(x) = \frac{1}{2}(1+f(x))(1-f(x)), \text{ para la sigmoidal bipolar}\]
 
 Aunque pueden emplearse redes neuronales multicapa con más de una capa intermedia, por lo general, con una sola capa intermedia es suficiente para enseñar a la red a resolver cualquier tipo de problema.
 
@@ -1477,3 +1480,36 @@ No obstante, si entrenamos demasiado a la red, puede que esta se vuelve muy espe
 Es por ello que hay que encontrar un punto justo entre precisión clasificando los patrones de entrenamiento y capacidad de aceptar variaciones pequeñas, manteniendo una correcta clasificación.
 
 Esto nos lleva a que (en las redes multicapa) podamos cambiar el algoritmo de entrenamiento considerando que en cada iteración, en lugar de movernos en la dirección del gradiente para la entrada dada, nos movemos en la dirección combinación del gradiente actual y el de la entrada anterior. Esto nos permite no ser demasiado específicos.
+
+Este entrenamiento es conocido como el método del \textbf{momento}. En esta ocasión la actualización de los pesos se lleva a cabo mediante las fórmulas:
+\[Δw_{jk}(t+1) = αδ_kz_j + μΔw_{jk}(t)\]
+y
+\[Δv_{ij}(t+1) = αδ_jx_i + μΔv_{ij}(t)\]
+lo que implica la necesidad de recordar los pesos de la iteración anterior.
+
+\subsection{Modificaciones en la función de activación}
+\subsubsection{Cambiando el recorrido}
+En ocasiones puede interesarnos que el recorrido de la función de activación $f(x)$ oscile entre $a$ y $b$ en lugar de entre $0$ y $1$. Para conseguirlo basta con tomar la función
+\[g(x)=αf(x)-β, \text{ siendo } α=b-a \text{ y } β = -a\]
+
+Al hacer este cambio seguimos conservando la propiedad de que la derivada puede evaluarse a partir de la evaluación de la función en el punto pues:
+\[g'(x) = \frac{1}{α}(β+g(x))(α-β-g(x))\]
+
+En concreto si queremos que $a=-1$ y $b=1$, es decir, queremos la función sigmoidal bipolar, este procedimiento nos permite obtener el resultado visto anteriormente.
+
+\subsubsection{Cambiando la pendiente}
+En ocasiones puede interesarnos cambiar la pendiente de la funció de activación de modo que el paso del valor más bajo al más alto posible sea más rápido.
+
+Esto implica considerar la función sigmoidal binaria como:
+\[f(x) = \frac{1}{1+e^{-σx}}\]
+donde $σ=1$ para los casos vistos hasta ahora. Cuanto mayor sea el valor σ más brusco será el crecimiento de la función, como muestra la figura \ref{fig:sigmoidalCambioSigma}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = 0.6\textwidth]{img/sigmoidalCambioSigma.png}
+\caption{Función sigmoidal para $σ=1$ (línea continua) y $σ=3$ (línea discontinua)}
+\label{fig:sigmoidalCambioSigma}
+\end{figure}
+
+En esta ocasión seguimos conservando la buena propiedad comentada anteriormente respecto a la evaluación de la derivada, teniendo
+\[f'(x) = σf(x)(1-f(x))\]
