@@ -4,6 +4,7 @@
 \doneby{arg0}#m
 \approvedby{arg0}#m
 \noteby{arg0}{arg1}#m
+\footnoteby{arg0}{arg1}#m
 \todoby{arg0}#m
 \inclass#m
 \mop{operacion}#m

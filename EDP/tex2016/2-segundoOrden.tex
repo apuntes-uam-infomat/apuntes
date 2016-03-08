@@ -1703,3 +1703,79 @@
 
 
 
+
+
+
+
+% Clase 8/3/2016
+
+Al igual que con el teorema de Dirichlet, podemos ver la aplicación de la identidad de Parçeval, que nos decía que \[ \norm{f}_{L^2}^2 = \sum_{k ∈ ℤ} \abs{\pesc{f, φ_k}}^2 \] con $\set{φ_k}$ nuestro sistema ortonormal.
+
+Consideramos de nuevo la extensión par de $f(x) = x(π-x)$. Podemos calcular y ver que \[ \pesc{\tilde{f}, φ_0} = \frac{1}{\sqrt{2π}} 2 \int_0^π x(π-x) \dif x = \sqrt{\frac{2}{π}} \left(\frac{πx^2}{2} - \frac{x^3}{3}\right|_{x = 0}^π =  \sqrt{\frac{2}{π}} \frac{π^3}{6} \]
+
+Para el resto de los coeficientes, vemos primero que los coeficientes de los senos van a ser $0$ por simetría. En el caso de los cosenos, vemos que \[ \pesc{\tilde{f}, \frac{\cos kx}{\sqrt{π}}} = \frac{2}{\sqrt{π}} \int_{0}^π x(π-x) \cos kx \dif x = \frac{2}{\sqrt{π}} \left(π\int_0^π x \cos kx \dif x - \int_0^π x^2 \cos kx \dif x \right) \]
+
+Resolvemos las dos integrales por separado: \[ \int_0^π x \cos kx \dif x = x \eval{\frac{\sin kx}{k}}_{x=0}^π - \int_0^π \frac{\sin kx}{k} \dif x = \eval{\frac{\cos kx}{k^2}}_{x=0}^π = \frac{(-1)^k - 1}{k^2} \] y la otra integral sale \[ \int_0^π x^2 \cos kx \dif x = \dotsb = \frac{2π}{k^2} (-1)^k \]
+
+Juntando ahora y haciendo más cuentas, queda que \[ \pesc{\tilde{f}, \frac{\cos kx}{\sqrt{π}}} = \frac{2 \sqrt{π}}{k^2}\left(-1 - (-1)^k\right) = \frac{2\sqrt{π}}{k^2} \begin{cases} 0 & k \text{ impar} \\ -2 & k \text{ par} \end{cases} \]
+
+Por otra parte, vemos que \[ \norm{\tilde{f}}^2_{L^2} = \dotsb =\frac{π^5}{15} \]
+
+Así, la identidad de Parçeval nos dice que \[ \frac{π^5}{15} = \left(\sqrt{\frac{2}{π}} \frac{π^3}{6}\right)^2 + \sum_{n=1}^∞ \left(\frac{2\sqrt{π}}{(2n)^2} - ( -2)\right)^2 = \frac{π^5}{18} + \sum_{n=1}^{∞} \frac{π}{n^4} \] y que simplifcando \[ \sum_{n=1}^∞ \frac{1}{n^4} = \frac{π^4}{90} \]
+
+Incluso podríamos repetir el resultado que hacíamos antes y sacar todavía más resultados de teoría de números, separando la suma de los pares y los impares \[ \frac{π^4}{90} = \sum_{k ∈ ℕ} \frac{1}{(2k)^4} + \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} = \sum_{k∈ℕ} \frac{1}{16k^4} + \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} \] y entonces podemos despejar y ver que \[ \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} =  \frac{π^4}{90} \frac{15}{16} \]
+
+
+\subsection{Convergencia puntual para funciones Hölder continuas}
+
+Recuperando lo que teníamos antes, teníamos que la continuidad no nos bastaba para tener convergencia de la serie de Fourier. Du Bois-Raymond construía un ejemplo de una función continua cuya serie no convergía en un punto, y Kolmogorov iba un poco más allá con una función continua cuya serie divergía en todo punto.
+
+Pediremos algo más que continuidad:
+
+\begin{defn}[Función\IS continua Hölder] Se dice que una función $\appl{f}{X}{ℝ}$ es Hölder continua si existe un $α ∈ [0,1]$ y $K ∈ ℝ$ tal que $∀t,s ∈ X$ (por ejemplo, $X = [-π, π]$) se cumple que \[ \abs{f(t) -f(s)} < K \abs{t-s}^α\]
+\end{defn}
+
+\begin{theorem} Sea $\appl{f}{X}{ℝ}$ una función Hölder continua. Entonces su serie de Fourier converge en todo punto a $f(x)$.
+\end{theorem}
+
+El punto de partida es el de siempre: tenemos que \[ \sum_{n = 0}^∞ a_n ≝ \lim_{N \to ∞} S_N\qquad\quad S_N = \sum_{n=0}^N a_n\]
+
+Para tratar esta suma introducimos el concepto de la \concept{Sumabilidad\IS Cèsaro}, definiendo las series de la media de las sumas parciales \[ σ_N = \frac{S_0 + \dotsb +  S_N}{N+1}\]
+
+Estas series tienen límite si lo tienen las sumas parciales:
+
+\begin{theorem} Si $\lim S_N = L$, entonces $\lim σ_N = L$. El recíproco no siempre es cierto.
+\end{theorem}
+
+Un ejemplo es ver que la serie $(-1)^n$ sí es sumable según Cèsaro, aunque no en el sentido habitual. Lo peculiar de esta serie es que oscila, y esto nos hace pensar que también se podría aplicar a las series de Fourier, que igualmente oscilan con los senos y cosenos.
+
+\begin{theorem} \[ σ_Nf = \int_{-π}^π f(x) F_N(x-t) \dif t \], donde $F_N$ son los núcleos de Féjer, que no son más que el promedio de los núcleos de Dirichlet \[ F_N(t) = \frac{1}{N+1} \sum_{k=0}^{N-1} D_k(t) = \frac{1}{N+1} \left(\frac{\sin\left(\frac{N+1}{2}\right) t}{\sin \frac{t}{2}}\right)^2\]
+\end{theorem}
+
+Lo interesante del núcleo de Féjer es que es positivo y que nos permitirá hacer cuentas igual que hacíamos con el núcleo de Poisson.
+
+\subsubsection{Aplicación a las EDPs}
+
+Recordamos la ecuación que teníamos del calor: \begin{align*}
+u_t - u_{xx} = 0 & \quad x ∈ (0,L),\, t > 0 \\
+u(0,t) = u(L,t) = 0 & \quad  t > 0 \\
+u(x,0) = f(x)
+\end{align*}
+
+Usando el método de separación de variables, llegábamos a que la solución era \[ u(x,t) \qeq \sum_{k ∈ ℤ} a_k e^{-\left(\frac{kπ}{L}\right)^2 t} \sin \frac{kπ}{L} x \], donde \[ f(x) \qeq \sum_{k ∈ ℤ} a_k \sin \frac{kπ}{L} x \]
+
+Teníamos tres interpretaciones: convergencia uniforme si tenemos $f ∈ C^2$ periódica, convergencia en sentido $L^2$ y convergencia puntual con el teorema de Dirichlet.
+
+Un teorema (que habría que poner un poquito mejor):
+
+\begin{theorem} Si $\sum f_k = f$ con convergencia uniforme y $\sum f_k' = g$, entonces $f$ es derivable y $f' = g$.
+\end{theorem}
+
+Con esto, podemos derivar la solución $u(x,t)$ y vemos que \[ u_t = \sum_{k ∈ ℤ} a_k \left[-\left(\frac{kπ}{L}\right)^2\right]  e^{-\left(\frac{kπ}{L}\right)^2 t} \sin \frac{kπ}{L} x \]
+
+Aplicamos aquí el siguiente lema:
+
+\begin{lemma} Sean $α, β > 0$. Entonces si la siguiente suma converge: \[ \sum_{k ∈ ℤ} k^α e^{-k^2β} < ∞\], entonces converge uniformemente.
+\end{lemma}
+
+Tenemos que efectivamente $u_t$ es esa serie con convergencia uniforme. Si hacemos la derivada con $u_{xx}$ nos quedará algo con convergencia uniformemente igualmente.
