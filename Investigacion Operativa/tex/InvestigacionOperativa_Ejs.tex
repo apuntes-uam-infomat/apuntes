@@ -834,3 +834,175 @@ Por otro lado:
 \spart $b,e≥0$ para que sea óptima y para tener una dirección extrema, necesitamos $c,d≤0$.
 
 \end{problem}
+
+\begin{problem}[8]
+Demuestra que, en el algoritmo del simplex, una variable que sale de la base en una determinada
+iteración no puede volver a entrar en la base en la iteración inmediatamente posterior.
+\solution
+
+\[\hat{z_r} - \hat{c_r} = \underbrace{(z_r - c_r)}_{0} - \underbrace{\frac{y_{rr}}{y_{r_k}} (z_k - c_k)}_{<0}\implies (1)\]
+
+$(1)$  la variable $r$ no entra en la siguiente iteración (aunque más adelante si podría volver a entrar).
+
+\begin{itemize}
+\item Como $r$ era una variable de la base, teníamos $z_r - c_r = 0$.
+\item $y_{r_k} > 0$ por ser el pivote. 
+\item $y_{rr} = 1$ ya que la columna del elemento r de la base es $(0,0,...,0,1,0,...,0)$ en la posición $r$.
+\item $z_k - c_k > 0$ ya que la variable $k$ entró en la base. 
+\end{itemize}
+
+\end{problem}
+
+\begin{problem}
+
+Estudia cómo puede detectarse mediante el algoritmo del simplex la existencia de “alternativa óptima”, es decir, la existencia de más de una solución óptima.
+\solution
+
+Si estamos en el óptimo, tenemos $z_j - c_j ≤ 0 ∀j∈N$. ¿Cómo descubrir que el óptimo no es único?
+
+La condición de optimalidad es:
+
+\[z = \bar{z} = \sum_{j∈N}(z_j - c_j)x_j\]
+
+Es condición necesaria que exista $j∈N$, tal que $z_j - c_j = 0$. De esta manera, al aumentar $x_j$ no aumenta el valor objetivo y tenemos infinitas soluciones óptimas.
+
+Vamos a ver un ejemplo:
+
+\begin{ioprob}
+\goal{$\min\{-x_1-x_2\}$}
+\restrictions{$x_1+x_2 ≤ 6$}{$x_1≤3$}{$x_1,x_2 ≥ 0$}{}{}{}
+\end{ioprob}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\fill[fill=blue!40!white](0,0) -- (3,0) -- (3,3) -- (0,6) -- (0,0);
+\draw[->] (0,0) -- (7,0);
+\draw[->] (0,0) -- (0,7);
+\draw (3,0) -- (3,5);
+\draw (6.1,-0.1) -- (-0.1,6.1);
+
+\end{tikzpicture}
+\caption{Solución gráfica del problema.}
+\end{figure}
+
+
+
+Vamos a construir el algoritmo del simplex, pasando previamente el problema a forma estándar:
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|cccc}
+$c_j$ & -1 & -1 &0&0\\\hline\hline
+6&1&1&1&0\\
+3&1&0&0&1\\\hline
+$z_j - c_j$ & 1&1&0&0
+\end{tabular}
+\end{table}
+
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|cccc}
+$c_j$ & 0 & 1 & 1 & -1\\\hline\hline
+3 & 0 & 1 & 1 & -1 \\
+3 & 1 & 0 & 0 & 1 \\\hline
+$z_j - c_j$ & 0&0&-1& \textcolor{red}{0}
+\end{tabular}
+\end{table}
+
+
+El punto solución son de la forma $(3,3,0,0)$, pero si tomamos $(3-α,3+α,0,α)$ (es decir, entra la 4º variable), seguimos teniendo un punto óptimo. ¿Hasta que valor puede llegar $α$? $α=3$ como máximo, entonces obtendríamos puntos óptimos de la forma $(0,6,0,3)$.
+
+Volviendo a la pregunta. \textbf{¿Condición necesaria y no suficiente?} Vamos a hacer un ejemplo en el que realmente veamos esto.
+
+
+\begin{ioprob}
+\goal{$\min\{x_1\}$}
+\restrictions{$x_1-x_2 ≤ 0$}{$2x_1 - x_2≥0$}{$x_1,x_2 ≥ 0$}{}{}{}
+\end{ioprob}
+
+Gráficamente el problema:
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+\fill[shading = axis,rectangle, left color=blue!60!white, right color=blue!25!white,shading angle=135,blue!75!white] (0,0) -- (5,5) -- (3.5,7) -- (0,0);
+\draw[->] (0,0) -- (7,0);
+\draw[->] (0,0) -- (0,7);
+\draw (0,0) -- (5,5);
+\draw (0,0) -- (3.5,7);
+\end{tikzpicture}
+\caption{Solución gráfica del problema.}
+\end{figure}
+
+
+Vamos a resolverlo con simplex. Para ello, convertimos el problema en forma estándar:
+
+\begin{ioprob}
+\goal{$\min\{x_1\}$}
+\restrictions{$x_1-x_2 +x_3= 0$}{$-2x_1 + x_2 + x_4 = 0$}{$x_1,x_2,x_3,x_4 ≥ 0$}{}{}{}
+\end{ioprob}
+
+La tabla del simplex sería:
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|cccc}
+$c_j$ & 1 & 0 & 0 & 0\\\hline\hline
+0 & 1 & -1 & 1 & 0 \\
+0 & -2 & 1 & 0 & 1 \\\hline
+$z_j - c_j$ & -1 & 0 & 0 & 0 
+\end{tabular}
+\end{table}
+
+Y vemos que ya hemos acabado, porque son todas negativas o $0$. 
+\end{problem}
+
+\begin{problem}
+En una iteración del algoritmo del simplex aplicado a un problema lineal de minimización se
+obtiene la tabla siguiente:
+
+\begin{centering}
+\begin{tabular}{c|cccc}
+&-2&3&0&0\\\hline
+&$x_1$&$x_2$&$x_3$&$x_4$\\\hline
+$x_3 = 4$ & c&0&1&$\rfrac{1}{5}$\\
+$x_1 = a$ & d&e&0&2\\\hline
+&f&-1&g&h
+\end{tabular}
+\end{centering}
+
+El valor del objetivo del problema en la solución básica factible a la que corresponde la tabla
+anterior es -6. Las variables $x_3$ y $x_4$ son de holgura y formaban la base inicial.
+
+\ppart Calcula el valor de las siete incógnitas a, c, d, e, f , g y h.
+
+\ppart ¿Corresponde la tabla a una solución básica factible óptima?
+\solution
+
+\spart $c=0$,$d=1$,$f=g=0$.
+
+\[h = z_4 - c_4 = c^\top_By_4 - c_4 = (0,-2) \begin{pmatrix}\rfrac{1}{5}\\2\end{pmatrix} - 0  = --4 \]
+
+\[ \bar{z} = -6 = -2a \implies a=3 \]
+
+\spart  Sí, porque son todos $0$ o negativos.
+
+\end{problem}
+
+\begin{problem}[11]
+
+\solution
+
+La condición de optimalidad no depende de $b$, entonces se sigue cumpliendo si $b\to b+θd$
+
+\[
+	B^{-1}b \to B^{-1}(b+θd) ≥ 0 \implies (b+θd)≥ 0 \implies \bar{d}≥0
+\]
+\begin{itemize}
+	\item $\bar{d}≥0$, la base es óptima $∀θ≥0$.
+	\item $\displaystyle\bar{d}\not ≥0 \implies b_i ≥ -θ\bar{d_i} \implies θ < \min\left\{\frac{-\bar{b_i}}{\bar{d}_i}\right\}$
+\end{itemize}
+
+\end{problem}

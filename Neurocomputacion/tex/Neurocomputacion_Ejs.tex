@@ -1335,3 +1335,145 @@ En general siempre que ajustemos los pesos de forma que una neurona de la capa i
 
 Otra situación en la que se produce muy poco aprendizaje es el momento en el que el valor δ es 0. Esto ocurre cuando la derivada de la función toma valor 0, cosa que ocurre cuando $f(x)\approx 1$.
 \end{problem}
+
+\section{Resumen de contenidos Teóricos}
+Hasta ahora hemos trabajado con dos tipos de redes neuronales diferentes: aquellas que sólo tienen dos capas de neuronas (la de entrada y la de salida) y las redes con una capa intermedia.
+
+Todas las redes funcionan de la misma manera: los valores se predicen atendiendo a las funciones de activación; para cada neurona distinta de las neuronas de entrada tenemos un bias, que actúa como una entrada con valor 1 permanente; y cada red tiene un algoritmo de aprendizaje que nos permite ajustar los pesos adecuadamente.
+
+\subsection{Algoritmos de aprendizaje}
+\subsubsection{Red Hebb}
+\begin{enumerate}
+\item Inicializamos los pesos a 0.
+\item Para cada patrón de entrenamiento:
+\begin{enumerate}
+\item Tomamos la salida esperada $t$
+\item Ajustamos los pesos según la regla:
+\[w_i = w_i + x_i\cdot t\]
+\[b = b + t\]
+\end{enumerate}
+\end{enumerate}
+
+\subsubsection{Perceptrón}
+\begin{enumerate}
+\item Inicializamos los pesos a 0.
+\item Definimos un factor de aprendizaje α
+\item Mientras no se cumpla la condición de parada:
+\begin{enumerate}
+\item Para cada patrón de entrenamiento
+\begin{enumerate}
+\item Hacemos trabajar a la red sobre el patrón obteniendo
+\[y\_in = b + \sum_i x_i\cdot w_i\]
+\[y = \left\{ \begin{array}{lll}
+1 & \text{si} & y\_in > \theta \\
+0 & \text{si} & -\theta \geq  y\_in \geq  \theta \\
+-1 & \text{si} & y\_in < -\theta
+\end{array}\right.\]
+
+\item Si el resultado predicho no coincide con el esperado, es decir si $y\neq t$ actualizamos los pesos según la regla
+\[w_i = w_i + αtx_i\]
+\[b = b + αt\]
+\end{enumerate}
+\item Condición de parada: Si ningún peso ha cambiado paramos.
+\end{enumerate}
+\end{enumerate}
+
+\subsubsection{Adaline}
+La regla de aprendizaje de esta red neuronal se apoya en la idea de \textbf{minimizar el error cuadrático medio}. Veamos cómo funciona esta regla:
+\begin{enumerate}
+\item Inicializamos los pesos con valores aleatorios.
+\item Definimos un factor de aprendizaje α
+\item Mientras no se cumpla la condición de parada:
+\begin{enumerate}
+\item Para cada patrón de entrenamiento
+\begin{enumerate}
+\item Hacemos trabajar a la red sobre el patrón obteniendo
+\[y\_in = b + \sum_i x_i\cdot w_i\]
+
+\item Actualizamos los pesos
+\[w_i = w_i + α(t-y\_in)x_i\]
+\[b = b + αt\]
+\end{enumerate}
+\item Condición de parada: Si el mayor cambio aplicado a los pesos es menor que un cierto valor indicado previamente, paramos.
+\end{enumerate}
+\end{enumerate}
+
+El \concept{error cuadrático medio} viene dado por la ecuación
+\[E = \sum_{j=1}^m(t_j-y\_in_j)^2\]
+
+siendo $E$ una función que (fijando una entrada) depende de todos los pesos de la red. Si queremos calcular los pesos que minimizan el error cuadrático medio para esa entrada lo que debemos hacer es modificar los pesos en la dirección del gradiente. El \concept{gradiente} de una superficie es un vector que nos da la dirección de máximo crecimiento (consecuentemente, su opuesto nos da la dirección de máximo decrecimiento).
+
+Para obtener el vector gradiente lo que único que debemos hacer es derivar respecto a cada coordenada. Vamos a ello:
+
+\[\frac{\partial E}{\partial w_{ij}} = \frac{\partial}{\partial w_{ij}}\sum_{k=1}^m(t_k-y\_in_k)^2 = \frac{\partial}{\partial w_{ij}} (t_j - y\_in_j)^2 = -2(t_j-y\_in_j)\frac{\partial}{\partial w_{ij}}y\_in_j\]
+Sabiendo que
+\[y\_in_j = \sum_{i=1}^n x_i w_{ij}\]
+tenemos
+\[\frac{\partial E}{\partial w_ij}=-2(t_j-y\_in_j)x_i\]
+
+Podemos observar que, en cada peso, la variación aplicada por el algoritmo de aprendizaje es el opuesto de este valor.
+
+
+\subsubsection{Perceptrón multicapa}
+\begin{enumerate}
+\item Inicializamos los pesos con valores aleatorios.
+\item Definimos un factor de aprendizaje α
+\item Mientras no se cumpla la condición de parada:
+\begin{enumerate}
+\item \textbf{Feedforward}
+\begin{enumerate}
+\item Asignamos a las neuronas de entrada los valores corresponientes al patrón dado
+\item Calculamos la salida de cada una de las neuronas de la capa intermedia, así como su entrada neta
+\[z\_in_j = v_{0j} + \sum_{i=1}^nx_iv_{ij}\]
+\[z_j=f(z\_in_j)\]
+\item Calculamos la salida de cada neurona de salida, así como su entrada neta
+\[y\_in_k = w_{0k} + \sum_{j=1}^pz_jw_{jk}\]
+\[y_k = f(y\_in_k)\]
+\end{enumerate}
+\item \textbf{Backpropagation of error}
+\begin{enumerate}
+\item Calculamos el valor δ de cada neurona de salida
+\[δ_k = (t-y_k)f'(y\_in_k) \]
+Calculamos tambien la variación de peso que deberemos aplicar a las conexiones que llegan hasta esta neurona:
+\[Δw_{jk}= αδ_kz_j\]
+\[Δw_{0k}= αδ_k\]
+
+\item Cada neurona oculta calcula su $δ\_in_j$ como suma ponderada de los valores δ que llegan hasta ella, multiplicada por la derivada.
+\[δ\_in_j = \sum_{k=1}^m δ_kw_{jk}\]
+\[δ_j= δ\_in_j \cdot f'(z\_in_j)\]
+
+Calculamos la variación de peso que deberemos aplicar a las conexiones que llegan hasta cada neurona:
+\[Δv_{ij} = αδ_jx_i\]
+\[Δv_{0j} = αδ_j\]
+
+\end{enumerate}
+\item \textbf{Update weights and biases}
+\begin{enumerate}
+\item Atendiendo a los incrementos calculados en los pasos anteriores actualizamos los pesos
+\end{enumerate}
+\end{enumerate}
+\item Comprobamos la condición de parada, que no viene definida por defecto.
+\end{enumerate}
+
+Para la única red multicapa que hemos estudiado hasta el momento hay una diferencia más, aparte de la existencia de una capa intermedia de neuronas. Para el \textbf{perceptrón multicapa} las neuronas intermedias y la de salida tienen función de activación continua con lo que el valor emitido puede ser cualquiera dentro de un intervalo.
+
+Para un percpetrón multicapa con salida binaria la función de activación suele ser
+\[f(x) = \frac{1}{1+e^{-x}}\]
+mientras que si la salida es bipolar suele tomarse la función de activación de la forma
+\[f(x) = \frac{2}{1+e^{-x}}+1\]
+
+En general es necesario emplear funciones continuas cuyo recorrido varíe desde 0 hasta 1, en el caso de salida binaria, o desde -1 hasta 1, para el caso de salida bipolar.
+
+En concreto se emplean funciones como las mencionadas anteriormente puesto que su derivada evaluada en un punto $x_0$ puede calcularse cómodamente a partir de la evaluación de la función en ese mismo punto. Así, a la hora de calcular $f'(z\_in_j)$ no tenemos que realizar ninguna evaluación de función, ya que $f(z\_in_j)$ ya se calculó previamente. La importancia de este detalle radica en el hecho de que evaluar funciones es uno de los procesos más costosos (y por tanto más lentos) que puede realizar un ordenador, por lo que conviene evitarlos.
+
+Aunque pueden emplearse redes neuronales multicapa con más de una capa intermedia, por lo general, con una sola capa intermedia es suficiente para enseñar a la red a resolver cualquier tipo de problema.
+
+\subsection{Sobreaprendizaje}
+
+El objetivo de las redes neuronales es ser capaz de predecir la salida de ciertos patrones y para ello se les entrena con unos patrones dados de los que conocemos su salida.
+
+No obstante, si entrenamos demasiado a la red, puede que esta se vuelve muy especifica para los patrones de entrenamiento dados\footnote{Esto no ocurre con el perceptrón, que sólo actualiza pesos si predice mal la salida} de modo que cuando analice otros datos parecidos a los iniciales no sea capaz de notarlo.
+
+Es por ello que hay que encontrar un punto justo entre precisión clasificando los patrones de entrenamiento y capacidad de aceptar variaciones pequeñas, manteniendo una correcta clasificación.
+
+Esto nos lleva a que (en las redes multicapa) podamos cambiar el algoritmo de entrenamiento considerando que en cada iteración, en lugar de movernos en la dirección del gradiente para la entrada dada, nos movemos en la dirección combinación del gradiente actual y el de la entrada anterior. Esto nos permite no ser demasiado específicos.
