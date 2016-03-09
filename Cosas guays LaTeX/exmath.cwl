@@ -45,6 +45,8 @@
 \units{arg0}#m
 \convx{arg0}#m
 \afin{arg0}#m
+\Hf{arg0}#m
+\gvx#m
 \app#m
 \obs#m
 \nota#m
