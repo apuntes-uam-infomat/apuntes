@@ -307,5 +307,5 @@
 \fourier#m
 \hash#m
 \difp#m
-\difp[f]#m
-\difp[f][p]#m
+\difp[F]#m
+\difp[F][p]#m
