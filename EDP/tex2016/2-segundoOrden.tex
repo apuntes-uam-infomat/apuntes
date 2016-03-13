@@ -1909,6 +1909,8 @@ Lo interesante del núcleo de Féjer es que es positivo y que nos permitirá hac
 
 \subsubsection{Aplicación a las EDPs}
 
+\textbf{Aplicación a la ecuación del calor}
+
 Recordamos la ecuación que teníamos del calor: \begin{align*}
 u_t - u_{xx} = 0 & \quad x ∈ (0,L),\, t > 0 \\
 u(0,t) = u(L,t) = 0 & \quad  t > 0 \\
@@ -1932,3 +1934,149 @@ Aplicamos aquí el siguiente lema:
 \end{lemma}
 
 Tenemos que efectivamente $u_t$ es esa serie con convergencia uniforme. Si hacemos la derivada con $u_{xx}$ nos quedará algo con convergencia uniformemente igualmente.
+
+
+
+
+
+% Clase 9/3/2016
+
+
+		\textbf{Aplicación a la ecuación de ondas}
+
+			\[  \begin{cases}
+				u_{tt} - u_{xx} = 0 \\
+				u(0,t) = u(L,t) = 0 \\
+				u(x,0) = f(x) \\
+				u_t(x,0) = g(x) \equiv 0
+				\end{cases}
+			\]
+
+			Por separación de variables y como $g \equiv 0$:
+
+			\[
+			\begin{cases}
+				u(x,t) = \sum_{k=1}^\infty a_k \cos(\frac{k\pi}{L}t) \sin(\frac{k\pi}{L}x) \\
+				\text{ donde } f(x) = \sum_{k=1}^\infty a_k \sin(\frac{k\pi}{L}x)
+			\end{cases}
+			\]
+
+			Realizamod la extensión impar de $f$ al intervalo $[-L,L] \rightarrow$ los coeficientes de los cosenos se anulan.
+
+			Entonces podemos escribir la serie de $u$. Como veíamos, tenemos 3 interpretaciones del $=$ dependiendo del tipo de convergencia que estemos hablando.
+
+			Toda la regularidad y convergencia que vamos a conseguir viene de los $a_k$, ya que no tenemos exponenciales, solo senos y cosenos que oscilan. Lo que quiere decir que la serie que vamos a obtener será ``buena'' si la serie dato es buena y mala si no.
+
+			El criterio que teníamos para regularidad era el decaimiento de la serie, como los senos y cosenos están acotados y su valor absoluto será como máximo uno, entonces sus factores (los $a_k$) son los que influyen en esa convergencia. Esto se puede extrapolar a la fórmula D'Alambert (\ref{eq:DALEMBERT}).
+
+
+			Miremos una extensión de la serie de los $a_k$:
+
+			\[a_1 \cos\left(\frac{\pi}{L}t \right) \sin\left(\frac{\pi}{L}x \right) + a_2 \cos\left(\frac{2\pi}{L}t \right) \sin\left(\frac{2\pi}{L}x \right) + a_3 \cos\left(\frac{3\pi}{L}t \right) \sin\left(\frac{3\pi}{L}x \right) + …\]
+
+
+			(3 DIBUJOS)
+
+
+			Por Riemann-Lebesgue tenemos que $a_k \to 0$.
+
+			\textbf{Extensiones:}
+
+			\begin{itemize}
+				\item Transformada de Fourier. Estudiamos el espectro de la función. Lo usamos cuando no conocemos la longitud de la cuerda.
+						$f(x)$, L desconocido.
+						\[\int_{-\infty}^\infty f(x) e^{-i} \xi^x dx = \gor{f} (\xi) \]
+
+				\item Transformada de Fourier discreta (DFT).
+
+				Supangamos que tenemos $f(x)$, $2\pi$-periódica.
+
+				\[ f(x) = \sum_{k=-\infty}^\infty c_k e^{ikx}\]
+
+				Realizamos una grabación digital de sonido realizando un muestreo. Es decir, el micrófono nos da el valor de la función para muchos tiempos discretos.
+
+				(DIBUJO SAMPLING)
+
+				Nuestro propósito es resumir esa información para poder guardarla de forma comprimida. Intentaremos hacer una interpolación para reconstruir la función inicial $f$. Después calcularemos la serie de fourier de esta, y por último truncaremos las frecuencias no audibles para comprimir.
+
+				Este proceso sería muy costoso así que en vez de hacer todos los pasos uno por uno vamos a intentar no tener que pasar por el mundo contínuo.
+
+				Tenemos unos datos;
+
+				En el intervalo $[0,2\pi]$ dividido en $N$ trozos:
+
+				\[x_j = \frac{2\pi}{N}j, \quad j=0,1,2,…,N-1\]
+
+				Y el sampling que hemos realizado:
+
+				\[ y_j = f(\frac{2\pi}{N}j)\]
+
+
+				\textbf{Idea 1}
+
+				Supongamos que existe:
+
+				\[f(x) = \sum_{k=-\infty}^\infty c_k e^{ikx} \]
+
+				\[ y_0 = f(x_0) = f(0) = \sum_{k=-\infty}^\infty c_k \]
+				\[ y_1 = f(x_1) = f\left(\frac{2\pi}{N}\right) = \sum_{k=-\infty}^\infty c_k \left( e^{i\frac{2\pi}{N}} \right)^k \eqreason{$e^{i\frac{2\pi}{N}} \equiv \omega $} \sum_{k=-\infty}^\infty c_k \omega^k \]
+				\[ y_p = f(x_p) = f\left(\frac{2\pi}{N}p\right) = \sum_{k=-\infty}^\infty c_k \left(\omega^p\right)^k \]
+
+
+
+				Tenemos $N ecuaciones$ e infinitas incógnitas $C_k$. Los $C_k$ son valores exactos pero podemos reducir el problema a encontrar valores aproximados $z_k$. Veamos el sistema aproximado:
+
+				\[y_0 = \sum_{k=0}^N-1 z_k\]
+				\[y_1 = \sum_{k=0}^N-1 z_k \omega^k\]
+				\[y_{N-1} = \sum_{k=0}^N-1 z_k \left(\omega^{N-1}\right)^k\]
+
+
+				\obs
+				\[ \omega = e^{i \frac{2\pi}{N}}  \]
+
+				(FALTA COMPLETAR)
+
+
+				Todo lo que tenemos es periódico así que cualquier bloque de longitud $N$ nos vale (es equivalente). Porque todos os coeficientes son $N$-periódicos. Suponiendo que los datos $\{y_i\}$ también los extiendo de manera $N$-periódica a izquierda y derecha. Tenemos que cualquier bloque de longitud $N$ es equivalente.
+
+				\[k=0,1,2,…,N-1\]
+				\[k = -\frac{N}{2}, -\frac{N}{2}+1, … , \frac{N}{2}\]
+
+
+				Formulación matricial:
+
+				\[ \bar{Y} = \left(
+				\begin{matrix}
+					1 & 1 & 1 & … & 1 \\
+					1 & \omega & \omega^2 & … & \omega^{N-1} \\
+					· & \omega^2 & \omega^4 & … & \omega^{(N-1)2} \\
+					· & · & · & · & · \\
+					1 & \omega^{N-1} & (\omega^2)^{N-1} & … & \omega^{(N-1)(N-1)}
+				\end{matrix} \right) \bar{Z}
+				\]
+
+				Ortogonalidad:
+
+				\[ \sum_{s=0}^{N-1} \omega^{js} \omega^{-LS} = \begin{cases}
+				0 & L \neq j\\
+				N & L = j
+				\end{cases} \]
+
+				(FALTA UNA COSILLA Y UN POCO DE EXPLICACIÓN)
+
+				Veamos la demostración
+
+				\begin{proof}
+
+				\[ \omega^{js} \omega^{-LS} = \omega^{(j-L)S} = e^{i\frac{2\pi}{N}(j-L)s}  \]
+
+				(FALTA TERMINAR)
+
+				\end{proof}
+
+
+
+			\end{itemize}
+
+
+

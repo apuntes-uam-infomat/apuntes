@@ -851,10 +851,100 @@ Si $(Λ_0, S_0)$ es un elemento maximal de $\mathcal{U}$, para probar Hahn-Banac
 \begin{prop} Dado $X= (V, \norm{·}_V)$ un espacio normado, entonces la inyección canónica $\appl{i}{X}{X^{**}}$ es isométrica.
 \end{prop}
 
+\begin{proof}
+Si $x^* ∈ X^*$ y $x ∈ X$, entonces $i(x)(x^*) = x^* (x) = \pesc{x^*, x}$. Sea $x_0 ∈ X$ y $E = \spn \set{x_0}$. Definimos \begin{align*}
+\appl{λ}{E&}{\kbb} \\
+tx_0 &\longmapsto t\norm{x_0}_X
+\end{align*} con $t ∈ \kbb$.
+
+Vemos que $\abs{λ(tx_0)} = \norm{tx_0}$, luego $λ$ es acotado en $E$ y con norma $1$.
+
+Usando Hahn-Banach, podemos extender λ a un funcional acotado $X$ y conservando la norma.
+
+Queremos que $\norm{i(x_0)}_{X^{**}} = \norm{x_0}_X$. Usando el $λ ∈ X^*$ que hemos producido entonces $i(x_0)(λ) = λ(x_0) = \norm{x_0}_X$., y entonces \[ \norm{i(x_0)}_{X^{**}} ≥ \frac{\abs{i(x_0)(λ))}}{\norm{λ}} = \norm{x_0}_{X^**} \]
+
+La desigualdad al otro lado también sale y listos.
+\end{proof}
+
 \begin{defn}[Espacio\IS reflexivo] Si $\appl{i}{V}{V^{**}}$ es una isometría sobreyectiva, se dice que $X = (V, \norm{·})$ es reflexivo.
 \end{defn}
 
 Por ejemplo, los espacios $L^p$ con $1 < p < ∞$ son reflexivos.
+
+\begin{prop} Sea $X = (V, \norm{·}_V)$ un espacio normado y $x ∈ X$. Entonces \[ \norm{x}_X = \sup_{\substack{λ ∈ X^* \setminus \set{0} \\ \norm{λ}_{X^*} ≤ 1}} \abs{\pesc{λ, x}} \] y de hecho este supremo es un máximo.
+\end{prop}
+
+Esta proposición nos permitirá estimar normas.
+
+\begin{proof}
+Para la desigualdad a un lado, \[ \abs{\pesc{λ,x}} = \abs{λ(x)} ≤ \norm{λ}_{X^*}\norm{x}_X ≤ \norm{x}_{X} \]
+
+Para la desigualdad al otro, construimos un $λ_0(x) = \norm{x}_{X^*}$ con $\norm{λ}_{X^*} = 1$ y deducimos la desigualdad como consecuencia de Hahn-Banach.
+\end{proof}
+
+\begin{prop} Sea $X = (V, \norm{·})$ un espacio normado y $E ⊂ V$ un subespacio. Entonces $E$ es denso en $V$ si y sólo si $∀λ ∈ X^*$ idénticamente nulo en $E$ lo es asimismo en $V$.
+\end{prop}
+
+\begin{proof} Si $E$ es denso y $λ ∈ X^*$ es nulo en $E$, como $E$ es denso y λ es continuo en $V$, entonces se sigue que $λ = 0$ en $\adh{E} = V$.
+
+Si $E$ no es denso en $V$, entonces $∃λ ∈ X^*$ con $λ = 0$ en $E$ y $λ ≠ 0$. Como $E$ no es denso en $V$, $\mop{int}(V\setminus E) ≠ ∅$, luego existe una bola $\bola_δ(x_0) ⊂ V$. En particular, $x_0 ∉ E$.
+
+Consideramos $E' = E + \spn\set{x_0}$. Si $y ∈ E'$, entonces $\uexists x ∈ V,\, t ∈ \kbb$ tal que $y = x + tx_0$. Definimos entonces \begin{align*}
+\appl{λ}{E'&}{\kbb} \\
+x + tx_0 & \longmapsto t
+\end{align*}
+
+Observamos que $λ$ es lineal. Además, $\restr{λ}{E} = 0$ y $λ(x_0) = 1 ≠ 0$, luego λ es un funcional lineal no trivial en $E'$ que se anula en $E$. Si vemos que es acotado lo podríamos extender con Hahn-Banach a un funcional acotado en todo $V$, y entonces ya estaría.
+
+Sea $y ∈ x + tx_0 ∈ E'$. Si $t ≠ 0$, entonces \[ \norm{y}_X = \abs{t}\norm{x_0 - (-x')}_{X}\] con $x' = \frac{1}{t}x ∈ E ⊂ \bola_δ(x_0)^c$, luego haciendo más cuentas es un funcional acotado. Lo extendemos y listos. Booom.
+
+\end{proof}
+
+\section{Espacio cociente en espacios de Banach}
+
+Partimos de un espacio de Banach $X$ y $E ⊂ X$ un subespacio cerrado. Entonces $(E, \norm{·}_X)$ es Banach igualmente. Recordamos que el \concept{Espacio\IS cociente} $\quot{X}{E}$ está dado por las clases de equivalencia de la relación \[ x,y ∈ X\; x \sim y \iff x - y ∈ E \]
+
+La norma que definamos en $\quot{X}{E}$ no puede depender del representante que tomemos de la clase de equivalencia, así que tenemos que complicarnos un poco la vida.
+
+\begin{defn}[Norma\IS cociente] \label{def:NormaCociente} Dado $X$ un espacio Banach y $E ⊂ X$ un subespacio cerrado, se define la norma cociente como \( \norm{[x]}_{\quot{X}{E}} = \inf_{y ∈ E} \norm{x + y}_X \label{eq:NormaCociente} \)
+\end{defn}
+
+
+\begin{prop} Dado $X$ un espacio normado y $E ⊂ X$ un subespacio de $X$, entonces:
+
+\begin{enumerate}
+\item La norma $\norm{·}_{\quot{X}{E}}$ es una seminorma.
+\item Si además $E$ es cerrado, entonces es una norma
+\item Si $E$ es cerrado y $X$ es Banach, entonces $\quot{X}{E}$ es completo con la norma cociente.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+
+\proofpart{La norma cociente está bien definida}
+
+Tenemos que ver que si $x - x' ∈ E$ entonces $\norm{x}_{X/E} = \norm{x'}_{X/E}$. Esto está claro, simplemente hay que sustituir en el ínfimo ese.
+
+También hay que ver que $\norm{x}_{X/E} = 0 \iff x ∈ \adh{E}$. Si $x ∈ E$, está claro porque en el ínfimo de \eqref{eq:NormaCociente} tomamos $y = -x$ y nos da cero. Para la implicación al otro lado, cogemos una sucesión que converge a $-x$, luego $-x ∈ \adh{E}$ y entonces $x ∈ \adh{E}$.
+
+Para el análogo, hay que ver que si $x ∉ \adh{E}$ entonces $x ∈ \adh{E}^c$, luego existe una bola $\bola_δ(x) ⊂ E^c$ y $\norm{x + y} ≥ δ ∀y ∈ E$ así que $\norm{x}_{X/E} ≥ δ > 0$.
+
+\proofpart{Seminorma}
+
+Sea $λ ∈ \kbb\setminus\set{0}$, $x ∈ X$. Entonces \[ \norm{λx}_{X/E} = \inf_{y ∈ E} \norm{λx + y} = \inf_{y ∈ \inv{λ}E} \norm{λx + λy} = \abs{λ} \inf_{y ∈ \inv{λ}E} \norm{x + y} = \abs{λ} \norm{x}_{X/E}\] ya que $E = \inv{λ}E$. Si $λ = 0$ no hay que hacer nada.
+
+Ahora hay que ver la desigualdad triangular. De nuevo trabajando con el ínfimo ese sale: cogemos $y = 2z$ ya que $2E = E$, aplicamos la desigualdad triangular para sacar $\norm{x + z}$, $\norm{x'+z}$ y entonces podemos separar el ínfimo en suma de dos ínfimos para sacar la desigualdad.
+
+Así que sí, tenemos una seminorma en $X$ que se anula precisamente en $\adh{E}$.
+
+\proofpart{Norma si $E$ es completo}
+
+Si $E$ es cerrado, entonces $\adh{E} = E$, luego $X$ se anula sólo en $\adh{E}$. Se cumple entonces la condición de positividad ($\norm{x}_{X/E} = 0 \iff x = [0]$), así que es una norma.
+
+\proofpart{$E$ cerrado y $X$ Banach implica $X/E$ Banach}
+
+
+\end{proof}
 
 \chapter{Dualidad en espacios de Banach}
 
