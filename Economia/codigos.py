@@ -143,7 +143,7 @@ def computeValuePutBarreraDown_In(path, a, b, p, S0, barrera, K):
 def computeValueCallAsiaticaAritmetica(path, a, b, p, S0, barrera, K):
 	prob = 1
 	value = S0
-	media = S0
+	media = 0
 	string = ""
 
 	for i in path:
