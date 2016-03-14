@@ -1297,30 +1297,36 @@
 
 		\[P(r,\alpha) = \frac{1}{2\pi} \frac{1-r^2}{1+r^2-2r\cos (\theta - s)} \]
 
-		% revisado hasta acá
+
 
 		\textbf{Propiedades}
 
 		\begin{itemize}
 
-			\item Fijo $r \in [0,1)$, $P(r,\alpha) = P(r,-\alpha)$, 2-$\pi$ periódico en $\alpha$.
+			\item Fijo $r \in \left[ 0,1 \right)$, $P(r,\alpha) = P(r,-\alpha)$, 2-$\pi$ periódico en $\alpha$.
 
 			\item $P(r,\alpha) > 0$
 
-			\item $\dpd{P}{\alpha} < 0$ en $\alpha \in [0,R)$
+			\item $\dpd{P}{\alpha} < 0$ en $\alpha \in \left[ 0,R \right)$
 
 			\[ \text{En particular} \begin{cases}
 				\max_{\alpha \in [\delta > 0, \pi)} P(r,\alpha) = P(r,\delta) \\
 				\min P(r,\alpha) = P(r,\pi) = P(r,-\pi)
 			\end{cases} \]
 
+			\obs \[ P(r, \theta) = \frac{1}{2\pi}\frac{1-r^2}{1+r^2-2r \cos(\theta)} = \frac{1}{2\pi} \sum_{-\infty}^\infty r^{|k|} e^{i k \alpha} \]
+
 			\item \[
 				\int_{-\pi}^\pi P(r, \alpha) d\alpha = 1 \quad \forall r < 1
 			\]
 
 			\begin{proof}
-				Utilizar \[ \int_{-\pi}^\pi P(r, \alpha) = \frac{1}{2\pi} \int_{-\pi}^\pi \sum_{k=-\infty}^{\infty} r^{|k|} \cdot e^{ik\alpha}  = … = 1 + \frac{1}{2\pi}  \]
-				(FALTA)
+				Utilizar \[ \int_{-\pi}^\pi P(r, \alpha) = \frac{1}{2\pi} \int_{-\pi}^\pi \sum_{k=-\infty}^{\infty} r^{|k|} \cdot e^{ik\alpha}  = \]
+				\[ \frac{1}{2\pi} \{ \int_{-\pi}^{\pi} \underbrace{1}_{k=0}  + \sum_{k<0} + \sum_{k>0} \} = 1 + \frac{1}{2\pi} \left\{ \int \sum_{k<0} + \sum_{k>0} \right\} \]
+
+				Entonces agrupamos términos con potencias $k$ con los de potencia $-k$ y las sumas nos dan cosenos. Integrando obtenemos senos de $-\pi$ y $\pi$ (por los límites de la integral):
+
+				\[\int_{-\pi}^{\pi} P(r, \alpha) d\alpha = 1\]
 			\end{proof}
 
 
@@ -1338,7 +1344,26 @@
 				\end{cases}
 			\]
 
-			(DIBUJO ONDITAS ENTRE -pi y pi)
+			Este es el comportamiento típico de una Delta de Dirac.
+
+			\begin{center}
+			\begin{tikzpicture}
+
+			\draw[-] (-3,0) -- (3,0) node [below] {$\theta$};
+			\draw[-] (0,-0.5) -- (0,2);
+
+			\draw[-] (-1.5,0.1) -- (-1.5,-0.1) node[below] {$-\pi$};
+			\draw[-] (1.5,0.1) -- (1.5,-0.1) node[below] {$\pi$};
+
+			\draw[blue, thick] plot[smooth] coordinates {(-1.5,0.2) (-0.5,0.5) (0,1.7) (0.5,0.5) (1.5,0.2)};
+
+			\draw[green, thick] plot[smooth] coordinates {(-1.5,0.6) (-0.7,0.8) (0,1.5) (0.7,0.8) (1.5,0.6)};
+
+			\node[right] at (1.5,0.6) {$r$ pequeño};
+			\node[right] at (1.5,0.2) {$r$ próximo a 1};
+
+			\end{tikzpicture}
+			\end{center}
 
 			Puesto que la función es periódica da lo mismo integrar entre $-\pi$ y $\pi$ que cualquier otro intervalo de tamaño $2\pi$. Todas serán 1.
 
@@ -1354,41 +1379,50 @@
 
 			\begin{proof}
 
-				\[0 \leq \left| \int_{-\pi}^{\pi} g(s9 P(r, \theta-s) - g(\theta))  \right| \]
+				\[0 \leq \left| \int_{-\pi}^{\pi} g(s) P(r, \theta-s) - g(\theta))  \right| \]
 
 				Tenemos que $\int\limits_{-\pi}^{\pi} P(r, \theta-s) ds = 1$ por los cálculos anteriores, por lo que la multiplicaremos por lo que ya tenemos:
 
-				\[0 \leq \left| \int_{-\pi}^{\pi} g(s9 P(r, \theta-s) - g(\theta))  \int\limits_{-\pi}^{\pi} P(r, \theta-s) ds  \right| \]
+				\[0 \leq \left| \int_{-\pi}^{\pi} g(s) P(r, \theta-s) - g(\theta))  \int\limits_{-\pi}^{\pi} P(r, \theta-s) ds  \right| \]
 
 				\[ = \left| \int_{-\pi}^\pi (g(s) - g(\theta)) P(r, \theta - s) ds \right|  \leq \int^{\pi}_{-\pi} | g(s) - g(\theta) | P(r, \theta- s) \]
 
 				Hemos podido hacer este paso ya que $P>0$, pero veremos en unos días que no se va a cumplir en otra prueba y tendremos problemas.
 
-
-				(DIBUJO)
-
 				Vamos a descomponer la integral en dos trozos, en uno nos ayudaremos de la continuidad de $g$ y en el otro de la del núcleo.
 
 				\[ = \underbrace{\int_{|\theta-s|< \delta}}_{|g(s) - g(\theta)| \text{ pequeño y }p\text{ grande}} + \underbrace{\int_{|\theta-s| > \delta}}_{|g(s) - g(\theta)| \text{ acotado y }p\text{ pequeño}} \]
 
+				\textbf{i:} Como $g$ es contínua en $[-\pi,\pi]$, intervalo cerrado y acotado. Entonces si $[-\pi,\pi]$ es compacto $\Rightarrow$ $g$ es uniformemente contínua.
+
 				Dado $\epsilon > 0$, $\exists \delta > 0$ tal que si $|\theta-s| < \delta$, entonces $|g(s) - g(\theta)| < \epsilon, \forall \theta$
 
-				(FALTA UN POCO dos casos)
+				\[\Rightarrow \int_{|\theta - s| < \delta} |g(s) - g(\theta) | P(r, \theta - s) ds < \epsilon \int_{|\theta - s| < \delta} P < \epsilon  \underbrace{\int_{-\pi}^{\pi} P}_{= \epsilon}    \]
 
-				Y volviendo a juntar tenemos:
+				Luego tiende a 0, pero hemos fijado $\delta$.
 
-				\[ \int^{\pi}_{-\pi} |g(s) - g(\theta) | \underbrace{P(r, \theta-s) ds}_{\leq P(r, \theta-(\theta-\delta)) = P(r, -\delta) = P(r, \delta)} \leq   \]
+				\textbf{ii:} Par el delta elegido en \textbf{i}, $\int\limits_{|\theta - s | > \delta} |g(s) - g(\theta)| P(r, \theta-s) ds = $
+
+				\[
+					\int_{\theta+\delta}^\pi \underbrace{|g(s) - g(\theta)| P(r, \theta-s)}_{(1)} +  \int_{-\pi}^{\theta-\delta} \underbrace{|g(s) - g(\theta)| P(r, \theta-s)}_{(2)}
+				\]
+
+				Y tenemos:
+
+				\[ (1) \leq P(r, \theta-(\theta-\delta)) = P(r, -\delta) = P(r, \delta) \leq  \]
 
 				\[\leq P(r, \delta) \int^{\pi}_{\theta+\delta} |g(s) - g(\theta) ds \leq C P(r, \underbrace{\delta}_{> 0}) \convs[][r][1^-] 0  \]
 
 				\[g \text{ continua } \Rightarrow |g| < M \]
 
-				\[ |g(s)  - g(\theta)| \leq |g(s)| + | g(\theta) | \leq 2m \]
+				\[ |g(s)  - g(\theta)| \leq |g(s)| + | g(\theta) | \leq 2M \]
 
 
 				Hemos probado:
 
-				Dado $\epsilon > 0$, $\exists r_0$ tal que si $r \in (r_0,1)$, (FALTA).
+				Dado $\epsilon > 0$, $\exists r_0$ tal que si $r \in (r_0,1)$:
+
+				\[ \left| \int_{-\pi}^\pi g(s) P(r, \theta-s) ds - g(\theta)  \right| < \epsilon \quad \forall \theta \]
 
 			\end{proof}
 
@@ -1401,7 +1435,7 @@
 				\left. \begin{array}{l}
 				f \\
 				g
-				\end{array} \right\} \rightarrow \alpha_k \rightarrow \sum_k \alpha_k r^{|k|} e^{ek\theta} \left\{ \begin{array}{l}
+				\end{array} \right\} \rightarrow \alpha_k \rightarrow \sum_k \alpha_k r^{|k|} e^{ik\theta} \left\{ \begin{array}{l}
 					\int^{\pi}_{-\pi} f(s) P(r, \theta - s)ds \convs[][r][1^-] f \\
 					\int^{\pi}_{-\pi} g(s) P(r, \theta - s)ds \convs[][r][1^-] g
 				\end{array} \right.
@@ -1415,13 +1449,13 @@
 		\textbf{2:} Si tenemos un problema en una circunferencia de radio $a$, hacemos un reescalado:
 
 		% faltan tildas aquí, que no he sabido ponerlas durante la clase
-		\[ W(\rho, \theta) = W(\frac{\rho}{a},\theta) \quad \rho \in [0,a) \]
+		\[ \gor{W}(\rho, \theta) = W(\frac{\rho}{a},\theta) \quad \rho \in [0,a) \]
 
 		Usando la regla de la cadena llegamos a:
 
-		\[W_{\rho \rho} + \frac{1}{\rho} W_\rho + \frac{1}{\rho^2} W_{\theta \theta} = 0, \quad \rho \in [0,a)  \]
+		\[\gor{W}_{\rho \rho} + \frac{1}{\rho} \gor{W}_\rho + \frac{1}{\rho^2} \gor{W}_{\theta \theta} = 0, \quad \rho \in [0,a)  \]
 
-		\[W(\rho, \theta) = W(\frac{\rho}{a},\theta) = \int^{\pi}_{-\pi} g(s)\underbrace{P(\frac{\rho}{a},\theta-s)}_{\text{núcleo de Poisson para la bola de radio }a} ds \]
+		\[\gor{W}(\rho, \theta) = W(\frac{\rho}{a},\theta) = \int^{\pi}_{-\pi} g(s)\underbrace{P(\frac{\rho}{a},\theta-s)}_{\text{núcleo de Poisson para la bola de radio }a} ds \]
 
 		Como consecuencia del teorema de Poisson tenemos:
 
@@ -1439,20 +1473,24 @@
 
 		Si $m \leq g(\theta) \leq M, \forall \theta \in [-\pi,\pi]$, entonces $m \leq u(x,y) \leq M, \forall (x,y)$
 
-		\[u(x,y) \rightarrow W(r,\theta) = \int_{-\pi}^{\pi} g(s) \underbrace{P(r,\theta-s)}_{\geq 0} \]
+		\[u(x,y) \rightarrow W(r,\theta) = \int_{-\pi}^{\pi} \underbrace{g(s)}_{\in [m,M]} \underbrace{P(r,\theta-s)}_{> 0} ds \begin{cases}
+			\leq \int_{-\pi}^{\pi} MP = M \\
+			\geq \int_{-\pi}^{\pi} mP = m
 
-		(FALTA)
+		\end{cases} \]
+
+		Una función armónica alcanza mínimo y máximo en el borde, no puede alcanzarlo en el interior.
 
 		\textbf{iii:} $f$,$g$ contínuas, $2\pi$-periódicas si:
 
 		\[ \int_{-\pi}^{\pi} f(s) e^{-iks}ds =
-		 \int_{-\pi}^{\pi} f(s) e^{-iks}ds \forall k \Rightarrow f \equiv g \]
+		 \int_{-\pi}^{\pi} f(s) e^{-iks}ds,  \forall k \Rightarrow f \equiv g \]
 
-		\textbf{iv:} Primer teorema de aproximación de Weirestrass. Sea f contínua y $2\pi periódica$ entonces existe un polinomio trigonométrico:
+		\textbf{iv:} \concept{Teorema\IS de aproximación de Weirestrass 1}. Sea f contínua y $2\pi periódica$ entonces existe un polinomio trigonométrico:
 
 		\[T_n (\theta) = \sum_{k = -n}^n c_k e^{ik\theta} \]
 
-		tal que $\forall \epsilon > 0$ existe $n_0$ tal que si $n > n_0$ $|T_n (\theta) - f(\theta)| < \epsilon, \forall \theta \in [-\pi,\pi]$.
+		tal que $\forall \epsilon > 0$ existe $n_0$ tal que si $n > n_0$: $|T_n (\theta) - f(\theta)| < \epsilon, \forall \theta \in [-\pi,\pi]$.
 
 		\begin{proof}
 
@@ -1470,22 +1508,31 @@
 
 			\[ \left| \sum_{k=-\infty}^{\infty} \alpha_k r^{|k|} e^{ik\theta} - f(\theta) \right| < \epsilon \]
 
-			\[  r_* < 1 \Rightarrow \sum_{k=-\infty}^\infty \alpha_k r_*^{|k|} e^{ik\theta} < \infty \eqreason[\Rightarrow]{Dado $\epsilon > 0, \exists N_0$ tal que si $n \geq n_0$} \sum_{|k| > n} \alpha_k r_*^{|k|} e^{ikºtheta} < \epsilon \]
+			\[  r_* < 1 \Rightarrow \sum_{k=-\infty}^\infty \alpha_k r_*^{|k|} e^{ik\theta} < \infty \eqreason[\Rightarrow]{Dado $\epsilon > 0, \exists N_0$ tal que si $n \geq n_0$} \sum_{|k| > n} \alpha_k r_*^{|k|} e^{ik\theta} < \epsilon \]
 
 			\textbf{a,b}
 
-			\[ \Rightarrow  \left| \underbrace{\sum_{|k| < k} \alpha_k r_*^{|k|} e^{ik\theta}}_{\text{Suma finita (polinomios trigonométricos)}} - f(\theta) \right| < 2 \epsilon \]
+			\[ \Rightarrow  \left| \underbrace{\sum_{|k| < k} \alpha_k r_*^{|k|} e^{ik\theta}}_{\text{Suma finita (polinomios trigonométricos)}} - f(\theta) \right| < 2 \epsilon, \forall \theta \in [-\pi,\pi] \]
 
-			(FALTA)
-
-			Por lo tanto cualquier función contínua se puede aproximar uniformemente por un polinómio trigonométrico.
+			Por lo tanto cualquier función contínua se puede aproximar uniformemente por una suma finita de $\alpha_k r^{|k|_* e^{ik\theta}}$.
 
 		\end{proof}
 
+		\textbf{v:} \concept{Teorema\IS de aproximación de Weirestrass 2}
 
-		Si la función $f$ fuera analítica tendríamos que se aproxima uniformemente en un intervalo por su polinomio de taylor (como los senos y los cosenos)
+		Dada una función $f$ $2\pi$-preiódica y contínua. $\forall \epsilon > 0 \exists$ un polinomio $p(x)= a_0 + a_1 x + … + a_n x^n $ tal que $|f(x)-P(x)| < \epsilon, \forall x \in [-\pi,\pi]$
+
+		\begin{proof}
+
+			Usar la misma prueba que con el primer terema de aproximación de Weirestrass
+
+		\end{proof}
+
+		Con esto llegamos a la idea de que si la función $f$ fuera analítica tendríamos que se aproxima uniformemente en un intervalo por su polinomio de taylor (como los senos y los cosenos)
 
 		Si aproximamos una función con un polinomio trigonométrico, entonces lo tenemos aproximado por muchos términos con senos y cosenos, lo cual son funciones analíticas, que permiten aproximar cada uno de ellos a su polinomio de taylor del orden que se quiera. Si acotamos cada término con ($\epsilon / $ número de términos) entonces el error total será menor a $\epsilon$.
+
+		Tenemos el problema de que no nos dice como calcular ese $p(x)$, la prueba no es constructiva. Sin embargo, el teorema de funciones analíticas si te da esa solución, pero solo vale para funciones iguales a su polinomio de Taylor.
 
 		\subsection{Identificación del límite con convergencia $L^2$}
 		\textbf{Aplicación} al estudio de la convergencia en $L^2$
@@ -1504,9 +1551,9 @@
 
 			Entonces sea $T_n$ polinomio trigonométrico de grado $n$:
 
-			\[ \| S_n f - f\|_{L^2} \leq \| T_n - f \|_2 < \epsilon \]
+			\[ \| S_n f - f\|_{L^2} \leq \| T_n - f \|_{L^2} < \epsilon \]
 
-			Es igual solo si $S_n \equiv T_n$.
+			Y es igual solo si $S_n \equiv T_n$.
 
 		\end{theorem}
 
@@ -1530,7 +1577,6 @@
 				\[ \| S_n f - f \|_2^2 - \|T_n -f\|_2^2 = … = \sum_{|k| < n} \underbrace{(<f,\Phi_k> - C_k) \overline{(<f,\Phi_k> - C_k)}}_{|<f, \Phi_k> - C_k|^2 < 0}  \]
 
 
-				Este resultado nos cuenta que (ALGO)
 			\end{proof}
 
 		\textbf{Consecuencias:}
@@ -1549,6 +1595,8 @@
 
 
 		\end{itemize}
+
+		% Revisado hasta aquí
 
 		%clase 2016/03/01
 
