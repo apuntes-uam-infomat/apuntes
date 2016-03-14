@@ -2028,103 +2028,217 @@ Tenemos que efectivamente $u_t$ es esa serie con convergencia uniforme. Si hacem
 
 			Por Riemann-Lebesgue tenemos que $a_k \to 0$.
 
-			\textbf{Extensiones:}
+	\subsection{Extensiones}
 
-			\begin{itemize}
-				\item Transformada de Fourier. Estudiamos el espectro de la función. Lo usamos cuando no conocemos la longitud de la cuerda.
-						$f(x)$, L desconocido.
-						\[\int_{-\infty}^\infty f(x) e^{-i} \xi^x dx = \gor{f} (\xi) \]
+		\subsubsection{Transformada de Fourier}
+			Estudiamos el espectro de la función. Lo usamos cuando no conocemos la longitud de la cuerda.
+					$f(x)$, L desconocido.
+					\[\int_{-\infty}^\infty f(x) e^{-i} \xi^x dx = \gor{f} (\xi) \]
 
-				\item Transformada de Fourier discreta (DFT).
+		\subsubsection{Transformada de Fourier discreta} (DFT)
 
-				Supangamos que tenemos $f(x)$, $2\pi$-periódica.
+			Supangamos que tenemos $f(x)$, $2\pi$-periódica.
 
-				\[ f(x) = \sum_{k=-\infty}^\infty c_k e^{ikx}\]
+			\[ f(x) = \sum_{k=-\infty}^\infty c_k e^{ikx}\]
 
-				Realizamos una grabación digital de sonido realizando un muestreo. Es decir, el micrófono nos da el valor de la función para muchos tiempos discretos.
+			Realizamos una grabación digital de sonido realizando un muestreo. Es decir, el micrófono nos da el valor de la función para muchos tiempos discretos.
 
-				(DIBUJO SAMPLING)
+			(DIBUJO SAMPLING)
 
-				Nuestro propósito es resumir esa información para poder guardarla de forma comprimida. Intentaremos hacer una interpolación para reconstruir la función inicial $f$. Después calcularemos la serie de fourier de esta, y por último truncaremos las frecuencias no audibles para comprimir.
+			Nuestro propósito es resumir esa información para poder guardarla de forma comprimida. Intentaremos hacer una interpolación para reconstruir la función inicial $f$. Después calcularemos la serie de fourier de esta, y por último truncaremos las frecuencias no audibles para comprimir.
 
-				Este proceso sería muy costoso así que en vez de hacer todos los pasos uno por uno vamos a intentar no tener que pasar por el mundo contínuo.
+			Este proceso sería muy costoso así que en vez de hacer todos los pasos uno por uno vamos a intentar no tener que pasar por el mundo contínuo.
 
-				Tenemos unos datos;
+			Tenemos unos datos;
 
-				En el intervalo $[0,2\pi]$ dividido en $N$ trozos:
+			En el intervalo $[0,2\pi]$ dividido en $N$ trozos:
 
-				\[x_j = \frac{2\pi}{N}j, \quad j=0,1,2,…,N-1\]
+			\[x_j = \frac{2\pi}{N}j, \quad j=0,1,2,…,N-1\]
 
-				Y el sampling que hemos realizado:
+			Y el sampling que hemos realizado:
 
-				\[ y_j = f(\frac{2\pi}{N}j)\]
-
-
-				\textbf{Idea 1}
-
-				Supongamos que existe:
-
-				\[f(x) = \sum_{k=-\infty}^\infty c_k e^{ikx} \]
-
-				\[ y_0 = f(x_0) = f(0) = \sum_{k=-\infty}^\infty c_k \]
-				\[ y_1 = f(x_1) = f\left(\frac{2\pi}{N}\right) = \sum_{k=-\infty}^\infty c_k \left( e^{i\frac{2\pi}{N}} \right)^k \eqreason{$e^{i\frac{2\pi}{N}} \equiv \omega $} \sum_{k=-\infty}^\infty c_k \omega^k \]
-				\[ y_p = f(x_p) = f\left(\frac{2\pi}{N}p\right) = \sum_{k=-\infty}^\infty c_k \left(\omega^p\right)^k \]
+			\[ y_j = f(\frac{2\pi}{N}j)\]
 
 
+			\textbf{Idea 1}
 
-				Tenemos $N ecuaciones$ e infinitas incógnitas $C_k$. Los $C_k$ son valores exactos pero podemos reducir el problema a encontrar valores aproximados $z_k$. Veamos el sistema aproximado:
+			Supongamos que existe:
 
-				\[y_0 = \sum_{k=0}^N-1 z_k\]
-				\[y_1 = \sum_{k=0}^N-1 z_k \omega^k\]
-				\[y_{N-1} = \sum_{k=0}^N-1 z_k \left(\omega^{N-1}\right)^k\]
+			\[f(x) = \sum_{k=-\infty}^\infty c_k e^{ikx} \]
 
-
-				\obs
-				\[ \omega = e^{i \frac{2\pi}{N}}  \]
-
-				(FALTA COMPLETAR)
-
-
-				Todo lo que tenemos es periódico así que cualquier bloque de longitud $N$ nos vale (es equivalente). Porque todos os coeficientes son $N$-periódicos. Suponiendo que los datos $\{y_i\}$ también los extiendo de manera $N$-periódica a izquierda y derecha. Tenemos que cualquier bloque de longitud $N$ es equivalente.
-
-				\[k=0,1,2,…,N-1\]
-				\[k = -\frac{N}{2}, -\frac{N}{2}+1, … , \frac{N}{2}\]
-
-
-				Formulación matricial:
-
-				\[ \bar{Y} = \left(
-				\begin{matrix}
-					1 & 1 & 1 & … & 1 \\
-					1 & \omega & \omega^2 & … & \omega^{N-1} \\
-					· & \omega^2 & \omega^4 & … & \omega^{(N-1)2} \\
-					· & · & · & · & · \\
-					1 & \omega^{N-1} & (\omega^2)^{N-1} & … & \omega^{(N-1)(N-1)}
-				\end{matrix} \right) \bar{Z}
-				\]
-
-				Ortogonalidad:
-
-				\[ \sum_{s=0}^{N-1} \omega^{js} \omega^{-LS} = \begin{cases}
-				0 & L \neq j\\
-				N & L = j
-				\end{cases} \]
-
-				(FALTA UNA COSILLA Y UN POCO DE EXPLICACIÓN)
-
-				Veamos la demostración
-
-				\begin{proof}
-
-				\[ \omega^{js} \omega^{-LS} = \omega^{(j-L)S} = e^{i\frac{2\pi}{N}(j-L)s}  \]
-
-				(FALTA TERMINAR)
-
-				\end{proof}
+			\[ y_0 = f(x_0) = f(0) = \sum_{k=-\infty}^\infty c_k \]
+			\[ y_1 = f(x_1) = f\left(\frac{2\pi}{N}\right) = \sum_{k=-\infty}^\infty c_k \left( e^{i\frac{2\pi}{N}} \right)^k \eqreason{$e^{i\frac{2\pi}{N}} \equiv \omega $} \sum_{k=-\infty}^\infty c_k \omega^k \]
+			\[ y_p = f(x_p) = f\left(\frac{2\pi}{N}p\right) = \sum_{k=-\infty}^\infty c_k \left(\omega^p\right)^k \]
 
 
 
-			\end{itemize}
+			Tenemos $N ecuaciones$ e infinitas incógnitas $C_k$. Los $C_k$ son valores exactos pero podemos reducir el problema a encontrar valores aproximados $z_k$. Veamos el sistema aproximado:
+
+			\[y_0 = \sum_{k=0}^N-1 z_k\]
+			\[y_1 = \sum_{k=0}^N-1 z_k \omega^k\]
+			\[y_{N-1} = \sum_{k=0}^N-1 z_k \left(\omega^{N-1}\right)^k\]
+
+
+			\obs
+			\[ \omega = e^{i \frac{2\pi}{N}}  \]
+
+			(FALTA COMPLETAR)
+
+
+			Todo lo que tenemos es periódico así que cualquier bloque de longitud $N$ nos vale (es equivalente). Porque todos os coeficientes son $N$-periódicos. Suponiendo que los datos $\{y_i\}$ también los extiendo de manera $N$-periódica a izquierda y derecha. Tenemos que cualquier bloque de longitud $N$ es equivalente.
+
+			\[k=0,1,2,…,N-1\]
+			\[k = -\frac{N}{2}, -\frac{N}{2}+1, … , \frac{N}{2}\]
+
+
+			Formulación matricial:
+
+			\[ \bar{Y} = \left(
+			\begin{matrix}
+				1 & 1 & 1 & … & 1 \\
+				1 & \omega & \omega^2 & … & \omega^{N-1} \\
+				· & \omega^2 & \omega^4 & … & \omega^{(N-1)2} \\
+				· & · & · & · & · \\
+				1 & \omega^{N-1} & (\omega^2)^{N-1} & … & \omega^{(N-1)(N-1)}
+			\end{matrix} \right) \bar{Z}
+			\]
+
+			Ortogonalidad:
+
+			\[ \sum_{s=0}^{N-1} \omega^{js} \omega^{-LS} = \begin{cases}
+			0 & L \neq j\\
+			N & L = j
+			\end{cases} \]
+
+			(FALTA UNA COSILLA Y UN POCO DE EXPLICACIÓN)
+
+			Veamos la demostración
+
+			\begin{proof}
+
+			\[ \omega^{js} \omega^{-LS} = \omega^{(j-L)S} = e^{i\frac{2\pi}{N}(j-L)s}  \]
+
+			(FALTA TERMINAR)
+
+			\end{proof}
+
+			% clase 14/3/2016
+
+			% La clase empieza con un comentario que amplia información de una sección anterior, que no he copiado.
+
+			\textbf{Aplicación:} cálculo de $\bar{z}$.
+
+				\[ y_j\omega^{-js} = \sum_{k=0}^{n-1} z_k \omega^{jk} \omega^{-js} \]
+
+				\[ \sum_{j=0}^{n-1} y_j \omega^{-js} = \sum_{j=0}^{n-1} \sum_{k=0}^{n-1} z_k \omega^{jk} \omega^{-js} = \]\[ = \sum_{k=0} z_k \sum_{j=0}^{n-1} \omega^{jk} \omega^{-js} = \begin{cases}
+					0 & s \neq k\\
+					N & s = k  \end{cases} \]
+
+				\textbf{Conclusión}
+
+				\[ \sum_{j=0}^{n-1} y_j \omega^{-js} = n z_s   \]
+				\[ z_s = \frac{1}{n} \sum_{j=0}^{n-1} y_j \omega^{-js}   \]
+				\[ y_j = \sum_{k=0}^{n-1} z_k \omega^{jk} \]
+				\[ \{\bar{z}\} \equiv \text{Transformada discreta de orden n de } \{\bar{y}\} \]
+
+				\[ \bar{z} = F_n (\bar{y}) \]
+
+
+
+			\textbf{Idea 2:}
+
+			\[f(x) = \sum_{k=-\infty}^{\infty} c_k e^{ikx} \]
+			\[c_k= \frac{1}{2\pi} \int_0^{2\pi} f(x) e^{-ikx} dx ≈ \frac{1}{2\pi} \sum_{j=0}^{n-1} f(x_j) e^{-ikxj} \frac{2\pi}{n}  \]
+			\[ = \frac{1}{N} \sum_{j=0}^{n-1}  y_j \omega^{-kj} \equiv z_k  \]
+
+			Tomando $k = n$:
+
+			\[c_n \underbrace{\eqexpl[≈]{?}}_{\text{En general no}} \frac{1}{n} \sum_{j=0}^{n-1} y_j \omega^{-Nj}  \eqreason{$\omega^n \equiv 1$} \frac{1}{n} \sum_{j=0}^{n-1} y_j \omega^{0j} = z_0   \]
+
+			En general $z_{n+l} = z_{l}$.
+
+			Esta es una aproximación válida si  $k << n$.
+
+			(DIBUJO ALIASING)
+
+
+			\textbf{Relación precisa entre $\{c_k\}$ y $\{z_k\}$}
+
+			\[ f(x) = \sum_{L=-\infty}^\infty c_L e^{iLx}  \]
+
+			\[ z_k = \frac{1}{N}  \sum_{j=0}^{n-1} y_j \omega^{-kj} = \frac{1}{n} \sum_{j=0}^{n-1}  f(x_j) \omega^{-kj} = \frac{1}{n} \sum_{j=0}^{n-1} f\left( \frac{2\pi}{n} j \right) \omega^{-kj}  \]
+
+			\[  = \frac{1}{n} \sum_{j=0}^{n-1} \sum_{L=-\infty}^{\infty} c_L e^{iL\frac{2\pi}{n}j} \omega^{-kj} = \frac{1}{n} \sum_{l=-\infty}^{\infty} c_l \sum_{j=0}^{n-1} \omega^{lj} \omega^{-kj} \]
+
+
+			No podemos aplicar tal cual el teorema de ortogonalidad porque la $l$ no va entre 0 y $n$. Pero podemos descomponer la suma en trozos de longitud $n$. En cada uno de ellos solo uno de los sumandos será distinto de 0.
+
+			(DIBUJO RECTA DIVIDIDA)
+
+
+			\[ \omega^{Lj} = \omega^{(L+n)j} = \omega^{(L+2n)j} … \]
+
+			\[ \frac{1}{n} \sum_{L=-\infty}^{\infty} c_L \sum_{j=0}^{n-1} \omega^{Lj} \omega^{-kj} = \frac{1}{n} n \{ c_k + c_{k+n} + c_{k+2n} + … \}  \]
+
+			\[ z_k = c_k + c_{k+n} + c_{k+2n} + c_{k+3n} + … = \sum_{k \mod n} c_k  \]
+
+			Por Riemman-Lebesgue: $C_k \convs[][k] 0$
+
+			Esto nos indica que el muestreo puede hacer que una onda de mucha frecuencia en nuestros datos baje de frecuencia al tomar la trnasformada de Fourier.
+
+
+			\obs Veamos una función $f(x) = \sum\limits_{k=-\infty}^{\infty} c_k e^{ikx}$.
+
+			\[ \left|  f - \sum_{k=-\infty}^{\infty} c_k e^{ikx} \right| = 0 \]
+			\[ = \left|  f - \sum_{|k|\leq n} + \sum_{|k| > n} \right| \geq \left|  f- \sum_{|k| \leq n} \right| - \left| \sum_{|k| > n} \right| \]
+
+			\[ \left| f- \sum_{|k| \leq n} c_k e^{ikx} \right| \leq \left| \sum_{|k| > n} c_k e^{ikx} \right| \leq \sum_{|k| > n} |c_k|  \]
+
+			Este es el error exacto que cometemos en el desarrollo de Fourier, en base a las $c$s. Tenemos este teorema que nos dice que si hacemos ese mismo cálculo con las $z$s, el error no es muy malo:
+
+			\begin{theorem}
+				\[ \left| f - \sum_{|k|< n} z_k e^{ikx}  \right| \leq 2 \sum_{|k| > n |c_k| } \]
+			\end{theorem}
+
+
+			\subsubsubsection{Cálculo efectivo (FFT)}
+
+			\[ \bar{u} = (u_0, u_1, … u_{n-1}) \rightarrow F_n (\bar{u})  \]
+			\[ \bar{v} = (v_0, v_1, … v_{n-1}) \rightarrow F_n (\bar{v})  \]
+
+			Entonces:
+
+			\[ \bar{y} = (y_0,y_1,…,y_{2n-1}) \equiv (u_0,v_0,u_1,v_1, … u_{n-1},v_{n-1})  \]
+
+			Pero que pasa con $f_{2n}(\bar{y})$?
+
+			Tenemos
+
+			\[ \left(F_{2n} (\bar{y})\right)_k = \left(F_{n} (\bar{u})\right)_k + \left(F_{n} (\bar{v})\right)_k \omega_{2n}^{-k}, k=0,1,…,n-1 \]
+
+			\[ \left(F_{2n} (\bar{y})\right)_{k+n} = \left(F_{n} (\bar{u})\right)_k - \left(F_{n} (\bar{v})\right)_k \omega_{2n}^{-k}, k=0,1,…,n-1 \]
+
+			\[ (\omega_{2n} = e^{i\frac{2\pi}{2n}}, \omega_{n} = e^{i \frac{2\pi}{n}})  \]
+
+			\begin{proof}
+
+				\[ w_{2n}^2 = \omega_{n} \]
+
+				Separamos la suma en indices pares e impares y listo.
+
+			\end{proof}
+
+			\textbf{Método FFT}
+
+			(DIBUJO ÁRBOL FFT)
+
+			Este método es $O(n \log n)$.
+
+
+
+
+
+
 
 
 
