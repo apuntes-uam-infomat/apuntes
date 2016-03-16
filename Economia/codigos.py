@@ -311,11 +311,11 @@ print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarrer
 
 print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_In, 1.08**(-8)*12, 12)
 
-print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueCallAsiaticaAritmetica, 0, 10)
+print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueCallAsiaticaAritmetica, 0, 10)
 
-print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueCallAsiaticaGeometrica, 0, 10)
+print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueCallAsiaticaGeometrica, 0, 10)
 
-print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueActivo2_3_c, 0, 10)
+print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueActivo2_3_c, 0, 10)
 
 print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueCashORNothing, 10, 1)
 
