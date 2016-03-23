@@ -1,3 +1,4 @@
+% -*- root: ../AlgebraConmutativa.tex -*-
 \chapter{Anillos II}
 
 \section{Módulos sobre anillos}
@@ -102,7 +103,7 @@ Más ejemplos:
 		Supongamos que $\ent[x]$ fuera finitamente generado como $\ent$-módulo. Entonces $\exists p_1(x),\dots,p_r(x) \in \ent[x]$ tales que $\ent[x]\{ n_1p_1(x)+\dots+n_rp_r(x): n_i \in \ent \}$. Sea $m=\max\{grado(p_i(x)) \} \implies grado(n_1p_1(x)+\dots+n_rp_r(x)) \leq m$. Pero en $\ent[x]$ no hay grado máximo.
 
 		Sin embargo $\ent[x]$ si es una $\ent$-álgebra finitamente generada, o una $\ent$-algebra de tipo finito ya que:
-		$$ \ent[x]=\{ \sum_{i=0}^n a_i x^i: a_i \in \ent, n \in \nat \}$$
+		$$ \ent[x]=\set{ \sum_{i=0}^n a_i x^i: a_i \in \ent, n \in \nat }$$
 	\end{proof}
 	\item Sea $\rac \subset \rac[\sqrt{2}]$.
 
@@ -383,41 +384,45 @@ $$\ker(f) = \{ r \in \ent_6: \exists s' \in \{ \cls{1}, \cls{2}, \cls{4} \}: s'r
 		(m-1-1) edge node [below] {$\psi$} (m-2-2);
 		\end{tikzpicture}
 
-		Primero probamos que si existe $g$ que hace conmutar el diagrama, debe ser único. Es decir que:
+		\proofpart{Unicidad}
+
+		Primero probamos que si existe $g$ que hace conmutar el diagrama, debe ser único. Tomamos entonces una aplicación de la siguiente forma:
 		\begin{align*}
 			g: S^{-1}R & \longmapsto  B\\
 			\frac{r}{s} & \longmapsto g\left( \frac{r}{s} \right)=g(r)\cdot g(s)^{-1} \\
 		\end{align*}
 
-		Fijamos un $a \in R$ y hacemos los dos caminos:
-		\begin{itemize}
-			\item Por un lado tenemos: \begin{align*}
-				f: R & \longmapsto  B\\
-				a & \longmapsto f(a) \\
-			\end{align*}
+		Fijamos entonces un $a ∈ R$ y hacemos los dos caminos, por $f$ y por $g○ψ$:
 
-			\item Por otro lado (\textcolor{red}{A ver si julian pone esta ecuacion mas bonita}):
-
+		\begin{center}
 			\begin{tikzpicture}
-			\matrix (m) [matrix of math nodes,row sep=1em,column sep=2em,minimum width=2em]
-			{
-				R & S^{-1}R &  B\\
-				a & \frac{a}{1} & g(a)\cdot g(1)^{-1}=g(a) \\};
-			\path[-stealth]
-			(m-1-1) edge node [above] {$\psi$} (m-1-2)
-			(m-1-2) edge node [above] {$g$} (m-1-3)
-			(m-2-1) edge node [above] {$\psi$} (m-2-2)
-			(m-2-2) edge node [above] {$g$} (m-2-3);
+			\node (R) at (0,0) {$R$};
+			\node (SR) at (2,-2) {$\inv{S}R$};
+			\node (B) at (4, 0) {$B$};
+
+			\draw[->] (R) -- node[midway, below] {$\psi$} (SR);
+			\draw[->] (SR) -- node[midway, below] {$g$} (B);
+			\draw[->] (R) -- node[midway, above] {$f$} (B);
+
+			\node[blue, xshift = -0.5cm] (A) at (R.west) {$a$};
+			\node[blue, xshift = 0.7cm, anchor = west] (AB) at (B.west) {\small $g(a)·\inv{g(1)} = g(a)$};
+			\node[blue, yshift=-0.5cm] (A1) at (SR.south) {$\frac{a}{1}$};
+
+			\draw[->, blue] (A) -- node[midway, below] {$\psi$} (A1);
+			\draw[->, blue] (A1) -- node[midway, below] {$g$} (AB.south west);
+
+			\node[red!80!black, yshift = 0.5cm] (FA) at (R.north) {$a$};
+			\node[red!80!black, yshift = 0.5cm] (FB) at (B.north) {$f(a)$};
+
+			\draw[->, red!80!black] (FA) -- node[midway, above] {$f$} (FB);
 			\end{tikzpicture}
-		\end{itemize}
+		\end{center}
 
-		Por tanto, como el diagrama conmuta $g(a)=f(a) \implies g(1)=f(1)$.
+		Por tanto, como el diagrama conmuta $g(a)=f(a)$, lo que nos deja fijo el comportamiento de $g$ en los elementos de la forma $\frac{a}{1}$ con $a ∈ R$. Nos falta saber qué ocurre con los que no son de esa forma, y saber si ahí también tenemos una única posibilidad de tomar $g$.
 
-		Sea $s\in S$, tenemos que $g(\frac{s}{1})=g(s)=f(s)$. Por hipótesis $f(s) \in B$ es invertible.
+		Para eso, sólo tenemos que ver qué ocurre a los elementos de la forma $\frac{1}{s}$. Operando: \[ g(\frac{1}{s})=g(1)g(s^{-1})=g(s^{-1})=g(s)^{-1}=f(s)^{-1} \], ya que por hipótesis $f(s)$ con $s ∈ S$ son elementos invertibles. Por lo tanto, $g$ es única y depende solamente de la elección de la $f$ de partida.
 
-		Cogemos ahora $g(\frac{1}{s})=g(1)g(s^{-1})=g(s^{-1})=g(s)^{-1}=f(s)^{-1}$
-
-		Y con esto queda probado que $g$ es única (\textcolor{red}{No se muy bien por qué esto lo prueba}).
+		\proofpart{Existencia}
 
 		Ahora vamos a probar que existe esa $g$. Si $g$ existiese tendríamos $g\left( \frac{r}{s}\right)=f(r)f(s)^{-1}$. Tenemos que ver que $g$ está bien definida (que dos elementos iguales no tengan imágenes distintas), es decir, que la expresión anterior no dependa del representante escogido.
 
@@ -600,8 +605,8 @@ Sea $R=\ent$, no confundir: $\ent_{\{3\}}$, con $\ent_{\gen{3}}$ con $\ent_3$, s
 \end{itemize}
 
 \section{Anillos noetherianos}
-\begin{defn}[Anillo noetheriano]
-	Se dice que $R$ es un anillo noetheriano si todo ideal $I \subset R$ es finitamente generado (como $R$-módulo). (ver \nlref{def:rmodulo_fg})
+\begin{defn}[Anillo\IS noetheriano]
+	Se dice que $R$ es un anillo noetheriano si todo ideal $I \subset R$ es finitamente generado (como $R$-módulo). (ver \nref{def:rmodulo_fg})
 
 	%Es decir, que para todo ideal en R  puedo encontrar un número finito de elementos dentro del ideal, de modo tal que cualquier otro elemento que viva en el ideal se puede escribir como combinación lineal de ellos.
 \end{defn}
