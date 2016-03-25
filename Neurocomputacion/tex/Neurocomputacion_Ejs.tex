@@ -1518,42 +1518,69 @@ En esta ocasión seguimos conservando la buena propiedad comentada anteriormente
 \subsection{Regla Hebb}
 
 \begin{problem}[1]\label{ej:3_1}
-Show that yer another way of viewinf the formation of the weight matrix for Hebb learning is to form an $n\times p$ matrix $S$ whose columns are the input paterns
+Show that yet another way of viewing the formation of the weight matrix for Hebb learning is to form an $n\times p$ matrix $S$ whose columns are the input paterns
 \[s(p) = (s_1(p),\cdots, s_i(p),\cdots s_n(p))\]
 es decir
 \[S = \left( \begin{array}{ccccc}
-s_1(1) & . & . & . & s_1(p) \\
+s_1(1) & . & . & . & s_1(P) \\
 . & . & . & . & . \\
-s_i(1) & . & . & . & s_i(p) \\
+s_i(1) & . & . & . & s_i(P) \\
 . & . & . & . & . \\
-s_n(1) & . & . & . & s_n(p) \\
+s_n(1) & . & . & . & s_n(P) \\
 \end{array}\right)\]
 
 and a $p \times m$ matrix $T$ whose rows are the output patterns
 \[t(p) = (t_1(p)), \cdots, t_j(p), \cdots t_m(p))\]
 es decir
-\[S = \left( \begin{array}{ccccc}
+\[T = \left( \begin{array}{ccccc}
 t_1(1) & . & . & . & t_m(p) \\
 . & . & . & . & . \\
-1 & . & . & . & 1 \\
+. & . & . & . & . \\
 . & . & . & . & . \\
 t_1(1) & . & . & . & t_m(p) \\
 \end{array}\right)\]
 
 then the product $S\cdot T$ gives the weight matrix $W$:
-\[S = S\cdot T =  \left( \begin{array}{ccccc}
-\sum_{ρ=1}^P s_1(p)t_1(p) & . & . & . & \sum_{ρ=1}^P s_1(p)t_m(p) \\
+\[W = S\cdot T =  \left( \begin{array}{ccccc}
+\sum_{p=1}^P s_1(p)t_1(p) & . & . & . & \sum_{p=1}^P s_1(p)t_m(p) \\
 . & . & . & . & . \\
 . & . & . & . & . \\
 . & . & . & . & . \\
-\sum_{ρ=1}^P s_n(p)t_1(p) & . & . & . & \sum_{ρ=1}^P s_n(p)t_m(p) \\
+\sum_{p=1}^P s_n(p)t_1(p) & . & . & . & \sum_{p=1}^P s_n(p)t_m(p) \\
 \end{array}\right)\]
 \solution
+
+\doneby{Pedro}
+
+La regla de aprendizaje Hebb consiste en actualizar los pesos en cada iteración según la fórmula
+\[Δω_{ij} = x_iy_j\]
+con independencia de si la predicción fue correcta o no.
+
+Tras repetir este proceso de aprendizaje con todos los patrones tendremos:
+\[Δω_{ij} = \sum_{x:y} x_iy_j\]
+que es lo mismo que obtenemos multiplicando las matrices $S$ y $T$ descritas en el enunciado.
+
 \end{problem}
 
 \begin{problem}[2]
 Show the computations for the first component of the response of a Hebb net for an input vector and how this response depends on whether the input vector is orthogonal to the other vectors stored in the net.
 \solution
+
+\doneby{Pedro}
+
+Partiendo de la matriz $W$ calculda en el ejercicio anterior, tomando ahora un vector cualquiera $\vx = (s_1(x),\ldots, s_n(x))$ al calcular la primera componente del vector de salida tendríamos:
+
+\begin{equation}\label{eq:salida}
+\vx \cdot W[1:] = s(x) \cdot \sum_{p=1}^Ps(p)^Tt_1(p) = \sum_{p=1}^Ts(x)\cdot s(p)^Tt_1(p)
+\end{equation}
+
+Los patrones ``almacenados'' en la red son simplemente los patrones usados para entrenamiento, para los que la red se ha preparado para dar una respuesta ``perfecta''.
+
+Si el vector de entrada que estamos analizando en este momento $\vx$ es perpendicular a alguno de los vectores usados para el entrenamiento tendremos
+\[s(x)\cdot s^T(p) = 0\]
+
+con lo que ciertos términos del sumatorio \ref{eq:salida} desaparecerían (al hacerse nulos)
+
 \end{problem}
 
 \subsection{Red neuronal heteroasociativa}
@@ -1561,24 +1588,115 @@ Show the computations for the first component of the response of a Hebb net for 
 \begin{problem}[3]
 Find the weight matrix for Example 3.1 using the results of Exercise \ref{ej:3_1}.
 \solution
+
+\doneby{Pedro}
+
+El ejemplo 3.1 nos plantea una red neuronal para la que nos da unos patrones de entrenamiento. Disponiendo la información de estos patrones en forma de matriz tenemos:
+
+\[S = \left( \begin{array}{cccc}
+1 & 1 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 0 & 1\\
+0 & 0 & 1 & 1
+\end{array}\right), \ \ T = \left( \begin{array}{cc}
+1 & 0 \\
+1 & 0 \\
+0 & 1 \\
+0 & 1
+\end{array}\right)\]
+
+Atendiendo al ejercicio \ref{ej:3_1} lo único que debemos hacer es multiplicar estas dos matrices, con lo que obtenemos la matriz de pesos:
+\[W = S\cdot T = \left( \begin{array}{cc}
+2 & 0 \\
+1 & 0 \\
+0 & 1 \\
+0 & 2
+\end{array}\right)\]
+
 \end{problem}
 
 \begin{problem}[4]
 Test Example 3.6 on the input training vectors. Then test on input vectors that are
 similar to the input training vectors.
 \solution
+
+\doneby{Pedro}
+
+En el ejemplo 3.6 se calcula la matriz de pesos correspondiende a los patrones de entrenamiento dados obteniendo:
+\[W = \left( \begin{array}{cc}
+4 & -4 \\
+2 & -2 \\
+-2 & 2 \\
+-4 & 4
+\end{array}\right)\]
+
+Puesto que las salidas son binarias, sabemos que la función de activación es:
+\[f(x) = \left\{ \begin{array}{lll} 1 & si & x>0 \\ 0 & si & x\leq 0 \end{array}\right. \]
+
+La siguiente tabla recoge los resultados obtenidos al clasificar los patrones de entrenamiento (4 primeras filas) y pequeñas modificaciones de los mismos:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Entrada } & \textbf{Salida esperada} & \textbf{Salida predicha} \\
+\hline
+(1,0,0,0) & (1,0) & (1,0) \\
+(1,1,0,0) & (1,0) & (1,0) \\
+(0,0,0,1) & (0,1) & (0,1) \\
+(0,0,1,1) & (0,1) & (0,1) \\
+(1,0,1,0) & (1,0) & (1,0) \\
+(1,1,0,1) & (1,0) & (1,0) \\
+(1,0,0,1) & ? & (0,0) \\
+(1,0,1,1) & (0,1) & (0,1) \\
+\hline
+\end{tabular}
+\end{center}
 \end{problem}
 
 \begin{problem}[5]
 Test Example 3.7 using the training input vectors. Then test with input vectors that
 are the training vector with one ``mistake''.
 \solution
+\doneby{Pedro}
+
+Tenemos la misma matriz de pesos del paso anterior pero en esta ocasión la salida es bipolar, por lo que estamos empleando una función de activación diferente:
+\[f(x) = \left\{ \begin{array}{lll} 1 & si & x>0 \\ 0 & si & x=0 \\ -1 & si & x< 0 \end{array}\right. \]
+
+Con las mismas entradas empleadas en el ejercicio anterior obtenemos:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Entrada } & \textbf{Salida esperada} & \textbf{Salida predicha} \\
+\hline
+(1,-1,-1,-1) & (1,-1) & (1,-1) \\
+(1,1,-1,-1)  & (1,-1) & (1,-1) \\
+(-1,-1,-1,1) & (-1,1) & (-1,1) \\
+(-1,-1,1,1)  & (-1,1) & (-1,1) \\
+(1,-1,1,-1)  & (1,-1) & (1,-1) \\
+(1,1,-1,1)   & (1,-1) & (1,-1) \\
+(1,-1,-1,1)  & ?      & (0,0)  \\
+(1,-1,1,1)   & (-1,1) & (-1,1) \\
+\hline
+\end{tabular}
+\end{center}
+
+No se observa ningún cambio en esta situación. No obstante, podría ocurrir que en lugar de producirse \emph{errores} en el patrón de entrada simplemente tengamos \emph{faltas de información}. En este caso tendríamos:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Entrada } & \textbf{Salida esperada} & \textbf{Salida predicha} \\
+\hline
+(1,0,-1,-1) & (1,-1)  & (1,-1) \\
+(0,1,-1,-1)  & (1,-1) & (1,-1) \\
+(-1,0,-1,1) & (-1,1)  & (-1,1) \\
+(0,-1,1,1)  & (-1,1)  & (-1,1) \\
+\hline
+\end{tabular}
+\end{center}
 \end{problem}
 
 \begin{problem}[6]
-\ppart
-
-Use the hybrid (binary/bipolar) form of Hebb rule learning as described in Example
+\ppart Use the hybrid (binary/bipolar) form of Hebb rule learning as described in Example
 3.6 to find the weight matrix for the associative memory network based on the
 following binary input-output vector pairs:
 
@@ -1594,11 +1712,81 @@ s(4) = (0,1,1,0) & t(4) = (0,1)
 \ppart Test the response of your network on various combinations of input patterns with``mistakes'' or ``missing data'' (as in Example 3.8). Discuss the results you observe.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Emplear la forma híbrida simplemente consiste en tomar los vectores de entrenamiento en forma binaria pero \emph{considerarlos bipolares} a la hora del entrenamiento.
+
+Como los estamos considerando binarios, la función de activación que trabajará en la red será la correspondiente a datos binarios, aunque haya sido entrenada de forma bipolar (de ahí que se llamen hibridas).
+
+La forma de realizar esto consiste en sustituir la fórmula del peso de cada conexión del algoritmo Hebb:
+\[w_{ij} = \sum_p s_i(p)t_j(p)\]
+por
+\[w_{ij} = \sum_p (2\cdot s_i(p)-1) \cdot (2\cdot t_j(p)-1)\]
+
+Usando los datos de entrenamiento:
+\[\begin{array}{cc}
+s(1) = (1,0,0,0) & t(1) = (1,0)\\
+s(2) = (1,0,0,1) & t(2) = (1,0)\\
+s(3)=  (0,1,0,0) & t(3) = (0,1) \\
+s(4) = (0,1,1,0) & t(4) = (0,1)
+\end{array}\]
+
+tenemos
+\[W = S\cdot T = \left( \begin{array}{cc}
+4 & -4 \\
+-4 & 4 \\
+-2 & 2 \\
+2 & -2
+\end{array}\right)\]
+
+\spart
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Entrada } & \textbf{Salida esperada} & \textbf{Salida predicha} \\
+\hline
+(1,0,0,0) & (1,0) & (1,0) \\
+(1,0,0,1) & (1,0) & (1,0) \\
+(0,1,0,0) & (0,1) & (0,1) \\
+(0,1,1,0) & (0,1) & (0,1) \\
+\hline
+\end{tabular}
+\end{center}
+
+Puesto que los patrones de entrenamiento son independientes la red es capaz de aprenderlos todos.
 \end{problem}
 
 \begin{problem}[7]
-Usinf the formation of Exercise \ref{ej:3_1}, fin the weight matrix for Example 3.7
+Using the formation of Exercise \ref{ej:3_1}, find the weight matrix for Example 3.7
 \solution
+
+\doneby{Pedro}
+
+Simplemente tenemos que escirbir las matrices $S$ y $T$ y multiplicarlas:
+
+\[S = \left( \begin{array}{cccc}
+1  & 1  & -1 & -1 \\
+-1 & 1  & -1 & -1 \\
+-1 & -1 & -1 & 1 \\
+-1 & -1 & 1  & 1
+\end{array}\right), \ \ T = \left( \begin{array}{cc}
+1  & -1 \\
+1  & -1 \\
+-1 & 1 \\
+-1 & 1
+\end{array}\right)\]
+
+\[W = S\cdot T = \left( \begin{array}{cc}
+4 & -4 \\
+2 & -2 \\
+-2 & 2 \\
+-4 & 4
+\end{array}\right)\]
+
 \end{problem}
 
 \subsection{Red neuronal autoasociativa}
