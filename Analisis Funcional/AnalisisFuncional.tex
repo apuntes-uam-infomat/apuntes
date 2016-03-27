@@ -53,7 +53,7 @@ Sin embargo, hay otra noción de convergencia que podemos usar y que es más fá
 
 Lo interesante de esta definición es que es ``bastante'' equivalente a la definición de convergencia.
 
-\begin{prop} Si una sucesión $\set{x_n}_{n≥1}$ tiene límite, entonces es de Cauchy.
+\begin{prop} \label{prop:SucesionConvergenteImplicaCauchy}Si una sucesión $\set{x_n}_{n≥1}$ tiene límite, entonces es de Cauchy.
 \end{prop}
 
 \begin{proof} Sea $x = \lim_{n \to ∞} x_n$. Entonces, $∀ε > 0$ existe un $N > 0$ tal que si $n≥N$ entonces $\dst(x_n, x) ≤ \sfrac{ε}{2}$. Si tomamos $m,n≥N$, entonces usando la desigualdad triangular tenemos que $\dst(x_m, x_n) ≤ \dst(x_m, x) + \dst(x, x_n) ≤ ε$.
@@ -781,43 +781,60 @@ Claramente, $\norm{x}_2 ≥ \norm{x}_X$ luego esta segunda norma domina en $X$ a
 \section{Teorema de Hahn-Banach}
 \label{sec:TeoremaHahnBanach}
 
-El último teorema fuerte de este tema es el de Hahn-Banach, que viene a resolver el problema de la extensión de operadores. Partiremos de operadores definidos únicamente en un subespacio, y querremos saber si esos operadores se pueden extender de forma más o menos amigable.
+El último teorema fuerte de este tema es el de Hahn-Banach, que viene a resolver el problema de la extensión de operadores. Partiremos de operadores definidos únicamente en un subespacio, y querremos saber si esos operadores se pueden extender de forma más o menos amigable, y sin recurrir a soluciones triviales.
 
-El teorema en sí es denso, así que empezaremos aproximándonos con teoremas más débiles y más fáciles de demostrar.
+El teorema en sí es denso, así que empezaremos aproximándonos con teoremas más débiles y más fáciles de demostrar. El primero nos demostrará la existencia de extensiones de operadores definidos en subespacios densos. En otras palabras, nos dice algo bastante obvio: que cuando tenemos un operador definido en casi todos los puntos del espacio, podemos ampliarlo a todos.
 
-\begin{prop} Sea $\appl{T}{V⊂X}{Y}$ lineal sobre $V$ con $X$ normado e $Y$ Banach
+\begin{prop} Sea $\appl{T}{V⊂X}{Y}$ lineal sobre $V$ con $X$ normado e $Y$ Banach, tal que
 \begin{enumerate}
-\item $V$ es un subsespacio denso de $X$.
+\item $V$ es un subespacio denso de $X$.
 \item $T$ es acotado en $V$.
 \end{enumerate}
 
-Entonces existe una única extensión $\appl{T}{X}{Y}$ con $T$ lineal y $\norm{T}_{xy}= \norm{T}{VY}$.
+Entonces existe una única extensión $\appl{\tilde{T}}{X}{Y}$ lineal y con $\norm{\tilde{T}}_{\linapp}= \norm{T}_{\linapp[V]} $.
 \end{prop}
 
-\begin{proof} Sea $x ∈ X$. Como $V$ es denso hay una sucesión en $V$ con límite $x$. La aplicación extendida se define como el límite de $T$ de los elementos de la sucesión. Se demuestra que está bien definido demostrando que otra sucesión se acercará igualmente a $X$ y haciendo cosas con las normas saldrá que $T(x_n) - T(x_n') \to 0$.
+\begin{proof} Sea $x ∈ X$. Como $V$ es denso hay una sucesión $\set{x_n}_{n ∈ ℕ} ⊂ V$ con límite $x$. La aplicación extendida se define como el límite de $T$ de los elementos de la sucesión, esto es, \[\tilde{T}(x) = \lim_{n \to ∞} T(x_n) \]
 
-Hay que demostrar además que el límite existe, y para eso usamos que $Y$ es Banach, que la sucesión de las imágenes de Cauchy por estar el operador acotado y listos.
+Lo primero a demostrar es que esta extensión no depende de la sucesión tomada, esto es, que si existe otra sucesión $\set{x_n'}_{n ∈ ℕ} ⊂ V$ con $x_n' \to x$, entonces $\lim_{n\to ∞} T(x_n) = \lim_{n\to ∞} T(x_n')$. Operando ambos límites tendremos que nos sale que son lo mismo: sabemos que para todo $ε > 0$ existe un $n_0$ tal que si $n > n_0$, entonces $\norm{x_n - x} < ε$ y $\norm{x_n' - x} < ε$. Ahora operamos con los límites:
+\begin{multline*}
+	\norm{T(x_n) - T(x_n')} = \norm{T(x_n - x_n')} ≤ \norm{T} \norm{x_n - x_n'} = \\
+	= \norm{T} \norm{(x_n - x) - (x_n' - x)} ≤ \norm{T} \left(\norm{x_n - x} + \norm{x_n' - x}\right) ≤ \norm{T} 2ε
+\end{multline*}, que se irá a cero cuando $ε \to 0$. Así, si $T(x_n) - T(x_n') \to 0$, los límites son iguales y nuestra extensión está bien definida.
 
-Vamos a ver ahora que es lineal. Sea $x$ límite de $x_n ∈ V$ y sea $λ ∈ \kbb$. Como las operaciones del espacio vectorial son compatibles con la topología, entonces $λx = \lim λx_n$. Así podemos tomar $T$ en ambos lados y ver que es lineal.
+Hay que demostrar además que el límite existe. Para ello, vamos a demostrar primero que la sucesión $\set{T(x_n)}_{n ∈ℕ} ⊂ Y$ es de Cauchy, y al ser $Y$ Banach sabremos que el límite existe. Simplemente hay que ver que $\norm{T(x_n) - T(x_m)} = \norm{T}\norm{x_n - x_m} ≤ \norm{T}ε$ por ser $\set{x_n}$ de Cauchy\footnote{Las sucesiones con límite son automáticamente de Cauchy, \fref{prop:SucesionConvergenteImplicaCauchy}.}.
 
-Luego sean $x,y ∈ X$ con sus respectivos límites definidos, y haciendo cuentas sale que es lineal de nuevo, usando que $T$ es lineal en $V$ y etc etc.
+Vamos a ver ahora que es lineal. Sea $x$ límite de $x_n ∈ V$ y sea $T ∈ \kbb$: queremos ver que $\tilde{T}(Tx) = T\tilde{T}(x)$. Como las operaciones del espacio vectorial son compatibles con la topología, entonces $Tx = \lim Tx_n$. Así podemos tomar $T$ en ambos lados y ver que es lineal. Por otra pLuego sean $x,y ∈ X$ con sus respectivos límites definidos, y queremos ver que $\tilde{T}(x+y) = \tilde{T}(x) + \tilde{T}(y)$. Haciendo cuentas sale que es lineal de nuevo, usando que $T$ es lineal en $V$.
 
-Nos falta ver que es acotada y que preserva la norma. Podemos sacar el líite fuera de la norma, por acotació o algo así podemos tomar el limsup y entonces acotar por $\norm{T}_V \norm{x_n}$ u la constante sale fuera y el límite es la norma de $X$ y entonces acotamos en $X$ con la misma norma.
+Nos falta ver que es acotada y que preserva la norma. Lo primero es recordar la definición de norma de un operador que dábamos en \eqref{eq:NormaEspacioAppLineales}, y operar con ella
+\begin{align*}
+\norm{\tilde{T}} &≝
+	\sup_{v∈X \setminus \set{0}} \frac{\norm{\tilde{T}(v)}}{\norm{v}} =
+	\sup_{\substack{v∈X \setminus \set{0} \\ \set{v_n} ⊂ V,\, v_n \to v}}
+		\frac{\norm{\lim\limits_{n \to ∞} T(v_n)}}{\norm{\lim\limits_{n \to ∞} v_n}} =
+	\sup_{\substack{v∈X \setminus \set{0} \\ \set{v_n} ⊂ V,\, v_n \to v}}
+		\lim_{n \to ∞} \frac{\norm{T(v_n)}}{\norm{v_n}} = \\
+&≤ 	\sup_{\substack{v∈X \setminus \set{0} \\ \set{v_n} ⊂ V,\, v_n \to v}}
+		\lim_{n \to ∞} \frac{\norm{T}\norm{v_n}}{\norm{v_n}} =
+	\norm{T}
+\end{align*}
 
-Para la desigualdad al otro lado, como $T$ es una extensión del operador pues algo.
+Por otra parte, dado que $\tilde{T}$ es extensión de $T$, es igual en los puntos en los que coinciden, por lo que ese supremo de la norma sobre $X \setminus \set{0}$ tiene que ser mayor o igual que el considerado sobre $V \setminus \set{0}$, al ser $V$ subespacio de $X$. Más formalmente:
+\[ \norm{\tilde{T}} = \sup_{v∈X \setminus \set{0}} \frac{\norm{\tilde{T}(v)}}{\norm{v}} ≥ \sup_{v∈V \setminus \set{0}} \frac{\norm{\tilde{T}(v)}}{\norm{v}} = \sup_{v∈V \setminus \set{0}} \frac{\norm{T(v)}}{\norm{v}} = \norm{T} \]
+
+Así, $\norm{\tilde{T}} = \norm{T}$ y por lo tanto está acotado y conserva la norma del operador original.
 \end{proof}
 
-Sea $X = (V, \norm{·}_∞)$ un espacio normado sobre \kbb, $E ⊂ V$ un subespacio y $\appl{λ}{E}{\kbb}$ un funcional acotado (esto es, $λ ∈ E^*$). Queremos encontrar extensiones de λ a todo $V$ no triviales y que conserven la norma.
+El siguiente paso es ver si podemos lograr extensiones con la misma norma cuando el subespacio no es denso. Podremos demostrar que existe una extensión a todo el espacio bajo ciertas condiciones (este será el \nref{thm:HahnBanach}), pero primero nos plantearemos un objetivo menos ambicioso: extenderlo a un subespacio algo ampliado.
 
-Buscaremos $E' \subsetneq E$ y $\appl{λ'}{E'}{\kbb}$ lineal, de tal forma que $\restr{λ'}{E} = λ$ y además $\abs{λ'(x)} ≤ \norm{λ}_{E^*} \norm{x}_X$ cuando $x ∈ E'$.
 
-\begin{lemma} \label{lem:ExtensionSpan} Si $E \subsetneq V$ y $x_0 ∉ E$, entonces $λ$ admite una extensión con las propiedades anteriores al subespacio \[ E' = E + \spn \set{x_0} = \set{x ∈ V \tq x = x_1 + μ x_0,\,\,x_1 ∈ E, μ ∈ \kbb} \]
+\begin{lemma} \label{lem:ExtensionSpan} Sea $X = (V, \norm{·}_∞)$ un espacio normado sobre \kbb, $E ⊂ V$ un subespacio y $\appl{λ}{E}{\kbb}$ un funcional acotado (esto es, $λ ∈ E^*$).Si $E \subsetneq V$ y $x_0 ∉ E$, entonces $λ$ admite una extensión $Λ$ al subespacio \[ E' = E + \spn \set{x_0} = \set{x ∈ V \tq x = x_1 + μ x_0,\,\,x_1 ∈ E, μ ∈ \kbb} \] tal que $\restr{Λ}{E} = λ$ y además $\abs{Λ(x)} ≤ \norm{λ}_{E^*} \norm{x}_X$ cuando $x ∈ E'$.
 \end{lemma}
 
 \begin{proof}
 Observamos que, dado $x_0 ∉ E$, $x_0$ es linealmente independiente de $E$ y por lo tanto $E' ≠ E$ y además la descomposición $x = x_1 + μx_0$ es única.
 
-La extensión estará dada por $λ(x) = λ(x_1) + μλ(x_0)$. El problema está en ver cuánto vale $λ(x_0)$, ya que $x_0$ no está en el dominio de $λ$.
+La extensión estará dada por $Λ(x) = λ(x_1) + μ λ (x_0)$. El problema está en ver qué valor le damos a $λ(x_0)$, ya que $x_0$ no está en el dominio de $λ$.
 
 \proofpart{$\kbb = ℝ$}
 
@@ -835,7 +852,7 @@ Como $u(x) = \Re λ(x)$, entonces $\norm{u(x)} ≤ \norm{λ(x)} \implies \norm{u
 \end{proof}
 
 
-\begin{theorem}[Teorema\IS de Hahn-Banach] Sea $(V, \norm{·}_V)$ un espacio vectorial normado, ya sea sobre los reales o complejos, y $E ⊂ V$ un subespacio sobre el cual está definido un funcional lineal acotado $λ ∈ E^*$.
+\begin{theorem}[Teorema\IS de Hahn-Banach] \label{thm:HahnBanach} Sea $(V, \norm{·}_V)$ un espacio vectorial normado, ya sea sobre los reales o complejos, y $E ⊂ V$ un subespacio sobre el cual está definido un funcional lineal acotado $λ ∈ E^*$.
 
 Entonces λ admite una extensión Λ a un funcional lineal acotado en $V$ tal que $\restr{Λ}{E} = λ$. Además, $∀x ∈ V$, se cumple que \[ \abs{Λ(x)} ≤ \norm{λ}_{E^*} \norm{x}_V \]
 \end{theorem}
