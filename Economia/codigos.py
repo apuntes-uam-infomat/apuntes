@@ -59,8 +59,8 @@ def computeValueCallBarreraUp_Out(path, a, b, p, S0, barrera, K):
 
 		value = value * i
 
-	if (value - S0) >= 0:
-		return (value - S0) * prob
+	if (value - K) >= 0:
+		return (value - K) * prob
 	else:
 		return 0
 
@@ -83,8 +83,8 @@ def computeValueCallBarreraUp_In(path, a, b, p, S0, barrera, K):
 		value = value * i
 
 	if flag:
-		if (value - S0) >= 0:
-			return (value - S0) * prob
+		if (value - K) >= 0:
+			return (value - K) * prob
 		else:
 			return 0
 	else:
@@ -94,23 +94,33 @@ def computeValueCallBarreraUp_In(path, a, b, p, S0, barrera, K):
 def computeValuePutBarreraDown_Out(path, a, b, p, S0, barrera, K):
 	prob = 1
 	value = S0
+	string = ""
+	flag = True
 
 	for i in path:
 		if value <= barrera:
 			value = 0
-			break
-		elif i == a:
+			flag = False
+		if i == a:
 			prob = prob * p
+			string = string + "a"
 		elif i == b:
 			prob = prob *(1-p)
+			string = string + "b"
 		else:
 			print "Some error occurs"
 
 		value = value * i
 
-	if (S0 - value) >= 0:
-		return (S0 - value) * prob
+	if flag:
+		if (K - value) >= 0:
+			print string, " & ",  str("{:.4f}".format(K-value)), " & ", str("{:.6f}".format(prob)), " \\\\"
+			return (K - value) * prob
+		else:
+			print string, " & 0 & ", str("{:.6f}".format(prob)), " \\\\"
+			return 0
 	else:
+		print string, " & 0 & ", str("{:.6f}".format(prob)), " \\\\"
 		return 0
 
 
@@ -118,22 +128,25 @@ def computeValuePutBarreraDown_In(path, a, b, p, S0, barrera, K):
 	prob = 1
 	value = S0
 	flag = False
+	string = ""
 
 	for i in path:
 		if value <= barrera:
 			flag = True
 		elif i == a:
 			prob = prob * p
+			string = string + "a"
 		elif i == b:
 			prob = prob *(1-p)
+			string = string + "b"
 		else:
 			print "Some error occurs"
 
 		value = value * i
 
 	if flag:
-		if (S0 - value) >= 0:
-			return (S0 - value) * prob
+		if (K - value) >= 0:
+			return (K - value) * prob
 		else:
 			return 0
 	else:
@@ -280,6 +293,7 @@ def computeValueAssetORNothing(path, a, b, p, S0, barrera, K):
 		print string, " & 0 & 0 \\\\"
 		return 0
 
+
 def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
 	trajectory = []
 
@@ -303,20 +317,22 @@ def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
 	return finalValue
 
 
-print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarreraUp_Out, 1.08**8*12, 12)
+#print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarreraUp_Out, 1.08**8*12, 12)
 
-print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarreraUp_In, 1.08**8*12, 12)
+#print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarreraUp_In, 1.08**8*12, 12)
 
-print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_Out, 1.08**(-8)*12, 12)
+#print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_Out, 1.08**(-8)*12, 12)
 
-print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_In, 1.08**(-8)*12, 12)
+#print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValuePutBarreraDown_In, 1.08**(-8)*12, 12)
 
-print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueCallAsiaticaAritmetica, 0, 10)
+#print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueCallAsiaticaAritmetica, 0, 10)
 
-print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueCallAsiaticaGeometrica, 0, 10)
+#print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueCallAsiaticaGeometrica, 0, 10)
 
-print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueActivo2_3_c, 0, 10)
+#print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueActivo2_3_c, 0, 10)
 
-print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueCashORNothing, 10, 1)
+#print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueCashORNothing, 10, 1)
 
-print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueAssetORNothing, 10, 0)
+#print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueAssetORNothing, 10, 0)
+
+print compute_future_value_binary_tree(1.07,0.93,0.512,12,12,computeValuePutBarreraDown_Out, 1.07**(-8)*12, 12)

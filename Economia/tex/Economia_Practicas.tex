@@ -1,0 +1,192 @@
+% -*- root: ../Economia.tex -*-
+\section{Primera práctica}
+Aunque el profesor explicó en clase cómo hacer esta práctica con excel, aquí mostramos la forma de resolverla empleando python.
+
+\begin{problem}[1]
+El subyacente S vale hoy 12€ y su volatilidad es del 24\%. Queremos valorar una put
+barrera down-and-out con un precio de ejercicio de 12,50€, un vencimiento anual,
+periodo mensual para el árbol. La barrera está situada en $b^8S_0$. El tipo libre de riesgo (composición continua) es del 2\%.
+\solution
+\doneby{Pedro}
+
+Este problema puede resolverse directamente a partir de las funciones mostradas en el script de python \ref{sec:arbolBin}. Vamos a explicar estas funciones:
+
+\begin{lstlisting}
+def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
+	trajectory = []
+
+	trajectory.append([a])
+	trajectory.append([b])
+
+	finalValue = 0
+
+	for path in trajectory:
+		if len(path) == T:
+			finalValue = finalValue + func(path, a, b, p, S0, barrera, K)
+		else:
+			pathA = list(path)
+			pathA.append(a)
+			pathB = list(path)
+			pathB.append(b)
+			trajectory.append(pathA)
+			trajectory.append(pathB)
+
+
+	return finalValue
+\end{lstlisting}
+
+Esta función genera el arbol binomial de la forma más genérica posible. Primero expande todo lo necesario el árbol hasta dar con todas las combinaciones (paths) posibles y finalmente calcula el valor de cada una de las trayectorias.
+
+Lo primero que hacemos es inicializar un array con los dos path posibles de longitud 1: $a$ y $b$.
+
+Tras esto la función entra en un bucle, iterando sobre el array de trayectorias. Para cada trayectoria que no esté completamente desarrollada (que no tenga la longitud adecuada) la duplica con las dos opciones posibles para el siguiente paso.
+
+Finalmente, si la trayectoria es completa (tiene tantos pasos como queríamos), calculamos el valor de la misma (donde tenemos en cuenta la probabilidad de que se de el suceso) y sumamos todos los valores.
+
+\begin{example}
+Veamos cómo se desarrolla la función con $T=2$:
+\begin{multicols}{2}
+\begin{Verbatim}[fontsize=\small]
+# Antes de comenzar el bucle for
+trajectory=[a,b]
+
+# Primera iteración del bucle
+## Comienzo
+[.a,b]
+
+## Final
+[.a,b,aa,ab]
+
+# Segunda iteración del bucle
+## Comienzo
+[a,.b,aa,ab]
+
+## Final
+[a,.b,aa,ab,ba,bb]
+
+# Tercera iteración del bucle
+## Comienzo
+[a,b,.aa,ab,ba,bb]
+
+## Final
+[a,b,.aa,ab,ba,bb,aaa,aab]
+
+# Cuarta iteración del bucle
+## Comienzo
+[a,b,aa,.ab,ba,bb,aaa,aab]
+
+## Final
+[a,b,aa,.ab,ba,bb,aaa,aab,aba,abb]
+
+# Séptima iteración del bucle
+## Comienzo
+[a,b,aa,ab,ba,bb,.aaa,aab,aba,abb,baa,bab,bba,bbb]
+## Calculamos el valor del path 'aaa'
+## Final
+[a,b,aa,ab,ba,bb,.aaa,aab,aba,abb,baa,bab,bba,bbb]
+
+
+\end{Verbatim}
+\end{multicols}
+\end{example}
+
+Veamos ahora cómo sería la función de evaluación para este caso concreto.
+
+\begin{lstlisting}
+def computeValuePutBarreraDown_Out(path, a, b, p, S0, barrera, K):
+	prob = 1
+	value = S0
+	string = ""
+
+	for i in path:
+		if value <= barrera:
+			value = 0
+			break
+		elif i == a:
+			prob = prob * p
+			string = string + "a"
+		elif i == b:
+			prob = prob *(1-p)
+			string = string + "a"
+		else:
+			print "Some error occurs"
+
+		value = value * i
+
+	if (K - value) >= 0:
+		print string, " & ",  str("{:.4f}".format(K-value)), " & ", str("{:.4f}".format(prob)), " \\\\"
+		return (K - value) * prob
+	else:
+		print string, " & 0 & ", str("{:.4f}".format(prob)), " \\\\"
+		return 0
+\end{lstlisting}
+
+Esta función considera el valor inicial de la acción, $S_0$, y calcula en cada iteración el valor en $t$ del activo. Si en algún momento toca la barrera o se situa por debajo de la misma (primer 'if' del código), la opción desaparece y tiene valor 0.
+
+Si el valor aún no ha bajado hasta la barrera, calculamos el nuevo valor según nos diga el path dado, que será una secuencia de la forma ``[abaab]'' y calculamos también la probabilidad asociada.
+
+Finalmente, devolvemos el valor correspondiente multiplicado por su probabilidad. e imprimimos en el formato adecuado el camino estudiado, su valor y su probabilidad asociada.
+
+Con estas funciones, la invocación del programa sería:
+\begin{lstlisting}
+print compute_future_value_binary_tree(1.07,0.93,0.512,12,12,computeValuePutBarreraDown_Out, 1.08**(-8)*12, 12)
+\end{lstlisting}
+
+Que nos da un valor final $V_T(P)=1.031$ que descontado nos da $V_0(P)=1.011$.
+
+La siguiente tabla contiene a modo de ejemplo algunos de los valores obtenidos.
+
+\begin{figure}[hbpt]
+\begin{minipage}{0.49\textwidth}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Camino} & \textbf{Valor} & \textbf{Probabilidad} \\
+\hline
+aaaaaaaaaaaa  & 0 &  0.000325  \\
+aaaaaaaaaaab  & 0 &  0.000309  \\
+aaaaaaaaaaba  & 0 &  0.000309  \\
+aaaaaaaaaabb  & 0 &  0.000295  \\
+aaaaaaaaabaa  & 0 &  0.000309  \\
+aaaaaaaaabab  & 0 &  0.000295  \\
+aaaaaaaaabba  & 0 &  0.000295  \\
+aaaaaaaaabbb  & 0 &  0.000281  \\
+aaaababbbabb  &  0.3485  &  0.000243  \\
+aaaababbbbaa  & 0 &  0.000255  \\
+aaaababbbbab  &  0.3485  &  0.000243  \\
+aaaababbbbba  &  0.3485  &  0.000243  \\
+aaaababbbbbb  &  1.8730  &  0.000232  \\
+aaaabbaaaaaa  & 0 &  0.000295  \\
+\hline
+\end{tabular}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.49\textwidth}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Camino} & \textbf{Valor} & \textbf{Probabilidad} \\
+\hline
+baaaaaaaaaaa  & 0 &  0.000309  \\
+baaaaaaaaaab  & 0 &  0.000295  \\
+baaaaaaaaaba  & 0 &  0.000295  \\
+baaaaaaaaabb  & 0 &  0.000281  \\
+baaaaaaaabaa  & 0 &  0.000295  \\
+baaaaabbabbb  &  0.3485  &  0.000243  \\
+baaaaabbbaaa  & 0 &  0.000268  \\
+baaaaabbbaab  & 0 &  0.000255  \\
+baaaaabbbaba  & 0 &  0.000255  \\
+baaaaabbbabb  &  0.3485  &  0.000243  \\
+baaaaabbbbaa  & 0 &  0.000255  \\
+baaaaabbbbab  &  0.3485  &  0.000243  \\
+baaaaabbbbba  &  0.3485  &  0.000243  \\
+baaaaabbbbbb  &  1.8730  &  0.000232  \\
+\hline
+\end{tabular}
+\end{center}
+\end{minipage}
+\caption{Caminos explorados con la probabilidad y el precio asociados a cada uno.}
+
+\end{figure}
+
+\end{problem}
