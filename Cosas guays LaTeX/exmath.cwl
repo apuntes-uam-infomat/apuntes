@@ -309,3 +309,6 @@
 \difp#m
 \difp[F]#m
 \difp[F][p]#m
+\linapp#m
+\linapp[X]#m
+\linapp[X][Y]#m

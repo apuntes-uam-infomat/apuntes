@@ -181,11 +181,10 @@ Vamos a buscar la estrategia de cobertura de este activo que es la call. Así te
 \varphi_0 \cdot 1.05 + \varphi_1\cdot 8 = 0
 \end{array}\right. \implies \varphi_1 = 0.25 \text{ y } \varphi_0 = -1.9\]
 
-Puesto que estamos bajo la suposición de que nos movemos en una economía libre de arbitrajes, el precio inicial de esta estrategia debe coincidir con el previo actual del activo $X$ (la call).
+Puesto que estamos bajo la suposición de que nos movemos en una economía libre de arbitrajes, el precio inicial de esta estrategia debe coincidir con el previo actual del activo $X$ (la réplica de la call).
 
 Así tenemos:
-\[C_0 = V_0(\varphi) = \frac{\varphi_0(1+r) + q(\varphi_1 \cdot 12) + (1-q)(\varphi_1\cdot 8)}{1+r} = -1.9 + \frac{0.63 \cdot 0.25\cdot 12 + 0.37 \cdot 0.25 \cdot 8}{1.05}\]
-\[C_0 = 0.6\]
+\[C_0 = V_0(\varphi) = \varphi_1 S_0^1 + \varphi_0S_0^0 = 0.25 \cdot 10 - 1.9 = 0.6\]
 \spart
 
 Una vez conocemos la probabilidad riesgo neutro podemos calcular el precio de la call como sigue:
@@ -287,7 +286,8 @@ Recordemos que un arbitraje no era más que la posibilidad de ganar dinero sin a
 \spart
 
 Para que el proceso de precios descontados sea una martingala necesitamos que:
-\[V_0(\varphi) = \esp[q]{\tilde{V}_1(\varphi)}\equiv \varphi_1+10\varphi_2 = (\varphi_1+12\varphi_2)Q(ω_1) + (\varphi_1 +10\cdot  \varphi_2)Q(ω_2)\]
+\[V_0(\varphi) = \esp[q]{\tilde{V}_1(\varphi)}\equiv \varphi_0+10\varphi_1 = (\varphi_0+12\varphi_1)Q(ω_1) + (\varphi_0 +10\cdot  \varphi_1)Q(ω_2)\]
+siendo $\varphi_i$ la cantidad de acciones del activo $S^i$
 
 que es obviamente cierto puesto que $Q(w_1)=0$ y $Q(ω_2)=1$.
 
@@ -505,10 +505,10 @@ El caso concreto que concierne a este ejemplo no es más que una call para la qu
 Puesto que no nos dan un precio de ejercicio $K$ vamos a suponer $K=S_0$\footnote{Esta suposición es correcta y la esperada por el profesor}.
 
 El valor en $t=T$ de la call mencionada sería:
-\[V_T(C_K) = \sum_{i=5}^{10}{10 \choose i}a^{i}b^{10-i}p^i(1-p)^{10-i}S_0-S_0\]
+\[V_T(C_K) = \sum_{i=5}^{10}{10 \choose i}p^i(1-p)^{10-i}(a^{i}b^{10-i}S_0-S_0)\]
 
 Ahora debemos comprobar cuantas de las trayectorias que estamos considerando al calcular $V_T(C_K)$ quedan anuladas por alcanzar el valor $a^8S_0$. Para ello basta con notar que eso ocurre siempre que tengamos 9 o 10 subidas en el proceso de desplazamiento por el árbol o si tenemos 8 subidas consecutivas. En estos casos el valor del activo es 0 en lugar de tener el valor de la Call. Así podemos escribir:
-\[V_T(X)=\sum_{i=5}^{8}{10 \choose i}a^{i}b^{10-i}p^i(1-p)^{10-i}S_0-S_0-p^8(1-p)^2(a^6S_0-S_0)\]
+\[V_T(X)=\sum_{i=5}^{8}{10 \choose i}p^i(1-p)^{10-i}(a^{i}b^{10-i}S_0-S_0)-p^8(1-p)^2(a^6S_0-S_0)\]
 
 Por último, para conocer el valor actual de este activo debemos traerlo al presente mediante un proceso de precios descontados.
 \[V_0(X)=V_T(X)e^{-r_cΔtn}=V_T(X)e^{-0.035\cdot 0.83}\]
@@ -521,7 +521,7 @@ Para realizar esta cuenta utilizamos el script de python \ref{sec:arbolBin} con 
 En esta ocasión tenemos la misma call del apartado anterior pero la opción de barrera funciona justo al contrario. Necesitamos alcanzar el valor $a^8S_0$ para que el activo esté realmente disponible.
 
 En esta ocasión tendremos:
-\[V_T(X)=\sum_{i=9}^{10}{10 \choose i}a^{i}b^{10-i}p^i(1-p)^{10-i}S_0-S_0+p^8(1-p)^2(a^6S_0-S_0)\]
+\[V_T(X)=\sum_{i=9}^{10}{10 \choose i}p^i(1-p)^{10-i}(a^{i}b^{10-i}S_0-S_0)+p^8(1-p)^2(a^6S_0-S_0)\]
 lo que nos lleva a un precio de:
 \[V_0(X)=V_T(X)e^{-r_cΔtn}=V_T(X)e^{-0.035\cdot 0.83} = 0.1288 \cdot 0.97127 = 0.125\]
 
@@ -530,8 +530,8 @@ donde el resultado numérico se ha calculado con la ayuda del script \ref{sec:ar
 \spart
 
 Este apartado es equivalente al apartado a) pues el árbol que lo representa es el espejo del de este apartado. Por tanto, es sencillo ver que:
-\[V_T(P_K) = S_0 -\sum_{i=5}^{10}{10 \choose i}b^{i}a^{10-i}(1-p)^i(p)^{10-i}S_0\]
-\[V_T(X) = S_0 -\sum_{i=5}^{8}{10 \choose i}b^{i}a^{10-i}(1-p)^i(p)^{10-i}S_0-(1-p)^8p^2(S_0-b^6S_0)\]
+\[V_T(P_K) = \sum_{i=5}^{10}{10 \choose i}(1-p)^ip^{10-i}(S_0 - b^{i}a^{10-i}S_0)\]
+\[V_T(X) =\sum_{i=5}^{8}{10 \choose i}(1-p)^ip^{10-i}(S_0-b^{i}a^{10-i}S_0)-(1-p)^8p^2(S_0-b^6S_0)\]
 Finalmente
 \[V_0(X)=V_T(X)e^{-r_cΔtn}=V_T(X)e^{-0.035\cdot 0.83}\]
 
@@ -542,7 +542,7 @@ Para realizar esta cuenta utilizamos el script de python \ref{sec:arbolBin} con 
 
 Nuevamente nos encontramos con el caso ``complementario'' del anterior por lo que tendremos:
 
-\[V_T(X) = S_0 -\sum_{i=9}^{10}{10 \choose i}b^{i}a^{10-i}(1-p)^i(p)^{10-i}S_0+(1-p)^8p^2(S_0-b^6S_0)\]
+\[V_T(X) = \sum_{i=9}^{10}{10 \choose i}(1-p)^ip^{10-i}(S_0-b^{i}a^{10-i}S_0)+(1-p)^8p^2(S_0-b^6S_0)\]
 
 Con el correspondiente
 \[V_0(X)=V_T(X)e^{-r_cΔtn}=V_T(X)e^{-0.035\cdot 0.83} = 0.0224 \cdot 0.97127 = 0.0218\]
@@ -561,17 +561,17 @@ El subyacente $S$ vale hoy 10 y su dinámica está descrita por un árbol binomi
 \ppart Calcular el precio de una call asiática de media artimética con precio de ejercicio 10
 \ppart Misma pregunta para la call de media geométrica
 \ppart Qué vale la opción cuyo flujo final viene dado por:
-\[(S_0-\frac{1}{6}\sum_{i=1}^6S_i)^+\]
+\[\left(S_0-\frac{1}{6}\sum_{i=1}^6S_i\right)^+\]
 \solution
 
 \doneby{Pedro}
 
 
 Los datos que conocemos nada más leer el enunciado son:
-\[S_0=10, \ T=0.5, \ Δt = 0.083, \ σ=0.28, \ R_c=0.053\]
+\[S_0=10, \ T=0.5, \ Δt = 0.083, \ σ=0.28, \ R_c=0.53\]
 
 con estos datos podemos calcular:
-\[a=e^{σ\sqrt{Δt}} = 1.08, \ b = \frac{1}{a} = 0.93, \ p = \frac{e^{r_cΔt}-b}{a-b}=0.53\]
+\[a=e^{σ\sqrt{Δt}} = 1.08, \ b = \frac{1}{a} = 0.93, \ p = \frac{e^{r_cΔt}-b}{a-b}=0.77\]
 
 \spart
 
@@ -581,10 +581,10 @@ Una \concept{call asiática} de media aritmética es una opción tal que su valo
 La forma de hacer este ejercicio consiste en plantear todos los posibles caminos y, para cada camino, calcularemos el precio final de la call y la probabilidad de que se de esa situación. La tabla \ref{fig:2_3a} muestra los resultados obtenidos
 
 La tabla ha sido generada por el mismo script, \ref{sec:arbolBin}, que nos permite obtener el siguiente resultado para el valor final de la call:
-\[V_1(C) = 0.68069 \implies V_0(C) = 0.66281\]
+\[V_1(C) = 1.7627 \implies V_0(C) = 1.3538\]
 donde el precio actual de la call se ha calculado mediante un proceso de precios descontados.
 
-\obs Nuevamente, no se especifica el precio de ejercicio de la opción, por lo que asumimos que este es igual al precio actual del activo asociado. Es decir, tomamos por defecto $K=S_0$.
+\obs Nuevamente, no se especifica el precio de ejercicio de ejercicio, por lo que asumimos que este es igual al precio actual del activo asociado. Es decir, tomamos por defecto $K=S_0$.
 
 \spart
 
@@ -597,12 +597,12 @@ La tabla \ref{fig:2_3b} recoje los diferentes caminos explorados y los valores y
 
 Con el mismo script de siempre, obtenemos el siguiente resultado:
 Ahora sólo tenemos que ponderar los valores calculados con las probabilidades asociadas con lo que obtenemos:
-\[V_1(C) = 5.131 \implies V_0(C) = V_1(C)e^{-r_cΔtn} = 4.997\]
+\[V_1(C) = 7.1197 \implies V_0(C) = V_1(C)e^{-r_cΔtn} = 5.468\]
 
 \spart
 
 Empleando de nuevo nuestro maravilloso script obtenemos los resultados mostrados en la tabla \ref{fig:2_3c} que nos lleva a un valor de la opción:
-\[V_1(C) = 0.2524 \implies V_0(C) = V_1(C)e^{-r_cΔtn} = 0.2458\]
+\[V_1(C) = 0.0084 \implies V_0(C) = V_1(C)e^{-r_cΔtn} = 0.0065\]
 \end{problem}
 
 
