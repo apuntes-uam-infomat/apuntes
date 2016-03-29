@@ -1,3 +1,4 @@
+% -*- root: ../EDP2016.tex -*-
 \chapter{Comportamiento cualitativo}
 
 % clase 15/3/2016
@@ -293,12 +294,93 @@ En este capítulo vamos a ver:
 
 		 	\[ \frac{1}{2} \int_0^L (W_t)^2 + (W_x)^2 dx = \frac{1}{2} \int_0^L (g-\gor{g})^2 + ((f-\gor{f})')^2 dx \]
 
-		 	Hemos demostrado también dependencia contínua de datos. Lo que quiere decir que datos pequeños nos llevan a energías pequeñas.
+		 	Hemos demostrado también dependencia continua de datos. Lo que quiere decir que datos pequeños nos llevan a energías pequeñas.
 
 		 	Y por lo tanto acabamos diciendo que el problema de las ondas es un problema bien propuesto: tiene existencia, unicidad y dependencia contínua.
 
 
+		 	% Clase gjulianm 29/3
 
+		\subsection{Deducción de la ecuación de onda}
 
+		\begin{figure}[hbtp]
+		\centering
+		\inputtikz{TensionCuerda}
+		\caption{Esquema para la demostración, dejando sólo un trozo de cuerda y sustituyendo por la tensión.}
+		\label{fig:TensionCuerda}
+		\end{figure}
 
+		La idea para la deducción de la ecuación de onda es la siguiente: quitar un cacho de cuerda y sustituirlo por una tensión $T(x,t)$, que representa el efecto del trozo de cuerda a la derecha del punto $x$ en el instante $t$.
 
+		Las componentes horizontales están en equilibrio, luego tienen que anularse: \( T(x+h) \cos θ(x+h) - T(x) \cos θ(x) = 0 \label{eq:Onda:EquilibrioHorizontal} \)
+
+		Las componentes verticales tienen que seguir la Ley de Newton: \( T(x + h) \sin θ(x+h) - T(x) \sin θ(x) = m · u_{tt} \label{eq:Onda:LeyNewton} \), donde $m$ es la masa que se calcula a partir de la densidad ρ (constante) y de la longitud de la curva: \[ m = ρ \int_{x}^{x+h} \sqrt{1+u_x^2} \dif s\]
+
+		Para hacer la deducción de la ecuación, dividiremos entre $h$ en \eqref{eq:Onda:LeyNewton}, y haciendo tender $h \to 0$ tenemos la derivada: \[ \left(T(x) \sin θ(x)\right)_x = ρ\sqrt{1+u_x^2(x,t)} u_{tt} \]
+
+		Haciendo el truco de escribir $\sin θ = \cos θ · \tan θ$, tenemos que $\tan θ = u_x$ y nos queda lo siguiente:  \[ \left(T(x) \cos θ(x) u_x \right)_x = ρ\sqrt{1+u_x^2(x,t)} u_{tt} \]
+
+		Ahora derivamos y vemos qué ocurre: \[ \left(T(x) \cos θ(x) u_x \right)_x = \left(T(x) \cos θ(x)\right)_x u_x + T(x) \cos θ(x) u_{xx} \]
+
+		Podemos simplificar viendo que \eqref{eq:Onda:EquilibrioHorizontal} nos decía que $T(x+h) \cos θ(x+h) - T(x) \cos θ(x) = 0$, luego $(T(x) \cos θ(x))_x = 0$. Además, por no sé equé tenemos que $T(x) \cos θ(x)$ es constante.
+
+		Sólo nos falta quitarnos la raíz esa fea. Para ello hacemos la simplificación de tener oscilaciones pequeñas, de tal forma que $u_x$ es pequeño, $u_x^2$ es todavía más pequeño y $1 + u_x^2 \approx 1$. Así, nos queda la ecuación que ya conocemos: \[ u_{tt} - c^2 u_{xx} = 0\]
+
+		\subsection{Ecuación de ondas en $ℝ$}
+
+		Partimos de nuestra ecuación homogénea: \[ \begin{cases}
+		u_{tt} - c^2 u_{xx} = 0 \\
+		u(x,0) = f(x) \\
+		u_t(x, 0) = g(x)
+		\end{cases}\]
+
+		La cuestión es que aquí no podemos aplicar las series de Fourier, porque no tenemos una longitud acotada: estamos estudiando la ecuación en todo $ℝ$. Lo que haremos será ver si aplicando la Fórmula de D'Alembert nos sale algo. Para eso, hacemos el siguiente cambio de variables: \begin{align*}
+		ξ &= x + ct & ξ_x = 1,\,& ξ_t = c \\
+		η &= x - ct & η_x = 1,\,& η_t = - c \\
+		\end{align*}
+
+		Haciendo las cuentas tenemos lo siguiente: \begin{align*}
+		u_x &= u_ξ + u_η \\
+		u_{xx} &= u_{ξξ} + 2 u_{ηξ} + u_{ηη} \\
+		u_t &= c u_ξ - c u_η \\
+		u_{tt} &= c^2 u_{ξξ} + 2c^2 u_{ηξ} + c^2 u_{ηη}
+		\end{align*}
+
+		La conclusión de todo esto es que la ecuación nos queda así: \[ 0 = u_{tt} - c^2 u_{xx} = -4c^2 u_{ηξ} \], de tal forma que la ecuación final nos queda muy simple: \[ u_{ηξ} = 0\]
+
+		De ahí podemos sacar fácilmente que $u_η = α(η)$, una función que sólo depende de $η$. Por tanto, podemos sacar la fórmula para $u$: \[ u = \int α(η) \dif η + B(ξ) = A(η) + B(ξ) = A(x-ct) + B(x+ct)\]
+
+		Si $u(x,0) = f(x)$, entonces $f(x) = A(x) + B(x)$, y si $u_t(x,0) = g(x)$ entonces $g(x) = -cA'(x) + cB'(x)$. El sistema resultante es el siguiente: \[ \begin{cases}
+		A' + B' = f \\
+		-A' + B' = \dfrac{1}{c} g
+		\end{cases} \]
+
+		Resolviéndolo, llegaremos de nuevo a la fórmula de D'Alembert: \( u(x,t) = \frac{1}{2} \left(f(x + ct) + f(x-ct)\right) + \frac{1}{2c} \int_{x-ct}^{x+ct} g(s) \dif s \label{eq:Onda:DAlembert} \)
+
+		A partir de aquí podemos encontrar algunas consecuencias y estudiar la función de onda. Lo primero es ver que la única solución del problema en todo $ℝ$ viene dada por esta fórmula: no hemos introducido ni quitado nuevas soluciones.
+
+		\begin{figure}[hbtp]
+		\centering
+		\inputtikz{ReprGraficaEcOnda}
+		\caption{Representación gráfica y dominio de dependendencia de la solución y de influencia de los datos.}
+		\label{fig:ReprGraficaEcOnda}
+		\end{figure}
+
+		Lo siguiente es estudiar lo que se ve en la \fref{fig:ReprGraficaEcOnda}. $u(x,t)$ sólo dependerá de los valores de $f$ en los puntos $a,b$ y del valor de $g$ en el intervalo $(a,b)$. La zona sombreada en la figura será el dominio de influencia del intervalo $[a,b]$: es sólo ahí donde influyen los datos de $f,g$ de esos puntos. Por ejemplo, si en $t = 0$ $f = g \equiv 0$ fuera de $[a,b]$, entonces en $t = T$ la solución será cero fuera de $[a - cT, b + cT]$. En otras palabras, hay una velocidad de propagación finita de los datos.
+
+		La aplicación de esto es la demostración de la conservación de la energía. Partíamos de una ecuación \[ E(t) = \frac{1}{2} \int_{-∞}^∞ u_x^2 \dif x + \frac{c^2}{2} \int_{-∞}^∞ u_t^2 \dif x\], y derivando y haciendo cuentas nos salía que \[ E'(t) = \int_{-∞}^∞ u_t(u_{tt} - c^2 u_{xx}) \dif x = 0\], luego la energía se conservaba.
+
+		Ahora bien, cuando hacíamos eso en dominios acotados, lo que necesitamos era la hipótesis de los valores de contorno para poder demostrar que salía lo que tenía que salir. Aquí lo que necesitaremos simplemente es que $f(x)$ y $g(x)$ sean funciones de soporte compacto (son $0$ fuera de un intervalo $[-M, M]$), de tal forma que para tiempos finitos se cumple que en el instante $t$, $u(x,t)$ es $0$ fuera del intervalo $[-M - ct, M + ct]$ y por tanto los términos de borde en la integración por partes para sacar $E'(t)$ se anulan.
+
+		Como nota, no podríamos pedir sólo que $u_x$ y $u_t$ fuesen integrables $L^2$, más que nada porque eso no implica que se vayan a $0$ en $∞$.
+
+		La conservación de la energía nos dará unicidad de solución, también para el problema no homogéneo; y dependencia continua de los datos. Estos resultados habría que compararlos con el teorema en dominios acotados, que es donde lo demostrarmos en su día.
+
+		Y luego una prueba de algo con un paralelogramo del que no me he llegado a enterar demasiado bien:
+
+		\begin{figure}[hbtp]
+		\centering
+		\inputtikz{Paralelogramo}
+		\caption{Paralelogramo.}
+		\label{fig:Paralelogramo}
+		\end{figure}
