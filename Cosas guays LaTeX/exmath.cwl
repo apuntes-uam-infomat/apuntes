@@ -312,3 +312,11 @@
 \linapp#m
 \linapp[X]#m
 \linapp[X][Y]#m
+\hconvs{arg1}{arg2}#m
+\hconvs[txt. arriba]{arg1}{arg2}#m
+\wconvs#m
+\wconvs[]#m
+\wconvs[][\infty]#m
+\wsconvs#m
+\wsconvs[]#m
+\wsconvs[][\infty]#m
