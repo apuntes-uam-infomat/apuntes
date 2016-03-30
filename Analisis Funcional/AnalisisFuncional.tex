@@ -678,7 +678,7 @@ Dado que ya hemos demostrado que ambas aplicaciones son continuas y la biyectivi
 
 En las siguientes secciones vamos a ver varios teoremas fundamentales del análisis funcional. El primero es el Teorema de la Acotación uniforme, que dice que para los operadores lineales continuos cuyo dominio es un espacio de Banach, la convergencia puntual es equivalente a la convergencia uniforme.
 
-\begin{theorem}[Teorema\IS de acotación uniforme de Banach-Stainhaus] Sea $\set{T_α}_{α∈A}$ un subconjunto de $\mathcal{L}(X,Y)$, donde $X$ es Banach e $Y$ es normado. Entonces, o bien las aplicaciones lineales $T_α$ están uniformemente acotadas (es decir, $∃C < ∞$ tal que $∀α ∈ A$ se tiene que $\norm{T_α} ≤ C$), o bien existe un cierto conjunto\footnote{Recordamos la definición de \nref{def:ConjuntoGDelta}: intersección numerable de abiertos.} $G_δ$ denso en $X$, que llamaremos $B$, tal que \[ \sup_{α ∈ A} \norm{T_α(x)}_Y = ∞ \quad ∀x ∈ B \]
+\begin{theorem}[Teorema\IS de acotación uniforme de Banach-Stainhaus] \label{thm:AcotacionUniforme} Sea $\set{T_α}_{α∈A}$ un subconjunto de $\mathcal{L}(X,Y)$, donde $X$ es Banach e $Y$ es normado. Entonces, o bien las aplicaciones lineales $T_α$ están uniformemente acotadas (es decir, $∃C < ∞$ tal que $∀α ∈ A$ se tiene que $\norm{T_α} ≤ C$), o bien existe un cierto conjunto\footnote{Recordamos la definición de \nref{def:ConjuntoGDelta}: intersección numerable de abiertos.} $G_δ$ denso en $X$, que llamaremos $B$, tal que \[ \sup_{α ∈ A} \norm{T_α(x)}_Y = ∞ \quad ∀x ∈ B \]
 \end{theorem}
 
 \begin{proof} % TODO: Vaya basura de demostración
@@ -1076,11 +1076,69 @@ Sean $x_1, x_2 ∈ X$ con $x_1 ≠ x_2$ (equivalentemente, $x_1 - x_2 ≠ 0$). Q
 
 El funcional será uno tal que $λ(x_1 - x_2) = \norm{x_1 - x_2}$ y $\norm{λ}_{X^*} = 1$, que sabemos que existe como consecuencia del \nref{thm:HahnBanach}: simplemente lo definimos en la recta dada por el vector $x_1 - x_2$ y lo extendemos a todo el espacio con la misma norma.
 
-Tomamos ahora $U_j = \bola_{\frac{\norm{x_1 - x_2}}{2}} (λ(x_j))$, y $Ω_j = \inv{λ}(U_j)$ para $j = 1,2$. Está claro que $x_j ∈ Ω_j$. Y continuamos mañana.
+Tomamos ahora $U_j = \bola_{\frac{\norm{x_1 - x_2}}{2}} (λ(x_j))$, y $Ω_j = \inv{λ}(U_j)$ para $j = 1,2$. Está claro que $x_j ∈ Ω_j$.
+
+Vamos a ver que $U_1 ∩ U_2 = ∅$ por reducción al absurdo. Supongamos que existe un $x ∈ U_1 ∩ U_2$. Entonces tanto $\norm{λ(x) - λ(x_1)}$ como $\norm{λ(x) - λ(x_2)}$ son menores que $\frac{1}{2}\norm{x_1 - x_2}$. Por otra parte, \[ 0 < \norm{x_1 - x_2} = \abs{λ(x-x_2)} = \abs{(λ(x_1) - λ(x)) - (λ(x_2) - λ(x))} < \norm{x_1 - x_2} \], contradicción.
 \end{proof}
 
 \begin{prop} Si $X = Y^*$ es un espacio de Banach dual, su topología débil-$*$ es Hausdorff.
 \end{prop}
+
+\begin{proof} Sean $f_1, f_2 ∈ X$ elementos del dual $Y^* = X$ y distintos. Por ser distinto, existe un $x ∈ Y$ tal que $f_1 (x) ≠ f_2(x)$ o, equivalentemente, $\pesc{f_1, x} ≠ \pesc{f_2, x}$. Aquí distinguiremos dos casos:
+
+\proofpart{$\kbb = ℝ$}
+
+Sin pérdida de generalidad, suponemos que $\pesc{f_1, x} < \pesc{f_2, x}$. Sea $α ∈ (\pesc{f_1, x}, \pesc{f_2, x})$, y tomamos los conjuntos \begin{align*}
+O_1 &= \set{ f ∈ X \tq \pesc{f, x} < α} \\
+O_2 &= \set{ f ∈ X \tq \pesc{f, x} > α}
+\end{align*}
+
+Ambos son abiertos en $X$ de la topología débil-$*$, $O_1 ∩ O_2 = ∅$, y además separan a $f_1$ y $f_2$, luego hemos probado que es Hausdorff.
+
+\proofpart{$\kbb = ℂ$}
+
+Sea $r$ la línea recta e $ℂ$ que separa $z_1 = \pesc{f_1, x}$ y $z_2 = \pesc{f_2, x}$. Y sí, sale. No entiendo muy bien por qué no lo hace genéricamente.
+\end{proof}
+
+\section{Convergencia en topologías débiles}
+
+\begin{defn}[Convergencia\IS débil] Sea $X$ un espacio de Banach y $\set{x_n}_{n ∈ ℕ}$ una sucesión en $X$. Entonces se dice que $x_n$ converge a $x$ débilmente ($x_n \wconvs[n] x$) si y sólo si $∀λ ∈ X^*$, $\pesc{λ, x_n} \convs \pesc{λ, x}$.
+\end{defn}
+
+\begin{defn}[Convergencia\IS débil-$*$] Sea $X = Y^*$ un espacio de Banach dual y $\set{x_n}_{n ∈ ℕ}$ una sucesión en $X$. Entonces se dice que $x_n$ converge a $x$ débilmente-$*$ ($x_n \wsconvs[n] x$) si y sólo si $∀y ∈ Y$, $\pesc{x_n, y} \convs \pesc{x,y}$.
+\end{defn}
+
+La primera observación es que para las dos convergencias, el límite si existe es único, por ser ambas topologías Hausdorff.
+
+La segunda es que, en general y com $\dim X = ∞$, ninguna de las topologías se pueden caracterizar por la convergencia de sucesiones, y de hecho ni siquiera son metrizables.
+
+\begin{prop}[Propiedades de la convergencia débil] \label{prop:ConvDebil} Sea $X$ un espacio Banach y $\set{x_n}_{n ∈ ℕ}$ una sucesión en $X$. Entonces, se cumplen las siguientes propiedades
+
+\begin{enumerate}
+\item \label{prp:ConvDebil:NormaImplicaDebil} Si $x_n \to x$ en norma, entonces $x_n \wconvs x$ débilmente.
+\item \label{prp:ConvDebil:DebilImplicaCota} Si $x_n \wconvs x$ débilmente, entonces $\sup \norm{x_n} < ∞$ (la sucesión está acotada) y además $\norm{x} ≤ \liminf \norm{x_n}$.
+\item \label{prp:ConvDebil:PescConvs} Si $x_n \wconvs x$ débilmente y $λ_n \to λ$ en norma, donde $\set{λ_n}_{n ∈ ℕ}$ es una sucesión en $X^*$, entonces $\pesc{λ_n, x_n} \to \pesc{λ,x}$.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+
+\proofpart{\ref{prp:ConvDebil:NormaImplicaDebil}: $x_n \to x \implies x_n \wconvs x$}
+
+Fijamos un $λ ∈ X^*$ y entonces \[ \abs{\pesc{λ,x} - \pesc{λ, x_n}} = \abs{\pesc{λ, x - x_n}} ≤ \norm{λ}_{X^*} \underbracket{\norm{x-x_n}_X}_{\to 0} \to 0 \]
+
+Asi, $\pesc{λ, x_n} \convs \pesc{λ,x}$ y por lo tanto $x_n \wconvs[n] x$.
+
+\proofpart{\ref{prp:ConvDebil:DebilImplicaCota}: $x_n \wconvs x \implies \sup \norm{x_n} < ∞ ∧ \norm{x} ≤ \liminf \norm{x_n}$}
+
+Si $x_n \wconvs x$ y $λ ∈ X^*$ fijo, entonces $\pesc{λ, x_n} \to \pesc{λ, x}$ en \kbb. Por lo tanto, $\pesc{λ, x_n}$ es una sucesión acotada en $\kbb$. Si consideramos $x_n ∈ X^{**}$ como elementos del doble dual, podemos aplicar el \nref{thm:AcotacionUniforme}, luego $\sup \norm{x_n}_{X^{**}} = \sup \norm{x_n}_X < ∞$ y está acotada.
+
+Para la otra parte, fijamos de nuevo $λ ∈ X^*$ con $\norm{λ}_{X^*} ≤ 1$. Entonces, $\abs{\pesc{λ, x_n}} ≤ \norm{λ}_{X^*} \norm{x_n}_X ≤ \norm{x_n}_X$, de tal forma que $\liminf \abs{\pesc{λ, x_n}} ≤ \liminf \norm{x_n}$.
+
+Como además $x_n \wconvs x$, entonces $\lim \pesc{λ, x_n} = \pesc{λ, x}$ y equivalentemente $\lim \abs{\pesc{λ, x_n}} = \abs{\pesc{λ, x}}$. Como el límite existe, $\liminf \abs{\pesc{λ, x_n}} = \lim \abs{\pesc{λ, x_n}}$ y ya tenemos (espero) lo que queríamos demostrar.
+\end{proof}
+
+
 
 \chapter{Espacios de Hilbert}
 
