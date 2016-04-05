@@ -637,7 +637,113 @@ En este capítulo vamos a ver:
 			\end{itemize}
 
 
+	\section{Laplaciano}
 
+	Si nos fijamos en la ecuación del calor, para dimensión espacial $N$ nos queda que \[ u_t - (u_{x_1x_1} + u_{x_2x_2} + \dotsb + u_{x_N x_N})\]
+
+	Para la ecuación de ondas, tenemos algo parecido:  \[ u_{tt} - (u_{x_1x_1} + u_{x_2x_2} + \dotsb + u_{x_N x_N})\]
+
+	Ese último paréntesis es una operación en si misma, que llamaremos el \concept{Laplaciano}: \( Δu = \sum_{i=1}^N u_{x_i x_i} = \tr (\Dif^2 u) = \dv (\grad u) \label{eq:Laplaciano}\)
+
+	Es especialmente interesante verlo como la divergencia del gradiente, para después poder aplicar en un futuro el teorema de Gauss para poder interar.
+
+	Una forma de ver la ecuación de ondas o del calor es como soluciones estacionarias de algo. Por ejemplo, si nos fijamos en el típico experimento de hacer vibrar una membrana con el sondio, estaríamos ante una ecuación \[ \begin{cases} u_{tt} - u_{xx} - u_{yy} \\ \restr{u}{∂Q} = 0 \\ u(x,0) = f(x) \\ u_t(x,0) = g(x) \end{cases} \] con $Q = (0,1) × (0,1)$.
+
+	Podríamos aplicar entonces el método de separación de variables, buscando dos funciones cuyo producto sea la solución: \[ u(x,y,t) = Φ(x,y) T(t) \] de tal forma que las soluciones serían de la forma \[ \frac{T''}{T} = \frac{ΔΦ}{Φ} = λ \]
+
+	La resolución en $Φ$ nos daría un problema de autovalores: \[ \begin{cases} ΔΦ = λ Φ \\ \restr{Φ}{∂Q} = 0 \end{cases} \], lo cual es un problema de autovalores. El resultado sería una sucesión de autovalores $λ_k$ y autofunciones $Φ_k$.
+
+	Volviendo al caso de la membrana, si ponemos arena en la membrana se quedará con una forma, más concretamente en los nodos de la membrana: los puntos en los que no vibra.
+
+	Nosotros no veremos el problema de resolver el laplaciano para dominios arbitrarios porque necesitamos mucho análisis funcional y en este curso no da tiempo. Nos vamos a dedicar a algo que no tengo claro qué es.
+
+	\subsection{Funciones armónicas, subarmónicas y superarmónicas}
+
+	No sé a qué viene esto.
+
+	\begin{defn}[Función\IS armónica] Si $-Δu = 0$ en Ω, entonces $u$ es armónica en $Ω$. \end{defn}
+	\begin{defn}[Función\IS subarmónica] Si $-Δu ≤ 0$ en Ω, entonces $u$ es subarmónica en $Ω$. \end{defn}
+
+	\begin{defn}[Función\IS superarmónica] Si $-Δu ≥ 0$ en Ω, entonces $u$ es superarmónica en $Ω$. \end{defn}
+
+	En dimensión $1$, las funciones armónicas son lineales, las subarmónicas convexas y las superarmónicas convexas.
+
+	En dimensiones superiores, las cosas se complican un poco más. Por ejemplo, una función lineal sigue siendo armónica, pero $u(x,y) = x^2 - y^2$ también es armónica.
+
+	Un ejemplo de función subarmónica es un paraboloide en dimensión $N$: \[ u(x_1, \dotsc, x_N) = \norm{\vx}^2 = x_1^2 + \dotsb + x_N^2 \] es subarmónica ya que $-Δu = -2N$.
+
+	En dimensión $2$, la función \[ F(x,y) = \log (x^2 + y^2)\] tiene laplaciano $-ΔF = 0$ en $ℝ^2 \setminus \set{(0,0)}$, por lo que es armónica.
+
+	En dimensión $N > 2$, la función \[ G(\vx) = \frac{1}{\norm{\vx}^{N-2}}\] también es armónica: $-ΔG = 0$ en $ℝ^N \setminus \set{\vec{0}}$.
+
+	Estos dos ejemplos son llamadas \concept{Soluciones\IS fundamentales}, y ya veremos más tarde por qué se llaman así.
+
+	Las funciones armónicas tienen unas propiedades básicas.
+
+	\begin{prop} \label{prop:PropsFuncArmonicas} Sean $u,v$ funciones armónicas en $Ω$.
+	\begin{enumerate}[itemsep = 0pt]
+	\item La suma $u +v$ es armónica.
+	\item El producto $uv$ en general no es armónico.
+	\item La traslación $u(x-x_0)$ es armónica en $\set{x \tq x - x_0 ∈ Ω}$.
+	\item El escalado $u(kx)$ es armónica en $\set{x \tq kx ∈ Ω}$.
+	\item Dada una transformación lineal $\appl{A}{ℝ^N}{ℝ^N}$ con $\norm{Ax} = \norm{x}\;∀xx ∈ ℝ^N$ (isometría), entonces $u(Ax)$ es armónica en $\set{x \tq Ax ∈ Ω}$.
+	\item \concept{Transformada\IS de Kelvin} La función \[ K(\vx) = \frac{1}{\norm{\vx}^{N-2}} u\left(\frac{\vx}{\norm{\vx}^2}\right) \] es armónica en $\set{ \vx \tq \frac{\vx}{\norm{\vx}^2} ∈ Ω}$.
+	\end{enumerate}
+	\end{prop}
+
+	La transformada de Kelvin es especialmente importante, ya que lleva de puntos de dentro de una bola a puntos fuera, y permite estudiar lo que pasa en el centro de la bola (en el $0$) viendo lo que ocurre en el infinito. La cuenta es un poco infernal, y nosotros lo haremos sólo en un caso.
+
+	\begin{proof}[Transformada de Kelvin - $u$ radial]
+	Suponemos que $u$ es radial, esto es, que $u$ sólo depende de la norma del vector $\vx$. Diremos entonces que $u \equiv u(r)$ con $r = \norm{\vx}$.
+
+	Vamos a estudiar la ``armonicidad'' de la función. Primero calculamos la derivada $r_i$: \begin{align*}
+	r^2 &= x_1^2 + \dotsb + x_N^2 \\
+	2rr_{x_i} &= 2x_i \\
+	r_{x_i} &= \frac{x_i}{r}
+	\end{align*}
+
+	Con esto ya podemos calcular la segunda derivada de $u$: \begin{align*}
+	u_{x_i} &= u_{r} r_{x_i} = u_{r} \frac{x_i}{r} \\
+	u_{x_ix_i} &= \dotsb = \left(\frac{ur}{r}\right)_r \frac{x_i^2}{r} + \frac{u_r}{r}
+	\end{align*}
+
+	Así, el laplaciano queda que es igual a \[ Δu = \sum_{i=1}^N = \left(\frac{ur}{r}\right)_r · r + N\frac{u_r}{r} = \dotsb = u_{rr} + \frac{N-1}{r} u_r \]
+
+	El ejercicio a cargo del lector consistiría en ver que dada la transformada de Kelvin \[ H(r) = \frac{1}{r^{N-2}} u\left(\frac{1}{r}\right)\] entonces \[ H_{rr} + \frac{N-1}{r} H_r = 0\]
+
+	\end{proof}
+
+	¿Cómo se escribiría la transformada de Laplace si dependiese también del ángulo? En ese caso, cada punto $\vx ∈ ℝ^N$ se escribiría como $\vx = r · ω$, con $r ∈ [0, ∞)$ y $ω ∈ \crc[N-1]$, de tal forma que el laplaciano sería \[ Δu(\vx) = u_{rr} + \frac{N-1}{r} u_r + \frac{1}{r^2} Δ_{\crc[N-1]} u \] , donde $Δ_{\crc[N-1]}$ sería el \concept{Operador\IS de Laplace-Beltrami} que es la restricción del laplaciano a la esfera. Esta sería la conexión de esto con la geometría y no vamos a ver nada más de esto.
+
+	\subsection{Propiedades fundamentales: Principios del máximo y de la media}
+
+	El principio del máximo nos dice lo siguiente: si tenemos una cuerda en equilibrio (una función armónica), no tenemos ni máximos ni mínimos fuera de la frontera. Si, por ejemplo, tenemos ondas en una membrana, entonces no está en equilibrio: está vibrando.
+
+	Podemos mirarlo desde otro lado, tomando una función superarmónica con $-Δu = F ≥ 0$. Es decir, que hay un equilibrio en presencia de una fuerza externa $F$. Esta fuerza será positiva si actúa hacia arriba, y negativa si lo hace hacia abajo. El principio del máximo nos dirá que, respectivamente, sólo será posible una onda hacia arriba $u > 0$ o hacia abajo $u < 0$. (dibujo aquí.)
+
+	\begin{prop}[Principio\IS del máximo débil] Sea $Ω$ un dominio\footnote{Conjunto abierto y conexo} acotado en $ℝ^N$, y sea $u$ una función subarmónica en Ω y $u ∈ C^2(Ω) ∩ C(\adh{Ω})$. Entonces el máximo en el cierre es igual al máximo en la frontera: \[ \max_{\adh{Ω}} u = \max_{∂Ω} u \]
+	\end{prop}
+
+	El principio del máximo debil sí que nos permite casos en los que el máximo se alcanza en la frontera y también en el interior. Con artillería más fuerte veremos que estos casos, en la práctica, no son posibles; aunque para ello tendremos que esperar un poco.
+
+	\begin{proof}
+
+	\proofpart{$-Δu < 0$ en Ω (desigualdad estricta)}
+
+	Haremos la demostración por reducción al absurdo: supongamos que $\max_{\adh{Ω}}$ se alcanza en $x_0 ∈ \mop{int} Ω$. En ese punto de máximo tiene que pasar dos cosas: que el gradiente se anula ($\grad u = \vec{0}$) y que el hessiano $\Dif^2 u$ tiene que ser semidefinida negativa. Esto es, los autovalores de $\Dif^2 u$ tienen que ser menores o iguales que $0$.
+
+	En ese caso, la traza ha de ser menor o igual que cero, pero $\tr \Dif^2 u(x_0) = Δu(x_0) ≥ 0$, contradicción porque habíamos dicho que $-Δ u < 0$.
+
+	\proofpart{$-Δu ≤ 0$ en Ω (desigualdad no estricta)}
+
+	En este caso miraremos una función modificada $v_ε \approx u$, tal que $-Δv_ε < 0$. Tomaremos entonces \[ v_ε(\vx) = u(\vx) + ε\norm{\vx}^2\], de manera que \[ -Δv_ε (\vx) = -Δu(\vx) - ε Δ(\norm{\vx}^2) = -Δu(\vx)  - 2εN < 0 \]
+
+	Aplicamos entonces el caso anterior a $v_ε$, y entonces hacemos tender $ε \to 0$. Esto queda como ejercicio para el lector. En el paso al límite, tendremos que aceptar la desigualdad no estricta, lo que nos da la debilidad de este principio.
+	\end{proof}
+
+	Aunque este principio lo hemos hecho sólo para funciones subarmónicas, para superarmónicas es sólo cambiar el signo. Para funciones armónicas, como son sub y super armónicas, tendremos que el mínimo y máximo se alcanzan en la frontera.
+
+	Este principio será muy potente: nos permitirá demostrar unicidad, estimaciones, y más cosas que no he llegado a copiar.
 
 
 
