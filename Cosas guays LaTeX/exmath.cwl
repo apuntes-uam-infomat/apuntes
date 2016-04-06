@@ -256,7 +256,7 @@
 \tc{arg3}#m
 \tc[Id. superior]{arg3}#m
 \tc[Id. superior][Id. inferior]{arg3}#m
-\tc[Id. superior][Id. inferior][máx superior]{arg3}#m
+\tc[Id. superior][Id. inferior][max superior]{arg3}#m
 \projp#m
 \projcp#m
 \lie{arg0}#m
