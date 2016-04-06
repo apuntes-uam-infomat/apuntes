@@ -2015,7 +2015,7 @@ x(2) = (0,1,0) & y(2) = (0,1)
 binary training patterns. In each case, when presenting an input pattern to one
 layer, the initial activation of the other layer is set to zero.
 
-\ppart Using the bipolar step function (with threshold 0) as the activation function for both layers, convert the training patterns to bipolar form and test the network response in both directions again. Initialize activation as in part b.
+\ppart Using the bipolar step function (with threshold 0) as the activation function for both layers, convert the training patterns to bipolar form and test the network response in both directions again. Initialize activation as in part b).
 
 \ppart Test the response of your network on each of the following noisy versions of the bipolar form of the training patterns. Iterate as required for stability.
 \[\begin{array}{lll}
@@ -2033,7 +2033,15 @@ La idea de las redes asociativas bidireccionales es tener dos capas de neuronas 
 
 Esta red puede recibir una entrada en cualquier de sus dos niveles y producir una salida en el otro. Dada la relación de los enlaces descrita anteriormente tenemos que la matriz de pesos en un sentido es $W$ y en el sentido contrario sería $W^T$.
 
-\spart En esta ocasión estamos considerando una función de activación de salto. En este caso concreto, puesto que las entradas y salidas son binarias empleamos las funciones de activación:
+\spart
+
+El proceso de entrenamiento de esta red no es más que aplicar la recla de Hebb. Así, inicializamos los pesos de forma que queden guardados los vectores dados en su versión bipolar.
+\[W = S\cdot T = \left( \begin{array}{cc} 1 & -1 \\ -1 & 1 \\ 1 & -1 \end{array}\right)\cdot \left( \begin{array}{cc} 1 & -1 \\ -1 & 1\end{array} \right) = \left(\begin{array}{ccc}
+2 & 0 \\
+0 & 2 \\
+2 & 0 \end{array} \right)\]
+
+\spart En esta ocasión estamos considerando una función de activación de salto. Tal y como indica el enunciado, y puesto que las entradas y salidas son binarias, tenemos las siguientes funciones de activación:
 \[\text{Para el nivel Y: } y_j = \left\{ \begin{array}{lll}
 1   & si & y_{in_j} > 0 \\
 y_j & si & y_{in_j} = 0 \\
@@ -2043,17 +2051,272 @@ y_j & si & y_{in_j} = 0 \\
 x_j & si & x_{in_j} = 0 \\
 0   & si & x_{in_j} < 0
 \end{array}\right.\]
+Donde el hecho de que $y_j=y_j$ en el caso en que $y_{in_j}=0$ indica que la activación de esa neurona no cambia sino que se mantiene con su valor anterior.
 
-Atendiendo al algoritmo descrito en el libro procedemos a entrenar la red.
+La idea de la aplicación de estas redes consiste en ejecutar la red neuronal en ambas direcciones hasta obtener una situación estable, que nos dará la predicción de la red.
+
+\begin{itemize}
+\item \textbf{Patrón (1,0,1)}
+
+Empezamos con $\vx=(1,0,1)$ y $\vy = (0,0)$.
+
+Aplicando la red una vez obtenemos:
+\[\vy_{in} = (1,0,1)\cdot W = (4,0) \implies \vy = (1,0)\]
+Ahora trabajamos en sentido contrario con este patrón con lo que obtenemos:
+\[\vx_{in} = (1,0)\cdot W^T = (2,0,2) \implies \vx = (1,0,1)\]
+
+Con esto habríamos terminado un primer ciclo, pero en alguna coordenada de alguno de los vectores $\vx$ o $\vy$ ha cambiado, por lo que debemos repetir.
+
+Tenemos $\vx=(1,0,1)$ y $\vy = (1,0)$.
+
+Aplicando la red una vez obtenemos:
+\[\vy_{in} = (4,0) \implies \vy = (1,0)\]
+Ahora trabajamos en sentido contrario con este patrón con lo que obtenemos:
+\[\vx_{in} = (1,0) = (2,0,2) \implies \vx = (1,0,1)\]
+
+En esta etapa ya no se produjeron cambios en ninguno de los vectores de activación con lo que podemos concluir que la salida de la red antes el patrón $(1,0,1)$ es $(1,0)$.
+
+\item \textbf{Patrón (1,0)}
+
+Empezamos con $\vx=(0,0,0)$ y $\vy = (1,0)$.
+
+Aplicando la red una vez obtenemos:
+\[\vx_{in} = (2,0,2) \implies \vx = (1,0,1)\]
+Ahora trabajamos en sentido contrario con este patrón con lo que obtenemos:
+\[\vy_{in} = (1,0)  \implies \vy = (1,0)\]
+
+Con esto habríamos terminado un primer ciclo, pero en alguna coordenada de alguno de los vectores $\vx$ o $\vy$ ha cambiado, por lo que debemos repetir.
+
+Tenemos $\vx=(1,0,1)$ y $\vy = (1,0)$.
+
+Aplicando la red una vez obtenemos:
+\[\vx_{in} = (2,0,2) \implies \vx = (1,0,1)\]
+Ahora trabajamos en sentido contrario con este patrón con lo que obtenemos:
+\[\vy_{in} = (2,-2) \implies \vy = (1,0)\]
+
+
+En esta etapa ya no se produjeron cambios en ninguno de los vectores de activación con lo que podemos concluir que la salida de la red antes el patrón $(1,0)$ es $(1,0,1)$.
+
+\item \textbf{Patrón (0,1,0)}
+
+Mismo procedimiento que con el patrón (1,0,1)
+
+\item \textbf{Patrón (0,1)}
+
+Mismo procedimiento que con el patrón (1,0)
+\end{itemize}
+
+\spart
+
+El procedimiento es el mismo del apartado anterior solo que las funciones de activación pasan a ser:
+
+\[\text{Para el nivel Y: } y_j = \left\{ \begin{array}{lll}
+1   & si & y_{in_j} > 0 \\
+y_j & si & y_{in_j} = 0 \\
+-1   & si & y_{in_j} < 0
+\end{array}\right. \text{,   Para el nivel X: } y_j = \left\{ \begin{array}{lll}
+1   & si & x_{in_j} > 0 \\
+x_j & si & x_{in_j} = 0 \\
+-1   & si & x_{in_j} < 0
+\end{array}\right.\]
+
+Los cuatro patrones de entrenamiento a considerar son equivalente dos a dos por lo que, como en la sección anterior, sólo desarrollaremos dos de ellos.
+
+\begin{itemize}
+\item \textbf{Patrón (-1,1,-1)}
+
+Empezamos con $\vx=(-1,1,-1)$ y $\vy = (0,0)$.
+
+Aplicando la red una vez obtenemos:
+\[\vy_{in} = (-1,1,-1)\cdot W = (-4,2) \implies \vy = (-1,1)\]
+Ahora trabajamos en sentido contrario con este patrón con lo que obtenemos:
+\[\vx_{in} = (-1,1)\cdot W^T = (-2,2,-2) \implies \vx = (-1,1,-1)\]
+
+Con esto habríamos terminado un primer ciclo, pero en alguna coordenada de alguno de los vectores $\vx$ o $\vy$ ha cambiado, por lo que debemos repetir.
+
+Tenemos $\vx=(-1,1,-1)$ y $\vy = (-1,1)$.
+
+Aplicando la red una vez obtenemos:
+\[\vy_{in} = (-1,1) \implies \vy = (-1,1)\]
+Ahora trabajamos en sentido contrario con este patrón con lo que obtenemos:
+\[\vx_{in} = (-2,2,-2) \implies \vx = (-1,1,-1)\]
+
+En esta etapa ya no se produjeron cambios en ninguno de los vectores de activación con lo que podemos concluir que la salida de la red antes el patrón $(-1,1,-1)$ es $(-1,1)$.
+
+\item \textbf{Patrón (-1,1)}
+Empezamos con $\vx=(0,0,0)$ y $\vy = (-1,1)$.
+
+Aplicando la red una vez obtenemos:
+\[\vx_{in} = (-1,1)\cdot W^T = (-2,2,-2) \implies \vx = (-1,1,-1)\]
+Ahora trabajamos en sentido contrario con este patrón con lo que obtenemos:
+\[\vy_{in} = (-1,1,-1)\cdot W = (-4,2) \implies \vy = (-1,1)\]
+
+Con esto habríamos terminado un primer ciclo, pero en alguna coordenada de alguno de los vectores $\vx$ o $\vy$ ha cambiado, por lo que debemos repetir.
+
+Tenemos $\vx=(-1,1,-1)$ y $\vy = (-1,1)$.
+
+Aplicando la red una vez obtenemos:
+\[\vx_{in} = (-2,2,-2) \implies \vx = (-1,1,-1)\]
+Ahora trabajamos en sentido contrario con este patrón con lo que obtenemos:
+\[\vy_{in} = (-1,1) \implies \vy = (-1,1)\]
+
+En esta etapa ya no se produjeron cambios en ninguno de los vectores de activación con lo que podemos concluir que la salida de la red antes el patrón $(-1,1)$ es $(-1,1,-1)$.
+
+\item \textbf{Patrón (1,-1,1)}
+Mismo procedimiento que con el patrón (-1,1,-1)
+
+\item \textbf{Patrón (1,-1)}
+Mismo procedimiento que con el patrón (-1,1)
+\end{itemize}
+
+\spart
+
+En esta sección las cuentas a realizar son las mismas de las dos secciones anteriores de modo que mostraremos simplemente los resultados obtenidos de forma esquemática.
+
+\begin{multicols}{2}
 \begin{enumerate}
-\item Inicializamos los pesos de forma que queden guardados los vectores dados.
-\[W = S\cdot T = \left( \begin{array}{cc} 1 & 0 \\ 0 & 1 \\ 1 & 0 \end{array}\right)\cdot \left( \begin{array}{cc} 1 & 0 \\ 0 & 1\end{array} \right) = \left(\begin{array}{ccc}
-1 & 0 \\
-0 & 1 \\
-1 & 0 \end{array} \right)\]
 
-TODO
+\item[a)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (0,-1,1) & (0,0) \\
+\hline
+2 & (1,-1,1) & (1,-1) \\
+\hline
+3 & (1,-1,1) & (1,-1) \\
+\hline
+\end{tabular}
+
+\item[b)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (0,0,1) & (0,0) \\
+\hline
+2 & (1,-1,1) & (1,0) \\
+\hline
+3 & (1,-1,1) & (1,-1) \\
+\hline
+4 & (1,-1,1) & (1,-1) \\
+\hline
+\end{tabular}
+
+\item[c)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (1,0,0) & (0,0) \\
+\hline
+2 & (1,-1,1) & (1,0) \\
+\hline
+3 & (1,-1,1) & (1,-1) \\
+\hline
+4 & (1,-1,1) & (1,-1) \\
+\hline
+\end{tabular}
+
+\item[d)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (-1,0,-1) & (0,0) \\
+\hline
+2 & (-1,0,-1) & (-1,0) \\
+\hline
+3 & (-1,0,-1) & (-1,0) \\
+\hline
+\end{tabular}
+
+\item[e)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (-1,0,0) & (0,0) \\
+\hline
+2 & (-1,0,-1) & (-1,0) \\
+\hline
+3 & (-1,0,-1) & (-1,0) \\
+\hline
+\end{tabular}
+
+
+\item[f)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (0,0,-1) & (0,0) \\
+\hline
+2 & (-1,0,-1) & (-1,0) \\
+\hline
+3 & (-1,0,-1) & (-1,0) \\
+\hline
+\end{tabular}
+
+\item[g)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (1,0,-1) & (0,0) \\
+\hline
+2 & (0,0,0) & (0,0) \\
+\hline
+3 & (0,0,0) & (0,0) \\
+\hline
+\end{tabular}
+
+\item[h)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (0,0,0) & (1,0) \\
+\hline
+2 & (1,0,1) & (1,0) \\
+\hline
+3 & (1,0,1) & (1,0) \\
+\hline
+\end{tabular}
+
+\item[i)]
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (0,0,0) & (0,1) \\
+\hline
+2 & (0,1,0) & (0,1) \\
+\hline
+3 & (0,1,0) & (0,1) \\
+\hline
+\end{tabular}
+
+Si la última fila de la correspondiente tabla no se corresponde con una de las siguiens parejas de vectores
+\[\begin{array}{ll}
+x(1)=(1,0,1) & y(1)=(1,0)\\
+x(2) = (0,1,0) & y(2) = (0,1)
+\end{array}\]
+significa que el patrón no ha podido ser clasificado correctamente. La red no encuentra el grupo al que pertenece.
+
 \end{enumerate}
+\end{multicols}
+
 \end{problem}
 
 \begin{problem}[11]
@@ -2068,8 +2331,96 @@ s(4)=(0,1,1,0) & t(4)=(0,1)
 
 \ppart Using the unit step function (with threshold 0) as the output units' activation function, test the response of your network on each of the input patterns. Describe the results obtained.
 
-\ppart Test the response of your network on various combination of input patterns with "mistakes" or "missing data" (as in Example 3.24). Discuss the results you ob-
-serve.
+\ppart Test the response of your network on various combination of input patterns with "mistakes" or "missing data" (as in Example 3.24). Discuss the results you observe.
 
 \solution
+
+\doneby{Pedro}
+
+\spart
+
+Una vez más empleamos la regla de Hebb obteniendo la siguiente matriz de pesos:
+
+\[W = S\cdot T = \left( \begin{array}{cccc} 1 & 1 & -1 & -1 \\ -1 & -1 & 1 & 1 \\ -1 & -1 & -1 & 1 \\ -1 & 1 & -1 & -1 \end{array}\right)\cdot \left( \begin{array}{cc} 1 & -1 \\ 1 & -1 \\ -1 & 1 \\ -1 & 1\end{array} \right) = \left(\begin{array}{ccc}
+4 & -4 \\ -4 & 4 \\ -2 & 2 \\ 2 & -2 \end{array} \right)\]
+
+\spart
+
+En este apartado deberíamos repetir el tipo de cuentas que hemos realizado en el problema anterior.
+
+Sin embargo, por la propia construcción de la matriz de pesos (que se hizo atendiendo a la regla de Hebb) sabemos que la red ha aprendido perfectamente los patrones dados de derecha a izquierda.
+
+Es decir, para cualquier patrón $s(i)$ la salida de la red será $t(i)$. No obstante esto no ocurre con los patrons $t(i)$ ya que, por definición, cada patrón llega a dos valores distintos de $s()$.
+
+Las siguientes tablas muestran lo que ocurre al trabajar con los dos primeros patrones de entrenamiento:
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Patrón (1,0,0,0)}
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (1,0,0,0) & (0,0) \\
+\hline
+2 & (1,0,0,1) & (1,0) \\
+\hline
+3 & (1,0,0,1) & (1,0) \\
+\hline
+\end{tabular}
+\item \textbf{Patrón (1,0)}
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (0,0,0,0) & (1,0) \\
+\hline
+2 & (1,0,0,1) & (1,0) \\
+\hline
+3 & (1,0,0,1) & (1,0) \\
+\hline
+\end{tabular}
+\end{itemize}
+\end{multicols}
+
+Si el objetivo de esta red era identificar como un mismo tipo los patrones $s(1)$ y $s(2)$ y por otro lado los patrones $s(3)$ y $s(4)$, el resultado puede considerarse correcto.
+
+\spart
+
+La siguiente tabla muestra los resultados obtenidos al trabajar con algunos vectores con ruido, del mismo modo que se hace en el ejemplo 3.24 del libro. Para ello trabajaremos en el caso bipolar de modo que un valor 0 implica un dato perdido
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Patrón (1,-1,-1,0)}
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (1,-1,-1,0) & (0,0) \\
+\hline
+2 & (1,-1,-1,1) & (1,-1) \\
+\hline
+3 & (1,-1,-1,1) & (1,-1) \\
+\hline
+\end{tabular}
+
+\item \textbf{Patrón (1,0)}
+
+\begin{tabular}{|ccc|}
+\hline
+\textbf{Iteración} & $\vx$ & $\vy$ \\
+\hline
+1 & (0,0,0,0) & (1,0) \\
+\hline
+2 & (1,-1,-1,1) & (1,-1) \\
+\hline
+3 & (1,-1,-1,1) & (1,-1) \\
+\hline
+\end{tabular}
+\end{itemize}
+\end{multicols}
+
 \end{problem}
