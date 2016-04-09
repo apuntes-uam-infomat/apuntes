@@ -951,15 +951,13 @@
 
 		Con esto ya podemos trabajar con la norma:
 		\begin{align*}
-		0 	&≤ \|f - S_n f\|^2_{L} = \pesc{f - S_n f, f- S_n f} = \\
+		0 	&≤ \|f - S_n f\|^2_{L^2} = \pesc{f - S_n f, f- S_n f} = \\
 			&= \pesc{f,f} - 2 \pesc{S_n f, f} + \pesc{S_n f, S_n f} = \\
-			&= \|f\|_{L}^2 - \sum_{|k| < n} |<f, \Phi_k>|^2 \\
-		 \sum_{|k| < N} \abs{\pesc{f, \Phi_k}}^2 &\leq \|f\|_L^2
+			&= \|f\|^2_{L^2} - \sum_{|k| < n} \abs{\pesc{f, \Phi_k}}^2 \\
+		 \sum_{|k| < N} \abs{\pesc{f, \Phi_k}}^2 &\leq \|f\|^2_{L^2}
 		\end{align*}
 
-		\obs Con funciones complejas, el producto escalar en $ℂ$ no es conmutativo: $\pesc{f,g} = \conj{\pesc{g,f}}$. Por suerte, aquí $\pesc{S_nf, f} ∈ ℝ$ siempre por lo qu eno tenemos problemas en hacer el intercambio en el cálculo anterior.
-
-		%% Julián: Revisado hasta aquí
+		\obs Con funciones complejas, el producto escalar en $ℂ$ no es conmutativo: $\pesc{f,g} = \conj{\pesc{g,f}}$. Por suerte, aquí $\pesc{S_nf, f} ∈ ℝ$ siempre por lo que no tenemos problemas en hacer el intercambio en el cálculo anterior. Lo único que hay que tener en cuenta es que cuando trabajamos con complejos, el valor absoluto es simplemente el módulo.
 
 		\obs  \[
 			\left.
@@ -975,54 +973,27 @@
 		\textbf{Conclusión:} Si demostramos que  $\|S_n f\|_{L^2} \rightarrow \| f \|_{L^2}$ entonces el último cálculo probaría que $S_n f \eqexpl[\rightarrow]{$L^2$} f$
 
 		\obs De lo obtenido en el último cálculo tenemos que:
-
 			\[ \sum_{|k| < n} |\pesc{f, \Phi_k}|^2 \leq \|f\|_2^2 \quad \forall n \]
 
 			Haciendo tender a $n$ a $\infty$ obtenemos la \concept{Desigualdad\IS de Bessel}:
-
 			\( \sum_{k=-\infty}^\infty |\pesc{f, \Phi_k}|^2 \leq \|f\|_2^2 \label{eq:desigualdad_bessel}  \)
 
-			\obs En $\real^3$, esto equivale al teorema de Pitágoras, pero nos falta ver el $\geq$.
+			En $\real^3$ esto equivale al teorema de Pitágoras, pero nos falta ver el $\geq$.
 
-		% clase 2016/02/23
-		\paragraph{Cálculos en $\cplex$}
-			De manera rápida, vamos a resumir los cálculos anteriores en $\cplex$, que aunque son parecidos, difieren en detalles.
+			Lo que sí nos permite ver esa desigualdad es que si $f \in L^2$, entonces la norma del producto escalar de $f$ por los elementos de la base $\Phi_k$ tiende a 0. Esto nos permite dar  una versión del lema de Riemann-Lebesgue:
 
-			Comencemos definiendo las sumas parciales:
-			$$S_n f = \sum\limits_{\abs{k}<n} \pesc{f, \Phi_k}\Phi_k$$
-			Primero, calculemos el cuadrado de su norma:
-			\begin{gather*}
-			\|S_n f\|^2 = \pesc{S_n f, S_n f} = \int_{-L}^{L} \sum\limits_{\abs{k}<n} \pesc{f, \Phi_k}\Phi_k \cdot \gor{\sum\limits_{\abs{j}<n} \pesc{f, \Phi_j}\Phi_j} \ ds \eqreasonup{agrupar sumas y suma finita conmuta con integral}\\
-			= \sum\limits_{\abs{k},\abs{j}<n} \pesc{f, \Phi_k} \gor{\pesc{f, \Phi_j}} \int_{-L}^{L} \underbrace{\Phi_k \gor{\Phi_j}}_{\pesc{\Phi_k, \Phi_j}} \ ds \eqreasonup{$\pesc{\Phi_k, \Phi_j} = \delta_{kj}$} \sum\limits_{\abs{k}<n} \pesc{f, \Phi_k} \gor{\pesc{f, \Phi_k}} \eqreasonup{def norma en $\cplex$} \\
-			= \sum\limits_{\abs{k}<n} \| \pesc{f, \Phi_k} \|^2
-			\end{gather*}
-
-			Ahora vemos si la distancia a $f$ está acotada:
-			$$0 \leq \| f - S_n f\|_2^2 = \|f\|^2 - \sum\limits_{\abs{k}<n} \| \pesc{f, \Phi_k} \|^2$$
-			Lo cual implica que
-			$$\sum\limits_{\abs{k}<n} \| \pesc{f, \Phi_k} \|^2 \leq \|f\|^2 \ \forall n \convs \sum\limits_{k=-\infty}^{k=\infty} \| \pesc{f, \Phi_k} \|^2 \eqreasonup[\leq]{Bessel} \|f\|^2 \eqreasonup[<]{$f \in L^2$} \infty$$
-
-			{\bf Conclusión:}
-			Si $f \in L^2$, entonces la norma del producto escalar de f por los elementos de la base $\Phi_k$ tiende a 0.
-
-			Por lo que podemos introducir una versión del lema de Riemann-Lebesgue:
-
-			\begin{lemma}{Riemman-Lebesgue}
-
-				\[ f \in L^2 \Rightarrow |\pesc{f, \Phi_k}| \convs[ ][k][\infty] 0\]
-
+			\begin{lemma}[Lema\IS de Riemman-Lebesgue] Sea $f ∈ L^2$ y $\set{Φ_k}_{k ∈ ℕ}$ una base ortonormal de $L^2$. Entonces, las ``coordenadas'' de $f$ se van a cero: \[ \abs{\pesc{f, \Phi_k}} \convs[ ][k][\infty] 0 \]
 			\end{lemma}
 
 			Y damos un pequeño ejemplo de su aplicación:
-			\begin{example}
-				$$ \int_{-L}^{L} f(s) \cdot \cos(\frac{k\pi}{L}s) ds \convs[ ][k][\infty] 0$$
-			\end{example}
+				\[ \int_{-L}^{L} f(s) \cdot \cos\left(\frac{k\pi}{L}s\right) \dif s \convs[ ][k][\infty] 0 \]
+
 
 	\subsection{Resumen}
 
 		\subsubsection*{Convergencia uniforme}
 
-			\begin{itemize}
+			\begin{itemize}[itemsep = 0pt]
 				\item Sistema trigonométrico (o exponencial complejo).
 				\item $f \in C^2$ periódica
 				\item No identificamos el límite
@@ -1031,13 +1002,10 @@
 
 		\subsubsection*{Convergencia $L^2$}
 
-			\begin{itemize}
-				\item Resultados válidos para cualquier sistema ortonormal $\{ \Phi_x \}$
-				\item $f \in L^2$
-				\item No identificamos el límite
-				\[\text{falta probar }\|S_N f\|_2 \convs \lim_{N \to \infty} \|f\|_2\]
-				\item Hay que utilizar la Desigualdad de Bessel y el Lema de Riemman-Lebesgue
-
+			\begin{itemize}[itemsep = 0pt]
+				\item Resultados válidos para cualquier sistema ortonormal $\{ \Phi_k \}$ y  $f \in L^2$.
+				\item No identificamos el límite: falta probar $\|S_N f\|_2 \convs \lim_{N \to \infty} \|f\|_2$.
+				\item Hay que utilizar la Desigualdad de Bessel y el Lema de Riemman-Lebesgue.
 			\end{itemize}
 
 		\subsection{Identificación del límite con convergencia uniforme}
@@ -1051,7 +1019,7 @@
 				u(x,y) = f(x,y) & \text{ en } x^2 + y^2 = 1
 			\end{cases}
 		\]
-		Con f tan regular como necesitemos.
+		con $f$ tan regular como necesitemos.
 
 		Hacemos el cambio a coordenadas polares:
 		\begin{align*}
@@ -1103,7 +1071,7 @@
 		\end{itemize}
 
 
-		EDO en $\Phi$ (Ecuación de ondas)
+		Resolvemos la EDO en $\Phi$ (Ecuación de ondas)
 		\[
 			\begin{cases}
 				\Phi'' = \lambda \Phi & \theta \in (-\pi, \pi) \\
@@ -1120,7 +1088,7 @@
 			\end{cases}
 		\]
 
-		Volvemos a la EDO en $r$ para ver sus soluciones a partir de las de $\Phi$:
+		Volvemos a la EDO en $R$ para ver sus soluciones a partir de las de $\Phi$:
 		\begin{align*}
 			\lambda_0 = 0 \implies & r\cdot R_0'' + R'_0 = 0\\
 			& r\cdot R_0'' = - R'_0\\
@@ -1132,13 +1100,13 @@
 		Como $R_0(r)$ debe estar acotada y continua en 0, tenemos que $A = 0$, luego $$W_{0}(r, \theta) = A_0$$
 
 		Vamos a ver qué ocurre con $\lambda_k = -k^2$:
-
 		\[r^2 R''_k + r R'_k - k^2 R_k = 0 \quad \text{\bf Ecuación de Euler}\]\index{Ecuación! de Euler}
+
 		Recordemos cómo se resuelve: buscamos soluciones de la forma
 		\begin{align*}
 			R_k &= r^\alpha \\
-			R'_k &= \alpha r^(\alpha - 1) \\
-			R''_k &= \alpha(\alpha-1)r^(\alpha - 2)
+			R'_k &= \alpha r^{\alpha - 1} \\
+			R''_k &= \alpha(\alpha-1)r^{\alpha - 2}
 		\end{align*}
 		Sustituimos en la ecuación original:
 		\[ 0 = r^\alpha [\alpha(\alpha -1)+ \alpha - k^2] = r^\alpha [\alpha^2 - k^2] \]
@@ -1185,9 +1153,8 @@
 
 		\begin{itemize}
 			\item ¿$W$ es solución?
-			\item ¿$W(1, \theta) = g(\theta)$
+			\item ¿$W(1, \theta) = g(\theta)$?
 		\end{itemize}
-
 
 		La suerte que tenemos es que es una serie geométrica en $\cplex$, que con $r<1$ no solo converge, sino que podemos escribir la solución.
 
@@ -1314,42 +1281,47 @@
 		\end{itemize}
 
 		\begin{theorem}
-			Supongamos que $g$ es una función contínua y $2\pi$-periódica. Entonces:
+			Supongamos que $g$ es una función continua y $2\pi$-periódica. Entonces:
 
-			\[ \int^\pi_{-\pi} g(s)P(r, \theta-s) ds \convs[][r][1^-] g(\theta) \text{ uniformemente en } [-\pi,\pi] \]
+			\[ \int^\pi_{-\pi} g(s)P(r, \theta-s) \dif s \convs[][r][1^-] g(\theta) \text{ uniformemente en } [-\pi,\pi] \]
 
 			IMPORTANTE: Este es el primer teorema que vemos en el que se nos indica el límite a parte de darnos convergencia uniforme. Usaremos este teorema como base para ampliar los resultados anteriores.
 		\end{theorem}
 
 			\begin{proof}
+				Para hacer la prueba vamos a estimar la diferencia entre ambas funciones:
+				\[0 \leq \left| \int_{-\pi}^{\pi} g(s) P(r, \theta-s) \dif s  - g(\theta))  \right| \]
 
-				\[0 \leq \left| \int_{-\pi}^{\pi} g(s) P(r, \theta-s) - g(\theta))  \right| \]
-
-				Tenemos que $\int\limits_{-\pi}^{\pi} P(r, \theta-s) ds = 1$ por los cálculos anteriores, por lo que la multiplicaremos por lo que ya tenemos:
-
-				\[0 \leq \left| \int_{-\pi}^{\pi} g(s) P(r, \theta-s) - g(\theta))  \int\limits_{-\pi}^{\pi} P(r, \theta-s) ds  \right| \]
-
-				\[ = \left| \int_{-\pi}^\pi (g(s) - g(\theta)) P(r, \theta - s) ds \right|  \leq \int^{\pi}_{-\pi} | g(s) - g(\theta) | P(r, \theta- s) \]
+				Tenemos que $\int_{-\pi}^{\pi} P(r, \theta-s) \dif s = 1$, luego podemos meterlo dentro multiplicando a $g(θ)$ sin que nada cambie:
+				\begin{align*}
+				0	&≤ \left| \int_{-\pi}^{\pi} g(s) P(r, \theta-s) \dif s - g(\theta) \int_{-\pi}^{\pi} P(r, \theta-s) \dif s  \right| = \\
+					&= \left| \int_{-\pi}^\pi (g(s) - g(\theta)) P(r, \theta - s) \dif s \right|
+					≤ \int^{\pi}_{-\pi} | g(s) - g(\theta) | P(r, \theta- s)
+				\end{align*}
 
 				Hemos podido hacer este paso ya que $P>0$, pero veremos en unos días que no se va a cumplir en otra prueba y tendremos problemas.
 
 				Vamos a descomponer la integral en dos trozos, en uno nos ayudaremos de la continuidad de $g$ y en el otro de la del núcleo.
 
-				\[ = \underbrace{\int_{|\theta-s|< \delta}}_{|g(s) - g(\theta)| \text{ pequeño y }p\text{ grande}} + \underbrace{\int_{|\theta-s| > \delta}}_{|g(s) - g(\theta)| \text{ acotado y }p\text{ pequeño}} \]
+				\[ = \underbrace{\int_{|\theta-s|< \delta}}_{|g(s) - g(\theta)| \text{ pequeño y }P\text{ grande}} + \underbrace{\int_{|\theta-s| > \delta}}_{|g(s) - g(\theta)| \text{ acotado y }P\text{ pequeño}} \]
 
-				\textbf{i:} Como $g$ es contínua en $[-\pi,\pi]$, intervalo cerrado y acotado. Entonces si $[-\pi,\pi]$ es compacto $\Rightarrow$ $g$ es uniformemente contínua.
+				\proofpart{Primera integral, en $\abs{θ - s} < δ$}
 
-				Dado $\epsilon > 0$, $\exists \delta > 0$ tal que si $|\theta-s| < \delta$, entonces $|g(s) - g(\theta)| < \epsilon, \forall \theta$
+				Para la primera integral, sabemos que $g$ es continua en $[-\pi,\pi]$, intervalo cerrado y acotado. Como $[-\pi,\pi]$ es compacto, entonces $g$ es uniformemente continua\footnote{Igual que la continuidad normal con la definición $ε-δ$, salvo porque el $δ$ no depende del punto que consideremos y nos vale para todo el intervalo. En este caso, como $g$ es continua en un compacto, para cada ε podemos tomar el δ máximo para cada punto, que existe y está bien definido.}.
 
-				\[\Rightarrow \int_{|\theta - s| < \delta} |g(s) - g(\theta) | P(r, \theta - s) ds < \epsilon \int_{|\theta - s| < \delta} P < \epsilon  \underbrace{\int_{-\pi}^{\pi} P}_{= \epsilon}    \]
-
-				Luego tiende a 0, pero hemos fijado $\delta$.
-
-				\textbf{ii:} Par el delta elegido en \textbf{i}, $\int\limits_{|\theta - s | > \delta} |g(s) - g(\theta)| P(r, \theta-s) ds = $
-
+				Dado $\epsilon > 0$, $\exists \delta > 0$ tal que si $|\theta-s| < \delta$, entonces $|g(s) - g(\theta)| < \epsilon, \forall \theta ∈ [-π, π]$. Así, podemos estimar la integral fácilmente:
 				\[
-					\int_{\theta+\delta}^\pi \underbrace{|g(s) - g(\theta)| P(r, \theta-s)}_{(1)} +  \int_{-\pi}^{\theta-\delta} \underbrace{|g(s) - g(\theta)| P(r, \theta-s)}_{(2)}
+					\int\limits_{|\theta - s| < \delta} \abs{g(s) - g(\theta)} P(r, \theta - s) \dif s < \epsilon \int\limits_{|\theta - s| < \delta} P < \epsilon \int_{-\pi}^{\pi} P = ε
 				\]
+
+				Luego tiende a 0, pero hay que tener cuidado porque ya hemos dejado fijado $\delta$.
+
+				\proofpart{Segunda integral, en $\abs{θ - s} > δ$}
+
+				Para el delta elegido en la integral anterior podemos dividir la integral en dos partes: \begin{multline*}
+				\int\limits_{|\theta - s | > \delta} \abs{g(s) - g(\theta)} P(r, \theta-s) \dif s = \\
+				= \int_{\theta+\delta}^\pi \underbrace{|g(s) - g(\theta)| P(r, \theta-s) \dif s}_{(A)} +  \int_{-\pi}^{\theta-\delta} \underbrace{|g(s) - g(\theta)| P(r, \theta-s) \dif s}_{(B)}
+				\end{multline*}
 
 				Y tenemos:
 
@@ -1370,9 +1342,7 @@
 
 			\end{proof}
 
-		\textbf{Aplicación}
-
-		\textbf{1:} $f$,$g$ continua, con los mismos coeficientes de Fourier $\Rightarrow f \equiv g$
+		La primera aplicación que nos da este teorema es muy sencilla y algo esperable: si tenemos dos funciones $f,g$ continuas con los mismos coeficientes de Fourier, entonces son la misma función\footnote{Misma función \textit{en $L^2$}, que es un detalle sutil. En $L^2$, dos funciones son equivalentes si y sólo si son iguales en casi todo punto. Es decir, que $f$ y $g$ podrían ser distintas, aunque sólo en un conjunto de medida cero.}.
 
 		\begin{proof}
 			\[
@@ -1390,7 +1360,7 @@
 
 		% clase 2016/02/29
 
-		\textbf{2:} Si tenemos un problema en una circunferencia de radio $a$, hacemos un reescalado:
+		Si tenemos un problema en una circunferencia de radio $a$, hacemos un reescalado:
 
 		% faltan tildas aquí, que no he sabido ponerlas durante la clase
 		\[ \gor{W}(\rho, \theta) = W(\frac{\rho}{a},\theta) \quad \rho \in [0,a) \]
@@ -1401,20 +1371,20 @@
 
 		\[\gor{W}(\rho, \theta) = W(\frac{\rho}{a},\theta) = \int^{\pi}_{-\pi} g(s)\underbrace{P(\frac{\rho}{a},\theta-s)}_{\text{núcleo de Poisson para la bola de radio }a} ds \]
 
-		Como consecuencia del teorema de Poisson tenemos:
+		Ya como consecuencias algo más interesantes del teorema de Poisson tenemos las siguientes proposiciones.
 
-		\textbf{i:} \concept{Propiedad\IS de la media}
+		\begin{prop}[Propiedad\IS de la media]
 
 		 \[u(x,y)|_{(0,0)}  = W(0,\theta) = \int_{-\pi}^\pi g(s) P(0, \theta - s) ds = \frac{1}{2\pi} \int_{-\pi}^\pi g(s) ds \]
 
 		 \[ u_{xx} + u_{yy} = 0\]
+		\end{prop}
 
-		 Las funciones que verifican la condición de laplace (las funciones armónicas) son muy rígidas y verifican que son el promedio de todos los puntos de la circunferencia que les rodea. Son las funciones que aparecen en los equilibrios, por ejemplo, en la función de ondas.
+		 Las funciones que verifican la condición de Laplace (las funciones armónicas) son muy rígidas y verifican que son el promedio de todos los puntos de la circunferencia que les rodea. Son las funciones que aparecen en los equilibrios, por ejemplo, en la función de ondas.
 
 		Lo veremos más adelante, pero se puede imaginar una membrana, que cuando se queda parada, en una posición de equilibrio, los puntos interiores dependen de la forma del bastidor que sujeta la membrana.
 
-		\textbf{ii:} \concept{Propiedad\IS del máximo}:
-
+		\begin{prop}[Propiedad\IS del máximo]
 		Si $m \leq g(\theta) \leq M, \forall \theta \in [-\pi,\pi]$, entonces $m \leq u(x,y) \leq M, \forall (x,y)$
 
 		\[u(x,y) \rightarrow W(r,\theta) = \int_{-\pi}^{\pi} \underbrace{g(s)}_{\in [m,M]} \underbrace{P(r,\theta-s)}_{> 0} ds \begin{cases}
@@ -1424,17 +1394,19 @@
 		\end{cases} \]
 
 		Una función armónica alcanza mínimo y máximo en el borde, no puede alcanzarlo en el interior.
+		\end{prop}
 
 		\textbf{iii:} $f$,$g$ contínuas, $2\pi$-periódicas si:
 
 		\[ \int_{-\pi}^{\pi} f(s) e^{-iks}ds =
 		 \int_{-\pi}^{\pi} f(s) e^{-iks}ds,  \forall k \Rightarrow f \equiv g \]
 
-		\textbf{iv:} \concept{Teorema\IS de aproximación de Weirestrass 1}. Sea f contínua y $2\pi periódica$ entonces existe un polinomio trigonométrico:
+		\begin{theorem}[Teorema\IS de aproximación de Weirestrass (I)] Sea $f$ contínua y $2\pi$-periódica. Entonces existe un polinomio trigonométrico:
 
 		\[T_n (\theta) = \sum_{k = -n}^n c_k e^{ik\theta} \]
 
 		tal que $\forall \epsilon > 0$ existe $n_0$ tal que si $n > n_0$: $|T_n (\theta) - f(\theta)| < \epsilon, \forall \theta \in [-\pi,\pi]$.
+		\end{theorem}
 
 		\begin{proof}
 
@@ -1462,42 +1434,32 @@
 
 		\end{proof}
 
-		\textbf{v:} \concept{Teorema\IS de aproximación de Weirestrass 2}
-
-		Dada una función $f$ $2\pi$-preiódica y contínua. $\forall \epsilon > 0 \exists$ un polinomio $p(x)= a_0 + a_1 x + … + a_n x^n $ tal que $|f(x)-P(x)| < \epsilon, \forall x \in [-\pi,\pi]$
+		\begin{theorem}Teorema\IS de aproximación de Weirestrass (II)]
+		Dada una función $f$ $2\pi$-periódica y continua. $\forall \epsilon > 0 \exists$ un polinomio $p(x)= a_0 + a_1 x + … + a_n x^n $ tal que $|f(x)-P(x)| < \epsilon, \forall x \in [-\pi,\pi]$
+		\end{theorem}
 
 		\begin{proof}
-
 			Usar la misma prueba que con el primer teorema de aproximación de Weirestrass
-
 		\end{proof}
 
-		Con esto llegamos a la idea de que si la función $f$ fuera analítica tendríamos que se aproxima uniformemente en un intervalo por su polinomio de Taylor (como los senos y los cosenos)
+		Con esto llegamos a la idea de que si la función $f$ fuera analítica tendríamos que se aproxima uniformemente en un intervalo por su polinomio de Taylor (como los senos y los cosenos).
 
 		Si aproximamos una función con un polinomio trigonométrico, entonces lo tenemos aproximado por muchos términos con senos y cosenos, lo cual son funciones analíticas, que permiten aproximar cada uno de ellos a su polinomio de Taylor del orden que se quiera. Si acotamos cada término con ($\epsilon / $ número de términos) entonces el error total será menor a $\epsilon$.
 
 		Tenemos el problema de que no nos dice como calcular ese $p(x)$, la prueba no es constructiva. Sin embargo, el teorema de funciones analíticas si te da esa solución, pero solo vale para funciones iguales a su polinomio de Taylor.
 
 		\subsection{Identificación del límite con convergencia $L^2$}
-		\textbf{Aplicación} al estudio de la convergencia en $L^2$
-
-		$\{\Phi_k\}$ sistema ortonormal en $L^2([-\pi,\pi])$
-
-		Dada $f \in L^2$,
-
-		\[\alpha_k = <f, \Phi_{k}> = \int_{-\pi}^\pi f(s) \overline{\Phi_k(s)} ds  \]
-
-		\[  S_n f = \sum_{|k| < n} (\alpha_k \Phi_k ) \sum_{|k| < n}<f, \Phi_k >\Phi_k \]
-
-		Siendo $\Phi_k(s) = \frac{e^{iks}}{\sqrt{2\pi}}$
+		\textbf{Aplicación} al estudio de la convergencia en $L^2$.
 
 		\begin{theorem}
+			Partimos de $\{\Phi_k\}$, con $\Phi_k(s) = \frac{e^{iks}}{\sqrt{2\pi}}$, un sistema ortonormal en $L^2([-\pi,\pi])$ y $f \in L^2$, con los coeficientes de Fourier
+			\[\alpha_k = \pesc{f, \Phi_{k}} = \int_{-\pi}^\pi f(s) \overline{\Phi_k(s)} \dif s  \] y las sumas parciales
+			\[  S_n f = \sum_{|k| < n} \alpha_k · \Phi_k = \sum_{|k| < n}\pesc{f, \Phi_k} \Phi_k \]
 
-			Entonces sea $T_n$ polinomio trigonométrico de grado $n$:
-
+			Entonces, para todo $ε > 0$ podemos encontrar $T_n$ polinomio trigonométrico de grado $n$, tal que
 			\[ \| S_n f - f\|_{L^2} \leq \| T_n - f \|_{L^2} < \epsilon \]
 
-			Y es igual solo si $S_n \equiv T_n$.
+			LA igualdad se dará sólo si $S_n \equiv T_n$.
 
 		\end{theorem}
 
@@ -2045,7 +2007,7 @@ Tenemos que efectivamente $u_t$ es esa serie con convergencia uniforme. Si hacem
 
 
 
-			Tenemos $N ecuaciones$ e infinitas incógnitas $C_k$. Los $C_k$ son valores exactos pero podemos reducir el problema a encontrar valores aproximados $z_k$. Veamos el sistema aproximado:
+			Tenemos $N$ ecuaciones e infinitas incógnitas $C_k$. Los $C_k$ son valores exactos pero podemos reducir el problema a encontrar valores aproximados $z_k$. Veamos el sistema aproximado:
 
 			\[y_0 = \sum_{k=0}^N-1 z_k\]
 			\[y_1 = \sum_{k=0}^N-1 z_k \omega^k\]
