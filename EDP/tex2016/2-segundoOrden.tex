@@ -160,7 +160,7 @@
 
 			 	Idea: $u(x,t) \eqexpl{?} A_0 + \sum\limits_{k=1}^{\infty} A_k e^{- \left( \frac{k \pi}{L} \right)^2 t}  \cos \left( \frac{k \pi}{L} x \right)$
 
-			 	Pero claro, no sabemos calcular $A_k$. ¿O como calculamos la convergencia? ¿Cómo calculamos las derivadas?
+			 	Pero claro, no sabemos calcular $A_k$. ¿O cómo calculamos la convergencia? ¿Cómo calculamos las derivadas?
 
 
 		\end{example}
@@ -560,7 +560,7 @@
 		\]
 		\end{defn}
 
-		Esta definición tiene una \textbf{interpretación geométrica} fácil de ver. Tenemos una banda de tamaño $2\epsilon$ alrededor de toda la gráfica de $f$, y si $n \geq n_0$, {\bf toda} la gráfica de $f_n$ está dentro de dicha banda.
+		Esta definición tiene una \textbf{interpretación geométrica} fácil de ver (\fref{fig:convergenciaUniforme}). Tenemos una banda de tamaño $2\epsilon$ alrededor de toda la gráfica de $f$, y si $n \geq n_0$, {\bf toda} la gráfica de $f_n$ está dentro de dicha banda.
 
 		Como era de esperar, la convergencia uniforme funciona bien con la continuidad y las integrales.
 
@@ -627,71 +627,53 @@
 
 		Una vez que sabemos qué tipos de convergencias vamos a trabajar, nos interesará saber obviamente la relación entre ellas.
 
-		\begin{itemize}
-			\item Convergencia uniforme $\Rightarrow$ Convergencia puntual.
+		Por ejemplo, es trivial ver que la convergencia uniforme implica convergencia puntual.
 
-			\item Convergencia uniforme en $(a,b)$, \textbf{acotado} $\Rightarrow$ Convergencia $L^2$
-			\begin{proof}
-				\[f_n \rightarrow f \text{ uniforme en } (a,b) \]
-				\[ \left( \int^{b}_a |fn-f|^2 dx \right)^{\frac{1}{2}} \eqexpl[<]{$n > n_0$} \left( \int^{b}_a \epsilon^2 dx \right)^{\frac{1}{2}} = \epsilon \sqrt{b-a} \rightarrow 0 \]
-			\end{proof}
+		\begin{wrapfigure}[12]{R}[0.15\textwidth]{0.4\textwidth}
+		\vspace{-10pt}
+		\inputtikz{ConvergenciaUniformeNoL2}
+		\vspace{-10pt}
+		\caption{Las funciones $f_n = \frac{1}{n} \ind_{[0, n]}$ convergen uniformemente a $0$ pero su integral siempre es $1$.}
+		\label{fig:ConvergenciaUniformeNoL2}
+		\end{wrapfigure}
 
-				\begin{obs}
-					Esto es falso en general en conjuntos no acotados (DIBUJOS EXPLICACIÓN)
+	 	Además, la convergencia uniforme en conjuntos $(a,b)$ \textit{acotados} \textbf{implica} convergencia $L^2$. Para la demostración, simplemente vemos que con la convergencia uniforme $\norm{f_n - f}^2 < ε^2$ para $n$ mayor que un cierto $n_0$. Así, la integral será \[ \left( \int^{b}_a \abs{f_n-f}^2 \dif x \right)^{\frac{1}{2}} < \left( \int^{b}_a \epsilon^2 \dif x \right)^{\frac{1}{2}} = \epsilon \sqrt{b-a} \longrightarrow 0 \]
 
-					Esto está relacionado con el hecho de que si (a,b) no acotado entonces límite e integral no permutan.
-				\end{obs}
+		En la ecuación anterior se puede ver que tendremos problemas en conjuntos no acotados, ya que entonces $b - a$ se nos puede ir totalmente y el límite y la integral no permutan. Un ejemplo de lo que puede ocurrir está en la \fref{fig:ConvergenciaUniformeNoL2}.
 
-			\item Convergencia $L^2 \not \Rightarrow $ convergencia uniforme
 
-				\begin{example}
-					Usando el mismo ejemplo que en la figura \ref{fig:ejemploContinuidadPuntual}
 
-					\[ 0 \leq \int^1_0 |f_n|^2 dx \eqreason[\leq]{$0 \leq f_n \leq 1 \Rightarrow 0 \leq f_n^2 \leq f_n$} \int^1_0 |f_n| dx \eqreasonup{Área triángulo} \frac{1}{2n} \convs[ ][n][0] \infty \]
+		El otro sentido no es cierto en general: la convergencia $L^2$ \textbf{no implica} convergencia uniforme. Usando el mismo ejemplo que en la figura \ref{fig:ejemploContinuidadPuntual}, tomamos $f_n(x) = (1 -nx)\ind_{[0, \sfrac{1}{n}]}$, de tal forma que integrando tenemos lo siguiente:
+		\[ 0 \leq \int^1_0 |f_n|^2 \dif x \eqreason[\leq]{$0 \leq f_n \leq 1 \implies 0 \leq f_n^2 \leq f_n$} \int^1_0 |f_n| \dif x \eqreasonup{Área triángulo} \frac{1}{2n} \convs[ ][n] 0 \]
 
-					De esto se deduce que:
+		En otras palabras, $f_n \convs[L^2] 0$, pero ya habíamos visto que esta función no converge uniformemente, ya que
+		\[ \lim f_n =
+		\begin{cases}
+			1 & x = 0\\
+			0 & x \neq 0
+		\end{cases}\]
 
-					\[f_n \eqexpl[\rightarrow]{$L^2$} 0\]
-					\[f_n \not \rightarrow 0 \text{ uniformemente, ya que } \lim f_n =
-					\begin{cases}
-						1 & x = 0\\
-						0 & x \neq 0
-					\end{cases}\]
-				\end{example}
+		La convergencia en $L^2$ \textbf{tampoco implica} convergencia puntual. Tomando la $f_n$ del ejemplo anterior, definimos $g_n = (-1)^n f_n$. La integral se va siempre a cero, luego $g_n \convs[L^2] 0$. Sin embargo, $g_n(0) = (-1)^n$, luego no hay convergencia puntual.
 
-			\item Convergencia en $L^2 \not \Rightarrow $ convergencia puntual
-
-				\begin{example}
-					\[g_n = (-1)^n f_n \text{ (ejemplo anterior)}\]
-					\[g_n \eqexpl[\rightarrow]{$L^2$} 0 \ \text{ , pero  } \ g_n(0) = (-1)^n \text{ que no converge.}\]
-
-				\end{example}
-
-			\item Convergencia puntual $\not \Rightarrow $ convergencia en $L^2$
-
-				\begin{example}
-
-					Utilizamos el mismo ejemplo visto en la figura \ref{fig:ejemploContinuidadPuntual2}.
-
-					\[h_n^2 \convs 0 \text{ puntualmente, pero } \int_0^1 |h_n|^2 dx = \frac{1}{2} \forall n \]
-				\end{example}
-
-		\end{itemize}
+		El otro sentido también es falso en general: la onvergencia puntual \textbf{no implica} convergencia en $L^2$. Con el mismo ejemplo visto en la figura \ref{fig:ejemploContinuidadPuntual2} (el triángulo cada vez más alto y estrecho):
+		\[h_n^2 \convs 0 \text{ puntualmente, pero } \int_0^1 |h_n|^2 \dif x = \frac{1}{2}\quad \forall n \]
 
 		De estas implicaciones y no implicaciones obtenemos los diagramas \ref{fig:diagramaConvergenciasAcotado} y \ref{fig:diagramaConvergenciasNoAcotado}.
 
 		\begin{figure}[thbp]
+		\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\inputtikz{diagramaConvergenciasAcotado}
-		\caption{Implicaciones para un dominio acotado}
+		\caption{Implicaciones para un dominio acotado.}
 		\label{fig:diagramaConvergenciasAcotado}
-		\end{figure}
-
-		\begin{figure}[thbp]
+		\end{subfigure}
+		\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\inputtikz{diagramaConvergenciasNoAcotado}
-		\caption{Implicaciones para un dominio no acotado}
+		\caption{Implicaciones para un dominio no acotado.}
 		\label{fig:diagramaConvergenciasNoAcotado}
+		\end{subfigure}
+		\caption{Implicaciones entre las distintas convergencias para dominios acotados y no acotados.}
 		\end{figure}
 
 	\section{Series de Fourier}
@@ -710,7 +692,7 @@
 				\item
 				\[ \int^{L}_{-L} \cos \left( \frac{k \pi}{L} x \right) \dif x = \int^{L}_{-L} \sin \left( \frac{k \pi}{L} x \right) \dif x = 0, \forall k \]
 
-				\[\Rightarrow \pesc{cos \left( \frac{k \pi}{L} x \right),1}_{L^2} = \pesc{\sin \cos \left( \frac{k \pi}{L} x \right),1}_{L_2} = 0\]
+				\[\Rightarrow \pesc{\cos \left( \frac{k \pi}{L} x \right),1}_{L^2} = \pesc{\sin \left( \frac{k \pi}{L} x \right),1}_{L_2} = 0\]
 
 				\item
 				\[ \int^{L}_{-L} \cos \left( \frac{k \pi}{L} x \right) \cdot \sin \left( \frac{j \pi}{L} x \right) \dif x = 0, \forall k, \forall j\]
@@ -811,67 +793,67 @@
 
 		\subsubsection{Convergencia para funciones $C^2$}
 
-		Veamos que herramienta vamos a utilizar para calcular este límite:
+		Vamos a empezar por lo fácil, pidiendo condiciones muy fuertes sobre las funciones. Empezaremos con funciones continuas y derivables dos veces, esto es, $f ∈ C^2$. En este caso, la herramienta a utilizar será el Criterio de Weierstrass.
 
-		\begin{defn}[Criterio\IS de Weierstrass]\label{defn:criterio_Weierstrass} Supongamos que tenemos $\{\Phi_k\}$ sucesión de funciones en $(a,b)$, tales que para cada $k$, existe $M_k \in \real$ con $|\Phi_k(x)| \leq M_k$, $\forall x \in (a,b)$.
+		\begin{prop}[Criterio\IS de Weierstrass]\label{prop:criterio_Weierstrass} Supongamos que tenemos $\{\Phi_k\}$ sucesión de funciones en $(a,b)$, tales que para cada $k$, existe $M_k \in \real$ con $|\Phi_k(x)| \leq M_k$, $\forall x \in (a,b)$.
 
-			Entonces: Si $\sum\limits_{k=1}^{\infty} M_k < \infty$, la serie $\sum\limits_{k=1}^{\infty} \Phi_k(x) $ converge uniformemente en $(a,b)$.
+		Entonces: Si $\sum\limits_{k=1}^{\infty} M_k < \infty$, la serie $\sum\limits_{k=1}^{\infty} \Phi_k(x) $ converge uniformemente en $(a,b)$.
+		\end{prop}
 
+		\begin{proof}
+			Queremos demostrar que la sucesión $\{\sum\limits_{k=1}^{N} \Phi_k(x)\}_{N=1,2,…} $ converge uniformemente en $(a,b)$. Para ello usaremos el criterio de Cauchy.\index{Criterio!de Cauchy} Basta probar que $\forall \epsilon > 0, \exists n_0 $ tal que $n,m \geq n_0 $, entonces:
 
-			\begin{proof}
-				Queremos demostrar que la sucesión $\{\sum\limits_{k=1}^{N} \Phi_k(x)\}_{N=1,2,…} $ converge uniformemente en $(a,b)$.
+			\[ \abs{\sum^n_1 \Phi_k(x) - \sum^m_1 \Phi_k(x)} < \epsilon \quad \forall x \in (a,b) \]
 
-				Criterio de Cauchy:\index{Criterio!de Cauchy} Basta probar que $\forall \epsilon > 0, \exists n_0 $ tal que $n,m \geq n_o $, entonces:
+			Suponiendo que $n > m$:
+			\[ \abs{\sum^{N}_1 \Phi_k (x) - \sum^{m}_1 \Phi_k (x)} = \abs{\sum^n_{k=m+1} \Phi_k} \leq \sum^n_{k=m+1} \abs{\Phi_k (x)} \leq \sum_{m+1}^n m_k < \epsilon\]
+			si $n,m$ son grandes por ser  $\sum\limits_{1}^{\infty} m_k < \infty $.
+		\end{proof}
 
-				\[ | \sum^n_1 \Phi_k(x) - \sum^m_1 \Phi_k(x) | < \epsilon \quad \forall x \in (a,b) \]
+		Este criterio nos permitirá decir que la serie de Fourier converge uniformemente, aunque de momento no sepamos decir a qué.
 
-				Suponiendo que $n > m$:
-				\[| \sum^{N}_1 \Phi_k (x) - \sum^{m}_1 \Phi_k (x) | = | \sum^n_{k=m+1} \Phi_k | \leq \sum^n_{k=m+1} | \Phi_k (x) | \leq \sum_{m+1}^n m_k < \epsilon \]
+		\begin{prop} Sea $f \in C^2 ([-L, L])$ de período $2L$ (esto es, $f(-L) = f(L)$). Entonces, la serie de Fourier \[ \frac{a_0}{2} + \sum_{k=1}^\infty a_k \cos \left( \frac{k \pi}{L} x \right) + \sum_{k=1}^\infty b_k \sin \left( \frac{k \pi}{L} x \right) \] converge uniformente en $[-L, L]$.
+		\end{prop}
 
-				si $n,m$ son grandes por ser  $\sum\limits_{1}^{\infty} m_k < \infty $.
+		\begin{proof} Vamos a tratar de aplicar el Criterio de Weirstrass, para lo que tendremos que acotar las funciones $a_k  \cos \left( \frac{k \pi}{L} x \right)$ y $b_k \sin \left( \frac{k \pi}{L} x \right)$ y demostrar que la suma de esas cotas es finita.
 
-			\end{proof}
-		\end{defn}
+		La demostración es igual para ambas funciones, así que lo haremos sólo con la del coseno. Sabemos que $\abs{\cos x} ≤ 1$, luego sólo hay que acotar los coeficientes $a_k$, que estaban definidos de la siguiente forma: \[a_k = \frac{1}{L} \int_{-l}^L \cos \left( \frac{k \pi}{L} s \right) f(s) \dif s \]
 
-		\begin{example}{Ejercicio para el lector}
+		Lo que haremos será integrar por partes dos veces, aprovechando que podemos derivar $f ∈ C^2$:
+		\begin{align*}
+		a_k &= \frac{1}{L} \int_{-L}^L \cos \left( \frac{k \pi}{L} s \right) f(s) \dif s \\
+			&= \frac{1}{L} \left[
+				\underbracket{\eval{f(s)
+					\frac{\sin \left( \frac{k \pi}{L} s \right)}
+						{\frac{k \pi}{L}}
+				}_{s=-L}^{L}}_{= 0 \text{ ya que } \sin \pm kπ = 0}
+			- \int^L_{-L} f'(s)
+			  \frac{\sin \left(\frac{k \pi}{L} s \right)}{\frac{k \pi}{L}} \dif s
+			\right] \\
+			&= \frac{1}{kπ} \int^L_{-L} f'(s) \sin \left( \frac{k \pi}{L} s \right) \dif s \\
+			&= \frac{1}{kπ} \left[
+				\underbracket{\eval{f'(s)
+					\frac{- \cos \left( \frac{k \pi}{L} s \right)}
+						{\frac{k \pi}{L}}
+				}_{s = -L}^L}_{= 0 \text{ ya que } \cos kπ = \cos -kπ}
+				- \int^L_{-L} f''(s)
+			  	\frac{- \cos \left(\frac{k \pi}{L} s \right)}{\frac{k \pi}{L}} \dif s
+			\right] = \\
+			&= \frac{L}{k^2 π^2} \int_{-L}^{L} f''(s) \cos \left(\frac{k \pi}{L} s \right) \dif s
+		\end{align*}
 
-			\[ f \in C^2 ([-L,L]), 2L-\text{periódica}\]
-			\[ a_k = \frac{1}{L} \int^{L}_{-L} f(x) \cos \left( \frac{k \pi}{L} x \right) dx \]
+		Dado que $f ∈ C^2$, $f''$ está acotada por una constante $M$, y como $\abs{\cos x} ≤ $ entonces podemos acotar todo eso: \[ \abs{a_k} = \abs{\frac{L}{k^2 π^2} \int_{-L}^{L} f''(s) \cos \left(\frac{k \pi}{L} s \right) \dif s} ≤ \frac{L}{k^2π^2} \int_{-L}^L M \dif s = \frac{C}{k^2} \]
 
-			Demostrar $|a_k| < \frac{C}{K^2}$
+		Ahora podemos aplicar el criterio de Weierstrass: dado que $\abs{a_k  \cos \left( \frac{k \pi}{L} x \right)} < \frac{C}{k^2}$ en $[-L, L]$ y $\sum\limits_{k=1}^∞ \frac{C}{k^2} < ∞$, tenemos que la serie $\sum\limits_{k=1}^∞ a_k  \cos \left( \frac{k \pi}{L} x \right)$ converge uniformemente en $[-L, L]$.
 
-			(Análogamente $|b_k| < \frac{C}{k^2}$)
+		Realizando el proceso análogo con los coeficientes $b_k$ llegaríamos a que la otra parte también converge uniformemente, y por lo tanto toda la serie de Fourier converge uniformemente en $[-L, L]$.
+		\end{proof}
 
-			Usando $\sum \frac{1}{k^2} < \infty$.
-		\end{example}
+		\textbf{Conclusión:} El criterio de Weierstrass nos implica convergencia uniforme en $[-L,L]$.
 
-		\obs Hasta ahora hemos demostrado que la suma converge a una función, pero no que converja a $f(x)$.
+		\obs Si $f \in C^3$ (más las condiciones de periodicidad) podría hacer partes otra vez y obtener la cota $\frac{C}{K^3}$. Y así hasta $C^n$: cuanta mayor regularidad le pidamos a la $f$ (y las condiciones de periodicidad oportunas para las cancelaciones) mayor orden tendrá el $\frac{1}{k}$.
 
-		Retomemos las fórmulas anteriores:
-
-		\[ f(x) ≈ \frac{a_0}{2} + \sum_{k=1}^\infty a_k \cos \left( \frac{k \pi}{L} x \right) + \sum_{k=1}^\infty b_k \sin \left( \frac{k \pi}{L} x \right) \]
-
-		\[a_k = \frac{1}{L} \int_{-l}^L \cos \left( \frac{k \pi}{L} s \right) f(s) ds \]
-
-		\[ f \in C^2 ([-L,L]), f(-L) = f(L) \]
-
-		\[a_k = \frac{1}{L} \int^L_{-L} \cos \left( \frac{k \pi}{L} s \right) f(s) ds \eqreasonup{partes} \frac{1}{L} \left\{ \left. f(s) \frac{\sin \left( \frac{k \pi}{L} s \right)}{\frac{k \pi}{L}} \right|_{s=-L}^{L} -  \int^L_{-L} f'(s) \frac{\sin \left( \frac{k \pi}{L} s \right)}{\frac{k \pi}{L}} ds   \right\}  \]
-
-		\[ = \frac{1}{k\pi} -  \int^L_{-L} f'(s) \sin \left( \frac{k \pi}{L} s \right) ds \eqreasonup{partes} … \leq \frac{C}{k^2} \]
-
-		Análogamente: $b_k \leq \frac{C}{k^2}$.
-
-		% clase 2016/02/22
-
-		\textbf{Conclusión:} criterio de Weierstrass $\Rightarrow$ convergencia uniforme en $[-L,L]$.
-
-		\obs ojo, Si $f \in C^3$ (más condiciones de periodicidad) podría hacer partes otra vez y obtener la cota $\frac{C}{K^3}$. Y así hasta $C^n$: cuanta mayor regularidad le pidamos a la $f$ (y las condiciones de periodicidad oportunas para las cancelaciones) mayor orden tendrá el $\frac{1}{k}$.
-
-		Veamos también que hay un problema sutil:
-
-		\[f \rightarrow \text{ calculo } \{a_0,a_k,b_k\} \rightarrow \text{ construyo serie que converge } \]
-
-		Pero esa serie, ¿converge a $f$?
+		Veamos también que hay un problema sutil. Dado $f$, calculamos los coeficientes $\{a_0,a_k,b_k\}$ y construimos una serie que hemos dicho que converge. Pero esa serie, ¿converge a $f$?
 
 		\begin{lemma}
 			Supongamos $\sum \Phi_k$ converge uniformemente en $(a,b)$ y sea $h(x)$ contínua.
@@ -880,142 +862,104 @@
 				\item $\sum_k h \Psi_k$ converge uniformemente en $(a,b)$ y además:
 				\[ \sum_k h \Psi_k = h \sum \Psi_k\]
 
-				\item \[\int_a^b \sum_k h \Psi_k = \sum_k \int_a^b h \Psi_k \]
+				\item $\displaystyle \int_a^b \sum_k h \Psi_k = \sum_k \int_a^b h \Psi_k$.
 			\end{itemize}
 
 		\end{lemma}
 
 		Este lema justifica que los coeficientes del desarrollo trigonométrico de$$g(x) = a_0 + \sum a_k \cos \left( \frac{k \pi}{L} x \right) + \sum b_k \sin \left( \frac{k \pi}{L} x \right) $$ son $\{a_0,a_k,b_k\}_{k \in \nat}$
 
-		\textbf{Convergencia uniforme}
-
-		$f \in C^2$, periódica $\Rightarrow$ la serie converge uniformemente.
-
-		Problema: identificar el límite.
+		En resumidas cuentas, a lo que hemos llegado es a que dada $f \in C^2$ periódica, la serie converge uniformemente. Ahora bien, seguimos sin saber identificar el límite. Vamos a dejarlo para más adelante y tratar de identificar el límite con condiciones más débiles.
 
 		\subsubsection{Convergencia en $L^2$}
 
-		Como $L^2$, nuestra base es: $\{1, \cos \left( \frac{k \pi}{L} x \right), \sin \left( \frac{k \pi}{L} x \right)\}_{k \in \nat}$
+		Como estamos en $L^2$, que es un espacio vectorial, trabajaremos con nuestra base $\set{1, \cos \left( \frac{k \pi}{L} x \right), \sin \left( \frac{k \pi}{L} x \right)}_{k \in \nat}$. Es ortogonal, así que vamos a calcular los módulos para normalizar (los cálculos exactos se dejan como ejercicio para el lector):
+		\begin{align*}
+		\norm{1}_{L^2(-L,L)} &= \sqrt{2L}\\
+		\norm{\cos \left( \frac{k \pi}{L} x \right)} &= \sqrt{L} \\
+		\norm{\sin \left( \frac{k \pi}{L} x \right)} &= \sqrt{L}
+		\end{align*}
 
-		\obs Si $f$ es discontinua en un punto, la integral ``no se entera'' y la transformación de Fourier me da la versión contínua de $f$.
+		Con lo que llegamos a la base ortonormal \[ \set{\frac{1}{\sqrt{2L}}, \frac{1}{\sqrt{L}} \cos \left( \frac{k \pi}{L} x \right),\frac{1}{\sqrt{L}} \sin \left( \frac{k \pi}{L} x \right)}_{k \in \nat} \]
 
-		Tenemos que $\{1, \cos \left( \frac{k \pi}{L} x \right), \sin \left( \frac{k \pi}{L} x \right)\}_{k \in \nat}$ es ortogonal.
+		Con esta base, la serie de Fourier no es más que la expresión de la función (o al menos, eso esperamos) en esa base concreta. Si recordamos la definición del produto escalar\footnote{$\pesc{f,g} = \int_{-L}^L fg \dif x$.} en $L^2$, tenemos \begin{align*}
+		a_k \cos \left( \frac{k \pi}{L} x \right)
+			&= \left(\frac{1}{L} \int^L_{-L} f(s) \cos \left( \frac{k \pi}{L} s \right) \dif s \right) \cos \left( \frac{k \pi}{L} x \right) =  \\
+			&= \pesc{f, \frac{1}{\sqrt{L}} \cos \left( \frac{k \pi}{L} s \right)} \cdot \frac{1}{\sqrt{L}} \cos \left( \frac{k \pi}{L} x \right)
+		\end{align*}
 
-		Vamos a calcular los módulos para normalizar:
+		Por comodidad, nos gustaría tener un sistema ortonormal $\set{Φ_k}_{k ∈ ℕ}$ ortornormal, con $\pesc{\Phi_k,\Phi_j}_{L^2} = \delta_{kj}$, de tal forma que simplemente podamos escribir \[ f ≈ \sum_k \pesc{f, \Phi_k}_{L^2} \cdot \Phi_k (x) \]
 
-		\[\|1\|_{L^2 (-L,L)} = \left( \int_{-L}^L \cos^2  \left( \frac{k \pi}{L} s \right) ds \right)^{1/2} = \sqrt{2L} \]
-
-		\[\left\|\cos \left( \frac{k \pi}{L} x \right)\right\|_{L^2 (-L,L)} = \left( \int_{-L}^L \cos^2  \left( \frac{k \pi}{L} s \right) ds \right)^{1/2} = \eqreason[…]{$\cos(2s) = \cos^2 \theta - \sin^2 \theta = 2\cos^2(\theta) - 1$}  = \sqrt{L} \]
-
-		El del seno es similar y también tiene como resultado $\sqrt{L}$.
-
-		Con lo que llegamos a la base ortonormal: $\{\frac{1}{\sqrt{2L}}, \frac{1}{\sqrt{L}} \cos \left( \frac{k \pi}{L} x \right),\frac{1}{\sqrt{L}} \sin \left( \frac{k \pi}{L} x \right)\}_{k \in \nat}$
-
-
-		\[ f(x) ≈ \frac{a_0}{2} + \sum_{k=1}^\infty a_k \cos \left( \frac{k \pi}{L} x \right) + \sum_{k=1}^\infty b_k \sin \left( \frac{k \pi}{L} x \right) \]
-
-		\[ a_k \cos \left( \frac{k \pi}{L} x \right) = \int^L_{-L} \frac{1}{L} \cos \left( \frac{k \pi}{L} s \right) ds \frac{1}{\sqrt{L}} \cos \left( \frac{k \pi}{L} x \right) = \]
-
-		\[ = < f, \frac{1}{\sqrt{L}} \cos \left( \frac{k \pi}{L} s \right)> \cdot \frac{1}{\sqrt{L}} \cos \left( \frac{k \pi}{L} x \right) \]
-
-
-		\textbf{Notación}
-
-		$\{ \Phi_k \} $ sistema ortonormal en $L^2$, ($<\Phi_k,\Phi_j>_{L^2} = \delta_{kj}$).
-
-		\[ f ≈ \sum_k < f, \Phi_k >_{L^2} \cdot \Phi_k (x) \]
-
-		\textbf{Notación compleja}
-
-		Usando $e^{i\theta} = \cos \theta + i \sin \theta$:
-
-		\[
-		\left. \begin{array}{r}
-			a_k = \frac{1}{L} \int^{L}_{-L} \cos \left( \frac{k \pi}{L} s \right) f(s) ds\\
-			b_k = \frac{1}{L} \int^{L}_{-L} \sin \left( \frac{k \pi}{L} s \right) f(s) ds
-		\end{array} \right| \begin{array}{l}
-			\frac{a_k - ib_k}{2} = \frac{1}{2L} \int_{-L}^L f(s) e^{-i \left( \frac{k \pi}{L} s \right)} ds \\
-			\frac{a_k + ib_k}{2} = \frac{1}{2L} \int_{-L}^L f(s) e^{+i \left( \frac{k \pi}{L} s \right)} ds \\
-		\end{array}
-		\]
-
+		Para lograrlo, introducimos la \textbf{Notación compleja}. Sabiendo que $e^{i\theta} = \cos \theta + i \sin \theta$, calculamos:
+		\begin{align*}
+		a_k
+			&= \frac{1}{L} \int^{L}_{-L} \cos \left( \frac{k \pi}{L} s \right) f(s) \dif s
+		& \frac{a_k - ib_k}{2}
+			&= \frac{1}{2L} \int_{-L}^L f(s) e^{-i \left( \frac{k \pi}{L} s \right)} \dif s \\
+		b_k &= \frac{1}{L} \int^{L}_{-L} \sin \left( \frac{k \pi}{L} s \right) f(s) \dif s
+		& \frac{a_k + ib_k}{2}
+			&= \frac{1}{2L} \int_{-L}^L f(s) e^{+i \left( \frac{k \pi}{L} s \right)} \dif s \\
+		\end{align*}
 		y definimos:
 		\[
 			\alpha_k = \frac{a_k - ib_k}{2}, \quad \alpha_{-k} = \frac{a_k + ib_k}{2}
 		\]
 
-		Esto también da un sistema ortogonal, pero ¿cómo normalizamos?:
+		Esto también da un sistema ortogonal, pero ¿cómo normalizamos la base $\set{ e^{i \left( \frac{k \pi}{L} s \right)}}_{k = 0,±1,±2,\dotsc}$?
 
-		\[\left\{ e^{i \left( \frac{k \pi}{L} s \right)} \right\}_{k = 0,±1,±2,…} \]
+		Para verlo, primero tenemos que definir bien el producto escalar cuando las funciones pueden ser complejas
+		\(\pesc{f,g}_{L^2} = \int^L_{-L} f(x) \conj{g(x)} \dif x \label{eq:ProdEscalarComplejo} \)
 
-		Vamos a ver que pasa con $L^2$ y las funciones con variable compleja:
+		De esta forma, los coeficientes nos quedan con una expresión bastante amable:
+		\[ \alpha_{\pm k} = \frac{1}{2L} \int^L_{-L} f(s) e^{-i \left( \frac{\pm k \pi}{L} s \right)} \dif s = \frac{1}{2L} \int_{-L}^L f(s) \conj{e^{i \left( \frac{\pm k \pi}{L} s \right)}} \dif s = \frac{1}{2L} \pesc{f, e^{i \left( \frac{\pm k \pi}{L} x \right)}} \]
 
-		\[<f,g>_{L^2} = \int^L_{-L} f(x) \conj{g(x)} dx \]
-
-		Luego:
-
-		\[ \alpha_k = \frac{1}{2L} \int^L_{-L} f(s) e^{-i \left( \frac{k \pi}{L} s \right)} ds = \frac{1}{2L} \int_{-L}^L f(s) \conj{e^{i \left( \frac{k \pi}{L} s \right)}} ds = \frac{1}{2L} <f, e^{i \left( \frac{k \pi}{L} x \right)}> \]
-
-		Ahora normalizamos:
+		Sólo queda normalizar los elementos de la base:
 		\[
-		\left\|e^{i \left( \frac{k \pi}{L} x \right)}\right\|_{L^2} = \left( < e^{i \left( \frac{k \pi}{L} x \right)}, e^{i \left( \frac{k \pi}{L} x \right)} >_{L^2} \right)^{\frac{1}{2}} = \left( \int^{L}_{-L} e^{i \left( \frac{k \pi}{L} x \right)} \cdot \conj{ e^{i \left( \frac{k \pi}{L} x \right)}} dx \right)^{\frac{1}{2}} = \sqrt{2L}
+		\left\|e^{i \left( \frac{k \pi}{L} x \right)}\right\|_{L^2} = \left( \pesc{ e^{i \left( \frac{k \pi}{L} x \right)}, e^{i \left( \frac{k \pi}{L} x \right)} }_{L^2} \right)^{\frac{1}{2}} = \left( \int^{L}_{-L} e^{i \left( \frac{k \pi}{L} x \right)} \cdot \conj{ e^{i \left( \frac{k \pi}{L} x \right)}} \dif x \right)^{\frac{1}{2}} = \sqrt{2L}
 		\]
 
 		Con lo que llegamos al sistema ortonormal:
-
 		\[
 			\left\{ \frac{1}{\sqrt{2L}} e^{i \left( \frac{k \pi}{L} x \right)} \right\}_{k = 0, ±1, ±2, …}
 		\]
-
+		y a la siguiente expresión para la serie de Fourier
 		\[
-		f ≈ \sum_{k=-\infty}^\infty \alpha_k e^{i \left( \frac{k \pi}{L} x \right)} = \sum_{k = -\infty}^\infty < f, \frac{1}{\sqrt{2L}} e^{i \left( \frac{k \pi}{L} x \right)} > = \frac{e^{i \left( \frac{k \pi}{L} x \right)}}{\sqrt{2L}}
+		f ≈ \sum_{k=-\infty}^\infty \alpha_k e^{i \left( \frac{k \pi}{L} x \right)} = \sum_{k = -\infty}^\infty \pesc{ f, \frac{1}{\sqrt{2L}} e^{i \left( \frac{k \pi}{L} x \right)} } · \frac{e^{i \left( \frac{k \pi}{L} x \right)}}{\sqrt{2L}}
 		\]
 
-		\obs Hay que diferenciar cuando hacemos producto escalar real del complejo.
+		Así, a partir de ahora denotaremos nuestros elementos de la base ortonormal como $Φ_k = \frac{e^{i \left( \frac{k \pi}{L} x \right)}}{\sqrt{2L}}$, con $\norm{Φ_k}_{L^2} = 1$ y podremos escribir simplemente
+		\[ f ≈ \sum_{k∈ℤ}\pesc{f, \Phi_k} \cdot \Phi_k \]
 
-		\textbf{Escribiremos:}
-
-		\[ f ≈ \sum_k <f, \Phi_k> \cdot \Phi_k \]
-
-		ya normalizado. $\|\Phi_k\|_2 = 1 \quad \forall k$.
-
-		Definimos las sumas parciales (y luego estudiaremos el paso al límite):
-
+		Para estudiar la convergencia de esa suma infinita, lo que haremos será lo habitual en estos casos: definir las sumas parciales y estudiar su límite. Así, definiremos
 		\[
-		S_n f = \sum_{|k| < n} <f, \Phi_k> \Phi_k \begin{cases}
-			\text{ en } \cplex & -n \leq k \leq n \\
-			\text{ en } \real & 1 \leq k \leq n
-		\end{cases}
+		S_n f = \sum_{|k| < n} \pesc{f, \Phi_k}
 		\]
 
-		\[ \text{¿} \| f - S_n f \|_{L^2} \rightarrow 0 \text{?}\]
+		Y ahora la pregunta del millón: ¿$\| f - S_n f \|_{L^2} \rightarrow 0$?
 
-		Hagamos cuentas:
+		Primero, vamos a estudiar la convergencia. Vamos a ver cómo se comporta la norma de las sumas parciales
+		\begin{align*}
+		\|S_n f\|_{L^2}^2 &= \pesc{S_n f, S_n f}_{L^2} = \sum_{|k| < n} \pesc{f, \Phi_k} \Phi_k \cdot \sum_{|j| < n} \pesc{f, \Phi_j} \Phi_j = \\
+			&\eqreasonup{$\sum$ finitas} \sum_{k, j < \abs{n}} \pesc{f, \Phi_k} \pesc{f, \phi_j}\underbrace{\pesc{\Phi_k, \Phi_j}}_{\delta_{kj}} = \\
+			&= \sum_k \abs{\pesc{f, \Phi_k}}^2
+		\end{align*}
 
-		\begin{itemize}
+		Luego concluimos que $\|S_n f\|_{L^2}^2$ es creciente. Vamos a ver ahora qué ocurre con $\norm{f - S_n f}^2 = \pesc{f - S_nf, f - S_nf}$. Primero vamos a calcular el producto $\pesc{f, S_n f}$:
+		\[
+			\pesc{f, S_n f} = \pesc{f, \sum_{|k| < n} \pesc{f, \Phi_k} \Phi_k} \eqreason{$\sum$ finita} \sum_{|k| < n} \abs{\pesc{f, \Phi_k}}^2
+		\]
 
-			\item
-			\[ \|S_n f\|_{L^2}^2 = < S_n f, S_n f>_{L^2} = \sum_{|k| < n} <f, \Phi_k> \Phi_k \cdot \sum_{|j| < n} <f, \Phi_j> \Phi_j \]
+		Con esto ya podemos trabajar con la norma:
+		\begin{align*}
+		0 	&≤ \|f - S_n f\|^2_{L} = \pesc{f - S_n f, f- S_n f} = \\
+			&= \pesc{f,f} - 2 \pesc{S_n f, f} + \pesc{S_n f, S_n f} = \\
+			&= \|f\|_{L}^2 - \sum_{|k| < n} |<f, \Phi_k>|^2 \\
+		 \sum_{|k| < N} \abs{\pesc{f, \Phi_k}}^2 &\leq \|f\|_L^2
+		\end{align*}
 
-			\[ \eqreason{$\sum$ finitas} \sum_{k,j} <f, \Phi_k><f, \phi_j>\underbrace{<\Phi_k, \Phi_j>}_{\delta_{kj}} = \sum_k | <f, \Phi_k> |^2
-			\]
+		\obs Con funciones complejas, el producto escalar en $ℂ$ no es conmutativo: $\pesc{f,g} = \conj{\pesc{g,f}}$. Por suerte, aquí $\pesc{S_nf, f} ∈ ℝ$ siempre por lo qu eno tenemos problemas en hacer el intercambio en el cálculo anterior.
 
-			Luego concluimos que $\|S_n f\|_{L^2}^2$ es creciente.
-
-			\item
-			\[
-				<f, S_n f> = <f, \sum_{|k| < n} <f, \Phi_k> \Phi_k > \eqreason{$\sum$ finita} \sum_{|k| < n} | <f, \Phi_k> |^2
-			\]
-
-			\item
-			\[
-				0 \leq \|f - S_n f\|^2_{L} = <f - S_n f, f- S_n f> = <f,f> - 2 <S_n f, f> + <S_n f, S_n f>
-			\]
-			\[ = \|f\|_{L}^2 - \sum_{|k| < n} |<f, \Phi_k>|^2 \Rightarrow \sum_{|k| < N} |<f, \Phi_k>|^2 \leq \|f\|_L^2 \]
-
-			\obs ¡Cuidado! en $\cplex: \ <S_n f, f> \neq < f, S_n f>$, hay que usar la siguiente propiedad:
-			$$<f,g> = \gor{<g,f>} $$
-		\end{itemize}
+		%% Julián: Revisado hasta aquí
 
 		\obs  \[
 			\left.
@@ -1212,7 +1156,7 @@
 
 		Dato: $W(1,\theta) = g(\theta)$.
 
-		Observamos que esta solución es buena porque si $r<1$, por el criterio de Weierstrass (\ref{defn:criterio_Weierstrass}), converge uniformemente en $[-\pi, \pi]$.
+		Observamos que esta solución es buena porque si $r<1$, por el criterio de Weierstrass (\ref{prop:criterio_Weierstrass}), converge uniformemente en $[-\pi, \pi]$.
 
 		Necesitamos:
 		\[ g(\theta) \qeq \frac{x_0}{2} + \sum_{k = 1}^{\infty} A_k \cos(k \theta) + B_k \sin(k \theta) \]
@@ -1265,7 +1209,7 @@
 %
 		&= \sum_{k=-\infty}^{\infty} \underbrace{\left( \frac{1}{2\pi} \int_{-\pi}^{\pi} g(s) e^{-iks} ds \right)}_{\leq \frac{1}{2\pi} \int_{-\pi}^{\pi} |g(s)| ds < C} r ^{|k|} \underbrace{e^{ik\theta}}_{|e^{ik\theta}| \leq 1}\\
 		\end{align*}
-		Donde hemos aplicado el criterio de Weierstrass \ref{defn:criterio_Weierstrass}.
+		Donde hemos aplicado el criterio de Weierstrass \ref{prop:criterio_Weierstrass}.
 
 		% Clase 2016/02/24
 		Si $r < 1$, tenemos que $\sum_k Cr^{|k|} < \infty$, luego tenemos convergencia uniforme de la serie $\sum_{k=-\infty}^{\infty} \alpha_{k} r^{\abs{k}} e^{ik\theta}$ y podemos intercambiar límite e integral:
