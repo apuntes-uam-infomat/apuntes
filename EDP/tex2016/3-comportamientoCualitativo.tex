@@ -52,78 +52,62 @@ En este capítulo vamos a ver:
 
 	\end{example}
 
+	\subsection{Unicidad y conservación de la energía}
 
-	\subsection{Unicidad}
+		Uno de los problemas más habituales al tratar las ecuaciones en derivadas parciales es saber si las soluciones son únicas o no. Partimos de nuestro problema
+		\[ \begin{cases}
+			u_{tt}-u_{xx} = 0\qquad x \in (0,L), t >0 \\
+			u(x,0) = f(x) 	\\
+			u_t(x,0) = g(x) \\
+			\text{Datos de contorno Dirichlet, Neumann o periódicos}
+		\end{cases} \]
 
-		\[\begin{cases}
-		   u_{tt}-u_{xx} = 0, x \in (0,L), t >0\\
-		   \text{contorno} \begin{cases}
-		   	\text{dirichlet}\\
-		   	\text{neumann}\\
-		   	\text{periódicas}
-		   \end{cases}\\
-		   \begin{cases}
-		   u(x,0) = 0 \\
-		   u_t (x,t) = 0
-		   \end{cases}
-		\end{cases}
-		 \]
+		Supongamos que existen dos soluciones $u_1, u_{2}$. Entonces, tendremos que $u = u_1 - u_2$ será solución del sistema
+		\( \begin{cases}
+			u_{tt}-u_{xx} = 0\qquad x \in (0,L), t >0 \\
+			u(x,0) = 0 	\\
+			u_t(x,0) = 0 \\
+			\text{Datos de contorno}
+		\end{cases} \label{eq:Onda:ProblemaUnicidad} \)
 
+		Para comprobar la unicidad, querremos saber si $u \equiv 0$ ($u_1$ y $u_2$ son iguales y la solución es única) o no.
 
-		 Supongamos que $u_1, u_{2}$ son soluciones. Luego $u = u_1 - u_2$ es solución + contorno + datos. Queremos probar que $u\equiv0$.
+		\begin{figure}[hbtp]
+		\centering
+		\inputtikz{EnergiaOnda}
+		\caption{Una ilustración de las fuerzas que dependen de la velocidad ($\vf_c$) y de la posición ($\vf_p$) que llevan a la definición de energía cinética y potencial.}
+		\label{fig:EnergiaOnda}
+		\end{figure}
 
-		 Como la ecuación es homogénea, la podemos multiplicar por $u_t$ e integrarla:
+		Para ello, vamos a introducir la ``energía'' de la onda y vamos a ver si nos da algo interesante. En cada punto $x ∈ [0,L]$ vamos a tener dos ``fuentes'' de energía. Una dependerá de la velocidad que lleve un punto, que será la cinética. Mirando a la ecuación de onda, esa velocidad no es más que la derivada de la onda $u$ con respecto al tiempo: si en $t_0 + Δt$ la onda ha crecido entonces llevamos velocidad positiva.
 
-		 \[ \int_{0}^{L} u_t (u_{tt}- u_{xx}) dx = 0 \]
+		La otra fuente de energía será la potencial, que depende de la altura $u$ del punto que consideremos. Si nos fijamos de nuevo en la \fref{fig:EnergiaOnda}, de lo que depende es de la derivada con respecto a $x$ por razones que ahora mismo no tengo claras. En cualquier caso, haciendo un ejercicio de imaginación la expresión de la energía será entonces la suma de ambas a lo largo de toda la cuerda:
+		\( E(t) = \frac{1}{2} \int_0^L (u_t)^2 + (u_x)^2 \dif x \label{eq:Onda:Energia} \)
 
-		 \( \int_0^L \underbrace{u_t u_{tt}}_{\frac{1}{2}(u^2_t)_t} - u_t u_{xx} dx  \label{eq:03_15_unicidad} \)
+		Podemos derivar esta ecuación con respecto al tiempo, ya que $u ∈ C^2$, y entonces tenemos que  \( E'(t) = \int_{0}^L u_t u_{tt} + u_x u_{xt} \dif x \label{eq:Onda:DerivadaEnergia} \)
 
-		 Miremos el segundo término de la integral. Operamos por partes:
+		¿Cuánto vale esta derivada? Vamos a verlo calculando la integral de $u_x u_{xt}$:
+		\begin{multline}
+		\int_0^L \underbracket{u_x}_u \underbracket{u_{xt} \dif x}_{\dif v} = \eval[2]{u_x u_t}_{x= 0}^L - \int_0^L u_{xx} u_t \dif x = \\
+		= u_x(L,t) u_t(L, t) - u_x(0,t) u_t(0,t) - \int_0^L u_t u_{xx} \dif x \label{eq:Onda:ContornosIntegral}
+		\end{multline}
 
-		 \[ \int_0^L  \underbrace{u_t}_{u} \underbrace{u_{xx} dx}_{dv} = \underbrace{\left. u_t u_x \right|_{x=0}^{L}}_{= 0} - \int_0^L \underbrace{u_x u_{tx}}_{\frac{1}{2}(u_x^2)_t} dx \]
+		Como se puede ver, aquí entran en juego las condiciones de contorno. Recordamos las tres posibilidades que tenemos:
 
-		 Y sustituyendo en \ref{eq:03_15_unicidad} tenemos que:
+		\begin{itemize}[itemsep = 0pt]
+		\item \textbf{Neumann}: $u_x(L, t) = u_x(0,t) = 0$.
+		\item \textbf{Dirichlet}: $u(0,t) = u(L, t) = 0 = u_t(0,t) = u_t(L, t)$.
+		\item \textbf{Periódicas}: $u(L, t) = u(0,t)$, $u_x(L, t) = u_x(0,t)$, $u_t(L, t) = u_t(0,t)$.
+		\end{itemize}
 
-		 \[  \int^{L}_{0} \frac{1}{2} (u_t^2)_t dx - 0 - \left(- \int_0^L \frac{1}{2}(u_x^2)_t dx \right) = \frac{1}{2} \int^{L}_{0}  (u_t^2)_t + (u_x^2)_t dx = \frac{1}{2} \left( \int^{L}_{0} u_t^2 + u_x^2 dx \right)_t\]
+		En cualquiera de los tres casos, lo que vamos a tener va a ser lo mismo: que $u_x(L,t) u_t(L, t) - u_x(0,t) u_t(0,t) = 0$. Sustituyendo eso en \eqref{eq:Onda:ContornosIntegral}, lo que nos quedará será que \[ \int_0^L u_x u_{xt} \dif x = - \int_{0}^L u_t u_{xx} \dif x \], y a su vez esto nos permite resolver la ecuación para la derivada de la energía \eqref{eq:Onda:DerivadaEnergia}:
+		\[ E'(t) = \int_0^L u_t \left(u_{tt} - u_{xx} \right) \dif x = 0\]
+		simplemente fijándonos en que la ecuación de onda nos dice que $u_{tt} - u_{xx} = 0$.
 
-		 \textbf{Conclusión}
+		Finalmente, a lo que hemos llegado no es más que al tradicional principio de \textbf{conservación de la energía}. En este caso, la energía de la onda se conserva a lo largo del tiempo para la ecuación de onda homogénea, y $E(t) = E(0)$, donde
+		\[ E(0) = \frac{1}{2} \int_0^L (u_t)^2 (x,0) + (u_x)^2 (x,0) \dif x = \frac{1}{2} \int_0^L g^2(x)+(f'(x))^2 \dif x \]
 
-		 \[ E(t) = \frac{1}{2} \int_{0}^L u_t^2(x,t) + u_x^2(x,t) dx \]
-
-		 \[ E'(t) = 0 \quad \forall t \quad \text{\bf Conservación de la energía total} \]
-
-
-		 \[ E(t) = E(0) = \frac{1}{2} \int_0^L u_t^2 (x,0) + u_x^2 (x,0) dx = \frac{1}{2} \int_0^L g^2(x)+(f'(x))^2 dx \eqreason{$f=g=0$} = 0 \]
-
-		 \[ E=0 \Rightarrow u_t = u_x = 0 \Rightarrow u \equiv \text{cte. y } u(x,0) = 0 \Rightarrow u \equiv 0\]
-
-		 Luego hemos demostrado que las dos soluciones son iguales y por lo tanto solo hay una solución.
-
-		 Tenemos también:
-
-		 \[ E(t) =  \frac{1}{2}\int_0^L (u_t)^2 + (u_x)^2 dx \rightarrow E'(t) = u_t (L,t) u_x(L,t) - u_t(0,t) u_x(0,t) \]
-
-		 Veamos que pasa dependiendo del tipo de contorno que tengamos:
-
-		 \begin{itemize}
-		 	\item Contorno Dirichlet
-		 		\[ u(0,t) = u(L,t) = 0, \forall t \Rightarrow u_t (0,t) = u_t(L,t) = 0 \forall t \Rightarrow E'(t) = 0 \]
-
-		 	\item Contorno Neumann
-		 		\[ u_x(0,t) = u_x(L,t) = 0, \forall t \Rightarrow  E'(t) = 0 \]
-
-		 	\item Periódicas
-		 		\[ u(0,t) = u(L,t), \forall t \Rightarrow u_t (0,t) = u_t(L,t) \forall t \quad \text{y} \quad u_x(0,t) = u_x(L,t), \forall t \Rightarrow E'(t) = 0 \]
-
-		 	\item mixtas
-
-		 \end{itemize}
-
-		 Este resultado es la \concept{conservación de la energía}:
-
-		 \[E(t) = \text{cte.} = E(0) = \frac{1}{2} \int_0^L (g(x))^2 + (f'(x))^2 dx  \]
-
-		 \textbf{Consecuencias:}
+		\paragraph{Consecuencias} Una vez que tenemos esto, volvemos a las condiciones iniciales \eqref{eq:Onda:ProblemaUnicidad} del problema del que $u = u_1 - u_2$ era solución, en el que los datos iniciales eran $u(x,0) = u_t(x,0)$. Esto nos dice que $E(0) = 0$, y como la energía se conserva tenemos que $E(t) = 0\;∀t ∈ ℝ^+$. Equivalentemente, $0 = \int_0^L (u_t)^2 + (u_x)^2 \dif x$, luego $u_t = u_x = 0$ así que la solución es constante. Finalmente, como el dato inicial era $u(x,0) = 0$, la solución es $u \equiv 0$, luego tenemos \textbf{unicidad}.
 
 		 	Veamos el caso Dirichlet, pero esto es válido para todos:
 
@@ -374,16 +358,9 @@ En este capítulo vamos a ver:
 
 		La conservación de la energía nos dará unicidad de solución, también para el problema no homogéneo; y dependencia continua de los datos. Estos resultados habría que compararlos con el teorema en dominios acotados, que es donde lo demostramos en su día.
 
-		Y luego una prueba de algo con un paralelogramo del que no me he llegado a enterar demasiado bien:
+		\subsubsection{Aplicación a ecuaciones en dominios acotados}
 
-		\begin{figure}[hbtp]
-		\centering
-		\inputtikz{Paralelogramo}
-		\caption{Paralelogramo.}
-		\label{fig:Paralelogramo}
-		\end{figure}
-
-		Una aplicación de esto es el de problemas con reflexiones: tenemos una cuerda en el intervalo $[0, ∞)$ y nuestro sistema \[ \begin{cases}
+		Todo esto que hemos hecho para dominios no acotados se aplicar de vuelta a dominios acotados y problemas con reflexiones. Tenemos una cuerda en el intervalo $[0, ∞)$ y nuestro sistema \[ \begin{cases}
 		u_{tt} - c^2u_{xx} = 0 & x > 0,\, t ∈ ℝ \\
 		u(0,t) = 0 & ∀ t ∈ ℝ \\
 		u(x,0) = f(x) & x > 0 \\
@@ -405,7 +382,7 @@ En este capítulo vamos a ver:
 
 		De ahí sacaríamos la solución $\tilde{u}(x,t)$ y nuestra solución final sería $u(x,t) = \tilde{u}(x,t)$ restringida a $x > 0$.
 
-		Sin embargo, tenemos un segundo método de resolución a través de una interpretación geométrica: gracias al método del paralelogramo podremos sacar el valor de la solución despejando (ver \fref{fig:AplicacionParalelogramo}).
+		Sin embargo, tenemos un segundo método de resolución a través de una interpretación geométrica: gracias al método del paralelogramo podremos sacar el valor de la solución despejando (ver \fref{fig:AplicacionParalelogramo}), sabiendo que \( u(A) + u(C) = u(B) + u(D) \label{eq:Onda:Paralelogramo} \)
 
 		\begin{figure}[hbtp]
 		\inputtikz{AplicacionParalelogramo}
@@ -413,7 +390,7 @@ En este capítulo vamos a ver:
 		\label{fig:AplicacionParalelogramo}
 		\end{figure}
 
-		Vamos a ver un ejemplo de este método, con la ecuación de siempre y datos iniciales $g \equiv 0$ y \[ f(x) = \begin{cases} 1 & x ∈ [1,2] \\ 0 x ∈ [0,1) ∪ (2,∞) \end{cases} \]
+		Vamos a ver un ejemplo de este método, con la ecuación de siempre y datos iniciales $g \equiv 0$ y \[ f(x) = \begin{cases} 1 & x ∈ [1,2] \\ 0 & x ∈ [0,1) ∪ (2,∞) \end{cases} \]
 
 		Sacando con la regla del paralelogramo los valores tendríamos algo como lo de la \fref{fig:OndaReflexion}, donde la onda rebotaría por la izquierda pero invertida. Además, en la zona donde la onda se anula, la energía se quedaría en la derivada $u_t$, no se nos pierde.
 
@@ -449,14 +426,14 @@ En este capítulo vamos a ver:
 		Φ(x,0) = 0 \\
 		Φ_t(x,0) = F(x,τ) \end{cases}\]
 
-		Así, el impulso $F(x,τ)$ en $t= 0$ sale como \[ Φ(x,t) = \frac{1}{2c} \int_{x-ct}^{x+ct} F(s,τ) \dif τ\], y para $t = τ$ tendríamos \[ Φ(x, t-τ) = \frac{1}{2c} \int_{x-c(t-τ)}^{x + c(t - τ)} F(s, τ) \dif s\]
-
-		\begin{figure}[hbtp]
+		\begin{wrapfigure}{R}[0.1\textwidth]{0.4\textwidth}
 		\centering
 		\inputtikz{IntegralOndaNoseque}
 		\caption{La integral que hacemos es la del triángulo, con $f$ aportando en los puntos iniciales (verde), $g$ aportando en el intervalo naranja y $F$ en la zona sombreada.}
 		\label{fig:Onda:Noseque}
-		\end{figure}
+		\end{wrapfigure}
+
+		Así, el impulso $F(x,τ)$ en $t= 0$ sale como \[ Φ(x,t) = \frac{1}{2c} \int_{x-ct}^{x+ct} F(s,τ) \dif τ\], y para $t = τ$ tendríamos \[ Φ(x, t-τ) = \frac{1}{2c} \int_{x-c(t-τ)}^{x + c(t - τ)} F(s, τ) \dif s\]
 
 		De esta forma, la solución para un punto dado es el impulso a lo largo del tiempo, esto es, \[ w(x,t) = \frac{1}{2c} \int_0^t Φ(x,t-τ) \dif τ = \frac{1}{2c} \int_0^t \int_{x-c(t-τ)}^{x + c(t - τ)} F(s, τ) \dif s \]
 
