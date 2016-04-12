@@ -157,3 +157,131 @@ Mínimo local en función cuasiconvexa es un mínimo global.
 \begin{proof}
 Se deja como ejercicio
 \end{proof}
+
+
+
+
+\section{Tras la reparación}
+
+\subsection{Resumen}
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|c|c}
+Primal $\equiv$ (P) & $\begin{array}{c} \min c'x\\Ax = b\\x≥ 0\end{array}$ & $\begin{array}{c} \max c'x\\Ax ≤ b\\x≥ 0\end{array}$\\
+\hline
+Dual $\equiv$ (D) & $\begin{array}{c} \max b'u\\A'u ≥ c\end{array}$ & $\begin{array}{c} \max b'u\\A^\top u ≤ c\\u≥ 0\end{array}$\\
+\end{tabular}
+\caption{Resumen de pasar del problema primal al dual.}
+\end{table}
+
+
+\subsection{Interpretación económica del problema dual}
+
+La solución del problema dual del pastelero es $u = \left(\rfrac{1}{3},0,10\right)$, que son los valores que aparecían en el problema \ref{ejer:pastelero}. Además, vemos también que $\bar{p} = \bar{d} = 775$. Es decir, la dualidad es fuerte. 
+
+Vamos a demostrarlo teóricamente.
+
+
+\begin{defn}[Dualidad\IS fuerte]
+$\bar{p} = \bar{d}$
+\end{defn}
+
+
+\begin{example} Escribe el dual de:
+
+...
+
+\begin{ioprob}
+\goal{$\min -u_1 - u_2$}
+\restrictions{$-u_2≥1$}{$u_2 ≤ 1-$}{$u_1-u_2≥-1$}{$u_1 ≥$}{$u_2≥0$}{}
+\end{ioprob}
+
+Aquí no tienen solución ni el factible ni el primal.
+\end{example}
+
+\begin{theorem}[Dualidad fuerte para problemas lineales]
+
+Consideremos un problema lineal en forma estándar $(P)$ y el correspondiente problema dual $(D)$. 
+
+Si $(P)$ tiene solución factible óptima finita, también la tiene $(D)$ y los correspondientes valores óptimos son iguales.
+\end{theorem}
+
+\begin{proof}
+\[u' \equiv c_B'B^{-1}\]
+
+\[
+\begin{array}{c}
+u'b = c'_BB^{-1}b
+c'x = c'_BB^{-1}n]c_N'0
+\end{array}
+\]
+
+
+$u$ es factible para $(D)$ $\dimplies$ 
+
+\[u'A ≤ c' = c'_BB^{-1}\left(B | N \right) ≤ (c'_B,c'_N)\dimplies \underbrace{c_B'B^{-1}N}_{z_j} ≤ c'_N\]
+
+Demostrar que $u$ es factible es lo mismo que demostrar que $z_j ≤ c_j$ en la tabla del simplex. Como $\bar{x}$ es el óptimo, en la última fila de simplex tenemos todos $≤0$, con lo que $z_j ≤ c_j$
+
+\paragraph{Conclusión: } Encontrar un óptimo para el primal es encontrar un factible para el dual.
+
+\end{proof}
+
+
+
+\[
+\dpa{\bar{z}}{b_i} = u_i
+\]
+Esto demuestra la observación de que la solución del dual del pastelero corresponde al beneficio marginal que gana de más al aumentar en 1 su cantidad de azúcar/mantequilla/harina. Esto es general para cualquier problema lineal.
+
+
+
+
+
+\subsection{Algortimo simple-dual}
+
+Tenemos un problema de programación lineal que resolvemos con simplex normal. Llegamos a una solución óptima que es factible del dual. Ahora, imaginemos que cambiamos $b$, con lo que las restricciones dejan de cumplirse. El estado de la tabla del simplex se mantiene, salvo la columna de la izquierda. 
+Este es un punto de partida para este algoritmo. Otro caso ventajoso de este algoritmo se da al tener ¿coeficientes negativos?
+
+
+\paragraph{Completar de las traspas}
+
+
+\begin{example} Resolver el problema:
+
+...
+
+Lo primero es pasarlo a forma estándar:
+
+
+\begin{ioprob}
+\goal{$\min{3x_1 + 2x_2}$}
+\restrictions{$3x_1-x_2+x_3 = -3$}{...}{...}{...}{...}{...}
+\end{ioprob}
+
+
+En este caso, no podemos empezar con el algoritmo del simplex, porque hay $b_i< 0$. Pero tendríamos una solución óptima si fuera factible. Al ser óptima en el primal, es factible en el dual y podemos aplicar el algoritmo del simplex-dual.
+Vamos a ver la evolución de las tablas.
+
+
+\paragraph{Vamos a verlo gráficamente paso a paso}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[scale=1.5]
+\draw[thick,->] (0,0) -- (3.5,0);
+\draw[thick,->] (0,0) -- (0,3.5);
+\draw[thick,-] (3,0) -- (0,3);
+\draw[thick,-] (1,0) -- (0,3);
+\draw[thick,-] (1.5,0) -- (0,2);
+\filldraw[fill=blue, opacity = 0.4] (3/5,6/5) -- (1.5,0) -- (3,0) -- (0,3) -- cycle;
+\node [label={below:$(1)$},nodepoint, inner sep=2pt,color=red] at (0,0) {};
+\node [label={left:$(2)$},nodepoint, inner sep=2pt,color=blue] at (0,2) {};
+\node [label={below left:$(3)$},nodepoint, inner sep=2pt,color=green] at (3/5,6/5) {};
+\end{tikzpicture}
+\caption{Evolución del algoritmo del simplex-dual.}
+\end{figure}
+
+
+\end{example}
