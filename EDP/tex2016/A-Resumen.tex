@@ -41,3 +41,85 @@ entonces (\fref{thm:Transversalidad}) tenemos una solución única en un entorno
 Si la matriz tiene determinante nulo, la única posibilidad para tener una solución $C^1$ es que el rango de la matriz $\Dif Φ$ sea $1$ (ver \fref{sec:CondTransversalidadInvalida} para más detalles), en cuyo caso tendremos que hacer lo mismo que antes para encontrar la solución.
 
 Si tenemos la mala suerte de que nos sale que toda la curva dato es característica, no hay solución y el problema está mal planteado.
+
+\section{Ecuaciones de segundo orden - Series de Fourier}
+
+La primera solución de este tema es para el problema de la ecuación de onda
+\[  \begin{cases}
+	u_{tt} - c^2 u_{xx} = 0  & x  \in (-L,L), t>0\\
+	u(-L,t) = u(L,t) &\forall t > 0\\
+	u_x(-L,t) = u_x(L,t) & \forall t > 0 \\
+	u(x,0) = f(x) \\
+	u_t(x,0) = g(x)
+	\end{cases}
+\]
+que se resuelve con la fórmula de D'Alambert, que tiene la expresión \[ u(x,t) = \frac{1}{2} \left[ f(x+ct) + f(x-ct) \right] + \frac{1}{2} \int^{x+ct}_{x-ct} g(s) \dif s \]
+
+Hay otra forma, que es la resolución con separación de variables y Fourier. En estos problemas, buscaremos una solución $u(x,t) = X(x) T(t)$, y haciendo las cuentas nos saldrá algo como \[ \frac{T'}{T} = \frac{X''}{X} = λ ∈ ℝ \], igual con derivadas de segundo orden también en $T$.
+
+Un ejemplo para el problema que poníamos arriba. Sustituimos $u = X(x) T(t)$ en $u_{tt} - u_{xx} = 0$ y tenemos que \begin{gather*}
+X(x)T''(t) -  X''(x) T(t) = 0 \\
+\frac{T''}{T} = \frac{X''}{X} = λ ∈ ℝ
+\end{gather*}, donde el cociente tiene que ser un número fijo $λ ∈ ℝ$ ya que ambas funciones son iguales a pesar de depender de distintas variables.
+
+La EDO para $X$ es $X'' = λX$, y las condiciones de contorno $X(-L) = X(L)$ y $X'(-L) = X'(L)$ se sacan de las condiciones del problema original. Damos valores a λ ($λ = 0$, $λ = μ^2 > 0$ y $λ = -μ^2 < 0$) y vemos que sólo en el último caso tenemos una solución no trivial: $X(x) = a \cos μx + b \sin μx$, con $μ = \frac{kπ}{L}$, siendo $2L$ la longitud del intervalo. Así, la solución general de $X$ será la suma de las infinitas soluciones \[ X_k(x) = a_k \cos \left( \frac{k\pi}{L} x \right) + b_k \sin \left( \frac{k\pi}{L} x \right) \]
+
+Si siguiésemos haciendo cuentas\footnote{Esto es un resumen, leer los apuntes para más detalles.} el problema que tenemos al final es que nos va a quedar la $X$ (y a veces también $T$) como un desarrollo en serie de senos o cosenos con unos coeficientes, que para sacarlos tendremos que cuadrarlos con los datos iniciales. Esto nos lleva a tener que expresar $f$ y $g$ como series de senos y cosenos, lo que se llama la serie de Fourier. Dada $f$ periódica en $(-L, L)$, entonces su serie de Fourier es
+\begin{align*}
+f(x) &= \frac{a_0}{2} + \sum_{k = 1}^∞ \left[a_k \cos \left(\frac{kπ}{L}x\right) + b_k \sin \left(\frac{kπ}{L}x\right) \right] \\
+a_k &= \frac{1}{L} \int_{-L}^L f(x) \cos \left(\frac{kπ}{L}x\right) \dif x \\
+b_k &= \frac{1}{L} \int_{-L}^L f(x) \sin \left(\frac{kπ}{L}x\right) \dif x
+\end{align*}
+
+Si queremos que la serie salga sólo en senos o sólo en cosenos hay que jugar con las extensiones para que se anulen los $b_k$ o los $a_k$ respectivamente.
+
+Hay otra posibilidad para expresar los coeficientes, que es dando una base del \nlref{def:EspacioL2} y usar su producto escalar \eqref{eq:ProdEscalarComplejo}, respectivamente: \(
+\left\{ \frac{1}{\sqrt{2L}} e^{i \left( \frac{k \pi}{L} x \right)} \right\}_{k = 0, ±1, ±2, …}
+\qquad\qquad
+\pesc{f,g}_{L^2} = \int^L_{-L} f(x) \conj{g(x)} \dif x
+\label{eq:Resumen:L2}
+\)
+
+Así, la expresión de $f$ queda como si fuese un vector normal: las coordenadas $α_k$ son el producto escalar de $f$ por cada elemento de la base, y para llegar a la función multiplicamos esas coordenadas $α_k$ por los elementos de la base:
+\begin{gather*}
+f(x) = \sum_{k=-\infty}^\infty \alpha_k e^{i \left( \frac{k \pi}{L} x \right)} = \sum_{k = -\infty}^\infty \pesc{ f, \frac{1}{\sqrt{2L}} e^{i \left( \frac{k \pi}{L} x \right)} } · \frac{e^{i \left( \frac{k \pi}{L} x \right)}}{\sqrt{2L}} \\
+α_k = \pesc{ f, \frac{1}{\sqrt{2L}} e^{i \left( \frac{k \pi}{L} x \right)} } = \frac{1}{\sqrt{2L}} \int_{-L}^L  f(x)  e^{-i \left( \frac{k \pi}{L} x \right)} \dif x
+\end{gather*}
+
+Algo más fácil de recordar que la expresión en serie de senos y cosenos.
+
+\subsection{Convergencia de la serie de Fourier}
+
+Si fuésemos físicos, ingenieros o cualquier otra clase de pervertido que se contenta con unas cuentas hechas a ojo, el tema terminaría aquí. A nosotros nos interesará además saber si esa serie infinita converge a lo que queremos y cómo lo hace.
+
+Recordamos las posibles convergencias de una serie de funciones: la \nlref{def:ConvergenciaPuntual}, que dice que cada punto converge pero que no conserva la integral; la \nlref{def:ConvergenciaUniforme}, que dice $∀ε > 0$ las $f_n$ están en una banda de anchura ε alrededor de $f$ para $n ≥ n_0$, y que preserva continuidad e integrabilidad en acotados aunque no la derivabilidad (\fref{thm:ConvergenciaUniforme}); y por último la \nlref{def:ConvergenciaL2} que nos dice que la integral de $f_n - f$ tiende a cero.
+
+Las relaciones entre las convergencias son fáciles: las dos únicas implicaciones son que la convergencia uniforme implica puntual; y si el dominio es acotado también implica convergencia $L^2$ (\fref{fig:DiagramaConvergencias}).
+
+La convergencia $L^2$ tiene nombre del \nlref{def:EspacioL2}, funciones cuadrado integrables. Es un espacio vectorial, con norma \eqref{eq:NormaL2} y producto escalar \eqref{eq:ProdEscalarL2}. Además, en él las funciones continuas son densas: toda función $L^2$ se puede aproximar por funciones continuas.
+
+\subsubsection{Convergencia para $f ∈ C^2$}
+
+Con esto se puede empezar a estudiar la convergencia de la serie de Fourier. Si partimos de $f ∈ C^2$, podemos usar el \nlref{prop:criterio_Weierstrass} (resumen: dadas cotas $M_k ≥ \abs{Φ_k(x)}$, si la suma de los $M_k$ es finita entonces la serie $\sum Φ_k$ converge uniformemente) para decir que la serie de Fourier converge uniformemente (\fref{prop:ConvergenciaUniformeFourier}), aunque no sabemos a qué.
+
+\subsubsection{Convergencia para $f ∈ L^2$}
+
+El siguiente paso es estudiar lo que ocurre si $f ∈ L^2$. Como decíamos antes, $L^2$ es un espacio vectorial con base y producto escalar \eqref{eq:Resumen:L2}. Ahí podemos demostrar la desigualdad de Bessel \eqref{eq:desigualdad_bessel}, que nos dice que \[ \sum_{k=-\infty}^\infty |\pesc{f, \Phi_k}|^2 \leq \|f\|_2^2 \] para $\set{Φ_k}$ base ortonormal de $L^2$ y nos da el \nref{lem:RiemannLebesgue} que nos dice que $\abs{\pesc{f, Φ_k}} \convs[][k] 0$.
+
+La desigualdad de Bessel nos da una cota superior para las sumas parciales de la serie de Fourier, que además están acotadas. Todo eso nos dice que las sumas parciales de Fourier convergen en $L^2$, aunque seguimos sin saber a qué.
+
+La identificación el límite requiere un lío interesante (ver \fref{sec:IdentificacionLimite}), que lleva a la definición del núcleo de Poisson que finalmente nos dará convergencia uniforme con un límite identificado en el \fref{thm:ConvUniformePoisson}.
+
+Además, los teoremas de aproximación de Weierstrass \ref{thm:AproxWeierstrass1} y \ref{thm:AproxWeierstrass2} nos dan finalmente la convergencia en $L^2$ en el \fref{thm:ConvergenciaL2}, que nos dice que los polinomios trigonométricos que mejor aproximan una función son la serie de Fourier. Además, tendremos la identidad de Parseval (la desigualdad de Bessel con igualdad: $\sum_{k= -\infty}^\infty  |\pesc{f, \Phi_k}|^2 = \|f\|^2_2$) y la convergencia de la serie de Fourier a la función en $L^2$ (\fref{thm:ConvergenciaL2Limite}).
+
+\subsubsection{Convergencia puntual}
+
+Buscaremos un resultado aproximado: no hace falta uniforme pero al menos puntual (la convergencia $L^2$ ni siquiera es puntual). Para ello, se define el núcleo de Dirichlet \eqref{eq:nucleoDirichlet}, con la propiedad interesante de que la suma parcial $S_N f$ es la convolución $f * D_N = \int f(s) D_N (x - s) \dif s$.
+
+Ese núcleo permite demostrar convergencia puntual de la serie para funciones acotadas y derivables en el punto (\fref{thm:Dirichlet1}) y convergencia al punto medio ($\lim_{n \to \infty} S_nf(x) = \frac{1}{2} \{f(x^+)+f(x^-)\}$) en funciones con discontinuidades amables (\fref{thm:Dirichlet2})
+
+Otro resultado de convergencia puntual es que para una \nlref{def:FuncContinuaHolder} (existen $K ∈ ℝ$, $α ∈ [0,1]$ tales que $\abs{f(t) -f(s)} < K \abs{t-s}^α$ para todos $t,s$ en el dominio) hay convergencia puntual de la serie de Fourier en todo punto (\fref{thm:ConvPuntualHolder}).
+
+\subsection{Aplicación a la resolución de EDPs}
+
+Cosas intereasantes para la resolución de EDPs: si la derivada de la serie de Fourier converge, entonces la función es derivable y su derivada es precisamente la derivada de la serie (\fref{thm:DerivadaFourier}).
