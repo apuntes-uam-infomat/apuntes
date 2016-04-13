@@ -90,6 +90,7 @@
 \eqreasonup[=]{arg1}#m
 \x#m
 \appl{f}{from}{to}#m
+\extappl{f}{from}{to}{origen}{destino}#m
 \uexists#m
 \sint#m
 \stdf#m
