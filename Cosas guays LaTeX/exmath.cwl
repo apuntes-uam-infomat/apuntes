@@ -46,6 +46,7 @@
 \convx{arg0}#m
 \afin{arg0}#m
 \Hf{arg0}#m
+\epigraph{arg0}#m
 \gvx#m
 \app#m
 \obs#m
