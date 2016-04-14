@@ -90,7 +90,7 @@ Ahora sólo queda comprobar $KKT(\vx,\gor{\vu})$.
 
 \end{proof}
 
-Con este teorema, clasificamos todos los mínimos que puede tener un problema en 2 clases disjuntas. \textbt{O cumple la cualificación de las restricciones o KKT}, pero no puede no cumplir ninguna (ni las 2 a la vez).
+Con este teorema, clasificamos todos los mínimos que puede tener un problema en 2 clases disjuntas. \textbf{O cumple la cualificación de las restricciones o KKT}, pero no puede no cumplir ninguna (ni las 2 a la vez).
 
 \begin{example}
 Determina los puntos que verifican KKT y resuelve el problema:
@@ -322,7 +322,7 @@ A continuación, una tabla que resume el cálculo de problemas duales a partir d
 \begin{tabular}{c|c|c}
 Primal $\equiv$ (P) & $\begin{array}{c} \min c'x\\Ax = b\\x≥ 0\end{array}$ & $\begin{array}{c} \max c'x\\Ax ≤ b\\x≥ 0\end{array}$\\
 \hline
-Dual $\equiv$ (D) & $\begin{array}{c} \max b'u\\A'u ≥ c\end{array}$ & $\begin{array}{c} \max b'u\\A^\top u ≤ c\\u≥ 0\end{array}$\\
+Dual $\equiv$ (D) & $\begin{array}{c} \max b'u\\A'u ≥ c\end{array}$ & $\begin{array}{c} \min b'u\\A^\top u ≤ c\\u≥ 0\end{array}$\\
 \end{tabular}
 \caption{Resumen de pasar del problema primal al dual.}
 \end{table}
@@ -433,7 +433,7 @@ En este caso, no podemos empezar con el algoritmo del simplex, porque hay $b_i< 
 Vamos a ver la evolución de las tablas.
 
 
-\paragraph{Vamos a verlo gráficamente paso a paso}
+\textbf{Vamos a verlo gráficamente paso a paso}
 
 \begin{figure}[hbtp]
 \centering
@@ -451,5 +451,154 @@ Vamos a ver la evolución de las tablas.
 \caption{Evolución del algoritmo del simplex-dual.}
 \end{figure}
 
-
 \end{example}
+
+
+\begin{prop}
+Tras el pivoteo se mantiene la factibilidad dual (optimilidad primal)
+\end{prop}
+\begin{proof}
+
+\[
+	\underbrace{(z_j-c_j)}_{≤0} - \frac{y_{rj}}{y_{rk}}\underbrace{(z_k-c_k)}_{≤0}
+\]
+
+También sabemos que $y_{rk}<0$.  Distingamos 2 casos:
+
+\[
+	y_{rj} ≥ 0 \implies \hat{z_j}-\hat{c_j} ≤ z_j-c-j ≤ 0
+\]
+
+\[
+	y_{rj} ≤ 0 \implies \hat{z_j}-\hat{c_j} ≤ 0 \dimplies \frac{z_j-c_j}{y_{rj}}≥\frac{z_l-c_l}{y_{rk}}
+\]
+Esta segunda condición se cumple por el criterio de entrada a la base (selección de $k$).
+
+Hemos visto que para cualquier valor de $y_{rj}$, se mantiene la condición de optimalidad ($z_j-c_j <0$)
+\end{proof}
+
+\begin{prop}
+Tras el pivoteo se mejora el objetivo del dual, es decir:
+
+\[
+	\sum_{i\in \hat{B}} c_i\gor{b_i} > \sum_{i\in B} c_i\gor{b_i}
+\]
+
+\end{prop}
+\begin{proof}
+%% Completar de las traspas
+\end{proof}
+
+\begin{prop}
+
+Si $y_{tj} ≥ 0 ∀j$, el tproblema primal no es factible
+\end{prop}
+
+\begin{proof}
+Si existiera $\vx≥0$ con $A\vx = \vb$ tendríamos:
+
+\[
+	A\vx = \vb \dimplies B^{-1}A\vx = \gor{b} \dimplies \sum_{j=1}^n y_jx_j = \gor{b}
+\]
+
+En particular, $\gor{b_r} = \sum_j y_{rj}x_j ≥ 0$, lo que no puede ser ¿por el criterio de elección de $r$? porque $\gor{b_r} < 0$.
+\end{proof} 
+
+
+\section{KTT y dualidad}
+
+Hasta ahora hemos visto las condiciones $KKT$ por un lado y el problema dual por el otro. Ahora vamos a ver qué relación tiene un concepto con el otro.
+
+\paragraph{HOlgura complementaria en problemas lineales}
+
+Sean $\vx$ y $\vu$ las soluciones de $(P) \equiv \max c^\top x \;\;s.a.\;\; A\vx ≤ b$ y de $(D)$ su dual.
+
+En el caso de dualidad fuerte, tenemos:
+
+\[
+	\pesc{\vc,\vx} ≤ \vu^\top A \vx ≤ \pesc{\vu,\vb} = \pesc{\vc,\vx}
+\]
+
+\begin{prop}
+Si una restricción no se activa en el primal, la variable correspondiente en el dual es 0. 
+También se cumple intercambiando el papel del dual y del primal.
+
+Si una variable del dual es positiva, la restricción correspondiente del primal está activa (por la holgura complementaria).
+
+\end{prop}
+\begin{proof}
+
+\end{proof}
+
+Estas condiciones caracterizan las soluciones de $(P)$ y de $(D)$ porque ... 
+
+
+
+
+\begin{example}
+
+Vamos a ver un ejemplo para entender los resultados anteriores.
+
+
+\begin{ioprob}
+\goal{$\max 3x_1 + 4x_2 + 6x_3$}
+\restrictions{$3x_1+x_2+x_3≤2$}{$x_1+2x_2+6x_3≤1$}{$x_i≥0$}{}{}{}
+\end{ioprob}
+
+\textbf{Escribe el problema dual:}
+
+\begin{ioprob}
+\goal{$\min 2u_1 + u_2$}
+\restrictions{$3u_1 + 1u_2 ≥ 3$}{$1u_1 + 2u_2 ≥ 4$}{$1u_1 + 6u_2 ≥ 6$}{$u_i ≥ 0$}{}{}
+\end{ioprob}
+
+
+\textbf{Resuelve el dual gráficamente:}
+
+Gracias a pasar al dual podemos representar gráficamente un problema que inicialmente tenía 3 variables y no podríamos dibujar con tanta facilidad.
+
+
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}[scale=1.5]
+\draw[thick,->] (0,0) -- (8,0);
+\draw[thick,->] (0,0) -- (0,4.2);
+\draw[thick,-] (1,0) -- (0,3);
+\draw[thick,-] (4,0) -- (0,2);
+\draw[thick,-] (6,0) -- (0,1);
+\filldraw[fill=blue, opacity = 0.2] (0,3) -- (2/5,9/5) -- (3,0.5) -- (6,0) -- (8,0) -- (8,4) -- (0,4) -- cycle;
+\node [label={above right:$(Optm.)$},nodepoint, inner sep=2pt,color=red] at (2/5,9/5) {};
+%\node [label={left:$(2)$},nodepoint, inner sep=2pt,color=blue] at (0,2) {};
+%\node [label={below left:$(3)$},nodepoint, inner sep=2pt,color=green] at (3/5,6/5) {};
+\end{tikzpicture}
+\caption{Resolución gráfica del ejemplo.}
+\end{figure}
+
+
+Resolviéndolo, obtenemos: 
+
+\[
+	(\gor{u_1},\gor{u_2},\gor{d}) = \left(\rfrac{2}{5},\rfrac{9}{5},\rfrac{13}{5}\right)
+\]
+
+
+
+En el óptimo dual, la 3 restricción no está activa, con lo que $x_3 = 0$. Además, como los $\gor{u_1} ≠ 0$ implica que la restricción correspondiente se verifica con igualdad. Lo mismo con $\gor{u_2}≠0$.Recapitulando, tenemos:
+
+\[
+\left.\begin{array}{c}
+	3x_1+x_2+x_3 = 2\\
+	x_1+2x_2+6x_3 = 1
+\end{array}\right\} \implies (x_3 = 0) + \text{ con igualdad } \implies \left\{\begin{array}{c}3x_1 + x_2 = 2\\x_1 + 2x_2 = 1\end{array}\right.
+\]
+
+\obs Si no supiéramos que $x_3 = 0$, por la dualidad fuerte tenemos otra ecuación que sería:
+
+\[
+	3x_1 + 4x_2 + 6x_3 = \gor{d}
+\]
+\end{example}
+
+
+\subsubsection{Holgura complementaria en problemas no lineales}.
