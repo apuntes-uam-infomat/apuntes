@@ -1,0 +1,120 @@
+% -*- root: ../BMinf.tex -*-
+
+\section{Primer parcial}
+
+\section{Sistemas de recomendación}
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|ccccc}
+&La feria & Origen & Rey León & Batman(B) & Club de la Lucha\\\hline
+L&0&4&3&1&4\\
+C&5&3&1&4&4\\
+S&0&3&4&0&2\\
+A&0&5&1&0&5
+\end{tabular}
+\caption{Matriz de recomendaciones del ejercicio 1.}
+\label{data_ejer_2.1}
+\end{table}
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|cccccc}
+&La fiera & Origen & Rey León & Batman & C.\\\hline
+Aventura 	&	0	&	0	&	1	&	1	&	0	\\
+Animación	&	0	&	0	&	1	&	0	&	0	\\
+Comedia		&	1	&	0	&	0	&	0	&	0	\\
+Drama		&	0	&	0	&	1	&	0	&	1	\\
+Romance		&	1	&	0	&	0	&	0	&	0	\\
+Accion		&	0	&	1	&	0	&	1	&	0	\\
+Sci-fi		&	0	&	1	&	0	&	1	&	0	\\
+Thriller	&	0	&	1	&	0	&	0	&	0	
+\end{tabular}
+\caption{Matriz de características de los items del ejercicio \ref{ejer:2.1}}
+\label{data_ejer_2.1_2}
+\end{table}
+
+\begin{problem}[?]
+\label{ejer:2.1}
+
+Tomando los datos de la matriz \ref{data_ejer_2.1}, nos preguntan:
+
+
+\ppart $KNN$ centrado en la media, tomando $K=1$.
+
+\ppart Recomendación basada en contenidos.
+
+\ppart Evaluación.
+
+
+\solution
+
+\spart 
+Calculamos las medias:
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|ccccc||c}
+&La feria & Origen & Rey León & Batman & C. & Medias\\\hline
+L&0&4&3&1&4&3\\
+C&5&3&1&4&4&3.4\\
+S&0&3&4&0&2&3\\
+A&0&5&1&0&5&3.6
+\end{tabular}
+\caption{Matriz de recomendaciones.}
+\end{table}
+
+Calculamos la similitud de $S$ con la película \textit{Batman} (B) y para ello necesitamos la similitud con su vecino.
+
+\[
+	\hat{r}(S,B) = 3 + \frac{sim(S,L)·(1-2)}{sim(S,L)} = 1
+\]
+
+\spart Lo primero es definir qué características de la película vamos a utilizar como contenido. Las posibilidades son muchas: el director, la sinopsis haciendo tf-idf, los actores, género ...
+
+\paragraph{Rocchio:}
+
+\subparagraph*{Opción no binaria}
+\[
+s = 3 \begin{pmatrix}0\\0\\0\\0\\0\\1\\1\\1\end{pmatrix} +
+4 \begin{pmatrix}1\\1\\1\\1\\0\\0\\0\\0\end{pmatrix}+
+2 \begin{pmatrix}0\\0\\0\\1\\0\\0\\0\\0\end{pmatrix} =
+\begin{pmatrix}4\\4\\4\\6\\0\\3\\3\\3\end{pmatrix}
+\]
+
+\[
+cos(s,F) = ...
+\]
+
+\subparagraph*{Opción binaria}
+
+\[
+s = 
+\begin{pmatrix}0\\0\\0\\0\\0\\1\\1\\1\end{pmatrix} +
+\begin{pmatrix}1\\1\\1\\1\\0\\0\\0\\0\end{pmatrix}+
+\begin{pmatrix}0\\0\\0\\1\\0\\0\\0\\0\end{pmatrix} =
+\begin{pmatrix}1\\1\\1\\2\\0\\1\\1\\1\end{pmatrix}
+\]
+
+Al utilizar opción binaria, la similitud es Jaccard.
+
+
+\[
+	Jaccard(s,Fiera) = \frac{|s\cap F|}{|s\cup F|} = \frac{1}{8}
+\]
+\[
+	Jaccard(s,Batman) = \frac{3}{7}
+\]
+
+\paragraph*{KNN}
+
+Empezamos identificando los 2 vecinos más próximos a \textit{La Fiera}. Vamos a suponer que son \textit{Batman} y \textit{Rey León}.
+
+Todo es exactamente igual que $KNN$ basado en contendio, salvo la similitud entre las películas. Para calcular la similitud entre las películas en un filtrado colaborativo se utilizan los vectores de recomendaciones de los usuarios para las películas. 
+\footnote{Para calcular la similitud entre películas para una recomendación basada en contenidos se utilizan las etiquetas.}
+
+\spart Evaluación:
+
+
+
+\end{problem}
