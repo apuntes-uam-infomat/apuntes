@@ -1,191 +1,305 @@
-% -*- root: ../InvestigacionOperativa.tex -*-
-
-\section{Introducción}
-
-En esta sección, vamos a repasar conceptos y algunas aplicaciones porque de aquí en adelante trabajaremos con estos conceptos.
+\section{Condiciones KTT}
 
 
-\begin{itemize}
-	\item Gradiente.
-	\item Matriz Hessiana.
-	\item Desarrollo de Taylor en varias variables:
-		\[
-			f(\vx) = f(\gor{\vx}) + \grad f(\gor{\vx})^\top (\vx-\gor{\vx}) + (\vx-\gor{\vx})\Hf{\gor{\vx}}(\vx-\gor{\vx}) + \norm{\vx-\gor{\vx}}R(\gor{\vx},\vx-\gor{\vx})
-		\]
-		con $\displaystyle \lim R(\vx,\gor{\vx}) = 0$ ($R$ es el resto).
-\end{itemize}
+\paragraph{Motivación:} Puede ser que los problemas a los que nos enfrentemos no cumplan las condiciones de convexidad estudiadas en el tema anterior. En ese caso, necesitaremos nuevas herramientas, como las condiciones KTT.
+Vamos a intentar relajar las condiciones de convexidad para los problemas que vamos a resolver, encontrando otras condiciones (definidas por Karoush, Kuhn y Tucker) que permiten la identificación de los mínimos de un problema. 
 
-\subsection{Condiciones para óptimos locales}
+En este tema vamos a estudiar tanto problemas generales como problemas convexos en un dominio del problema abierto que incluye todos los puntos que satisfacen las restricciones.
 
-\paragraph{Condición necesaria de primer orden}
-Si $\vx$ es un máximo o mínimo local, entonces $\grad f(\vx) = 0$.
+Consideremos el problema:
 
-Para ver que la condición es necesaria pero no suficiente, podemos pensar en $f(x_1,x_2) = x_1^2 - x_2^2$, cuyo gradiente se anula en $(0,0)$, pero no es un mínimo ni un máximo. Estamos ante un punto de silla (punto de inflexión).
+\begin{ioprob}
+\goal{$\min f(x)$}
+\restrictions{$f_i(x)≤0\;i=1,...,m$}{}{}{}{}{}
+\end{ioprob}
 
 
-\paragraph{Condiciones necesarias de segundo orden} Sea $f$ 2 veces diferenciable en $\gor{\vx}$. Si $\gor{\vx}$ es un mínimo local de $f$, encones:
-\begin{itemize}
-	\item $\grad f(\gor{\vx}) = 0$
-	\item $\Hf{\gor{\vx}}$ semidefinida positiva.
-\end{itemize}
-
-Con el mismo ejemplo anterior podemos ver que es condición necesaria.
-
-\paragraph{Condiciones suficientes} Sea $f$ 2 veces diferenciable en $\gor{\vx}$. Si $\gor{\vx}$ es un mínimo local de $f$, encones:
-\begin{itemize}
-	\item $\grad f(\gor{\vx}) = 0$
-	\item $\Hf{\gor{\vx}}$ definida positiva.
-\end{itemize}
-\begin{proof}
-	Si $\vx$ no es un mínimo local estrico, entonces existe una sucesión $\vx_k \to \gor{\vx}$ con $\gor{\vx_k} ≠ \vx$ tal que $f(\vx_k) ≤ f(\gor{\vx})$.
-
-	Sea \[d_k = \frac{\vx_k - \gor{\vx}}{\norm{\vx_k - \gor{\vx}}}\]
-
-	Las normas están acotadas, y estamos en $\real^n$ y algún argumento de compacidad, podemos tomar una subsucesión convergente de $d_k\to d$, que vamos a llamar $d_k$
-
-	Tomamos el desarrollo de Taylor de $f(\vx_k)$:
-
-	\[
-		f(\vx_k) = f(\gor{\vx}) = f(\gor{\vx}) + \frac{1}{2}\Hf{f(\gor{\vx})}(\vx_k - \gor{\vx}) + \norm{\vx_k - \gvx}^2R(\gx,\gx_k)
-	\]
-
-	\[
-		0≥\frac{f(\vx_k - f(\gx)}{\norm{\vx_k - \gvx}^2} = \frac{1}{2}d_k^t\Hf{f(\gvx)}d_k + R(\gvx,\vx_k)
-	\]
-	Hemos llegado a que $\Hf{f(\gvx)}$ tiene que ser semidefinida negativa.
-\end{proof}
-
-Estas condiciones están bien, pero no son del todo interesantes para este curso, ya que estamos buscando soluciones globales a problemas y todas estas condiciones son locales.
-Vamos a necesitar alguna restricción más sobre $f$ para poder buscar soluciones globales.
-
-\subsection{Funciones convexas}
-
-\begin{defn}[Función\IS convexa]
-Una función $\appl{f}{D}{ℝ}$ es convexa si su dominio $D\subset\real ℝ^n$ es covexa y  $∀\vx,\vy\in D$, $∀λ∈[0,1]$ se verifica:
+\begin{defn}[Condiciones\IS KTT]
+Sean $u_i ≥0$ y el Lagrangiano:
 
 \[
-	f(λ\vx + (1-λ)\vy ≤ λf(\vx) + (1-λ)f(\vy)
-\]
+	L(x) = f(x) + \sum_i u_i f_i(x)
+\] 
+
+\obs Estos $u_i$ utilizados los denominaremos \concept{ultiplicadores} por el \href{https://en.wikipedia.org/wiki/Lagrange_multiplier}{teorema de los multiplicadores de Lagrange}.
+
+Se dice que el punto $\vx$ y el vector de multiplicadores $\vu \in ℝ^m$ verifica las condiciones KTT para un problema $(P)$ si
+
+\begin{align*}
+KKT(\vx) \dimplies \grad L(\vx) = 0 \dimplies \grad f(\vx) + \sum_i u_i\grad f_i(\vx) &=0\\
+f_i(\vx)  &≤ 0 \;\; i=1,...,m\\
+u_i&≥0\;\; i=1,...,m\\
+u_if_i(\vx) &= 0  \;\; i=1,...,m
+\end{align*}
+\end{defn}
+\paragraph{Notación:} $KKT(\vx)$ significa que para $\vx$ existe un vector de multiplicadores tales que verifican las condiciones KTT. De la misma manera, $KTT(\vx,\vu)$ significa que el punto $\vx$ y el vector de multiplicadores satisfacen las condiciones KKT.
+
+Cualquier mínimo local de un problema $(P)$, que también cumpla las cualificación de las restricciones (que definimos a continuación) tiene que cumplir las condiciones KTT. 
+Esto nos puede dar una pista para encontrar mínimos locales en un problema.
+
+
+\begin{defn}[Cualificación\IS de las restricciones]
+Dado un punto fatible $\vx$, sea $I_{\vx} = \{i : f_i(\vx) = 0\}$ el conjunto de restricciones \textbf{activas} en $\vx$.
+
+$\vx$ verifica la cualificación de las restricciones si los vectores $\grad f_i(\vx)$ son linealmente independientes.
 \end{defn}
 
-\obs
-\begin{itemize}
-	\item \concept{Convexidad\IS estricta} requiere $<$ en lugar de $≤$.
-	\item Una función es (estrictamente) cóncava si $-f$ es (estrictamente) convexa.
-	\item $f$ es convexa $\dimplies ∀x,\vec{u}, g(t) = f(x+tu)$ es convexa (en su dominio, es decir $\{t : x+tu\in D\}$)
-	\begin{proof}
-		\[g(λt_1+(1-λ)t_2) = f(x+(λt_1+(1-λt_2)\vu) = ...
-		\]
-	\end{proof}
-\end{itemize}
+Vamos a ver el resultado importante que relaciona estos conceptos:
 
-\begin{example}
-\begin{itemize}
-	\item $f(x) = x^2$ es convexa.
+\begin{itheorem}
+\[
+\left.
+	\begin{array}{c}
+		\vx \text{ mínimo local de } (P)\\
+		\vx \text{ verifica la cualificación de las restricciones}
+	\end{array}
+\right\} \implies KKT(\vx)
+\]
+\end{itheorem}
 
-	Como todavía no hemos visto la definición de convexidad en términos de la segunda derivada, vamos a recurrir a la definición.
-	\begin{proof}
-		\[
-			\left(λx_1 + (1-λ)x_2\right)^2 ≤ λx_1^2 +(1-λ)x_2^2)
-		\]
-	\end{proof}
-	\item $f(\vx) = \max\{x_1,...,x_n\}$ es convexa.
-	\begin{proof}
-		\[f(λ\vx + (1-λ) \vy) = \max\set{λx_1 + (1-λ)y_1,...,λx_n + (1-λ)y_n} ≤ λ\max\{x_k\} + (1-λ)\max\{y_k\} = λf(\vx) + (1-λ)f(\vy)\]
-	\end{proof}
-	\item Las funciones afines $f(x) = A\vx + b$ son cóncavas y convexas.
-	\item Cualquier norma $f(\vx) = \norm{\vx}$ es una función convexa.
-	\item Si $S$ es convexo, la distancia a $S$:
-	\[
-		f(x) = d(x,S) = \inf_{s\in S}\norm{\vx-s}
-	\]
-	es una función convexa.
-
-\end{itemize}
-
-\begin{theorem}[Desigualdad\IS de Jensen]
-Si $\appl{f}{D}{ℝ}$ es convexa, entonces $∀x_1,...,x_n\in D$ y $,λ_1,...,λ_n ≥0$ con $\sum^n λ_i = 1$ se cumple:
-
-\[f\left(\sum^k x_iλ_iy\right) ≤ \sum^k λ_if(x_i)\]
-
-\end{theorem}
 \begin{proof}
-Por inducción sobre $k$.
+Si $\vx$ es un mínimo local de $(P)$ entonces no existe ninguna dirección $d∈ℝ^n$ tal que sin salir del conjunto factible mejoremos el valor objetivo de $\vx$ en esa dirección, es decir:
+
+\[
+	\pesc{\grad f(\vx),d}< 0 \wedge \pesc{\grad f_i(\vx) < 0} ∀ i \in I
+\]
+
+Siendo $I$ el conjunto de las restricciones activas en $\vx$.
+
+Por el teorema Gordan, existen $u_0≥0, u_i≥0, i\in I$ no todos nulos tales que $\pesc{(u_0,\vu),(\grad f, \grad f_i}$
+
+$u_0 >0$ por la cualificación de las restricciones, ya que 
+\[
+	u_0 = 0 \implies \sum u_i\grad f_i (\vx) = 0 
+\]
+con lo que habríamos encontrado una combinación lineal y podríamos concluir que $\grad f_i$ son linealmente dependientes y por hipótesis no puede serlo.
+
+Definimos $\gor{u_i} = \frac{u_i}{u_0}$ si $i\in I$y $\gor{u_i} = 0$ si $i\notin I$. De esta manera tenemos:
+
+\[
+	\gor{u_i} f_i = 0 \impliedby
+	\left\{ 
+		\begin{array}{cc} 
+			i\in I &\implies f_i(\vx) = 0 \\
+			i\notin I &\implies \gor{u_i} = 0
+		\end{array}
+	\right.
+\]
+
+Ahora sólo queda comprobar $KKT(\vx,\gor{\vu})$.
+
 \end{proof}
 
-\obs Podríamos interpretar $λ_i$ como probabilidades y tendríamos:
+Con este teorema, clasificamos todos los mínimos que puede tener un problema en 2 clases disjuntas. \textbt{O cumple la cualificación de las restricciones o KKT}, pero no puede no cumplir ninguna (ni las 2 a la vez).
 
-Si $X$ es una variable aleatoriao que toma los valores $x_i$ con probabilidad $λ_i$, entonces $f(\esp{X})≤\esp{f(X)}$
+\begin{example}
+Determina los puntos que verifican KKT y resuelve el problema:
+
+\begin{ioprob}
+\goal{$\min x_1^2+x_2^2 + 2x_3^2$}
+\restrictions{$2x_1+3x_2+x_3 ≥ 6 \to -2x_1 - 3x_2 - x_3 + 6 ≤0$}{}{}{}{}{}
+\end{ioprob}
+
+Tenemos $\grad f(\vx) = (2x_1,2x_2,4x_3)$, con $f_i = (-2,-3,-1)$
+
+Construimos el "sistema":
+
+\[
+\grad f(\vx) + \sum u_i f_i(\vx) \to 
+\left\{
+	\begin{array}{cc}
+		2x_1-2u = 0&\\
+		-2x_2 - 3u = 0&\\
+		6x_3 - u = 0&\\
+		u≥0, 2x_1+3x_2+x_3≥6 &(Factibilidad)\\
+		u[-2x_1 - 3x_2 - x_3 + 6] = 0 &(Holgura Complementaria)
+	\end{array}\right.
+\]
+
+Y ahora resolvemos el sistema\footnote{No hay ningún algoritmo mejor que ir razonando.}.
+
+\begin{equation}
+\label{KTT:ejemplo1}
+2x_1+3x_2+x_3 > 6 \overset{H.C.}{\to} u=0 \to x_i = 0 \to \neg F
+\end{equation}
+De \ref{KTT:ejemplo1} obtenemos que $2x_1+3x_2 + x_3 = 6$ y nos hemos quitado la desigualdad.
+
+Ahora tenemos un sistema de 4 incógnitas $(x_1,x_2,x_3,u)$ y 4 ecuaciones. Resolviendo el sistema obtenemos:
+
+\[
+	sol. \to (x_1,x_2,x_3,u) = \left( \rfrac{8}{9}, x_1^0,x_2^0,x_3^0\right)
+\]
+
+Llamamos $\gor{\vx} = (x_1^0,x_2^0,x_3^0)$. Hemos encontrado un punto que $KKT(\gor{\vx})$.
+
+Por otro lado: como $\grad f_i(\vx) = (-2,-3,1) ∀\vx$, todos los $\grad f_i$ son linealmente independientes para todos los $\vx$, con lo que todos los puntos cumplen la cualificación de las restricciones.
+
+$\gor{\vx}$ es un punto que cumple la cualificación de las restricciones y es KKT, con lo que es el único mínimo que hay. Como sólo hay un mínimo, éste tiene que ser el mínimo global.
 
 \end{example}
 
-Vamos a ver más condiciones de convexidad de funciones, para no tener que recurrir a la definición.
+\begin{example}
 
-\paragraph{Completar la teoría}
+Resolver gráficamente y determinar los puntos que verifican KKY en el siguiente problema:
+
+\begin{ioprob}
+\goal{$\max 3x_1+x_2$}
+\restrictions{$x_2-(1-x_1)^3≤0$}{$x_1≥0$}{$x_2≥0$}{}{}{}
+\end{ioprob}
+
+Lo primero es escribirlo como problema de minimización para poder utilizar lo visto hasta ahora:
+
+\begin{ioprob}
+\goal{$\min -3x_1-x_2$}
+\restrictions{$x_2-(1-x_1)^3≤0$}{$-x_1≤0$}{$-x_2≤0$}{}{}{}
+\end{ioprob}
+
+Para comprobar KKT, calculamos el Lagrangiano:
+
+\[
+	L(\vx,\vu) = -3x_1 - x_2 + u_0[x_2-(1-x_1)^3] + u_1(-x_1) + u_2(x_2)
+\]
+
+Y construimos el sistema:
+
+\[
+	\left\{
+	\begin{array}{lc}
+		\dpa{L}{x_1} = -3 + 3u_0(1-x_1)^2 - u_1 = 0&(I)\\
+		\dpa{L}{x_2} = -1 * u_0 - u_2 = 0 & (II)\\
+		\left. 
+			\begin{array}{c}
+				u_0[x_2-(1-x_1)^3] = 0\\
+				u_1(x_i) = 0\\
+				u_2(x_2) = 0
+			\end{array}
+			\right\} &(HC)
+	\end{array}
+	\right.
+\]
+
+Y se resuelve.
+
+\end{example}
 
 
-\paragraph{Ejemplos}
-\begin{itemize}
-	\item $f(x) = -\log(x)$ podemos derivar 2 veces y como es positiva, convexa.
-	\item $f(x) = e^{ax}$ es convexa.
-	\item $f(x) = x^a$
-	\subitem $a≤0, a≥1 \to$ convexa.
-	\subitem $0<a<1 \to $ cóncava.
-	\item $f(x) = x^\top Ax + a^\top x+ c$ donde $A$ es simétrica. Queremos ver que $f$ convexa $\dimplies$ $A$ definida positiva.
-	\item La más relevante: $X$ una matrix $n\times p$ y sean $β\in\real^p$ e $y\in\real^n$, entonces:
-	$f(β) = \norm{y-Xβ}$ es convexa, siendo $\norm{·}$ cualquier norma.
+\subsection{KTT con igualdad}
 
-	Esta función es convexa porque es la composición de 2 funciones. $Xβ$ es una función afín y la norma es convexa para cualquier norma. Entonces, como $f(β)$ es una combinación de funciones convexas, es convexa.
-\end{itemize}
+Podemos extender la noción de condición KKT a un problema en el que haya restricciones con igualdad, esto es:
+
+\marginpar{\textcolor{yellow}{Completar de .tex del profesor}}
 
 
 
-\section{Cuasiconvexidad}
+También hay una condición de cualificación de las restricciones y un teorema con el resultado análogo al anterior para problemas con restricciones con igualdad.
 
 
-Aquí faltan bastantes cosas.
+\section{Problema dual}
+
+Podemos definir un problema a partir de uno dado que siempre es convexo y tiene otras propiedades interesantes. En ocasiones es más fácil de resolver y en otras aporta información muy claramente que en el problema inicial no están definidas. 
+
+Vamos a comenzar definiendo la función que da lugar al problema dual:
+
+\begin{defn}[Función\IS lagrangiana]
+Para un problema general (no necesariamente convexo) con $m$ restricciones con desigualdad y $p$ restricciones con igualdad, definimos:
+
+\[
+	L(\vx,\vu,\vv) = f(\vx) + \sum_i^m u_if_i(\vx) + \sum_i^p v_if_i(\vx)
+\]
+\end{defn}
+
+\paragraph{Interpretación:} Vamos a interpretar las restricciones como penalizaciones. Ahora el conjunto factible será todo $\real^n$, pero los puntos que no cumplan una restricción van a ser "penalizados". Definimos la función objetivo:
+
+\[
+	f(\vx) + \sum I_{-}(f_i(\vx)) + \sum I_{0}(f_i(\vx)) \to \left\{ 
+		\begin{array}{c}
+		I_{-} = \left\{
+			\begin{array}{ccc}
+				0 & si & x≤0\\
+				∞ & si & x> 0\\
+			\end{array}\right.\\
+		I_{0} = \left\{
+			\begin{array}{ccc}
+				0 & si & x = 0\\
+				∞ & si & x ≠ 0\\
+			\end{array}\right.
+		\end{array}
+		\right.
+\]
+
+De esta manera hemos agrandado el conjunto factible y tenemos un problema equivalente, pero sin restricciones. Tomando valores interesantes en vez de $I_{-}$ e $I_{0}$, llegaríamos la función lagrangiana.
 
 
-\subsection{Utilidad}
+\begin{defn}[Función\IS dual]
+	\[
+		g(\vu,\vv) = \inf_{x\in D} L(\vx,\vu,\vv)
+	\]
+\end{defn}
 
-La cuasiconvexidad es una propiedad más relajada que al convexidad pero que es condición suficiente para algunos resultados interesantes. Por ejemplo:
+Tomando la función dual, tenemos:
+
+\[
+	g(\vu,\vv) = \inf_{\vx\in D} L(\vx,\vu,\vv) ≤ L(\vx,\vu\vv) = f(x) + \sum u_if_i(\vx) + \sum v_if_i(\vx) \overset{(1)}{≤} f(\vx)
+\]
+
+$(1)$ si $\vx$ es un problema factible.
 
 \begin{prop}
-Mínimo local en función cuasiconvexa es un mínimo global.
+La función dual es una función cóncava (aunque el problema inicial $(PI)$ no sea convexo).
 \end{prop}
 
 \begin{proof}
-Se deja como ejercicio
+\[
+	g(λu_1 + (1-λ)u_2, λu_1 + (1-λ)v_2) = \min \{L(\vx,\vu,\vv)\} = \min \{λL(\vx,u_1,v_1) + (1-λ)L(\vx,u_2,v_2)\} \]
+\[≥ λ\underbrace{\min\{L(\vx,u_1,v_1)\}}_{g(u_1,v_1)} + (1-λ) \underbrace{\min\{L(\vx,u_2,v_2)\}}_{g(u_2,v_2)}
+\]
+\end{proof}
+
+La función dual es una cota inferior del valor óptimo del problema inicial. Podríamos considerar resolver el problema inicial buscando la mejor cota inferior de la función dual. De esta manera, igual llegamos a resolver el mismo problema. 
+Los siguientes resultados nos ayudarán a resolver estas cuestiones:
+
+Por si no nos creemos que sea una cota inferior, vamos a verlo formalmente como teorema (aunque no lo demostremos):
+
+\begin{itheorem}
+Sea $\bar{p}$ el valor óptimo de un problema de optimización cuya función dual es $g(\vu,\vv)$. \textbf{Entonces:} $∀ \vu≥0,∀v, g(\vu,\vv) = \bar{p}$
+\end{itheorem}
+\begin{proof}
+Aunque no lo vamos a demostrar.
 \end{proof}
 
 
+\begin{defn}[Problema\IS dual]
+Sea $g(\vu,\vv)$ la función dual asociada a un problema $(PI)$.
 
-
-\section{Tras la reparación}
-
-\subsection{Resumen}
-
-\begin{table}[hbtp]
-\centering
-\begin{tabular}{c|c|c}
-Primal $\equiv$ (P) & $\begin{array}{c} \min c'x\\Ax = b\\x≥ 0\end{array}$ & $\begin{array}{c} \max c'x\\Ax ≤ b\\x≥ 0\end{array}$\\
-\hline
-Dual $\equiv$ (D) & $\begin{array}{c} \max b'u\\A'u ≥ c\end{array}$ & $\begin{array}{c} \max b'u\\A^\top u ≤ c\\u≥ 0\end{array}$\\
-\end{tabular}
-\caption{Resumen de pasar del problema primal al dual.}
-\end{table}
-
-
-\subsection{Interpretación económica del problema dual}
-
-La solución del problema dual del pastelero es $u = \left(\rfrac{1}{3},0,10\right)$, que son los valores que aparecían en el problema \ref{ejer:pastelero}. Además, vemos también que $\bar{p} = \bar{d} = 775$. Es decir, la dualidad es fuerte. 
-
-Vamos a demostrarlo teóricamente.
-
-
-\begin{defn}[Dualidad\IS fuerte]
-$\bar{p} = \bar{d}$
+\begin{ioprob}
+\goal{$\max g(\vu,\vv)$}
+\restrictions{$u≥0$}{}{}{}{}{}
+\end{ioprob}
 \end{defn}
+
+\begin{itemize}
+	\item Llamaremos \concept{problema\IS primal} al problema inicial.
+	\item El problema dual es \textbf{siempre convexo}, independientemente de que lo sea o no el problema primal al que corresponde.
+	\item Un punto $(\vu,\vv)$ con $\vu≥0$ y $g(u,v) < -∞$ se llama \concept{solución\IS factible dual}.
+	\item Llamamos \concept{solución\IS factible dual óptima} al punto $(\vu,\vv)$ que resuelve el problema dual.
+	\item El problema dual tiene conjunto factible convexo, función cóncava y es un problema convexo\footnote{No tengo muy claro cómo puede ser todo esto al mismo tiempo}. 
+	El problema es que la función dual puede ser muy complicada.
+\end{itemize}
+
+
+\subsection{Problemas duales}
+
+\paragraph{El problema dual de un problema lineal en forma estándar}
+
+...
+
+\paragraph{El dual de un problema lineal en forma canónica}
+
+...
+
+\paragraph{Ejemplos}
+
+...
 
 
 \begin{example} Escribe el dual de:
@@ -200,6 +314,43 @@ $\bar{p} = \bar{d}$
 Aquí no tienen solución ni el factible ni el primal.
 \end{example}
 
+\subsubsection{Resumen}
+
+A continuación, una tabla que resume el cálculo de problemas duales a partir de primales.
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{c|c|c}
+Primal $\equiv$ (P) & $\begin{array}{c} \min c'x\\Ax = b\\x≥ 0\end{array}$ & $\begin{array}{c} \max c'x\\Ax ≤ b\\x≥ 0\end{array}$\\
+\hline
+Dual $\equiv$ (D) & $\begin{array}{c} \max b'u\\A'u ≥ c\end{array}$ & $\begin{array}{c} \max b'u\\A^\top u ≤ c\\u≥ 0\end{array}$\\
+\end{tabular}
+\caption{Resumen de pasar del problema primal al dual.}
+\end{table}
+
+
+
+\subsection{Dualidad fuerte y débil}
+
+
+\begin{defn}[Dualidad\IS débil]
+Sean $\bar{p},\bar{d}$ sendos valores óptimos del problema primal y su dual.
+
+Entonces:\[\bar{p} ≤ \bar{d}\]
+\end{defn}
+
+De aquí podemos sacar 2 conclusiones:
+
+\begin{itemize}
+	\item Si el primal no es acotado ($\bar{p} = -∞$), entonces el dual no es factible.
+	\item Si el dual no es acotado ($\bar{d} = ∞$), entonces el primal no es factible.
+\end{itemize}
+
+
+\begin{defn}[Dualidad\IS fuerte]
+$\bar{p} = \bar{d}$
+\end{defn}
+
+
 \begin{theorem}[Dualidad fuerte para problemas lineales]
 
 Consideremos un problema lineal en forma estándar $(P)$ y el correspondiente problema dual $(D)$. 
@@ -208,6 +359,7 @@ Si $(P)$ tiene solución factible óptima finita, también la tiene $(D)$ y los 
 \end{theorem}
 
 \begin{proof}
+\label{proof:dualidadFuerte}
 \[u' \equiv c_B'B^{-1}\]
 
 \[
@@ -228,24 +380,40 @@ Demostrar que $u$ es factible es lo mismo que demostrar que $z_j ≤ c_j$ en la 
 
 \end{proof}
 
-
-
+\obs
 \[
 \dpa{\bar{z}}{b_i} = u_i
 \]
-Esto demuestra la observación de que la solución del dual del pastelero corresponde al beneficio marginal que gana de más al aumentar en 1 su cantidad de azúcar/mantequilla/harina. Esto es general para cualquier problema lineal.
+
+Es decir, el resultado de incrementar uno de los coeficientes del problema primal, corresponde al valor del multiplicador.
+
+\paragraph{Dualidad fuerte para problemas lineas}
+\begin{itemize}
+	\item La condición de factibilidad de $\bar{u}$ equivale a la de optimalidad de $\gx$.
+	\item Resolver el primal y el dual es equivalente a partir de la relación obtenida en la demostración \ref{proof:dualidadFuerte}:
+	\[
+		\bar{u}^\top =  c_B^\top B^{-1}
+	\]
+\end{itemize}
+
+\subsection{Interpretación económica del problema dual}
+
+La solución del problema dual del pastelero es $u = \left(\rfrac{1}{3},0,10\right)$, que son los valores que aparecían en el problema \ref{ejer:pastelero}. Además, vemos también que $\bar{p} = \bar{d} = 775$. Es decir, la dualidad es fuerte. 
 
 
+En la solución de este problema (\ref{ejer:pastelero}), se preguntaba la modificación del valor objetivo al aumentar en 1 cada una de las cantidades y la solución obtenida se corresponde con la solución del problema dual,
+como nos indicaba la observación anterior.
 
 
+\subsection{Algoritmo simplex-dual}
 
-\subsection{Algortimo simple-dual}
-
-Tenemos un problema de programación lineal que resolvemos con simplex normal. Llegamos a una solución óptima que es factible del dual. Ahora, imaginemos que cambiamos $b$, con lo que las restricciones dejan de cumplirse. El estado de la tabla del simplex se mantiene, salvo la columna de la izquierda. 
+\paragraph{Motivación:} 
+Tenemos un problema de programación lineal que resolvemos con simplex normal. 
+Llegamos a una solución óptima que es factible del dual. Ahora, imaginemos que cambiamos $b$, con lo que las restricciones dejan de cumplirse. El estado de la tabla del simplex se mantiene, salvo la columna de la izquierda. 
 Este es un punto de partida para este algoritmo. Otro caso ventajoso de este algoritmo se da al tener ¿coeficientes negativos?
 
 
-\paragraph{Completar de las traspas}
+
 
 
 \begin{example} Resolver el problema:

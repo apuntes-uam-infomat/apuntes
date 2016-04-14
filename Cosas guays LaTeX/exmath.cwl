@@ -46,6 +46,7 @@
 \convx{arg0}#m
 \afin{arg0}#m
 \Hf{arg0}#m
+\epigraph{arg0}#m
 \gvx#m
 \app#m
 \obs#m
@@ -90,6 +91,7 @@
 \eqreasonup[=]{arg1}#m
 \x#m
 \appl{f}{from}{to}#m
+\extappl{f}{from}{to}{origen}{destino}#m
 \uexists#m
 \sint#m
 \stdf#m

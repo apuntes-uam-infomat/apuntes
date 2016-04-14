@@ -2422,5 +2422,236 @@ La siguiente tabla muestra los resultados obtenidos al trabajar con algunos vect
 \end{tabular}
 \end{itemize}
 \end{multicols}
+\end{problem}
+
+\section{Redes neuronales competitivas}
+\subsection{Introducción}
+
+\begin{problem}[1]
+Show that if the weight vectors are not the same length, it is possible that the weight vector that appears to be closest to the input vector will not be the weight vector that is chosen when the dot product metric is used. More specifically, consider two weight vectors $\vec{w}_1$ and $\vec{w}_2$ with lengths $\norm{\vec{w}_1}$ and $\norm{\vec{w}_2}$ and angles with a horizontal axis of $\theta_1$ and $\theta_2$, respectively. For an arbitrary input vector $\vec{s}$, what is the inequality relation (in terms of the lengths and angles of the three vectors $\vec{w}_1$, $\vec{w}_2$ and $\vec{s}$ that determines when the neuron represented by $\vec{w}_1$ would be chosen as the winner (using the dot product metric). Give an example where this might not be the desired choice.
+
+\solution
+\doneby{Pedro}
+
+A lo largo de esta sección veremos varios algoritmos de redes neuronales en los que, a partir de una entrada dada, tendremos que seleccionar una \emph{neurona ganadora}, siendo esta la que tenga pesos más cercanos a los valores del vector de entrada.
+
+Al comparar qué vector es más cercano pueden emplearse diferentes métricas, en este caso concreto se indica que se empleará el producto escalar. Es decir, dado un vector de entrada se calculará su producto escalar por los vectores de pesos de las (en este caso 2) neuronas y se tomará el valor más grande.
+
+Queda claro que ganará la neurona asociada a los pesos $\vec{w}_1$ siempre que:
+\[\vec{w}_1\cdot \vec{s} \geq \vec{w}_2\cdot \vec{s} \equiv \norm{\vec{w}_1}\cdot \norm{\vec{s}}\cos(\theta_1) \geq \norm{\vec{w}_2}\cdot \norm{\vec{s}}\cos(\theta_2)\]
+
+Si tenemos $\vec{w}_1=(10,0)$ y $\vec{w}_2=(0,1)$ tendremos que, evidentemente, la longitud de estos dos vectores no coincide. Así para el vector $\vec{s}=(0.5,1)$ que, evidentemente, se acerca más a $\vec{w}_2$ tendremos:
+\[\vec{w}_1\cdot \vec{s} = 5 \;\;\; \vec{w}_2\cdot \vec{s} = 1\]
+con lo que el algoritmo escogerá el vector $\vec{w}_1$ como el más cercano.
+\end{problem}
+
+\subsection{Redes de Kohonen autoasociativas}
+\begin{problem}[2]\label{ej:kohonenGraph}
+\ppart  Given a Kohonen self-organizing map with weights as shown in the following
+diagram, use the square of the Euclidean distance to find the cluster unit that
+is closest to the input vector $(.5,.2)$
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/figure4-2.png}
+\end{center}
+
+\ppart
+Using a learning ratio of .2, find the new weights for unit $C_J$
+
+\ppart If units $C_{J-1}$ and $C_{J+1}$ are also allowed to learn the input pattern, find their new weights.
+\solution
+\doneby{Pedro}
+
+\spart
+
+Este apartado se corresponde con el primer paso del proceso de entrenamiento de las redes de Kohonen. Lo único que debemos hacer es comparar las distancias euclídeas entre el vector de entrada y cada uno de los vectores de pesos asociados a cada neurona $C_i$. Así tenemos:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Neurona}  & \textbf{Vector de pesos} & \textbf{Distancia Euclídea}\\
+\hline
+$C_1$ & $(0.3, 0.7)$ & $(0.2)^2 + (0.5)^2 = 0.29$\\
+$C_2$ & $(0.6, 0.9)$ & $(0.1)^2 + (0.7)^2 = 0.5$\\
+$C_3$ & $(0.1, 0.5)$ & $(0.4)^2 + (0.3)^2 = 0.25$\\
+$C_4$ & $(0.4, 0.3)$ & $(0.1)^2 + (0.1)^2 = 0.02$\\
+$C_5$ & $(0.8, 0.2)$ & $(0.3)^2 + (0)^2 = 0.09$\\
+\hline
+\end{tabular}
+\end{center}
+
+La ganadora es la neurona $C_4$.
+
+\spart
+
+El algoritmo de aprendizaje de las redes de Kohonen pasa por actualizar los pesos de la neurona ganadora del proceso llevado a cabo en el apartado anterior. Esta actualización se lleva a cabo según la fórmula:
+\[Δw_{ij} = α(x_i-w_{ij})\]
+
+Así, los pesos de la neurona $C_4$ pasan a ser:
+\[\vec{w}_4 = (0.42, 0.28)\]
+
+\spart
+
+Por último, las redes de Kohonen nos permiten definir un ``radio de influencia'' de modo que las neuronas cercanas a la neurona ganadora también actualizan sus pesos. En este caso concreto este radio es 1 por lo que las neuronas $C_3$ y $C_5$ también actualizan sus pesos empleando la misma regla del apartado anterior. Así tenemos
+\[\vec{w}_3 = (0.18,0.44) \;\;\;\; \vec{w}_5=(0.74,0.2)\]
+
+\end{problem}
+
+\begin{problem}[3]
+Repeat the preceding exercise for the input vector $(.5,.5)$ with $α=.1$
+
+\solution
+\doneby{Pedro}
+
+Consideramos de nuevo la red del ejercicio anterior (sin las modificaciones llevadas a cabo en ese ejercicio) y trabajamos con el nuevo vector de entrada.
+
+\begin{enumerate}
+\item \textbf{Buscamos la neurona de cluster ganadora} comparando la distancia euclídea del vector de entrada con cada uno de los
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Neurona}  & \textbf{Vector de pesos} & \textbf{Distancia Euclídea}\\
+\hline
+$C_1$ & $(0.3, 0.7)$ & $(0.2)^2 + (0.2)^2 = 0.08$\\
+$C_2$ & $(0.6, 0.9)$ & $(0.1)^2 + (0.4)^2 =0.17$\\
+$C_3$ & $(0.1, 0.5)$ & $(0.4)^2 + (0)^2 = 0.2$\\
+$C_4$ & $(0.4, 0.3)$ & $(0.1)^2 + (0.2)^2 = 0.05$\\
+$C_5$ & $(0.8, 0.2)$ & $(0.3)^2 + (0.3)^2 = 0.18$\\
+\hline
+\end{tabular}
+\end{center}
+
+La ganadora vuelve a ser la neurona $C_4$.
+
+\item \textbf{Actualizamos pesos de la neurona ganadora}
+
+\[\vec{w}_4 = (0.41,0.32)\]
+
+\item \textbf{Actualizamos pesos de neuronas cercanas}
+
+\[\vec{w}_3 = (0.14,0.5) \;\;\;\; \vec{w}_5 = (0.77,0.23) \]
+\end{enumerate}
+
+
+\end{problem}
+
+\begin{problem}[4]
+Consider a Kohonen net with two cluster units and five input units. The weigth vectors for the cluster units are
+\[\vec{w}_1 = (1.0,0.8,0.6,0.4,0.2)\]
+and
+\[\vec{w}_2 = (0.2, 0.4, 0.6, 0.8, 1.0)\]
+Use the square of the Euclidean distance to find the winning cluster unit for the input pattern
+\[\vec{x} = (0.5, 1.0, 0.5, 0.0, 0.0)\]
+Using a learning rate of .2, find the new weights for the winning unit.
+\solution
+\doneby{Pedro}
+
+Los cuadrados de las distancias euclídeas en este caso son:
+\[(\norm{\vec{w}_1-\vx})^2 = 0.5\;\;\; (\norm{\vec{w}_2-\vx})^2 = 1.84\]
+
+La neurona ganadora es $C_1$, la asociada al vector de pesos $\vec{w}_1$. Actualizando sus pesos tenemos:
+\[\vec{w}_1 = (0.9, 0.84,0.58,0.32, 0.16)\]
+\end{problem}
+
+\subsection{Redes LVQ (aprendizaje por cuantificación vectorial)}
+\begin{problem}[5]
+Consider an LVQ net with two input units and four target classes: $C_1$, $C_2$, $C_3$ and $C_4$. There are 16 classification units, with weight vectors indicated by the coordinates on the following chart, read in row-column order. For example, the unit with weight vector (0.2,0.4) is assigned to represent Class 3, and the classification units for Class 1 have initial weight vectors of (0.2, 0.2), (0.2, 0.6), (0.6, 0.8), and (0.6, 0.4).
+\begin{center}
+\includegraphics[width=0.5\textwidth]{img/figure4-5.png}
+\end{center}
+Using the square of the Euclidean distance (and the geometry of the diagram, to avoid having to do any distance calculations), determine the changes that occur as you do the following:
+
+\ppart Present an input vector of $(.25, .25)$ representing Class 1. Using a learning rate of $α=0.5$ show which classification unit moves where (i.e., determine its new weight vector)
+
+\ppart Present an input vector of $(0.4,0.35)$ representing Class 1. What happens?
+
+\ppart Instead of presenting the second vector as in part b) present the vector $(0.4,0.45)$ What happens?
+
+\ppart Suppose the training inputs are drawn from the following regions:
+\begin{center}
+\includegraphics[width=0.5\textwidth]{img/figure4-5-d.png}
+\end{center}
+
+From a short-term point of view, which of the second vectors presented -$(0.4,0.35)$ in part b) or $(0.4,0.45)$ in part c)- has better effect in moving the classification units towar their desired positions to represent the input data?
+\solution
+\doneby{Pedro}
+
+El esquema mostrado es una simiplifación del grafo que representa la red neuronal. Podría dibujarse como en el ejercicio \ref{ej:kohonenGraph} teniendo un total de 16 neuronas en la capa de salida, manteniendo 2 en la capa de entrada, y considerando que varias neuronas de salida representan la misma clase. Este método no es más que una \emph{variación de la red neuronal de kohonen}.
+
+\spart
+
+Al presentar un vector de entrada debemos buscar cuál de las 16 neuronas es más cercana consierando la distancia euclídea.
+
+En este caso concreto es sencillo observar que el vector de pesos más cercano al patrón dado es $\vec{w}_1=(0.2,0.2)$.
+
+Ahora llega el momento de ajustar los pesos de la neurona ganadora para lo que debemos tener en cuenta si la clasificación ha sido correcta o no. Puesto que en esta ocasión la clasificación ha sido acertada tenemos
+\[Δ\vec{w}_{j} = α(x-\vec{w}_j)\]
+por lo que el nuevo peso para la neurona será
+\[\vec{w}_1 = (0.225,0.225)\]
+
+\spart
+
+Para el nuevo vector dado es sencillo ver que el vector de pesoso más cercano según la distancia euclídea es $\vec{w}_6 = (0.4,0.4)$.
+
+En esta ocasión la clasificación no es correcta por lo que la actualización del peso de la neurona ganadora viene dada por
+\[Δ\vec{w}_j = -α(x-\vec{w}_j)\]
+Así tenemos
+\[\vec{w}_j = (0.4, 0.425)\]
+
+\spart
+
+La elección de la neurona ganadora no cambia y la clasificación sigue siendo incorrecta. En cambio, la actualización de los pesos daría lugar a:
+\[\vec{w}_j = (0.4, 0.375)\]
+
+\spart
+
+El efecto de ambos vectores es muy similar. Atendiendo al diagrama dada queremos conseguir que los vectores de entrada con coordenadas entre 0 y 0.5 sean clasificados como Class 1. Para lograr esto nos interesa que los pesos de las neuronas Class 1 estén dentro de este intervalo.
+
+Podría considerarse que el segundo vector (el presentado en el partado c)) tiene un mejor efecto ya que se aleja de la posible clasificación errónea de un vector $\vec{s}=(0.5,0.5)$
+
+\end{problem}
+
+\subsection{Counterpropagation}
+
+\begin{problem}[6]
+Consider the following full counterpropagation net:
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/figure4-6.png}
+\end{center}
+Using the input pair
+\[\vec{x} = (1,0,0,0) \;\;\; \vec{y}=(1,0)\]
+perform the first phase of training (one step only). Find the activation of the cluster layer units. Update the weights using a learning rate of .3.
+\solution
+\doneby{Pedro}
+
+En la primera fase presentamos los vectores $\vx=(1,0,0,0)$ y $\vy=(1,0)$ a la red y las neuronas de la capa de cluster (la intermedia) compiten en busca de la que tenga pesos más cercanos al vector de entrada.
+
+\obs Los dos vectores del entrenamiento son considerados como una entrada de 6 coordenadas a la hora de buscar la neurona ganadora.
+
+Así tenemos que las distancias para las neuronas $Z_1$ y $Z_2$ son:
+\[D_1 = 0.2^2+0.8^2+0.2^2+0.2^2+0.5^2+0.5^2 = 1.26\]
+\[D_2 = 0.8^2+0.2^2+0.8^2+0.8^2+0.5^2+0.5^2 = 2.46\]
+con lo que la ganadora es la neurona $Z_1$.
+
+Una vez tenemos localizada la neurona ganadora procedemos a actualizar los pesos de la neurona ganadora según las reglas:
+\[Δv_{ij} = α(x_i-v_{ij})\]
+\[Δw_{ij} = β(y_i-w_{ij})\]
+
+Puesto que sólo nos dan un factor de aprendizaje suponemos que $α=β$ con lo que obtenemos:
+\[\vec{w}_1 = (0.86,0.56,0.14,0.14)\]
+\[\vec{v}_1 = (0.65, 0.35)\]
+\end{problem}
+
+\begin{problem}[7]
+Repreat exercise 6, except use $\vec{x}=(1,0,1,1)$ and $\vec{y}=(0,1)$
+\solution
+\doneby{Pedro}
+
+Volvemos a comparar los cuadrados de las distancias euclídeas obteniendo:
+\[D_1 = 0.2^2+0.8^2+0.8^2+0.8^2+0.5^2+0.5^2 = 2.46\]
+\[D_2 = 0.8^2+0.2^2+0.2^2+0.2^2+0.5^2+0.5^2 = 1.26\]
+
+En esta ocasión la ganadora es la neurona $Z_2$. Tras actualizar los pesos tenemos:
+\[\vec{w}_1 = (0.44,0.14,0.86,0.86)\]
+\[\vec{v}_1 = (0.35,0.65)\]
 
 \end{problem}
