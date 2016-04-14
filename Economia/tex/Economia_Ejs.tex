@@ -769,8 +769,171 @@ Despejando $P_0$ de la ecuación de paridad call-put y sustituyendo $C_0$ por su
 \[ = \frac{K}{(1+r)^N}\left(1-\phi(n_0,N,q) \right) + S_0\left(\phi(n_0,N,q') -1\right)\]
 
 Una vez llegados a este punto basta con ver que
-\[\bar{\phi}(n_0,N,q) = P(X<n_0) = 1- P(x \geq n_0) = 1-\phi(n_0,N,q)\]
+\[\bar{\phi}(n_0,N,q) = P(X<n_0) = 1- P(X \geq n_0) = 1-\phi(n_0,N,q)\]
 con lo que
 \[\left(1-\phi(n_0,N,q) \right) = \left(\bar{\phi}(n_0,N,q) \right) \text{ y } \left(\phi(n_0,N,q') -1\right) = \left(-\bar{\phi}(n_0,N,q') \right)\]
 con lo que obtenemos exactamente la fórmula de la put.
+\end{problem}
+
+\section{Cox-Rubinstein y modelos continuos}
+\begin{problem}[1]
+Este ejercicio se basa en la fórmula de cox-Rubinstein:
+\[C_0 = S_0 \phi(n_0, N,q') - \frac{K}{(1+r)^N}\phi(n_0,N,q)\]
+\ppart Usar dicha fórmula así como la paridad call put $(C_0-P_0=S_0-K/(1+r)^N)$ para obtener la fórmula de valoración de la put:
+\[P_0=\frac{K}{(1+r)^N}\bar{\phi}(n_0,N,q)-S_0\bar{\phi}(n_0,N,q')\]
+siendo
+\[\bar{\phi}(n_0,N,q)=P(X<n_0) \text{ para } X \approx B(N,q)\]
+
+\ppart Demostrar que
+\[\phi(n_0,N,q)=Q(S_n>K)\]
+siendo $Q$ la probabilidad riesgo neutro
+
+\ppart Sea $Q'$ la probabilidad martingala asociada al activo con riesgo. Usando dicho activo como numerario, demostrar que
+\[\phi(n_0,N,q') = Q'(S_N>K)\]
+Interpretar la fórmula de Cox-Rubinsteins en función de $Q$ y $Q'$
+
+\ppart Suponiendo que $Q'(S)n>K)\to N(d_+)$ y $Q(S_n>K)\to N(d_-)$ cuando $N$ tiende a infinito establecer las fŕomulas de valoración para las opciones call digitales \textbf{asset-or-nothing} y \textbf{cash-or-nothing} cuyos flujos finales vinen dados por:
+\[C_T^{\text{AoN}}=S_T\ind_{\{S_T\geq K\}}\;\;\; C_T^{\text{CoN}}=\ind_{\{S_T\geq K\}}\]
+
+\ppart Si las opciones put correspondientes vienen dadas por los siguientes flujos finales:
+\[P_T^{\text{AoN}}=S_T\ind_{\{S_T< K\}}\;\;\; P_T^{\text{CoN}}=\ind_{\{S_T<K\}}\]
+escribir las relaciones de paridad call-put asociadas.
+\solution
+
+\doneby{Pedro}
+
+\spart
+
+Este apartado es el ejercicio 6 de la hoja anterior.
+
+\spart
+
+Recordemos que, por definición,
+\[\phi(n_0,N,q) = \sum_{n_0}^N{N \choose n} q^n(1-q)^{N-n} = \mathbb{P}(X\geq n_0) \text{ siendo } X\approx B(N,q)\]
+
+Ya tenemos que $q$ era la probabilidad de tomar el camino ascendente en cada nodo del árbol binomial. Por definición tenemos que
+\[n_0 = \left[\frac{\ln (K/S_0\cdot b^N)}{\ln(a/b)} \right] +1\]
+a partir de ese valor de $n_0$ tendremos $a^nb^{N-n}S_0 > K$ (basta con atender al desarrollo de la fórmula de Cox-Rubinstein de las transparencias)
+
+Por tanto, al considerar $\mathbb{P}(X\geq n_0)$ estamos considerando $\mathbb{P}(a^nb^{N-n}S_0\geq K)$ que es equivalente a $\mathbb{P}(S_N>K)$ siendo $\mathbb{P}$ la probabilidad riesgo neutro.
+
+\spart
+
+La probabilidad martingala asociada al activo con riesgo era aquella que se obtenía al considerar un activo con riesgo como numerario, es decir, descontamos respecto a este activo (en lugar de la cuenta bancaria) y forzamos que el valor actual coincida con el esperado tras el descuento.
+
+Hasta ahora teníamos
+\[C_0 = \frac{1}{(1+r)^N}\sum_{n=0}^Nq^n(1-q)^{N-n}(a^nb^{N-n}S_0-K)^+\]
+
+Puesto que ahora queremos cambiar el numerario, llamando $S^1$ al nuevo numerario tendremos:
+\[C_0 = \frac{1}{S^1_N}\sum_{n=0}^N(q')^n(1-q')^{N-n}(a^nb^{N-n}S_0-K)^+\]
+siguiendo el mismo razonamiento empleado en los apuntes llegaríamos a que
+\[\phi(n_0,N,q') = \sum_{n=n_0}^Nq^n(1-q)^{N-n}S_0a^nb^{N-n}\]
+Ahora, con el mismo razonamiento del apartado anterior, es sencillo ver que
+\[\phi(n_0,N,q') = \mathbb{P}(S_N>K) \text{ siendo } \mathbb{P} \text{ la nueva probabilidad martingala}\]
+
+Combinando lo demostrado en este apartado y el anterior podemos escribir la fórmula Cox-Rubinstein como:
+\[C_0=S_0Q'(S_N>K) - \frac{K}{(1+r)^N}Q(S_N>K)\]
+
+\spart
+
+Apoyándonos en la fórmula de Cox-Rubinstein que escribimos al final del apartado anterior podemos ver que
+\[C_T^{\text{AoN}}=S_TN(d_+)-\frac{K}{(1+r)^N}N(d_-) \text{ y } C_T^{\text{CoN}}=1N(d_+)-\frac{K}{(1+r)^N}N(d_-)\]
+
+\spart
+
+La relación pardida call put es:
+\[C_0-P_0=S_0-K/(1+r)^N\]
+Para el caso del \textbf{asset-or-nothing} tenemos la fórmula que acabamos de escribir y para el \textbf{cash-or-nothing} tenemos
+\[C_0-P_0=\frac{1}{(1+r)^N}\]
+
+\end{problem}
+
+\begin{problem}[2]
+En este ejercicio partimos de la fórmula de Black-Scholes para una call europea:
+\[C_0(S_0,K,σ,r,T)=S_0N(d_+)-Ke^{-rT}N(d_-) \]
+\[\text{   con } d_{\pm} = \frac{1}{σ\sqrt{T}}\left( \ln \frac{S_0}{Ke^{-rT}}\pm \frac{1}{2}σ^2T\right)\]
+
+\ppart Establecer la fórmula equivalente para la put europea
+\ppart Calcular todas las sensibilidades de la put europea
+\ppart Demostrar que $C_0(S_0,S_0,σ,r,T)=S_0C_0(1,1,σ,r,T)$
+\solution
+\doneby{Pedro}
+
+\spart
+
+Nos apoyamos en la paridad call put para obtener el equivalente de Cox-Rubinstein para la put. Esto se corresponde con el primer apartado del ejercicio anterior\footnote{En este caso estamos en tiempo continuo pero la situación es equivalente} de donde obtenemos:
+\[P_0 = Ke^{-rT}(1-N(d_-))-S_0(1-N(d_+)) = S_0N(d_+) -Ke^{-rT}N(d_-)+Ke^{-rT} -S_0 \]
+
+\spart
+
+Las \textbf{sensibilidades} son las derivadas parciales del precio respecto de los distintos parámetros.
+
+Para calcular las derivadas nos apoyamos en que los dos primeros sumandos de la fórmula para $P_0$ coinciden con los de la fórmula de Black-Scholes por lo que una parte de las derivadas ya la tenemos calculada en los apuntes.
+\begin{itemize}
+\item \textbf{Delta}
+\[\partial_S = N(d_+)-1\]
+\item \textbf{Gamma}
+\[\partial^2_S = \frac{1}{xσ\sqrt{T}}N'(d_+)\]
+\item \textbf{Teta}
+\[\partial_T = \frac{xσ}{2\sqrt{T}}N'(d_-) + Ke^{-rT}rN(d_-)-rKe^{-rT}\]
+\item \textbf{Vega}
+\[\partial^2_T = x\sqrt{T}N'(d_+)+r^2Ke^{-rT}\]
+\item \textbf{Ro}
+\[\partial_r = TKe^{-rT}N(d_-)-TKe^{-rT}\]
+\item \textbf{Lambda}
+\[\partial^2_r = -e^{-rT}N(d_-)+T^2Ke^{-rT}\]
+\end{itemize}
+
+\spart
+
+Al considerar $S_0=K$ tendremos
+\[d_{\pm} = \frac{1}{σ\sqrt{T}}\left( \ln \frac{S_0}{S_0e^{-rT}}\pm \frac{1}{2}σ^2T\right) = d_{\pm} = \frac{1}{σ\sqrt{T}}\left( \ln \frac{1}{e^{-rT}}\pm \frac{1}{2}σ^2T\right)\]
+con lo que $d_{\pm}$ y con ellos $N(d_{\pm})$ ya no depende de $S_0$ ni de $K$.
+
+Por tanto
+\[C_0(S_0,S_0,σ,r,T) = S_0N(d_+)-S_0e^{-rT}N(d_-) = S_0\left(N(d_+)-e^{-rT}N(d_-) \right) = S_0 C_0(1,1,σ,r,T)\]
+\end{problem}
+
+\begin{problem}[3]
+Las \textbf{Collars} (o \textbf{Boston}) tienen un payoff de la siguiente forma:
+\[h_c(S_T) = \min\left(\max(S_T,K_1),K_2 \right)\text{ con } K_2 > K_1 > 0\]
+Representar el payoff y calcular el valor de la opción.
+\solution
+\doneby{Pedro}
+
+La gráfica queda:
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}
+\addplot[domain=0:4,blue] {4};
+\addplot[domain=4:6,blue] {x};
+\addplot[domain=6:10,blue] {6};
+\draw[dotted] (axis cs:4,7) -- (axis cs:4,3);
+\draw[dotted] (axis cs:6,7) -- (axis cs:6,3);
+\draw[dotted] (axis cs:-1,4) -- (axis cs:11,4);
+\draw[dotted] (axis cs:-1,6) -- (axis cs:11,6);
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+donde las lineas discontinuas marcan los valores de $K_1$ y $K_2$.
+
+El valor de la opción con vencimiento $T$ viene dad por:
+\[K_1e^{-rT}\mathbb{P}(S_T\leq K_1) + S_0 \mathbb{P}(K_1 < S_T \leq K_2) + K_2e^{-rT}\mathbb{P}(K_2 < S_T)\]
+
+\end{problem}
+
+\begin{problem}[4]
+Consideramos el payoff de una \textbf{breakforward}
+\[h_{BF}(S_T) = \max(S_T,F)-K\]
+con
+\begin{itemize}
+\item $F=S_0e^{rT}$ es el precio a plazo $T$ del subyacente
+\item $K>F$ es elegida de manera que la prima sea nula.
+\end{itemize}
+
+Representar el payoff y calcular el valor de la opción
+
+\solution
+
 \end{problem}
