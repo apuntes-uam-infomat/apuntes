@@ -322,3 +322,7 @@
 \wsconvs#m
 \wsconvs[]#m
 \wsconvs[][\infty]#m
+\dual#m
+\dual[X]#m
+\ddual#m
+\ddual[X]#m
