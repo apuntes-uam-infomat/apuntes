@@ -137,6 +137,7 @@
 \vg#m
 \va#m
 \vb#m
+\vc#m
 \vu#m
 \vn#m
 \vv#m
@@ -322,3 +323,7 @@
 \wsconvs#m
 \wsconvs[]#m
 \wsconvs[][\infty]#m
+\dual#m
+\dual[X]#m
+\ddual#m
+\ddual[X]#m
