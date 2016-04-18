@@ -2001,7 +2001,7 @@ Consider an autoassociative net with the bipolar step function as the activation
 \[T_2: \ (1,1,1,-1,0,0)\cdot W_{1,2} = (4,4,4,0,-2,-2) \implies (1,1,1,-1,-1,-1) \]
 \end{problem}
 
-\subsection{Memoria asociativa bidireccional}
+\subsection{Memoria asociativa bidireccional}\label{sec:MemoriaAsociativaBidireccional}
 
 \begin{problem}[10]
 \ppart Use the Hebb rule as described in Section 3.5.2 to find the weight matrix to store
@@ -2424,6 +2424,100 @@ La siguiente tabla muestra los resultados obtenidos al trabajar con algunos vect
 \end{multicols}
 \end{problem}
 
+\section{Resumen de contenidos Teóricos}
+\subsection{Algoritmos de aprendizaje}
+En esta sección el único algoritmo de aprendizaje con el que vamos a trabajar es la \textbf{regla Hebb}. Esta regla ya ha sido estudiada anteriormente para el caso en que sólo tuviéramos una neurona de salida. A continuación mostramos el algoritmo correspondiente cuando hay varias neuronas de salida.
+\begin{enumerate}
+\item Inicializamos los pesos a 0.
+\item Para cada patrón de entrenamiento:
+\begin{enumerate}
+\item Tomamos la salida esperada $y$
+\item Ajustamos los pesos según la regla:
+\[w_{ij} = w_{ij} + x_i\cdot y_j\]
+\end{enumerate}
+\end{enumerate}
+
+\obs En los problemas de asociación de patrones no empleamos bias.
+
+Para cada par entrada-salida de patrones de entrenamiento calcularíamos una matriz de pesos para, finalmente, sumar todas estas matrices.
+
+Como se mostró en el primer ejercicio de la sección anterior los pesos obtenidos por la regla Hebb coinciden con los obtenidos al realizar el producto de la matriz cuyas entradas son las entradas de los patrones de entrenamiento y la matriz cuyas filas son las salidas de dichos patrones.
+
+\subsection{Memorización de los patrones de entrenamiento}
+
+Es importante observar que si los vectores con los que construimos la matriz de pesos son perpendiculares el ŕesultado obtenido será ópimo.
+
+Sea $W$ la matriz de pesos es sencillo ver
+\[W = \sum_{p=1}^Ps(p)^Tt(p)\]
+donde $s(p)$ son los vecotres de entrada y $t(p)$ las salidas esperadas de los patrones de entrenamiento.
+
+Si ahora atendemos a la salida de la red para el patrón $s(i)$ tenemos:
+\begin{equation}\label{eq:inputW}
+s(i)W = \sum_{p=1}^Ps(i)s(p)^Tt(p)
+\end{equation}
+pero, puesto que los vectores son perpendiculares tenemos $s(i)s(j)^T=0, \forall i\neq j$. Así
+\[s(i)W = s(i)s(i)^Tt(p) = \norm{s(i)}^2t(p)\]
+por tanto la salida es el vector $t(p)$\footnote{La cuenta muestra que obtenemos un múltiplo que, al pasar por la función de activación, dará como salida el vector $t(p)$.}
+
+\obs Si los patrones escogidos para el entrenamiento no son perpendiculares, el aprendizaje no siempre será perfecto puesto que el sumatorio de la ecuación \ref{eq:inputW} tendrá más de un término no nulo con lo que el resultado perfecto mostrado se verá afectado por ciertas desviaciones que pueden llegar a obtener una predicción errónea.
+
+
+\subsection{Regla delta}
+Además de la regla de Hebb también puede emplearse la regla delta para el aprendizaje. Extendiendo la regla delta estudiada anteriormente tenemos una función de ajuste de pesos:
+\[Δw_{ij} = α(t_j-y_j)f'(y_{in_j})\]
+
+\subsection{Tipos de asociaciones}
+\begin{defn}[Red neuronal heteroasociativa]
+Red neuronal asociativa en la que los vectores de entrada y los de salida son diferentes sin necesidad de tener si quiera el mismo número de coordenadas.\\
+\end{defn}
+
+\begin{defn}[Red neuronal autoasociativa]
+Red neuronal asociativa en la que las entradas y las salidas de los vectores de entrenamiento coinciden. La idea de estas redes es \textbf{memorizar} una serie de vectores para después comprobar a cuál de ellos se asemejan más las entradas futuras.\\
+
+A fin de incrementar la capidad de generalizar de la red es habitual forzar que la diagonal principal de la matriz de pesos esté compuesta por 0s. La idea intuitiva tras esto es evitar que la matriz de pesos acabe siendo la matriz identidad que, evidentemente, almacena perfectamente todos los vectores pero no generaliza nada.
+\end{defn}
+
+\subsection{Capacidad máxima de aprendizaje}
+
+\begin{theorem}
+Dada una red neuronal \textbf{autoasociativa} donde los vectores de entrada sean perpendiculares, bipolares y tengan dimensión $n$, puede memorizar $n-1$ vectores. No obstante, tratar de almacenar $n$ vectores da lugar a una matriz incapaz de reconocer ningún vector.
+\end{theorem}
+
+Para el lector curioso, la demostración de este resultado se encuentra en el libro de la asignatura en las páginas 127, 128 y 129.
+
+\subsection{Red de Hopfield}
+\begin{defn}[Red de Hopfield]
+Red neuronal autoasociativa e iterativa donde las neuronas se encuentran totalmente interconectadas con pesos simétricos sin que ninguna neurona se conecte con ella misma.\\
+
+Para almacenar una serie de patrones se emplea la regla de Hebb.
+\end{defn}
+
+\subsubsection{Algoritmo}
+La distinción de estas redes reside en la forma en que se aplican sobre un cierto vector de entrada. Esta aplicación es:
+
+\begin{enumerate}
+\item Establecemos las activaciones iniciales (los valores iniciales de cada neurona) según el vector de entrada $\vx$ que estemos considerando.
+\item Para cada neurona $\vy_i$
+\begin{enumerate}
+\item \[y_{in_j} = x_i +\sum_j y_jw_{ji}\]
+\item \[y_i = \left\{ \begin{array}{lll}
+1 & iff & y_{in_j}> \theta_i \\
+y_i & iff y y_{in_j} = \theta_i \\
+0 & iff & y_{in_j}<\theta_i
+\end{array}\right.\]
+\end{enumerate}
+\end{enumerate}
+
+Es evidente que el orden en el que se itere sobre las neuronas es importante puesto que el cambio del valor de $y_i$ en una neurona afecta a la entrada neta de las demás. Este orden es escogido de manera aleatoria y el proceso se repite hasta que se completa una iteración sin cambios.
+
+\subsection{Red bidireccional asociativa}
+\begin{defn}[Red bidireccional asociativa]
+Estas redes neuronales tienen estructura similar a las heteroasociativas salvo que las conexiones entre las neuronas de entrada y las de salida son bidireccionales.
+
+Tal y como se describe y muestra en los ejercicios de la sección \ref{sec:MemoriaAsociativaBidireccional} la idea del proceso de aplicación consiste en enviar los datos de una capa a la otra de manera iterativa hasta llegar a una convergencia.
+\end{defn}
+
+
 \section{Redes neuronales competitivas}
 \subsection{Introducción}
 
@@ -2655,3 +2749,5 @@ En esta ocasión la ganadora es la neurona $Z_2$. Tras actualizar los pesos tene
 \[\vec{v}_1 = (0.35,0.65)\]
 
 \end{problem}
+
+
