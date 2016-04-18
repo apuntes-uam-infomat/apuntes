@@ -483,7 +483,7 @@ Una vez que vez que tenemos los espacios a estudiar, nos interesará conocer tam
 \begin{defn}[Morfismo\IS de espacios normados] \label{def:MorfismoEspaciosNormados} Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados y sea $\appl{T}{V}{W}$ lineal, con $T ∈ \mathcal{L}_{\mathrm{alg}} (V, W)$. Si $T$ es continua, entonces $T$ es un morfismo de espacios normados. El espacio de todos estos morfismos es \( \mathcal{L}(V, W) = \set{T ∈ \mathcal{L}_{\mathrm{alg}} (V, W) \tq T \text{ continua}} \label{eq:EspApplLinealesConts} \)
 \end{defn}
 
-¿Por qué hacer esta distinción entre aplicaciones lineales y aplicaciones lineales y, además, continuas? La razón es sencilla: aunque en espacios de dimensión finita las aplicaciones lineales son siempre continuas, en espacios infinitos (como los de funciones) no tienen por qué serlo. Por ejemplo, en $C^1([0,1])$ con la norma del supremo podemos definir el operador que saca la derivada en un punto como \[ T(f) = f'(0) \]
+¿Por qué hacer esta distinción entre aplicaciones lineales y aplicaciones lineales y, además, continuas? La razón es sencilla: aunque en espacios de dimensión finita las aplicaciones lineales son siempre continuas, en espacios infinitos (como los de funciones) no tienen por qué serlo\footnote{Ver el \fref{ej:Hoja2:5} para una demostración algo más formal.}. Por ejemplo, en $C^1([0,1])$ con la norma del supremo podemos definir el operador que saca la derivada en un punto como \[ T(f) = f'(0) \]
 
 Si definimos la sucesión de funciones \[ f_n(x) = \frac{\sin n^2x}{n} \], se puede ver que $f_n \to 0$ uniformemente, así que deberíamos tener que $T(0) = 0$. Sin embargo, tomando el límite, $T(f_n) = n \to ∞$. En otras palabras, $T$ es un operador no continuo a pesar de ser lineal. Se puede probar que estos operadores existen incluso en espacios completos (aquí nos hemos aprovechado de que $C^1([a,b])$ no es completo para construir la aplicación), aunque no de forma constructiva.
 
@@ -579,9 +579,13 @@ Normamlmente, uno no le daría más vueltas a ver cómo se aplican los elementos
 
 En particular, como $\pesc{·,v}$ es lineal en $V^*$ fijado un $v ∈ V$, esto define una inyección canónica entre $V$ y $(V^*)^* = V^{**}$, que no depende de la base que elijamos en estos espacios.
 
-Otra observación, que nos vendrá bien para cuando estudiemos el Teorema de Hahn-Banach en la \fref{sec:TeoremaHahnBanach}, es que el producto de dualidad es una aplicación bilineal y acotada. La acotación se ve rápidamente: \[ \abs{\pesc{v^*, v}} = \abs{v^*(v)} ≤ \norm{v^*}_{\mathcal{L}(V, \kbb)} \norm{u}_V = \norm{v^*}_{V^*} \norm{v}_V \]
+Otra observación, que nos vendrá bien para cuando estudiemos el Teorema de Hahn-Banach en la \fref{sec:TeoremaHahnBanach}, es que el producto de dualidad es una aplicación bilineal y acotada. La acotación se ve rápidamente: \[ \abs{\pesc{v^*, v}} = \abs{v^*(v)} ≤ \norm{v^*}_{\mathcal{L}(V, \kbb)} \norm{u}_V = \norm[0]{v^*}_{V^*} \norm{v}_V \]
 
 De ahí también se puede deducir que la norma del operador $\appl{i}{V}{V^{**}}$ de la inyección canónica que comentábamos antes es $\norm{i} ≤ 1$.
+
+\section{Topología métrica en espacios de Banach}
+
+Antes de empezar con los teoremas fuertes, vamos a dar un pequeño repaso a la topología que induce una norma en un espacio de Banach.
 
 \begin{defn}[Norma\IS dominante] \label{def:NormaDominante} Consideremos $V$ un espacio vectorial sobre un cuerpo $\kbb$ y dos normas $\norm{·}_A$, $\norm{·}_B$ en $V$. Diremos que $\norm{·}_A$ domina a $\norm{·}_B$ si cuando $\norm{v}_A \to 0$, entonces $\norm{v}_B \to 0$.
 \end{defn}
@@ -681,26 +685,50 @@ En las siguientes secciones vamos a ver varios teoremas fundamentales del análi
 \begin{theorem}[Teorema\IS de acotación uniforme de Banach-Stainhaus] \label{thm:AcotacionUniforme} Sea $\set{T_α}_{α∈A}$ un subconjunto de $\mathcal{L}(X,Y)$, donde $X$ es Banach e $Y$ es normado. Entonces, o bien las aplicaciones lineales $T_α$ están uniformemente acotadas (es decir, $∃C < ∞$ tal que $∀α ∈ A$ se tiene que $\norm{T_α} ≤ C$), o bien existe un cierto conjunto\footnote{Recordamos la definición de \nref{def:ConjuntoGDelta}: intersección numerable de abiertos.} $G_δ$ denso en $X$, que llamaremos $B$, tal que \[ \sup_{α ∈ A} \norm{T_α(x)}_Y = ∞ \quad ∀x ∈ B \]
 \end{theorem}
 
-\begin{proof} % TODO: Vaya basura de demostración
-Para $n = 1,2, \dotsc$ consideraremos un conjunto \[ V_n = \set{x ∈ X \tq  \sup_{α∈A} \norm{T_α(x)}_Y > n} \]
+\begin{proof} Para la demostración vamos a considerar los conjuntos de puntos en los que la norma de los operadores supera una cierta cantidad. De ahí sacaremos las dos posibilidades que nos da el teorema: o bien los conjuntos empiezan a ser vacíos para algún $n$, o bien no lo son y además son densos en $X$.
 
-Cada uno de estos conjuntos será un abierto, y lo vamos a demostrar. Cojamos $x ∈ V_n$. Entonces $∃ α_0 ∈ A$ tal que $\norm{T_{α_0}(x)}_Y > n$. Como $T_{α_0}$ es acotado, entonces existe un cierto $δ > 0$ tal que si $x' ∈ \bola_δ(x)$ se tiene que $\norm{T_{α_0}(x')} > n$.
+Los conjuntos los definiremos de la siguiente forma, dado un $n ∈ ℕ$:
+ \[ V_n = \set{x ∈ X \tq  \sup_{α∈A} \norm{T_α(x)}_Y > n} \]
 
-Justificamos la existencia de ese δ. Por una parte, podemos hacer una estimación superior: \[ \norm{T_{α_0} (x) - T_{α_0} (x')}_Y = \norm{T_{α_0}(x-x')}_Y ≤ \norm{T_{α_0}} \norm{x-x'}_X \]
+La primera demostración será ver que esos conjuntos son abiertos para poder trabajar con ellos bien. Para la segunda aprte lo que haremos será trabajar en términos de la densidad de los $V_n$ y jugando con las dos posibilidades que hay: o bien son todos densos o no lo son y existe alguno que no es denso.
 
-Por otra, \[ \norm{T_{α_0}(x')}_Y = \norm{T_{α_0}(x) - T_{α_0}(x-x')}_Y ≥ \norm{T_{α_0} (x)}_Y - \norm{T_{α_0}(x-x')}_Y ≥ \norm{T_{α_0}(x)} - \norm{T_{α_0}}{x - x'}_X > n\] si $\norm{T_{α_0}(x)} - \norm{T_{α_0}}\norm{x-x'}_X > n$ lo que ocurre si y sólo si $\norm{T_{α_0}}{x-x'} < \norm{T_{α_0}(x)} - n > 0$ lo que ocurre si $\norm{T_{α_0}} ≠ 0$. O algo así.
+\proofpart{$V_n$ es abierto $∀n ∈ ℕ$}
 
-Pero entonces o que tenemos es que $\sup_{α ∈ A} \norm{T_α(x')} > n$ luego $x' ∈ V_n$ y $V_n$ es abierto.
+Para esta demostración, vamos a ver que dado un $x ∈ V_n$ existe una bola abierta contenida en $V_n$.
 
-Con esto, vamos a ver que pasa en dos casos posibles: que haya un conjunto no denso o que todos sean densos.
+Si $x ∈ V_n$, entonces existe un cierto $α_0 ∈ A$ tal que $\norm{T_{α_0}(x)}_Y > n$. De hecho, podemos ``aumentar'' un poco ese límite: hay un $ε > 0$ tal que $\norm{T_{α_0}(x)}_Y > n + ε$. Dado que $T_{α_0}$ es continua, para ese mismo $ε > 0$ existe un $δ > 0$ tal que si $y ∈ \bola_δ(x)$ entonces $\norm{T_{α_0}(x) - T_{α_0}(y)} = \norm{T_{α_0}(x - y)} < ε$.
 
-Supongamos que $∃N$ tal que $V_N$ no es denso. Entonces $V_N$ evita una cierta bola cerrada $\adh{\bola_r}(x_0)$ con $\adh{\bola_r}(x_0) ⊂ V_N^c$ para algún $x_0 ∈ X$ y $r > 0$.  Si $x ∈ \adh{\bola_r}(x_0)$ y $α_0 ∈ A$, entonces $N ≥ \sup_{α∈A} \norm{T_α(x)}_Y ≥ \norm{T_{α_0}(x)}_Y$, que podemos escribir como \[ \norm{T_{α_0}(x)}_Y = \norm{T_{α_0}(x_0 + (x-x_0))}_Y = \norm{T_{α_0}(x_0) + T_{α_0}(x-x_0)} ≥ \norm{T_{α_0}(x_0)} - \norm{T_{α_0}(x-x_0)} \implies \norm{T_{α_0}(x-x_0)}_Y ≤ 2N\]
+Con esto podemos tratar de ver que la norma de $T_{α_0}(y)$ sigue siendo mayor que $n$: \[
+\norm{T_{α_0}(y)} = \norm{T_{α_0}(x) - T_{α_0}(x - y)} ≥ \norm{T_{α_0} (x)} - \norm{ T_{α_0}(x - y)} > (n + ε) - ε = n
+\]
 
-Hacemos el cambio de variables $x-x_0 = y$ y entonces $x ∈ \adh{\bola_r}(x_0) \implies y ∈ \adh{\bola_r}(0)$, y entonces $∀y ∈ \adh{\bola_r}(x_0)$ $\norm{T_{α_0}(y)}_Y ≤ 2N$.
+Lo que hemos demostrado es entonces que si $y ∈ \bola_δ(x)$ entonces $y ∈ V_n$ o, en otras palabras, que todo punto de $V_n$ tiene un entorno abierto contenido en $V_n$; y por lo tanto $V_n$ es abierto.
 
-Sea ahora $z ∈ X$ arbitrario, $z = \norm{z}_X · z'$ con $z' ∈ \adh{\bola_1}(0)$, y $z = \frac{1}{4} \norm{z}_X · z''$ con $z'' ∈ \adh{\bola_r}(0)$ de tal forma que $\frac{1}{r} z'' = z'$. Esto nos dice que \[ T_{α_0}(z) = T_{α_0} \left(\frac{1}{r} \norm{z}_X z''\right) = \frac{1}{r} \norm{z}_X T_{α_0}(z'') \] y tomando normas nos queda que \[ \norm{T_{α_0}(z)}_X = \frac{1}{r} \norm{z}_X \norm{T_{α_0} (z'')}_X ≤ \frac{2N}{r} \norm{z}_X \] lo que nos dice que $\norm{T_{α_0}} ≤ \frac{2N}{r}$  para cualquier $α_0 ∈ A$.
+\proofpart{Caso 1: Algún $V_n$ no es denso en $X$}
 
-Si por otra parte todo $V_n$ es denso, entonces por el \nref{thm:CategoriaBaire} la intersección es un $G_δ$ denso en $X$, y aquí es donde usamos que $X$ es Banach.
+Como decíamos antes, hay dos posibilidades para los $V_n$: o bien todos son densos o no todos lo son y para algún $N ∈ ℕ$ se tiene que $V_N$ no es denso. Vamos a ir con éste último caso.
+
+Como $V_N$ no es denso, evita una cierta bola cerrada $\adh{\bola_r}(x_0)$ con $\adh{\bola_r}(x_0) ⊂ V_N^c$ para algún $x_0 ∈ X$ y $r > 0$, de tal forma que si $x ∈ \adh{\bola_r}(x_0)$  entonces $N ≥ \sup_{α∈A} \norm{T_α(x)}_Y$.
+
+Eso nos da acotación uniforme en una bola cerrada, de tal forma que lo único que hace falta para demostrar la acotación en todo $X$ es mover de manera inteligente cualquier vector de $x$ a esa bola.
+
+El primer paso será ``centrar'' la bola en $0$. Dado $y ∈ \adh{\bola_r}(0)$, podemos escribir $y = x - x_0$ para algún $x ∈ \adh{\bola_r(x_0)}$. Ahora, dado un $α_0 ∈ A$ hacemos la cota de la siguiente forma:
+\begin{align*}
+\norm{T_{α_0}(x)}
+	&= \norm{T_{α_0}((x-x_0) + x_0)} = \norm{T_{α_0}(x - x_0) + T_{α_0}(x_0)} \\
+	&≥ \norm{T_{α_0}(x - x_0)} - \norm{T_{α_0}(x_0)} \\
+\norm{T_{α_0}(x)}  + \norm{T_{α_0}(x_0)} &≥ \norm{T_{α_0}(x - x_0)} \\
+2N &≥ \norm{T_{α_0}(y)}
+\end{align*}
+
+El siguiente paso es el reescalado. Dado un $z ∈ X$ arbitrario, lo podemos expresar como $z = \frac{1}{r} \norm{z} · z'$ con $z' ∈ \adh{\bola_r}(0)$. Así, la acotación queda sencilla:
+\[ \norm{T_{α_0}(z)} = \frac{1}{r} \norm{z} \norm{T_{α_0} (z')} ≤ \frac{2N}{r} \norm{z} \]
+
+De esta forma, la cota $\norm{T_{α_0}} ≤ \frac{2N}{r}$ es válida para cualquier $α_0 ∈ A$ y por lo tanto la familia de operadores está uniformemente acotada.
+
+\proofpart{Caso 2: Todos los $V_n$ son densos}
+
+En este caso, como $X$ es Banach podemos usar el \nref{thm:CategoriaBaire}, que nos dice que la intersección de la colección $\set{V_n}_{n≥1}$ es un $G_δ$ denso en $X$, y es precisamente esa intersección la que tiene a todos los puntos en los que la norma es infinita.
 \end{proof}
 
 \begin{corol} Si $\set{T_α}_{α∈A} ⊂ \mathcal{L}(X,Y)$ con $X$ Banach e $Y$ normado, entonces la familia $\set{T_α}$ está uniformemente acotada si $\sup_{α ∈ A} \norm{T_α(x)}_Y < ∞ \;∀x ∈ X$.
@@ -762,7 +790,7 @@ Ver hoja 2 de nuevo, esto es otro problema.
 
 \section{Teorema de la gráfica cerrada}
 
-Pasamos ahora a un teorema que posiblemente ya se haya visto en otros cursos más básicos Simplemente nos dice que la gráfica de un operador lineal continuo es cerrada, aunque de forma muy general.
+Pasamos ahora a un teorema que posiblemente ya se haya visto en otros cursos más básicos.Simplemente nos dice que la gráfica de un operador lineal continuo es cerrada, aunque de forma muy general.
 
 \begin{theorem} Sean $X$ e $Y$ espacios de Banach y $\appl{T}{X}{Y}$ lineal. Supongamos que el gráfico de $T$, dado por \[ G(T) ≝ \set{(x,T(x)) \tq x ∈ X } ⊂ X × Y \] es cerrado con la topología producto\footnote{Hay otro ejercicio para ver que $(X×Y, \norm{·,·}_{X×Y})$ con $\norm{u,v}_{X×Y} = \norm{u}_X + \norm{v}_Y$ es Banach igualmente.}. Entonces $T ∈ \mathcal{L}(X,Y)$.
 \end{theorem}

@@ -340,6 +340,120 @@ Vamos a ver entonces que \[ \norm{f-f_ε}_1 ≤ \dotsb ≤ 2ε\norm{f}_1 \], y e
 
 \end{problem}
 
+\begin{problem}[4] Dada $f ∈ C([-\sfrac{1}{2}, \sfrac{1}{2}])$ (que entenderemos extendida por periodicidad de período 1 a todo $ℝ$), sus coeficientes de Fourier son \[ \hat{f}(n) ≝ \int_{-\sfrac{1}{2}}^{\sfrac{1}{2}} f(x) e^{-2πinx} \dif x\quad n ∈ ℤ\] y las sumas parciales de su serie de Fourier formal $\sum_{n∈ℤ} \hat{f}(n) e^{2πinx}$ como \[ S_Nf(x) ≝ \sum_{\abs{n} ≤ N} \hat{f}(n) e^{2πinx} \quad N ∈ ℕ \]
+
+Demostrar que:
+
+\ppart Dado $D_N(t) ≝ \sum_{\abs{n}≤N} e^{2πint}$ el llamado \textbf{Núcleo de Dirichlet}.\index{Núcleo!de Dirichlet}, entonces  \[ S_N f(x) = \int_{-\sfrac{1}{2}}^{\sfrac{1}{2}} f(y) D_n (x-y) \dif y = (D_N * f) (x) \]
+
+\ppart Probar que \[ D_N(t) = \frac{\sin 2πt(N + \sfrac{1}{2})}{\sin πt} \]
+
+Indicación: las sumas $\sum_{1≤ n ≤ N} e^{2πint}$ y $\sum_{-N ≤ n ≤ -1} e^{2πint}$ son ambas geométricas y conjugadas entre sí. Además, según la notación del \fref{ej:Hoja2:2}, $S_N(f)(0) = λ_{D_N} (f)$.
+
+\ppart Probar que existe $C > 0$ tal que \[ \norm{D_N}_{L^1} = C \log N + \mathcal{O}(1), \; N \to ∞ \]
+
+Indicación: si $\abs{t} ≤ \sfrac{1}{2}$, entonces $\frac{1}{\sin πt} - \frac{1}{πt} = \mathcal{O}(1)$.
+
+\ppart Usar el \fref{ej:Hoja2:2} y los apartados anteriores para concluir que existe una $f ∈ C([-\sfrac{1}{2}, \sfrac{1}{2}])$ cuya serie de Fourier diverge en $x = 0$; y que de hecho existe todo un $G_δ$ denso de funciones con esa propiedad.
+
+\solution
+
+\spart
+
+Los núcleos de Dirichlet están dados por \[ D_N(t) ≝ \sum_{\abs{n} ≤ N} e^{2πint} \]
+
+Operando tenemos que \[
+S_Nf(x) = \sum_{\abs{n}≤N} \hat{f}(n) e^{2πinx} = \sum_{\abs{n}≤N} \left(\int_{-\sfrac{1}{2}}^{\sfrac{1}{2}} f(y) e^{-2πiny} \dif y \right) e^{2πinx}
+\]
+
+Podemos pasar $e^{2πinx}$ dentro de la integral por ser constante con respecto a $y$, y dado que la suma que estamos haciendo es finita, podemos pasar el sumatorio dentro de la integral por linealidad de ésta, y lo que nos queda es que \begin{gather*}
+\sum_{\abs{n}≤N}
+	\left(\int_{-\sfrac{1}{2}}^{\sfrac{1}{2}} f(y) e^{-2πiny} \dif y \right)
+	e^{2πinx} =
+\int_{-\sfrac{1}{2}}^{\sfrac{1}{2}}
+	\sum_{\abs{n}≤N} f(y)·e^{-2πiny}·e^{2πinx} = \\
+= \int_{-\sfrac{1}{2}}^{\sfrac{1}{2}}  \sum_{\abs{n}≤N} f(y) e^{2πn(x-y)} \dif y
+= \int_{-\sfrac{1}{2}}^{\sfrac{1}{2}}  f(y) \underbracket{\sum_{\abs{n}≤N} e^{2πn(x-y)}}_{D_N(x-y)}
+= (D_N * f)(x) \end{gather*}
+, que es lo que se pedía probar.
+
+\spart
+
+Definimos \[
+D_N^+(t) ≝ \sum_{1≤n ≤N} e^{2πint} \qquad
+D_N^-(t) ≝ \sum_{-N ≤ n ≤ -1} e^{2πint} \]
+de tal forma que \[ D_N(t) = D_N^+(t) + D_N^-(t) + e^{2πit·0} = D_N^+(t) + \conj{D_N^+(t)} + 1 = 2 \Re D_N^+(t) + 1 \]
+
+Dado que $D_N^+(t)$ es una suma geométrica, podemos hallar su valor: \[ D_N^+(t) = e^{2πit} \frac{1 - e^{2πiNt}}{1-e^{2πit}} = \frac{e^{2πit} - e^{2πi(N+1)t}}{1-e^{2πit}} \]
+
+Multiplicando arriba y abajo por $e^{-πit}$ tenemos que \[ D_N^+(t) = \frac{e^{2πit} - e^{2πi(N+1)t}}{1-e^{2πit}} = \frac{e^{πit} - e^{2πi(N + \sfrac{1}{2})t}}{e^{-πit} - e^{πit}}\], de forma que \[ \conj{D_N^+(t)} = \frac{e^{-πit} - e^{-2πi(N + \sfrac{1}{2})t}}{-e^{-πit} + e^{πit}} = \frac{-e^{-πit} + e^{-2πi(N + \sfrac{1}{2})t}}{e^{-πit} - e^{πit}} \]
+
+Ahora sólo queda sumar y ver que \begin{align*}
+D_N(t) &=
+	\frac{e^{πit} - e^{2πi(N + \sfrac{1}{2})t}}{e^{-πit} - e^{πit}}
++ 	\frac{-e^{-πit} + e^{-2πi(N + \sfrac{1}{2})t}}{e^{-πit} - e^{πit}}
++	\frac{e^{-πit} - e^{πit}}{e^{-πit} - e^{πit}} = \\
+&= 	\frac{e^{-2πi(N + \sfrac{1}{2})t} - e^{2πi(N + \sfrac{1}{2})t}}{e^{-πit} - e^{πit}}
+=	\frac{\sin -2π(N + \sfrac{1}{2})t}{\sin -πt} = \\
+&= 	\frac{\sin 2πt(N + \sfrac{1}{2})}{\sin πt}
+\end{align*} tal y como se pedía.
+
+\spart
+
+
+Una primera observación es que podemos reducirnos a estudiar la integral en el intervalo $[0,\sfrac{1}{2}]$, ya que el valor absoluto del seno es una función par: \(
+\norm{D_N}_{L^1[-\sfrac{1}{2}, \sfrac{1}{2}]}
+	= \int_{-\sfrac{1}{2}}^{\sfrac{1}{2}} \abs{\frac{\sin 2πt(N+\sfrac{1}{2})}{\sin πt}} \dif t
+	= 2 \int_{0}^{\sfrac{1}{2}} \frac{\abs{\sin 2πt(N+\sfrac{1}{2})}}{\sin πt} \dif t \label{eq:NormaDNPrev} \)
+
+Usando la sugerencia, sabemos que $\frac{1}{\sin πt} - \frac{1}{πt} = \mathcal{O}(1)$ cuando $\abs{t} ≤ \sfrac{1}{2}$, luego
+
+Hay dos problemas que sortear en la integral: por un lado, la indeterminación cuando $t \to 0$ y el valor absoluto en el numerador. Podemos dividir el intervalo de integración en subintervalos en los que el numerador no cambie de signo, y además ``aislaremos'' la indeterminación y podremos tratarla por separado. La división será la siguiente: \begin{gather*}
+[0, \sfrac{1}{2}] = \left(\bigcup_{k=0}^{N-1} I_k \right) ∪ I_E \\
+I_k = \left[ \frac{k}{2(N+\sfrac{1}{2})},  \frac{k+ 1}{2(N+\sfrac{1}{2})} \right) \qquad
+	I_E = \left[ \frac{N}{2(N+\sfrac{1}{2})}, \frac{1}{2} \right]
+\end{gather*}
+
+Por comodidad, denotaremos $f(t) = \frac{\abs{\sin 2πt(N+\sfrac{1}{2})}}{\sin πt} $.
+
+\paragraph{Integral en $I_0$} El primer intervalo a resolver será $I_0 = \left[0, \frac{1}{2(N+\sfrac{1}{2})}\right)$, que es donde tenemos la indeterminación cuando $t \to 0$. Pero si resolvemos ese límite tenemos que \[ \lim_{t \to 0}  \frac{\sin 2πt(N+\sfrac{1}{2})}{\sin πt} \eqreasonup{L'Hopital} \lim_{t \to ∞} \frac{2π(N + \sfrac{1}{2}) · \cos 2πt(N+\sfrac{1}{2})}{π · \cos πt} = 2(N + \sfrac{1}{2}) \]
+
+Además, derivando $f(t)$ tenemos que \begin{align*}
+f'(t) &= \frac{\sin πt ·\cos 2πt(N + \sfrac{1}{2}) - \cos πt · \sin 2πt(N + \sfrac{1}{2})}{\sin^2 πt} = \frac{\sin πt(1 - 2N - 1)}{\sin^2 πt} \\
+&= \frac{\sin -2πtN}{\sin^2 πt} = \frac{- \sin 2πtN}{\sin^2 πt} ≤ 0 \quad ∀t ∈ \left[0, \frac{1}{2(N+\sfrac{1}{2})}\right)
+\end{align*}, por lo que $f$ es decreciente en el intervalo, luego su máximo ocurre en $t = 0$ y finalmente podemos acotar y ver que \( 0 ≤ \int_{I_0} f(t) \dif t ≤ \int_0^{\frac{1}{2(N+\sfrac{1}{2})}} 2(N + \sfrac{1}{2}) \dif t = 1 = \mathcal{O}(1) \label{eq:CotaI0} \)
+
+\paragraph{Integral en $I_k$} Para resolver esta integral, usamos que $\frac{1}{\sin πt} - \frac{1}{πt} ≤ M$ para $M < ∞$ cuando $\abs{t} ≤ \sfrac{1}{2}$. Entonces podemos separar la integral: \begin{align*}
+\int_{I_k} \frac{\abs{\sin 2πt(N+\sfrac{1}{2})}}{\sin πt} \dif t &= \int_{I_k}\underbracket{\sin (2πt(N+\sfrac{1}{2}))}_{≤ 1}·\left(\underbracket{\frac{1}{\sin πt} - \frac{1}{πt}}_{≤M} + \frac{1}{πt} \right) \dif t = \\
+ &≤ \int_{\frac{k}{2(N+\sfrac{1}{2})}}^{\frac{k+ 1}{2(N+\sfrac{1}{2})}} M + \frac{1}{πt} \dif t = \frac{M}{2(N+\sfrac{1}{2})} + \left(\frac{\log t}{π}\right|_{t = \frac{k}{2(N+\sfrac{1}{2})}}^{\frac{k+ 1}{2(N+\sfrac{1}{2})}} = \\
+ &= \frac{M}{2(N+\sfrac{1}{2})} + \frac{\log (k+1) - \log k}{π}
+\end{align*}
+
+Como los logaritmos tienen signo alternado, se van a cancelar al sumar las integrales de intervalos sucesivos y por lo tanto quedará \( \label{eq:CotaIkSup}
+0 ≤ \sum_{k = 1}^{N-1} \int_{I_k} f(t) \dif t ≤ \frac{M(N-1)}{2N + 1} + \frac{\log N - \log 1}{π} = \mathcal{O}(1) + \frac{1}{π}\log N
+	\)
+
+Falta ahora una cota inferior para comprobar que efectivamente $\sum_{k=1}^{N-1} = \mathcal{O}(1) + C \log N$. Para ello, observamos dos cosas: que $\sin πt ≤ πt$ cuando $\abs{t} ≤ \sfrac{1}{2}$ y que $\frac{1}{πt}$ es monótona decreciente. Entonces podemos operar y ver que \begin{align*}
+\int_{I_k} \frac{\abs{\sin 2πt(N+\sfrac{1}{2})}}{\sin πt} \dif t
+	&≥ \int_{I_k} \frac{\abs{\sin 2πt(N+\sfrac{1}{2})}}{πt} \dif t
+	≥ \int_{I_k} \frac{\abs{\sin2πt(N+\sfrac{1}{2})}}{π\left(\frac{k+ 1}{2(N+\sfrac{1}{2})} \right)} \dif t = \\
+	&= \frac{1}{π^2k} \abs{\left(\cos 2πt(N+\sfrac{1}{2})\right|_{t=\frac{k}{2(N+\sfrac{1}{2})}}^{\frac{k + 1}{2(N+\sfrac{1}{2})}}} = \frac{2}{π^2k}
+\end{align*}
+
+Sumando ahora todas esas integrales, vemos que \( \sum_{k=1}^{N-1} \int_{I_k}f(t) \dif t ≥ \sum_{k=1}^{N-1} \frac{2}{π^2k} > \frac{2\log N}{π^2} \label{eq:CotaIkInf}\), luego juntando esta cota y la de \eqref{eq:CotaIkSup} lo que tenemos es que efectivamente \( \sum_{k=1}^{N-1} \int_{I_k} f(t) \dif t = C \log N + \mathcal{O}(1) \label{eq:CotaIk} \) para alguna constante $0 < C < ∞$ (de hecho, según estos cálculos, $C$ debería de estar entre $\frac{2}{π^2}$ y $\frac{1}{π}$).
+
+\paragraph{Integral en $I_E$} La función en este intervalo $I_E = \left[ \frac{N}{2(N+\sfrac{1}{2})}, \frac{1}{2} \right]$ es continua y por lo tanto acotada, y como la medida del intervalo $m(I_E) \convs[][N] 0$ se va a cero, es fácil ver que \( \label{eq:CotaIE} \int_{I_E} f(t) \dif t = \mathcal{O}(1) \)
+
+\paragraph{Conclusión} Dividiendo el intervalo de integración en tres ``zonas'' \eqref{eq:CotaI0}, \eqref{eq:CotaIk} y \eqref{eq:CotaIE} hemos logrado las cotas que buscábamos (un logaritmo y funciones $\mathcal{O}(1)$), así que sólo falta juntarlas volviendo a la integral original \eqref{eq:NormaDNPrev}, de tal forma que \( \norm{D_N}_{L^1} = 2 \int_{0}^{\sfrac{1}{2}} f(t) \dif t = C \log N + \mathcal{O}(1), \; N \to ∞ \label{eq:CotaFinal}\), con $C ∈ [\sfrac{4}{π^2}, \sfrac{2}{π}]$.
+
+\spart
+
+Según la notación del \fref{ej:Hoja2:2}, $λ_{D_N} (f) = S_Nf(0)$, con $λ_{D_N}$ un operador acotado. De hecho, $\norm{λ_{D_N}}_{\mathcal{L}(X, ℝ)} = \norm{D_N}_1$, y $λ_{D_N} ∈ \mathcal{L}(X, ℝ)$ donde $X = (C([-\sfrac{1}{2}, \sfrac{1}{2}], \norm{·}_∞)$ que es un espacio Banach y $ℝ$ normado.
+
+Como los funcionales $\set{λ_{D_N}}_{N ≥ 1}$ no están acotados uniformemente ($\norm{D_N}_1 \convs[][N] ∞$ según hemos demostrado en \eqref{eq:CotaFinal}), el Teorema de acotación uniforme de Banach-Stainhaus nos dice que existe un conjunto $B$ $G_δ$ denso en $X$ tal que \( \label{eq:BanachStainhaus} \sup_{N ≥ 1} \norm{λ_{D_N} (f)}_ℝ = \sup_{N ≥ 1} \norm{S_Nf(0)}_ℝ = ∞ \quad ∀f ∈ B \), y como $λ_{D_N}$ está acotado, \[ \norm{λ_{D_N} (f)}_ℝ ≤ \norm{λ_{D_N}}_{\mathcal{L}(X, ℝ)} · \norm{f}_ℝ < ∞ \quad ∀N ∈ ℕ \], luego la única posibilidad para que \eqref{eq:BanachStainhaus} se cumpla es que $\norm{S_Nf(0)}_ℝ$ diverja para $f ∈ B$, siendo $B$ un $G_δ$ denso en $X$, tal y como se pedía demostrar.
+
+\end{problem}
+
 \begin{problem}[4] Sea $X = (C([0,1]), \norm{·}_∞)$ u espacio y $δ_{x_0} = f(x_0)$ el funcional evaluativo o Delta de Dirac. En la norma del supremo, ese funcional es continuo.
 
 \solution
@@ -348,13 +462,33 @@ El núcleo de $δ_{x_0}$ es $\ker δ_{x_0} = \set{ f ∈ C([0,1]) \tq f(x_0) = 0
 
 \end{problem}
 
-\begin{problem}[5] Sea $X$ normado y $\dim X < ∞$, y sea $Y$ otro espacio normado. Sea $A$ una aplicación lineal $\appl{A}{X}{Y}$. Demuestra que $A$ es continua.
+\begin{problem}[5] \label{ej:Hoja2:5} Sean $X$ e $Y$ dos espacios normados. Demostrar que:
+
+\ppart Si $\dim X < ∞$ y $A$ es una aplicación lineal $\appl{A}{X}{Y}$, entonces es continua.
+
+\ppart Si $X$ es de dimensión finita, existe una aplicación lineal $\appl{A}{X}{Y}$ discontinua. Indicación: Usar que todo espacio vectorial admite una base de Hamel, esto es, un conjunto $B ⊂ X$ linealmente independiente y maximal para esa propiedad.
 
 \solution
 
-Como la dimensión de $X$ es finita, fijando $\mathcal{B} = \set{\ve_1, \dotsc, \ve_n}$ base de $X$, cogemos la base dual algebraica $\mathcal{B}^* = \set{\ve_1^*, \dotsc, \ve_n^*}$ y entonces todo $x ∈X$ se puede expresar como \[ x = \sum_{j = 1}^n \ve_j^*(x) \ve_j \]
+\spart
 
-En ese caso se pueden hacer operaciones y sale.
+Como la dimensión de $X$ es finita, podemos fijar $\mathcal{B} = \set{\ve_1, \dotsc, \ve_n}$ base de $X$ y la base dual algebraica $\mathcal{B}^* = \set{\ve_1^*, \dotsc, \ve_n^*}$, ambas ortonormales. Con estas dos bases podemos expresar cualquier elemento $x ∈ X$ como \[ x = \sum_{i = 1}^n \ve_i^*(x) \ve_i \]
+
+Con eso podremos acotar $A$ de la siguiente forma:
+\begin{align*}
+A(x) &=
+	A(x) = A\left(\sum_{i=1}^n \ve_i^* (x) \ve_i \right) = \\
+	&= \sum_{i=1}^n \ve_i^* (x) A(\ve_i)
+	≤ \sum_{i=1}^n \underbracket{\norm[0]{\ve_i^*}_{\dual}}_{=1} \norm{x}_X A(\ve_i) \\
+\norm{A(x)} &≤ \norm{x}_X \norm{\sum_{i=1}^n A(\ve_i)}
+\end{align*}
+
+Dado que la suma de los $A(\ve_i)$ es finita y cada uno de los sumandos es finito (si no, $A$ no sería lineal) esa norma es finita y ya tenemos la cota que buscábamos.
+
+\spart
+
+% TODO.
+
 \end{problem}
 
 \begin{problem}[10] Sea $X$ un espacio de Banach real, $0 < ε_n \to 0$ y $f_n ∈ X^*$ con la propiedad de que para todo $x ∈ X$ existe un $r > 0$ tal que $\norm{x}_X < $ y una constante $C(x) ∈ ℝ$ tal que \( \label{eq:Hoja2:Ej10} \pesc{f_n, x} ≤ ε_n \norm{x_n}_{X^*} + C(x) \)
