@@ -2750,4 +2750,108 @@ En esta ocasión la ganadora es la neurona $Z_2$. Tras actualizar los pesos tene
 
 \end{problem}
 
+\section{Resumen de contenidos Teóricos}
+\subsection{Maxnet}
+La redes \concept{maxnet} permiten encontrar el máximo entre una sirie de valores. Se componen de un número variable de neuronas que actúan a su vez como entradas y salidas. Cada neurona se conecta con todas las demás con un peso negativo -ε y consigo misma con peso 1.
 
+La función de activación es
+\[f(x) = \left\{\begin{array}{ll} x & \text{ sii } x > 0 \\ 0 & \text{ en otro caso } \end{array} \right.\]
+
+Una vez ``alimentamos'' la red con un vector de entrada iteramos en la red hasta que todos los pesos se vuelven 0 excepto uno. La neurona con valor no nulo es considerada la ganadora y su entrada será el máximo de todas las entradas.
+
+\obs Esta red neuronal puede no tener mucho valor en si misma pero se utiliza a menudo como parte del proceso de otras redes neuronales más complejas.
+
+\subsection{Sombrero mejicano}
+Toma su nombre de el parecido que hay entre el grafo que representa esta red neuronal, que podemos observar en \ref{figure:mexicanHat} y el típico sombrero mejicano.
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/mexicanHat.png}
+\label{figure:mexicanHat}
+\end{center}
+
+En esta red definimos un radio de proximidad tal que las neuronas dentro de ese radio ejercen un refuerzo positivo. Del mismo modo definimos un segundo radio (mayor que el anterior) donde las neuronas provocan un refuerzo negativo. Por último, las neuronas más allá de este segundo radio no provocan ningún efecto sobre la neurona en cuestión. El algoritmo es el siguiente:
+
+\begin{enumerate}
+\item Inicializamos los parámetros: $t_{\text{max}}$, máximo de ejecuciones; $R_1$ radio de refuerzo positivo; $C_1$ refuerzo positivo; $R_2$ radio de refuerzo negativo y $C_2$ refuerzo negativo.
+\item Inicializamos los pesos:
+\[w_k = C_1 \; \text{ para } k = 0,1,...,R_1\]
+\[w_k = C_2 \; \text{ para } k = R_1+1,...,R_2\]
+\item Inicializamos $\vx\_old=\vec{0}$.
+\item Inicializamos $\vx=\vec{s}$ siendo $\vec{s}$ el patrón de entrada
+\item Mientras no alcancemos el máximo de iteraciones:
+\begin{enumerate}
+\item Calculamos la entrada neta de cada neurona
+\[\vx_i = C_1 \sum_{k=-R_1}^{R_1}\vx\_old_{i+k} + C_2 \sum_{k=R_1+1}^{R_2}\left(\vx\_old_{i+k}+\vx\_old_{i-k}\right)\]
+\item Aplicamos la \textbf{función de activación}
+\[\vx\_old_i = \min(x\_max, \max(0,\vx_i))\]
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Red Hamming}
+La \concept{red Hamming} es una red para la clasificación de vectores que emplea la distancia Hamming para localizar el vector más cercano, es decir, busca el vector con más componentes comunes al vector dado.
+
+Esta red funciona mediante el siguiente algoritmo, donde $n$ es el número de neuronas de entrada, $m$ es el número de neuronas de salida y $\vec{e}(j)$ es el $j$-ésimo vector de entrenamiento:
+\begin{enumerate}
+\item Para almacenar los $m$ vectores de entrenamiento inicializamos los pesos
+\[w_{ij} = \frac{\vec{e}_i(j)}{2}\]
+y los bias
+\[b_j = \frac{n}{2}\]
+\item Para cada vector de entrada $\vx$
+\begin{enumerate}
+\item Calculamos la entrada neta a cada neurona de salida
+\[\vy\_in_j = b_j + \sum_i \vx_iw_{ij}\]
+\item Empleamos una \textbf{maxnet} sobre las neuronas de salida hasta encontrar un ganador
+\end{enumerate}
+\end{enumerate}
+
+\obs La idea de estas redes es que cada neurona de salida tenga ``almacenado'' un vector de entrenamiento. La neurona ganadora será aquella que almacenara el vector más similar al vector de entrada.
+
+\subsection{Redes de Kohonen}
+Las redes de kohonen son redes auto-organizativas que asumen una estructura topológica en sus neuronas, es decir, tienen las nociones de cercanía/lejanía entre ciertas neuronas.
+
+Cada una de las $n$ neuronas de entrada está conectada a todas las $m$ neuronas de salida. Su funcionamiento es \emph{similar} al de las redes hamming salvo que las neuronas cercanas a una dada afectan a su peso.
+
+El entrenamiento se lleva a cabo mediante el siguiente algoritmo:
+\begin{enumerate}
+\item Inicializamos los pesos (por ejemplo mediante la regla Hebb para que memorice los primeros patrones)
+\item Fijamos un factor de aprendizaje y radios de vecindad (como con las redes de sobrero mejicano)
+\item Mientras no se de la condición de parada
+\begin{enumerate}
+\item Para cada vector de entrada $\vx$
+\begin{enumerate}
+\item Para cada neurona de salida calculamos
+\[D(j)=\sum_i (w_{ij}-x_i)^2\]
+\item Buscamos el mínimo de os $D(j)$ que tendrá índice $J$
+\item Para todas las neuronas ``cercanas'' a $\vy_J$:
+\[Δw_{ij} = α(x_i-w_{ij})\]
+\end{enumerate}
+\item Actualizamos factor de aprendizaje
+\item Reducimos el radio de vecindad
+\end{enumerate}
+\end{enumerate}
+
+\obs El factor de aprendizaje se reduce lentamente en cada iteración.
+
+\subsection{Redes LVQ (aprendizaje por cuantificación vectorial)}
+Se trata de un método de clasificación de patrones en el que cada unidad representa una clase o categoría. Una vez entrenada, una red de este tipo clasifica un vector de entrada asignándole la misma clase que la neurona de salida cuyo vector de pesos es más cercano al patrón de entrada.
+
+La arquitectura de estas redes es la misma que la de las redes de Kohonen salvo que \textbf{no supone ninguna estructura topológica}. El entrenamiento se lleva a cabo mediante el siguiente algoritmo:
+
+\begin{enumerate}
+\item Inicializamos los pesos
+\item Mientras no se de la condición de parada
+\begin{enumerate}
+\item Para cada vector de entrada $\vx$
+\begin{enumerate}
+\item Encontrar la neurona de salida que minimiza
+\[\norm{\vx - \vec{w}_j}\]
+es decir, la neurona cuyos pesos de entrada más se acercan al vector $\vx$.
+\item Actualizar el peso como sigue
+\[Δ\vec{w}_j = \left\{\begin{array}{ll}α(\vx - \vec{w}_j) & \text{ si la predicción fue correcta} \\ -α(\vx-\vec{w}_j & \text{ si falló}\end{array} \right. \]
+\end{enumerate}
+\item Reducir el factor de aprendizaje
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Contrapropagación}
+\textcolor{red}{TODO}
