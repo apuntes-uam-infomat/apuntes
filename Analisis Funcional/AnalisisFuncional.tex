@@ -1,4 +1,4 @@
-\documentclass[bibnumbers, palatino]{apuntes}
+\documentclass[palatino]{apuntes}
 
 \title{Análisis Funcional}
 \author{Guillermo Julián Moreno}
@@ -11,7 +11,7 @@
 \usepackage{tikztools}
 
 \setlist{itemsep=1pt, topsep=5pt}
-\bibliographystyle{plainnat}
+\bibliographystyle{alpha}
 % --------------------
 
 \begin{document}
@@ -462,7 +462,7 @@ La cuestión es que sobre este espacio, la $p$-norma no es una norma sino una se
 
 En otras palabras, consideramos que dos funciones son la misma si son iguales salvo en un conjunto de medida 0. Ahora podemos tomar el cociente y definir el espacio $L^p$ con el que trabajaremos habitualmente.
 
-\begin{defn}[Espacio\IS $L^p(X)$] Dado \meas un espacio de medida y $\sim$ la relación de equivalencia de \eqref{eq:RelEquivMedidacero}, definimos \[ L^p(X) = \quot{\mathcal{L}^p(X)}{\sim} \] o, en otras palabras, el espacio de clases de funciones que sólo difieren en un conjunto de medida 0.
+\begin{defn}[Espacio\IS $L^p(X)$] \label{def:EspacioLp} Dado \meas un espacio de medida y $\sim$ la relación de equivalencia de \eqref{eq:RelEquivMedidacero}, definimos \[ L^p(X) = \quot{\mathcal{L}^p(X)}{\sim} \] o, en otras palabras, el espacio de clases de funciones que sólo difieren en un conjunto de medida 0.
 \end{defn}
 
 Ahora, la $p$-norma sí es una norma ($\norm{f}_p = 0$ si y sólo si $f(x) = 0$ en casi todo punto, que es un único elemento en $L^p$) y por lo tanto $L^p(X)$ es un espacio normado.
@@ -483,7 +483,7 @@ Una vez que vez que tenemos los espacios a estudiar, nos interesará conocer tam
 \begin{defn}[Morfismo\IS de espacios normados] \label{def:MorfismoEspaciosNormados} Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados y sea $\appl{T}{V}{W}$ lineal, con $T ∈ \mathcal{L}_{\mathrm{alg}} (V, W)$. Si $T$ es continua, entonces $T$ es un morfismo de espacios normados. El espacio de todos estos morfismos es \( \mathcal{L}(V, W) = \set{T ∈ \mathcal{L}_{\mathrm{alg}} (V, W) \tq T \text{ continua}} \label{eq:EspApplLinealesConts} \)
 \end{defn}
 
-¿Por qué hacer esta distinción entre aplicaciones lineales y aplicaciones lineales y, además, continuas? La razón es sencilla: aunque en espacios de dimensión finita las aplicaciones lineales son siempre continuas, en espacios infinitos (como los de funciones) no tienen por qué serlo. Por ejemplo, en $C^1([0,1])$ con la norma del supremo podemos definir el operador que saca la derivada en un punto como \[ T(f) = f'(0) \]
+¿Por qué hacer esta distinción entre aplicaciones lineales y aplicaciones lineales y, además, continuas? La razón es sencilla: aunque en espacios de dimensión finita las aplicaciones lineales son siempre continuas, en espacios infinitos (como los de funciones) no tienen por qué serlo\footnote{Ver el \fref{ej:Hoja2:5} para una demostración algo más formal.}. Por ejemplo, en $C^1([0,1])$ con la norma del supremo podemos definir el operador que saca la derivada en un punto como \[ T(f) = f'(0) \]
 
 Si definimos la sucesión de funciones \[ f_n(x) = \frac{\sin n^2x}{n} \], se puede ver que $f_n \to 0$ uniformemente, así que deberíamos tener que $T(0) = 0$. Sin embargo, tomando el límite, $T(f_n) = n \to ∞$. En otras palabras, $T$ es un operador no continuo a pesar de ser lineal. Se puede probar que estos operadores existen incluso en espacios completos (aquí nos hemos aprovechado de que $C^1([a,b])$ no es completo para construir la aplicación), aunque no de forma constructiva.
 
@@ -579,9 +579,13 @@ Normamlmente, uno no le daría más vueltas a ver cómo se aplican los elementos
 
 En particular, como $\pesc{·,v}$ es lineal en $V^*$ fijado un $v ∈ V$, esto define una inyección canónica entre $V$ y $(V^*)^* = V^{**}$, que no depende de la base que elijamos en estos espacios.
 
-Otra observación, que nos vendrá bien para cuando estudiemos el Teorema de Hahn-Banach en la \fref{sec:TeoremaHahnBanach}, es que el producto de dualidad es una aplicación bilineal y acotada. La acotación se ve rápidamente: \[ \abs{\pesc{v^*, v}} = \abs{v^*(v)} ≤ \norm{v^*}_{\mathcal{L}(V, \kbb)} \norm{u}_V = \norm{v^*}_{V^*} \norm{v}_V \]
+Otra observación, que nos vendrá bien para cuando estudiemos el Teorema de Hahn-Banach en la \fref{sec:TeoremaHahnBanach}, es que el producto de dualidad es una aplicación bilineal y acotada. La acotación se ve rápidamente: \[ \abs{\pesc{v^*, v}} = \abs{v^*(v)} ≤ \norm{v^*}_{\mathcal{L}(V, \kbb)} \norm{u}_V = \norm[0]{v^*}_{V^*} \norm{v}_V \]
 
 De ahí también se puede deducir que la norma del operador $\appl{i}{V}{V^{**}}$ de la inyección canónica que comentábamos antes es $\norm{i} ≤ 1$.
+
+\section{Topología métrica en espacios de Banach}
+
+Antes de empezar con los teoremas fuertes, vamos a dar un pequeño repaso a la topología que induce una norma en un espacio de Banach.
 
 \begin{defn}[Norma\IS dominante] \label{def:NormaDominante} Consideremos $V$ un espacio vectorial sobre un cuerpo $\kbb$ y dos normas $\norm{·}_A$, $\norm{·}_B$ en $V$. Diremos que $\norm{·}_A$ domina a $\norm{·}_B$ si cuando $\norm{v}_A \to 0$, entonces $\norm{v}_B \to 0$.
 \end{defn}
@@ -681,26 +685,50 @@ En las siguientes secciones vamos a ver varios teoremas fundamentales del análi
 \begin{theorem}[Teorema\IS de acotación uniforme de Banach-Stainhaus] \label{thm:AcotacionUniforme} Sea $\set{T_α}_{α∈A}$ un subconjunto de $\mathcal{L}(X,Y)$, donde $X$ es Banach e $Y$ es normado. Entonces, o bien las aplicaciones lineales $T_α$ están uniformemente acotadas (es decir, $∃C < ∞$ tal que $∀α ∈ A$ se tiene que $\norm{T_α} ≤ C$), o bien existe un cierto conjunto\footnote{Recordamos la definición de \nref{def:ConjuntoGDelta}: intersección numerable de abiertos.} $G_δ$ denso en $X$, que llamaremos $B$, tal que \[ \sup_{α ∈ A} \norm{T_α(x)}_Y = ∞ \quad ∀x ∈ B \]
 \end{theorem}
 
-\begin{proof} % TODO: Vaya basura de demostración
-Para $n = 1,2, \dotsc$ consideraremos un conjunto \[ V_n = \set{x ∈ X \tq  \sup_{α∈A} \norm{T_α(x)}_Y > n} \]
+\begin{proof} Para la demostración vamos a considerar los conjuntos de puntos en los que la norma de los operadores supera una cierta cantidad. De ahí sacaremos las dos posibilidades que nos da el teorema: o bien los conjuntos empiezan a ser vacíos para algún $n$, o bien no lo son y además son densos en $X$.
 
-Cada uno de estos conjuntos será un abierto, y lo vamos a demostrar. Cojamos $x ∈ V_n$. Entonces $∃ α_0 ∈ A$ tal que $\norm{T_{α_0}(x)}_Y > n$. Como $T_{α_0}$ es acotado, entonces existe un cierto $δ > 0$ tal que si $x' ∈ \bola_δ(x)$ se tiene que $\norm{T_{α_0}(x')} > n$.
+Los conjuntos los definiremos de la siguiente forma, dado un $n ∈ ℕ$:
+ \[ V_n = \set{x ∈ X \tq  \sup_{α∈A} \norm{T_α(x)}_Y > n} \]
 
-Justificamos la existencia de ese δ. Por una parte, podemos hacer una estimación superior: \[ \norm{T_{α_0} (x) - T_{α_0} (x')}_Y = \norm{T_{α_0}(x-x')}_Y ≤ \norm{T_{α_0}} \norm{x-x'}_X \]
+La primera demostración será ver que esos conjuntos son abiertos para poder trabajar con ellos bien. Para la segunda aprte lo que haremos será trabajar en términos de la densidad de los $V_n$ y jugando con las dos posibilidades que hay: o bien son todos densos o no lo son y existe alguno que no es denso.
 
-Por otra, \[ \norm{T_{α_0}(x')}_Y = \norm{T_{α_0}(x) - T_{α_0}(x-x')}_Y ≥ \norm{T_{α_0} (x)}_Y - \norm{T_{α_0}(x-x')}_Y ≥ \norm{T_{α_0}(x)} - \norm{T_{α_0}}{x - x'}_X > n\] si $\norm{T_{α_0}(x)} - \norm{T_{α_0}}\norm{x-x'}_X > n$ lo que ocurre si y sólo si $\norm{T_{α_0}}{x-x'} < \norm{T_{α_0}(x)} - n > 0$ lo que ocurre si $\norm{T_{α_0}} ≠ 0$. O algo así.
+\proofpart{$V_n$ es abierto $∀n ∈ ℕ$}
 
-Pero entonces o que tenemos es que $\sup_{α ∈ A} \norm{T_α(x')} > n$ luego $x' ∈ V_n$ y $V_n$ es abierto.
+Para esta demostración, vamos a ver que dado un $x ∈ V_n$ existe una bola abierta contenida en $V_n$.
 
-Con esto, vamos a ver que pasa en dos casos posibles: que haya un conjunto no denso o que todos sean densos.
+Si $x ∈ V_n$, entonces existe un cierto $α_0 ∈ A$ tal que $\norm{T_{α_0}(x)}_Y > n$. De hecho, podemos ``aumentar'' un poco ese límite: hay un $ε > 0$ tal que $\norm{T_{α_0}(x)}_Y > n + ε$. Dado que $T_{α_0}$ es continua, para ese mismo $ε > 0$ existe un $δ > 0$ tal que si $y ∈ \bola_δ(x)$ entonces $\norm{T_{α_0}(x) - T_{α_0}(y)} = \norm{T_{α_0}(x - y)} < ε$.
 
-Supongamos que $∃N$ tal que $V_N$ no es denso. Entonces $V_N$ evita una cierta bola cerrada $\adh{\bola_r}(x_0)$ con $\adh{\bola_r}(x_0) ⊂ V_N^c$ para algún $x_0 ∈ X$ y $r > 0$.  Si $x ∈ \adh{\bola_r}(x_0)$ y $α_0 ∈ A$, entonces $N ≥ \sup_{α∈A} \norm{T_α(x)}_Y ≥ \norm{T_{α_0}(x)}_Y$, que podemos escribir como \[ \norm{T_{α_0}(x)}_Y = \norm{T_{α_0}(x_0 + (x-x_0))}_Y = \norm{T_{α_0}(x_0) + T_{α_0}(x-x_0)} ≥ \norm{T_{α_0}(x_0)} - \norm{T_{α_0}(x-x_0)} \implies \norm{T_{α_0}(x-x_0)}_Y ≤ 2N\]
+Con esto podemos tratar de ver que la norma de $T_{α_0}(y)$ sigue siendo mayor que $n$: \[
+\norm{T_{α_0}(y)} = \norm{T_{α_0}(x) - T_{α_0}(x - y)} ≥ \norm{T_{α_0} (x)} - \norm{ T_{α_0}(x - y)} > (n + ε) - ε = n
+\]
 
-Hacemos el cambio de variables $x-x_0 = y$ y entonces $x ∈ \adh{\bola_r}(x_0) \implies y ∈ \adh{\bola_r}(0)$, y entonces $∀y ∈ \adh{\bola_r}(x_0)$ $\norm{T_{α_0}(y)}_Y ≤ 2N$.
+Lo que hemos demostrado es entonces que si $y ∈ \bola_δ(x)$ entonces $y ∈ V_n$ o, en otras palabras, que todo punto de $V_n$ tiene un entorno abierto contenido en $V_n$; y por lo tanto $V_n$ es abierto.
 
-Sea ahora $z ∈ X$ arbitrario, $z = \norm{z}_X · z'$ con $z' ∈ \adh{\bola_1}(0)$, y $z = \frac{1}{4} \norm{z}_X · z''$ con $z'' ∈ \adh{\bola_r}(0)$ de tal forma que $\frac{1}{r} z'' = z'$. Esto nos dice que \[ T_{α_0}(z) = T_{α_0} \left(\frac{1}{r} \norm{z}_X z''\right) = \frac{1}{r} \norm{z}_X T_{α_0}(z'') \] y tomando normas nos queda que \[ \norm{T_{α_0}(z)}_X = \frac{1}{r} \norm{z}_X \norm{T_{α_0} (z'')}_X ≤ \frac{2N}{r} \norm{z}_X \] lo que nos dice que $\norm{T_{α_0}} ≤ \frac{2N}{r}$  para cualquier $α_0 ∈ A$.
+\proofpart{Caso 1: Algún $V_n$ no es denso en $X$}
 
-Si por otra parte todo $V_n$ es denso, entonces por el \nref{thm:CategoriaBaire} la intersección es un $G_δ$ denso en $X$, y aquí es donde usamos que $X$ es Banach.
+Como decíamos antes, hay dos posibilidades para los $V_n$: o bien todos son densos o no todos lo son y para algún $N ∈ ℕ$ se tiene que $V_N$ no es denso. Vamos a ir con éste último caso.
+
+Como $V_N$ no es denso, evita una cierta bola cerrada $\adh{\bola_r}(x_0)$ con $\adh{\bola_r}(x_0) ⊂ V_N^c$ para algún $x_0 ∈ X$ y $r > 0$, de tal forma que si $x ∈ \adh{\bola_r}(x_0)$  entonces $N ≥ \sup_{α∈A} \norm{T_α(x)}_Y$.
+
+Eso nos da acotación uniforme en una bola cerrada, de tal forma que lo único que hace falta para demostrar la acotación en todo $X$ es mover de manera inteligente cualquier vector de $x$ a esa bola.
+
+El primer paso será ``centrar'' la bola en $0$. Dado $y ∈ \adh{\bola_r}(0)$, podemos escribir $y = x - x_0$ para algún $x ∈ \adh{\bola_r(x_0)}$. Ahora, dado un $α_0 ∈ A$ hacemos la cota de la siguiente forma:
+\begin{align*}
+\norm{T_{α_0}(x)}
+	&= \norm{T_{α_0}((x-x_0) + x_0)} = \norm{T_{α_0}(x - x_0) + T_{α_0}(x_0)} \\
+	&≥ \norm{T_{α_0}(x - x_0)} - \norm{T_{α_0}(x_0)} \\
+\norm{T_{α_0}(x)}  + \norm{T_{α_0}(x_0)} &≥ \norm{T_{α_0}(x - x_0)} \\
+2N &≥ \norm{T_{α_0}(y)}
+\end{align*}
+
+El siguiente paso es el reescalado. Dado un $z ∈ X$ arbitrario, lo podemos expresar como $z = \frac{1}{r} \norm{z} · z'$ con $z' ∈ \adh{\bola_r}(0)$. Así, la acotación queda sencilla:
+\[ \norm{T_{α_0}(z)} = \frac{1}{r} \norm{z} \norm{T_{α_0} (z')} ≤ \frac{2N}{r} \norm{z} \]
+
+De esta forma, la cota $\norm{T_{α_0}} ≤ \frac{2N}{r}$ es válida para cualquier $α_0 ∈ A$ y por lo tanto la familia de operadores está uniformemente acotada.
+
+\proofpart{Caso 2: Todos los $V_n$ son densos}
+
+En este caso, como $X$ es Banach podemos usar el \nref{thm:CategoriaBaire}, que nos dice que la intersección de la colección $\set{V_n}_{n≥1}$ es un $G_δ$ denso en $X$, y es precisamente esa intersección la que tiene a todos los puntos en los que la norma es infinita.
 \end{proof}
 
 \begin{corol} Si $\set{T_α}_{α∈A} ⊂ \mathcal{L}(X,Y)$ con $X$ Banach e $Y$ normado, entonces la familia $\set{T_α}$ está uniformemente acotada si $\sup_{α ∈ A} \norm{T_α(x)}_Y < ∞ \;∀x ∈ X$.
@@ -762,7 +790,7 @@ Ver hoja 2 de nuevo, esto es otro problema.
 
 \section{Teorema de la gráfica cerrada}
 
-Pasamos ahora a un teorema que posiblemente ya se haya visto en otros cursos más básicos Simplemente nos dice que la gráfica de un operador lineal continuo es cerrada, aunque de forma muy general.
+Pasamos ahora a un teorema que posiblemente ya se haya visto en otros cursos más básicos.Simplemente nos dice que la gráfica de un operador lineal continuo es cerrada, aunque de forma muy general.
 
 \begin{theorem} Sean $X$ e $Y$ espacios de Banach y $\appl{T}{X}{Y}$ lineal. Supongamos que el gráfico de $T$, dado por \[ G(T) ≝ \set{(x,T(x)) \tq x ∈ X } ⊂ X × Y \] es cerrado con la topología producto\footnote{Hay otro ejercicio para ver que $(X×Y, \norm{·,·}_{X×Y})$ con $\norm{u,v}_{X×Y} = \norm{u}_X + \norm{v}_Y$ es Banach igualmente.}. Entonces $T ∈ \mathcal{L}(X,Y)$.
 \end{theorem}
@@ -1168,6 +1196,65 @@ Para la segunda, supongamos $x_n \wsconvs x$ y sea $y ∈ Y$ tal que $\pesc{x_n,
 
 \seprule[Falta una clase]
 
+Vamos a demostrar el Teorema de Banach-Aaloglu, que nos va a dar propiedad más importante de la topología $*$-débil:
+
+\begin{theorem} Sea $X = Y^*$ un espacio de Banach dual. Entonces $\bola_X = \adh{\bola}_1(0) = \{ x \in X \text{tal que} \norm{x}_X \leq 1 \}$ es compacto en la topología débil-$*$ de X.
+\end{theorem}
+
+\begin{proof} Sean $y \in Y, \Omega_y = \{ \lambda \in \kbb : \abs{\lambda} \leq \norm{y}_Y \}. $
+
+Consideramos el siguiente espacio, que es bastante monstruo (es un prod. cartesiano): \[ \Omega =  \prod_{y \in Y} \Omega_y \text{ con la topología producto.} \]
+
+Recordamos que la topología producto en $\Omega$ es la topología más débil que hace que cada proyección $ \pi_y : \Omega \longmapsto \Omega_y ; (\omega_y)_{y \in Y} \longmapsto \omega_y $ sea continua.
+
+Observamos que también podemos escribir $\Omega$ como \[ \Omega = \{ \phi : Y \longmapsto \kbb ; y \longmapsto \omega_y \in \Omega_y  \} \]
+
+En este punto aplicamos el teorema de Tychonoff, que nos dice que todo producto de espacios topológicos compactos es compacto. Por tanto, $\Omega$ es un espacio topológico compacto
+
+Así mismo, la bola unidad $\bola_X$ de $X$ es un subconjunto de $\Omega$ , ya que podemos escribir $\bola_X$ como \[ \bola_X = \{ \phi \in \Omega : \phi es lineal \} \] y para ver que es compacto (respecto de la restricción de la topología producto de $\Omega$ a $\bola_X$) nos basta ver que es cerrado. Además, hay que ver que la topología inducida en $\bola_X$ por $\Omega$ es la $*$-débil.
+
+En $\Omega$ la topología es la más débil que hace que cada aplicación $\lambda \longmapsto \lambda(y) (y \in Y)$ sea continua. Si además exigimos que $\lambda$ sea un funcional lineal, tenemos justo la definición de topología $*$-débil.
+
+Por definición de linealidad, podemos escribir la bola unidad en $X$ como: \[ \bola_X = \Omega \cap \left( \bigcap_{y, y' \in Y} A_{y, y'} \right) \cap \left( \bigcap_{\lambda \in K, y \in Y} B_{\lambda, y} \right) \]
+
+\[ A_{y, y'} = \{ \phi : Y \longmapsto \kbb : \phi(y + y') = \phi(y) + \phi(y') \} \]
+\[ B_{\lambda, y} = \{ \phi : Y \longmapsto \kbb : \phi(\lambda y) = \lambda \phi(y) \} \]
+
+(Asegurarse de que las definiciones de los As y Bs están bien).
+
+Cada uno de los conjuntos $A_{y, y'}, B_{\lambda, y}$ son cerrados en $\Omega$ respecto de la topología producto.
+
+$\bola_X$ es una intersección de cerrados dentro de un compacto y por tanto es un compacto.
+
+\end{proof}
+
+\begin{theorem} Sea $X = Y^*$ un espacio de Banach dual y supongamos además que $Y$ es separable. Entonces la topología $*$-débil sobre la bola unidad $\bola_X$ es metrizalble.
+\end{theorem}
+
+\begin{proof}
+
+Fijamos una sucesión $\{ y_n \}_{n \geq 1} \subset \bola_Y $ (bola unidad de Y) con $ \adh{\{ y_n \}_{n \geq 1}} = \bola_Y $ (tomamos el cierre en la topología fuerte de Y). Esto es equivalente a decir que $\{ y_n \}_{n \geq 1}$ es denso en $\bola_Y$.
+
+(esta sucesión existe porque... COMPLETAR).
+
+En $X$, definimos $ \norm{x}_* = \sum_{n \geq 1} 2^{-n} \abs{<x, y_n>} \leq \left( \sum_{n \geq 1} 2^{-n} \right) \norm{x}_X = \norm{x}_X $.
+
+Así que la norma original domina a la seminorma que acabamos de definir.
+
+Vamos a ver que $\norm{x}_*$ es una norma en $X$: \[ \norm{x}_* = 0 \Rightarrow \abs{\pesc{x, y_n}} = 0 \forall n \Rightarrow \pesc{x, y_n} = 0 \forall n.\]
+
+Puesto que $\{ y_n \}_{n \geq 1}$ es denso en $\bola_Y$, dado $y \in \bola_Y$ existe una subsucesión $y_{n_j}$ de $y_n$ con $y_{n_j} \longrightarrow y$ en la topología fuerte.
+
+Entonces $ 0 = \pesc{x, y_{n_j}} \longrightarrow \pesc{x, y} \Rightarrow \pesc{x, y} = 0 \forall y \in \bola_Y \Rightarrow \pesc{x, y} = 0 \forall y \in Y $
+
+Hemos llegado a una contradicción con el hecho de que la topología $*$-débil es Hausdorff.
+
+\end{proof}
+
+\begin{corol} Si $X$ es un espacio de Banach dual y separable la topología $*$-débil se puede... (faltan cosas aquí). Además si $\{x_n\}_{n \geq 1}$ es una sucesión en $\bola_X$, entonces existe una subsucesión $\{x_{n_k}\}_{k \geq 1}$ de $\{x_n\}_{n \geq 1}$ que es $*$-débil convergente.
+\end{corol}
+
+\seprule[Falta una clase]
 \begin{theorem} Si $X = Y^*$ es un Banach dual con $Y$ separable, entonces la bola en $X$ es metrizable en la topología débil-$*$.
 \end{theorem}
 
@@ -1333,6 +1420,86 @@ Por la parte anterior, deducimos que \ddual es reflexivo, ya que su predual es \
 \end{proof}
 
 Resumen para la semana que viene: dualidad en espacios $L^p$. Serán reflexivos con $\dual[L^p] = p'$, con $p' = 2$. Si $p = 1$ y el espacio de medida es σ-finito, entonces el dual es $L^∞$.
+
+\section{Determinación de espacios duales}
+
+A lo largo de esta sección, vamos a estudiar espacios duales específicos y vamos a caracterizarlos, centrándonos en los espacios de funciones integrables $L^p$ (ver \fref{def:EspacioLp}). Por recordar rápidamente, los espacios $L^p$ eran los espacios de funciones tales que $\int_X \abs{f}^p < ∞$, identificando con una relación de equivalencia las funciones que sean iguales en casi todo punto.  Además, la norma se definía como \[ \norm{f}_p = \left(\int_X \abs{f}^p \dif μ\right)^{\frac{1}{p}} \]
+
+En el caso especial de $p = ∞$, la norma era $\norm{f}_∞ = \essup \abs{f}$, donde el supremo esencial es el mínimo de todas las cotas $λ ≥ \abs{f(x)}$ que se cumplen en casi todo punto de X (con respecto a la medida μ).
+
+\begin{theorem} \label{thm:DualLp} Sea $\meas$ un espacio de medida y un exponente $1 < p < ∞$. Entonces el dual del espacio $L^p\meas$ es $L^{q} \meas$ con $1 < q < ∞$ tal que $\frac{1}{p} + \frac{1}{q} = 1$.
+
+Si $p = 1$ y además \meas es un espacio de medida σ-finita\footnote{\citep[Def. II.9]{ApuntesVarReal} Una medida μ es σ-finita si y sólo si existe un conjunto numerable $\mathcal{U} ⊆ \mathcal{X}$ tal que su unión recubre todo $X$ y además $μ (U) < ∞$ para todo $U ∈ \mathcal{U}$.} también tenemos que $L^1\meas^* = L^∞ \meas$.
+
+Por último, el dual de $L^∞\meas$ contiene estrictamente a $L^1\meas$ savo en casos triviales.
+\end{theorem}
+
+Aunque aquí hemos puesto los espacios de medida explícitamente, los omitiremos y daremos por supuesto para no recargar demasiado las definiciones.
+
+Para la demostración necesitaremos la desigualdad de Hölder\footnote{En Variable Real, \citep[Proposición III.1]{ApuntesVarReal}.}.
+
+\begin{prop}[Desigualdad\IS de Hölder] \label{prop:DesHolder} Sea $f ∈ L^p$ y $g ∈ L^q$ con $p,q$ exponentes conjugados\footnote{Igual que antes, tales que $\frac{1}{p} + \frac{1}{q} = 1$.}. Entonces, $fg ∈ L^1$ y \[ \norm{fg}_1 ≤ \norm{f}_p \norm{g}_q \]
+\end{prop}
+
+Si $p = 1$ y $q = ∞$, la desigualdad es trivial. Si $1 < p < ∞$, entonces la desigualdad es consecuencia de la desigualdad elemental cuando $a,b ≥ 0$: \[ ab < \frac{a^p}{p} + \frac{b^q}{q} \]
+
+Otra desigualdad importante que necesitaremos será la de Minkowsky, que es la que justifica que $L^p$ es un espacio normado.
+
+\begin{prop}[Desigualdad\IS de Minkowsky] \label{prop:DesMinkowsky} Sean $f,g ∈ L^p$ con $1 ≤ p ≤ ∞$. Entonces $f + g ∈ L^p$ y \[ \norm{f + g}_p ≤ \norm{f}_p + \norm{g}_p \]
+\end{prop}
+
+\begin{proof}
+De nuevo, en el caso $p = 1$ esto es trivial. Para $1 < p < ∞$, vemos que \[ (a+b)^p ≤ 2^{p-1} (a^p + b^p)\] como consecuencia de $t \to t^p$ es convexa para $p > 1$. Así, podemos acotar: \[ \int_X \abs{f(x) + g(x)}^p \dif μ ≤ 2^{p-1} \int_X \left(\abs{f}^p + \abs{g}^p\right) \dif μ = 2^{p-1} \left(\norm{f}_p^p + \norm{g}_p^p\right) < ∞ \] que aunque nos vale para demostrar que $f + g ∈ L^p$ no es óptima.
+
+Para hacer la acotación óptima, hacemos una descomposición: \begin{multline*}
+\norm{f+g}_p^p = \int_X \abs{f+g}^p \dif μ = \int_x \abs{f+g}^{p-1} \abs{f+g} \dif μ ≤ \\ ≤ \underbracket{\int_X \abs{f+g}^{p-1} \abs{f} \dif μ}_{A} + \underbracket{\int_X \abs{f+g}^{p-1} \abs{g} \dif μ}_{B}
+\end{multline*}
+
+Para estimar $A$, usamos la \nlref{prop:DesHolder}, sabiendo que $\abs{f+g}^{p-1} ∈ L^q$ con $q$ el exponente conjugado, ya que $(p-1) q = p$. Entonces nos queda que \[ A= \int_X \abs{f+g}^{p-1} \abs{f} \dif μ ≤ \left(\int_X \abs{f+g}^{(p-1)q} \dif μ\right)^{\frac{1}{q}} \norm{f}_p = \norm{f+g}^{p-1} \norm{f}_p \]
+
+De la misma manera llegaríamos a que $B ≤ \norm{f+g}_p^{p-1} \norm{g}_p$. Sustituyendo de vuelta nos queda lo que buscábamos: \begin{align*}
+\norm{f+g}_p^p &≤ \norm{f+g}^{p-1} \left(\norm{f}_p + \norm{g}_p\right) \\
+\norm{f+g}_p &≤ \norm{f}_p + \norm{g}_p \\
+\end{align*}
+
+Sólo habría que tener cuidado cuando $\norm{f + g} = 0$ porque no podríamos hacer la división, aunque en ese caso como $\norm{f}_p, \norm{g}_p ≥ 0$ la desigualdad sería trivial.
+\end{proof}
+
+Con esto ya estamos muy cerca de probar que los espacios $L^p$ son espacios de Banach. Vamos a ello.
+
+\begin{theorem} \label{thm:EspacioLpBanach} Dado $1 ≤ p ≤ ∞$ y \meas un espacio de medida, entonces el espacio vectorial $(L^p\meas, \norm{·}_p)$ es un espacio de Banach.
+\end{theorem}
+
+\begin{proof} El hecho de que sea normado viene directamente de la \nlref{prop:DesMinkowsky}. Vamos a ver que además es un espacio completo según $p$.
+
+\proofpart{$p = ∞$}
+
+Sea $\set{f_n}_{n ≥ 1}$ una sucesión de Cauchy en $L^∞ \meas$. Es decir, que para todo $k ∈ ℕ$ existe un $N_k ∈ ℕ$ tal que si $m, n ≥ N_k$ entonces $\norm{f_m - f_n}_∞ ≤ \sfrac{1}{k}$.
+
+Con esto podemos construir los conjuntos \[ E_k = \set{ x ∈ X \tq \abs{f_n(x) - f_m(x)} ≤ \sfrac{1}{k}} \], medibles y con $μ(X_k^c) = 0$ (si el complementario no tuviese medida cero entonces $\norm{f_m - f_n}_∞$ sería mayor que $\sfrac{1}{k}$).
+
+Consideramos la intersección de todos ellos: sea $X_0 = \bigcap_{k≥1}X_k$. De ahí podemos acotar la medida del complementario: \[ 0 ≤ μ(X_0^c) = μ\left(\bigcup_{k ≥ 1} X_0^c\right) ≤ \sum_{k ≥ 1} μ(X_k^c) = 0\], luego $μ(X_0^c) = 0$.
+
+Con esto podemos ver que las sucesiones numéricas $\set{f_n(x)}_{n ≥ 1}$ con $x ∈ X_0$ son de Cauchy, ya que $∀k ∈ ℕ$ y $m,n ≥ N_k$ sabemos que $\abs{f_m(x) - f_n(x)} ≤ \sfrac{1}{k}$ ya que $x ∈ X_k\;∀k ≥ 1$.
+
+Definimos entonces la función \[ f(x) = \begin{cases} \lim\limits_{n \to ∞} f_n(x) & x ∈ X_0 \\ 0 & x ∈ X_0^c\end{cases} \]
+
+Es una función medible, y si $x ∈ X_0$ entonces \[ \abs{f(x)} = \abs{\lim_{n \to ∞} f_n(x)} = \lim_{n \to ∞} \abs{f_n(x)} ≤ \lim_{n \to ∞} \norm{f_n}_∞ \], donde ese último límite existe y es finito por ser la sucesión de normas $\norm{f_n}_∞$ de Cauchy en $ℝ$.
+
+Dado que hemos podido acotar todos los puntos que se nos podrían ir (si $x ∈ X_0^c$ no hay nada que acotar), lo que tenemos es que $f ∈ L^∞$.
+
+Falta demostrar que esa $f$ es efectivamente el límite de las $f_n$. Para eso, miramos a los $x ∈ X_0$ (el complementario tiene medida 0 y lo que pase ahí no influye) y vemos que, dado un $n$ fijo, \[ \abs{f(x) - f_n(x)} = \lim_{m \to ∞} \abs{f_m(x) - f_n(x)} ≤ \frac{1}{k}\] si $m, n ≥ N_k$. Esto implica que $\norm{f - f_n}_∞ \to 0$ y por lo tanto $f_n \to f$.
+
+\proofpart{$1 ≤ p < ∞$}
+
+Si $\set{f_n}_{n ≥ 1}$ es de Cauchy en $L^p$, basta ver que una subsucesión $\set{f_{n_k}}_{k  ≥ 1}$ converge en $L^p$.
+
+Escogeremos inductivamente $1 ≤ n_1 < n_2 < \dotsb <n_k \to ∞$ de tal forma que $g_k = f_{n_k}$ cumpla que $\norm{g_{k+1} - g_k}_p ≤ \frac{1}{2^k}$ para $k ∈ ℕ$, cosa que podemos hacer por ser $\set{f_n}$ de Cauchy en $L^p$.
+
+Sea ahora \[ G_n(x) = \sum_{k = 1}^n \abs{g_{k+1}(x) - g_k(x)}\quad n ∈ ℕ \] para lo que podemos calcular su $p$-norma: \[ \norm{G_n}_p = \norm[3]{\sum_{k=1}^n \abs{g_{k+1}(x) - g_k(x)}}_p \eqreasonup[≤]{\nref{prop:DesMinkowsky}} \sum_{k=1}^n \norm{g_{k+1} - g_k}_p \sum_{k = 1}^n 2^{-k} = 1 \]
+
+Como además de estar acotada $G_n$ es una sucesión monótona creciente, definimos $G(x) = \lim_{n \to ∞} G_n(x)$, y el teorema de convergencia monótona \citep[Teorema I.14]{ApuntesVarReal} nos dice que $\norm{G}_p = \lim_{n \to ∞} \norm{G_n}_p$.
+\end{proof}
 
 \chapter{Espacios de Hilbert}
 

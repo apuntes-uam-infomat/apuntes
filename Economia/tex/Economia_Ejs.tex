@@ -935,5 +935,151 @@ con
 Representar el payoff y calcular el valor de la opción
 
 \solution
+\doneby{Pedro}
 
+La gráfica queda:
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}
+\addplot[domain=0:6,blue] {5};
+\addplot[domain=6:10,blue] {x-1};
+\draw[dotted] (axis cs:6,5) -- node[left] {F} (axis cs:6,12);
+\draw[dotted] (axis cs:-1,5) -- node[below] {F-K} (axis cs:11,5);
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+Es sencillo comprobar que mientras el valor del activo sea menor que el valor $F$ fijado previamente, el payoff es $F-K$. Una vez $S_T$ alcance el valor de $F$ y siga creciendo percibimos un aumeto lineal del payoff.
+
+\end{problem}
+
+\begin{problem}[5]
+Queremos confeccionar una \textbf{colar} con coste inicial cero. Este tipo de opción recibe el nombre de \textbf{range forward}. Su payoff tiene la siguiente forma:
+\[h_{RF}(S_T) = \max(\min(S_T,K_2),K_1)-F = \max(\min(S_T-F,K_2-F),K_1-F)\]
+donde
+\[K_1 < F < K_2 \text{ y } F=S_0e^{rT}\]
+
+\ppart Represente el payoff
+\ppart Calcular el valor de la opción
+\solution
+\doneby{Pedro}
+
+\spart
+Atendiendo a la fórmula que representa el payoff de esta opción es sencillo comprobar que nos encontramos ante una opción closer en la que todos los precios se reducen de forma constante. Por tanto la gráfica, mostrada a continuación, es un desplazamiento hacia abajo de la gráfica asociada a una opción closer.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[ymin=2.5,ymax=5.5]
+\addplot[domain=0:4,blue] {3};
+\addplot[domain=4:6,blue] {x-1};
+\addplot[domain=6:10,blue] {5};
+\draw[dotted] (axis cs:4,7) -- (axis cs:4,2.5);
+\draw[dotted] (axis cs:6,7) -- (axis cs:6,2.5);
+\draw[dotted] (axis cs:-1,4) -- (axis cs:11,4);
+\draw[dotted] (axis cs:-1,6) -- (axis cs:11,6);
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+donde las lineas discontinuas marcan los valores de $K_1$ y $K_2$.
+
+\spart
+
+Teniendo en cuenta que el valor descontado de la $F$ es $S_0$ podemos ver que el valor de la opción con vencimiento $T$ viene dad por:
+\[(K_1e^{-rT}-S_0)\mathbb{P}(S_T\leq K_1) + (K_2e^{-rT}-S_0)\mathbb{P}(K_2 < S_T)\]
+
+\end{problem}
+
+\begin{problem}[6]
+Se considera una opción \textbf{Portfolio Insurance} cuyo payoff viene dado por:
+\[h_{PF}(S_T) = \max(K,S_0 + β(αS_T-S_0)) \text{ con } 0 < α \leq 1 \text{ y } β > 0\]
+El coeficiente α es conocido como la ``upside capture'' y β como el ``upside gain''.
+
+\ppart Representar el payoff
+
+\ppart Calcular el valor de la opción
+
+\solution
+\doneby{Pedro}
+
+\spart
+
+Vamos a fijarnos en que momento los dos valores de la función máximo son iguales.
+
+\[K=S_0 + β(αS_T-S_0) \implies S_T = \frac{\frac{K-S_0}{β}+S_0}{α} = x\]
+
+Mientras $S_T < x$ el payoff será $K$ y a partir de ese valor será $S_0 + β(αS_T-S_0)$. Así la gŕafica queda:
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}
+\addplot[domain=0:6,blue] {5};
+\addplot[domain=6:10,blue] {0.7*x+0.8};
+\draw[dotted] (axis cs:6,5) -- node[left] {x} (axis cs:6,12);
+\draw[dotted] (axis cs:-1,5) -- node[below] {K} (axis cs:11,5);
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+El valor de la opción es:
+\[V_0 = Ke^{-rT}\mathbb{P}\left(S_T < \frac{\frac{K-S_0}{β}+S_0}{α}\right) + (S_0 + β(αS_T-S_0)))e^{-rT}\mathbb{P}\left(S_T \geq \frac{\frac{K-S_0}{β}+S_0}{α}\right) \]
+
+\end{problem}
+
+\begin{problem}[7]
+El activo $A$ tiene un precio anual de 10 y una volatilidad del 27\%. El tipo de interés libre de riesgo (composición continua) es del 5\%.
+
+\ppart ¿Cuál es el precio (Black-Scholes) de una opción que da derecho, dentro de tres meses, a comprar una unidad del subyacente a su precio actual? (Se calculará $N(x)$ como un desarrollo de Taylor)
+
+\ppart Si una institución ha vendido opciones que dan derecho a la compra, dentro de tres meses, de 1000 acciones de la empresa $A$ al precio unitario de 12, ¿Cómo deberá cubrirse frente a posibles cambios advesros en el precio del subyacente?
+\solution
+\doneby{Pedro}
+
+\spart
+
+La fórmula Black-Scholes nos dice
+\[C_0(S_0,K,σ,r,T) = S_0N(d_+)-Ke^{-rT}N(d_-)\]
+
+Para calcular $N(x)$, siguiendo la sugerencia del enunciado, calculamos:
+\[N(x) = \int_{0}^{x}\frac{1}{\sqrt{2π}}e^{-\frac{1}{2}x^2} = \frac{1}{\sqrt{2π}}\int_0^x\sum_{i=0}^{\infty}(-1)^i\frac{x^{2i}}{2^ii!} = \frac{1}{\sqrt{2π}}\sum_{i=0}^{\infty}(-1)^i\frac{x^{2i+1}}{2^ii!(2i+1)} =\]
+\[=\frac{1}{\sqrt{2π}}\left(x-\frac{x^3}{3 \cdot 2 \cdot 1!} +\frac{x^5}{5 \cdot 4 \cdot 2!} - \frac{x^7}{7\cdot 8 \cdot 3!}+...\right)\]
+
+Para emplear la fórmula de Black-Scholes debemos calcular $d_{\pm}$:
+\[d_{\pm} = \frac{1}{0.27\sqrt{1}}\left(\ln \frac{10}{10e^{-0.05}}\pm\frac{1}{2}0.27^2 \right)=3.73 \left(0.05 \pm 0.0365\right) \implies d_+ = 0.323, \;\; d_-=0.05 \]
+
+Ya estamos en conidciones de realizar las operaciones pertinentes obteniendo:
+\[C_0(10,10,0.27,0.05,1) = 10 \cdot 0.317 - 10\cdot 0.95 \cdot 0.05 = 2.7\]
+
+\spart
+
+\textcolor{red}{TODO}
+\end{problem}
+
+\begin{problem}[8]
+Consideremos un modelo de un periodo con un precio inicial de $S_0$ y dos estados finales $aS_0$ y $bS_0$.
+
+\ppart Escribir el valor de una call de strike $K$ y de la put correspondiente en función de $a$, $b$, $S_0$, $K$ y $r$.
+
+\ppart
+Escribir la relación de paridad call put y deducir de ella que
+\[q' =\frac{aq}{1+r} \text{ y } 1-q'=\frac{(1-q)b}{1+r}\]
+definen una probabilidad (ver demostración de Cox-Rubinstein)
+
+\solution
+\doneby{Pedro}
+
+\spart
+\[C_0 = \frac{(aS_0-K)}{1+r}, \;\;\;\; P_0 = \frac{(K-bS_0)}{1+r}\]
+
+\spart
+
+La relación de paridad call put es:
+\[C_0 - P_0 = S_0-\frac{K}{(1+r)^T}\]
+
+Es evidente que $q'+(1-q')=1$ por lo que para demostrar que esos dos valores forman una probabilidad basta con comprobar que ambos son menores que 1.
+
+Puesto que estamos bajo la suposición de que no hay arbitrajes tenemos
+\[1+r < a \implies -ab < -b(1+r) \implies a(1+r)-ab < -b(1+r)+a(1+r)\]
+de la última desigualdad y de la definición de $q$ podemos deducir
+\[q=\frac{1+r-b}{b-a} < \frac{1+r}{a}\]
+con lo que queda claro que $q'<1$.
 \end{problem}
