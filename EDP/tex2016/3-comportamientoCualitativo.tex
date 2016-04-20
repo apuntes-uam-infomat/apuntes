@@ -1328,6 +1328,180 @@ En este capítulo vamos a ver:
 			T |_{\partial \Omega} = 0
 		\end{cases}\]
 
+%Clase 19-4-2016
+
+\section{Ecuación de Calor}
+
+	Hemos observado este problema en un dominio acotado (con dimensión espacial 1). Y hemos obtenido diversos resultados como la separación de variables, construcción de series, convergencia… En este último caso hemos obtenido regularidad para $t > 0$ (factor $e^{-\left(\frac{k \pi}{L}\right)^2 t}$).
+
+	Ahora vamos a intentar obtener resultados sobre unicidad (en dimensión 1) y vamos a intentar ver que pasa cuando el dominio no está acotado o cuando aumentamos el número de dimensiones.
+
+	Veamos un ejemplo concreto. Dato el sistema \[ \begin{cases}
+		u_{t} - u_{xx} = 0, x \in (0,L), t > 0 \\
+		u(x,0) = f(x) \\
+		u(0,t) = u(L,t) = 0 \leftarrow \text{Dirichlet homogéneas}
+	 \end{cases}\]
+
+	 \begin{quote}
+	 	EC.Calor: modelo de las EDP de tipo parabólico
+	 \end{quote}
+
+	 Fijamos $T > 0$ y consideramos $Q_T = [0,L]\times [0,T] \in \real^2$, lo cual es un cilindro parabólico.
+
+	 Con la varilla entre dos bloques de hielo, lo que esperamos es que la temperatura de la varilla baje y que tengamos temperaturas mínimas en los extremos. Si resulta que la varilla está más fría que el hielo el proceso contrario ocurrirá y se calentará. En este caso el mínimo se debería alcanzar en algún punto del instante inicial y los máximos estarían en los extremos. Lo que podemos ver es que no es razonable pensar que los mínimos y máximos van a estar en algún punto que no sea los extremos de la varilla o la varilla en el instante inicial.
+
+	 (DIBUJOS EVOLUCIÓN CALOR Y MÁXIMOS Y MÍNIMOS)
+
+	 Esto nos va a llevar a un principio del máximo algo más fuerte que nos va a restringir en que partes de la frontera se va a alcanzar.
+
+	 \begin{defn}[Frontera\IS parabólica]
+	 	\[\delta_P Q_T = \{(x,0), x \in [0,L]\} \cup \{(0,t), t \in [0,T]\} \cup \{(L,t), t \in [0,T]\}\]
+	 \end{defn}
+
+	 \begin{theorem}[Principio\IS del máximo débil]
+	 	\[ \begin{cases}
+	 		u_{t} - u_{xx} = 0, x \in (0,L), t > 0 \\
+			u(x,0) = f(x) \\
+			u(0,t) = \alpha(t) \\
+			u(L,t) = \beta(t)
+	 	\end{cases}\]
+
+	 	Entonces $u(x,t)$ alcanza su máximo y su mínimo en puntos de la frontera parabólica $\delta_P Q_T$
+	 \end{theorem}
+
+	 \begin{proof}
+	 	Demostraremos por reducción al absurdo:
+
+	 	\begin{itemize}
+
+	 		\item Supongmos que se alcanza un máximo en algún punto del interior de $Q_R$.
+
+	 			\[ u_t(x_0,t_0), u_x(x_0,t_0) = (0,0)\]
+
+	 			(DIBUJO)
+
+	 			$u(x,t_0)$ es máximo en $x_0$
+
+	 			$u_{xx}(x_0) \leq 0$. Si la desigualdad fuera estricta habríamos acabado.
+
+	 		\item Supongamos que se alcanza en algún punto de $\delta Q_T - \delta_P Q_T$
+
+	 			(DIBUJO)
+
+	 			\[ \left. \begin{array}{r}
+	 				u_t(x_0,T) \geq 0 \\
+	 				u_{xx} (x_0,T) \leq 0
+	 			\end{array} \right\} \text{ Si la desigualdad fuera estricta habríamos acabado.}\]
+
+	 	\end{itemize}
+
+	 	Idea: Modificar $u$ par obtener en alguna parte desigualdad estricta. Definimos:
+
+	 	\[ \begin{cases}
+	 		v^\epsilon(x,t) = u(x,t) + \epsilon x^2\\
+	 		v^\epsilon_t = u_t \\
+			v^\epsilon_{xx} = u_{xx} + 2\epsilon \\
+			v^\epsilon_t - v^\epsilon_{xx} = u_t - u_{xx} - 2\epsilon = - 2\epsilon < 0
+	 	\end{cases}\]
+
+	 	Repitiendo los dos items anteriores con $v^\epsilon$ demostramos que $v^\epsilon$ no puede tener máximo en el interior ni en $\delta Q_T - \delta_P Q_T$.
+
+	 	\[ \underbrace{\max v^\epsilon}_{Q_T} = \underbrace{\max v^\epsilon}_{\delta_P Q_T} \]
+	 	\[ \left. \begin{array}{r}
+	 		u(x,t) \leq v^\epsilon (x,t) = u(x,t) + \epsilon x^2 \leq u(x,t) + \epsilon L^2 \\
+	 		v^\epsilon \longrightarrow u(\text{uniforme en } Q_T)
+	 		\end{array} \right\} \Rightarrow \max v^\epsilon \convs[][\epsilon][0] \max u
+	 	\]
+
+	 	De manera análoga:
+	 	\[ \underbrace{\min u}_{Q_T} = \underbrace{\min u}_{\delta_P Q_T} \]
+
+
+	 \end{proof}
+
+	 Como consecuencias de este principio del máximo tenemos:
+	 \begin{itemize}
+	 	\item Comparación
+	 	\item Unicidad
+	 	\item Estimación a priori
+	 	\item Dependencia continua de los datos
+	 \end{itemize}
+
+	 \begin{example}[Comparación]
+	 	\begin{align*}
+	 		u_t - u_{xx} = F_1(x,t) &\geq F_2(x,t) = V_t - V_{xx} \\
+	 		u(x,0) = f_1(x) &\geq f_2(x) = v(x,0) \\
+	 		u(0,t) = \alpha_1(t) &\geq \alpha_2(t) = v(0,t)\\
+	 		u(L,t) = \beta_1(t) &\geq \beta_2(t) = v(L,t)
+	 	\end{align*}
+
+	 	\textbf{Comentarios}
+	 	\begin{itemize}
+	 		\item Resultado válido en dim. N, ecuación $u_t - \Delta u = 0$
+	 		\item \[u_t - u_{xx} \geq 0 (\text{supersolución})\]
+	 			\[ \underbrace{\min u}_{Q_T} = \underbrace{\min u}_{\delta_P Q_T} \]
+
+	 			\[u_t - u_{xx} \leq 0 (\text{subsolución})\]
+				\[ \underbrace{\max u}_{Q_T} = \underbrace{\max u}_{\delta_P Q_T} \]
+
+
+				\[ W = u-v … W_t - W_{xx} \geq 0\]
+				\[ \left.\begin{array}{r}
+					W(x,0) \geq 0 \\
+					W(0,t) \geq 0 \\
+					W(L,t) \geq 0
+				\end{array} \right\} \eqreason[\Rightarrow]{Principio del máximo} W= 0 \text{ en } Q_T \Rightarrow u \geq v \text{ en } Q_T \]
+	 	\end{itemize}
+
+	 \end{example}
+
+	 \begin{example}[Unicidad]
+
+	 	(FALTA)
+
+	 \end{example}
+
+	 \begin{example}[Estimación a priori]
+
+	 	\[\begin{cases}
+	 		u_{t} - u_{xx} = F(x,t) \\
+			u(x,0) = f(x) \\
+			u(0,t) = \alpha(t) \\
+			u(L,t) = \beta(t)
+	 	\end{cases}\]
+
+	 	Supongamos $|F(x,t)| \leq M, \forall(x,t) \in Q_T$
+
+	 	Definimos $W(x,t) = u(x,t) + \frac{M}{2} x^2$
+
+	 	\[ W_t = u_t ; W_{xx} = u_{xx} + M\]
+	 	\[\begin{cases}
+	 		W_t - W_{xx} = u_t - u_{xx} - M = F-M \eqreason[\leq]{$F \leq M$} 0 (\text{subsol.})\\
+	 		W(x,0) = u(x,0) + \frac{M}{2} x^2 = f(x) + \frac{M}{2} x^2 \leq \underbrace{f(x) + \frac{M}{2}L^2}_{\|f\|_\infty = \max |f|}\\
+	 		W(0,t) = u(0,t) = \alpha(t) \\
+	 		W(L,t) = u(L,t) + \frac{M}{2}L^2 = \beta(t) + \frac{M}{2} L^2
+	 	\end{cases}\]
+
+	 	\[ \underbrace{\max W}_{Q_T} = \underbrace{\max W}_{\delta_P Q_T} \]
+
+	 	\[ W(x,t) \leq \max\limits_{\delta_P Q_T} w \leq \max \{ \|f\|_\infty + \frac{M}{2}L^2, \|\alpha\|_\infty, \|\beta\|_\infty + \frac{ML^2}{2}\} \]
+
+	 	\(\leq \|f\|_\infty + \|\alpha\|_\infty + \|\beta\|_\infty + \frac{\|F\|_\infty}{2}L^2 \label{eq:estimacion_a_priori_calor}\)
+
+	 	\textbf{Conclusión}
+
+	 	\[ u(x,t) \leq u(x,t) + \frac{M}{2}x^2 \leq \eqref{eq:estimacion_a_priori_calor} \]
+
+	 	Análogamente $u(x,t) \geq … $
+
+	 	Resultado: $|u(x,t)| \leq \|F\|_\infty \frac{L^2}{2} + … $
+
+
+
+
+
+	\end{example}
+
 
 
 
