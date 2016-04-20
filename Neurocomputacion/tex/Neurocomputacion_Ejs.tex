@@ -2854,4 +2854,68 @@ es decir, la neurona cuyos pesos de entrada más se acercan al vector $\vx$.
 \end{enumerate}
 
 \subsection{Contrapropagación}
-\textcolor{red}{TODO}
+Las redes de \concept{contrapropagación} son redes neuronales multicapa que constan de cpaa de entrada, salida y clustering. Suelen emplearse para comprimir datos, aproximar funciones o asociar patrones.
+
+El entrenamiento de este tipo de redes se lleva a cabo en dos fases en cada una de las cuales nos fijamos en una parte de la red neuronal ligeramente diferente, como muestran las imágenes \ref{figure:counterpropagationPhase1}, \ref{figure:counterpropagationPhase2} y \ref{figure:counterpropagationTotal}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/phase1.png}
+\caption{Neuronas activas durante la primera fase del entrenamiento}
+\label{figure:counterpropagationPhase1}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.6\textwidth]{img/phase2.png}
+\caption{Neuronas activas durante la segunda fase del entrenamiento}
+\label{figure:counterpropagationPhase2}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=0.8\textwidth]{img/total.png}
+\caption{Red neuronal contrapropagación}
+\label{figure:counterpropagationTotal}
+\end{figure}
+
+El algoritmo de entrenamiento es:
+
+\begin{enumerate}
+\item Inicializamos los pesos, factores de aprendizaje, etc
+\item Mientras no se de la condición de parada para la fase 1:
+\begin{enumerate}
+\item Para cada par de patrones de entrenamiento $\vx:\vy$.
+\begin{enumerate}
+\item Establecer activaciones de los niveles $X$ e $Y$ con los valores de $\vx$ e $\vy$ respectivamente.
+\item Encontrar la neurona de cluster, $Z_j$, ganadora, es decir, aquella cuyo vector de pesos de entrada sea el más cercano al vector $\vx:\vy$.
+\item Actualizar los pesos de esta neurona ganadora:
+\[Δv_{ij} = α(\vx_i-v_{ij})\]
+\[Δw_{kj} = β(\vy_k - w_{kj})\]
+\end{enumerate}
+\item Reducimos los factores de aprendizaje α y β
+\end{enumerate}
+\item Mientras que no se de la condición de parada para la fase 2:
+\begin{enumerate}
+\item Para cada par de patrones $\vx:\vy$
+\begin{enumerate}
+\item Establecer activaciones de los niveles $X$ e $Y$ con los valores de $\vx$ e $\vy$ respectivamente.
+\item Encontrar la neurona de cluster, $Z_j$, ganadora, es decir, aquella cuyo vector de pesos de entrada sea el más cercano al vector $\vx:\vy$.
+\item Actualizar los pesos de esta neurona ganadora:
+\[Δv_{ij} = α(\vx_i-v_{ij})\]
+\[Δw_{kj} = β(\vy_k - w_{kj})\]
+\obs Llegados a este punto α y β son muy pequeños ya que han ido siendo reducidos en cada iteración de la fase 1.
+\item Actualizar los pesos desde la neurona $Z_j$ ganadora hasta las capas de salida
+\[Δu_{ij} = a(\vx_i-v_{ij})\]
+\[Δt_{kj} = b(\vy_k - w_{kj})\]
+\end{enumerate}
+\item Reducimos los factores de aprendizaje $a$ y $b$.
+\end{enumerate}
+\end{enumerate}
+
+\obs A la hora de buscar la neurona de clustering ganadora, en caso de haber un empate se toma aquella con índice más pequeño.
+
+\subsubsection{Contrapropagación sólo hacia delante}
+Se trata de una variación de la red neuronal de contrapropagación en la que las neuronas sólo disparan hacia delante. Se utilizan para aproximar funciones de la forma $\vy=f(\vx)$ que no son necesariamente invertibles.
+
+La red neuronal es igual a la de contrapropagación mostrada en la figura \ref{figure:counterpropagationTotal} solo que sin los niveles $\vx^*$ ni $\vy^*$. La única capa de entrada es el nivel $\vx$ y el único nivel de salida es $\vy$. Sólo se utilizan los factores de aprendizaje $a$ y α, manteniéndose un sistema de entrenamiento equivalente (con los nuevos conceptos de entradas y salidas que acabamos de comentar)
