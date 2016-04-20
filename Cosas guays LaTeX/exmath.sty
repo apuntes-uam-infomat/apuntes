@@ -67,6 +67,30 @@
   \textcolor{blue}{Hecho por mÃ­. No fiarse al 100\%}%
 }
 
+\newcommand*\IsExactlyOneToken[1]{%
+  TT\fi
+  \ifx\@empty#1\@empty
+    \expandafter\@EmptyCase
+  \else
+    \expandafter\@IsOnlyOneToken
+  \fi
+  #1\@@@
+}
+\@ifdefinable\@IsOnlyOneToken{\def\@IsOnlyOneToken#1#2\@@@{%
+  \ifx\@empty#2\@empty
+}}
+\@ifdefinable\@EmptyCase{\def\@EmptyCase#1\@@@{% #1 for robustness
+  \iffalse % since 0 != 1
+}}
+
+\newcommand{\@addparensifrequired}[1]{
+	\if\IsExactlyOneToken{#1}%
+		\,#1%
+    \else
+		\left(#1\right)%
+  	\fi
+}
+
 % Se puede definir de forma genérica con \doneby{Quién}.
 \newcommand{\doneby}[1]{\textcolor{\@nameuse{probcolor-#1}}{\itshape Hecho por #1. Se aceptan correcciones.}} % 1: Autor | Muestra el texto "Hecho por..."
 \newcommand{\approvedby}[1]{\textcolor{\@nameuse{probcolor-#1}}{\itshape Revisado por #1. Se siguen aceptando correcciones}} % 1: Autor | Muestra el texto "Revisado por..."
@@ -631,6 +655,6 @@
 \newcommandx{\hconvs}[3][1=,2=n,3=\infty]{\xrightharpoonup[\ifthenelse{\equal{#2}{}}{}{#2\to #3}]{#1}} % 1O: txt. arriba; 2O:
 \newcommandx{\wconvs}[2][1=,2=\infty]{\hconvs[][#1][#2]}
 \newcommandx{\wsconvs}[2][1=,2=\infty]{\hconvs[\ast][#1][#2]}
-\newcommand{\dual}[1][X]{\ensuremath{{#1}^*}\xspace}
-\newcommand{\ddual}[1][X]{\ensuremath{{#1}^{**}}\xspace}
+\newcommand{\dual}[1][X]{\ensuremath{{\@addparensifrequired{#1}}^*}\xspace}
+\newcommand{\ddual}[1][X]{\ensuremath{{\@addparensifrequired{#1}}^{**}}\xspace}
 
