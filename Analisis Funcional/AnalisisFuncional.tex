@@ -529,7 +529,7 @@ Una vez hemos demostrado que $A$ está acotada, entonces la continuidad sigue de
 
 Un tema interesante es que el espacio de aplicaciones lineales sobre espacios normados es también un espacio normados. Incluso llega a ser Banach si el espacio de llegada es Banach. Para demostrarlo, primero definiremos la norma que usaremos:
 
-\begin{prop} \label{prop:NormaEspacioAppLineales} Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados sobre un mismo cuerpo \kbb. Entonces $\mathcal{L}(V,W)$\footnote{Aplicaciones lineales y continuas de $V$ en $W$, ver \eqref{eq:EspApplLinealesConts}.} es normado si definimos \( \norm{A} ≝ \sup_{v∈V \setminus \set{0}} \frac{\norm{A(v)}_W}{\norm{v}_V} \label{eq:NormaEspacioAppLineales} \)
+\begin{prop}[Norma\IS de morfismos de espacios normados] \label{prop:NormaEspacioAppLineales} Sean $(V, \norm{·}_V)$ y $(W, \norm{·}_W)$ dos espacios normados sobre un mismo cuerpo \kbb. Entonces $\mathcal{L}(V,W)$\footnote{Aplicaciones lineales y continuas de $V$ en $W$, ver \eqref{eq:EspApplLinealesConts}.} es normado si definimos \( \norm{A} ≝ \sup_{v∈V \setminus \set{0}} \frac{\norm{A(v)}_W}{\norm{v}_V} \label{eq:NormaEspacioAppLineales} \)
 \end{prop}
 
 \begin{proof} La acotación de $A ∈ \mathcal{L}(V,W)$ (\fref{prp:LinealEspNormados:Cota}) nos da directamente que esa norma está bien definida, ya que \[ \norm{A(v)}_W ≤ C\norm{v}_V \implies \frac{\norm{A(v)}_W}{\norm{v}_V} ≤ C < ∞ \quad ∀v ≠ 0\]
@@ -1359,7 +1359,7 @@ Esta última desigualdad es la que vamos a demostrar, utilizando para ello el le
 
 Nos basta probar que $ \abs{\sum_{j=1}^n \beta_j \pesc{\xi, \lambda_j}} \leq \norm{\sum_{j=1}^n \beta_j \lambda_j}_{X^{**}} $.
 
-$\abs{\sum_1^n \beta_j \pesc{\xi, \lambda_j}} = \abs{\pesc{\xi, \sum_1^n \beta_j \lambda_j}} \leq \norm{\xi}_{X^{**}} \norm{\sum_1^n \beta_j \lambda_j}_{X^*} $ 
+$\abs{\sum_1^n \beta_j \pesc{\xi, \lambda_j}} = \abs{\pesc{\xi, \sum_1^n \beta_j \lambda_j}} \leq \norm{\xi}_{X^{**}} \norm{\sum_1^n \beta_j \lambda_j}_{X^*} $
 
 \end{proof}-
 
@@ -1485,6 +1485,8 @@ Si $p = 1$ y además \meas es un espacio de medida σ-finita\footnote{\citep[Def
 Por último, el dual de $L^∞\meas$ contiene estrictamente a $L^1\meas$ savo en casos triviales.
 \end{theorem}
 
+\subsection{Introducción: $L^p$ son espacios de Banach}
+
 Aunque aquí hemos puesto los espacios de medida explícitamente, los omitiremos y daremos por supuesto para no recargar demasiado las definiciones.
 
 Para la demostración necesitaremos la desigualdad de Hölder\footnote{En Variable Real, \citep[Proposición III.1]{ApuntesVarReal}.}.
@@ -1549,8 +1551,57 @@ Escogeremos inductivamente $1 ≤ n_1 < n_2 < \dotsb <n_k \to ∞$ de tal forma 
 
 Sea ahora \[ G_n(x) = \sum_{k = 1}^n \abs{g_{k+1}(x) - g_k(x)}\quad n ∈ ℕ \] para lo que podemos calcular su $p$-norma: \[ \norm{G_n}_p = \norm[3]{\sum_{k=1}^n \abs{g_{k+1}(x) - g_k(x)}}_p \eqreasonup[≤]{\nref{prop:DesMinkowsky}} \sum_{k=1}^n \norm{g_{k+1} - g_k}_p \sum_{k = 1}^n 2^{-k} = 1 \]
 
-Como además de estar acotada $G_n$ es una sucesión monótona creciente, definimos $G(x) = \lim_{n \to ∞} G_n(x)$, y el teorema de convergencia monótona \citep[Teorema I.14]{ApuntesVarReal} nos dice que $\norm{G}_p = \lim_{n \to ∞} \norm{G_n}_p$.
+Como además de estar acotada $G_n$ es una sucesión monótona creciente, definimos $G(x) = \lim_{n \to ∞} G_n(x)$, y el teorema de convergencia monótona \citep[Teorema I.14]{ApuntesVarReal} nos dice que $\norm{G}_p = \lim_{n \to ∞} \norm{G_n}_p$, luego $G ∈ L^p$ y equivalentemente $G^p ∈ L^1$ gracias a que $G$ son no negativas. A su vez esto nos dice que $0 ≤ G^p(x) < ∞$ en μ-ctp\footnote{Abreviación: Casi todo punto con respecto a la medida μ.}.
+
+Consideramos ahora un punto $x ∈ X$. Si $G(x) < ∞$ y damos índices $m > n ≥ 2$, entonces tenemos que \begin{align*}
+\abs{g_m(x) - g_n(x)}
+	&= \abs{(g_m(x) - g_{m-1}(x)) + \dotsb + (g_{n+1}(x) - g_n(x))} \\
+	&≤ \abs{g_m(x) - g_{m-1}(x)} + \dotsb + \abs{g_{n+1}(x) - g_n(x)} = \\
+	&= \sum_{k = n}^{m-1} \abs{g_{k+1}(x) - g_k(x)}
+		= G_{m-1}(x) - G_{n-1}(x) \\
+	&≤ G(x) - G_{n-1}(x) \convs 0
+\end{align*}
+
+Luego lo que estamos diciendo es que la sucesión $\set{g(x)}_{n ≥ 1}$ es de Cauchy en \kbb si $G(x) < ∞$. Así, podemos definir la función \[ f(x) = \begin{cases}
+\lim_{n \to ∞} g_n(x) & G(x) < ∞ \\
+0 & G(x) = ∞
+\end{cases}\] que es medible por un límite de funciones medibles, y además podemos dar una cota $\abs{f(x) - g_k(x)} = \lim_{n \to ∞} \abs{g_n(x) - g_k(x)} ≤ G(x) - G_{n-1}(x) ≤ G(x)$, donde $G(x)$ es finito en μ-ctp.
+
+Con esto podremos aplicar el teorema de convergencia dominada \citep[Teorema I.18]{ApuntesVarReal}: sabemos que $\abs{f(x) - g_k(x)}^p ≤ G(x)^p ∈ L^1$ y que $f(x) - g_k(x) \to 0$ si $G(x) < ∞$, luego en resumidas cuentas \[ \int_X \abs{f - g_k}^p \dif μ \convs[][k] 0 \implies \abs{f- g_k}^p \convs[L^1][k]\] y entonces $\set{g_k}_{k ≥ 1}$ tiene límite $f$ en $L^p$.
+
+Finalmente, como $\set{g_k}$ es una subsucesión de la sucesión de Cauchy $\set{f_n}_{n ≥ 1} ⊂ L^p$, entonces $f_n$ converge igualmente a $f$ en $L^p$ y por lo tanto $L^p$ es completo.
 \end{proof}
+
+\subsection{Dualidad en espacios $L^p$}
+
+\begin{lemma} Si $1 ≤ p ≤ ∞$, entonces hay una inclusión isométrica $L^q\meas ⊂ L^p\meas^*$ en el siguiente sentido: si $g ∈ L^q$ y $λ_g$ es un funcional lineal \begin{align*}
+\appl{λ_g}{L^p&}{\kbb} \\
+f &\longmapsto \int_X gf \dif μ
+\end{align*}
+
+La norma del funcional será $\norm{λ_g}_{(L^p)^*} ≤ \norm{g}_q$ con igualdad cuando $1 < p ≤ ∞$.
+\end{lemma}
+
+\begin{proof} Es fácil ver que está bien definido: por la \nlref{prop:DesHolder} la integral está acotada: \[ \abs{λ_g(x)} = \norm{fg}_1 ≤ \norm{g}_q \norm{f}_p < ∞\] y es obvio que es perfectamente lineal. Esto además da una acotación para la norma del funcional: \( \label{eq:CotaFuncLinealLp} \norm{λ_g}_{(L^q)^*} ≤ \norm{g}_q \)
+
+Para la demostración de la norma, sea $g ∈ L^q$ con $g ≠ 0$ para no tener el funcional nulo, y con $1 ≤ q < ∞$. Sea ahora $f$ tal que \[ f= \abs{g}^{\frac{1}{p-1}}\sign g\qquad \sign g = \begin{cases} \frac{g}{\abs{g}} & g ≠ 0 \\ 0 & g = 0\end{cases}\] e interpretando además $\frac{1}{p-1} = 0$ si $p = ∞$.
+
+Esta función está en $L^p$, ya que $\abs{f}^p = \abs{g}^{\frac{p}{p-1}} = \abs{g}^q ∈ L^1$.
+
+Con esto, podemos calcular $λ_g(f)$: \[ λ_g(f) = \int_X \abs{g}^{\frac{1}{p-1}} \underbracket{g \sign g}_{\abs{g}} \dif μ = \int_X \abs{g}^{1 + \frac{1}{p-1}} \dif μ = \int_X \abs{g}^q \dif μ = \norm{g}_q^q \]
+
+Recordamos ahora la definición de la norma de un funcional \eqref{eq:NormaEspacioAppLineales}: $\norm{A} ≝ \sup_{v∈V \setminus \set{0}} \frac{\norm{A(v)}_W}{\norm{v}_V}$. Luego como \[ \frac{λ_g(f)}{\norm{f}_p} = \frac{\norm{g}_q^q}{\norm{g}_q^{\sfrac{q}{p}}} = \norm{g}_q \]  y ya teníamos una cota superior en \eqref{eq:CotaFuncLinealLp}, lo que tenemos es que $\norm{λ_g}_{(L^q)^*} = \norm{g}_q$ y por lo tanto la inyección \begin{align}
+\appl{Λ}{L^q&}{(L^p)^*} \label{eq:InyeccionDualLp} \\
+g & \longmapsto λ_g \nonumber
+\end{align} es isométrica.
+\end{proof}
+
+Una cosa que querremos ver\footnote{No sé por qué, parece que tiene que ver algo con el Teorema de Representación de Riesz.} es que esa inyección \eqref{eq:InyeccionDualLp} es sobreyectiva si $1 < p < ∞$. Sabemos que si $2 ≤ p < ∞$ entonces $L^p$ es reflexivo por ser convexo. Si $1 < p ≤ 2$, entonces $Λ(L^p)$ es un subespacio cerrado de $L^q$ y como $L^q$ es reflexivo entonces $Λ(L^p)$ es reflexivo y como Λ es isometría entonces $L^p$ también es reflexivo, luego en resumen $L^p$ es reflexivo si $1 < p < ∞$.
+
+Para ver que $Λ$ es sobreyectiva entonces basta ver que como $Λ(L^q)$ es cerrado en $(L^p)^*$ nos basta ver que es denso en $(L^p)^*$. Sea $φ ∈ \ddual[(L^p)]$ y supongamos que $φ$ se anula sobre $Λ(\dual[(L^p)])$. Queremos demostrar que $φ \equiv 0$, lo que diría que $Λ(L^p)$ es denso como corolario del \nref{thm:HahnBanach}.
+\tabularnewline
+Como $L`p$ es reflexivo, φ se puede identificar con $\tilde{φ} ∈ L^q$ de la fomra $φ(u) = \pesc{\tilde{φ}, u} = \pesc{\tilde{φ}, Λ(\tilde{u})}$ con $u ∈ \dual[L^p]$ y $\tilde{u} ∈ L^p$ y en particular cogemos $\tilde{u} = \abs{\tilde{φ}}^{\frac{1}{p-1}}\sign \tilde{φ}$ y al final tenemos que $0 = \norm{\tilde{φ}}_q^q$, luego $\tilde{φ} = 0$, luego $φ = 0$. % LOLWHAT
+
 
 \chapter{Espacios de Hilbert}
 
