@@ -1,6 +1,7 @@
 \elst{arg0}{arg1}{arg2}#m
 \do{arg0}#m
 \pbreak#m
+\@addparensifrequired{arg0}#m
 \doneby{arg0}#m
 \approvedby{arg0}#m
 \noteby{arg0}{arg1}#m
