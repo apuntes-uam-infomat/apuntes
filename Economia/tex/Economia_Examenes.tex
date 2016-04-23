@@ -3,28 +3,144 @@
 \begin{problem}[1]
 Consideramos una opción que pagará a vencimiento (dentro de un año) $(S_4-A_4)^+$ siendo $A_4=\frac{1}{4}\sum_{i=1}^4S_i$, la media de los valores del subyacente dentro de tres, seis, nueve y doce meses.
 
-\ppart Calcular el valor de esta opción. Para ello supondremos que la dinámica para los doce próximos meses viene descrita por un modelo binomial de cuatro periodos. En cada periodo el activo puede subir o bajar un 3\%. El tipo libre de riesgo es el 5\% anual para composición continua. El activo no paga dividendos y su valor acutal es 10.
+\ppart Calcular el valor de esta opción. Para ello supondremos que la dinámica para los doce próximos meses viene descrita por un modelo binomial de cuatro periodos. En cada periodo el activo puede subir o bajar un 3\%. El tipo libre de riesgo es el 5\% anual para composición continua. El activo no paga dividendos y su valor actual es 10.
 
 \ppart ¿Cuál sería el impacto en este valor si el subyacente pagase dividendos en el noveno mes?
 
 \solution
+\doneby{Pedro}
 
+\spart
+
+Puesto que el activo puede subir o bajar un 3\% en cada período tenemos $a=1.03$ y $b=0.97$. El enunciado nos dice que el tipo libre de riesgo es $r=0.05$ en composición continua y tenemos $Δt=1/4=0.25$. Para calcular la probabilidad riesgo neutro nos apoyamos en el hecho de que no pueden existir arbitajes en nuestro modelo por lo que el valor actual del subyacente debe coincidir con el proceso de precios descontados, es decir:
+\[S_0 = \frac{aS_0p + bS_0(1-p)}{e^{rΔt}} \implies p = \frac{e^{rΔt}-b}{a-b} = 0.71\]
+
+La siguiente tabla contiene los posibles caminos que debemos estudiar:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Camino} & \textbf{Probabilidad} & \textbf{Valor} & \textbf{Valor ponderado}\\
+\hline
+aaaa & 0.25 & 0 & 0 \\
+aaab & 0.10 & 0 & 0 \\
+aaba & 0.10 & 0 & 0 \\
+aabb & 0.04 & 0 & 0 \\
+abaa & 0.10 & 0 & 0 \\
+abab & 0.04 & 0 & 0 \\
+abba & 0.04 & 0 & 0 \\
+abbb & 0.02 & 0.15 & 0.003 \\
+baaa & 0.10 & 0 & 0 \\
+baab & 0.04 & 0 & 0 \\
+baba & 0.04 & 0.15 & 0.006 \\
+babb & 0.02 & 0.3 & 0.006 \\
+bbaa & 0.04 & 0.3 & 0.012 \\
+bbab & 0.02 & 0.45 & 0.009 \\
+bbba & 0.02 & 0.59 & 0.012 \\
+bbbb & 0.007 & 0.73 & 0.005 \\
+\hline
+\end{tabular}
+\end{center}
+
+Para calcular el valor de la opción debemos sumar los valores ponderados y descontar dicho valor patra ``traerlo al presente''.
+
+\[V_0(X) = \frac{0.003+0.06+0.006+0.012+0.009+0.012+0.005}{e^{0.05\cdot 0.25\cdot 4}}=\frac{1.07}{1.05}=0.1\]
+
+\spart
+
+Si se reparten dividendos en un cierto momento, el valor del subyacente en ese momento caerá. Esto hará que la media de los valores por los que pasa el subyacente se reduzca y por tanto aumente el valor de la opción. Un aumento del valor de la opción, evidentemente, implica un aumento de su valor actual.
 \end{problem}
 
 \begin{problem}[2]
 Consideremos el subyacente $S_0=50$ cuya dinámica para los próximos seis meses viene descrita por un modelo binomial de dos periodos. En cada periodo el activo puede subir o bajar un 20\%. El tipo libre de riesgo es el 12\% anual para composición continua. El activo no paga dividendos.
 
-\ppart Calcular la probabilidad riesgo neutro de pasar al estdo alto
+\ppart Calcular la probabilidad riesgo neutro de pasar al estado alto
 
-\ppart Calcular el valor de la put americana de precio de ejeercicio 52
+\ppart Calcular el valor de la put americana de precio de ejercicio 52
 
 \ppart Si el activo pagase dividendos, ¿el precio de la put sería mayor o menos?
 
-\ppart Consideremos ahora un derivad sobre dicho subyacente que paga, al final de los seis meses, $M_2(ω)-m_2(ω)$ donde
+\ppart Consideremos ahora un derivado sobre dicho subyacente que paga, al final de los seis meses, $M_2(ω)-m_2(ω)$ donde
 \[M_2(ω)=\max(S_0(ω),S_1(ω),S_2(ω)), \;\;\; m_2(ω)=\min(S_0(ω),S_1(ω),S_2(ω))\]
 Calcular la caretara de cobertura en cada nodo.
 
 \solution
+\doneby{Pedro}
+
+\spart
+
+Si en cada período el activo puede subir o bajar un 20\% tenemos $a=1.2$ y $b=0.8$. Como hicimos en el ejercicio anterior, calculamos la probabilidad riesgo neutro forzando que el valor actual del activo coincida con su valor de precios descontados, de modo que no hay arbitrajes:
+\[S_0 = \frac{aS_0p + bS_0(1-p)}{e^{rΔt}} \implies p = \frac{e^{rΔt}-b}{a-b} = 0.58\]
+recordemos que en este caso $r=0.12$.
+
+\spart
+
+La put es un contrato que nos da derecho a vender por un determinado precio. Esta opción tendrá valor no nulo cuando el subyacente al que está asociada haya disminuido de precio. En caso contrario nos interesará vender al valor actual y no al acordado en la put, por lo que no estaremos ejerciendo dicho contrato.
+
+La put americana presenta la particularidad de que nos permite ejercer en cualquier momento.
+
+La siguiente tabla muestra el precio de opción en $T=2$.
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Camino} & \textbf{Valor}\\
+\hline
+aa & 0 \\
+ab & 4 \\
+ba & 4 \\
+bb & 20 \\
+\hline
+\end{tabular}
+\end{center}
+
+Sin embargo, podía ocurrir que hubiésemos ejercicio antes de llegar a esta situación. Vamos a estudiar el valor de esta opción en los estados $aS_0$ y $bS_0$.
+
+\begin{itemize}
+\item \textbf{Estado $aS_0$}
+En este momento no tiene sentido ejercer puesto que el subyacente vale más que el precio de ejercicio. Por tanto el valor en este estado es el resultado de los valores en $abS_0$ y $aaS_0$ descontados:
+
+\[V_{a} = \frac{p\cdot (abS_0-K)^+ + (1-p)\cdot (aaS_0-K)^+}{e^{0.12\cdot 0.25}}=1.65\]
+
+\item \textbf{Estado $bS_0$}
+
+El valor de la opción si ejercemos en este punto es $V_{b_1} = K-bS_0=12$. Si no ejercemos tendremos un valor:
+\[V_{b_2} = \frac{p\cdot (baS_0-K)^+ + (1-p)\cdot (bbS_0-K)^+}{e^{0.12\cdot 0.25}} = 10.46\]
+
+Por tanto en esta situación nos interesa ejercer con lo que el valor de la opción en este punto será
+\[V_b = 12\]
+\end{itemize}
+
+Ahora en el estado inicial tenemos que el precio de la opción es:
+\[V(X) = \frac{12\cdot (1-p) + 1.65\cdot p}{e^{0.12\cdot 0.25}} = 5.86\]
+
+\spart Si pagase dividendos, en el momento del pago el valor decaería con lo que la put ganaría valor haciendo que el precio de la opción aumentase.
+
+\spart
+
+\begin{itemize}
+\item \textbf{Nodo $aS_0$}
+
+En este momento tenemos una opción que paga $a^2S_0-S_0$ con probabilidad $p$ y $a^S_0-S_0$ con probabilidad $(1-p)$.
+
+Para replicar esta cartera podemos jugar con el subyacente $S_0$ y la cuenta bancaria con rendimiento fijo conocido. Así necesitamos $\varphi_1$ acciones del activo $S_0$ e $\varphi_0$ de la cuenta bancaria de modo que:
+
+\[\left\{\begin{array}{l}
+\varphi_0 e^{0.12\cdot 0.25}+\varphi_1 \cdot 72 = 22 \\
+\varphi_0 e^{0.12\cdot 0.25}+\varphi_1 \cdot 50 = 10 \\
+\end{array}\right. \implies \varphi_1 = \frac{12}{22} = 0.5, \;\; \varphi_0 = -14.56\]
+
+\item \textbf{Nodo $bS_0$}
+
+En este momento tenemos una opción que paga $S_0-bS_0$ con probabilidad $p$ y $S_0-b^2S_0$ con probabilidad $(1-p)$. Calculamos la cartera de cobertura:
+\[\left\{\begin{array}{l}
+\varphi_0 e^{0.12\cdot 0.25}+\varphi_1 \cdot 50 = 10 \\
+\varphi_0 e^{0.12\cdot 0.25}+\varphi_1 \cdot 32 = 18 \\
+\end{array}\right. \implies \varphi_1 = \frac{-8}{18} = -0.44, \;\; \varphi_0 = 31.13\]
+
+\item \textbf{Nodo $S_0$}
+No podemos calcular una cartera de cobertura en este nodo pues tenemos demasiados estados finales.
+\end{itemize}
 
 \end{problem}
 
