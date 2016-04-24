@@ -5,13 +5,16 @@ import random
 def computeValueSTMinusMin(path, a, b, p, S0, barrera, K):
 	prob = 1
 	value = S0
-	minimum = S0
+	minimum = a**len(path)*S0
+	string =""
 
 	for i in path:
 		if i == a:
 			prob = prob * p
+			string = string +"a"
 		elif i == b:
 			prob = prob *(1-p)
+			string = string + "b"
 		else:
 			print "Some error occurs"
 
@@ -19,6 +22,7 @@ def computeValueSTMinusMin(path, a, b, p, S0, barrera, K):
 		if value < minimum:
 			minimum = value
 
+	print string, " & ",  str("{:.4f}".format(value - minimum)), " & ", str("{:.4f}".format(prob)), " \\\\"
 	return (value - minimum) * prob
 
 
@@ -335,4 +339,6 @@ def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
 
 #print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueAssetORNothing, 10, 0)
 
-print compute_future_value_binary_tree(1.07,0.93,0.512,12,12,computeValuePutBarreraDown_Out, 1.07**(-8)*12, 12)
+#print compute_future_value_binary_tree(1.07,0.93,0.512,12,12,computeValuePutBarreraDown_Out, 1.07**(-8)*12, 12)
+
+print compute_future_value_binary_tree(1.092412275,0.9154053122,0.9179234294,4,10,computeValueSTMinusMin, 1.08**8*12, 12)
