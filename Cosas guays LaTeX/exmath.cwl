@@ -83,6 +83,7 @@
 \rg#m
 \tr#m
 \dist#m
+\inter#m
 \eqexpl{arg1}#m
 \eqexpl[=]{arg1}#m
 \wrapreasontext{arg0}#m
