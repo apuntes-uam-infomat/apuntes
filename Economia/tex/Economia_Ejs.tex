@@ -827,7 +827,7 @@ Hasta ahora teníamos
 Puesto que ahora queremos cambiar el numerario, llamando $S^1$ al nuevo numerario tendremos:
 \[C_0 = \frac{1}{S^1_N}\sum_{n=0}^N(q')^n(1-q')^{N-n}(a^nb^{N-n}S_0-K)^+\]
 siguiendo el mismo razonamiento empleado en los apuntes llegaríamos a que
-\[\phi(n_0,N,q') = \sum_{n=n_0}^Nq^n(1-q)^{N-n}S_0a^nb^{N-n}\]
+\[\phi(n_0,N,q') = \sum_{n=n_0}^N(q')^n(1-q')^{N-n}\]
 Ahora, con el mismo razonamiento del apartado anterior, es sencillo ver que
 \[\phi(n_0,N,q') = \mathbb{P}(S_N>K) \text{ siendo } \mathbb{P} \text{ la nueva probabilidad martingala}\]
 
@@ -887,7 +887,7 @@ Para calcular las derivadas nos apoyamos en que los dos primeros sumandos de la 
 \spart
 
 Al considerar $S_0=K$ tendremos
-\[d_{\pm} = \frac{1}{σ\sqrt{T}}\left( \ln \frac{S_0}{S_0e^{-rT}}\pm \frac{1}{2}σ^2T\right) = d_{\pm} = \frac{1}{σ\sqrt{T}}\left( \ln \frac{1}{e^{-rT}}\pm \frac{1}{2}σ^2T\right)\]
+\[d_{\pm} = \frac{1}{σ\sqrt{T}}\left( \ln \frac{S_0}{S_0e^{-rT}}\pm \frac{1}{2}σ^2T\right)  = \frac{1}{σ\sqrt{T}}\left( \ln \frac{1}{e^{-rT}}\pm \frac{1}{2}σ^2T\right)\]
 con lo que $d_{\pm}$ y con ellos $N(d_{\pm})$ ya no depende de $S_0$ ni de $K$.
 
 Por tanto
@@ -1030,7 +1030,7 @@ El activo $A$ tiene un precio anual de 10 y una volatilidad del 27\%. El tipo de
 
 \ppart ¿Cuál es el precio (Black-Scholes) de una opción que da derecho, dentro de tres meses, a comprar una unidad del subyacente a su precio actual? (Se calculará $N(x)$ como un desarrollo de Taylor)
 
-\ppart Si una institución ha vendido opciones que dan derecho a la compra, dentro de tres meses, de 1000 acciones de la empresa $A$ al precio unitario de 12, ¿Cómo deberá cubrirse frente a posibles cambios advesros en el precio del subyacente?
+\ppart Si una institución ha vendido opciones que dan derecho a la compra, dentro de tres meses, de 1000 acciones de la empresa $A$ al precio unitario de 12, ¿Cómo deberá cubrirse frente a posibles cambios adversos en el precio del subyacente?
 \solution
 \doneby{Pedro}
 
@@ -1044,14 +1044,45 @@ Para calcular $N(x)$, siguiendo la sugerencia del enunciado, calculamos:
 \[=\frac{1}{\sqrt{2π}}\left(x-\frac{x^3}{3 \cdot 2 \cdot 1!} +\frac{x^5}{5 \cdot 4 \cdot 2!} - \frac{x^7}{7\cdot 8 \cdot 3!}+...\right)\]
 
 Para emplear la fórmula de Black-Scholes debemos calcular $d_{\pm}$:
-\[d_{\pm} = \frac{1}{0.27\sqrt{1}}\left(\ln \frac{10}{10e^{-0.05}}\pm\frac{1}{2}0.27^2 \right)=3.73 \left(0.05 \pm 0.0365\right) \implies d_+ = 0.323, \;\; d_-=0.05 \]
+\[d_{\pm} = \frac{1}{0.27\sqrt{0.25}}\left(\ln \frac{10}{10e^{-0.05\cdot 0.25}}\pm\frac{1}{2}0.27^2 \cdot 0.25\right)=7.4 \left(0.0125 \pm 0.009\right) \implies\]
+\[\implies d_+ = 0.16, \;\; d_-=0.025 \]
 
 Ya estamos en conidciones de realizar las operaciones pertinentes obteniendo:
-\[C_0(10,10,0.27,0.05,1) = 10 \cdot 0.317 - 10\cdot 0.95 \cdot 0.05 = 2.7\]
+\[C_0(10,10,0.27,0.05,1) = 10 \cdot 0.06 - 10\cdot 0.95 \cdot 0.01 = 0.5\]
 
 \spart
 
-\textcolor{red}{TODO}
+\textcolor{red}{No estoy nada convencido de lo que estoy haciendo aqui. Avisadme si veis errores}
+%Con las fórmulas del apartado anterior, siendo en este caso $K=12$, $S_0=10$ tenemos:
+%\[d_{\pm} = \frac{1}{0.27\sqrt{0.25}}\left(\ln \frac{10}{12e^{-0.05\cdot 0.25}}\pm\frac{1}{2}0.27^2\cdot 0.25 \right) \implies d_+ = -1.19, \;\; d_-=-1.325 \]
+%lo que nos lleva a
+%\[C_0(10,12,0.27,0.05,1) = 10 \cdot 0.62 - 10\cdot 0.95 \cdot 0.6 = 0.5\]
+
+%Por tanto, con la venta de la opción descrita, obtenemos un capital de 500.
+
+Si el valor de las acciones de la emprea $A$ decae y a vencimiento se encuentra por debajo de 12 habremos ganado puesto que el comprado de nuestras opciones no va a ejercer su derecho a compra ya que en el mercado puede comprar las acciones más baratas que con nuestro contrato.
+
+El problema aparece si ocurre al revés, las acciones suben de precio. Para cubrirnos ante esta situación adversa podemos comprar 1000 opciones asset or nothing que paguen $S_T$ si $S_T>12$ y 0 en caso contrario.
+
+Esta compra tendrá un coste de
+\[1000\cdot V(X_1) = 1000\cdot e^{-rΔt}\sum_{i=n_0}^NS_T(ω_i)\mathbb{P}(ω_i)\]
+siendo $n_0$ tal que $\forall i>n_0, \;\; S_T(ω_i)>12$.
+
+La venta que hemos realizado nos ha permitido ingresar:
+\[1000\cdot V(X_2) = 1000 \cdot e^{-rΔt} \sum_{i=n_0}^N(S_T(ω_i)-12)\mathbb{P}(ω_i)\]
+con el mismo valor de $n_0$ de la cuenta anterior.
+
+Si el subyacente acaba en un valor superior a 12 obtendremos $12000$ a vencimiento puesto que las acciones obtenidas con nuestro asset or nothing son vendidas a precio 12. Si el subyacente acaba en un valor inferior a 12 no obtendremos nada a vencimiento. En total nuestros dos posibles ``estados financieros'' serán:
+\begin{itemize}
+\item \textbf{La acción supera el precio de ejercicio}
+\[1000\cdot e^{-rΔt} \left(12-\sum_{i=n_0}^NS_T(ω_i)\mathbb{P}(ω_i)+\sum_{i=n_0}^N(S_T(ω_i)-12)\mathbb{P}(ω_i)\right) \geq 0\]
+En la última igualdad nos hemos apoyado en que la suma de todas las probabilidades es 1, por tanto, si solo sumamos una parte de las probabilidades obtenemos algo menor que 1.
+\item \textbf{La acción no alcanza el precio de ejercicio}
+\[1000\cdot e^{-rΔt} \left(S_T-\sum_{i=n_0}^NS_T(ω_i)\mathbb{P}(ω_i)+\sum_{i=n_0}^N(S_T(ω_i)-12)\mathbb{P}(ω_i)\right) =\]
+\[= 1000\cdot e^{-rΔt} \left(S_T -12 \cdot \mathbb{P}(S_T(ω_i)>12) \right)\]
+
+Si hemos vendido esta opción es porque esperamos que la acción baje de precio es decir, consideramos $\mathbb{P}(S_T(ω_i)>12)$ pequeño con lo que en esta situación esperamos llegar a obtener beneficios.
+\end{itemize}
 \end{problem}
 
 \begin{problem}[8]
