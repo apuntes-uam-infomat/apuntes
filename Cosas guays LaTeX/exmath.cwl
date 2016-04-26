@@ -1,6 +1,7 @@
 \elst{arg0}{arg1}{arg2}#m
 \do{arg0}#m
 \pbreak#m
+\@addparensifrequired{arg0}#m
 \doneby{arg0}#m
 \approvedby{arg0}#m
 \noteby{arg0}{arg1}#m
@@ -82,6 +83,7 @@
 \rg#m
 \tr#m
 \dist#m
+\inter#m
 \eqexpl{arg1}#m
 \eqexpl[=]{arg1}#m
 \wrapreasontext{arg0}#m

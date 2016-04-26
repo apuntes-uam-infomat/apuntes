@@ -1,0 +1,582 @@
+\documentclass{beamer}
+
+%\usepackage{beamerthemetreebars}
+\usepackage{graphicx}
+%\usepackage{beamerthemesplit}
+%\beamertemplateshadingbackground{red!10}{blue!10}
+
+%----------------------------------------------------------------------
+% Para que aparezcan varias transparencias en la misma p\'{a}gina
+\usepackage{pgfpages}
+%\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm,landscape]
+%----------------------------------------------------------------------
+% Suprime los s\'{\i}mbolos de navegaci\'{o}n
+\setbeamertemplate{navigation symbols}{}
+%---------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+%----------------------------------------------------------------
+\newcommand{\ep}{\epsilon}
+\newcommand{\real}{{\rm I\kern-.17em R}}
+\newcommand{\pro}{\mbox{P}}
+%-----------------------------------------------------------------
+
+\title[Estad\'{\i}stica: Tema 4]{Tema 4\\
+Funciones convexas y optimización convexa}
+\author[Berrendero]
+{Jos\'{e} R. Berrendero}
+\date{}
+\institute{Departamento de Matem\'{a}ticas\\
+ Universidad Aut\'{o}noma de Madrid}
+
+%------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------
+
+
+
+\frame{\titlepage}
+%----------------------------------------------------------------------
+\begin{frame}[plain]
+\frametitle{Contenidos del tema 4}
+
+\begin{itemize}
+ 
+\item Repaso de algunos resultados sobre optimización de funciones.
+\item Funciones convexas. Caracterizaciones.
+\item Operaciones que preservan la convexidad.	
+\item Resultados generales sobre optimización convexa.
+
+ 
+\end{itemize}
+
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Notación}
+
+{\scriptsize
+Para una función $f:\mathbb{R}^n\to \mathbb{R}$, denotamos
+
+\
+
+\begin{itemize}
+\item \textbf{Derivada direccional}: sea $d\in\mathbb{R}^n$ con $d\neq 0$,
+\[
+f'(x,d)=\lim_{\lambda\to 0} \frac{f(x+\lambda d)-f(x)}{\lambda}.
+\]
+
+\
+
+\item \textbf{Derivadas parciales}: $f'_i(x) = f'(x,e_i)$ con $e_i=(0,\ldots,1,\ldots,0)^\top$.
+
+\
+
+\item \textbf{Gradiente}: $\nabla f(x) = (f'_1(x),\ldots,f'_n(x))^\top$.
+
+\
+
+\item \textbf{Matriz Hessiana}:
+\[
+Hf(x) = \left(\begin{array}{ccc}
+f''_{11}(x) & \cdots & f''_{1n}(x) \\
+\vdots & \ddots & \vdots \\
+f''_{n1}(x) & \cdots & f''_{nn}(x)
+\end{array}  \right)
+\]
+
+\end{itemize}
+}
+
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Propiedades básicas}
+
+{\scriptsize
+
+
+
+
+\begin{itemize}
+\item $f$ tiene derivadas parciales continuas $\Rightarrow$ $f$ es diferenciable $\Rightarrow$ $f$ tiene derivadas parciales.
+
+\
+
+\item $f$ diferenciable $\Rightarrow$ $f'(x,d)=\nabla f(x)^\top d$.
+
+\
+
+\item  $f$ es diferenciable en $\bar{x}$ si y solo si
+\[
+f(x) = f(\bar{x}) +  \nabla f(\bar{x})^\top (x-\bar{x}) + \|x-\bar{x}\| R(\bar{x};x-\bar{x}),
+\]
+donde $\lim_{x\to\bar{x}} R(\bar{x};x-\bar{x})=0$.
+
+\
+
+\item  $f$ es diferenciable dos veces en $\bar{x}$ si y solo si
+\[
+f(x) = f(\bar{x}) +  \nabla f(\bar{x})^\top (x-\bar{x}) + 
+\frac{1}{2} (x-\bar{x})^\top Hf(\bar{x}) (x-\bar{x}) +   \|x-\bar{x}\|^2 R(\bar{x};x-\bar{x}),
+\]
+donde $\lim_{x\to\bar{x}} R(\bar{x};x-\bar{x})=0$.
+
+
+\
+
+
+\item  Si $f$ es diferenciable en $\bar{x}$ y $\nabla f(\bar{x})^\top d < 0$ (resp. $>0$), entonces existe $\delta>0$ tal que $f(\bar{x})>f(\bar{x}+\lambda d)$ (resp. $<$) si $0<\lambda <\delta$.
+
+\end{itemize}
+}
+
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Condiciones para óptimos locales}
+
+\textbf{Condición necesaria de primer orden:} Sea $f$  diferenciable en $\bar{x}$. Si $\bar{x}$ es un mínimo o máximo local de $f$ entonces $\nabla f(\bar{x})=0$.
+
+\
+
+\textbf{Condiciones necesarias de segundo orden:} Sea $f$  dos veces diferenciable en $\bar{x}$. Si $\bar{x}$ es un mínimo local de $f$ entonces
+\begin{enumerate}
+\item  $\nabla f(\bar{x})=0$
+\item  $Hf(\bar{x})$ es semidefinida positiva
+\end{enumerate}
+
+\
+
+\textbf{Condiciones suficientes de segundo orden:} Sea $f$  dos veces diferenciable en $\bar{x}$. Si 
+\begin{enumerate}
+\item  $\nabla f(\bar{x})=0$
+\item  $Hf(\bar{x})$ es definida positiva
+\end{enumerate}
+entonces $\bar{x}$ es un mínimo local (estricto) de $f$.
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Funciones convexas}
+
+Una \textbf{función} $f:D\to \mathbb{R}$ es \textbf{convexa} si su dominio $D\subset\mathbb{R}^n$ es convexo, y para todo $x, y\in D$, para todo $\lambda\in [0,1]$, se verifica 
+\[
+f(\lambda x + (1-\lambda) y)\leq \lambda f(x) + (1-\lambda) f(y).
+\]
+
+\
+
+\begin{itemize}
+\item La \textbf{convexidad estricta} requiere $<$ en lugar de $\leq$.
+
+\
+
+\item Una función $f$ es \textbf{(estrictamente) cóncava} si $-f$ es (estrictamente) convexa.
+
+\
+
+\item $f$ es convexa si y solo si para todo $x$ y $u$, $g(t)=f(x+tu)$ es convexa (en su dominio, es decir, $\{t:\, x+tu\in D\})$.  
+\end{itemize}
+
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Algunos ejemplos}
+
+\begin{itemize}
+\item $f(x) = x^2$ es convexa.
+
+\
+
+\item  $f(x)=\max\{x_1,\ldots,x_n\}$ donde $x=(x_1,\ldots,x_n)^\top$ es convexa.
+
+\
+
+\item Las funciones afines $f(x) = Ax+b$ son cóncavas y convexas.
+
+\
+
+\item Cualquier norma $f(x)= \|x\|$ es una función convexa.
+
+\
+
+\item Si $S$ es convexo, la distancia a $S$, 
+\[
+f(x)=d(x,S)=\inf_{s\in S}\|x-s\|
+\]
+es una función convexa. 
+\end{itemize}
+
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Desigualdad de Jensen}
+
+\textbf{Teorema:} Si $f:D\to \mathbb{R}$ es convexa, entonces para todo $x_1,\ldots,x_k$ de su dominio y $\lambda_1,\ldots,\lambda_n\geq 0$ con $\lambda_1+\cdots + \lambda_k=1$ se cumple
+\[
+f(\lambda_1x_1+\cdots + \lambda_k x_k)\leq \lambda_1 f(x_1) +\ldots + \lambda_k f(x_k).
+\]
+
+{\scriptsize
+\textbf{Demostración:} Por inducción sobre $k$, observando que si $x=\lambda_1x_1+\cdots + \lambda_{k+1} x_{k+1}$, entonces  $
+x = \lambda y + (1-\lambda) x_{k+1}$,
+donde $y=\sum_{i=1}^k (\lambda_1/\lambda) x_i$, con $\lambda=1-\lambda_{k+1}$.
+}
+
+\
+
+
+Si $X$ es una v.a. que toma los valores $x_i$ con probabilidad $\lambda_i$, entonces $f[\mathbb{E}(X)]\leq \mathbb{E}[f(X)]$.
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Epigrafo}
+
+El \textbf{epigrafo}  de una función $f:D \to\mathbb{R}$ se define como:
+\[
+\mbox{epi}(f) = \{(x,t):\, x\in D, f(x)\leq t\}\subset \mathbb{R}^{n+1}.
+\]
+
+\
+
+\textbf{Teorema}: Una función es convexa  si y solo si su epigrafo  es un conjunto convexo. 
+
+\
+
+\textbf{Teorema}: Sea $\{f_i:\, i\in I\}$ una familia de funciones convexas definidas sobre un conjunto convexo no vacío $S$ tal que para todo $x\in S$, el conjunto $\{f_i(x):\, i\in I\}$ está acotado superiormente. Entonces la función $
+f(x) = \sup\{f_i(x):\, i\in I\}$, $x\in S$, es convexa.
+
+\
+
+{\scriptsize
+\textbf{Demostración:} $\mbox{epi}(f) = \bigcap_{i\in I}\mbox{epi}(f_i)$.
+}
+
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Funciones convexas diferenciables}
+
+
+
+\textbf{Teorema:} Sea $f:D\to\mathbb{R}$  diferenciable sobre un dominio convexo y abierto $D$. Entonces, $f$ es convexa si y solo si
+\[
+f(x)\geq f(\bar{x})+\nabla f(\bar{x})^\top (x-\bar{x}),
+\]
+para todo $x,\bar{x}\in D$.
+
+\
+
+{\scriptsize
+\textbf{Demostración:}
+
+($\Rightarrow$) Si $x,\bar{x}\in D$ y $f$ es convexa en $D$,
+\[
+f(\lambda x + (1-\lambda) \bar{x}) \leq \lambda f(x) + (1-\lambda) f(\bar{x}) \Leftrightarrow [f\big(\bar{x}+\lambda(x-\bar{x})\big) - f(\bar{x})] / \lambda \leq f(x) - f(\bar{x}).
+\]
+Se toman límites cuando $\lambda\to 0$.
+
+\
+
+($\Leftarrow$)  Si $x\neq y$ y $\lambda\in [0,1]$, se aplica la condición a $x$ e $y$ con $\bar{x}=\lambda x+(1-\lambda)y$:
+$f(x)\geq f(\bar{x})+\nabla f(\bar{x})(x-\bar{x})$ y $f(y)\geq f(\bar{x})+\nabla f(\bar{x})(y-\bar{x})$. Se multiplica la primera desigualdad por $\lambda$, la segunda por $1-\lambda$ y se suman.
+
+
+}
+
+
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Funciones convexas diferenciables dos veces}
+
+
+
+
+\textbf{Teorema:} Sea $f:D\to\mathbb{R}$  con dos derivadas continuas sobre un dominio convexo y abierto $D$. Entonces, $f$ es convexa si y solo si $Hf(x)$ es semidefinida positiva para todo $x\in D$.
+
+{\scriptsize
+\textbf{Demostración:}
+ Para $n=1$ se demuestra en los ejercicios. Para $n>1$ se considera $g(\lambda)=f(x+\lambda d)$ y se tiene en cuenta que $g''(\lambda)=d^\top Hf(x+\lambda d)d$.
+}
+
+\
+
+\begin{itemize}
+\item Una función dos veces diferenciable es cóncava si $D$ es convexo y $Hf(x)$ es semidefinida negativa para todo $x\in D$.
+
+\item Si $Hf(x)$ es definida positiva para todo $x\in D$, la función es estrictamente convexa, pero el recíproco no es cierto (por ejemplo, $f(x)=x^4$).
+
+
+\end{itemize}
+
+
+
+\end{frame}
+
+
+
+%----------------------------------------------
+\begin{frame}
+\frametitle{Operaciones que preservan la convexidad}
+
+\begin{itemize}
+
+\item El \textbf{supremo de funciones convexas} es una función convexa.
+
+\
+
+
+\item \textbf{Sumas ponderadas no negativas}: Si $f_i$ convexa y $w_i\geq 0$, para $i=1,\ldots,n$, entonces $f=w_1f_1+\ldots + w_nf_n$ es convexa.
+
+\
+
+\item \textbf{Composición con una aplicación afín}: $g(x)=f(Ax+b)$ es convexa  si $f$ es convexa.
+
+\
+
+
+
+
+\item \textbf{Composición}: Sea $D\subset\mathbb{R}^n$ y $f:D\to \mathbb{R}$ convexa. Sea $I\subset f(D)$ un intervalo tal que $g:I\to \mathbb{R}$ es creciente y convexa. Entonces la composición $g\circ f$ es convexa. 
+
+\
+
+\item \textbf{Minimización parcial}: Si $f$ es convexa en $(x,y)$ y $C$ es un conjunto convexo no vacío, la función $g(x)=\inf_{y\in C} f(x,y)$ es convexa en $x$.
+
+\end{itemize}
+
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Más ejemplos de funciones convexas}
+
+
+
+
+\begin{itemize}
+
+
+\item $f(x)=-\log x$ es convexa. 
+
+\
+
+\item $f(x)=e^{ax}$ es convexa en $\mathbb{R}$ para todo $a\in\mathbb{R}$. 
+
+\
+
+\item $f(x)=x^a$ ($x>0$) es convexa si $a\leq 0$ o $a\geq 1$, y cóncava si $0\leq a\leq 1$.
+
+\
+
+\item $f(x)=x^\top A x+ a^\top x + c$, donde $A$ es simétrica, es convexa si y solo si $A$ es semidefinida positiva.
+
+\
+
+\item Sea $X$ una matriz $n\times p$ y sean $\beta\in\mathbb{R}^p$ e $y\in\mathbb{R}^n$, entonces $f(\beta)=\|y-X\beta\|$ es convexa, donde $\|\cdot\|$ es cualquier norma.
+
+
+\end{itemize}
+\end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Problema general de optimización convexa}
+
+La \textit{optimización convexa} trata el problema general de minimizar una función convexa, sobre un conjunto factible también convexo:
+
+
+
+
+\begin{equation}
+\label{eq:conv.general}
+\mbox{minimizar} \  f(x) \ \ \mbox{s.a.} \ \ x\in S, 
+\end{equation}
+donde $f:D\to\mathbb{R}$ es convexa y $S\subset D\subset \mathbb{R}^n$ es convexo. 
+
+\
+
+Casos particulares:
+\begin{itemize}
+\item Optimización lineal.
+\item Optimización cuadrática.
+\item Mínimos cuadrados.
+\end{itemize}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Teorema local-global}
+
+En un problema convexo no hay distinción entre mínimos globales y locales.
+
+\
+
+{\bf Teorema:} Todo mínimo local de (\ref{eq:conv.general}) es también un mínimo global de (\ref{eq:conv.general}).
+
+\
+
+{\scriptsize
+{\bf Demostración:}
+
+\begin{itemize}
+\item Sea $\bar{x}$ un mínimo local. Existe $R>0$ tal que $f(\bar{x})\leq f(x)$, para todo $x\in S\cap B(\bar{x}, R)$.
+\item Spg. que existe $y\in S$ tal que $f(y)<f(\bar{x})$.
+\item Consideramos $z=(1-\theta)\bar{x} + \theta y$, para $\theta > 0$ suficientemente pequeño. 
+\item $z\in S\cap B(\bar{x}, R)$ pero $f(z)<f(\bar{x})$. 
+\end{itemize}
+}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Mínimos globales bajo convexidad y diferenciabilidad}
+
+{\bf Teorema:} Consideremos el problema (\ref{eq:conv.general}) en el que se supone además que $f$ es diferenciable.
+Un punto $\bar{x}\in S$ es mínimo global de (\ref{eq:conv.general}) si y solo si 
+\[
+\nabla f(\bar{x})^\top (x-\bar{x}) \geq 0, \ \mbox{para todo}\ x\in S. 
+\]
+
+\
+
+{\scriptsize
+{\bf Demostración:}
+
+ $(\Leftarrow)$   Por la convexidad de $f$, para todo $x\in S$,
+ \[
+ f(x)\geq f(\bar{x}) + \nabla f(\bar{x})^\top (x-\bar{x}) \geq f(\bar{x}).
+ \]
+
+$(\Rightarrow)$
+\begin{enumerate}
+\item  Spg. existe $x\in S$ con $\nabla f(\bar{x})^\top (x-\bar{x})<0$. Entonces, $x-\bar{x}$ es una dirección de descenso local.
+\item Existe $0<\lambda <1$ tal que $f(\bar{x})>f\big(\bar{x}+\lambda (x-\bar{x})\big)=
+f(\lambda x + (1-\lambda)\bar{x})$. 
+\item $\lambda x + (1-\lambda)\bar{x} \in S$ porque $S$ es convexo.
+\item Por lo tanto, $\bar{x}$ no es un mínimo global. 
+\end{enumerate}
+}
+\end{frame}
+
+
+%----------------------------------------------
+\begin{frame}
+\frametitle{Observaciones}
+
+\begin{enumerate}
+
+
+
+
+
+
+
+\item Si $S$ es abierto (por ejemplo, $S=\mathbb{R}^n$) entonces la condición del teorema anterior se reduce a $\nabla f(\bar{x}) =0$. \\
+(Considera $x=\bar{x}-\lambda \nabla f(\bar{x})$, para $\lambda>0$ suf. pequeño.)
+
+\
+
+\item Sin embargo, si $S$ no es abierto la condición sirve para detectar óptimos en la frontera. 
+($\min x^2\ \ \mbox{s.a.}\ \ 1\leq x \leq 2$.)
+
+\
+
+\item Si $\nabla f(\bar{x}) \neq 0$, entonces $-\nabla f(\bar{x})$ define un hiperplano soporte a $S$ en $\bar{x}$.
+
+\
+
+\item Aplicación a un problema de optimización lineal.
+
+\
+
+\item Aplicación a un problema convexo con restricciones de igualdad:
+\[
+\min f(x)\ \ \mbox{s.a.}\ \ Ax=b,
+\]
+donde $f$ es convexa y diferenciable.
+\end{enumerate}
+
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Ejemplo}
+
+
+
+
+Resuelve gráficamente el problema:
+
+\
+
+\begin{center}
+\begin{tabular}{ll}
+minimizar & $(x_1-4)^2 + (x_2-6)^2$  \\
+s.a. & $x_2\geq x_1^2$  \\
+	 & $x_2\leq 4$  
+\end{tabular}
+\end{center}
+
+\
+
+Demuestra analíticamente que la solución obtenida gráficamente es el mínimo global del problema.
+
+
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Una versión más explícita del problema convexo}
+
+En la práctica consideramos problemas convexos para los que el conjunto factible se conoce más explícitamente:
+
+\begin{center}
+\begin{tabular}{lll}
+minimizar & $f(x)$ & \\
+s.a. & $f_i(x)\leq 0,$  &  $i=1,\ldots,m$ \\
+	 & $a^\top_i x = b_i,$  &  $i=1,\ldots,p$,
+\end{tabular}
+\end{center}
+donde las funciones $f,f_1,\ldots, f_n$ son convexas. 
+
+
+
+Equivalentemente,
+\begin{center}
+\begin{tabular}{lll}
+minimizar & $f(x)$ & \\
+s.a. & $f_i(x)\leq 0,$  &  $i=1,\ldots,m$ \\
+	 & $Ax=b,$  &  
+\end{tabular}
+\end{center}
+donde las filas de $A$ son los vectores $a_i^\top$.
+
+\
+
+Denotamos por $D$ la intersección de los dominios de todas las funciones del problema.
+
+\end{frame}
+
+%----------------------------------------------------------------------
+\end{document}
+%----------------------------------------------------------------------
+
+
+%----------------------------------------------
+\begin{frame}
+\frametitle{}
+
+\end{frame}
+%--------------------------------------------
