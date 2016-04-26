@@ -1,0 +1,1288 @@
+\documentclass{beamer}
+
+%\usepackage{beamerthemetreebars}
+\usepackage{graphicx}
+%\usepackage{beamerthemesplit}
+%\beamertemplateshadingbackground{red!10}{blue!10}
+
+%----------------------------------------------------------------------
+% Para que aparezcan varias transparencias en la misma p\'{a}gina
+\usepackage{pgfpages}
+%\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm,landscape]
+%----------------------------------------------------------------------
+% Suprime los s\'{\i}mbolos de navegaci\'{o}n
+\setbeamertemplate{navigation symbols}{}
+%---------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+%----------------------------------------------------------------
+\newcommand{\ep}{\epsilon}
+\newcommand{\real}{{\rm I\kern-.17em R}}
+\newcommand{\pro}{\mbox{P}}
+%-----------------------------------------------------------------
+
+\title[Estad\'{\i}stica: Tema 5]{Tema 5\\
+Dualidad y condiciones de Karush-Kuhn-Tucker}
+\author[Berrendero]
+{Jos\'{e} R. Berrendero}
+\date{}
+\institute{Departamento de Matem\'{a}ticas\\
+ Universidad Aut\'{o}noma de Madrid}
+
+%------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------
+
+
+
+\frame{\titlepage}
+%----------------------------------------------------------------------
+\begin{frame}[plain]
+\frametitle{Contenidos del tema 5}
+
+\begin{itemize}
+ 
+\item Condiciones de Karush-Kuhn-Tucker (KKT).
+\begin{itemize}
+\item Problemas con restricciones de desigualdad.
+\item Problemas con restricciones de desigualdad y de igualdad.
+\end{itemize}
+	
+  \item El problema dual.
+  
+  \item Dualidad en optimización lineal. Algoritmo simplex dual.
+
+ \item Relaciones entre el problema dual y las condiciones de KKT.
+\end{itemize}
+
+
+\end{frame}
+
+
+%----------------------------------------------
+\begin{frame}
+\frametitle{Problemas que vamos a analizar}
+
+
+En este tema consideraremos \textbf{problemas generales} de optimización de la forma
+
+\begin{center}
+\begin{tabular}{lll}
+minimizar & $f(x)$ \\
+s.a. & $f_i(x)\leq 0,$  &  $i=1,\ldots,m$ \\
+	 & $h_i(x) = 0,$  &  $i=1,\ldots,p.$
+\end{tabular}
+\end{center}
+
+También consideraremos  \textbf{problemas convexos} de la forma
+
+\begin{center}
+\begin{tabular}{lll}
+minimizar & $f(x)$ & \\
+s.a. & $f_i(x)\leq 0,$  &  $i=1,\ldots,m$ \\
+	 & $a^\top_i x = b_i,$  &  $i=1,\ldots,p$,
+\end{tabular}
+\end{center}
+donde las funciones $f,f_1,\ldots, f_n$ son convexas. 
+
+
+
+\
+
+En general, denotamos por $D$ la intersección de los dominios de todas las funciones del problema y suponemos que $D$ es un abierto que incluye los puntos que satisfacen las restricciones.
+
+\end{frame}
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Condiciones de Karush-Kuhn-Tucker (solo desigualdades)}
+
+Consideramos el problema  (P):
+
+\begin{center}
+\begin{tabular}{lll}
+minimizar & $f(x)$ &  \\
+s.a. & $f_i(x)\leq 0$ & $i=1,\ldots,m $,
+\end{tabular}
+\end{center}
+donde todas las funciones son diferenciables.
+
+\
+
+
+Se dice que el punto $\bar{x}\in\mathbb{R}^n$, junto con el vector de multiplicadores $\bar{u}\in\mathbb{R}^m$, verifica las condiciones KKT para (P) si
+
+\begin{align*}
+\nabla f(\bar{x}) + \sum_{i=1}^m \bar{u}_i \nabla f_i(\bar{x})  & = 0 \\
+f_i(\bar{x}) &\leq 0, & i = 1,\ldots,m \\
+\bar{u}_i    & \geq 0, & i = 1,\ldots,m\\
+\bar{u}_i f_i(\bar{x}) &  = 0, & i = 1,\ldots,m.
+\end{align*}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{frame}
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Condiciones KKT necesarias para mínimo local de (P)}
+
+
+
+Cualquier mínimo local de (P), que verifique una condición adicional debe satisfacer las condiciones   KKT.
+
+\
+
+\textbf{Cualificación de las restricciones}: Dado un punto factible $\bar{x}$, sea $I=\{i:\, f_i(\bar{x})=0\}$ el conjunto de restricciones activas en $\bar{x}$.
+
+\
+
+Se dice que $\bar{x}$ verifica la cualificación de las restricciones si  los vectores $\nabla f_i(\bar{x})$, $i\in I$, son linealmente independientes.
+
+
+\
+
+\textbf{Teorema:} Sea $\bar{x}$ un mínimo local de (P) que verifica la cualificación de las restricciones anterior. Entonces, existe un vector $\bar{u}\geq 0$ tal que $\bar{x}$ y $\bar{u}$ verifican las condiciones KKT.
+
+\end{frame}
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Condiciones KKT necesarias para mínimo local de (P)}
+
+
+
+\textbf{Demostración:} 
+
+\begin{itemize}
+\item Si $\bar{x}$ es un mínimo local de (P), no existe ninguna dirección $d\in\mathbb{R}^n$ tal que $\nabla f(\bar{x})^\top d<0$, $\nabla f_i(\bar{x})^\top d<0$ para $i\in I$.
+
+\
+
+\item Por el teorema de Gordan, existen $u_0\geq 0$, $u_i\geq 0$, $i\in I$, no todos nulos, tales que $u_0\nabla f(\bar{x}) + \sum_{i\in I}u_i\nabla f(\bar{x})=0$.
+
+\
+
+\item Por la cualificación de las restricciones, $u_0 > 0$.
+
+\
+
+\item Definimos  $\bar{u}_i=u_i/u_0$ si $i\in I$ y $\bar{u}_i=0$ si $i\notin I$.
+
+\
+
+\item Es fácil comprobar que $\bar{x}$ y $\bar{u}$ verifican las condiciones KKT. 
+\end{itemize}
+
+
+
+\end{frame}
+
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Observaciones}
+
+Para encontrar el mínimo global del problema (P):
+
+\begin{itemize}
+\item Hallar los puntos que verifican las condiciones de KKT.
+
+\item Hallar los puntos factibles que no verifican  la cualificación de las restricciones.
+\end{itemize}
+
+Si el problema tiene solución, debe encontrarse entre los puntos hallados de alguna de estas dos formas.
+
+\
+
+\textbf{Ejemplo:} Determina los puntos que verifican las condiciones KKT y resuelve el problema:
+\begin{center}
+\begin{tabular}{ll}
+minimizar & $x_1^2+x_2^2+2x_3^2$   \\
+s.a. & $2x_1 + 3x_2 + x_3\geq 6$ \\
+\end{tabular}
+\end{center}
+
+
+
+\end{frame}
+
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Ejemplo}
+
+
+Considera el siguiente problema de optimización:
+
+\begin{center}
+\begin{tabular}{ll}
+maximizar & $3x_1+x_2$   \\
+s.a. & $x_2 - (1-x_1)^3 \leq 0$ \\
+  & $x_1\geq 0$, $x_2\geq 0$
+\end{tabular}
+\end{center}
+
+
+
+
+\begin{itemize}
+\item Resuelve el problema gráficamente
+\item Escribe las condiciones KKT
+\item ¿Verifican KKT los puntos del interior del conjunto factible?
+\item ¿Verifica el máximo global del problema las condiciones KKT?
+\item ¿Existen puntos que verifican las condiciones KKT y que no son máximos locales?
+\end{itemize}
+
+
+
+
+\end{frame}
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Ejemplo}
+
+\begin{center}
+\includegraphics[scale=0.5]{EjemploKKT}
+\end{center}
+
+\end{frame}
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Condiciones de Karush-Kuhn-Tucker (también igualdades)}
+
+{\scriptsize
+Consideramos el problema  (PI):
+
+\begin{center}
+\begin{tabular}{lll}
+minimizar & $f(x)$ \\
+s.a. & $f_i(x)\leq 0,$  &  $i=1,\ldots,m$ \\
+	 & $h_i(x) = 0,$  &  $i=1,\ldots,p.$
+\end{tabular}
+\end{center}
+donde todas las funciones son diferenciables.
+
+\
+
+
+Se dice que el punto $\bar{x}\in\mathbb{R}^n$, junto con los vectores de multiplicadores $\bar{u}\in\mathbb{R}^m$ y $\bar{v}\in\mathbb{R}^p$, verifica las condiciones KKT para (PI) si
+
+\begin{align*}
+\nabla f(\bar{x}) + \sum_{i=1}^m \bar{u}_i \nabla f_i(\bar{x}) + \sum_{i=1}^p \bar{v}_i\nabla h_i(\bar{x}) & = 0 \\
+f_i(\bar{x}) &\leq 0, & i = 1,\ldots,m \\
+h_i(\bar{x}) &= 0, & i = 1,\ldots,p \\
+\bar{u}_i    & \geq 0, & i = 1,\ldots,m\\
+\bar{u}_i f_i(\bar{x}) &  = 0, & i = 1,\ldots,m\\
+\end{align*}
+
+}
+
+
+
+
+
+
+
+
+
+
+\end{frame}
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Condiciones KKT necesarias para mínimo local de (PI)}
+
+
+
+Cualquier mínimo local de (PI), que verifique una condición adicional debe satisfacer las condiciones   KKT.
+
+\
+
+\textbf{Cualificación de las restricciones}: Dado un punto factible $\bar{x}$, sea $I=\{i:\, f_i(\bar{x})=0\}$ el conjunto de restricciones activas en $\bar{x}$.
+
+\
+
+Se dice que $\bar{x}$ verifica la cualificación de las restricciones si  los vectores $\nabla f_i(\bar{x})$, $i\in I$ y $\nabla h_i(\bar{x})$, $i=1,\ldots,p$ son linealmente independientes.
+
+
+\
+
+\textbf{Teorema:} Sea $\bar{x}$ un mínimo local de (PI) que verifica la cualificación de las restricciones anterior. Entonces, existen vectores $\bar{u}\geq 0$ y $\bar{v}$ tales que $\bar{x}$, $\bar{u}$ y $\bar{v}$ verifican las condiciones KKT.
+
+\end{frame}
+%-----------------------------------------------
+\begin{frame}
+\frametitle{Condiciones KKT necesarias para mínimo local de (PI)}
+
+
+
+\textbf{Demostración (esquema):} 
+
+\begin{itemize}
+\item Si $\bar{x}$ es un mínimo local de (PI), no existe ninguna dirección $d\in\mathbb{R}^n$ tal que $\nabla f(\bar{x})^\top d<0$; $\nabla f_i(\bar{x})^\top d<0$, para $i\in I$; $\nabla h_i(\bar{x})^\top d = 0$, para $i=1,\ldots,p$.
+
+\
+
+\item Por un teorema de la alternativa, existen $u_0\geq 0$; $u_i\geq 0$, $i\in I$; $v_i$, $i=1,\ldots,p$,  no todos nulos, tales que 
+\[
+u_0\nabla f(\bar{x}) + \sum_{i\in I}u_i\nabla f(\bar{x})+\sum_{i=1}^p v_i\nabla h_i(\bar{x})=0.
+\]
+
+\
+
+\item Por la cualificación de las restricciones, $u_0 > 0$.
+
+\
+
+\item Definimos  $\bar{u}_i=u_i/u_0$, si $i\in I$; $\bar{u}_i=0$, si $i\notin I$ y
+$\bar{v}_i=v_i/u_0$, $i=1\ldots,p$.
+
+\
+
+\item Es fácil comprobar que $\bar{x}$, $\bar{u}$ y $\bar{v}$ verifican las condiciones KKT. 
+\end{itemize}
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{La función dual}
+
+Para un problema general (no necesariamente convexo) la \textbf{función lagrangiana} es:
+\[
+L(x,u,v) = f(x) + \sum_{i=1}^m u_i f_i(x) + \sum_{i=1}^p v_i h_i(x).
+\]
+
+
+\
+
+
+La \textbf{función dual} es 
+\[
+g(u,v) = \inf_{x\in D} L(x,u,v).
+\] 
+
+
+
+\
+
+Si $u\geq 0$, calcular $g(u,v)$ puede interpretarse como resolver una versión menos exigente del problema original (PI).
+
+
+\
+
+La función dual es cóncava (aunque (PI) no sea convexo).
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{El problema dual}
+
+La función dual (es decir el valor óptimo de la versión menos exigente del problema) es una cota inferior del valor óptimo del problema original:
+
+\
+
+{\bf Teorema:} Sea $\bar{p}$ el valor óptimo de un problema de optimización cuya función dual es $g(u,v)$. Para todo $u\geq 0$ y para todo $v$, $g(u,v)\leq \bar{p}$.
+
+\
+
+Resulta natural preguntarse cuál es la mejor de las cotas que pueden obtenerse de esta forma. Esto lleva al \textbf{problema dual}.
+
+
+
+
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{El problema dual}
+
+
+\begin{center}
+\begin{tabular}{ll}
+maximizar & $g(u,v)$ \\
+s.a. & $u\geq 0$.    
+\end{tabular}
+\end{center}
+
+\
+
+
+El problema dual es siempre convexo, independientemente de que lo sea o no el problema primal al que corresponde.
+
+\
+
+Un punto $(u,v)$ con $u\geq 0$ y $g(u,v)>-\infty$ (es decir, en el dominio de la función dual) se llama \textbf{solución factible dual}.
+
+\
+
+Llamamos \textbf{solución factible dual óptima} al punto $(\bar{u},\bar{v})$ que resuelve el problema dual.
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Dualidad débil}
+
+Si $\bar{p}$ y $\bar{d}$ son los valores óptimos de los problemas primal (minimización) y dual (maximización) respectivamente, las definiciones implican la \textbf{desigualdad de dualidad débil}:
+\[
+\bar{d} \leq \bar{p}.
+\]
+
+\
+
+¿Qué ocurre si $\bar{p}=-\infty$? ¿Qué ocurre si $\bar{d}=\infty$?
+
+\
+
+Si el primal es no acotado, entonces el dual es no factible. Si el dual es no acotado, entonces el primal es no factible.
+
+\
+
+La brecha de dualidad es la diferencia $\bar{p}-\bar{d}$.
+
+
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{El dual de un problema lineal en forma estándar}
+
+\begin{center}
+\begin{tabular}{ll}
+minimizar & $c^\top x$  \\
+s.a. & $Ax=b$,     \\
+	 & $x\geq 0$.  
+\end{tabular}
+\end{center}
+
+\textbf{Función lagrangiana}:
+\[
+L(x,u,v) = -b^\top v + (c+A^\top v -u)^\top x.
+\]
+
+\
+
+La \textbf{función dual} es $g(u,v)=-b^\top v$, si $c+A^\top v -u=0$, y $g(u,v)=-\infty$, en caso contrario.
+
+
+\
+
+\textbf{Problema dual}:
+
+\begin{center}
+\begin{tabular}{ll}
+maximizar & $b^\top v$  \\
+s.a. & $A^\top v \leq c$       
+\end{tabular}
+\end{center}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{El dual de un problema lineal en forma canónica}
+
+\textbf{Problema primal}:
+
+\begin{center}
+\begin{tabular}{ll}
+maximizar & $c^\top x$  \\
+s.a. & $Ax\leq b$,     \\
+	 & $x\geq 0$.  
+\end{tabular}
+\end{center}
+
+\textbf{Problema dual}:
+
+\begin{center}
+\begin{tabular}{ll}
+minimizar & $b^\top v$  \\
+s.a. & $A^\top v \geq c$,     \\
+	 & $v\geq 0$.  
+\end{tabular}
+\end{center}
+
+
+\textbf{Ejercicio:} Escribe el dual de
+\begin{center}
+\begin{tabular}{ll}
+minimizar & $c^\top x$  \\
+s.a. & $Ax\geq b$,     \\
+	 & $x\geq 0$.  
+\end{tabular}
+\end{center}
+
+
+
+\textbf{Observaciones:}
+
+\begin{itemize}
+\item El dual del dual es el primal.
+\item Los duales de problemas primales equivalentes son también equivalentes entre sí.
+\end{itemize}
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Ejemplos}
+
+Escribe el problema dual de los siguientes problemas de optimización lineal:
+
+\begin{center}
+\begin{tabular}{lr}
+minimizar & $6x_1 + 8x_2$ \\
+s.a. & $3x_1+x_2 \geq 4$    \\
+	 & $5x_1 + 2x_2\geq 7$  \\
+	 & $x_1\geq 0,\ x_2\geq 0$
+\end{tabular}
+\end{center}
+
+\
+
+\begin{center}
+\begin{tabular}{lr}
+minimizar & $8x_1 + 3x_2 - 2x_3$ \\
+s.a. & $x_1-6x_2+x_3 \geq 2$    \\
+	 & $5x_1 + 7x_2 - 2x_3= -4$  \\
+	 & $x_1\geq 0,\ x_2\geq 0,\ x_3\geq 0$
+\end{tabular}
+\end{center}
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Interpretación económica del problema dual}
+
+ Un pastelero dispone de 150 kg de harina, 22 kg de azúcar y 27.5
+ kg de mantequilla para elaborar dos tipos de pasteles ($A$ y
+ $B$). Cada caja de pasteles de tipo $A$ requiere 3 kg de harina,
+ 1 kg de azúcar y 1 kg de mantequilla, y su venta le reporta un
+ beneficio de 20 euros. Cada caja de pasteles
+  de tipo $B$ requiere 6 kg de harina,
+ 0.5 kg de azúcar y 1 kg de mantequilla y su venta le reporta un
+ beneficio de 30 euros.
+ \begin{itemize}
+ \item[(a)] ?`Cu\'antas cajas de cada
+ tipo debe elaborar el pastelero de manera que se maximicen sus
+ ganancias? 
+ \item [(b)] Supongamos que la
+ cantidad de harina disponible aumenta en un kg. ?`Cu\'anto aumenta
+ el beneficio del pastelero? Contesta a la misma cuesti\'on para un
+ aumento de un kg en la cantidad de az\'ucar y mantequilla.
+ \end{itemize}
+
+
+\end{frame}
+%-------------------------------------------------------------
+\begin{frame}
+\frametitle{Interpretación económica del problema dual}
+
+\begin{center}
+\begin{tabular}{lr}
+maximizar & $20x_1 + 30x_2$ \\
+s.a. & $3x_1+6x_2 \leq 150$    \\
+	 & $x_1 + x_2/2 \leq 22$  \\
+	 & $x_1+x_2\leq 27.5$\\
+	 & $x_1\geq 0,\ x_2\geq 0$
+\end{tabular}
+\end{center}
+
+\
+
+\begin{itemize}
+\item La solución es $\bar{x}_1=5$ y $\bar{x}_2=22.5$.
+\item El beneficio óptimo es $\bar{z}=775$.
+\end{itemize}
+
+
+\
+
+\begin{itemize}
+\item Si $\Delta H=1$, tenemos $\Delta \bar{z}=10/3$.
+\item Si $\Delta A=1$, tenemos $\Delta \bar{z}= 0$.
+\item Si $\Delta M=1$, tenemos $\Delta \bar{z}= 10$.
+\end{itemize}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Interpretación económica del problema dual}
+
+Un comprador está interesado en adquirir el negocio del pastelero (es decir, los recursos de azúcar, harina y mantequilla de los que dispone) y quiere hacerle una oferta de precios por kg de azúcar, harina y mantequilla. Por supuesto el pastelero solo aceptará la oferta del comprador si lo que gana con la venta es al menos lo mismo que ganaría fabricando pasteles. 
+
+\
+
+¿Qué problema debe resolver el comprador para hacerle la oferta más ventajosa al pastelero?
+
+\
+
+Resuelve el problema del comprador. 
+
+\
+
+¿Qué relaciones existen entre las soluciones de los problemas del pastelero y del comprador? 
+
+
+
+
+
+\end{frame}
+%-------------------------------------------------------------
+\begin{frame}
+\frametitle{Interpretación económica del problema dual}
+
+Las variables $u_1$, $u_2$ y $u_3$ representan los precios de los tres recursos (harina, azúcar y mantequilla) respectivamente.
+
+\
+
+El problema del comprador es:
+
+\begin{center}
+\begin{tabular}{lr}
+minimizar & $150u_1 + 22u_2 + 27.5u_3$ \\
+s.a. & $3u_1+u_2 + u_3 \geq 20$    \\
+	 & $6u_1 + u_2/2 + u_3 \geq 30$  \\
+	 & $u_1\geq 0,\ u_2\geq 0,\ u_3\geq 0$
+\end{tabular}
+\end{center}
+
+\
+
+\begin{itemize}
+\item La solución es $\bar{u}_1=10/3$, $\bar{u}_2=0$ y $\bar{u}_3=10$.
+\item El beneficio óptimo es $\bar{z}=775$.
+\end{itemize}
+
+
+\
+
+\begin{itemize}
+\item Los valores óptimos del objetivo son los mismos para ambos problemas (la brecha de dualidad es cero).
+\item Los precios óptimos coinciden con los beneficios marginales.
+\end{itemize}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Dualidad fuerte}
+
+Se dice que hay \textbf{dualidad fuerte} cuando $\bar{p}=\bar{d}$. 
+
+\
+
+En problemas lineales factibles siempre hay dualidad fuerte.
+
+
+\
+
+Puede ocurrir $\bar{d}=-\infty$ y $\bar{p}=\infty$.
+
+\
+
+Escribe el dual de 
+
+\begin{center}
+\begin{tabular}{lr}
+maximizar & $-x_1 + x_2$ \\
+s.a. & $x_1 \leq -1$    \\
+	 & $-x_1 - x_2 \leq -1$  \\
+	 & $x_1\geq 0,\ x_2\geq 0$
+\end{tabular}
+\end{center}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Dualidad fuerte para problemas lineales}
+
+\textbf{Teorema:} Consideremos un problema lineal en forma estándar (P) y el correspondiente problema dual (D). Si (P) tiene solución factible óptima finita, también la tiene (D) y los correspondientes valores óptimos son iguales. 
+
+\
+
+{\scriptsize
+
+\textbf{Demostración:} 
+
+\begin{itemize}
+\item Sea $\bar{x}={B^{-1}b\choose 0}$ la solución factible óptima de (P).
+
+\
+
+\item Sea $\bar{u}^\top = c_B^\top B^{-1}$. Se cumple
+\[
+\bar{u}^\top A \leq c^\top \Leftrightarrow c_B^\top B^{-1}N\leq c_N^\top \Leftrightarrow z_j\leq c_j,\ \ j\in N
+\]
+Luego $\bar{u}$ es factible para (D).
+
+\
+
+\item Además $\bar{u}^\top b=c_B^\top B^{-1}b=c^\top \bar{x}$.
+\end{itemize}
+}
+
+ \end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Dualidad fuerte para problemas lineales}
+
+\begin{itemize}
+
+
+
+\item La condición de factibilidad de $\bar{u}$ equivale a la de optimalidad de $\bar{x}$.
+
+
+\item En el ejemplo, el pastelero ganará lo mismo tanto si fabrica pasteles como si vende el negocio. Si su problema no fuese acotado, no aceptaría ninguna oferta y como consecuencia, el problema del comprador no sería factible.
+
+\item Resolver el primal y el dual es equivalente a partir de la relación $\bar{u}^\top =c_B^\top B^{-1}$.
+
+
+\item Sensibilidad de soluciones:
+$
+\bar{z} = \bar{u}^\top b = \sum_{i=1}^m \bar{u}_i b_i.
+$
+Por lo tanto
+\[
+\frac{\partial \bar{z}}{\partial b_i} = \bar{u}_i.
+\]
+La solución del dual puede interpretarse en términos del incremento del valor óptimo del primal ante pequeñas variaciones de los recursos. 
+
+
+
+\end{itemize}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Algoritmo simplex-dual}
+
+
+\textbf{Punto de partida:}
+\begin{itemize}
+\item Un punto factible para el dual, pero no para el primal.
+\item $z_j-c_j\leq 0$, para todo $j$, pero $\bar{b}=B^{-1}b\ngeqslant 0$.
+\end{itemize}
+
+\
+
+\textbf{Criterio de salida:} Sale de la base la variable $x_r$ tal que
+\[
+\bar{b}_r = \min\{ \bar{b}_i:\, \bar{b}_i < 0\}.
+\]
+
+\
+
+\textbf{Criterio de entrada:} Entra en la base la variable $x_k$ tal que 
+\[
+\frac{z_k-c_k}{y_{rk}} = \min\left\{ \frac{z_j-c_j}{y_{rj}}:\, y_{rj} < 0\right\}.
+\]
+
+\
+
+\textbf{Infactibilidad:} Si $y_{rj}\geq 0$ para todo $j$, el problema primal es no factible.
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Ejemplo}
+
+\begin{center}
+\begin{tabular}{lr}
+minimizar & $3x_1 + 2x_2$ \\
+s.a. & $3x_1+x_2 \geq 3$    \\
+	 & $4x_1 + 3x_2 \geq 6$  \\
+	 & $x_1+x_2\leq 3$\\
+	 & $x_1\geq 0,\ x_2\geq 0.$
+\end{tabular}
+\end{center}
+
+En forma estándar,
+
+\begin{center}
+\begin{tabular}{lr}
+minimizar & $3x_1 + 2x_2$ \\
+s.a. & $-3x_1-x_2 + x_3 = -3$    \\
+	 & $-4x_1 - 3x_2 + x_4 = -6$  \\
+	 & $x_1+x_2 + x_5 = 3$\\
+	 & $x_i\geq 0,\ i=1,\ldots, 5.$
+\end{tabular}
+\end{center}
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Ejemplo}
+
+\begin{center}
+\begin{tabular}{r | rrrrr}
+$c$ & 3 & 2 & 0 & 0 & 0 \\ \hline
+Variables & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\ \hline
+$x_3 = -3$ & -3 & -1 & 1 & 0 & 0 \\
+$x_4=  -6$   & -4 & \textbf{-3} & 0 & 1 & 0  \\
+$x_5=3$ & 1 & 1 & 0 & 0 & 1 \\ \hline
+$z_j-c_j$ & -3 & -2 & 0 & 0 & 0 
+\end{tabular}
+\end{center}
+
+
+\begin{center}
+\begin{tabular}{r | rrrrr}
+$c$ & 3 & 2 & 0 & 0 & 0 \\ \hline
+Variables & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\ \hline
+$x_3 = -1$ & \textbf{-5/3} & 0 & 1 & -1/3 & 0 \\
+$x_2=  2$   & 4/3 & 1 & 0 & -1/3 & 0  \\
+$x_5=1$ & -1/3 & 0 & 0 & 1/3 & 1 \\ \hline
+$z_j-c_j$ & -1/3 & 0 & 0 & -2/3 & 0 
+\end{tabular}
+\end{center}
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Ejemplo}
+
+
+\begin{center}
+\begin{tabular}{r | rrrrr}
+$c$ & 3 & 2 & 0 & 0 & 0 \\ \hline
+Variables & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\ \hline
+$x_1 = 3/5$ & 1 & 0 & -3/5 & 1/5 & 0 \\
+$x_2=  6/5$   & 0 & 1 & 4/5 & -3/5 & 0  \\
+$x_5=6/5$ & 0 & 0 & -1/5 & 2/5 & 1 \\ \hline
+$z_j-c_j$ & 0 & 0 & -1/5 & -3/5 & 0 
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item La solución del primal es $\bar{x}_1=3/5$, $\bar{x}_2=6/5$ ($\bar{z}=21/5$).
+\item La solución del dual es 
+\[
+\bar{u}^\top = c_B^\top B^{-1} = (3,2,0)\begin{pmatrix}
+-3/5 & 1/5 & 0 \\ 
+4/5 & -3/5 & 0 \\ 
+-1/5 & 2/5 & 1
+\end{pmatrix} = (-1/5,-3/5,0).
+\]
+\end{itemize}
+
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Algoritmo simplex-dual}
+
+(1) Tras el pivoteo se mantiene la factibilidad dual (optimalidad primal):
+\[
+\hat{z}_j - \hat{c}_j = (z_j-c_j) - \frac{y_{rj}}{y_{rk}} (z_k-c_k)
+\]
+
+\
+
+(2) Tras el pivoteo mejora el objetivo del dual:
+\begin{align*}
+\sum_{i\in \hat{B}} c_i\bar{b}_i &=  \sum_{i\in B} c_i\left(\bar{b}_i - \frac{\bar{b}_r}{y_{rk}}y_{ik} \right) + c_k\frac{\bar{b}_r}{y_{rk}}\\
+\sum_{i\in \hat{B}} c_i\bar{b}_i &= \sum_{i\in B} c_i\bar{b}_i - \frac{\bar{b}_r}{y_{rk}} ( \sum_{i\in B} c_iy_{ik} - c_k)\\
+\sum_{i\in \hat{B}} c_i\bar{b}_i &= \sum_{i\in B} c_i\bar{b}_i - \frac{\bar{b}_r}{y_{rk}} ( z_k - c_k) > \sum_{i\in B} c_i\bar{b}_i.
+\end{align*}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Algoritmo simplex-dual}
+
+(3) Si $y_{rj}\geq 0$ para todo $j$, el problema primal no es factible:
+
+\
+
+Si existiera $x\geq 0$ con $Ax=b$ tendríamos:
+\[
+Ax=b \Leftrightarrow B^{-1}Ax = \bar{b} \Leftrightarrow \sum_{j=1}^n y_j x_j = \bar{b}.
+\]
+
+En particular, $\bar{b}_r = \sum_{j=1}^n y_{rj} x_j\geq 0$, lo que no puede ser porque $\bar{b}_r<0$.
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Holgura complementaria en problemas lineales}
+
+Sean $\bar{x}$ y $\bar{u}$ las soluciones de (P) y (D):
+
+(P) max $c^\top x$ s.a. $Ax\leq b$, $x\geq 0$.
+
+(D) min $b^\top u$ s.a. $A^\top u\geq c$, $u\geq 0$.
+
+\
+
+ Sabemos $c^\top \bar{x}=b^\top \bar{u}$ (dualidad fuerte en el caso lineal).
+ 
+
+\[
+c^\top \bar{x} \leq \bar{u}^\top A\bar{x} \leq \bar{u}^\top b = c^\top \bar{x},
+\]
+
+\
+
+Por lo tanto, si $a_i$ y $a^j$ denotan las columnas y las filas de $A$,
+\begin{itemize}
+\item $\bar{u}^\top(A\bar{x}-b)=0 \Leftrightarrow \bar{u}_j(a^j\bar{x}-b_j)=0$, $j=1,\ldots,m$
+\item $(c^\top-\bar{u}^\top A)\bar{x}=0 \Leftrightarrow \bar{x}_i(c_i-\bar{u}^\top a_i)=0$, $i=1,\ldots,n$
+\end{itemize} 
+
+\
+
+Estas condiciones caracterizan las soluciones de (P) y (D)\\ (¿Por qué?)
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Holgura complementaria en problemas lineales}
+
+\begin{center}
+\begin{tabular}{lr}
+maximizar & $3x_1 + 4x_2 + 6x_3$ \\
+s.a. & $3x_1+x_2 + x_3 \leq 2$    \\
+	 & $x_1 + 2x_2 + 6x_3 \leq 1$  \\
+	 & $x_i\geq 0,\ i=1,2,3$
+\end{tabular}
+\end{center}
+
+
+\
+
+
+\begin{itemize}
+\item Escribe el dual del problema anterior.
+\item Resuelve el problema dual gráficamente.
+\item Utiliza la condiciones de holgura complementaria para resolver el primal.
+\end{itemize}
+
+
+\end{frame}
+
+%----------------------------------------------
+\begin{frame}
+\frametitle{Holgura complementaria}
+
+Consideramos un problema general (no necesariamente convexo)
+\begin{center}
+\begin{tabular}{lll}
+minimizar & $f(x)$ \\
+s.a. & $f_i(x)\leq 0,$  &  $i=1,\ldots,m$ \\
+	 & $h_i(x) = 0,$  &  $i=1,\ldots,p.$
+\end{tabular}
+\end{center}
+para el que se cumple la dualidad fuerte. Sean $\bar{x}$ y $(\bar{u},\bar{v})$ las soluciones óptimas del primal y el dual respectivamente.
+
+\begin{align*}
+f(\bar{x}) &= g(\bar{u},\bar{v}) = \inf_x \big(f(x) + \sum_{i=1}^m \bar{u}_i f_i(x) + \sum_{i=1}^p \bar{v}_i h_i(x) \big)\\
+&\leq f(\bar{x}) + \sum_{i=1}^m \bar{u}_i f_i(\bar{x}) + \sum_{i=1}^p \bar{v}_i h_i(\bar{x}) \leq f(\bar{x})
+\end{align*}
+
+
+Todas las desigualdades son en realidad igualdades.
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Holgura complementaria}
+
+
+
+\begin{align*}
+f(\bar{x}) &= g(\bar{u},\bar{v}) = \inf_x \big(f(x) + \sum_{i=1}^m \bar{u}_i f_i(x) + \sum_{i=1}^p \bar{v}_i h_i(x) \big)\\
+&= f(\bar{x}) + \sum_{i=1}^m \bar{u}_i f_i(\bar{x}) + \sum_{i=1}^p \bar{v}_i h_i(\bar{x}) 
+\end{align*}
+
+
+
+Dos consecuencias relevantes:
+
+\begin{itemize}
+\item $\bar{x}$ minimiza $L(x,\bar{u},\bar{v})$ en $x$.
+
+\item Se cumple $\sum_{i=1}^m \bar{u}_i f_i(\bar{x})=0$. Como consecuencia:
+\[
+\bar{u_i} f_i(\bar{x}) = 0, \ \ \ i=1,\ldots,m.
+\]
+Estas son las condiciones de holgura complementaria.
+\end{itemize}
+
+
+\end{frame}
+
+%--------------------------------------------
+\begin{frame}
+\frametitle{Dualidad y condiciones de Karush-Kuhn-Tucker}
+
+Supongamos las siguientes condiciones:
+
+\begin{itemize}
+\item Las funciones $f,f_1,\ldots, f_m,h_1,\ldots,h_p$ son diferenciables.
+\item Las soluciones óptimas de los problemas primal y dual se alcanzan en los puntos
+ $\bar{x}$ y $(\bar{u},\bar{v})$.
+\item Hay dualidad fuerte: $f(\bar{x})=\bar{p}=\bar{d}=g(\bar{u},\bar{v})$.
+\end{itemize}
+
+
+\
+
+Entonces, los óptimos deben cumplir las condiciones KKT:
+
+\begin{align*}
+\nabla f(\bar{x}) + \sum_{i=1}^m \bar{u}_i \nabla f_i(\bar{x}) + \sum_{i=1}^p \bar{v}_i\nabla h_i(\bar{x}) & = 0 \\
+f_i(\bar{x}) &\leq 0, & i = 1,\ldots,m \\
+h_i(\bar{x}) &= 0, & i = 1,\ldots,p \\
+\bar{u}_i    & \geq 0, & i = 1,\ldots,m\\
+\bar{u}_i f_i(\bar{x}) &  = 0, & i = 1,\ldots,m\\
+\end{align*}
+
+\end{frame}
+
+%--------------------------------------------
+\begin{frame}
+\frametitle{Condiciones KKT en problemas convexos}
+
+
+Cuando el problema primal es convexo, las condiciones KKT son suficientes para el óptimo global.
+
+\
+
+
+\textbf{Teorema:} Consideremos un problema primal convexo y con funciones diferenciables. Sean $\bar{x}$ y $(\bar{u},\bar{v})$ puntos que satisfacen las condiciones KKT. Entonces $\bar{x}$ es la solución del problema primal, $(\bar{u},\bar{v})$ es la solución del dual y  $\bar{p} =  \bar{d}$.
+
+\
+
+\textbf{¿Verdadero o falso?} Un punto $\bar{x}$ es la solución de un problema convexo si y solo si verifica las condiciones KKT.
+
+
+\end{frame}
+%--------------------------------------------
+\begin{frame}
+\frametitle{Condiciones KKT en problemas convexos}
+
+\textbf{Demostración:}
+
+\
+
+\begin{itemize}
+\item $\bar{x}$ es factible.
+
+\
+
+\item $L(x,\bar{u},\bar{v})$ es convexa en $x$.
+
+\
+
+\item Como su gradiente se anula en $\bar{x}$, se tiene que $\bar{x}$ es el mínimo global de $L(x,\bar{u},\bar{v})$.
+
+\
+
+\item  Por tanto,
+\[
+g(\bar{u},\bar{v}) = L(\bar{x},\bar{u},\bar{v}) = 
+ f(\bar{x}) + \sum_{i=1}^m \bar{u}_i  f_i(\bar{x}) + \sum_{i=1}^p \bar{v}_i h_i(\bar{x}) = f(\bar{x}).
+\]
+
+\end{itemize}
+
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Dualidad fuerte para problemas convexos}
+
+En problemas convexos la dualidad fuerte no se cumple en general. Pero puede probarse bajo condiciones adicionales no restrictivas. 
+
+\
+
+\textbf{Condición de Slater}: en un problema convexo
+\begin{center}
+\begin{tabular}{lll}
+minimizar & $f(x)$ & \\
+s.a. & $f_i(x)\leq 0,$  &  $i=1,\ldots,m$ \\
+	 & $Ax=b,$  &  
+\end{tabular}
+\end{center}
+en el que $\mbox{rango}(A)=p$, se cumple la condición de Slater si existe $\bar{x}\in D$  tal que $f_i(\bar{x})<0$, para $i=1,\ldots,m$, y $A\bar{x}=b$. 
+
+\
+
+(Recordatorio: estamos suponiendo $D$ abierto)
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Dualidad fuerte para problemas convexos}
+
+
+\textbf{Teorema:} Si en un problema convexo se verifica la condición de Slater, entonces $\bar{p} =  \bar{d}$.
+
+\
+
+{\scriptsize 
+
+{\bf Demostración:} 
+
+\begin{itemize}
+\item Como el primal es factible, $\bar{p}<\infty$. ¿Qué ocurre si $\bar{p}=-\infty$?
+
+\
+
+\item Definimos los conjuntos:
+\begin{align*}
+A &= \{(u,v,t)\in \mathbb{R}^m\times \mathbb{R}^p \times \mathbb{R}:\, \exists x\in D\ \mbox{con}\ 
+f_i(x)\leq u_i,\ Ax-b=v,\ f(x)\leq t\} \\
+B &= \{(0,0,s)\in \mathbb{R}^m\times \mathbb{R}^p \times \mathbb{R}:\, s<\bar{p}\}
+\end{align*}
+
+
+
+\item $A$ y $B$ son convexos y disjuntos.
+
+\
+
+\item Teorema de separación: existe $\alpha\in\mathbb{R}$ y $(\bar{u},\bar{v},\mu)\neq 0$ tales que 
+\begin{enumerate}
+\item Si $(u,v,t)\in A$, $\bar{u}^\top u + \bar{v}^\top v + \mu t \geq \alpha$.
+\item Si $(0,0,t)\in B$, $ \mu t \leq \alpha$. Es decir  $\mu t \leq \alpha$ para $t<\bar{p}$, lo que implica $\mu\bar{p}\leq \alpha$.
+\end{enumerate}
+
+\
+
+\item Por 1, $\bar{u}\geq 0$ y $\mu\geq 0$.
+
+\end{itemize}
+
+
+}
+
+\end{frame}
+%----------------------------------------------
+\begin{frame}
+\frametitle{Dualidad fuerte para problemas convexos}
+
+
+
+
+{\scriptsize
+
+\begin{itemize}
+\item Además,  por 1 y 2, para todo $x\in D$,
+\begin{equation}
+\label{eq.fuerte}
+\sum_{i=1}^m \bar{u}_i f_i(x) + \bar{v}^\top (Ax-b) + \mu f(x) \geq \mu\bar{p}
+\end{equation}
+
+
+\item Si $\mu>0$, para todo $x\in D$, $L(x,\bar{u}/\mu,\bar{v}/\mu)\geq\bar{p}$. Por lo tanto 
+$g(\bar{u}/\mu,\bar{v}/\mu)\geq \bar{p}$ y $\bar{d}=\bar{p}$, que es lo que queríamos probar.
+
+\
+
+\item Usando la condición de Slater, vamos a llegar a una contradicción cuando $\mu=0$. Por (\ref{eq.fuerte}),
+$
+\sum_{i=1}^m \bar{u}_i f_i(x) + \bar{v}^\top (Ax-b) \geq 0,
+$
+para todo $x\in D$.
+
+
+\
+
+
+\item Si $\bar{x}$ es el punto en el que se cumple la condición de Slater, $\sum_{i=1}^m \bar{u}_i f_i(\bar{x})\geq 0$, por lo que $\bar{u}=0$. Como $(\bar{u},\bar{v},\mu)\neq 0$, tenemos que \textcolor{blue}{$\bar{v}\neq 0$}.
+
+\
+
+\item Pero $\bar{u}=0$ y (\ref{eq.fuerte}) implican $\bar{v}^\top (Ax-b) \geq 0$, para todo $x\in D$.
+
+\
+
+\item Para $\lambda>0$ suficientemente pequeño, $\bar{x}-\lambda A^{\top}\bar{v}\in D$ (abierto).
+
+\
+
+\item $\bar{v}^\top[A(\bar{x}-\lambda A^{\top}\bar{v}) - b] = -\lambda \|A^\top\bar{v}\|^2\geq 0$. Por lo que $A^\top\bar{v}=0$.
+
+\
+
+\item Como $\mbox{rango}(A)=p$, \textcolor{blue}{$\bar{v}=0$}. 
+
+
+\end{itemize}
+
+}
+
+
+\end{frame}
+
+
+
+
+
+%----------------------------------------------------------------------
+\end{document}
+%----------------------------------------------------------------------
+
+%-----------------------------------------------
+\begin{frame}
+\frametitle{}
+
+\end{frame}
+%----------------------------------------------
+
+
+MATERIAL SUPRIMIDO:
+%----------------------------------------------------------------------
+\begin{frame}
+\frametitle{Minimización cuadrática con restricciones de igualdad}
+
+Consideramos el problema 
+
+\begin{center}
+\begin{tabular}{ll}
+minimizar & $(1/2) x^\top P x + q^\top x + r $ \\
+s.a. & $Ax=b$,
+\end{tabular}
+\end{center}
+donde $P$ es semidefinida positiva.
+
+\
+
+Las condiciones KKT para este problema se reducen a:
+\begin{align*}
+A\bar{x} &= b\\
+P\bar{x}+q+A^\top\bar{v} &= 0
+\end{align*}
+
+\
+
+Para obtener el óptimo basta resolver un sistema de ecuaciones lineales:
+\[
+\left(\begin{array}{cc}
+P & A^\top \\ A & 0
+\end{array}\right)
+\left(\begin{array}{c}
+\bar{x} \\ \bar{v} 
+\end{array}\right)=
+\left(\begin{array}{c}
+-q \\ b 
+\end{array}\right)
+\]
+
+\end{frame}

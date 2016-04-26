@@ -8,7 +8,7 @@
 
 \DeclareOption{palatino}{%
 	\renewcommand{\rmdefault}{ppl}
-	\renewcommand{\sfdefault}{lmss}
+	\renewcommand{\sfdefault}{fla}
 	\renewcommand{\ttdefault}{lmtt}
 	\renewcommand*{\familydefault}{\rmdefault}
 	\def\@fontsizeopt{11pt}

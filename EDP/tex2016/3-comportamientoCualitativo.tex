@@ -1652,7 +1652,6 @@ En este capítulo vamos a ver:
 			Veremos que no se pueden cambiar aleatoriamente y tenemos que respetar la relación entre tiempo y espacio $\lambda = \mu^2$ para realizar un cambio de variables adecuado. Y veremos que esto nos ayudará a pasar a una EDO.
 		\end{example}
 
-
 		% Clase 25-4-2016
 		\begin{example}
 			\[u_t - \Delta u = 0, x \in \real^n, t > 0\]
@@ -1765,7 +1764,109 @@ En este capítulo vamos a ver:
 
 
 		% Clase 26-4-2016
-		(AQUÍ VA LO DE DEJUAN)
+		Tenemos que ajustar el valor de $C$ para que
+
+		\[
+			1 = \frac{C}{t^{\rfrac{N}{2}}} \int_{\real^N} e^{-\frac{x_1^2+x_2^2+...+x_n^2}{4t}} dx = \frac{C}{t^{\rfrac{N}{2}}}\prod \int_{-∞}^{∞} e^{-\frac{x_i}{4t}} dx_i
+		\]
+
+		Haciendo el cambio de variables:
+
+		\[
+			z = \frac{x_i}{2\sqrt{t}}
+		\]
+
+
+		Obtenemos:
+
+		\[
+			\frac{C}{t^{\rfrac{N}{2}}} \left[ \int_{-∞}^{∞} e^{-z^2}2\sqrt{t}dz \right]^N = ...
+		\]
+
+
+		Hemos llegado a la expresión del \concept{núcleo de Gauss}
+
+		\[G(x,t) = \frac{1}{(\sqrt{4πt})^N}e^{-\frac{\norm{\vx}^2}{4t}}\]
+
+		Esto es una solución particular que tiene la curiosidad de que en $t=0$ no está definida.
+		%
+		Vamos a estudiar el núcleo de Gauss:
+
+		\paragraph{Propiedades:}
+
+		\begin{itemize}
+			\item $G(x,t) > 0$.
+			\item $G(x,t)$ es par en $x_i$ (de hecho, es radial)
+			\item $G(x,t)$ decreciente en $x_i>0$.
+			\item Tomando el límite acercándonos a $t=0$, observamos:
+
+			\[\lim_{t\to 0^+} G(x,t) = \begin{array}{ccc} 0&si&\vec{x} ≠ 0 \\ ∞ & si & \vx = 0\end{array}\]
+
+			\item Si alguien tiene curiosidad, estas 2 últimas propiedades se pueden escribir como que el núcleo de Gauss, converge nosecomo a la delta de dirack.
+
+			\[
+				G(x,t) \to_{t\to 0^+} \delta_{x=0}
+			\]
+		\end{itemize}
+
+		\begin{theorem}
+		Sea $f$ una función continua y acotada.
+
+		Sea \[u(x,t) = \int_{\real^n} G(\vx-\vy,t)f(\vy)d\vy\]
+
+		\textbf{Entonces:}
+
+		\begin{itemize}
+			\item $u(x,t)\in C^{∞}$
+			\item $u_t - laplacianou = 0, \vx \in \real^n\;,t>0$, es decir, es solución de la ecuación de difusión (o ecuación del calor).
+			\item $\lim_{t\to 0^+} u(x,t) = f(x)$ con convergencia puntual.
+		\end{itemize}
+		\end{theorem}
+
+		\obs Tenemos un \textbf{efecto regularizante}.
+		%
+		Hemos llegado a soluciones $C^{∞}$ partiendo de cosas que no tendrían porqué serlo.
+
+		Además, tenemos una \textbf{velocidad infinita}, es decir no existe $\vx \tlq u(\vx,ε) = 0$ cuando $ε\to 0$.
+		%
+		En un tiempo tan pequeño como queramos, encontramos que el calor del dato inicial se ha desplazado a cualquier punto.
+
+		Vamos a justificarlo.
+		%
+		Supongamos que tenemos una pequeña cantidad de calor en $x=x_1, t=0$.
+		%
+		La función solución $u(x,t)$ siempre positiva. Al integrar el producto en $\vx = \vec{x_2}$ muy alejado de $\vec{x_1}$
+
+		\[
+			\int_{\real^n} G(\vx_2-\vy,t)f(\vy)d\vy
+		\]
+
+
+
+
+		Comentarios ``útiles'':
+
+		\begin{equation}
+			\abs{\dpa{G}{x_i} (z,t)} \leq … \leq \frac{|x_i-y_i|+1}{2\sqrt{4πt}^N} e^{-\frac{\norm{x-y}(\norm{x-y}-2)}{4t}}
+			\label{eq:dejuan}
+		\end{equation}
+
+		Este paso clave demuestra que podemos pasar derivadas dentro de integrales, es decir:
+
+		\[
+			\dpa{u}{x_i} = \int_{\real^N} \dpa{G}{x_i} f
+		\]
+
+		Si tomamos más derivadas, en el término $|x_i-y_i|$ aparecería elevado a alguna potencia.
+		%
+		Independientemente de la potencia que aparezca, el argumento sigue siendo válido porque la exponencial negativa de \ref{eq:dejuan} manda sobre cualquier polinomio.
+
+
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+		¿Este resultado prueba convergencia uniforme? No, porque en principio el $δ$, podría depender de $\vx$ y podría ocurrir que necesitáramos una prueba para $\vx$.
+		%
+		Si tomamos uniformemente continua, entonces $\exists δ$ que no depende de $\vx$, con lo que la convergencia es uniforme.
 
 
 		\begin{proof}
@@ -1860,10 +1961,6 @@ En este capítulo vamos a ver:
 					\item Si $f$ es uniformenente contínua $\Rightarrow$ convergencia uniforme
 					\item Si $f \in L^2 \Rightarrow u(x,t) \convs[L^2][t][0^+] f(x)$
 				\end{itemize}
-
-
-
-
 
 
 
