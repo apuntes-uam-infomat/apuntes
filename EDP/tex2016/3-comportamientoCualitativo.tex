@@ -1764,7 +1764,102 @@ En este capítulo vamos a ver:
 		(DIBUJOS DE $t$ pequeño a $t$ grande)
 
 
+		% Clase 26-4-2016
+		(AQUÍ VA LO DE DEJUAN)
 
+
+		\begin{proof}
+			¿Qué pasa con $\frac{\partial u}{\partial x}$ ?
+			\[ \lim_{h \to 0} \frac{u(\bar{x} + hei,t)-u(\bar{x},t)}{h} = \lim_{h \to 0} \int\limits_{\real^n} \frac{G(\bar{x}-\bar{y}+he_i,t)-G(\bar{x}-\bar{y})}{h} f(y) dy
+			\]
+
+			Problema: ¿Podemos permutar límite e integral?
+
+			Usaremos el teorema de convergencia dominada:
+
+			\[\left. \begin{array}{r}
+				f_x \to f \text{ puntualmente en } \Omega \\
+				|f_x(x)| \leq F(x), \forall x \forall k \\
+				F \text{integrable}
+			\end{array} \right\} \Rightarrow \lim_k \int\limits_{\Omega} f_k = \int\limits_\Omega \lim f_k = \int\limits_\Omega f\]
+
+			\[ \frac{G(\bar{x}-\bar{y}+he_i,t)-G(\bar{x}-\bar{y},t)}{h} = \frac{\partial G}{\partial x}(z,t) \]
+
+			$z$ es un punto intermedio
+
+			\[\frac{\partial G}{\partial X_i}(z,t) = … = \frac{z_i}{2t} \frac{1}{(\sqrt{4\pi t}^n)} e^{-\frac{\|z\|^2}{4t}}\]
+
+			Entonces expresamos $z$, que está entre $\bar{x}-\bar{y}$ y $\bar{x}-\bar{y}+he_i$, como: $z = \bar{x} - \bar{y} + \theta h e_i$ con $\theta \in (0,1)$
+
+			\[ \left| \frac{\partial G}{\partial x}(z,t) \right|  \leq \frac{|z_i}{2t (\sqrt{4\pi t})`n} e^{-\frac{\|z\|}{4t}}\]
+
+			\[\text{ Queremos encontrar} \begin{cases}
+				|z_i| \leq |x_i - y_i| + 1 \\
+				\| z\|^2 \geq (ALGO)
+			\end{cases}\]
+
+			(FALTA)
+
+			Y entonces podemos reescribir lo que queríamos encontrar así:
+
+			\[\begin{cases}
+				|z_i| \leq |x_i - y_i| + 1 \\
+				\| z\|^2 \geq \|\bar{x}-\bar{y}\| (\|\bar{x}-\bar{y}\| -2)
+			\end{cases}\]
+
+			Acotamos la expresión que teníamos así:
+
+			\[ \left| \frac{\partial G}{\partial x}(z,t) \right|  \leq \frac{|z_i}{2t (\sqrt{4\pi t})`n} e^{-\frac{\|z\|}{4t}} \leq \frac{|x_i-y_i| +1}{2t(\sqrt{4 \pi t})^n} e^{-\frac{\|\bar{x}-\bar{y}\| (\|\bar{x}-\bar{y}\| -2)}{4t}}\]
+
+			Lo que es equivalente a $\phi(y)$
+
+			Por lo que hemos acotado:
+
+			\[ \left| \frac{G(x-y+he_i,t) - G(x-y,t)}{h} f(y) \right| \leq \phi(y) g(y) \]
+
+			$f(y)$ está acotada. Y $\phi(y)$ es integrable. Tenemos que hacer que se deje integrar en todo $\real^n$. Tiene que decaer en el infinito, no nos vale que sea continua, pero podemos ver que tiene decaimiento exponencial.
+
+			Hemos demostrado:
+
+			\[ \frac{\partial u}{\partial x_i} = \int\limits_{\real^n}\frac{\partial G}{\partial x} f\]
+
+			Iterando el proceso (pasando todas las derivadas dentro de la integral):
+			\[ u \in C^\infty, t> 0\]
+
+			Como por ejemplo:
+			\[ u_t - \Delta u = … = \int(G_t- \Delta G) f = 0\]
+
+
+		\end{proof}
+
+		\begin{example}
+
+			Queremos probar:
+			\[ \int\limits_{\real^n} G(x-y,t) f(y) dy \convs[][t][0^+] f(x)\]
+
+			\[ 0 \leq \left| \int\limits_{\real^n} G(x-y,t) f(y) dy - f(x) \int_{\real^n} G(x-y,t) dy \right|\]
+
+			\[ = \left| \int_{\real^n} G(x-y,t) (f(y)-f(x))dy \right| \eqreason[\leq]{$G \geq 0$} \int_{\real^n} G(x-y,t) |f(x) - f(y)| dy \]
+
+			Dado $\epsilon > 0$ encontramos $\delta$ tal que si $\|x-y\| < \delta$, entonces $|f(\bar{x})-f(\bar{y})| < \epsilon$
+
+			\[ \int\limits_{\real^n} = \underbrace{\int\limits_{\|x-y\| < \delta}}_{(1)} + \underbrace{\int\limits_{\|x-y\|>\delta}}_{(2)}\]
+
+			\[ (1) \leq \int\limits_{\|x-y\|\leq \delta} G \epsilon \eqreason[\leq]{$\int_{\real^n} G = 1$} \epsilon\]
+
+			\[ (2): \int\limits_{\|x-y\|>\delta} G(x-y) \underbrace{| f(x) - f(y) |}_{C,f \text{ acotada}} dy \leq C \int\limits_{\|x-y\| > \delta} \frac{1}{(\sqrt{4\pi t})^n} e^{-\frac{\|x-y\|^2}{4t}} dy \convs[exponencial][t][0^+] \epsilon\]
+
+			Entonces hay convergencia puntual:
+			\[\int G(x-y,t) f(y) dy \convs[][t][0^+] f(x)\]
+
+		\end{example}
+
+		\obs
+				\begin{itemize}
+					\item Si $f$ es continua puntualmente $\Rightarrow$ convergencia puntual (que acabamos de demostrar)
+					\item Si $f$ es uniformenente contínua $\Rightarrow$ convergencia uniforme
+					\item Si $f \in L^2 \Rightarrow u(x,t) \convs[L^2][t][0^+] f(x)$
+				\end{itemize}
 
 
 
