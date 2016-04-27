@@ -159,6 +159,31 @@ de interés libre de riesgo para el periodo es del 4\% anual para composición c
 \ppart ¿Cuál sería el impacto en dicho precio si, con el subyacente en 10 euros, su volatilidad crece un 10\%?
 
 \solution
+\doneby{Pedro}
+
+\spart
+
+La empresa buscará cubrise respecto a los cambios en el precio de la acción para lo que recurrimos a las sensibilidades de la fórmula de la call Cox-Rubinstein. Recordemos que
+\[δ = \partial_S = N(d_+)\]
+
+A la hora de cubrirnos de posibles variaciones en el precio lo que queremos es encontrar una cartera que tenga $δ=0$. Para ello consideramos como elementos de nuestra cartera la call que hemos vendido y el activo $S$. Si por cada call vendida compramos $x$ acciones de $S$, la suma de sus deltas será:
+\[δ - x\cdot 1 = 0 \implies x = δ\]
+por lo que deberemos comprar $1000\cdot δ$ acciones del activo $S$ para cubrirnos.
+
+\obs En la ecuación $δ-x=0$ nos hemos apoyado en el hecho de que la variación del precio del activo $S$ respecto a su precio es 1.
+
+\spart
+
+Por la definición de derivada tenemos
+\[ΔC = δΔS = N(d_+)ΔS \]
+puesto que no conocemos σ no podemos realizar el cálculo de este valor.
+
+\spart
+
+Atendiendo a la derivada respecto de la volatilidad tenemos:
+\[ΔC = \upsilon Δσ = S_0\sqrt{T}N'(d_+)\cdot 0.1\]
+
+queda claro que el precio subirá.
 
 \end{problem}
 
@@ -201,7 +226,7 @@ Así para cada bono de la tabla tenemos los siguientes rendimientos:
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
-\textbf{Tiempo discretp} & \textbf{Tiempo continuo} \\
+\textbf{Tiempo discreto} & \textbf{Tiempo continuo} \\
 \hline
 $r^d_{0.25}=2.5/97.5=0.025 \text{ trimestral.}$ & $r_{0.25}=\ln(1+r^d_{0.25}) \text{ trimestral.}$\\
 $r^d_{0.5}=5.1/94.9=0.054 \text{ semestral.}$ & $r_{0.5}=\ln(1+r^d_{0.5})=0.052 \text{ semestral.}$\\
@@ -369,6 +394,49 @@ Consideramos una opción que pagará a vencimiento (dentro de cuatro meses) $(S_
 
 \solution
 
+\doneby{Pedro}
+
+\spart
+
+Lo primero que debemos hacer es calcular $a$, $b$ y $q$ con los datos del enunciado. Así tenemos
+\[a=1.03, \;\; b = 0.97, \;\; q = \frac{e^{rΔt}-b}{a-b} = 0.60 \]
+
+La tabla \ref{tabla:Mayo2015_2} contiene los posibles caminos que puede llevar el activo, cada uno con su valor y su probabilidad asociados.
+
+\begin{figure}[hbpt]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Path} & \textbf{Valor} & \textbf{Probabilidad} & \textbf{Ponderado}\\
+\hline
+aaaa & $(a^4S_0-\frac{S_0}{4}(a+a^2+a^3+a^4))^+ = 0.48$ & $q^4 = 0.13$ & 0.06 \\
+aaab & $(a^2S_0-\frac{S_0}{4}(a+a^2+a^3+a^2))^+ = 0$ & $q^3(1-q)=0.09$  & 0 \\
+aaba & $(a^2S_0-\frac{S_0}{4}(a+a^2+a+a^2))^+ = 0.15$ & $q^3(1-q)=0.09$  & 0.01\\
+aabb & $(S_0-\frac{S_0}{4}(a+a^2+a+1))^+ = 0$ & $q^2(1-q)^2=0.06$  & 0 \\
+abaa & $(a^2S_0-\frac{S_0}{4}(a+1+a+a^2))^+ = 0.31$ & $q^3(1-q)=0.09$  & 0.03\\
+abab & $(S_0-\frac{S_0}{4}(a+1+a+1))^+ = 0$ & $q^2(1-q)^2=0.06$  & 0 \\
+abba & $(S_0-\frac{S_0}{4}(a+1+b+1))^+ = 0$ & $q^2(1-q)^2=0.06$  & 0 \\
+abbb & $(b^2S_0-\frac{S_0}{4}(a+1+b+b^2))^+ = 0$ & $q(1-q)^3=0.04$  & 0 \\
+baaa & $(a^2S_0-\frac{S_0}{4}(b+1+a+a^2))^+ = 0.45$ & $q^3(1-q)=0.09$  & 0.04\\
+baab & $(S_0-\frac{S_0}{4}(b+1+a+1))^+ = 0$ & $q^2(1-q)^2=0.06$  & 0 \\
+baba & $(S_0-\frac{S_0}{4}(b+1+b+1))^+ = 0.15$ & $q^2(1-q)^2=0.06$  & 0.009\\
+babb & $(b^2S_0-\frac{S_0}{4}(b+1+b+b^2))^+ = 0$ & $q(1-q)^3=0.04$  & 0 \\
+bbaa & $(S_0-\frac{S_0}{4}(b+b^2+b+1))^+ = 0.30$ & $q^2(1-q)^2=0.06$  & 0 \\
+bbab & $(b^2S_0-\frac{S_0}{4}(b+b^2+b+b^2))^+ = 0$ & $q(1-q)^3=0.04$  & 0 \\
+bbba & $(b^2S_0-\frac{S_0}{4}(b+b^2+b^3+b^2))^+ = 0$ & $q(1-q)^3=0.04$  & 0 \\
+bbbb & $(b^4S_0-\frac{S_0}{4}(b+b^2+b^3+b^4))^+ = 0$ & $(1-q)^4=0.02$  & 0 \\
+\hline
+\end{tabular}
+\caption{Análisis de las trayectorias posibles para la opción del ejercicio 3}
+\label{tabla:Mayo2015_2}
+\end{figure}
+
+Para calcular el valor de la opción debemos descontar los valores ponderados en $T=4$ obteniendo:
+\[V(X) = \frac{0.06+0.01+0.03+0.04+0.09}{e^{0.025}\cdot 1} = 0.14\]
+
+\spart
+
+Si pagase dividendos en el tercer mes, el valor de la acción en ese punto decaería lo que implicaría que la media fuese más baja y pero también lo fuese el valor final de la acción. Sin embargo, si la bajada es de un $x\%$, el valor final de la acción caería un $x\%$ y lo mismo ocurriría con la media ya que todos los sumandos sufren el mismo descuento. Por tanto la opción no cambia de valor.
 \end{problem}
 
 
@@ -381,12 +449,33 @@ El activo $A$ tiene un precio actual de 11.68 euros y una volatilidad del 25\%. 
 
 \ppart Calcular las sensibilidades del precio de la opción a la volatilidad y al tipo libre de riesgo.
 
-\ppart ¿cómo variaría el precio de la opción si la volatilidad sube al 30\%, permaneciendo el resto de parámetros inalterados?
+\ppart ¿Cómo variaría el precio de la opción si la volatilidad sube al 30\%, permaneciendo el resto de parámetros inalterados?
 
 \ppart ¿Y si el tipo de interés baja al 150 puntos básicos, permaneciendo todos los demás parámetros inalterados?
 
 \solution
 
+\doneby{Pedro}
+
+\spart
+
+Como ya se ha explicado en el ejercicio \ref{ej:NormalTaylor} tenemos:
+\[N(x) = \frac{1}{\sqrt{2π}}\left(x-\frac{x^3}{3 \cdot 2 \cdot 1!} +\frac{x^5}{5 \cdot 4 \cdot 2!} - \frac{x^7}{7\cdot 8 \cdot 3!}+...\right)\]
+
+Con los datos del enunciado tenemos
+\[d_{\pm} = \frac{1}{0.25\sqrt{0.25}}\left(\ln \frac{11.68}{11.68e^{-0.025\cdot 0.25}}\pm\frac{1}{2}0.25^2 \cdot 0.25\right)=8 \left(0.0063 \pm 0.0078\right) \implies\]
+\[\implies d_+ = 0.11, \;\; d_-=-0.012 \]
+
+Ahora evaluamos la normal:
+\[N(d_+)=0.54, \;\; N(d_-)=0.495\]
+Así, empleando la fórmula de Bacl-Scholes tenemos:
+\[C_0(11.68,11.68,0.25,0.025,0.25)=0.56\]
+
+\spart
+
+Para conocer la respuesta nos apoyamos en las sensibilidades de la fórmula de Black-Scholes. Para este caso concreto nos interesa la delta.
+\[ΔC_{BS} \approx ΔS\cdot δ = ΔS \cdot N(d_+) = 0.1168 \cdot 0.54 = 0.063\]
+Es decir, al aumentar el precio del activo un $1\%$ la opción aumenta un $6.3\%$.
 \end{problem}
 
 \begin{problem}[4]
@@ -405,6 +494,9 @@ Consideramos una opción que pagará a vencimiento (dentro de tres meses) $(S_4-
 \ppart ¿Cuál sería el impacto en este valor si el subyacente pagase dividendos en el segundo mes?
 
 \solution
+
+
+
 
 \end{problem}
 

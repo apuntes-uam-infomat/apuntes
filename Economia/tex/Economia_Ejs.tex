@@ -948,7 +948,7 @@ Por definición, si el valor de $K$ se calcula de forma que la prima sea nula, e
 
 Lo primero que debemos hacer es calcular el valor de $K$. Para ello tenemos que forzar que el valor de la opción sea 0, puesto que nos dice el enunciado que la prima debe ser nula.
 
-\[-K = V(\max\{S_T,F\}) = V(\max\{S_T-F,0\}-F) = C(T,S_0,F)-F\]
+\[K = V(\max\{S_T,F\}) = V(\max\{S_T-F,0\}+F) = C(T,S_0,F)+F\]
 
 El valor $K$ es un número, aunque esté expresado en función del precio de una call es un valor número, no significa que tengamos/vendamos ninguna call.
 
@@ -1038,7 +1038,7 @@ El valor de la opción es:
 
 \end{problem}
 
-\begin{problem}[7]
+\begin{problem}[7]\label{ej:NormalTaylor}
 El activo $A$ tiene un precio anual de 10 y una volatilidad del 27\%. El tipo de interés libre de riesgo (composición continua) es del 5\%.
 
 \ppart ¿Cuál es el precio (Black-Scholes) de una opción que da derecho, dentro de tres meses, a comprar una unidad del subyacente a su precio actual? (Se calculará $N(x)$ como un desarrollo de Taylor)
@@ -1054,21 +1054,27 @@ La fórmula Black-Scholes nos dice
 
 Para calcular $N(x)$, siguiendo la sugerencia del enunciado, calculamos:
 \[N(x) = \int_{0}^{x}\frac{1}{\sqrt{2π}}e^{-\frac{1}{2}x^2} = \frac{1}{\sqrt{2π}}\int_0^x\sum_{i=0}^{\infty}(-1)^i\frac{x^{2i}}{2^ii!} = \frac{1}{\sqrt{2π}}\sum_{i=0}^{\infty}(-1)^i\frac{x^{2i+1}}{2^ii!(2i+1)} =\]
-\[=\frac{1}{\sqrt{2π}}\left(x-\frac{x^3}{3 \cdot 2 \cdot 1!} +\frac{x^5}{5 \cdot 4 \cdot 2!} - \frac{x^7}{7\cdot 8 \cdot 3!}+...\right)\]
+\[=\frac{1}{\sqrt{2π}}\left(x-\frac{x^3}{3 \cdot 2 \cdot 1!} +\frac{x^5}{5 \cdot 4 \cdot 2!} - \frac{x^7}{7\cdot 8 \cdot 3!}+...\right)\footnote{Como explicó posteriormente el profesor en clase basta con hacer un desarrollo de Taylor con un par de sumandos}\]
+\obs Tenemos que tener en cuenta que este método nos da la probabilidad de que nos encontremos entre 0 y $x$. Sin embargo la normal se extiende hasta $-\infty$ por lo que la probabilidad de encontrarnos entre $-\infty$ y $x$ (que es lo que querremos calcular) será $0.5 +$ la probabilidad calculada con este método.
 
 Para emplear la fórmula de Black-Scholes debemos calcular $d_{\pm}$:
 \[d_{\pm} = \frac{1}{0.27\sqrt{0.25}}\left(\ln \frac{10}{10e^{-0.05\cdot 0.25}}\pm\frac{1}{2}0.27^2 \cdot 0.25\right)=7.4 \left(0.0125 \pm 0.009\right) \implies\]
 \[\implies d_+ = 0.16, \;\; d_-=0.025 \]
 
 Ya estamos en conidciones de realizar las operaciones pertinentes obteniendo:
-\[C_0(10,10,0.27,0.05,1) = 10 \cdot 0.06 - 10\cdot 0.95 \cdot 0.01 = 0.5\]
+\[C_0(10,10,0.27,0.05,1) = 10 \cdot 0.56 - 10\cdot 0.95 \cdot 0.51 = 0.76\]
 
 \spart
 Nos encontramos en la situación en que hemos vendido 1000 call sobre el activo $S$ valorado actualmente en 10, a un precio de ejercicio $K=12$. Evidentemente si el precio de la acción baja estaremos ganando dinero puesto que el comprado no querrá usar la call. Sin embargo, si el precio de la acción sube el cliente querrá ejercitar su derecho a compra y deberemos proporcionarle las opciones indicadas, con lo que perderemos dinero. Antes esta posbile pérdida, que puede ser enorme si el precio de la acción sube mucho, debemos cubrirnos.
 
-Para ello nos apoyamos en las sensibilidades de la call según la fórmula de Black-Scholes. En concreto la delta $(δ=N(d_+))$ nos da la variación del precio de la call en función del precio del activo correspondiente. Por tanto tenemos
-\[C_{BS}(S+ Δt)-C_{BS}(S) = δΔS\]
-Por tanto, si compramos acciones $S$ por valor de $δΔS$ estaremos cubiertos ante la posible subida del precio. Puesto que tanto δ como $ΔS$ cambian constantemente, deberemos estar pendientes de la situación y actualizar este dato, es decir, comprar o vender acciones, para mantenernos cubiertos.
+Recordemos que la δ nos mide la variación del precio de la call respecto a la variación del precio del subyacente.
+\[δ = \partial_S = N(d_+)\]
+
+A la hora de cubrirnos de posibles variaciones en el precio lo que queremos es encontrar una cartera que tenga $δ=0$. Para ello consideramos como elementos de nuestra cartera la call que hemos vendido y el activo $S$. Si por cada call vendida compramos $x$ acciones de $S$, la suma de sus deltas será:
+\[δ - x\cdot 1 = 0 \implies x = δ\]
+por lo que deberemos comprar $1000\cdot δ$ acciones del activo $S$ para cubrirnos.
+
+\obs En la ecuación $δ-x=0$ nos hemos apoyado en el hecho de que la variación del precio del activo $S$ respecto a su precio es 1.
 \end{problem}
 
 \begin{problem}[8]
