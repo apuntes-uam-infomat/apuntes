@@ -1963,6 +1963,7 @@ En este capítulo vamos a ver:
 				\end{itemize}
 
 
+		% Clase 27-4-2016
 		% Copiado por @gjulianm
 
 		Ayer demostrarmos que teníamos convergencia a una función, pero el problema es que no sabemos si es solución única.
@@ -1983,5 +1984,127 @@ En este capítulo vamos a ver:
  		Finalmente podemos hallar la solución al problema completo: \( u(x,t) = \int{ℝ^N} G(x-y, t) f(y) \dif y + \int_0^t \int_{ℝ^N} G(x-y, t-s) F(y,s) \dif y \dif s \label{eq:Calor:SolucionNoHomogenea} \)
 
  		De nuevo, nos encontramos con el problema de la unicidad. Tenemos $u_1$ y $u_2$ dos soluciones, así que consideramos la función $ψ = u_1 - u_2$ y buscamos soluciones no triviales al sistema \[ \begin{cases} ψ_t - Δψ = 0 \\ ψ(x,0) = 0 \end{cases} \]
+
+ 		%Vuelta a @erpheus
+
+ 		\subsection{Contraejemplo de Tijonov}
+ 			También conocido como Tychonoff.
+
+ 			\[u_t - u_{xx} = 0\]
+
+ 			En la dirección del tiempo tenemos solo una derivada (ecuación de orden uno) y solo necesitamos un dato inicial para fijar el problema.
+
+ 			En la dirección de las x tenemos un problema de orden 2, por lo que hacen falta añadir dos datos si queremos fijar la $x$:
+
+ 			\[\begin{cases}
+ 				u_t-u_{xx} = 0 \\
+ 				u(0,t) = g(t) \\
+ 				u_x(0,t) = 0
+ 			\end{cases}\]
+
+ 			Tijonov decidió expresar $u(x,t)$ como desarrollo en forma de potencias: $u(x,t) = \sum\limits_{k=0}^\infty a_k(t) x^k = a_0(t) + a_1(t)x + a_2(t)x^2 + …$
+
+ 			Formalmente:
+ 			\[ g(t) = u(0,t) = a_0(t)\]
+ 			\[ u_x(x,t) \qeq a_1(t) + 2a_2(t)x + 3a_3(t)x^2 + …\]
+ 			\[ 0 = u_x(0,t) = a_1(t)\]
+
+ 			\begin{align*}
+ 				u_t(x,t) &= a'_0 + a'_1 x + a'_2x^2 + … \\
+ 				u_x(x,t) &= a_1 + 2a_2x + 3a_3x^2 + … \\
+ 				u_{xx}(x,t) &= 2a_2 + 3 \cdot 2 a_3 x + 4 \cdot 3 a_4 x^2 + …
+ 			\end{align*}
+
+ 			Para tener $u_t = u_{xx}$ igualamos los coeficientes de caa término en $x^j$.
+
+ 			\[ a'_j(t) = (j+2)(j+1) a_{j+2} (t)\]
+ 			\[a_1 \equiv 0 \Rightarrow a'_1 \equiv 0 \Rightarrow a_3 \equiv 0 \Rightarrow a'_3 \equiv 0 …\]
+
+ 			Por lo que llegamos a que $a_{2n+1} = 0 \forall n$. Podemos hacer lo mismo con los pares:
+
+ 			\begin{align*}
+ 				a_0 &= g \\
+ 				g' &= a'_0 = 2 \cdot 1 a_2 (t) \Rightarrow a_2 = \frac{1}{2} g' \\
+ 				\frac{1}{2}g'' &= a'_2 = 4 \cdot 3 a_4 (t) \Rightarrow a_4 = \frac{1}{4!} g'' \\
+ 				\frac{1}{4!}g''' &= a'_4 = 6 \cdot 5 a_6 (t) \Rightarrow a_6 = \frac{1}{6!} g'''
+ 			\end{align*}
+
+ 			Y llegamos a la expresión general: $a_{2n} (t) = \frac{1}{(2n)!} g'^{j} (t)$
+
+ 			Solución:
+ 				\[ u(x,t) = \sum_{n=0}^\infty  \frac{1}{(2n)!} g'^{j} (t) x^{2n}\]
+
+ 			¿Como elegimos $g$?
+
+ 			(DIBUJO)
+
+ 			\[ g(t) = \begin{cases}
+ 				0,& t \leq 0 \\
+ 				e^{-t^{-\alpha}},&  t>0
+ 			\end{cases}\]
+
+ 			\[ g \in C^\infty, g'^k(t) \equiv 0, t < 0, g \not\equiv 0\]
+
+ 		\subsection{Resultados (parciales) de unicidad}
+
+ 			El desarrollo que hemos hecho en Tijonov no funciona bien en el infinito ya que tiene un término de la forma $x^{2n}$.
+
+ 			\begin{theorem}[Unicidad de soluciones acotadas]
+ 				\[\left.\begin{array}{r}
+ 					u_t - \Delta u = F \\
+ 					u(x,0) = f
+ 				\end{array}\right\} \exists M \text{ t.q. } |u(x,t)| < M, \forall x, t \]
+
+ 				Si $u_1, u_2$ soluciones de este problema $\Rightarrow u_1 = u_2$
+ 			\end{theorem}
+
+ 			\begin{proof}
+ 				Definimos $v = u_1 -u_2$ y tenemos el siguiente problema:
+
+ 				\[\begin{cases}
+ 					v_t - \Delta v = 0\\
+ 					v(x,0) = 0
+ 				\end{cases}  \quad\quad |v| < M\]
+
+ 				Tenemos $-\Delta u = 0$ en $\real^n$, es decir, $u$ está acotada. Intentaremos acotarla y ver que podemos hacerlo con la $v$ también.
+
+ 				\[ W(x,t) = \alpha (2t + \frac{\| x\|^2}{N}) …\]
+
+ 				(DIBUJO)
+
+ 				(FALTA)
+
+ 				(DIBUJO FRONTERA PARABÓLICA DE $Q_t$)
+
+ 				En $t=0$:
+
+ 				\[ \|\bar{x}\| \leq R \left\{ \begin{cases}
+ 					W(x,0) = \alpha \frac{\|\bar{x}\|^2}{n}\\
+ 					v(x,0) = 0
+ 				\end{cases}\right\} \Rightarrow v \leq W \forall \alpha \]
+
+ 				\[ \|x\| = R \Rightarrow W(x,t) = \alpha(2t+\frac{R^2}{n}) \]
+
+ 				Y entonces ¿ $W \geq v$ si $\|\bar{x}\| = R$?. $v$ acotada $\Rightarrow v \leq M \leq \alpha (2t + \frac{R^2}{n})$ tomando $\frac{\alpha R^2}{n} > M$, por lo que $R^2 > \frac{nM}{\alpha}$
+
+ 				Es decir, podemos componer $v, W_\alpha$ es $Q_t = B_R(\bar{0}) \prod [0,T]$, si $R^2 > \frac{nM}{\alpha}$.
+
+ 				(DIBUJOS)
+
+ 				Conclusión: Fijamos un punto $(x_0,t_0)$.
+ 					\[v(x_0,t_0) \leq W(x_0,t_0) = \alpha (2t_0+ \frac{\|x_0\|^2}{n})\]
+
+ 				Dado un punto cualquiera $(x_0,t_0)$ con $t_0 < T$ tenemos:
+ 				\[ v(x_0,t_0) \leq \alpha (2 t_0 + \frac{\|x_0\|^1}{n}) \quad \forall \alpha\]
+
+ 				Tomando $\alpha \rightarrow 0$:
+ 				\[v(x_0,t_0) \leq 0 \Rightarrow v \equiv 0\]
+
+ 				Por lo que las soluciones son iguales.
+
+ 			\end{proof}
+
+
+
 
 
