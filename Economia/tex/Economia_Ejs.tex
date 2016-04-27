@@ -825,11 +825,11 @@ Hasta ahora teníamos
 \[C_0 = \frac{1}{(1+r)^N}\sum_{n=0}^Nq^n(1-q)^{N-n}(a^nb^{N-n}S_0-K)^+\]
 
 Puesto que ahora queremos cambiar el numerario, llamando $S^1$ al nuevo numerario tendremos:
-\[C_0 = \frac{1}{S^1_N}\sum_{n=0}^N(q')^n(1-q')^{N-n}(a^nb^{N-n}S_0-K)^+\]
+\[C_0 = \frac{1}{S^1_N}\sum_{n=0}^N(q)^n(1-q)^{N-n}(a^nb^{N-n}S_0-K)^+\]
 siguiendo el mismo razonamiento empleado en los apuntes llegaríamos a que
-\[\phi(n_0,N,q') = \sum_{n=n_0}^N(q')^n(1-q')^{N-n}\]
+\[\phi(n_0,N,q) = \sum_{n=n_0}^N(q)^n(1-q)^{N-n}\]
 Ahora, con el mismo razonamiento del apartado anterior, es sencillo ver que
-\[\phi(n_0,N,q') = \mathbb{P}(S_N>K) \text{ siendo } \mathbb{P} \text{ la nueva probabilidad martingala}\]
+\[\phi(n_0,N,q) = \mathbb{P}(S_N>K) \text{ siendo } \mathbb{P} \text{ la nueva probabilidad martingala}\]
 
 Combinando lo demostrado en este apartado y el anterior podemos escribir la fórmula Cox-Rubinstein como:
 \[C_0=S_0Q'(S_N>K) - \frac{K}{(1+r)^N}Q(S_N>K)\]
@@ -841,6 +841,8 @@ Apoyándonos en la fórmula de Cox-Rubinstein que escribimos al final del aparta
 \[C_T^{\text{AoN}}=S_TN(d_+)-\frac{K}{(1+r)^N}N(d_-) \text{ y } C_T^{\text{CoN}}=1N(d_+)-\frac{K}{(1+r)^N}N(d_-)\]
 
 \textcolor{red}{Elena: Si estamos hablando de tiempo continuo (la probabilidad tiende a la normal) no deberíamos poner $e^{-rT}$ en lugar de $(1+r)^{-N}$?}
+\textcolor{blue}{Pedro: El tiempo no es continuo. Simplemente tomamos $N$ muy grande y en esos valores la probabilidad se parece a la de la normal.}
+
 
 
 \spart
@@ -862,10 +864,11 @@ En este ejercicio partimos de la fórmula de Black-Scholes para una call europea
 \ppart Demostrar que $C_0(S_0,S_0,σ,r,T)=S_0C_0(1,1,σ,r,T)$
 \solution
 \doneby{Pedro}
+\approvedby{Elena}
 
 \spart
 
-Nos apoyamos en la paridad call put para obtener el equivalente de Cox-Rubinstein \textcolor{red}{(Black-Scholes)} para la put. Esto se corresponde con el primer apartado del ejercicio anterior\footnote{En este caso estamos en tiempo continuo pero la situación es equivalente} de donde obtenemos:
+Nos apoyamos en la paridad call put para obtener el equivalente de Black-Scholes para la put. Esto se parece al primer apartado del ejercicio anterior y es fácil ver que tenemos:
 \[P_0 = Ke^{-rT}(1-N(d_-))-S_0(1-N(d_+)) = S_0N(d_+) -Ke^{-rT}N(d_-)+Ke^{-rT} -S_0 \]
 
 \spart
@@ -881,14 +884,11 @@ Para calcular las derivadas nos apoyamos en que los dos primeros sumandos de la 
 \item \textbf{Teta}
 \[\partial_T = \frac{xσ}{2\sqrt{T}}N'(d_-) + Ke^{-rT}rN(d_-)-rKe^{-rT}\]
 \item \textbf{Vega}\\
-\textcolor{red}{La vega no es con respecto a $\sigma$? A mi me sale lo mismo que teníamos para la call puesto que la fórmula de la put no depende de $\sigma$: $x\sqrt{T}N'(d_{-})$}
-\[\partial^2_T = x\sqrt{T}N'(d_+)+r^2Ke^{-rT}\]
+\[\partial_σ = x\sqrt{T}N'(d_{-}) \]
 \item \textbf{Ro}\\
-\textcolor{red}{La ro es con respecto a $r$ de modo que quedaría: $TKe^{-rT}N(d_-)+rKe^{-rT}$ }
 \[\partial_r = TKe^{-rT}N(d_-)-TKe^{-rT}\]
 \item \textbf{Lambda}\\
-\textcolor{red}{La lambda es con respecto a $K$ de modo que quedaría: $-e^{rT}N(d_{-})+e^{-rT}$}
-\[\partial^2_r = -e^{-rT}N(d_-)+T^2Ke^{-rT}\]
+\[\partial_r = -e^{-rT}N(d_-)+e^{-rT}\]
 \end{itemize}
 
 \spart
@@ -1249,7 +1249,7 @@ La TIR es tipo $r^*$ que anula el valor neto, es decir, es el rendimiento al que
 \end{problem}
 
 \begin{problem}[8]
-Calcular el valor teórico de una acción que paga en 0 un dividendo del 3\% que aumentará un 1.5\% anualmente si el tipo libre de riesgo es del 4\%.
+Calcular el valor teórico de una acción que paga en 0 un dividendo del 3\% y  que aumentará su valor un 1.5\% anualmente considerando que el tipo libre de riesgo es del 4\%.
 \solution
 
 Al pagar un dividendo del $3\%$ el valor de la acción cae a un $97\%$ de su valor inicial y, a partir de ahí, comienza a subir según la situación descrita por el enunciado. Para estudiar su precio no tenemos más que descontar los valores de la acción en cada año:
@@ -1267,6 +1267,22 @@ Consieramos una inversión que vale hoy 150 con unas previsiones de ganancias, e
 \ppart Se anuncia un proyecto que reduce en 5 euros las ganancias en los dos próximos años a cambio de incrementarlos en un 10\% a partir del terce año. ¿Le interesa?
 \solution
 
+\spart
+
+El PER se calcula dividiendo el primer dividendo previsto entre el precio actual de la inversión. Así tenemos
+\[\text{PER} = \frac{20}{150} = 0.13\]
+
+\spart
+
+Si el inversor espera un rendimiento anual del 10\%, esto quiere decir que espera que ese sea el tipo anual. Por tanto, el valor de la inversión no es más que el resultado de descontar los flujos dados. Así obtenemos
+\[PV = 20\cdot e^{-0.1} + 40 \cdot e^{-0.2} + 47 \cdot e^{-0.3} + 55 \cdot e^{-0.4} + 15 \cdot e^{-0.5} + 12 \cdot e^{-0.6} = 138.22\]
+
+\spart
+
+Al preguntar por el rendimiento esperado quiere decir cuál es el rendimiento que hace que el valor de producto neto ($NPV$) sea nulo, es decir, nos piden la TIR. Para ello tenemos que calcular el valor $r$ tal que:
+\[PV = 20\cdot e^{-r} + 40 \cdot e^{-r \cdot 2} + 47 \cdot e^{-r \cdot 3} + 55 \cdot e^{-r \cdot 4} + 15 \cdot e^{-r \cdot 5} + 12 \cdot e^{-r \cdot 6} = 150\]
+
+Llamando a $e^{-r}=t$ nos encontramos ante un polinomio de grado 6.
 \end{problem}
 
 \begin{problem}[10]
