@@ -76,8 +76,8 @@ Vamos a estudiar el problema dual del planteado aquí.
 Con lo que:
 
 \[
-	g(u) =\begin{array}{ccc} -∞ & si &\sum y_iu_i ≠ 0\\ \sum u_i - \frac{1}{?}\sum_i\sum_j u_i u_j y_i y_j x'_i x_j  & si & \sum y_iu_i = 0
-	\end{array}
+	g(u) =\left\{\begin{array}{ccc} -∞ & si &\sum y_iu_i ≠ 0\\ \sum u_i - \frac{1}{?}\sum_i\sum_j u_i u_j y_i y_j x'_i x_j  & si & \sum y_iu_i = 0
+	\end{array}\right.
 \]
 
 Vamos a expresar el problema dual.
@@ -174,3 +174,172 @@ Llegamos al problema dual:
 \end{ioprob}
 
 La única diferencia que aparece es $C≥u$, es decir, los pesos están acotados superiormente.
+
+
+\paragraph{Resumen\\}
+
+\begin{table}[hbtp]
+\centering
+\begin{tabular}{r|cc|l}
+ & Primal & Dual & Cálculo hiperplano\\\hline
+Separables &  $
+\begin{array}{l}
+	\min \frac{||ω||^2}{2}\\
+	\;\;\;y_i(ω'x_i+ω_0) ≥ 1
+\end{array}
+$&$\begin{array}{r}
+	\max u'\vec{1}-\rfrac{1}{2}u'Hu\\
+	u'y = 0\\
+	u≥0
+\end{array}
+$ 
+&
+$\begin{array}{r}
+	ω = \sum u_iy_ix_i\\
+	ω_0 = \frac{1}{n}\sum(y_i-ωx_i)
+\end{array}$\\\hline
+No separables &  $
+\begin{array}{l}
+	\min \frac{||ω||^2}{2} + C \sum \xi_i \\
+	\;\;\;y_i(ω'x_i+ω_0) ≥ 1 - \xi_i
+\end{array}
+$&$\begin{array}{r}
+	\max u'\vec{1}-\rfrac{1}{2}u'Hu\\
+	u'y = 0\\
+	u≥0
+\end{array}
+$ & $
+\begin{array}{l}
+	ω = \sum u_iy_ix_i\\ 
+		\;\;\;∀ 0<u_i<C\\
+	\left\{
+	\begin{array}{c}
+		\xi_i = 0\\
+		y_i(ω'x_i + ω_0) = 1 
+	\end{array}
+	\right. \to ω_0 = ...
+\end{array}
+$
+\end{tabular}
+\caption{Tabla resumen SVM}
+\end{table}
+
+\subsection{Extensión a reglas no lineales}
+
+Todo lo visto hasta ahora de \gls{SVM} sólo sirve para casos lineales. 
+%
+Hasta ahora teníamos $ω_0+ω\vx$. 
+%
+Puede ser que nuestros datos no se ajusten bien a una regla de clasificación lineal, pero que si transformamos los datos, éstos sí se ajusten bien con una regla de clasificación lineal.
+%
+Por ejemplo, si tenemos $x_1^2+x_2^2 - 3$, no hay manera de conseguir $ω_0+ω\vx$, pero podemos llevarnos el problema a otro espacio: $\varphi(x_1,x_2) = (x_1^2,x_2^2,x_1,x_2)$. 
+%
+De esta manear, $ω_0 + ωφ(x_1,x_2)$ sí es lineal y podemos aplicar toda la teoría vista hasta ahora.
+
+\textbf{Contras:} ¿Qué ocurre si tenemos cosas más complicadas que $x_1^2+x_2^2-3$? 
+%
+Necesitaríamos aumentar la dimensión del problema tal vez demasiado y se nos complica demasiado.
+
+Este espacio al que podamos llevar los datos, si lo hacemos con cuidado y los llevamos a un espacio de Hilbert en el que existe una transformación con unas propiedades interesantes.
+%
+En base a esta idea, tenemos un teorema muy potente que nos permite extender muy fácilmente la regla de clasificación \gls{SVM} a reglas de clasificación no lineales.
+
+
+
+
+
+\begin{theorem}[Kernel\IS trick]
+
+Una función $k:\mathbb{R}^d\times \mathbb{R}^d\to\mathbb{R}$ es simétrica y semidefinida positiva (SDP) si y solo si existe un espacio de Hilbert $\mathcal{H}$ y una transformación $\phi:\mathbb{R}^d\to \mathcal{H}$ tal que $k(x,y)=\langle \phi(x),\phi(y)\rangle_{\mathcal{H}}$.
+
+
+\end{theorem}
+
+En la práctica, en lugar de elegir $\mathcal{H}$ y $\phi$, se elige un núcleo y se sustituye $x'_ix_j$ por $k(x_i,x_j)$.
+%
+
+Podemos construir una nueva regla de clasificación. 
+%
+La regla de clasificación que teníamos es $ω_0 + \sum α_i\pesc{x_i,x}$. 
+%
+Podemos tomar:
+
+\[
+	ω_0 + \sum α_i\pesc{φ(x_i),φ(x)} = ω_0 + \sum α_ik(x_i,x)
+\]
+
+\[
+	\text{k núcleo } \dimplies  k(x,y) = \pesc{x,y}
+\]
+
+\begin{proof}
+
+
+\proofpart{$\impliedby$}
+
+$k$ es simétrica porque es un producto escalar.
+%
+
+Además, 
+
+\[
+	0≤\norm{\sum u_iφ(x_i)}^2 = \pesc{\sum u_iφ(x_i),\sum u_iφ(x_i)}_H = \]
+\[\;\;\;\;\;\; = \sum\sum u_iu_j\pesc{φ(x_i),φ(x_j)} = \sum\sum u_iu_jk(x_i,x_j)
+\]
+
+\proofpart{$\implies$}
+
+Demasiado compleja porque hay que meterse en espacios de Hilbert que no vienen al caso.
+
+\end{proof}
+
+Vamos a ver algunos núcleos utilizados:
+
+\begin{description}
+\item Polinomios de grado $m$:
+\[
+k(x,y) = (x'y + c)^m.
+\]
+
+\item Gaussiano:
+\[
+k(x,y) = \exp\left(-\frac{\|x-y\|^2}{2\sigma^2} \right)
+\]
+
+
+\item Laplaciano:
+\[
+k(x,y) = \exp\left(-\frac{\|x-y\|}{\sigma}\right)
+\]
+\end{description}
+
+Para cada problema concreto hay que usar un núcleo apropiado.
+
+\begin{example}
+Tomamos $k(x,y) = (\pesc{x,y} + 1)^2$.
+%
+Vamos a calcular exactamente cuál es la transformación $φ$ asociada.
+
+
+\[
+	k(x,y) = (x_1y_1 + x_2y_2 + 1)^2 = x_1^2y_1^2+x_2^2+y_2^2+1+2x_1y_1+2x_2y_y+2x_1x_2y_1y_2 = \pesc{φ(x),φ(y)}
+\]
+
+Vamos a ver cuál tiene que ser $φ$.
+%
+Como tenemos 6 sumandos, necesitamos $\appl{φ}{\real^2}{\real^6}$. 
+%
+Pensando en el producto escalar habitual ($\pesc{\vx,\vy} = \sum\vx_i\vy_i$)
+
+\[φ(\vx) = (x_1^2,x_2^2,1,\sqrt{2}x_1,\sqrt{2}x_2,\sqrt{2}x_1x_2\]
+
+\paragraph{Regla de clasificación:}
+
+\[
+	y_i = 1 \dimplies ω_0 + \sum α_i\pesc{φ(x_i),φ(x)} = ω_0 + \sum α_i(\pesc{x_i,x}+1)^2 = x'Ax+a'x+ω_0
+\]
+
+Hemos obtenido una regla de clasificación cuadrática.
+
+
+\end{example}
