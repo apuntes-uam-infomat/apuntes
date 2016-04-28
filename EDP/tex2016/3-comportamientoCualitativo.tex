@@ -1652,9 +1652,457 @@ En este capítulo vamos a ver:
 			Veremos que no se pueden cambiar aleatoriamente y tenemos que respetar la relación entre tiempo y espacio $\lambda = \mu^2$ para realizar un cambio de variables adecuado. Y veremos que esto nos ayudará a pasar a una EDO.
 		\end{example}
 
+		% Clase 25-4-2016
+		\begin{example}
+			\[u_t - \Delta u = 0, x \in \real^n, t > 0\]
+		\end{example}
+
+		Estamos buscando una soluciín particular, normalizando:
+		\[ \int\limits_{\real^n} u(\bar{x},t) d\bar{x} = 1, \forall t\]
+
+
+		Vamos a ir simplificando el problema. La primera simplificación que haremos será escribir $u$ como radical:
+		\[ r^2 = x^2_1 + … + x^2_n \]
+
+		Con $u = u(r)$:
+		\[ u_{x_1 x_1} + u_{x_2 x_2} + … + u_{x_n x_n} = … = u_{x_r x_r} + \frac{n-1}{r}u_r \]
+		\[ u_t - u_{rr} - \frac{n-1}{r}u_r  = 0\]
+		\[ 1 = \int\limits_{\real^n}  u(\bar{x},t) d \bar{x} \eqreason{polares} \int\limits_{S^{n-1}} \int_0^\infty u(r,t) r^{n-1} dr d\omega = \eqreason[\omega_n]{Medida esfera radio 1} \int_0^\infty u(r,t) r^{n-1} r^{n-1} dr \]
+
+		Con lo que llegamos a la simplificación del problema:
+
+		\[\begin{cases}
+			u_t - u_{rr} - \frac{n-1}{r}u_r  = 0\\
+			\int_0^\infty u(r,t) r^{n-1} r^{n-1} dr = \frac{1}{\omega}
+		\end{cases}\]
+
+		Ahora simplificamos realizando cambios de escala:
+
+		\[\begin{cases}
+			r = \lambda s\\
+			t = \mu \tau
+		\end{cases} \quad\quad \lambda, \mu \rightarrow \text{factores de cambio de escala.}\]
+
+		(ups)
+
+		Quremos llegar a algo como $V_\tau - V_{ss} - \frac{n-1}{s} V_{s} = 0$.
+
+		\begin{align*}
+			V_\tau (s,\tau) &= u_t (\lambda s, \mu \tau) \cdot (\mu \tau)_{\tau} \\
+				&= u_t(\lambda s, \mu \tau) \mu \\
+				v_s(s,\tau) &= u_r(\lambda s, \mu \tau) \lambda \\
+				v_{ss}(s,\tau) = u_{rr} (\lambda s, \mu \tau) \lambda^2
+		\end{align*}
+
+		\[ v_\tau (s,\tau) - v_{ss}(s,\tau) - \frac{n-1}{s} v_s(s,\tau)\]
+		\[ = \mu \mu_t(\lambda s, \mu \tau) - u_{rr}(\lambda s, \mu \tau) \lambda^2 - \frac{n-1}{\lambda s} \lambda^2 u_r(\lambda s, \mu \tau) \]
+		\[ = \mu u_t(\lambda s, \mu \tau) - \lambda^2 \{ u_{rr}(\lambda s, \mu \tau) `\frac{n-1}{\lambda s} u_r(\lambda s, \mu \tau)\}\]
+
+		Falta algún comentario pero la conclusión es:
+
+		\[ v_\tau - v_{ss} - \frac{n-1}{s} v_s = (\mu - \lambda^2) u_t(\lambda s, \mu \tau)  \]
+
+		Necesitamos $\mu = \lambda^2$.
+
+		\[ v(s,\tau) = Cu(\lambda s, \lambda^2 \tau)\]
+
+		Ajustamos $C$ para conseguir:
+
+		\[ \int_0^\infty v(s, \tau) s^{n-1} dx = \frac{1}{\omega_{n}} \]
+		\[ \frac{1}{\omega_n} = C \int_0^\infty u(\lambda s, \lambda^2 \tau) s^{n-1} ds \eqreason{cambio de variable $\lambda s = r$} C \int_0^\infty u(r, \lambda^2 \tau) \frac{r^{n-1}}{\lambda n dr}  \]
+		\[ = \frac{c}{\lambda^n}  \underbrace{\int_0^\infty   u(r, \lambda^2\tau) r^{n-1} dr}_{= \frac{1}{\omega_n} (\forall \tau)}  = \frac{C}{\lambda^n}\frac{1}{\omega_n} \Rightarrow C = \lambda^n\]
+
+		\[ v(s,\tau) = \lambda^n u(\lambda s, \lambda^2 \tau)\]
+
+		Con esto hemos llegado a que si existe una solución existen infinitas cambiando la $n$ en la fórmula anterior. Pero también hemos obtenido que las soluciones no solo deben ser $C^2$, sino que tienen que respetar estas restricciones. Ahora, con un espacio de funciones posibles menor vamos a intentar encontrarlas:
+
+		\[ \underbrace{v(s,1)}_{\text{una variable}} = \lambda^n u (\lambda s, \lambda^2) \]
+
+		Recordemos $\lambda^2 = t$, $\lambda s = r$ y $s = \frac{r}{\lambda} = \frac{r}{\sqrt{t}}$.
+
+		\[ u(r,t) = \frac{1}{\lambda^n} v(s,1) = \frac{1}{t^{n/2}} v(\frac{r}{\sqrt{t}},1)\]
+
+		Idea: $u(r,t) = \frac{1}{t^{n/2}} \Phi(\frac{r}{\sqrt{t}})$, con $\Phi: \real \rightarrow \real$.
+
+		Llegamos al problema: Encontrar una función $\Phi$ (de una variable) tal que $u(r,t) = \frac{1}{t^{n/2}} \Phi(\frac{r}{\sqrt{t}})$ sea solución.
+
+		\textbf{Notación: } $\xi = \frac{r}{\sqrt{t}}$, y $\xi_r = \frac{1}{\sqrt{t}}$, y $\xi_t = -\frac{1}{2} t^{-3/2} r$.
+
+		\[ u_t = - \frac{n}{2} t^{-n/2-1} \Phi + t^{-n/2} \Phi' (\xi) \xi_t = -\frac{n}{2} t^{-n/2 - 1} \Phi(\xi) + t^{-n/2} \Phi'(\xi) (-\frac{1}{2}) \]
+
+		(FALTA $u_r$ y $u_{rr}$)
+
+		\[ u_t - u_{rr} - \frac{n-1}{r}u_r = … = - t^{-n/2 - 1} \underbrace{\left\{ \Phi'' + \frac{n-1}{\xi}\Phi' + \frac{\xi}{2}\Phi' + \frac{n}{2}\Phi \right\}}_{\text{EDO}} \]
+
+		Conclusión: tenemos que encontar una solución
+		\[ \Phi'' + \frac{n-1}{\phi} \Phi'+ \frac{\xi}{2}\Phi' + \frac{n}{2}\Phi = 0\]
+
+		En el caso $n = 1$:
+		\[ \Phi'' + \underbrace{\frac{\xi}{2}\Phi' \frac{1}{2}\Phi}_{\frac{1}{2} (\xi \Phi)'} = 0\]
+
+		\[ \left[ \Phi' + \frac{1}{2} (\xi \Phi)  \right]' = 0\]
+		\[ \Phi' + \frac{1}{2} \xi \Phi = 0 \quad \text{cte.}\]
+		\[ \frac{\Phi'}{\Phi} = -\frac{1}{2} \xi\]
+		\[ \Phi(\xi) = C e^{-\frac{\xi^2}{4}}\]
+
+		Con $n=1$:
+
+		\[ u(r,t) = t^{-\frac{1}{2}} \Phi(\frac{r}{\sqrt{t}}) \eqexpl{C}  \text{algo muy bonito}\]
+
+		Para el caso $n \neq 1$ usamos facotr integrante $\xi^{n-1} + …$
+
+		\[ \underbrace{\xi^{n-1} \Phi'' + (n-1) \xi^{n-2}}_{(\xi^{n-1}\Phi')'} \Phi' + \underbrace{\frac{1}{2}\xi^n \Phi' + \frac{1}{2} n \xi^{n-1} \Phi}_{(\frac{1}{2} \xi^n \Phi)'} = 0 \]
+
+		\[ (\xi^{n-1} \Phi' + \frac{\xi^n}{2}\Phi)' = 0\]
+
+		(FALTA UN POQUITÍN)
+
+		Conclusión:
+			\[ u(r,t) = t^{-n/2} \Phi(\frac{r}{\sqrt{t}}) = t^{-\frac{n}{2}} C e^{-\frac{r^2}{4t}} \]
+
+		(DIBUJOS DE $t$ pequeño a $t$ grande)
+
+
+		% Clase 26-4-2016
+		Tenemos que ajustar el valor de $C$ para que
+
+		\[
+			1 = \frac{C}{t^{\rfrac{N}{2}}} \int_{\real^N} e^{-\frac{x_1^2+x_2^2+...+x_n^2}{4t}} dx = \frac{C}{t^{\rfrac{N}{2}}}\prod \int_{-∞}^{∞} e^{-\frac{x_i}{4t}} dx_i
+		\]
+
+		Haciendo el cambio de variables:
+
+		\[
+			z = \frac{x_i}{2\sqrt{t}}
+		\]
+
+
+		Obtenemos:
+
+		\[
+			\frac{C}{t^{\rfrac{N}{2}}} \left[ \int_{-∞}^{∞} e^{-z^2}2\sqrt{t}dz \right]^N = ...
+		\]
+
+
+		Hemos llegado a la expresión del \concept{núcleo de Gauss}
+
+		\[G(x,t) = \frac{1}{(\sqrt{4πt})^N}e^{-\frac{\norm{\vx}^2}{4t}}\]
+
+		Esto es una solución particular que tiene la curiosidad de que en $t=0$ no está definida.
+		%
+		Vamos a estudiar el núcleo de Gauss:
+
+		\paragraph{Propiedades:}
+
+		\begin{itemize}
+			\item $G(x,t) > 0$.
+			\item $G(x,t)$ es par en $x_i$ (de hecho, es radial)
+			\item $G(x,t)$ decreciente en $x_i>0$.
+			\item Tomando el límite acercándonos a $t=0$, observamos:
+
+			\[\lim_{t\to 0^+} G(x,t) = \begin{array}{ccc} 0&si&\vec{x} ≠ 0 \\ ∞ & si & \vx = 0\end{array}\]
+
+			\item Si alguien tiene curiosidad, estas 2 últimas propiedades se pueden escribir como que el núcleo de Gauss, converge nosecomo a la delta de dirack.
+
+			\[
+				G(x,t) \to_{t\to 0^+} \delta_{x=0}
+			\]
+		\end{itemize}
+
+		\begin{theorem}
+		Sea $f$ una función continua y acotada.
+
+		Sea \[u(x,t) = \int_{\real^n} G(\vx-\vy,t)f(\vy)d\vy\]
+
+		\textbf{Entonces:}
+
+		\begin{itemize}
+			\item $u(x,t)\in C^{∞}$
+			\item $u_t - laplacianou = 0, \vx \in \real^n\;,t>0$, es decir, es solución de la ecuación de difusión (o ecuación del calor).
+			\item $\lim_{t\to 0^+} u(x,t) = f(x)$ con convergencia puntual.
+		\end{itemize}
+		\end{theorem}
+
+		\obs Tenemos un \textbf{efecto regularizante}.
+		%
+		Hemos llegado a soluciones $C^{∞}$ partiendo de cosas que no tendrían porqué serlo.
+
+		Además, tenemos una \textbf{velocidad infinita}, es decir no existe $\vx \tlq u(\vx,ε) = 0$ cuando $ε\to 0$.
+		%
+		En un tiempo tan pequeño como queramos, encontramos que el calor del dato inicial se ha desplazado a cualquier punto.
+
+		Vamos a justificarlo.
+		%
+		Supongamos que tenemos una pequeña cantidad de calor en $x=x_1, t=0$.
+		%
+		La función solución $u(x,t)$ siempre positiva. Al integrar el producto en $\vx = \vec{x_2}$ muy alejado de $\vec{x_1}$
+
+		\[
+			\int_{\real^n} G(\vx_2-\vy,t)f(\vy)d\vy
+		\]
 
 
 
+
+		Comentarios ``útiles'':
+
+		\begin{equation}
+			\abs{\dpa{G}{x_i} (z,t)} \leq … \leq \frac{|x_i-y_i|+1}{2\sqrt{4πt}^N} e^{-\frac{\norm{x-y}(\norm{x-y}-2)}{4t}}
+			\label{eq:dejuan}
+		\end{equation}
+
+		Este paso clave demuestra que podemos pasar derivadas dentro de integrales, es decir:
+
+		\[
+			\dpa{u}{x_i} = \int_{\real^N} \dpa{G}{x_i} f
+		\]
+
+		Si tomamos más derivadas, en el término $|x_i-y_i|$ aparecería elevado a alguna potencia.
+		%
+		Independientemente de la potencia que aparezca, el argumento sigue siendo válido porque la exponencial negativa de \ref{eq:dejuan} manda sobre cualquier polinomio.
+
+
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+		¿Este resultado prueba convergencia uniforme? No, porque en principio el $δ$, podría depender de $\vx$ y podría ocurrir que necesitáramos una prueba para $\vx$.
+		%
+		Si tomamos uniformemente continua, entonces $\exists δ$ que no depende de $\vx$, con lo que la convergencia es uniforme.
+
+
+		\begin{proof}
+			¿Qué pasa con $\frac{\partial u}{\partial x}$ ?
+			\[ \lim_{h \to 0} \frac{u(\bar{x} + hei,t)-u(\bar{x},t)}{h} = \lim_{h \to 0} \int\limits_{\real^n} \frac{G(\bar{x}-\bar{y}+he_i,t)-G(\bar{x}-\bar{y})}{h} f(y) dy
+			\]
+
+			Problema: ¿Podemos permutar límite e integral?
+
+			Usaremos el teorema de convergencia dominada:
+
+			\[\left. \begin{array}{r}
+				f_x \to f \text{ puntualmente en } \Omega \\
+				|f_x(x)| \leq F(x), \forall x \forall k \\
+				F \text{integrable}
+			\end{array} \right\} \Rightarrow \lim_k \int\limits_{\Omega} f_k = \int\limits_\Omega \lim f_k = \int\limits_\Omega f\]
+
+			\[ \frac{G(\bar{x}-\bar{y}+he_i,t)-G(\bar{x}-\bar{y},t)}{h} = \frac{\partial G}{\partial x}(z,t) \]
+
+			$z$ es un punto intermedio
+
+			\[\frac{\partial G}{\partial X_i}(z,t) = … = \frac{z_i}{2t} \frac{1}{(\sqrt{4\pi t}^n)} e^{-\frac{\|z\|^2}{4t}}\]
+
+			Entonces expresamos $z$, que está entre $\bar{x}-\bar{y}$ y $\bar{x}-\bar{y}+he_i$, como: $z = \bar{x} - \bar{y} + \theta h e_i$ con $\theta \in (0,1)$
+
+			\[ \left| \frac{\partial G}{\partial x}(z,t) \right|  \leq \frac{|z_i}{2t (\sqrt{4\pi t})`n} e^{-\frac{\|z\|}{4t}}\]
+
+			\[\text{ Queremos encontrar} \begin{cases}
+				|z_i| \leq |x_i - y_i| + 1 \\
+				\| z\|^2 \geq (ALGO)
+			\end{cases}\]
+
+			(FALTA)
+
+			Y entonces podemos reescribir lo que queríamos encontrar así:
+
+			\[\begin{cases}
+				|z_i| \leq |x_i - y_i| + 1 \\
+				\| z\|^2 \geq \|\bar{x}-\bar{y}\| (\|\bar{x}-\bar{y}\| -2)
+			\end{cases}\]
+
+			Acotamos la expresión que teníamos así:
+
+			\[ \left| \frac{\partial G}{\partial x}(z,t) \right|  \leq \frac{|z_i}{2t (\sqrt{4\pi t})`n} e^{-\frac{\|z\|}{4t}} \leq \frac{|x_i-y_i| +1}{2t(\sqrt{4 \pi t})^n} e^{-\frac{\|\bar{x}-\bar{y}\| (\|\bar{x}-\bar{y}\| -2)}{4t}}\]
+
+			Lo que es equivalente a $\phi(y)$
+
+			Por lo que hemos acotado:
+
+			\[ \left| \frac{G(x-y+he_i,t) - G(x-y,t)}{h} f(y) \right| \leq \phi(y) g(y) \]
+
+			$f(y)$ está acotada. Y $\phi(y)$ es integrable. Tenemos que hacer que se deje integrar en todo $\real^n$. Tiene que decaer en el infinito, no nos vale que sea continua, pero podemos ver que tiene decaimiento exponencial.
+
+			Hemos demostrado:
+
+			\[ \frac{\partial u}{\partial x_i} = \int\limits_{\real^n}\frac{\partial G}{\partial x} f\]
+
+			Iterando el proceso (pasando todas las derivadas dentro de la integral):
+			\[ u \in C^\infty, t> 0\]
+
+			Como por ejemplo:
+			\[ u_t - \Delta u = … = \int(G_t- \Delta G) f = 0\]
+
+
+		\end{proof}
+
+		\begin{example}
+
+			Queremos probar:
+			\[ \int\limits_{\real^n} G(x-y,t) f(y) dy \convs[][t][0^+] f(x)\]
+
+			\[ 0 \leq \left| \int\limits_{\real^n} G(x-y,t) f(y) dy - f(x) \int_{\real^n} G(x-y,t) dy \right|\]
+
+			\[ = \left| \int_{\real^n} G(x-y,t) (f(y)-f(x))dy \right| \eqreason[\leq]{$G \geq 0$} \int_{\real^n} G(x-y,t) |f(x) - f(y)| dy \]
+
+			Dado $\epsilon > 0$ encontramos $\delta$ tal que si $\|x-y\| < \delta$, entonces $|f(\bar{x})-f(\bar{y})| < \epsilon$
+
+			\[ \int\limits_{\real^n} = \underbrace{\int\limits_{\|x-y\| < \delta}}_{(1)} + \underbrace{\int\limits_{\|x-y\|>\delta}}_{(2)}\]
+
+			\[ (1) \leq \int\limits_{\|x-y\|\leq \delta} G \epsilon \eqreason[\leq]{$\int_{\real^n} G = 1$} \epsilon\]
+
+			\[ (2): \int\limits_{\|x-y\|>\delta} G(x-y) \underbrace{| f(x) - f(y) |}_{C,f \text{ acotada}} dy \leq C \int\limits_{\|x-y\| > \delta} \frac{1}{(\sqrt{4\pi t})^n} e^{-\frac{\|x-y\|^2}{4t}} dy \convs[exponencial][t][0^+] \epsilon\]
+
+			Entonces hay convergencia puntual:
+			\[\int G(x-y,t) f(y) dy \convs[][t][0^+] f(x)\]
+
+		\end{example}
+
+		\obs
+				\begin{itemize}
+					\item Si $f$ es continua puntualmente $\Rightarrow$ convergencia puntual (que acabamos de demostrar)
+					\item Si $f$ es uniformenente contínua $\Rightarrow$ convergencia uniforme
+					\item Si $f \in L^2 \Rightarrow u(x,t) \convs[L^2][t][0^+] f(x)$
+				\end{itemize}
+
+
+		% Clase 27-4-2016
+		% Copiado por @gjulianm
+
+		Ayer demostrarmos que teníamos convergencia a una función, pero el problema es que no sabemos si es solución única.
+
+		Antes de eso vamos a ver el problema no homogéneo, es decir, con \[ \begin{cases}
+		u_t - Δu = F(x,t) \\
+		u(x,0) = f(x) \end{cases} \]
+
+		El truco es el de siempre, el que ya usamos al jugar con la ecuación de onda. Asumimos de momento que $f$ y $F$ son tan regulares y acotadas como necesitemos.
+
+ 		Para operar, descomponemos $u$ como suma de dos soluciones $v + w$, donde una se lleva el dato inicial y otra la no homogeneidad: \[
+ 		\begin{cases} v_t - Δv = 0 \\ v(x,0) = f(x) \end{cases} \qquad \begin{cases} w_t - Δw = F(x,t) \\ w(x,0) = 0 \end{cases} \]
+
+ 		Aplicamos ahora el principio de Duhamel que vimos en la \fref{sec:PrincipioDuhamel}. Fijamos un tiempo $s > 0$ y resolvemos el sistema \[ \begin{cases} Φ_t - ΔΦ = 0 \\ Φ(x,0) = F(x,s) \end{cases} \] con solución \[ Φ(x,t) = \int_{ℝ^N} G(x-y, t) F(y,s) \dif s \] del dato $F(x,s)$ en $t = 0$. Para ver la solución en $t = s$, hacemos la traslación: \[ Φ(x, t - s) = \int_{ℝ^N} G(x-y, t-s) F(y,s) \dif y \]
+
+ 		Así, la solución $w(x,t)$ será la suma de los efectos de $F$ entre $0$ y $t$, luego \[ w(x,t) = \int_0^t Φ(x, t - s) \dif s = \int_0^t \int_{ℝ^N} G(x-y, t-s) F(y,s) \dif y \dif s\]
+
+ 		Finalmente podemos hallar la solución al problema completo: \( u(x,t) = \int{ℝ^N} G(x-y, t) f(y) \dif y + \int_0^t \int_{ℝ^N} G(x-y, t-s) F(y,s) \dif y \dif s \label{eq:Calor:SolucionNoHomogenea} \)
+
+ 		De nuevo, nos encontramos con el problema de la unicidad. Tenemos $u_1$ y $u_2$ dos soluciones, así que consideramos la función $ψ = u_1 - u_2$ y buscamos soluciones no triviales al sistema \[ \begin{cases} ψ_t - Δψ = 0 \\ ψ(x,0) = 0 \end{cases} \]
+
+ 		%Vuelta a @erpheus
+
+ 		\subsection{Contraejemplo de Tijonov}
+ 			También conocido como Tychonoff.
+
+ 			\[u_t - u_{xx} = 0\]
+
+ 			En la dirección del tiempo tenemos solo una derivada (ecuación de orden uno) y solo necesitamos un dato inicial para fijar el problema.
+
+ 			En la dirección de las x tenemos un problema de orden 2, por lo que hacen falta añadir dos datos si queremos fijar la $x$:
+
+ 			\[\begin{cases}
+ 				u_t-u_{xx} = 0 \\
+ 				u(0,t) = g(t) \\
+ 				u_x(0,t) = 0
+ 			\end{cases}\]
+
+ 			Tijonov decidió expresar $u(x,t)$ como desarrollo en forma de potencias: $u(x,t) = \sum\limits_{k=0}^\infty a_k(t) x^k = a_0(t) + a_1(t)x + a_2(t)x^2 + …$
+
+ 			Formalmente:
+ 			\[ g(t) = u(0,t) = a_0(t)\]
+ 			\[ u_x(x,t) \qeq a_1(t) + 2a_2(t)x + 3a_3(t)x^2 + …\]
+ 			\[ 0 = u_x(0,t) = a_1(t)\]
+
+ 			\begin{align*}
+ 				u_t(x,t) &= a'_0 + a'_1 x + a'_2x^2 + … \\
+ 				u_x(x,t) &= a_1 + 2a_2x + 3a_3x^2 + … \\
+ 				u_{xx}(x,t) &= 2a_2 + 3 \cdot 2 a_3 x + 4 \cdot 3 a_4 x^2 + …
+ 			\end{align*}
+
+ 			Para tener $u_t = u_{xx}$ igualamos los coeficientes de caa término en $x^j$.
+
+ 			\[ a'_j(t) = (j+2)(j+1) a_{j+2} (t)\]
+ 			\[a_1 \equiv 0 \Rightarrow a'_1 \equiv 0 \Rightarrow a_3 \equiv 0 \Rightarrow a'_3 \equiv 0 …\]
+
+ 			Por lo que llegamos a que $a_{2n+1} = 0 \forall n$. Podemos hacer lo mismo con los pares:
+
+ 			\begin{align*}
+ 				a_0 &= g \\
+ 				g' &= a'_0 = 2 \cdot 1 a_2 (t) \Rightarrow a_2 = \frac{1}{2} g' \\
+ 				\frac{1}{2}g'' &= a'_2 = 4 \cdot 3 a_4 (t) \Rightarrow a_4 = \frac{1}{4!} g'' \\
+ 				\frac{1}{4!}g''' &= a'_4 = 6 \cdot 5 a_6 (t) \Rightarrow a_6 = \frac{1}{6!} g'''
+ 			\end{align*}
+
+ 			Y llegamos a la expresión general: $a_{2n} (t) = \frac{1}{(2n)!} g'^{j} (t)$
+
+ 			Solución:
+ 				\[ u(x,t) = \sum_{n=0}^\infty  \frac{1}{(2n)!} g'^{j} (t) x^{2n}\]
+
+ 			¿Como elegimos $g$?
+
+ 			(DIBUJO)
+
+ 			\[ g(t) = \begin{cases}
+ 				0,& t \leq 0 \\
+ 				e^{-t^{-\alpha}},&  t>0
+ 			\end{cases}\]
+
+ 			\[ g \in C^\infty, g'^k(t) \equiv 0, t < 0, g \not\equiv 0\]
+
+ 		\subsection{Resultados (parciales) de unicidad}
+
+ 			El desarrollo que hemos hecho en Tijonov no funciona bien en el infinito ya que tiene un término de la forma $x^{2n}$.
+
+ 			\begin{theorem}[Unicidad de soluciones acotadas]
+ 				\[\left.\begin{array}{r}
+ 					u_t - \Delta u = F \\
+ 					u(x,0) = f
+ 				\end{array}\right\} \exists M \text{ t.q. } |u(x,t)| < M, \forall x, t \]
+
+ 				Si $u_1, u_2$ soluciones de este problema $\Rightarrow u_1 = u_2$
+ 			\end{theorem}
+
+ 			\begin{proof}
+ 				Definimos $v = u_1 -u_2$ y tenemos el siguiente problema:
+
+ 				\[\begin{cases}
+ 					v_t - \Delta v = 0\\
+ 					v(x,0) = 0
+ 				\end{cases}  \quad\quad |v| < M\]
+
+ 				Tenemos $-\Delta u = 0$ en $\real^n$, es decir, $u$ está acotada. Intentaremos acotarla y ver que podemos hacerlo con la $v$ también.
+
+ 				\[ W(x,t) = \alpha (2t + \frac{\| x\|^2}{N}) …\]
+
+ 				(DIBUJO)
+
+ 				(FALTA)
+
+ 				(DIBUJO FRONTERA PARABÓLICA DE $Q_t$)
+
+ 				En $t=0$:
+
+ 				\[ \|\bar{x}\| \leq R \left\{ \begin{cases}
+ 					W(x,0) = \alpha \frac{\|\bar{x}\|^2}{n}\\
+ 					v(x,0) = 0
+ 				\end{cases}\right\} \Rightarrow v \leq W \forall \alpha \]
+
+ 				\[ \|x\| = R \Rightarrow W(x,t) = \alpha(2t+\frac{R^2}{n}) \]
+
+ 				Y entonces ¿ $W \geq v$ si $\|\bar{x}\| = R$?. $v$ acotada $\Rightarrow v \leq M \leq \alpha (2t + \frac{R^2}{n})$ tomando $\frac{\alpha R^2}{n} > M$, por lo que $R^2 > \frac{nM}{\alpha}$
+
+ 				Es decir, podemos componer $v, W_\alpha$ es $Q_t = B_R(\bar{0}) \prod [0,T]$, si $R^2 > \frac{nM}{\alpha}$.
+
+ 				(DIBUJOS)
+
+ 				Conclusión: Fijamos un punto $(x_0,t_0)$.
+ 					\[v(x_0,t_0) \leq W(x_0,t_0) = \alpha (2t_0+ \frac{\|x_0\|^2}{n})\]
+
+ 				Dado un punto cualquiera $(x_0,t_0)$ con $t_0 < T$ tenemos:
+ 				\[ v(x_0,t_0) \leq \alpha (2 t_0 + \frac{\|x_0\|^1}{n}) \quad \forall \alpha\]
+
+ 				Tomando $\alpha \rightarrow 0$:
+ 				\[v(x_0,t_0) \leq 0 \Rightarrow v \equiv 0\]
+
+ 				Por lo que las soluciones son iguales.
+
+ 			\end{proof}
 
 
 
