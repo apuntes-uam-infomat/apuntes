@@ -1,7 +1,7 @@
 \documentclass[palatino, bibnumbers]{apuntes}
 
 \title{Geometría y Topología}
-\author{Guillermo Julián Moreno}
+\author{Guillermo Julián Moreno \and Víctor de Juan Sanz}
 \date{15/16 C2}
 
 % Paquetes adicionales
@@ -12,12 +12,26 @@
 \usepackage{xfrac}
 \usepackage{wrapfig}
 \usepackage{fastbuild}
+\usepackage{tikz-cd}
 
 \usetikzlibrary{arrows}
 \usetikzlibrary{patterns}
 \usetikzlibrary{intersections}
 \usetikzlibrary{calc}
 \usetikzlibrary{fadings}
+
+\tikzset{
+	snake/.style={
+		rounded corners,
+		to path={
+			-- ([xshift=1em]\tikztostart.east)
+			-- ([xshift=1em]\tikztostart.south east)
+			-- ([xshift=-1em]\tikztotarget.north west)
+			-- ([xshift=-1em]\tikztotarget.west)
+			-- (\tikztotarget)
+		}
+	}
+}
 
 \setlist{itemsep=1pt, topsep=5pt}
 \bibliographystyle{alpha}
@@ -332,6 +346,7 @@ Para los puntos que no estén en la parte que pegamos, usamos el atlas que ya ve
 Lo interesante de la suma conexa es que si ambas variedades son orientables, entonces la suma conexa es orientable.
 
 \section{Característica de Euler}
+\label{sec:CaracteristicaEuler}
 
 Las sumas conexas también nos permiten definir un teorema de clasificación de superficies compactas.
 
@@ -984,7 +999,7 @@ Una posibilidad es que $γ = ∂Ω$ no sea el borde de ninguna variedad (recorda
 
 En cualquiera de los dos casos tenemos el mismo tipo de información: agujeros. La cohomología de De Rham nos dice qué formas diferenciales nos están gritando que han encontrado un agujero en la variedad. En este caso, el ejemplo lo hemos hecho con formas de grado 1 (las estamos integrando a lo largo de líneas) pero la analogía vale para más dimensiones.
 
-Un ejemplo rápido es calcular la cohomología de $ℝ$, que sale \[ H^k(ℝ) \cong \begin{cases} ℝ & k = 0 \\ \set{0} & k = 1 \\ \set{0} & k > 1 \end{cases}\]
+Un ejemplo rápido es calcular la cohomología de $ℝ$, que sale \( H^k(ℝ) \cong \begin{cases} ℝ & k = 0 \\ \set{0} & k = 1 \\ \set{0} & k > 1 \end{cases} \label{eq:CohomologiaR} \)
 
 En cuanto nos pasamos de la dimensión de $ℝ$, el grupo de cohomología es $\set{0}$ (no hay formas diferenciales de grado mayor que la dimensión de la variedad). Para formas de grado $k = 0$, tenemos que el grupo es de dimensión $1$ porque sólo hay una componente conexa.
 
@@ -999,11 +1014,13 @@ $H^*(M)$ es un anillo con las operaciones $+$, $∧$.
 
 Habría que comprobar para ver que es un anillo que si $ω, η$ son cerradas entonces $ω ∧ η$ y $ω + η$ son cerradas, y que además esto no depende de la elección del representante\footnote{Como lo que estudiamos son formas cerradas, sabemos que $[ω] = [ω + \dif ω_1]$}. Son un montón de cuentas sin ninguna dificultad que salen directamente.
 
-\section{Resultados básicos. Cohomología de variedades difeomorfas u homótopas}
+\section{Resultados básicos}
 
 Antes de ver herramientas más fuertes para tratar la cohomología de De Rham, vamos a ver algunos resultados básicos y más sencillos sobre lo que ocurre en cohomologías de variedades que son difeomorfas o que son homótopas. Dado que antes veíamos que la cohomología nos dice algo sobre la topología de las variedades, lo que esperamos es que las cohomologías sean iguales si la transformación no nos cambia la topología de la variedad.
 
-\begin{prop} \label{prop:IsomorfismoDifeomorfismo} Sean $N$, $M$ dos variedades diferenciables y sea $\appl{f}{M}{N}$ un difeomorfismo entre ellas. Entonces, los grupos de cohomología son isomorfos ($H^k(N) \cong H^k(M)$).
+\subsection{Invarianza por homeomorfismos}
+
+\begin{prop} \label{prop:CohomDifeomorfismo} Sean $N$, $M$ dos variedades diferenciables y sea $\appl{f}{M}{N}$ un difeomorfismo entre ellas. Entonces, los grupos de cohomología son isomorfos ($H^k(N) \cong H^k(M)$).
 
 Además, $f$ induce isomorfismos de espacios vectoriales y de anillos respectivamente  \begin{align*}
 \appl{f^*}{H^k(N)&}{H^k(M)} \\
@@ -1020,6 +1037,8 @@ Es fácil ver que, dada $ω ∈ Ω^k(N)$, entonces se cumplen ambas cosas:\begin
 
 Igualmente podemos considerar el pullback inverso $\inv{f^*} = (\inv{f})^*$ que está bien definido por ser $f$ difeomorfismo, y tendremos el isomorfismo.
 \end{proof}
+
+\subsection{Invarianza por homotopías}
 
 Pasará algo parecido con dos variedades homótopas, aunque la demostración llega un poco más de trabajo (tampoco mucho).
 
@@ -1051,7 +1070,7 @@ Entonces $f^* = (G○s_0)^* = s_0^* ○ G^* = s_1^* ○ G^* = (G○s_1)^* = g^*$
 
 Con esto ya podemos ir a demostrar que dos variedades homótopas son iguales.
 
-\begin{corol}
+\begin{corol} \label{crl:CohomHomotopia}
 Si dos variedades $M, N$ son homótopas entonces sus anillos de cohomología son iguales.
 \end{corol}
 
@@ -1060,65 +1079,52 @@ Si dos variedades $M, N$ son homótopas entonces sus anillos de cohomología son
 El teorema anterior nos dice que entonces $\mop{Id}^* \simeq (g ○ f)^* = f^* ○ g^*$ y análogamente para $(f ○ g)^*$. Finalmente, tenemos que $\appl{f^*}{H^k(N)}{H^k(M)}$ y $\appl{g^*}{H^k(M)}{H^k(N)}$ son aplicaciones con inversas bien definidas, luego son biyectivas y por lo tanto inducen un isomorfismo entre $H^k(M)$ y $H^k(N)$.
 \end{proof}
 
-Por último, vamos a ver un resultado que luego ampliaremos, que es ver qué ocurre con el producto cartesiano de una variedad con $ℝ$.\footnote{A esto Gabino lo llama el ``Lema de Poincaré'' pero creo que no lo he visto llamado así en ninguna otra aprte así que voy a omitir el nombre.}
+Una aplicación de esto es ver que $\crc[1]$ no es un retracto por deformación de $ℝ^2$. Si lo fuera, los grupos de cohomología serían ambos nulos $H^1(ℝ^2) = 0$ pero $-y\dif x + x \dif y ∈ H^1(\crc[1])$ no es exacta.
 
-\subsection{Lema de Poincaré}
+En general, podemos ver que $H^k(ℝ^{n+1} \setminus \set{0}) \cong H^k(\crc[n])$. ¿Cómo encontrar un generador de $H^1(ℝ^2 \setminus \set{0})$. Bueno, podemos coger la contracción $r(x) = \frac{x}{\norm{x}}$ y entonces la forma generadora es \[ r^*(\dif θ) = r^*\left(\frac{-y \dif x + x \dif y}{x^2 + y^2}\right) \]
 
-\noteby{Guille}{No sé dónde meter esto. }
-\noteby{Guille}{Arreglar esto muy fuerte.}
+\subsection{Cohomología de $M × ℝ$. Lema de Poincaré}
 
-\begin{lemma}[Lema\IS de Poincaré] \label{lem:Poincare} $π^* ○ s^*$ es la identidad a nivel de cohomología de $H^*(ℝ^{n+1})$, donde $π$ es algo y $s$ es otra cosa y $π○s(x) = x$.
+Por último, vamos a ver un resultado que luego ampliaremos, que es ver qué ocurre con el producto cartesiano de una variedad con $ℝ$.
 
-\noteby{Guille}{Creo que $s_k(x) = (x,k)$ y $π(x,k) = x$, o algo así.}
-\end{lemma}
-
-\begin{corol} $π^*$ y $s^*$ son mutuamente inversas a nivel de cohomología, luego $H^k(ℝ^{n+1}) = H^k(ℝ^n)$.
-\end{corol}
-
-Por lo tanto $H^k(ℝ^n) = 0$ cuando $k > 0$. Otra forma de decir esto es que en la bola toda forma diferencial cerrada es exacta.
-
-Podemos ver que, en $ℝ^2$, si tomamos $ω ∈ Ω^1(ℝ^2)$ de la forma $ω = F \dif x + G \dif y$, con $F,G ∈ C^∞$, entonces $ω$ será cerrada si y sólo si \[ 0 = \dif ω = (G_x - F_y) \dif x \y \dif y \iff G_x = F_y\]
-
-Y algo.
-
-\begin{proof}[\nref{lem:Poincare}] Basta probar que existe una aplicación lineal $\appl{K}{Ω(ℝ^{n+1})}{Ω(ℝ^{n+1})}$ que satisface la relación \( π^* ○ s^* = \mathrm{Id}_{Ω(ℝ^{n+1})} \pm (\dif K \pm K ○ \dif) \label{eq:PrfPoincare:1}\), pues en ese caso tendríamos que, dada $ω ∈ H^k(ℝ^{n+1})$, \[ π^*○s^*([ω]) = [\mathrm{Id} ○ ω + \underbracket{\dif K ω }_{\text{exacta, } [\dif K ω] = 0}+ \underbracket{K \dif ω}_{\dif ω = 0} ]  = [ω]\]
-
-Entonces definimos \begin{align*}
-\appl{K}{Ω(ℝ^{n+1})&}{Ω(ℝ^{n+1})} \\
-f(\vx, t) \dif x_I &\longmapsto 0 \\
-g(\vx, t) \dif x_J ∧ \dif t & \longmapsto \left(\int_0^t g(x,s) \dif s\right) \dif x_J
-\end{align*}
-
-Veamos que $K$ satisface la condición de \eqref{eq:PrfPoincare:1}. Y si se hacen las cuentas pues sale.
-\end{proof}
-
-\begin{prop} Más generalmente, $H^*(M×ℝ) = H^*(M)$ usando una demostración análoga.
+\begin{prop} \label{prop:CohomMR} Sea $M$ una variedad diferenciable. Entonces $H^k(M × ℝ) = H^k(M)$.
 \end{prop}
 
-\subsection{Invarianza homotópica}
+\begin{proof} La idea es la misma que la de la demostración del \fref{crl:CohomHomotopia}: dar una composición que sea la identidad a nivel de homotopía de tal forma que cada una de las funciones sea biyectiva.
 
+En este caso, definimos la proyección y el ``levantamiento'' de la siguiente forma:
+\begin{align*}
+M × ℝ &\longmapsto M \\
+(x, k)&\xrightarrow{\; π \;} x \\
+(x, k)& \xleftarrow{\; s_k \;} x
+\end{align*}
 
-En el caso particular de un retracto por deformación, algo.
+Es obvio que $π ○ s_k = \mop{Id}$ y que por lo tanto $s_k^* ○ π^* = \mop{Id}^*$. En el otro sentido no es así ($s_k ○ π ≠ \mop{Id}$), aunque a nivel de homotopía se puede demostrar que existe un cierto operador que nos hace que $π^* ○ s_k^* = \mop{Id}^*$ y ya tendríamos todo bien. Ahora bien, la demostración es algo larga y no la voy a copiar. Al que le interese, que lea \citep[Sec. 4]{bott2013differential}.
+\end{proof}
 
-Vamos a demostrar que $\crc[1]$ no es un retracto por deformación de $ℝ^2$. Si lo fuera, los grupos de cohomología serían ambos nulos $H^1(ℝ^2) = 0$ pero $-y\dif x + x \dif y ∈ H^1(\crc[1])$ no es exacta.
+Trivialmente, este resultado nos da la cohomología de $ℝ^n$ a partir de la de $ℝ$ que ya habíamos visto en \eqref{eq:CohomologiaR}: \( H^k(ℝ^n) = \begin{cases} ℝ & k = 0 \\ \set{0} & k ≠ 0 \end{cases} \label{eq:CohomologiaRN} \)
 
-En general, $H^k(ℝ^{n+1} \setminus \set{0}) \cong H^k(\crc[n])$. ¿Cómo encontrar un generador de $H^1(ℝ^2 \setminus \set{0})$. Bueno, podemos coger la contracción $r(x) = \frac{x}{\norm{x}}$ y entonces la forma generadora es \[ r^*(\dif θ) = r^*\left(\frac{-y \dif x + x \dif y}{x^2 + y^2}\right) \]
+Además, esto sirve para dar una demostración muy rápida del Lema de Poincaré.
 
-Estos resultados sobre homotopía siguen siendo válidos a nivel topológico, porque además podemos aproximar cualquier función continua por funciones diferenciables y listos, tete.
+\begin{lemma}[Lema\IS de Poincaré] \label{lem:Poincare} Sea $M$ una variedad contractible. Entonces toda forma cerrada es exacta.
+
+Equivalentemente, \( H^k(\bola^n) = \begin{cases} ℝ & k = 0 \\ \set{0} & k ≠ 0 \end{cases} \label{eq:CohomologiaBN} \)
+\end{lemma}
+
+\begin{proof} Una variedad contractible (en particular, $\bola^n$ es contractible) es difeomorfa a $\bola^n$, luego según la \fref{prop:CohomDifeomorfismo} su cohomología es isomorfa a la de $ℝ^n$, que ya la habíamos visto en \eqref{eq:CohomologiaRN}.
+\end{proof}
 
 \section{Cálculo de cohomologías: Mayer-Vietoris}
 
-Hasta ahora hemos visto algunos resultados para calcular cohomologías. Sabemos que si $M$ es conexa, entonces $H^0(M) = 0$, que $H^k(\bola^n) = 0$ cuando $k > 0$ por el \nref{lem:Poincare}, y que además si $M_1 \simeq M_2$ (homotópicamente equivalentes) entonces $H^*(M_1) = H^*(M_2)$.
+Hasta ahora hemos visto algunos resultados para calcular cohomologías. Sabemos que si $M$ es conexa, entonces $H^0(M) = 0$, que $H^k(\bola^n) = 0$ cuando $k > 0$ por el \nref{lem:Poincare}, y que además si $M_1 \simeq M_2$ (homotópicamente equivalentes) entonces $H^*(M_1) = H^*(M_2)$ (\fref{crl:CohomHomotopia}).
 
 Sin embargo, para otros cálculos de cohomologías no tenemos herramientas. Mayer-Vietoris será lo que usaremos para sacar cohomologías, trabajando con abiertos que cubren la variedad y estudiando su intersección. Para definirlo, primero necesitaremos una cierta base previa.
-
-\subsection{Previo: Base algebraica}
 
 \begin{defn}[Sucesión\IS exacta de espacios vectoriales] Una sucesión exacta de espacios vectoriales es una cadena \[ \dotsb \to V_{i-1} \xrightarrow{h_{i-1}} V_{i} \xrightarrow{h_i} V_{i+1} \to \dotsb \] tales que $\ker h_i = \img h_{i-1}$.
 \end{defn}
 
 Por ejemplo, si tenemos una sucesión exacta \[ 0 \xrightarrow{h_0} V_1 \xrightarrow{h_1} V_2 \xrightarrow{
-h_2} V_3 \xrightarrow{h_3} 0 \] podemos ver varias cosas, como que  $h_1$ es inyectiva ($\ker h_1 \img h_0 = 0$) y que $h_3$ es suprayectiva ($\ker h_3 = \img h_2 = V_3$). Entrando en temas menos obvios, podemos aplicar el primer teorema de isomorfía para $h_2$, de tal forma que \[ \quot{V_2}{V_1} \cong V_3 \]
+h_2} V_3 \xrightarrow{h_3} 0 \] podemos ver varias cosas, como que  $h_1$ es inyectiva ($\ker h_1 = \img h_0 = 0$) y que $h_3$ es suprayectiva ($\ker h_3 = \img h_2 = V_3$). Entrando en temas menos obvios, podemos aplicar el primer teorema de isomorfía para $h_2$, de tal forma que \[ \quot{V_2}{V_1} \cong V_3 \]
 
 En ejemplos más concretos, podemos definir una cadena exacta \[ 0 \to ℝ^2 \overset{h_1}{\hookrightarrow} ℝ^5 \xrightarrow{h_2} ℝ^3 \mapsto 0 \], con \begin{align*}
 h_1(x_1, x_2) &= (x_1, x_2, 0,0,0) \\
@@ -1136,11 +1142,17 @@ Volviendo a las formas diferenciales, podemos volver a la cadena \[0 \to Ω^0(\b
 \end{align*}, que son sucesiones exactas, y entonces podemos razonar por inducción sumando las formulitas de la suma de dimensión, aunque personalmente no tengo del todo claro por qué está usando lo que quiere probar para demostrarlo exactamente lo mismo.
 \end{proof}
 
-\begin{theorem}[Sucesión\IS exacta de Mayer-Vietoris] Sean $U,V$ abiertos de $M$ tales que $M = U ∪ V$. Entonces la siguiente sucesión es exacta: \( \begin{matrix}
-0 \to & Ω^*(M) & \xrightarrow{r} &Ω^*(U) \oplus Ω^*(V) & \xrightarrow{δ} & Ω^*(U∩V) & \to 0 \\
-& ω &\xrightarrow{r} & (\restr{ω}{U}, \restr{ω}{V}) & & & \\
-&   & 				 & (η_1, η_2) & \xrightarrow{δ} & \restr{η_2}{U∩V} - \restr{η_1}{U∩V} &
-\end{matrix} \label{eq:SucesionMayerVietoris}\)
+\begin{theorem}[Sucesión\IS exacta de Mayer-Vietoris] \label{thm:SucesionMayerVietoris} Sean $U,V$ abiertos de $M$ tales que $M = U ∪ V$. Entonces la siguiente sucesión es exacta:
+
+\begin{center}
+\tikzexternaldisable
+\begin{tikzcd}[row sep = 3pt, column sep = 8pt]
+0 \ar[r] & Ω^*(M) \ar[r, "r"] & Ω^*(U) \oplus Ω^*(V) \ar[r, "\delta"] & Ω^* (U ∩ V) \ar[r] & 0 \\
+	& ω \ar[r, "r"]	& (\left.ω\right|_U, \left.ω\right|_V) & & \\
+	&  & (η_1, η_2) \ar[r, "δ"] & \left.η_2\right|_{U∩V} - \left.η_1\right|_{U∩V} &
+\end{tikzcd}
+\tikzexternalenable
+\end{center}
 \end{theorem}
 
 \begin{proof} $r$ es inyectiva porque $U ∪ V = M$, y además $\ker δ ⊇ \img r$ obviamente: \[ δ○r (ω) = δ(\restr{ω}{U}, \restr{ω}{V}) = \restr{ω}{U∩V} - \restr{ω}{U∩V} = 0 \]
@@ -1162,44 +1174,86 @@ Un ejemplo de esa partición para $\crc[n]$, con dos funciones concretas. que cu
 \begin{theorem}[Teorema\IS de Mayer-Vietoris de cohomología] La siguiente sucesión es exacta
 \[ \dotsb \xrightarrow{\dif^*} H^{k-1} (U∩V) \xrightarrow{\dif^*} H^k(M) \xrightarrow{r} H^k(U) \oplus H^k(V) \xrightarrow{δ} H^k(U∩V) \xrightarrow{\dif^*} H^{k+1} (M)  \xrightarrow{\dif^*} \dotsb \]
 
-$r$, y $δ$ definidas como en \eqref{eq:SucesionMayerVietoris}, y $\dif^*$ es más difícil de definir (Gabino dixit).
+$r$, y $δ$ definidas como en el \fref{thm:SucesionMayerVietoris}, y $\dif^*$ es más difícil de definir (Gabino dixit).
 \end{theorem}
 
-Una aplicación de esto es de nuevo $\crc[1]$, con las cartas $U,V$ de toda la vida. La idea es que $H^0(U) \oplus H^0(V)$ tiene dimensión 2, $H^0(U∩V)$ tiene dimensión dos por ser dos componentes conexas, $\dim H^1(U) = \dim H^1(V) = 0$ por ser $U,V$ homeomorfos a $ℝ$ y entonces hay una sucesión metida entre dos ceros. Como la suma alternada de dimensiones es cero, luego \[ 1 - 2 + 2 - \dim H^1(M) + 0 = 0\], luego $\dim H^1(M) = 1$.
+\subsection{Aplicación: Cohomología de $\crc[n]$}
 
-Y bueno, al final, salen cosas.
+\begin{figure}[hbtp]
+\centering
+\inputtikz{S1Cover}
+\caption{Un atlas de $\crc[1]$ con dos abiertos $U, V$ y su intersección para calcular Mayer-Vietoris.}
+\label{fig:S1Cover}
+\end{figure}
 
-No sé qué estamos haciendo. Cogemos una variedad $M = U ∪ V$, y entonces la cadena que tenemos es \begin{align*}
-0 &\to H^0(M) \to H^0(U) \oplus H^0(V) \to H^0(U∩V) \to \\
-  &\to H^1(M) \to H^1(U) \oplus H^1(V) \to H^1(U∩V) \to \\
-\dotsb  &\to H^k(M) \to H^k(U) \oplus H^k(V) \to H^k(U∩V) \to \\
-\dotsb  &\to H^m(M) \to H^m(U) \oplus H^m(V) \to H^m(U∩V) \to  0\\
+La primera aplicación de esto es poder calcular la cohomología de $\crc[1]$ con las cartas $U,V$ de toda la vida (\fref{fig:S1Cover}). La idea es que $H^0(U) \oplus H^0(V)$ tiene dimensión 2, $H^0(U∩V)$ tiene dimensión dos por ser dos componentes conexas, $\dim H^1(U) = \dim H^1(V) = 0$ por ser $U,V$ homeomorfos a $ℝ$ y entonces hay una sucesión metida entre dos ceros. Como la suma alternada de dimensiones es cero, tenemos que \[ 1 - 2 + 2 - \dim H^1(M) + 0 = 0\] y por lo tanto $\dim H^1(\crc[1]) = 1$.
+
+Así, al final tenemos que \( H^k(\crc[1]) = \begin{cases} ℝ & k = 0,1 \\ \set{0} & k > 1 \end{cases} \label{eq:CohomologiaS1} \)
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{CoverS2}
+\caption{Cobertura de $\crc[2]$ con dos abiertos $U,V$, que podemos considerar como $\crc[2]$ menos el polo sur y norte respectivamente.}
+\label{fig:S2Cover}
+\end{figure}
+
+Este resultado se puede ampliar a la esfera ($\crc[2]$) usando un argumento parecido. Lo que hacemos es tomar una cobertura con dos abiertos $U,V$ quitando el polo sur y norte respectivamente, como en la \fref{fig:S2Cover}. Cada uno de ellos es homeomorfo a $\bola^2$, y su intersección (una banda alrededor de la esfera) es homótopa a $\crc[1]$.
+
+La cadena de Mayer-Vietoris que nos queda es la siguiente:
+\begin{center}
+\tikzexternaldisable
+\begin{tikzcd}[row sep = 3pt]
+0 \rar
+	& H^0(\crc[2]) \rar & H^0(U) \oplus H^0(V) \rar & H^0(U ∩ V) \arrow[dll, snake] \\
+	& H^1(\crc[2]) \rar & \textcolor{red!70!black}{H^1(U) \oplus H^1(V)} \rar & H^1(U ∩ V) \arrow[dll, snake] \\
+	& H^2(\crc[2]) \rar & \textcolor{blue!70!black}{H^2(U) \oplus H^2(V)} \rar & H^2(U ∩ V) \rar & 0 \\
+\end{tikzcd}
+\tikzexternalenable
+\end{center}
+
+Tenemos una ventaja, que es que $H^1(U) \oplus H^1(V) = H^2(U) \oplus H^2(V) \set{0}$ así que podemos dividir la cadena en dos subcabenas que siguen siendo exactas. Para la primera tenemos los siguientes espacios con sus respectivas dimensiones:
+\begin{center}
+\tikzexternaldisable
+\begin{tikzcd}[row sep = 0pt, column sep = 7pt]
+0 \rar
+	& H^0(\crc[2]) \rar & H^0(U) \oplus H^0(V) \rar & H^0(U ∩ V) \rar &  H^1(\crc[2]) \rar & \textcolor{red!70!black}{H^1(U) \oplus H^1(V)}\\
+	& 1 & 1 \oplus 1 = 2 & 1 & ? & 0
+\end{tikzcd}
+\tikzexternalenable
+\end{center}
+
+La única dificultad en esta cadena está en ver que $U ∩ V \simeq \crc[1]$ y por lo tanto $H^0(U ∩ V) = H^0(\crc[1]) = ℝ$, porque el resto es el número de componentes conexas y ver que la dimensión de la suma directa es la suma de las dimensiones. Así, simplemente despejamos en la suma alternada:
+\begin{align*}
+0 &= 1 - 2 + 1 - \dim H^1(\crc[2]) \\
+0 &= \dim H^1(\crc[2]) ≝ h^1(\crc[2])
 \end{align*}
 
-Esto es una cadena exacta así que la suma alternada de dimensiones es 0. Usábamos como notación $h^k(M) ≝ \dim H^k(M)$.
+Es decir, $\dim H^1(\crc[2]) = 0$ (recordemos la notación $\dim H^k(M) ≝ h^k(M)$, que es más cómoda).
 
-Con esto calculábamos la cohomología de la esfera. Cogíamos $\crc[n]$ como $U ∪ V$, donde $U$ y $V$ eran la esfera menos el polo norte y el polo sur respectivamente. Veíamos que, en el caso particular, $U ∩ V = \crc[2] \setminus \set{N, S} = ℝ^2 \setminus \set{S} \simeq \crc[1]$ por homotopía. La cuestión es que como $H^1(U) = 0$, podemos acortar la cadena y tenemos lo siguiente: \[
-\begin{matrix}
- 0 & \to H^0(\crc[2]) & \to H^0(U) \oplus H^0(V) & \to H^0(U∩V) & \to H^1(\crc[2]) & \to H^1(U) \oplus H^1(V) = 0 \\
- 0 & \to 1 & \to 1 \oplus 1 & \to 1 & \to ? & \to 0 \\
-\end{matrix}\]
+Vamos ahora con la otra cadena, que igualmente sale sencilla:
+\begin{center}
+\tikzexternaldisable
+\begin{tikzcd}[row sep = 0pt, column sep = 7pt]
+\textcolor{red!70!black}{H^1(U) \oplus H^1(V)} \rar
+	& H^1(U ∩ V) \rar & H^2(U ∩ V) \rar & H^2(\crc[2]) \rar & \textcolor{blue!70!black}{H^2(U) \oplus H^2(V)}\\
+0 & 1 & 0 \oplus 0 = 0 & ? & 0
+\end{tikzcd}
+\tikzexternalenable
+\end{center}
 
-De esta, haciendo la sua alternada de dimensiones nos queda que $h^1(\crc[2]) = 0$.
+El truco en esta está de nuevo en ver que $U ∩ V \simeq \crc[1]$, y ya habíamos calculado $H^1(\crc[1])$ en \eqref{eq:CohomologiaS1}. Así, es fácil ver que $h^2(\crc[2]) = 1$. Juntando todo, podemos sacar la cohomología de la esfera: \( h^k(\crc[2]) = \begin{cases} 1 & k = 0 \\ 0 & k = 1 \\ 1 & k = 2 \end{cases} \label{eq:CohomologiaS2} \)
 
-Por otra parte, tenemos la otra cadena:
-\[
-\begin{matrix}
-0 = H^1(U) \oplus H^1(V) & \to H^1(U ∩V) & \to H^2(\crc[2]) & \to H^2(U) \oplus H^2(V) = 0 \\
-0 & \to  ? & \to ? & \to  \\
-\end{matrix}\], de la que podemos sacar que $h^2(\crc[2]) = h^1(U ∩ V)$. Ahora bien, $U ∩V \simeq \crc[1]$, y ya habíamos visto\footnote{Haciendo de nuevo la cadena exacta.} que $h^1(\crc[1]) = 1$, luego $h^2(\crc[2])  = 1$.
-
-En general, para esferas tendremos lo siguiente: \[
+Podríamos ampliar este resultado y nos saldría algo parecido para esferas $n$-dimensionales: sólo tenemos dimensión cuando $k = 0$ o cuando $k = n$ \(
 h^k(\crc[n]) = \begin{cases}
 1 & k = 0 \\
-0 & 0 < k < n \\
-1 & k = n\end{cases}\]
+0 & k ≠ 0,n \\
+1 & k = n\end{cases} \label{eq:CohomologiaSN} \)
 
-\subsection{Característica de Euler-Poincaré}
+En el fondo, esto concuerda con la idea intuitiva que le habíamos dado a la cohomología: que nos revela agujeros. En el caso de la esfera $n$-dimensional no hay agujeros hasta que no llegamos a la dimensión de la esfera entera, donde el ``agujero'' es el que ella misma encierra.
+
+\section{Característica de Euler-Poincaré}
+
+En la \fref{sec:CaracteristicaEuler} veíamos una invariante topológica sencilla, que era la \nref{def:CaracteristicaEuler}. En ese caso lo habíamos visto para superficies, pero se puede extender a variedades arbitrarias. Esa extensión será lo que nosotros llamemos la característica de Euler-Poincaré
 
 \begin{defn}[Característica\IS de Euler-Poincaré] Dada una variedad diferenciable $M$ de dimensión $n$, se define su característica de Euler-Poincaré como \[ χ(M) = \sum_{i = 0}^n (-1)^i h^i(M)\]
 \end{defn}
@@ -1213,14 +1267,53 @@ La ventaja de esta definición es que no requiere que la variedad sea compacta. 
 \item $χ(\crc[n]) = h^0(\crc[2]) \pm h^n(\crc[2])$ con el signo según según valga $n$, luego es $2$ para $n$ par y $0$ para $n$ impar.
 \end{itemize}
 
-De momento, parece que queda lo mismo que la \fref{def:CaracteristicaEuler} que dábamos antes a través de triangulaciones.
+De momento, parece que queda lo mismo que la \fref{def:CaracteristicaEuler} que dábamos antes a través de triangulaciones. Eso sí, tenemos la ventaja de que es más fácil de manejar. Por ejemplo, aplicando directamente Mayer-Vietoris tenemos la siguiente proposición.
 
 \begin{prop} Sea $M$ una variedad diferenciable, y $U,V$ dos abiertos que la cubren. Entonces \[ χ(M) = χ(U) + χ(V) - χ(U∩V)\]
 \end{prop}
 
-\begin{proof}
-Simplemente yendo a la cadena de Mayer-Vietoris y la suma alternada de dimensiones sale.
+\begin{wrapfigure}[7]{R}[0.1\textwidth]{0.3\textwidth}
+\centering
+\inputtikz{CoverTorus}
+\vspace{-10pt}
+\caption{Una cobertura del toro con dos abiertos cuya intersección es homótopa a la suma conexa de dos circunferencias.}
+\label{fig:CoverTorus}
+\end{wrapfigure}
+
+Una comprobación interesante es hacerlo con el toro.
+
+La cobertura que cogemos es la de la \fref{fig:CoverTorus}. Dividimos el toro en dos mitades que se solapan, de tal forma que la intersección es una unión disjunta de dos bandas, que podemos deformar continuamente a dos circunferencias. Esto es, $U ∩ V \simeq \crc[1] \sqcup \crc[1]$. Además, cada uno de esos abiertos será homotópicamente equivalente a $\crc[1]$.
+
+La cadena de Mayer-Vietoris que sale es la siguiente:
+
+\tikzexternaldisable
+\begin{tikzcd}[row sep = 3pt, column sep = 7pt]
+0 \rar
+	& H^0(\torus) \rar & H^0(U) \oplus H^0(V) \rar & H^0(U ∩ V) \arrow[dll, snake] \\
+	& H^1(\torus) \rar & H^1(U) \oplus H^1(V) \rar & H^1(U ∩ V) \arrow[dll, snake] \\
+	& H^2(\torus) \rar & H^2(U) \oplus H^2(V) \rar & H^2(U ∩ V) \rar & 0 \\
+\end{tikzcd}
+\tikzexternalenable
+
+Para poder calcular bien esa cadena necesitamos saber la cohomología de la unión disjunta, que es muy sencillita.
+
+\begin{prop} Sean $M, N$ dos variedades diferenciables. Entonces $H^k(M \sqcup N) = H^k(M) \oplus H^k(N)$.
+\end{prop}
+
+\begin{proof} Vamos a aplicar Mayer-Vietoris para la variedad $M \sqcup N$, con abiertos $M,N$ que la cubren. La principal ventaja de este enfoque es que $M ∩ N = ∅$, luego podemos crear cadenas exactas que nos aíslan el grupo de cohomología $H^k(M \sqcup N)$. En concreto, la cadena que sale es la siguiente, con sus respectivas dimensiones debajo.
+\begin{center}
+\tikzexternaldisable
+\begin{tikzcd}[row sep = 0pt, column sep = 7pt]
+H^{k-1}(M ∩ N) \rar & H^k(M \sqcup N) \rar & H^k(M) \oplus H^k(N) \rar & H^k(M ∩ N) \\
+0 & h^k(M \sqcup N) & h^k(M) + h^k(N) & 0
+\end{tikzcd}
+\tikzexternalenable
+\end{center}
+
+Con esto ya lo tenemos: $h^k(M \sqcup N) = h^k(M) + h^k(N)$.
 \end{proof}
+
+% TODO: Mover esto detrás de la fórmula de Künneth
 
 Con esto ¿podemos? calcular la característica del toro. Y sale lo que tiene que salir. Y para el toro doble también. Esta es una cosa que a Gabino no le sale muy bien pero que nosotros lo tenemos que saber.
 
@@ -1278,7 +1371,7 @@ Por cierto, el otro día vimos un resultado muy bonito que es que la caracterís
 
 De nuevo, hacemos la cadena y al final que $h^3(M) = 0$, $h^1(M) = 1$, $h^2(M) = 2$, que eslo que esperábamos? bueno, que para ejercicio con $ℝ^4 \setminus\set{p_1, \dotsc, p_n}$.
 
-\seprule[Clase mágica]
+\section{Dualidad de Poincaré}
 
 Una variedad  $M^n$ es orientable si y sólo si admite una forma de volumen $w ∈ Ω^n(M)$ tal que $ω(p) ≠ 0$ para $∀ p ∈ M$.
 
@@ -1974,8 +2067,12 @@ El próximo día (que creo que nunca va a llegar) veremos qué ocurre con $k=n$.
 \chapter{Cálculos y otras explicaciones}
 \input{tex/GT_Calculos.tex}
 
+\chapter{Otros conceptos}
+\input{tex/GT_OtrosConceptos.tex}
+
 \chapter{Ejercicios}
 \input{tex/GeometriaTopologia_Ejs.tex}
+
 
 \bibliography{../Apuntes}{}
 \printindex
