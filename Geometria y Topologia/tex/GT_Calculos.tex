@@ -1,6 +1,6 @@
 % -*- root: ../GeometriaTopologia.tex -*-
 
-Para evitarnos emborronar mucho los apuntes, ponemos en esta sección los cálculos y cuentas largas que vamos haciendo durante el curso.
+Para evitarnos emborronar mucho los apuntes, ponemos en esta sección los cálculos y cuentas largas que vamos haciendo durante el curso y otros conceptos que hemos explorado pero no se relacionan demasiado con el temario.
 
 \section{Proyección estereográfica de $\crc$}
 \label{sec:proyeccion_estereografica_crc}
@@ -43,3 +43,63 @@ Y ahora calculamos la imagen de $(s,t)$ por $\alpha_2(s,t) = \frac{s}{1+t}$:
 
 Luego
 \[ \alpha_2 \circ \alpha_1^{-1}(x,y) = \frac{1}{x} \]
+
+\section{Algunos conceptos de homología}
+
+\noteby{Guille}{Esto es un intento de entender qué es la homología porque en un principio pensaba que hacía falta para la dualidad de Poincaré. Luego he visto que no, que no hace falta, pero como ya lo tengo escrito pues lo dejo aquí y así aprendemos algo más.}
+
+En cursos básicos de Topología \citep{ApuntesTopologia} se estudiaba una invariante topológica bastante interesante, que era el grupo fundamental. Lo malo es que aunque es muy intuitivo, no es demasiado fácil de manejar ni especialmente útil. No es fácil de manejar porque se define dado un punto base, el origen y final de los caminos que luego cocientamos con la relación de equivalencia: siempre tendremos que tener cuidado para que la elección del punto no cambie los caminos. Y no es muy útil porque no ``ve'' nada que no sea de dimensión 2: no podemos extender directamente la noción de ``camino'' a más dimensiones.
+
+La solución que permite mantener esa idea de ver la topología a través de los caminos es la homología. El bloque básico serán los \textit{simplex}, que como su nombre indica son cosas simples\footnote{Chistaco.}: puntos, líneas, triángulos, tetrahedros... Aunque pueda parecer una descripción estúpida, en realidad es muy útil ver los \textit{simplex} como unidades sencillas que podamos combinar y pegar para estudiar otros aspectos: una unión de líneas más o menos dobladas nos da un camino, con lo que ya podremos estudiar homotopía; una unión de triángulos nos dará una triangulación, que ya vimos con la \nref{def:CaracteristicaEuler} que es bastante útil. A priori promete, así que merece la pena estudiarlos más a fondo.
+
+Por formalizar un poco todo eso de ``cosas simples'' (somos matemáticos al fin y al cabo) vamos a dar definiciones concretas. El \concept{p-simplex\IS estándar} será el conjunto \[ Δ_p = \set{x = \sum_{i=0}^p λ_i \ve_i \tq \sum λ_i = 1, \, λ_i ∈ [0,1]} \] con $\set{\ve_0, \dotsc, \ve_p}$ la base canónica de $ℝ^p$.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{PSimplex}
+\caption{Ejemplos de $p$-simplex estándar. En orden, $0$, $1$, $2$ y $3$-simplex (resp. punto, línea, triángulo isósceles y tetrahedro regular).}
+\label{fig:PSimplex}
+\end{figure}
+
+La \fref{fig:PSimplex} nos da algunos ejemplos de $p$-simplexes, que tal y como decíamos son cosas bastante simples.
+
+Con lo que trabajaremos será con sus imágenes en variedades $M$, lo que llamaremos un \concept{p-simplex\IS singular}, que serán formalmente aplicaciones $\appl{σ_p}{Δ_p}{M}$.
+
+\begin{figure}[hbtp]
+\centering
+\inputtikz{PChain}
+\caption{La suma formal de una $p$-cadena se puede ver ``pegar'' los simplexes en la variedad.}
+\label{fig:PChain}
+\end{figure}
+
+La ventaja de todo esto es que las definiciones que muchas veces nos costaba formalizar se vuelven muy sencillas y manejables. La primera es la unión de caminos, que de forma abstracta modelamos como un grupo abeliano libre, esto es como sumas formales $c = \sum n_σ σ$ finitas, con coeficientes reales\footnote{En realidad, basta con coeficientes en un grupo abeliano cualquiera, no hace falta que sea $ℝ$.} arbitrarios $n_σ$, lo que llamaremos \concept{p-cadena}. Intuitivamente, eso se puede entender\footnote{Creo. No estoy nada seguro.} como la unión las imágenes en la variedad (\fref{fig:PChain}). El conjunto de todas esas sumas formales de $p$-símplices se denotará como $Δ_p(X)$.
+
+También podemos formalizar muy bien lo que es una cara, aunque de momento nos basta con ver que las caras de un simplex $Δ_p$ son los tres simplex $Δ_{p-1}$ obvios. Igualmente, eso nos permite definir lo que es el borde de una $p$-cadena tomando la suma formal de sus bordes. En particular, podemos definir el operador de borde $\appl{∂_p}{Δ_p(X)}{Δ_{p-1}(X)}$ que nos lleva de una $p$-cadena a su borde (una suma formal de 3 $(p-1)$-símplices, o una $(p-1)$-cadena).
+
+Una particularidad de ese borde que debería llamarnos mucho la atención es la siguiente: $∂(∂(σ)) = 0$\footnote{Formalmente, el borde se define como $∂_p σ = \sum_{i=0}^p (-1)^i σ^i$, donde $σ^i$ es la cara $i$-ésima de σ. La ventaja de los coeficientes alternados es que luego se cancelan si componemos dos operaciones de bordes.}. No dice nada del otro mundo: un borde no tiene borde. Ahora bien, es una propiedad muy parecida a la que teníamos en formas diferenciales, que era que $\dif^2 = 0$.
+
+Es un hecho que no es casual, y nos lleva directos a la definición de las homologías con la misma motivación que para las formas diferenciales: estudiaremos las cadenas que nos revelen agujeros (los ciclos), quitándonos de encima los que son triviales (los que son un borde de otra $p$-cadena). Lo único que necesitamos para que todo cuadre es definir los ciclos como aquellos cuyo borde es nulo (cosa bastante razonable).
+
+\begin{defn}[Grupo\IS de homología] Sea $X$ un espacio topológico. Entonces se define su grupo de homología de grado $p$ como \[ H_p(X) = \quot{\ker ∂_p}{\img ∂_{p+1}}\]
+\end{defn}
+
+En el grupo de homología tenemos unos resultados muy similares a los que teníamos en cohomologías: $H_0(X)$ tiene la misma dimensión que el número de componentes conexas por caminos de $X$. También recuperamos el resultado de homotopía: $H_1(X)$ es isomorfo al grupo fundamental cuando $X$ es conexo por caminos.
+
+El concepto dual de las $p$-cadenas son las \concept{p-cocadenas}, aplicaciones $\appl{φ}{Δ_{p}(X)}{ℝ}$ que a cada cadena les asignan un número. Por ejemplo, una $p$-cocadena puede ser la que mida la longitud de la cadena. En general, consideraremos $C_p(X)$ el espacio de estas cocadenas.
+
+Además, podemos construir el operador δ dual del borde, que nos aumenta la dimensión de la cocadena. Para ello, lo que hace es asignar a una $(p+1)$-cadena un valor en función de los valores que tienen sus bordes. Más formalmente, \begin{align*}
+\appl{δ_p}{C_p(X)}{C_{p+1}(X)} & \\
+φ \longmapsto \appl{φ ○ ∂_{p+1}&}{Δ_{p+1}}{ℝ} \\
+ &\qquad\;\; σ \longmapsto φ(∂σ)
+\end{align*}
+
+Igual que $∂^2 = 0$, tenemos que $δ^2 = 0$, y entonces podemos definir la \concept{Cohomología\IS singular} de forma análoga: \[ H^p(X) = \quot{\ker δ_p}{\img δ_{p-1}} \]
+
+Aquí podemos unir de vuelta con la cohomología de De Rham a través del siguiente teorema:
+
+\begin{theorem}[Teorema\IS de De Rham] Sea $M$ una variedad diferenciable. Entonces, sus grupos de cohomología singular y cohomología de De Rham son isomorfos, con el isomorfismo $Φ$ que a cada $p$-forma diferencial $ω ∈ H^p_{dR}(M)$ le asigna la $p$-cocadena que la evalúa en la integral. Esto es, \begin{align*}
+\appl{H^p(M) \ni I(ω)}{H_p(M)&}{ℝ} \\
+ c &\longmapsto \int_c ω
+\end{align*}
+
+\end{theorem}
