@@ -475,7 +475,7 @@ Una vez que hemos emulado las direcciones en las que podemos definir las derivad
 Un ejemplo es ver que, si tomamos una función $\appl{f}{M}{ℝ}$ y una carta $\inv{φ}(t_1, \dotsc, t_n) \equiv (x_1, \dotsc, x_m)$ entonces $\eval[2]{\pd{}{x_i}}_p$ es una derivación que se aplica de la siguiente forma:
 \( \eval{\dpd{}{x_i}}_p (f) ≝ \eval{\dpd{f○\inv{φ}}{t_i}}_{φ(p)} \label{eq:DerivacionTangente} \)
 
-Además, las derivaciones son una base de el espacio tangente.
+Además, las derivaciones son una base del espacio tangente.
 
 \begin{prop} $\set{\eval[2]{\pd{}{x_1}}_p, \dotsc,\eval[2]{\pd{}{x_n}}_p}$ es una base de $\tgs_p M$. En particular, $\dim \tgs_p M = \dim M$.
 \end{prop}
@@ -486,10 +486,12 @@ Para demostrar que es una base, necesitamos ver que son linealmente independient
 
 \proofpart{Independencia}
 
-\begin{gather*}
-\sum_i = a_i \eval{\dpd{}{x_1}}_p = \vec{0} ∈ \tgs_p M \\
-0 = \vec{0}(x_j) = \sum a_i \eval{\dpd{}{x_1}}_p  = a_j \; ∀j
-\end{gather*} % OK.
+Supongamos que no son independientes y que \[ \sum_{i = 1}^n a_i \eval{\dpd{}{x_i}}_p = \vec{0} ∈ \tgs_p M \] con unos ciertos coeficientes $a_1, \dotsc, a_n ∈ ℝ$.
+
+Ahora probamos a evaluar en ambos lados de esa igualdad la derivación en $x_j$, tendríamos que \begin{align*}
+\sum_{i=1}^n a_i \eval{\dpd{x_j}{x_i}}_p &= a_j \\
+\vec{0}(x_j) &= 0
+\end{align*} luego $a_j = 0$ para todo $j = 1, \dotsc, n$, y por lo tanto no tenemos una combinación lineal porque todos los coeficientes son cero. Es decir, que son linealmente independientes.
 
 \proofpart{Generadores}
 
@@ -497,16 +499,32 @@ Tenemos que ver que cualquier vector $v ∈ \tgs_p M$ se puede expresar como sum
 
 Debe ocurrir que $v(x_j) = a_j$. Sea $\appl{λ}{U_p}{ℝ}$ una función arbitraria, queremos ver qué es $$v(\lambda) = \sum\limits_{i=1}^{n} a_i \eval{\dpd{}{x_i}}_p (\lambda) $$
 
-Empezamos calculando el desarrollo de Taylor de $\lambda$: $$\lambda = \lambda(p) + \left(\sum\limits_{i=1}^{n} \eval{\dpd{\lambda}{x_i}}_p (x_i - p)\right) + \frac{1}{2}\set{\eval{\dpd{\lambda}{x_i \partial x_j}}_p (x_i - p)(x_j - p)}_{i,j=1,\dots, n} + \dots$$
+Empezamos calculando el desarrollo de Taylor de $\lambda$ en $p = (p_1, \dotsc, p_n)$: \[
+\lambda =
+	\lambda(p)
+	+ \sum\limits_{i=1}^{n} \eval{\dpd{\lambda}{x_i}}_p · (x_i - p)
+	+ \frac{1}{2}\sum_{i = 1}^n \sum_{j = 1}^n
+		\eval{\dpd{\lambda}{x_i \partial x_j}}_p · (x_i - p_i)(x_j - p_j)
+	+ \dotsb \]
 
-Y sustituimos en \ref{eq:pruebaGeneradoresPlanoTg}
-$$ v(\lambda) = \underbrace{v(\underbrace{\lambda(p)}_{\text{constante}})}_{=0} + \underbrace{v(x_i)}_{=a_i} \sum \eval{\dpd{\lambda}{x_i}}_p + \frac{1}{2}\set{\eval{\dpd{\lambda}{x_i \partial x_j}}_p \underbrace{v((x_i - p))}_{=0}\underbrace{v((x_j - p))}_{=0}} + 0 \dots $$
+Con esto podemos sustituir en \eqref{eq:pruebaGeneradoresPlanoTg}, teniendo en cuenta que la derivación es lineal, que la derivación de una constante es 0 y que los términos de mayor orden se nos van a ir por la regla de Leibniz y que evaluamos Taylor en $x = p$. Por ejemplo: \[ \eval{v\left((x_i - p_i) (x_j - p_j)\right)}_{x = p} = \left[ \underbracket{(x_i - p_i)}_0 v(x_j) + v(x_i) \underbracket{(x_j - p_j)}_0 \right|_{x = p} = 0 \]
 
-Con lo que obtenemos $$v(\lambda) = \sum a_i \eval{\dpd{\lambda}{x_i}}_p $$
+Ahora vemos qué pasa sustituyendo:
+\begin{align*}
+v(λ) &= \left(\lambda(p)
+	+ \sum\limits_{i=1}^{n} \eval{\dpd{\lambda}{x_i}}_p · (x_i - p)
+	+ \frac{1}{2}\sum_{i = 1}^n \sum_{j = 1}^n
+		\eval{\dpd{\lambda}{x_i \partial x_j}}_p · (x_i - p_i)(x_j - p_j)
+	+ \dotsb\right) \\
+	&= \underbracket{v(λ(p))}_0 + \sum_{i=1}^n v(x_i)  \eval{\dpd{\lambda}{x_i}}_p + \frac{1}{2}\sum_{i = 1}^n \sum_{j = 1}^n
+		\eval{\dpd{\lambda}{x_i \partial x_j}}_p · \underbracket{v\left((x_i - p_i)(x_j - p_j)\right)}_0
+	+ \dotsb \\
+	&=  \sum_{i=1}^n a_i \eval{\dpd{\lambda}{x_i}}_p
+\end{align*} que es efectivamente lo que buscábamos.
 
 \end{proof}
 
-\obs En la prueba anterior, hemos abusado de notación\footnote{y volverá a pasar}: $$ \eval{\dpd{\lambda}{x_i}}_p := \eval{\dpd{(\lambda \circ \varphi^{-1})}{x_i}}_{\varphi(p)} $$
+\obs En la prueba anterior, hemos abusado de notación\footnote{y volverá a pasar}: $$ \eval{\dpd{\lambda}{x_i}}_p ≝ \eval{\dpd{(\lambda \circ \varphi^{-1})}{x_i}}_{\varphi(p)} $$
 
 
 ¿Qué pasa con el cambio de coordenadas? En este caso, podemos hacer cuentas y las cosas funcionan bien:\[ \eval{\dpd{}{y_j}}_p = \sum_{i=1}^n \eval{\dpd{x_i}{y_j}}_p · \eval{\dpd{}{x_i}}_p \]
@@ -649,7 +667,7 @@ El hecho clave de esta proyección es ver que dos puntos $(z,w), (z', w') ∈ �
 
 En otras palabras, lo que nos dice esto es que la proyección nos lleva todos los puntos de una misma circunferencia (multiplicar con un complejo de módulo 1 es simplemente rotar en una circunferencia) a un único punto en $\projcp^1$. Así, cada punto $[z\cln w] ∈ \projcp$ tiene asociada la fibra de puntos $e^{iθ}·(z,w)$ con $θ ∈ [0, 2π)$, que como decíamos es una cierta circunferencia. Para el resto de cuentas y una formalización algo mejor, es interesante leer \citep{liuHopfFibration} (que además habla de mecánica cuántica, que siempre mola).
 
-Para nuestro caso de la geometría y topología, lo que nos faltaría ver es que efectivamente $\crc[3] \not\cong \crc[1] × \crc[2]$. Una demostración con cuentas sería totalmente infernal, pero sí que se podrá hacer con las cohomologías de De Rham que veremos en el \fref{chap:CohomologiaDeRham}.
+Para nuestro caso de la geometría y topología, lo que nos faltaría ver es que efectivamente $\crc[3] \not\cong \crc[1] × \crc[2]$. Una demostración con cuentas sería totalmente infernal, pero sí que se podrá hacer con las cohomologías de De Rham que veremos en la \fref{sec:FibracionHopfCohomologia}.
 
 \section{Campos vectoriales}
 
@@ -1110,7 +1128,27 @@ M × ℝ &\longmapsto M \\
 (x, k)& \xleftarrow{\; s_k \;} x
 \end{align*}
 
-Es obvio que $π ○ s_k = \mop{Id}$ y que por lo tanto $s_k^* ○ π^* = \mop{Id}^*$. En el otro sentido no es así ($s_k ○ π ≠ \mop{Id}$), aunque a nivel de homotopía se puede demostrar que existe un cierto operador que nos hace que $π^* ○ s_k^* = \mop{Id}^*$ y ya tendríamos todo bien. Ahora bien, la demostración es algo larga y no la voy a copiar. Al que le interese, que lea \citep[Sec. 4]{bott2013differential}.
+Es obvio que $π ○ s_k = \mop{Id}$ y que por lo tanto $s_k^* ○ π^* = \mop{Id}^*$. En el otro sentido no es así ($s_k ○ π ≠ \mop{Id}$, por ejemplo $s_k(π(x, x^2)) = (x, k)$), así que vamos que tener que complicarnos un poco la vida.
+
+La suerte que tenemos es que no necesitamos que sea exactamente la identidad: nos basta que sea la identidad más algo que se anule en el grupo de cohomología. Es decir, que si encontramos una aplicación $\appl{K}{Ω^*(M × ℝ)}{Ω^*(M × ℝ)}$ tal que \[ π^* ○ s_k^* = \mop{Id} \pm \left(\dif K - K \dif \right) \] con \( \dif K - K \dif = \mop{Id} \label{eq:Poincare:IdK} \)a nivel de formas diferenciales nos valdría, ya que entonces si $ω$ es cerrada tendríamos que \[ ω = (\dif K - K \dif)(ω) = \dif (K ω) - K(\underbracket{\dif ω}_{ = 0}) = \dif (K ω)  \] lo que nos diría que $ω$ es una forma exacta, y por lo tanto es $0$ en la cohomología.
+
+Para encontrar esa aplicación, damos en $M × ℝ$ coordenadas locales $x_1, \dotsc, x_n, t$, de tal forma que cualquier forma diferencial se podrá expresar como \[ ω = η_1 + f(\vx, t) · η_2 ∧ \dif t\] con $η_1, η_2$ de la forma $η_i = \sum_I f_{i,I}(\vx, t) \dif x_I$ y con $\vx = (x_1, \dotsc, x_n)$ por acortar notación. En otras palabras, que podemos separar cualquier $ω ∈ Ω^*(M × ℝ)$ en una parte que no tiene $\dif t$ y en otra que sí la tiene.
+
+Con esta expresión podemos definir nuestra aplicación: \[ K(η_1 + η_2 ∧ \dif t) = \dif x_J  · \int_ℝ f_I(\vx, t) \dif t \]
+
+Vamos a comprobar que efectivamente esta aplicación cumple \eqref{eq:Poincare:IdK}, tomando $ω = η_1 + η_2 ∧ \dif t$. Por linealidad de $K$, nos basta demostrarlo para $η_1 = f_1 \dif x_I$ y $η_2 = f_2 \dif x_J$.
+\begin{align*}
+\dif (K ω) - K ( \dif ω)
+	&= \dif \left[K(η_1 + η_2 ∧ \dif t)\right] - K(\dif η_1 + \dif (η_2 ∧ \dif t)) = \\
+	&= \dif \left(\dif x_J \int_{ℝ} f_2(\vx, t) \dif t\right)
+	- K \left(\sum_{j = 1}^n \dpd{f}{x_j} \dif x_j ∧ \dif x_I + \dpd{f_1}{t} \dif t ∧ \dif x_I + \right. \\
+	&\qquad +\left. \sum_{j = 1}^n \dpd{f_2}{x_j} \dif x_j ∧ \dif x_I ∧ \dif t \right) = \\
+	&= \sum_{j=1}^n \left(\int_{ℝ} \dpd{f_2}{x_j} (\vx, t) \dif t\right) ∧ \dif x_j ∧ \dif x_J
+	+ f_1 \dif x_I \\
+	&\qquad - \sum_{j = 1}^n \left(\int_{ℝ} \dpd{f_2}{x_j}(\vx, t) \dif t\right) \dif x_j ∧ \dif x_I
+\end{align*}
+
+  aunque a nivel de homotopía se puede demostrar que existe un cierto operador que nos hace que $π^* ○ s_k^* = \mop{Id}^*$ y ya tendríamos todo bien. Ahora bien, la demostración es algo larga y no la voy a copiar. Al que le interese, que lea \citep[Sec. 4]{bott2013differential}.
 \end{proof}
 
 Trivialmente, este resultado nos da la cohomología de $ℝ^n$ a partir de la de $ℝ$ que ya habíamos visto en \eqref{eq:CohomologiaR}: \( H^k(ℝ^n) = \begin{cases} ℝ & k = 0 \\ \set{0} & k ≠ 0 \end{cases} \label{eq:CohomologiaRN} \)
@@ -1327,7 +1365,7 @@ La sucesión de Mayer-Vietoris también es válida aquí, aunque justo al revés
 \begin{center}
 \tikzexternaldisable
 \begin{tikzcd}[row sep = 3pt]
-0 & Ω^*(M) \arrow{l}{} & Ω^*(U) \oplus Ω^*(V) \arrow{l}{r} & Ω^* (U ∩ V) \arrow{l}{\delta} & \arrow{l}{} 0
+0 & Ω_c^*(M) \arrow{l}{} & Ω_c^*(U) \oplus Ω_c^*(V) \arrow{l}{r} & Ω_c^* (U ∩ V) \arrow{l}{\delta} & \arrow{l}{} 0
 \end{tikzcd}
 \tikzexternalenable
 \end{center}
@@ -1349,9 +1387,9 @@ Esta secuencia da lugar de nuevo a una secuencia a nivel de cohomologías para u
 \begin{center}
 \tikzexternaldisable
 \begin{tikzcd}[row sep = 3pt]
-0 	& H^0(M) \arrow{l}{} & \arrow{l}{} H^0(U) \oplus H^0(V) & \arrow{l}{} H^0(U ∩ V)  \\
-	& \phantom{H^0(M)} \arrow[snake up]{urr}{} & \dotsb & \phantom{H^1(U ∩ V)} \\
-	& H^n(M) \arrow[snake up]{urr}{} & \arrow{l}{} H^n(U) \oplus H^n(V) & \arrow{l}{} H^n(U ∩ V) & \arrow{l}{} 0 \\
+0 	& H_c^0(M) \arrow{l}{} & \arrow{l}{} H_c^0(U) \oplus H_c^0(V) & \arrow{l}{} H_c^0(U ∩ V)  \\
+	& \phantom{H_c^0(M)} \arrow[snake up]{urr}{} & \dotsb & \phantom{H_c^1(U ∩ V)} \\
+	& H_c^n(M) \arrow[snake up]{urr}{} & \arrow{l}{} H_c^n(U) \oplus H_c^n(V) & \arrow{l}{} H_c^n(U ∩ V) & \arrow{l}{} 0 \\
 \end{tikzcd}
 \tikzexternalenable
 \end{center}
@@ -1546,6 +1584,7 @@ Para aplicar la hipótesis de inducción coge una sucesión exacta y lo multipli
 \end{proof}
 
 \subsection{Aplicación: la fibración de Hopf no es trivial}
+\label{sec:FibracionHopfCohomologia}
 
 Vamos a ver lo que teníamos pendiente de la \fref{sec:FibracionHopf}. Ahí habíamos demostrado que tenemos un fibrado local para $\crc[3]$ de tal forma que todo entorno $U ⊂ \crc[3]$ era isomorfo a $\crc[1] × \crc[2]$. Decíamos que era un fibrado no trivial porque aunque localmente ocurría eso, luego teníamos que $\crc[3] \not\cong \crc[1] × \crc[2]$ aunque no llegamos a demostrarlo.
 
