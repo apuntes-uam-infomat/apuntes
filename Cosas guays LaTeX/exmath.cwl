@@ -318,6 +318,8 @@
 \linapp#m
 \linapp[X]#m
 \linapp[X][Y]#m
+\linend#m
+\linend[H]#m
 \hconvs{arg1}{arg2}#m
 \hconvs[txt. arriba]{arg1}{arg2}#m
 \wconvs#m
