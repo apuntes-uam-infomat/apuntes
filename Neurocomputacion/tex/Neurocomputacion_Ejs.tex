@@ -15,13 +15,13 @@ w_i=w_i+x_iy
 
 siendo $y$ el valor esperado en la neurona de salida que estamos ajustando.
 
-Si nuestra red tuviera varias neuronas de salida para cada una de ellas deberíamos aplicar el mismo procedimiento.
+Si nuestra red tuviera varias neuronas de salida, deberíamos aplicar el mismo procedimiento a cada una de ellas.
 
 Ahora debemos ver como serán los datos de entrenamiento que definen la función XOR, que están recogidos en la siguiente tabla:
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{A} & \textbf{B} & \textbf{A XOR B}\footnote{Consideramos los valores de salida con una codificación bipolar ya que esta red no es capaz de aprender nada de aquellos patrones de entrenamiento con output nulo} \\
+\textbf{A} & \textbf{B} & \textbf{A XOR B} \\
 \hline
 -1 & -1 & -1 \\
 -1 & 1 & 1 \\
@@ -30,6 +30,7 @@ Ahora debemos ver como serán los datos de entrenamiento que definen la función
 \hline
 \end{tabular}
 \end{center}
+Donde hemos considerados los valores de salida con una codificación bipolar ya que esta red no es capaz de aprender nada de aquellos patrones de entrenamiento con output nulo
 
 Es evidente ver que nuestra red tendrá un total de 4 neuronas siendo una de ellas la neurona de salida, por lo que nuestro vector de pesos inicializado será:
 \[w = (0,0,0) \text{ siendo } w_0 \text{ el peso asociado al ``bias''}\]
@@ -88,11 +89,6 @@ mistakes occur in the pixels where the training patterns differ.)
 Example 2.8 could be rephrased as an example of distinguishing the pattern X
 from not-X (rather than specifically detecting X versus 0). Another pattern (for not X) that might be added to the net is:
 
-\begin{center}
-% TODO: Meter esta imagen.
-%\includegraphics[width=0.3\textwidth]{img/pattern.png}
-\end{center}
-
 \ppart Find the new weights to store this pattern together with the two patterns used in
 Example 2.8. (You can work from the weights in the example.) What does the bias
 value tell you? How does the ability of the net to respond to noisy (missing or mis-
@@ -138,9 +134,9 @@ Vamos a completar ahora el entrenamiento de la red con el nuevo patrón que se n
 +1x_{21} & -1x_{22} & -1x_{23} & -1x_{24} & +1x_{25} \\
 \end{array}\]
 
-Podemos comprobar que tras este entrenamiento el valor de la neurona de salida tras leer el patrón $X$ es $Σ=35$, con lo que se ha reducido la capacidad de detectar errores y fallos a la hora de clasificar el patrón $X$.
+Podemos comprobar que tras este entrenamiento el valor de la neurona de salida tras leer el patrón $X$ es $Σ=35$. Sin embargo ahora hay datos que pueden perderse provocando una reducción de Σ en sólo una unidad.
 
-En general, a medida que añadamos patrones distintos de $X$ para el entrenamiento, habrá más distribuciones para las que el resultado Σ deba ser negativo. Por tanto cada vez menos ruido será necesario para hacer que la red clasifique mal un patrón $X$.
+En general, a medida que añadamos patrones distintos de $X$ para el entrenamiento aumentamos la capacidad de generalización de la red de modo que el resultado es menos específico y es capaz de eliminar mejor el ruido.
 \end{problem}
 
 \begin{problem}[4]
@@ -302,7 +298,7 @@ Operando sobre los datos de entrada en formato bipolar tenemos:
 \end{tabular}
 \end{center}
 
-Los resultados esperados (columna Target) los he deducido buscando el vecino más próximo. Podemos comprobar que los resultados esperados coinciden exactamente con los obtenidos salvo, lógicamente, en los casos donde no hay un resultado esperado claro.
+Los resultados esperados (columna Target) los hemos deducido buscando el vecino más próximo. Podemos comprobar que los resultados esperados coinciden exactamente con los obtenidos salvo, lógicamente, en los casos donde no hay un resultado esperado claro.
 
 \end{problem}
 
@@ -393,7 +389,7 @@ La tabla representada en el ejemplo seguiría siendo la misma aunque los pesos a
 
 Vamos a imitar la demostración del libro con el cambio dado en el enunciado.
 
-Consideramos, como se hace en la demostración del libro, el conjunto de entrenamiento, $F$, formado por lo patros de entrenamiento con salida esperada $1$ y la negación de los patrones de entrenamiento con salida esperada $-1$. Así, todos los patrones de $F$ tienen salida esperada $1$.
+Consideramos, como se hace en la demostración del libro, el conjunto de entrenamiento, $F$, formado por lo patrones de entrenamiento con salida esperada $1$ y la negación de los patrones de entrenamiento con salida esperada $-1$. Así, todos los patrones de $F$ tienen salida esperada $1$.
 
 Definimos como $\vec{w}^*$ el vector de pesos solución, cuya existencia suponemos. Así:
 \begin{equation}\label{eq:vectorPesosSol}
@@ -404,23 +400,23 @@ Empezamos con un vector de pesos nulo $\vec{w}(0)=\vec{0}$. Con cada patrón de 
 \[\vec{w}(i) = \vec{w}(i-1)+α\cdot \vx(i-1)\]
 
 Cuando iteremos sobre todos los patrones de entrenamiento tendremos:
-\[\vec{w}(k) = \vec{w}(0) + α\cdot \sum_{i=0}^{k-1} \vec{w}(i)\]
+\[\vec{w}(k) = \vec{w}(0) + α\cdot \sum_{i=0}^{k-1} \vec{x}(i)\]
 donde estamos iterando sobre aquellos patrones de entrenamiento que produjeron un error.
 
 De la ecuación \ref{eq:vectorPesosSol}, sabiendo que el conjunto de patrones de entrenamiento es finito, podemos deducir que existe
 \[m=\min\{\vx \cdot \vec{w}^*\}\]
 La existencia de este mínimo nos permite escribir:
-\[\vec{w}(k)\cdot \vec{w}^* = \vec{w}(0)\cdot \vec{w}^*+αkm\]
+\[\vec{w}(k)\cdot \vec{w}^* = \vec{w}(0)\cdot \vec{w}^*+α\cdot k\cdot m\]
 puesto que $\vx(i)\cdot \vec{w}^* \geq m \ \forall i$.
 
 Empleando ahora la desigualdad de Cauchy-Schwartz podemos escribir
 \begin{equation}\label{eq:Dif1}
-\norm{\vec{w}(k)}^2 \geq \frac{(\vec{w}(k)\cdot \vec{w}^*)^2}{\norm{\vec{w}^*}^2} \geq  \frac{(\vec{w}(0)\cdot \vec{w}^*+αkm)^2}{\norm{\vec{w}^*}^2}
+\norm{\vec{w}(k)}^2 \geq \frac{(\vec{w}(k)\cdot \vec{w}^*)^2}{\norm{\vec{w}^*}^2} \geq  \frac{(\vec{w}(0)\cdot \vec{w}^*+α\cdot k\cdot m)^2}{\norm{\vec{w}^*}^2}
 \end{equation}
 
 Ahora vamos a comprobar que el valor $k$ no puede ser arbitrariamente grande. Consideramos
 \[\vec{w}(k)=\vec{w}(k-1)+\vx(k-1)\]
-sabiendo que
+sabiendo que\footnote{Estamos considerando sólo aquellos vectores $\vx(i)$ que provocan aprendizaje en la red, es decir, aquellos para los que $\vx(i)\cdot \vec{2}(i) \leq 0$.}
 \[\vx(k-1)\cdot \vec{w}(k-1) \leq 0\]
 podemos ver que
 \[\norm{\vec{w}(k)}^2 \leq \norm{\vec{w}(k-1)}^2 + \norm{\vx(k-1)}^2\]
@@ -444,7 +440,7 @@ Combinando las desigualdades \ref{eq:Dif1} y \ref{eq:Dif2} y considerando que el
 
 \begin{problem}[9]
  Show that the use of a bias is essential in Example 2.11. That is, show that it is
-impossible to find weights W I and W2 for which the points (1,1), (1,0), (0,1), and (0,0)
+impossible to find weights W1 and W2 for which the points (1,1), (1,0), (0,1), and (0,0)
 are classified correctly. First, show that (0,0) will never be classified correctly, and
 in fact, no learning will ever occur for that point. Then, neglecting (0,0), consider
 whether (1,1), (1,0), and (0,1) can be classified correctly. That is, do weights WI and
@@ -612,7 +608,7 @@ would have on the binary representation of the AND function in Example 2.11.
 
 \solution
 
-Según el libro: ``Principles of Neurodynamics'' un sistema de aprendizaje como el descrito en el enunciado es un sistema \textbf{gamma}, que se define en el libro como sigue:
+Según el libro: ``Principles of Neurodynamics'' un sistema de aprendizaje como el descrito en el enunciado es un sistema \textbf{gamma}, que se define como sigue:
 
 \begin{defn}[Sistema Gamma]
 El sistema de aprendizaje gamma es una regla que dicta cómo modificar los pesos de las conexiones que llegan a una determinada neurona de tal forma que a todas las conexiones activas sufren la misma variación manteniendo la suma total de las conexiones constante.
@@ -1475,7 +1471,7 @@ Aunque pueden emplearse redes neuronales multicapa con más de una capa intermed
 
 El objetivo de las redes neuronales es ser capaz de predecir la salida de ciertos patrones y para ello se les entrena con unos patrones dados de los que conocemos su salida.
 
-No obstante, si entrenamos demasiado a la red, puede que esta se vuelve muy especifica para los patrones de entrenamiento dados\footnote{Esto no ocurre con el perceptrón, que sólo actualiza pesos si predice mal la salida} de modo que cuando analice otros datos parecidos a los iniciales no sea capaz de notarlo.
+No obstante, si entrenamos demasiado a la red, puede que esta se vuelva muy específica para los patrones de entrenamiento dados\footnote{Esto no ocurre con el perceptrón, que sólo actualiza pesos si predice mal la salida} de modo que cuando analice otros datos parecidos a los iniciales no sea capaz de notarlo.
 
 Es por ello que hay que encontrar un punto justo entre precisión clasificando los patrones de entrenamiento y capacidad de aceptar variaciones pequeñas, manteniendo una correcta clasificación.
 
@@ -1498,7 +1494,7 @@ Al hacer este cambio seguimos conservando la propiedad de que la derivada puede 
 En concreto si queremos que $a=-1$ y $b=1$, es decir, queremos la función sigmoidal bipolar, este procedimiento nos permite obtener el resultado visto anteriormente.
 
 \subsubsection{Cambiando la pendiente}
-En ocasiones puede interesarnos cambiar la pendiente de la funció de activación de modo que el paso del valor más bajo al más alto posible sea más rápido.
+En ocasiones puede interesarnos cambiar la pendiente de la función de activación de modo que el paso del valor más bajo al más alto posible sea más rápido.
 
 Esto implica considerar la función sigmoidal binaria como:
 \[f(x) = \frac{1}{1+e^{-σx}}\]
