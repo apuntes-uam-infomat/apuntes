@@ -2787,14 +2787,15 @@ En esta red definimos un radio de proximidad tal que las neuronas dentro de ese 
 \item Inicializamos los pesos:
 \[w_k = C_1 \; \text{ para } k = 0,1,...,R_1\]
 \[w_k = C_2 \; \text{ para } k = R_1+1,...,R_2\]
-\item Inicializamos $\vx\_old=\vec{0}$.
 \item Inicializamos $\vx=\vec{s}$ siendo $\vec{s}$ el patrón de entrada
+\item Inicializamos $\vx\_old = \vx$.
 \item Mientras no alcancemos el máximo de iteraciones:
 \begin{enumerate}
 \item Calculamos la entrada neta de cada neurona
 \[\vx_i = C_1 \sum_{k=-R_1}^{R_1}\vx\_old_{i+k} + C_2 \sum_{k=R_1+1}^{R_2}\left(\vx\_old_{i+k}+\vx\_old_{i-k}\right)\]
 \item Aplicamos la \textbf{función de activación}
 \[\vx\_old_i = \min(x\_max, \max(0,\vx_i))\]
+donde $x\_max$ es un valor definido en el primer paso del algoritmo. Se emplea para evitar que una activación crezca indefinidamente.
 \end{enumerate}
 \end{enumerate}
 
@@ -2917,8 +2918,8 @@ El algoritmo de entrenamiento es:
 \[Δw_{kj} = β(\vy_k - w_{kj})\]
 \obs Llegados a este punto α y β son muy pequeños ya que han ido siendo reducidos en cada iteración de la fase 1.
 \item Actualizar los pesos desde la neurona $Z_j$ ganadora hasta las capas de salida
-\[Δu_{ij} = a(\vx_i-v_{ij})\]
-\[Δt_{kj} = b(\vy_k - w_{kj})\]
+\[Δu_{ij} = a(\vy_i-u_{ij})\]
+\[Δt_{kj} = b(\vx_k - t_{kj})\]
 \end{enumerate}
 \item Reducimos los factores de aprendizaje $a$ y $b$.
 \end{enumerate}
