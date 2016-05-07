@@ -8,6 +8,7 @@
 \footnoteby{arg0}{arg1}#m
 \todoby{arg0}#m
 \inclass#m
+\triple#m
 \hint{Sugerencia}#m
 \mop{operacion}#m
 \imgref{referencia}#m
