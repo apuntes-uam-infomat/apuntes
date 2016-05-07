@@ -271,6 +271,10 @@
 \tgsd#m
 \inmr{arg0}{arg1}{arg2}#m
 \halfp#m
+\hash#m
+\difp#m
+\difp[F]#m
+\difp[F][p]#m
 \cind#m
 \Re#m
 \Im#m
@@ -312,10 +316,6 @@
 \spn#m
 \densein#m
 \fourier#m
-\hash#m
-\difp#m
-\difp[F]#m
-\difp[F][p]#m
 \linapp#m
 \linapp[X]#m
 \linapp[X][Y]#m
