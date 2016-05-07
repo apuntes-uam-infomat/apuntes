@@ -632,11 +632,11 @@ En este capítulo vamos a ver:
 
 	Volviendo al caso de la membrana, si ponemos arena en la membrana se quedará con una forma, más concretamente en los nodos de la membrana: los puntos en los que no vibra.
 
-	Nosotros no veremos el problema de resolver el laplaciano para dominios arbitrarios porque necesitamos mucho análisis funcional y en este curso no da tiempo. Nos vamos a dedicar a algo que no tengo claro qué es.
+	Nosotros no veremos el problema de resolver el laplaciano para dominios arbitrarios porque necesitamos mucho análisis funcional y en este curso no da tiempo. Nos vamos a centrar en dominios acotados, y vamos a desarrollar varias herramientas que nos permitan inferir cosas sobre la solución a partir de la ecuación.
 
 	\subsection{Funciones armónicas, subarmónicas y superarmónicas}
 
-	No sé a qué viene esto.
+	Podemos clasificar las soluciones en tres clases posibles según el signo del laplaciano.
 
 	\begin{defn}[Función\IS armónica] Si $-Δu = 0$ en Ω, entonces $u$ es armónica en $Ω$. \end{defn}
 	\begin{defn}[Función\IS subarmónica] Si $-Δu ≤ 0$ en Ω, entonces $u$ es subarmónica en $Ω$. \end{defn}
@@ -726,85 +726,92 @@ En este capítulo vamos a ver:
 	% Clase 6-4-2016
 	\subsubsection{Aplicaciones}
 
-	Vamos a ver cuatro tipos de aplicaciones: comparación, unicidad, estimación a priori y dependencia contínua.
+	Antes de ir directamente con la prueba y desarrollo de esos principios, vamos a ver de qué nos sirven.
 
 	\begin{example}[1 - Comparación]
-		Supongamos que tenemos una función superarmónica que es positiva en el borde:
+		El principio del máximo nos permite comparar dos posibles soluciones si el laplaciano de una es mayor que el de otra. Partimos de una función superarmónica que es positiva en el borde:
+		\[ \begin{cases}
+		- Δ u ≥ 0 & \text{en } Ω \\
+		\restr{u}{∂Ω} ≥ 0
+		\end{cases} \implies u ≥ 0 \text{ en }\adh{Ω} \]
 
-		\[\begin{array}{r}
-		-\Delta u ≥ 0 \text{ en } \Omega \\
-		u|_{\delta \Omega} ≥ 0
-		\end{array} \Rightarrow u ≥ 0 en \bar{\Omega} \]
+		Si tenemos otra solución $v$ ``menor'' que $u$ en el sentido de los datos, esto es,
+		\[ \begin{cases}
+		- Δ u ≥ -Δv & \text{en } Ω \\
+		\restr{u}{∂Ω}  ≥ \restr{v}{∂Ω}
+		\end{cases} \] podemos restar ambas soluciones y aplicar el principio del máximo para tener que
+		\[ \begin{cases}
+		- Δ u - (-Δv) ≥ 0 & \text{en } Ω \\
+		\restr{u-v}{∂Ω} ≥ 0
+		\end{cases} \implies u - v ≥ 0 \implies u ≥ v \text{ en }\adh{Ω} \]
 
-		Entonces aplicamos el principio de comparación débil:
-
-		\[\begin{array}{r}
-		-\Delta u ≥ -\Delta v \text{ en } \Omega \\
-		u|_{\delta \Omega} ≥ v|_{\delta \Omega}
-		\end{array} \Rightarrow u \eqreason[≥]{Comparación débil} v en \bar{\Omega} \]
-
-		Más tarde veremos un principio de comparación fuerte.
+		Es decir, que el principio del máximo implicará directamente un \concept{Principio\IS de comparación débil}. Más tarde veremos un principio de comparación fuerte para desigualdades estrictas.
 	\end{example}
 
 	\begin{example}[2 - Unicidad]
+
+		Con condiciones de Dirichlet, el principio del máximo nos dará unicidad de la solución. Partimos del problema
 		\[ \begin{cases}
-			-\Delta u = F \text{ en } \Omega \\
-			u|_{\delta \Omega} = g \leftarrow \text{ Dirichlet}
+			-\Delta u = F & \text{ en } \Omega \\
+			u|_{∂ \Omega} = g  & \text{ Dirichlet}
 			\end{cases}
 		\]
 
-		Imaginamos $u_1$ y $u_2$ soluciones:
-
-		\[\begin{array}{r}
-		-\Delta u_1 = -\Delta u_2 \text{ en } \Omega \\
-		u_1|_{\delta \Omega} = u_2|_{\delta \Omega}
-		\end{array} \Rightarrow u_1 \equiv u_2 en \bar{\Omega} \]
-
-		Tenemos una condición de unicidad pero que pasa con:
-
-		\[ -\Delta u = F, \left. \frac{\delta u}{\delta m} \right|_{\delta \Omega} = g\]
-
-		Es decir, condiciones Neumman.
+		Si tenemos $u_1, u_2$ solucione, tenemos que su resta resuelve el problema
+		\[ \begin{cases}
+			-\Delta u = 0 & \text{ en } \Omega \\
+			u|_{∂ \Omega} = 0 & \text{ Dirichlet}
+			\end{cases}
+		\] y el principio del máximo nos dice que $u_1 - u_2 = 0$, esto es, que la solución es única. Más tarde veremos qué que pasa con condiciones Neumann, condiciones de la forma
+		\[ \begin{cases}
+		-\Delta u = F \\
+		\left. \dpd{u}{m}\right|_{∂ \Omega} = g
+		\end{cases} \]
 
 	\end{example}
 
-	\begin{example}[3 - estimación a priori]
+	\begin{example}[3 - Estimación a priori]
+		El principio del máximo también nos permitirá sacar unas acotaciones a priori para la solución sin tener que calcularla, sólo a partir de los datos que se nos den en un dominio acotado.
 
-
+		El problema del que partimos es el siguiente:
 		\[\begin{cases}
-		-\Delta u  = F \text{ en } \Omega \text{ acotado } (\Omega \in B_R(0)) \\
-		u|_{\delta \Omega} = g
-		\end{cases}\]
-
+		-\Delta u  = F &\text{ en } \Omega ⊆ \bola_R(0)) \\
+		u|_{∂ \Omega} = g
+		\end{cases}\] con las siguientes cotas para $F$ y g:
 		\[ m \leq F \leq M, \quad \gor{m} \leq g \leq \gor{M} \]
 
-		Usamos la función auxiliar:
+		Querremos aplicar el principio de comparación con una función simple para tener una cota que nos valga para $u$. Definiremos entonces la siguiente función auxiliar
+		\[ \Phi(\vx) = A - B \norm{\vx}^2 \] con $A,B ∈ ℝ$ y ahora veremos cómo cuadrar esos coeficientes.
 
-		\[ \Phi(\vx) = A - \underbrace{B}_{\frac{M}{2N}} \norm{\vx}^2 \]
+		Si sacamos el laplaciano de Φ, vemos que tenemos que tomar $B = \frac{M}{2N}$, con $N$ la dimensión del espacio, para que sea mayor que $-Δu$:
+		\[ - \Delta \Phi = \dotsb = 2NB \eqreason{$\displaystyle B = \frac{M}{2N}$} M \geq F = -\Delta u \]
 
-		\[ - \Delta \Phi = … = 2NB \eqreason{$B = \frac{M}{2N}$} M \geq F = -\Delta u  \]
+		Viendo además el valor en el borde, tendremos que $A = \bar{M} + \frac{M}{2N}R^2$:
+		\[ \restr{\Phi(x)}{∂Ω} = A - \frac{M}{2N} \norm{\vx}^2 \eqreasonup[≥]{$\vx ∈ Ω ⊆ \bola_R(0)$} A - \frac{M}{2N} R^2 \eqreason{$A = \gor{M} + \frac{M}{2N} R^2 $} \gor{M} \geq g = u|_{∂\Omega} \]
 
-		Elegimos $A$ para tener $\Phi|_{\delta \Omega} \geq u |_{\delta\Omega}$
-
-		\[ \Phi(x) = A - \frac{M}{2N} \norm{\vx}^2 \geq A - \frac{M}{2N} R^2 \eqreason{$A = \gor{M} + \frac{M}{2N} R^2 $} \gor{M} \geq g = u|_{\delta \Omega} \]
-
-		\textbf{Conclusión}
-
-		\[ \Phi(\vx) = \gor{M} + \frac{M}{2N} R^2 - \frac{M}{2N} \norm{\vx}^2 \]
-		\[ \left\{ \begin{array}{l}
-		-\Delta \Phi \geq - \Delta u \text{ en } \Omega \\
-		\Phi |_{\delta \Omega} \geq u|_{\delta \Omega}
-
-		\end{array} \right\} \Rightarrow \Phi \geq u \]
-
-		\[ u(\vx) \leq \underbrace{\gor{M}}_{g} + \frac{M}{2N} (R^2 - \norm{\vx}^2), \forall \vx \in \Omega \]
-
+		Así, la función que nos queda es
+		\[ \Phi(\vx) = \gor{M} + \frac{M}{2N} R^2 - \frac{M}{2N} \norm{\vx}^2 \] y ahora podemos aplicar el principio de comparación. Tenemos que
+		\[ \begin{cases}
+		-\Delta \Phi \geq - \Delta u & \text{ en } \Omega \\
+		\Phi |_{∂ \Omega} \geq u|_{∂ \Omega}
+		\end{cases} \] luego $Φ ≥ u$ en $\adh{Ω}$. Finalmente, esto nos la cota que buscábamos:
+		\[ u(\vx) \leq \gor{M} + \frac{M}{2N} (R^2 - \norm{\vx}^2)\qquad \forall \vx \in \Omega \]
 	\end{example}
 
-	\begin{example}[4 - dependencia contínua]
+	\begin{example}[4 - Dependencia continua]
+		Como último ejemplo, podemos ver que tenemos una dependencia continua de los datos, es decir, que si cambiamos un poco los datos la solución también cambia poco. Sean $u_1, u_2$ soluciones respectivas de los problemas
+		\[ \begin{cases}
+			-\Delta u = F_1 & \text{ en } \Omega \\
+			u|_{∂ \Omega} = g_1
+			\end{cases}
+			\qquad
+			\begin{cases}
+			-\Delta u = F_2 & \text{ en } \Omega \\
+			u|_{∂ \Omega} = g_2
+			\end{cases}
+		\] con $\norm{F_1 - F_2}_∞ = \sup \abs{F_1 - F_2} < ε$ y $\norm{g_1 - g_2}_∞ < δ$.
 
-		(FALTA)
-
+		Podemos aplicar ahora la estimación a priori que veíamos en el ejemplo anterior al problema con datos $F_1 - F_2$ y $g_1 - g_2$ y tenemos que $u(\vx) ≤ ε + \frac{δ}{2N}(R^2 - \norm{\vx}^2)$, que es precisamente lo que buscábamos: cambios pequeños en los datos acotan los cambios en las soluciones
 	\end{example}
 
 	\obs Si tomamos la ecuación:
@@ -818,47 +825,27 @@ En este capítulo vamos a ver:
 
 	(DIBUJOS ESPINA DE LEBESGUE)
 
-	\subsubsection{Consecuencias}
+	\subsubsection{Propiedad de la media}
 
-		\subsubsubsection{Propiedad de la medida}
+		Una vez vistos ejemplos, vamos con la teoría y la demostración del principio de la media. Empezaremos con el caso fácil, en dimensión $N = 2$.
 
-		Caso $N = 2$:
-
-		\[ B_R (0,0) \subset \Omega \]
-
-		\[\begin{cases}
-			-\Delta u = 0 \text{ en } B_R
-			u|_{\delta B_R} = u
+		\begin{prop}[Propiedad\IS de la media (bolas en $ℝ^2$)] Sea $\bola_R(\va) ⊆ ℝ^2$ la bola de radio $R$ centrada en $\va ∈ ℝ^2$. Consideramos el problema \[
+		\begin{cases}
+			-\Delta u = 0 & \text{ en } \bola_R(\va) \\
+			u|_{∂\bola_R(\va)} = f
 		\end{cases}\]
 
-		Por el principio del máximo obtenemos unicidad:
+		Entonces, se cumple la propiedad de la media: \[ u(\va) = \frac{1}{2πR} \int_{∂\bola_R(\va)} f \]
 
-		Con $R = 1$: \[ u(r, \theta) = \int_{0}^{2\pi} u(1,s) P_r(\theta-s) \dif{s} = \frac{1}{2\pi} \int_0^{2\pi} u(1,s) \frac{1-r^2}{1+r^2 - 2r\cos(\theta-s)} \dif{s} \]
+		Es decir, el valor de $u$ en el centro de la bola es igual a su valor medio en el borde.
+		\end{prop}
 
-		Con $R$ genérico: $\frac{r}{R}$:
+		\begin{proof} Sabemos que la solución al problema del laplaciano en $\bola_R$ viene dado por el núcleo de Poisson \eqref{eq:NucleoPoisson}, esto es, \[ u(r, \theta) = \frac{1}{2π} \int_{0}^{2\pi} u(1,s) P_r(\theta-s) \dif{s} = \frac{1}{2\pi} \int_0^{2\pi} u(1,s) \frac{1-r^2}{1 + r^2 - 2r\cos(\theta-s)} \dif{s} \]
 
-		\[ \text{sol. en }B_R \equiv u(r, \theta) = \frac{1}{2\pi} \int_0^{2\pi} u(R,s) \frac{R^2-r^2}{R^2+r^2-2rR \cos(\theta-s)} \]
+		Sustituyendo para $r = 0$, tenemos que \[ u(0,θ) = \frac{1}{2π} \int_0^{2π} u(1,s) \dif s = \frac{1}{2π} \int_{∂\bola_1(\vec{0})} f \]
 
-		\[  \underbrace{u (x = 0, y=0)}_{\text{CAR}} = \underbrace{u(r, \theta)}_{\text{POL}} |_{r=0} = \]
-
-		\[ \frac{1}{2\pi} \int_0^{2\pi} \underbrace{u(R,s)}_{\text{POL}} ds =  \frac{1}{2\pi} \int_0^{2\pi} \underbrace{u(x=R\cos(s),y=R\sin(s))}_{\text{CAR}} ds\]
-
-		(DIBUJO)
-
-		Realizamos una traslación para obtener un resultado válido para cualquier $(a,b) \in \Omega$, y cualquiera $R$ tal que $B_R(a,b) \subset \Omega$.
-
-		\[ u(a,b) = \frac{1}{2\pi R} \int_0^{2\pi} u(a+R\cos s, b R \sin s) R ds \]
-
-		\[ C_R \equiv \{ (x-a)^2 + (y-b)^2 = R^2\}\]
-		\[ \sigma_R (s) = (a + R \cos s , b + R \sin s), s \in [0,2\pi]\]
-		\[ \sigma'_R (s) = (-R \sin s, R \cos s)\]
-		\[ \norm{\sigma'_R} = R\]
-
-		Obtenemos la propiedad de la media sobre circunferencias:
-
-		\[ u(a,b) = \frac{1}{2\pi} \int_0^{2\pi} u(\sigma_R (s)) \cdot \norm{\sigma'} \]
-
-		(FALTA Y LA FÓRMULA ANTERIOR ESTÁ INCOMPLETA)
+		Ahora sólo falta tener la solución en una bola de radio $R$ centrada en $\va = (a_1, a_2)$. Para eso hacemos la parametrización \[ \sigma_R (s) = (a + R \cos s , b + R \sin s) \quad s \in [0,2\pi) \] con $\norm{σ_R'} = R$. Entonces ya podemos sustituir y ver que efectivamente sale lo que buscamos: \[ \frac{1}{2πR} \int_{∂\bola_R(\va)} f \dif σ_R = \frac{1}{2πR} \int_0^{2π} f(σ_R(s)) \norm{σ_R'} \dif s = \frac{1}{2π} \int_0^{2π} u(1, s) \dif s  = u(0, θ) = u(\va) \]
+		\end{proof}
 
 		\obs La propiedad de la media sobre circunferencias $C_R$ $\Rightarrow$ Propiedad de la media sobre círculos $B_R$
 
@@ -991,8 +978,8 @@ En este capítulo vamos a ver:
 		\begin{defn}[Desigualdad\IS para funciones sub/superarmónicas]
 
 			\begin{itemize}
-				\item $\Delta u \leq 0 \Rightarrow u(0) \leq \frac{1}{|\delta B_R|} \int_{\delta B_R} u d \sigma_R $
-				\item $- \Delta u \geq 0 \Rightarrow u(0) \geq \frac{1}{|\delta B_R|} \int_{\delta B_R} u d \sigma_R $
+				\item $\Delta u \leq 0 \Rightarrow u(0) \leq \frac{1}{|∂ \bola_R|} \int_{∂ \bola_R} u d \sigma_R $
+				\item $- \Delta u \geq 0 \Rightarrow u(0) \geq \frac{1}{|∂ \bola_R|} \int_{∂ \bola_R} u d \sigma_R $
 			\end{itemize}
 
 		\end{defn}
@@ -1021,6 +1008,8 @@ En este capítulo vamos a ver:
 		\end{itemize}
 
 		La segunda aplicación sería la Unicidad:
+
+		\subsubsection{Principio del máximo fuerte}
 
 		\obs Hasta ahora tenemos unicidad para condiciones de Dirichlet, por el principio del máximo (débil).
 
@@ -1350,7 +1339,12 @@ En este capítulo vamos a ver:
 
 	 Con la varilla entre dos bloques de hielo, lo que esperamos es que la temperatura de la varilla baje y que tengamos temperaturas mínimas en los extremos. Si resulta que la varilla está más fría que el hielo el proceso contrario ocurrirá y se calentará. En este caso el mínimo se debería alcanzar en algún punto del instante inicial y los máximos estarían en los extremos. Lo que podemos ver es que no es razonable pensar que los mínimos y máximos van a estar en algún punto que no sea los extremos de la varilla o la varilla en el instante inicial.
 
-	 (DIBUJOS EVOLUCIÓN CALOR Y MÁXIMOS Y MÍNIMOS)
+	 \begin{figure}[hbtp]
+	 \centering
+	 \inputtikz{EcCalorMaximosMinimos}
+	 \caption{Máximos y mínimos en la ecuación del calor: no podemos tenerlos por el medio, sólo en los bordes laterales (verdes) y en el inferior (morado), lo que llamaremos la frontera parabólica.}
+	 \label{fig:EcCalorMaximosMinimos}
+	 \end{figure}
 
 	 Esto nos va a llevar a un principio del máximo algo más fuerte que nos va a restringir en que partes de la frontera se va a alcanzar.
 
@@ -1358,7 +1352,7 @@ En este capítulo vamos a ver:
 	 	\[\partial_P Q_T = \{(x,0), x \in [0,L]\} \cup \{(0,t), t \in [0,T]\} \cup \{(L,t), t \in [0,T]\}\]
 	 \end{defn}
 
-	 \begin{theorem}[Principio\IS del máximo débil]
+	 \begin{theorem}[Principio\IS del máximo débil] \label{thm:MaximoDebilCalor}
 	 	\[ \begin{cases}
 	 		u_{t} - u_{xx} = 0, x \in (0,L), t > 0 \\
 			u(x,0) = f(x) \\
