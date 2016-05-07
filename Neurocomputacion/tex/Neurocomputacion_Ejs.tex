@@ -15,13 +15,13 @@ w_i=w_i+x_iy
 
 siendo $y$ el valor esperado en la neurona de salida que estamos ajustando.
 
-Si nuestra red tuviera varias neuronas de salida para cada una de ellas deberíamos aplicar el mismo procedimiento.
+Si nuestra red tuviera varias neuronas de salida, deberíamos aplicar el mismo procedimiento a cada una de ellas.
 
 Ahora debemos ver como serán los datos de entrenamiento que definen la función XOR, que están recogidos en la siguiente tabla:
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{A} & \textbf{B} & \textbf{A XOR B}\footnote{Consideramos los valores de salida con una codificación bipolar ya que esta red no es capaz de aprender nada de aquellos patrones de entrenamiento con output nulo} \\
+\textbf{A} & \textbf{B} & \textbf{A XOR B} \\
 \hline
 -1 & -1 & -1 \\
 -1 & 1 & 1 \\
@@ -30,6 +30,7 @@ Ahora debemos ver como serán los datos de entrenamiento que definen la función
 \hline
 \end{tabular}
 \end{center}
+Donde hemos considerados los valores de salida con una codificación bipolar ya que esta red no es capaz de aprender nada de aquellos patrones de entrenamiento con output nulo
 
 Es evidente ver que nuestra red tendrá un total de 4 neuronas siendo una de ellas la neurona de salida, por lo que nuestro vector de pesos inicializado será:
 \[w = (0,0,0) \text{ siendo } w_0 \text{ el peso asociado al ``bias''}\]
@@ -88,11 +89,6 @@ mistakes occur in the pixels where the training patterns differ.)
 Example 2.8 could be rephrased as an example of distinguishing the pattern X
 from not-X (rather than specifically detecting X versus 0). Another pattern (for not X) that might be added to the net is:
 
-\begin{center}
-% TODO: Meter esta imagen.
-%\includegraphics[width=0.3\textwidth]{img/pattern.png}
-\end{center}
-
 \ppart Find the new weights to store this pattern together with the two patterns used in
 Example 2.8. (You can work from the weights in the example.) What does the bias
 value tell you? How does the ability of the net to respond to noisy (missing or mis-
@@ -138,9 +134,9 @@ Vamos a completar ahora el entrenamiento de la red con el nuevo patrón que se n
 +1x_{21} & -1x_{22} & -1x_{23} & -1x_{24} & +1x_{25} \\
 \end{array}\]
 
-Podemos comprobar que tras este entrenamiento el valor de la neurona de salida tras leer el patrón $X$ es $Σ=35$, con lo que se ha reducido la capacidad de detectar errores y fallos a la hora de clasificar el patrón $X$.
+Podemos comprobar que tras este entrenamiento el valor de la neurona de salida tras leer el patrón $X$ es $Σ=35$. Sin embargo ahora hay datos que pueden perderse provocando una reducción de Σ en sólo una unidad.
 
-En general, a medida que añadamos patrones distintos de $X$ para el entrenamiento, habrá más distribuciones para las que el resultado Σ deba ser negativo. Por tanto cada vez menos ruido será necesario para hacer que la red clasifique mal un patrón $X$.
+En general, a medida que añadamos patrones distintos de $X$ para el entrenamiento aumentamos la capacidad de generalización de la red de modo que el resultado es menos específico y es capaz de eliminar mejor el ruido.
 \end{problem}
 
 \begin{problem}[4]
@@ -302,7 +298,7 @@ Operando sobre los datos de entrada en formato bipolar tenemos:
 \end{tabular}
 \end{center}
 
-Los resultados esperados (columna Target) los he deducido buscando el vecino más próximo. Podemos comprobar que los resultados esperados coinciden exactamente con los obtenidos salvo, lógicamente, en los casos donde no hay un resultado esperado claro.
+Los resultados esperados (columna Target) los hemos deducido buscando el vecino más próximo. Podemos comprobar que los resultados esperados coinciden exactamente con los obtenidos salvo, lógicamente, en los casos donde no hay un resultado esperado claro.
 
 \end{problem}
 
@@ -393,7 +389,7 @@ La tabla representada en el ejemplo seguiría siendo la misma aunque los pesos a
 
 Vamos a imitar la demostración del libro con el cambio dado en el enunciado.
 
-Consideramos, como se hace en la demostración del libro, el conjunto de entrenamiento, $F$, formado por lo patros de entrenamiento con salida esperada $1$ y la negación de los patrones de entrenamiento con salida esperada $-1$. Así, todos los patrones de $F$ tienen salida esperada $1$.
+Consideramos, como se hace en la demostración del libro, el conjunto de entrenamiento, $F$, formado por lo patrones de entrenamiento con salida esperada $1$ y la negación de los patrones de entrenamiento con salida esperada $-1$. Así, todos los patrones de $F$ tienen salida esperada $1$.
 
 Definimos como $\vec{w}^*$ el vector de pesos solución, cuya existencia suponemos. Así:
 \begin{equation}\label{eq:vectorPesosSol}
@@ -404,23 +400,23 @@ Empezamos con un vector de pesos nulo $\vec{w}(0)=\vec{0}$. Con cada patrón de 
 \[\vec{w}(i) = \vec{w}(i-1)+α\cdot \vx(i-1)\]
 
 Cuando iteremos sobre todos los patrones de entrenamiento tendremos:
-\[\vec{w}(k) = \vec{w}(0) + α\cdot \sum_{i=0}^{k-1} \vec{w}(i)\]
+\[\vec{w}(k) = \vec{w}(0) + α\cdot \sum_{i=0}^{k-1} \vec{x}(i)\]
 donde estamos iterando sobre aquellos patrones de entrenamiento que produjeron un error.
 
 De la ecuación \ref{eq:vectorPesosSol}, sabiendo que el conjunto de patrones de entrenamiento es finito, podemos deducir que existe
 \[m=\min\{\vx \cdot \vec{w}^*\}\]
 La existencia de este mínimo nos permite escribir:
-\[\vec{w}(k)\cdot \vec{w}^* = \vec{w}(0)\cdot \vec{w}^*+αkm\]
+\[\vec{w}(k)\cdot \vec{w}^* = \vec{w}(0)\cdot \vec{w}^*+α\cdot k\cdot m\]
 puesto que $\vx(i)\cdot \vec{w}^* \geq m \ \forall i$.
 
 Empleando ahora la desigualdad de Cauchy-Schwartz podemos escribir
 \begin{equation}\label{eq:Dif1}
-\norm{\vec{w}(k)}^2 \geq \frac{(\vec{w}(k)\cdot \vec{w}^*)^2}{\norm{\vec{w}^*}^2} \geq  \frac{(\vec{w}(0)\cdot \vec{w}^*+αkm)^2}{\norm{\vec{w}^*}^2}
+\norm{\vec{w}(k)}^2 \geq \frac{(\vec{w}(k)\cdot \vec{w}^*)^2}{\norm{\vec{w}^*}^2} \geq  \frac{(\vec{w}(0)\cdot \vec{w}^*+α\cdot k\cdot m)^2}{\norm{\vec{w}^*}^2}
 \end{equation}
 
 Ahora vamos a comprobar que el valor $k$ no puede ser arbitrariamente grande. Consideramos
 \[\vec{w}(k)=\vec{w}(k-1)+\vx(k-1)\]
-sabiendo que
+sabiendo que\footnote{Estamos considerando sólo aquellos vectores $\vx(i)$ que provocan aprendizaje en la red, es decir, aquellos para los que $\vx(i)\cdot \vec{2}(i) \leq 0$.}
 \[\vx(k-1)\cdot \vec{w}(k-1) \leq 0\]
 podemos ver que
 \[\norm{\vec{w}(k)}^2 \leq \norm{\vec{w}(k-1)}^2 + \norm{\vx(k-1)}^2\]
@@ -444,7 +440,7 @@ Combinando las desigualdades \ref{eq:Dif1} y \ref{eq:Dif2} y considerando que el
 
 \begin{problem}[9]
  Show that the use of a bias is essential in Example 2.11. That is, show that it is
-impossible to find weights W I and W2 for which the points (1,1), (1,0), (0,1), and (0,0)
+impossible to find weights W1 and W2 for which the points (1,1), (1,0), (0,1), and (0,0)
 are classified correctly. First, show that (0,0) will never be classified correctly, and
 in fact, no learning will ever occur for that point. Then, neglecting (0,0), consider
 whether (1,1), (1,0), and (0,1) can be classified correctly. That is, do weights WI and
@@ -612,7 +608,7 @@ would have on the binary representation of the AND function in Example 2.11.
 
 \solution
 
-Según el libro: ``Principles of Neurodynamics'' un sistema de aprendizaje como el descrito en el enunciado es un sistema \textbf{gamma}, que se define en el libro como sigue:
+Según el libro: ``Principles of Neurodynamics'' un sistema de aprendizaje como el descrito en el enunciado es un sistema \textbf{gamma}, que se define como sigue:
 
 \begin{defn}[Sistema Gamma]
 El sistema de aprendizaje gamma es una regla que dicta cómo modificar los pesos de las conexiones que llegan a una determinada neurona de tal forma que a todas las conexiones activas sufren la misma variación manteniendo la suma total de las conexiones constante.
@@ -1475,7 +1471,7 @@ Aunque pueden emplearse redes neuronales multicapa con más de una capa intermed
 
 El objetivo de las redes neuronales es ser capaz de predecir la salida de ciertos patrones y para ello se les entrena con unos patrones dados de los que conocemos su salida.
 
-No obstante, si entrenamos demasiado a la red, puede que esta se vuelve muy especifica para los patrones de entrenamiento dados\footnote{Esto no ocurre con el perceptrón, que sólo actualiza pesos si predice mal la salida} de modo que cuando analice otros datos parecidos a los iniciales no sea capaz de notarlo.
+No obstante, si entrenamos demasiado a la red, puede que esta se vuelva muy específica para los patrones de entrenamiento dados\footnote{Esto no ocurre con el perceptrón, que sólo actualiza pesos si predice mal la salida} de modo que cuando analice otros datos parecidos a los iniciales no sea capaz de notarlo.
 
 Es por ello que hay que encontrar un punto justo entre precisión clasificando los patrones de entrenamiento y capacidad de aceptar variaciones pequeñas, manteniendo una correcta clasificación.
 
@@ -1498,7 +1494,7 @@ Al hacer este cambio seguimos conservando la propiedad de que la derivada puede 
 En concreto si queremos que $a=-1$ y $b=1$, es decir, queremos la función sigmoidal bipolar, este procedimiento nos permite obtener el resultado visto anteriormente.
 
 \subsubsection{Cambiando la pendiente}
-En ocasiones puede interesarnos cambiar la pendiente de la funció de activación de modo que el paso del valor más bajo al más alto posible sea más rápido.
+En ocasiones puede interesarnos cambiar la pendiente de la función de activación de modo que el paso del valor más bajo al más alto posible sea más rápido.
 
 Esto implica considerar la función sigmoidal binaria como:
 \[f(x) = \frac{1}{1+e^{-σx}}\]
@@ -1519,8 +1515,7 @@ En esta ocasión seguimos conservando la buena propiedad comentada anteriormente
 
 \begin{problem}[1]\label{ej:3_1}
 Show that yet another way of viewing the formation of the weight matrix for Hebb learning is to form an $n\times p$ matrix $S$ whose columns are the input paterns
-\[s(p) = (s_1(p),\cdots, s_i(p),\cdots s_n(p))\]
-es decir
+\[s(p) = (s_1(p),\cdots, s_i(p),\cdots s_n(p)), \; i.e.,\]
 \[S = \left( \begin{array}{ccccc}
 s_1(1) & . & . & . & s_1(P) \\
 . & . & . & . & . \\
@@ -1530,17 +1525,16 @@ s_n(1) & . & . & . & s_n(P) \\
 \end{array}\right)\]
 
 and a $p \times m$ matrix $T$ whose rows are the output patterns
-\[t(p) = (t_1(p)), \cdots, t_j(p), \cdots t_m(p))\]
-es decir
+\[t(p) = (t_1(p)), \cdots, t_j(p), \cdots t_m(p)), \; i.e.,\]
 \[T = \left( \begin{array}{ccccc}
 t_1(1) & . & . & . & t_m(p) \\
 . & . & . & . & . \\
 . & . & . & . & . \\
 . & . & . & . & . \\
 t_1(1) & . & . & . & t_m(p) \\
-\end{array}\right)\]
+\end{array}\right).\]
 
-then the product $S\cdot T$ gives the weight matrix $W$:
+Then the product $S\cdot T$ gives the weight matrix $W$:
 \[W = S\cdot T =  \left( \begin{array}{ccccc}
 \sum_{p=1}^P s_1(p)t_1(p) & . & . & . & \sum_{p=1}^P s_1(p)t_m(p) \\
 . & . & . & . & . \\
@@ -1557,8 +1551,8 @@ La regla de aprendizaje Hebb consiste en actualizar los pesos en cada iteración
 con independencia de si la predicción fue correcta o no.
 
 Tras repetir este proceso de aprendizaje con todos los patrones tendremos:
-\[Δω_{ij} = \sum_{x:y} x_iy_j\]
-que es lo mismo que obtenemos multiplicando las matrices $S$ y $T$ descritas en el enunciado.
+\[W_{ij} = \sum_{x:y} x_iy_j\]
+que es lo mismo que obtenemos multiplicando las matrices $S$ y $T$ descritas en el enunciado. Para verlo basta con identificar $y_j = t_j(p)$ y $x_i = s_i(p)$ donde $p$ itera sobre todos los patrones de entrenamiento.
 
 \end{problem}
 
@@ -1576,10 +1570,10 @@ Partiendo de la matriz $W$ calculda en el ejercicio anterior, tomando ahora un v
 
 Los patrones ``almacenados'' en la red son simplemente los patrones usados para entrenamiento, para los que la red se ha preparado para dar una respuesta ``perfecta''.
 
-Si el vector de entrada que estamos analizando en este momento $\vx$ es perpendicular a alguno de los vectores usados para el entrenamiento tendremos
+Si el vector de entrada que estamos analizando en este momento, $\vx$, es perpendicular a alguno de los vectores usados para el entrenamiento tendremos
 \[s(x)\cdot s^T(p) = 0\]
 
-con lo que ciertos términos del sumatorio \ref{eq:salida} desaparecerían (al hacerse nulos)
+con lo que ciertos términos del sumatorio \ref{eq:salida} desaparecerían (al hacerse nulos).
 
 \end{problem}
 
@@ -1719,7 +1713,7 @@ s(4) = (0,1,1,0) & t(4) = (0,1)
 
 Emplear la forma híbrida simplemente consiste en tomar los vectores de entrenamiento en forma binaria pero \emph{considerarlos bipolares} a la hora del entrenamiento.
 
-Como los estamos considerando binarios, la función de activación que trabajará en la red será la correspondiente a datos binarios, aunque haya sido entrenada de forma bipolar (de ahí que se llamen hibridas).
+Como los estamos considerando binarios, la función de activación que trabajará en la red será la correspondiente a datos binarios, aunque haya sido entrenada de forma bipolar (de ahí que se llamen híbridas).
 
 La forma de realizar esto consiste en sustituir la fórmula del peso de cada conexión del algoritmo Hebb:
 \[w_{ij} = \sum_p s_i(p)t_j(p)\]
@@ -1758,6 +1752,24 @@ tenemos
 \end{center}
 
 Puesto que los patrones de entrenamiento son independientes la red es capaz de aprenderlos todos.
+
+\spart
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Entrada } & \textbf{Salida esperada} & \textbf{Salida predicha} \\
+\hline
+(1,0,1,0) & (1,0) & (1,0) \\
+(1,0,1,1) & (1,0) & (1,0) \\
+(0,1,0,1) & (0,1) & (0,1) \\
+(0,1,1,1) & (0,1) & (0,1) \\
+(1,1,0,0) & ? & (0,0) \\
+\hline
+\end{tabular}
+\end{center}
+
+Podemos observar que la red es bastante resistente a fallos, dando una salida correcta cuando una de las entradas es errónea.
 \end{problem}
 
 \begin{problem}[7]
@@ -1804,7 +1816,7 @@ Use the Hebb rule to store the vectors (1, 1, 1, 1) and (1, 1, - 1, - 1) in an a
 
 Una \concept{red neuronal autoasociativa} se caracteriza por la presencia de tantas neuronas de salida como de entrada y el empleo de los patrones de entrenamiento con salida idéntica a la entrada.
 
-Estas redes sirven para memorizar una serie de patrones a fin de poder detectarlos posteriormente y también detectar \textbf{pequeñas modificaciones} sobre estos patrones es decir, detectar los patrones aún con la presencia de ruido.
+Estas redes sirven para memorizar una serie de patrones a fin de poder detectarlos posteriormente y también detectar \textbf{pequeñas modificaciones} sobre estos patrones es decir, identificar los patrones aún con la presencia de ruido.
 
 En ocasiones se establecen los pesos de la diagonal, aquellos que conectan una nuerona de entrada con su equivalente en la salida, a 0 de modo que se incrementa la capidad de la red para generalizar.
 
@@ -1855,8 +1867,9 @@ Realizamos la multiplicación obteniendo:
 2 & 2 & 0 & 0 \\
 0 & 0 & 2 & 2 \\
 0 & 0 & 2 & 2 \\
-\end{array}\right) = (4,4,-4,-4) \implies_f (1,1,1,1)\]
+\end{array}\right) = (4,4,-4,-4) \Rightarrow_f (1,1,1,1)\]
 
+donde $\Rightarrow_f$ indica que se ha aplicado la función de activación
 
 \spart
 
@@ -1868,7 +1881,7 @@ Al analizar el vector tenemos
 2 & 2 & 0 & 0 \\
 0 & 0 & 2 & 2 \\
 0 & 0 & 2 & 2 \\
-\end{array}\right) = (4,4,2,2) \implies_f (1,1,1,1)\]
+\end{array}\right) = (4,4,2,2) \Rightarrow_f (1,1,1,1)\]
 
 \spart
 
@@ -2029,7 +2042,7 @@ layer, the initial activation of the other layer is set to zero.
 \solution
 \doneby{Pedro}
 
-La idea de las redes asociativas bidireccionales es tener dos capas de neuronas de forma que cada capa sea capaz de transmitir información a la siguiente. La conexión entre cada neurona de una capa (llamémosla $X$) y la otra capa (llamémosla $Y$) es bidireccional, siendo el peso único.
+La idea de las \concept{redes asociativas bidireccionales} es tener dos capas de neuronas de forma que cada capa sea capaz de transmitir información a la otra (de ahi que se llamen \emph{bidireccionales}. La conexión entre cada neurona de una capa (llamémosla $X$) y la otra capa (llamémosla $Y$) es bidireccional, siendo el peso único.
 
 Esta red puede recibir una entrada en cualquier de sus dos niveles y producir una salida en el otro. Dada la relación de los enlaces descrita anteriormente tenemos que la matriz de pesos en un sentido es $W$ y en el sentido contrario sería $W^T$.
 
@@ -2306,17 +2319,14 @@ En esta sección las cuentas a realizar son las mismas de las dos secciones ante
 3 & (0,1,0) & (0,1) \\
 \hline
 \end{tabular}
-
-Si la última fila de la correspondiente tabla no se corresponde con una de las siguiens parejas de vectores
+\end{enumerate}
+\end{multicols}
+Si la última fila de la correspondiente tabla no se corresponde con una de las siguientes parejas de vectores
 \[\begin{array}{ll}
 x(1)=(1,0,1) & y(1)=(1,0)\\
 x(2) = (0,1,0) & y(2) = (0,1)
 \end{array}\]
 significa que el patrón no ha podido ser clasificado correctamente. La red no encuentra el grupo al que pertenece.
-
-\end{enumerate}
-\end{multicols}
-
 \end{problem}
 
 \begin{problem}[11]
@@ -2350,7 +2360,7 @@ En este apartado deberíamos repetir el tipo de cuentas que hemos realizado en e
 
 Sin embargo, por la propia construcción de la matriz de pesos (que se hizo atendiendo a la regla de Hebb) sabemos que la red ha aprendido perfectamente los patrones dados de derecha a izquierda.
 
-Es decir, para cualquier patrón $s(i)$ la salida de la red será $t(i)$. No obstante esto no ocurre con los patrons $t(i)$ ya que, por definición, cada patrón llega a dos valores distintos de $s()$.
+Es decir, para cualquier patrón $s(i)$ la salida de la red será $t(i)$. No obstante esto no ocurre con los patrones $t(i)$ ya que, por definición, cada patrón llega a dos valores distintos de $s()$.
 
 Las siguientes tablas muestran lo que ocurre al trabajar con los dos primeros patrones de entrenamiento:
 
@@ -2426,7 +2436,7 @@ La siguiente tabla muestra los resultados obtenidos al trabajar con algunos vect
 
 \section{Resumen de contenidos Teóricos}
 \subsection{Algoritmos de aprendizaje}
-En esta sección el único algoritmo de aprendizaje con el que vamos a trabajar es la \textbf{regla Hebb}. Esta regla ya ha sido estudiada anteriormente para el caso en que sólo tuviéramos una neurona de salida. A continuación mostramos el algoritmo correspondiente cuando hay varias neuronas de salida.
+En esta sección el único algoritmo de aprendizaje con el que hemos trabajado es la \textbf{regla Hebb}. Esta regla ya ha sido estudiada anteriormente para el caso en que sólo tuviéramos una neurona de salida. A continuación mostramos el algoritmo correspondiente cuando hay varias neuronas de salida.
 \begin{enumerate}
 \item Inicializamos los pesos a 0.
 \item Para cada patrón de entrenamiento:
@@ -2441,13 +2451,13 @@ En esta sección el único algoritmo de aprendizaje con el que vamos a trabajar 
 
 Para cada par entrada-salida de patrones de entrenamiento calcularíamos una matriz de pesos para, finalmente, sumar todas estas matrices.
 
-Como se mostró en el primer ejercicio de la sección anterior los pesos obtenidos por la regla Hebb coinciden con los obtenidos al realizar el producto de la matriz cuyas entradas son las entradas de los patrones de entrenamiento y la matriz cuyas filas son las salidas de dichos patrones.
+Como se mostró en el primer ejercicio de la sección anterior (\ref{ej:3_1}) los pesos obtenidos por la regla Hebb coinciden con los obtenidos al realizar el producto de la matriz cuyas entradas son las entradas de los patrones de entrenamiento y la matriz cuyas filas son las salidas de dichos patrones.
 
 \subsection{Memorización de los patrones de entrenamiento}
 
-Es importante observar que si los vectores con los que construimos la matriz de pesos son perpendiculares el ŕesultado obtenido será ópimo.
+Es importante observar que si los vectores con los que construimos la matriz de pesos son perpendiculares el resultado obtenido será ópimo.
 
-Sea $W$ la matriz de pesos es sencillo ver
+Sea $W$ la matriz de pesos, es sencillo ver
 \[W = \sum_{p=1}^Ps(p)^Tt(p)\]
 donde $s(p)$ son los vecotres de entrada y $t(p)$ las salidas esperadas de los patrones de entrenamiento.
 
@@ -2457,9 +2467,9 @@ s(i)W = \sum_{p=1}^Ps(i)s(p)^Tt(p)
 \end{equation}
 pero, puesto que los vectores son perpendiculares tenemos $s(i)s(j)^T=0, \forall i\neq j$. Así
 \[s(i)W = s(i)s(i)^Tt(p) = \norm{s(i)}^2t(p)\]
-por tanto la salida es el vector $t(p)$\footnote{La cuenta muestra que obtenemos un múltiplo que, al pasar por la función de activación, dará como salida el vector $t(p)$.}
+por tanto la salida es el vector $t(p)$\footnote{La cuenta muestra que obtenemos un múltiplo \textbf{positivo} que, al pasar por la función de activación, dará como salida el vector $t(p)$.}
 
-\obs Si los patrones escogidos para el entrenamiento no son perpendiculares, el aprendizaje no siempre será perfecto puesto que el sumatorio de la ecuación \ref{eq:inputW} tendrá más de un término no nulo con lo que el resultado perfecto mostrado se verá afectado por ciertas desviaciones que pueden llegar a obtener una predicción errónea.
+\obs Si los patrones escogidos para el entrenamiento no son perpendiculares, el aprendizaje no siempre será perfecto puesto que el sumatorio de la ecuación \ref{eq:inputW} tendrá más de un término no nulo con lo que el resultado mostrado se verá afectado por ciertas desviaciones que pueden llegar a dar lugar a una predicción errónea.
 
 
 \subsection{Regla delta}
@@ -2501,9 +2511,9 @@ La distinción de estas redes reside en la forma en que se aplican sobre un cier
 \begin{enumerate}
 \item \[y_{in_j} = x_i +\sum_j y_jw_{ji}\]
 \item \[y_i = \left\{ \begin{array}{lll}
-1 & iff & y_{in_j}> \theta_i \\
-y_i & iff y y_{in_j} = \theta_i \\
-0 & iff & y_{in_j}<\theta_i
+1 & sii & y_{in_j}> \theta_i \\
+y_i & sii & y_{in_j} = \theta_i \\
+0 & sii & y_{in_j}<\theta_i
 \end{array}\right.\]
 \end{enumerate}
 \end{enumerate}
@@ -2684,7 +2694,7 @@ por lo que el nuevo peso para la neurona será
 
 \spart
 
-Para el nuevo vector dado es sencillo ver que el vector de pesoso más cercano según la distancia euclídea es $\vec{w}_6 = (0.4,0.4)$.
+Para el nuevo vector dado es sencillo ver que el vector de pesos más cercano según la distancia euclídea es $\vec{w}_6 = (0.4,0.4)$.
 
 En esta ocasión la clasificación no es correcta por lo que la actualización del peso de la neurona ganadora viene dada por
 \[Δ\vec{w}_j = -α(x-\vec{w}_j)\]
@@ -2698,9 +2708,9 @@ La elección de la neurona ganadora no cambia y la clasificación sigue siendo i
 
 \spart
 
-El efecto de ambos vectores es muy similar. Atendiendo al diagrama dada queremos conseguir que los vectores de entrada con coordenadas entre 0 y 0.5 sean clasificados como Class 1. Para lograr esto nos interesa que los pesos de las neuronas Class 1 estén dentro de este intervalo.
+El efecto de ambos vectores es muy similar. Atendiendo al diagrama dado queremos conseguir que los vectores de entrada con coordenadas entre 0 y 0.5 sean clasificados como Class 1. Para lograr esto nos interesa que los pesos de las neuronas Class 1 estén dentro de este intervalo.
 
-Podría considerarse que el segundo vector (el presentado en el partado c)) tiene un mejor efecto ya que se aleja de la posible clasificación errónea de un vector $\vec{s}=(0.5,0.5)$
+Podría considerarse que el segundo vector (el presentado en el partado c) tiene un mejor efecto ya que se aleja de la posible clasificación errónea de un vector $\vec{s}=(0.5,0.5)$
 
 \end{problem}
 
@@ -2759,13 +2769,14 @@ La función de activación es
 
 Una vez ``alimentamos'' la red con un vector de entrada iteramos en la red hasta que todos los pesos se vuelven 0 excepto uno. La neurona con valor no nulo es considerada la ganadora y su entrada será el máximo de todas las entradas.
 
-\obs Esta red neuronal puede no tener mucho valor en si misma pero se utiliza a menudo como parte del proceso de otras redes neuronales más complejas.
+\obs Esta red neuronal puede no tener mucho valor en si misma pero se utiliza a menudo como parte del proceso de otras redes neuronales más complejas. En concreto, aunque \emph{no se muestre en los diagramas} todas las elecciones de ``máximo'' llevadas a cabo en los ejercicios de la sección anterior son válidas porque podrían llevarse a cabo con una red Maxnet.
 
 \subsection{Sombrero mejicano}
-Toma su nombre de el parecido que hay entre el grafo que representa esta red neuronal, que podemos observar en \ref{figure:mexicanHat} y el típico sombrero mejicano.
+Las redes \concept{Sombrero mejicano} toman su nombre de el parecido que hay entre el grafo que representa esta red neuronal, que podemos observar en la figura \ref{figure:mexicanHat} y el típico sombrero mejicano.
 
 \begin{center}
 \includegraphics[width=0.8\textwidth]{img/mexicanHat.png}
+\captionof{figure}{Diagrama de la red de sombrero mejicano}
 \label{figure:mexicanHat}
 \end{center}
 
@@ -2776,14 +2787,15 @@ En esta red definimos un radio de proximidad tal que las neuronas dentro de ese 
 \item Inicializamos los pesos:
 \[w_k = C_1 \; \text{ para } k = 0,1,...,R_1\]
 \[w_k = C_2 \; \text{ para } k = R_1+1,...,R_2\]
-\item Inicializamos $\vx\_old=\vec{0}$.
 \item Inicializamos $\vx=\vec{s}$ siendo $\vec{s}$ el patrón de entrada
+\item Inicializamos $\vx\_old = \vx$.
 \item Mientras no alcancemos el máximo de iteraciones:
 \begin{enumerate}
 \item Calculamos la entrada neta de cada neurona
 \[\vx_i = C_1 \sum_{k=-R_1}^{R_1}\vx\_old_{i+k} + C_2 \sum_{k=R_1+1}^{R_2}\left(\vx\_old_{i+k}+\vx\_old_{i-k}\right)\]
 \item Aplicamos la \textbf{función de activación}
 \[\vx\_old_i = \min(x\_max, \max(0,\vx_i))\]
+donde $x\_max$ es un valor definido en el primer paso del algoritmo. Se emplea para evitar que una activación crezca indefinidamente.
 \end{enumerate}
 \end{enumerate}
 
@@ -2807,9 +2819,9 @@ y los bias
 \obs La idea de estas redes es que cada neurona de salida tenga ``almacenado'' un vector de entrenamiento. La neurona ganadora será aquella que almacenara el vector más similar al vector de entrada.
 
 \subsection{Redes de Kohonen}
-Las redes de kohonen son redes auto-organizativas que asumen una estructura topológica en sus neuronas, es decir, tienen las nociones de cercanía/lejanía entre ciertas neuronas.
+Las \concept{redes de kohonen} son redes auto-organizativas que asumen una estructura topológica en sus neuronas, es decir, tienen las nociones de cercanía/lejanía entre ciertas neuronas.
 
-Cada una de las $n$ neuronas de entrada está conectada a todas las $m$ neuronas de salida. Su funcionamiento es \emph{similar} al de las redes hamming salvo que las neuronas cercanas a una dada afectan a su peso.
+Cada una de las $n$ neuronas de entrada está conectada a todas las $m$ neuronas de salida. Su funcionamiento es \emph{similar} al de las redes Hamming salvo que las neuronas cercanas a una dada afectan a su peso.
 
 El entrenamiento se lleva a cabo mediante el siguiente algoritmo:
 \begin{enumerate}
@@ -2821,7 +2833,7 @@ El entrenamiento se lleva a cabo mediante el siguiente algoritmo:
 \begin{enumerate}
 \item Para cada neurona de salida calculamos
 \[D(j)=\sum_i (w_{ij}-x_i)^2\]
-\item Buscamos el mínimo de os $D(j)$ que tendrá índice $J$
+\item Buscamos el mínimo de los $D(j)$ que tendrá índice $J$
 \item Para todas las neuronas ``cercanas'' a $\vy_J$:
 \[Δw_{ij} = α(x_i-w_{ij})\]
 \end{enumerate}
@@ -2854,7 +2866,7 @@ es decir, la neurona cuyos pesos de entrada más se acercan al vector $\vx$.
 \end{enumerate}
 
 \subsection{Contrapropagación}
-Las redes de \concept{contrapropagación} son redes neuronales multicapa que constan de cpaa de entrada, salida y clustering. Suelen emplearse para comprimir datos, aproximar funciones o asociar patrones.
+Las redes de \concept{contrapropagación} son redes neuronales multicapa que constan de tes capas: entrada, salida y clustering. Suelen emplearse para comprimir datos, aproximar funciones o asociar patrones.
 
 El entrenamiento de este tipo de redes se lleva a cabo en dos fases en cada una de las cuales nos fijamos en una parte de la red neuronal ligeramente diferente, como muestran las imágenes \ref{figure:counterpropagationPhase1}, \ref{figure:counterpropagationPhase2} y \ref{figure:counterpropagationTotal}
 
@@ -2906,8 +2918,8 @@ El algoritmo de entrenamiento es:
 \[Δw_{kj} = β(\vy_k - w_{kj})\]
 \obs Llegados a este punto α y β son muy pequeños ya que han ido siendo reducidos en cada iteración de la fase 1.
 \item Actualizar los pesos desde la neurona $Z_j$ ganadora hasta las capas de salida
-\[Δu_{ij} = a(\vx_i-v_{ij})\]
-\[Δt_{kj} = b(\vy_k - w_{kj})\]
+\[Δu_{ij} = a(\vy_i-u_{ij})\]
+\[Δt_{kj} = b(\vx_k - t_{kj})\]
 \end{enumerate}
 \item Reducimos los factores de aprendizaje $a$ y $b$.
 \end{enumerate}
