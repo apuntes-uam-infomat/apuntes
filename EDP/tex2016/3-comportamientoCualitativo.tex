@@ -829,7 +829,7 @@ En este capítulo vamos a ver:
 
 		Una vez vistos ejemplos, vamos con la teoría y la demostración del principio de la media. Empezaremos con el caso fácil, en dimensión $N = 2$.
 
-		\begin{prop}[Propiedad\IS de la media (bolas en $ℝ^2$)] Sea $\bola_R(\va) ⊆ ℝ^2$ la bola de radio $R$ centrada en $\va ∈ ℝ^2$. Consideramos el problema \[
+		\begin{prop}[Propiedad\IS de la media (bolas en $ℝ^2$)] \label{prop:MediaBolaR2} Sea $\bola_R(\va) ⊆ ℝ^2$ la bola de radio $R$ centrada en $\va ∈ ℝ^2$. Consideramos el problema \[
 		\begin{cases}
 			-\Delta u = 0 & \text{ en } \bola_R(\va) \\
 			u|_{∂\bola_R(\va)} = f
@@ -847,171 +847,117 @@ En este capítulo vamos a ver:
 		Ahora sólo falta tener la solución en una bola de radio $R$ centrada en $\va = (a_1, a_2)$. Para eso hacemos la parametrización \[ \sigma_R (s) = (a + R \cos s , b + R \sin s) \quad s \in [0,2\pi) \] con $\norm{σ_R'} = R$. Entonces ya podemos sustituir y ver que efectivamente sale lo que buscamos: \[ \frac{1}{2πR} \int_{∂\bola_R(\va)} f \dif σ_R = \frac{1}{2πR} \int_0^{2π} f(σ_R(s)) \norm{σ_R'} \dif s = \frac{1}{2π} \int_0^{2π} u(1, s) \dif s  = u(0, θ) = u(\va) \]
 		\end{proof}
 
-		\obs La propiedad de la media sobre circunferencias $C_R$ $\Rightarrow$ Propiedad de la media sobre círculos $B_R$
+		A partir de esta propiedad de la media del valor en el borde podemos sacar que también es válido si la media la hacemos sobre todos los valores del interior.
 
-		\begin{proof}
-		\[ B_R (a,b) \subset \Omega\text{ , en particular: } B_{\rho}(a,b) \subset \Omega, \rho \in [0,R] \]
+		\begin{prop} \label{prop:MediaBolaInteriorR2} Bajo las mismas hipótesis de la \fref{prop:MediaBolaR2}, tenemos que  \[ u(\va) = \frac{1}{πR^2} \int_{\bola_R(\va)} u(x,y) \dif x \dif y  \]
+		\end{prop}
 
-		\[ u(a,b) = \frac{1}{|C_\rho|} \int_{C_\rho}  u( \sigma_{\rho}(s) ) d\sigma_{\rho} = … = \frac{1}{2\pi\rho} \int_0^{2\pi} u(a + \rho\cos s, b+ \rho \sin s) \rho ds \]
+		\begin{proof} Lo primero que miramos es que si $\bola_R(\va) ⊂ Ω$ con $\va = (a_1, a_2)$, entonces $∀ρ ∈ [0,R]$ tendremos igualmente que $\bola_ρ(\va) ⊂ Ω$. Con esto podemor plantear la propiedad anterior para radio ρ e integrar a ambos lados en ρ de $0$ a $R$. Para que todo sea más fácil consideramos el cambio de coordenadas correspondiente, y lo abreviamos como $x(ρ, s)$ y $y(ρ,s)$ (es un cambio típico a coordenadas polares).
 
-		\[  \int_{0}^{R} \rho u (a,b) d \rho = \frac{1}{2\pi} \int_0^R \int_0^{2\pi} u(a + \rho \cos s , b + \rho \sin s) \rho ds d\rho \]
-
-		\[ \frac{R^2}{2} u(a,b) = \frac{1}{2\pi}  \int\int_{B_R} u(x,y) dx dy \]
-
-		\[ u(a,b) = \frac{1}{\pi R^2} \int\int_{B_R} u(x,y) dx dy = \frac{1}{|B_R|} \int\int_{B_R} u(x,y)dx dy \]
-
+		Vamos a ello:
+		\begin{align*}
+		ρ · u(a,b) &= \frac{1}{2π} \int_0^{2π} u(x(ρ, s), y(ρ,s)) · ρ \dif s \\
+		\int_0^R ρ · u(a,b) \dif ρ &= \frac{1}{2π} \int_0^R \int_{0}^{2π} u(x(ρ, s), y(ρ, s)) ρ \dif r \dif s \\
+		\frac{R^2}{2} u(a,b) &= \frac{1}{2π} \iint_{\bola_R(\va)} u(x,y) \dif x  \dif y \\
+		u(a,b) &= \frac{1}{πR^2} \iint_{\bola_R(\va)} u(x,y) \dif x \dif y \\
+		u(a,b) &=  \frac{1}{|\bola_R|} \iint_{\bola_R(\va)} u(x,y) \dif x \dif y
+		\end{align*} que es precisamente lo que buscábamos: el valor en el centro es la media de valores en toda la bola.
 		\end{proof}
 
 		% Clase 11-4-2016
 
-		Investiguemos un poco más que pasa en $N > 2$. Realizaremos una prueba apoyada en las identidades de Green.
+		Investiguemos un poco más que pasa en $N > 2$. Realizaremos una prueba apoyada en las identidades de Green y demás teoremas del análisis matemático. El primero será el de Gauss, que pasamos a recordar a continuación.
 
-		Empezamos con el \concept{Teorema\IS de Gauss}:
+		\begin{theorem}[Teorema\IS de Gauss] \label{thm:Gauss} Sea $Ω ⊂ ℝ^3$ una región con borde $∂Ω$, y $\appl{\vf}{Ω}{ℝ^3}$ un campo vectorial continuo y derivable. Entonces se cumple que \[
+			\iint_{∂V} \vf \dif S = \iiint_{Ω} \dv \vf \dif x \dif y \dif z
+		\]
+		\end{theorem}
 
-		\[ \int_{\delta \Omega} \gor{F} dx = \int_{\Omega} \dv \gor{F}dx = \int_{\delta \Omega} \pesc{\gor{F},\eqreason[\gor{n}]{normal exterior unitaria}} d\sigma \]
+		Recordamos también que la divervencia dado un campo $\vf = (F_1, \dotsc, F_n)$ se calcula como \[ \dv \vf = \pd{F_1}{x_1} + \dotsb + \pd{F_n}{x_n} \] y que la integral sobre una superficie con vector normal unitario $\vn$ es \[ \int_{∂V} \vf \dif S = \int_{∂V} \pesc{\vf, \vn} \dif x \dif y \dif z \]
 
-		\[ \Delta u = \dv (\Delta u)\]
+		Este ejemplo nos interesa particularmente porque el laplaciano es la divergencia del gradiente, esto es, $Δu = \dv (\grad u)$.
 
-		\begin{itemize}
-			\item $\int\limits_{\Omega} \Delta u dx = \int\limits_{\delta\Omega} \pesc{\grad u, \gor{n}} dx = \int\limits_{\delta\Omega} \eqreason[\frac{\delta u}{\delta \gor{u}}]{Derivada de u en la dirección normal exterior} dx $
+		También tendremos la siguiente identidad a partir del Teorema de Gauss, que nos será útil para simplificar los cálculos.
 
-			\obs
-			\begin{itemize}
-				\item \[\left\{\begin{array}{l}
-					-\Delta u = G \text{ en } \Omega \\
-					\frac{\delta u}{\delta u}|_{\delta\Omega} = g
+		\begin{prop}[Identidad\IS de Green] \label{prop:IdGreen} Sean $u,v ∈ C^2(U)$ con $U ⊂ ℝ^3$. Entonces se cumple que \( \int_U v · Δu - u · Δv \dif V = \int_{∂U} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S \label{eq:IdGreen} \) donde $\pd{v}{\vn}$ no es más que una forma pija\footnote{Seguro que ha sido un físico.} de poner la derivada direccional: \[ \dpd{v}{\vn} = \pesc{\grad v, \vn} = \grad_{\vn} v\]
+		\end{prop}
 
-				\end{array} \right| \rightarrow - \int_{\Omega} G dx = \int_{\delta \Omega} g d \sigma (\text{Condición de compatibilidad entre datos}) \]
+		Es espcialmente interesante porque nos dará una forma de ``integrar por partes'' en dimensiones superiores, ya que podemos reescribir $\int v Δu$ quitándonos el laplaciano en $u$.
 
-				\item $u$ armónica en $\Omega \Rightarrow \int_{\delta\omega} $ (falta)
-			\end{itemize}
+		Con todas estas herramientas ya podremos probar la propiedad de la media:
+		\begin{prop}[Propiedad\IS de la media] \label{prop:MediaBola} Sea $\bola_{R}(\va) ⊂ ℝ^N$ una bola $N$-dimensional de radio $R$ centrada en $\va ∈ ℝ^N$, y sea $u$ solución del problema dado por \[
+		\begin{cases}
+			-\Delta u(\vx) = 0 & x ∈ \bola_R(\va) \\
+			u(\vx)|_{∂\bola_R(\va)} = f(\vx)
+		\end{cases} \]
 
-			\item \[\gor{F} = v \grad u = (v u_{x_1}, vu_{x_2}, … , vu_{x_n}) \]
-			\[ \dv \gor{F} = … = \pesc{\grad v, \grad u} + v \Delta u \]
+		Entonces, se cumple la propiedad de la media: \[ u(\va) = \frac{1}{\abs{∂\bola_R}} \int_{∂\bola_R} u(\vx) \dif σ\] donde $\abs{∂\bola_R(\va)}$ es la medida del borde de la bola (es decir, el área/volumen/loquesea de la hiperesfera de radio $R$).
+		\end{prop}
 
-			\[ \int_{\Omega} \dv \gor{F} dx = \int_{\delta\Omega} \pesc{\gor{F},\gor{n}} d \sigma \]
+		\begin{proof} Vamos a tratar de aplicar las identidades anteriores, aunque para ello necesitaremos un campo vectorial, y nosotros sólo tenemos una función escalar. Definiremos pues $\vf = v · \grad u = \left(v u_{x_1}, \dotsc, v u_{x_n}\right)$, de tal forma que la divergencia nos queda $\dv \vf = \pesc{\grad v, \grad u} + v Δ u$.
 
-			\[ \int_{\Omega} \pesc{\grad v, \grad u} dx + \int_{\Omega} \text{FALTA}\]
+		Como idea feliz para el caso $N > 2$ (que es el que queremos demostrar, el resto ya lo tenemos) tomaremos $v$ de la siguiente forma\footnote{Si tuviésemos $N=2$ tomaríamos $\log \norm{\vx}$.}: \[ v(\vx) = \frac{1}{\norm{\vx}^{N-2}} = (x_1^2 + \dotsb + x_N^2)^{\frac{2-N}{2}}\]
 
-			\[ \int_{\Omega} v \Delta u dx = \int_{\delta \Omega} v \frac{\delta u}{\delta n} d \sigma - \int_{\Omega} \pesc{\grad v, \grad u} dx (\text{ Integración por partes}) \]
+		Haciendo cuentas, nos salen dos resultados interesantes para el gradiente y el laplaciano (ambos definidos sólo cuando $\vx ≠ \vec{0}$):
+		\begin{align*}
+		\grad v  &= (2-N) \frac{\vx}{\norm{\vx}^N} \\
+		- Δ v &= 0
+		\end{align*}
 
-			\obs Supongamos $- \dif u = G$, tomamos $v=u$.
+		Ahora trataríamos de aplicar la \nref{prop:IdGreen}, pero tenemos que tener cuidado porque ni $v$ ni su gradiente son continuas en todo $ℝ^n$. Tendremos que quitarnos el punto conflictivo, así que integraremos en $B = \bola_R \setminus \bola_ε$ con $ε > 0$.
 
-			\[ -\int_{\Omega} u G dx = \int_{\delta \Omega} u \frac{\delta u}{\delta n} d \sigma - \int_{\omega} \|\grad u\|^2 d \sigma \]
+		Ahora sí podemos aplicar Green, con la ventaja de que $Δu = Δv = 0$. Así, nos queda que \[ \int_{∂B} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S = \int_{B} v Δu - uΔv = 0 \]
 
-			\item Identidad de Green
+		\begin{wrapfigure}[8]{R}[0.1\textwidth]{0.3\textwidth}
+		\centering
+		\inputtikz{BolaRBolaEpsilon}
+		\caption{Frontera de $B$, con las orientaciones concretas para cada bola.}
+		\label{fig:BolaRBolaEpsilon}
+		\end{wrapfigure}
 
-				\[ \int_{\Omega} v \Delta u - u \delta v dx = \int_{\delta \Omega} v \frac{\delta u}{\delta n} - u \frac{\delta v}{\delta n} d \sigma  \]
+		Vamos a hacer la integral sobre la frontera, teniendo en cuenta la orientación de los dos anillos (\fref{fig:BolaRBolaEpsilon}, son orientaciones opuestas). Como esa integral es cero, lo que nos queda es que las integrales sobre cada borde son iguales: \begin{align*}
+		0 &= \int_{∂B} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S \\
+		 \int_{∂\bola_{R}} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S &=  \int_{∂\bola_ε} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S
+		\end{align*}
 
-				\textbf{Objetivo:} Probar la propiedad de la media (al menos para $N > 2$).
+		Sabiendo que $v = \frac{1}{\norm{\vx}^{N-2}}$, resolvemos la integral sobre un borde:
+		\[ \int_{∂\bola_R} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S = \int_{∂\bola_R} \frac{1}{R^{N-2}} \dpd{u}{\vn} - u \frac{2-N}{R^{N-1}} \dif S = \dotsb
+		\]
 
-				Supongamos $-\Delta u = 0$ en $\Omega$
+		% TODO: Completar esto.
+		Después de cálculos desconocidos, llegamos a que
+		\[\frac{1}{R^{N-1}} \int_{∂ \bola_R} u \dif \sigma_R = \frac{1}{\epsilon^{N-1}} \int_{∂\bola_\epsilon} u \dif \sigma_\epsilon \]
+		y después de algunos cálculos más a que \[ m_\epsilon \leq \frac{1}{\abs{∂ \bola_{\epsilon}}} \int_{∂ \bola_\epsilon} u \dif \sigma_\epsilon \leq M_\epsilon  \]
 
-				Tomamos $v(\bar{x}) = \frac{1}{\|\bar{x} \|^{N-2}} $ (si $N = 2$, $v(\bar{x}) = \log(\|\bar{x}\|)$).
+		Por continuidad: \[M_\epsilon. m_\epsilon \convs[\epsilon][0] u(0) \]
 
-				\[ v(\bar{x}) = (x_1^2 + x_2^2 + … + x_N^2)^{\frac{2-N}{2}}  \]
-				\[ V_{x_i} = \frac{2-N}{2} (x_1^2 + x_2^2 + … + x_N^2)^{\frac{2-N}{2} -1} 2x_i = (2-N) \|\bar{x}\|^{-N} x_i \]
-				\[ \Delta v = (2-N) \frac{\bar{x}}{\|\bar{x}\|^N}\]
-				\[-\Delta V = … = 0, \text{ en } \real^n-\{0\}\]
-
-				Podríamos intentar resolver esto aplicando Gauss, pero no debemos ya que estamos en un dominio donde $v$, $\Delta v$ no son contínuas.
-
-				\begin{proof}
-
-					Vamos a centrarnos en un anillo de radio interior $\epsilon$ y radio exterior $R$. Por lo que aplicaremos Green en $B_{R}- B_{\epsilon}$.
-
-					\[ \underbrace{ \int\limits_{B_R-B_\epsilon} v \Delta u - u \Delta v dx}_{= 0 (-\Delta u = -\Delta v = 0)} = \int\limits_{\delta(B_R-B_\epsilon)} v \frac{\delta u}{\delta u} - \frac{\delta v}{\delta u} d \sigma = (*) \]
-
-					Ahora tenemos que ver cual es la frontera. En este caso se compone de dos anillos, el exterior y el interior. Y además tenemos que tener en cuenta cuales con los vectores normales exteriores. Para el disco exterior serán hacia radios más grandes, pero en el disco interior serán hacia radios más pequeños.
-
-					Entonces tenemos que:
-
-					\[(*) = \int_{\delta B_R} - \int_{\delta B_\epsilon} \Rightarrow  \int_{\delta B_R} = \int_{\delta B_\epsilon}\]
-
-					\[ int_{\delta B_R} \underbrace{v}_{\frac{1}{R^{N-2}}} \frac{\delta u}{\delta u} - u \underbrace{\frac{\delta v}{\delta u}}_{\frac{(2-N)}{R^{N-1}}} d \sigma_R  = \frac{1}{R^{N-2}} \int_{\delta B_R} \frac{\delta u}{\delta u} d\sigma + \frac{N-2}{R^{N-1}} \int_{\delta B_R} B u d\sigma_R  \]
-
-					(FALTA)
-
-					\textbf{Conclusión}
-
-					\[\frac{1}{R^{N-1}} \int_{\sigma B_R} u d\sigma_R = \frac{1}{\epsilon^{N-1}} \int_{\delta B_\epsilon} u d \sigma_\epsilon \]
-
-					(FALTA UN MONTÓN QUE LLEGA A:)
-
-					\[ m_\epsilon \leq \frac{1}{|\delta B_{\epsilon}} \int_{\delta B_\epsilon} u d \sigma_\epsilon \leq M_\epsilon  \]
-
-					Por continuidad: \[M_\epsilon. m_\epsilon \convs[\epsilon][0] u(0) \]
-
-				\end{proof}
-
-				\textbf{Conclusión}
-
-					El valor de la función armónica en el origen es:
-
-					\[ u(0) = \frac{1}{|B_R|} \int_{\delta B_R} u(y) d \sigma_R \]
-
-					\obs
-
-					\[
-						u \text{ armónica} \Rightarrow \begin{cases}
-							-\Delta u = 0 \\
-							\int_{\delta B} \frac{\delta u}{\delta u} d \sigma = \int_{B} \Delta u dx = 0
-						\end{cases}
-					\]
-
-					\[
-						u \text{ superarmónica} \Rightarrow \begin{cases}
-							-\Delta u \geq 0 \\
-							\int_{\delta B} \frac{\delta u}{\delta u} d \sigma = \int_{B} \Delta u dx \leq 0
-						\end{cases}
-					\]
-
-					\[
-						u \text{ subarmónica} \Rightarrow \begin{cases}
-							-\Delta u \leq 0 \\
-							\int_{\delta B} \frac{\delta u}{\delta u} d \sigma = \int_{B} \Delta u dx \geq 0
-						\end{cases}
-					\]
-
-		\end{itemize}
-
-		\begin{defn}[Desigualdad\IS para funciones sub/superarmónicas]
-
-			\begin{itemize}
-				\item $\Delta u \leq 0 \Rightarrow u(0) \leq \frac{1}{|∂ \bola_R|} \int_{∂ \bola_R} u d \sigma_R $
-				\item $- \Delta u \geq 0 \Rightarrow u(0) \geq \frac{1}{|∂ \bola_R|} \int_{∂ \bola_R} u d \sigma_R $
-			\end{itemize}
-
-		\end{defn}
+		\end{proof}
 
 
-		% Clase 12-4-16
+		En \textbf{conclusión}, hemos llegado a lo que buscábamos:
+		\[ u(0) = \frac{1}{|\bola_R|} \int_{∂ \bola_R} u(y) \dif  \sigma_R \]
 
-		\textbf{Resumen}
+		Sin demostrarlo, vamos a ver que tenemos algunas desigualdades si $u$ es sólo superarmónica o subarmónica.
 
-		Hemos visto una aplicación de la integración por partes con la identidad de Green: La propiedad de la media (en dimensión arbitraria): $-\Delta u=0$ en $\Omega \supset B_R(\bar{0})$: \[u(\bar{0}) = \frac{1}{|\delta B_R|} \int\limits_{\delta B_R} u(y)d\sigma_R \]
+		\begin{prop}[Desigualdad\IS para funciones sub/superarmónicas] Si $u$ es subarmónica, entonces tenemos que \[ -Δ u ≤ 0 \implies u(0)  ≤  \frac{1}{|\bola_R|} \int_{∂ \bola_R} u(y) \dif  \sigma_R\]
 
-		Extensiones:
-		\begin{itemize}
-			\item Válido para cualquier $B_R(x_0) \subset \Omega$:
-			\[ u(\bar{x_0}) = \frac{1}{|\delta B_R(\bar{x_0})|} \int\limits_{\delta B_R(\bar{x_0})} u(y)d\sigma_R \]
+		Si $u$ es superarmónica, entonces
+		\[ -Δ u ≥ 0 \implies u(0)  ≥  \frac{1}{|\bola_R|} \int_{∂ \bola_R} u(y) \dif  \sigma_R\]
+		\end{prop}
 
-			\item Propiedad de la media para esferas $\Rightarrow$ propiedad de la media para bolas:
-			\[ u(\bar{x_0}) = \frac{1}{|B_R(\bar{x_0})|} \int\limits_{B_R(\bar{x_0})} u(y)dy \]
+		Por supuesto, la desigualdad vale para cualquier bola centrada en cualquier punto:
+		\[ u(\vx_0) = \frac{1}{|∂ \bola_R(\vx_0)|} \int\limits_{∂\bola_R(\vx_0)} u(y)\ \dif \sigma_R \]
 
-			\item Válido (con desigualdad) para funciones subarmónicas o superarmónicas:
-			\begin{itemize}
-				\item $-\Delta u \geq 0 \rightarrow u(\bar{x_0}) \geq \frac{1}{|\delta B_R|} \int\limits_{\delta B_R(\bar{x_0})} u(y)d\sigma_R > \frac{1}{|B_R(\bar{x_0})|} \int\limits_{B_R(\bar{x_0})} u(y)dy$
+		También tendremos un resultado análogo al que teníamos en dimensión 2 (\fref{prop:MediaBolaInteriorR2}):
 
-				(FALTA)
-			\end{itemize}
-		\end{itemize}
+		\begin{prop} \label{prop:MediaBolaInterior} Bajo las mismas hipótesis de la \fref{prop:MediaBola}, tenemos que  \[ u(\va) = \frac{1}{\abs{\bola_R(\va)}} \int_{\bola_R(\va)} u  \]
+		\end{prop}
 
-		La segunda aplicación sería la Unicidad:
+		La propiedad de la media es también interesante porque nos permitirá probar el principio del máximo fuerte.
 
 		\subsubsection{Principio del máximo fuerte}
 
-		\obs Hasta ahora tenemos unicidad para condiciones de Dirichlet, por el principio del máximo (débil).
+		Hasta ahora tenemos unicidad para condiciones de Dirichlet, por el \nref{prop:PrincipioMaximoDebil}.
 
 		Veamos los casos dependiendo del contorno:
 
@@ -1050,7 +996,7 @@ En este capítulo vamos a ver:
 		\end{itemize}
 
 
-		\begin{prop}[Principio\IS del máximo fuerte]
+		\begin{prop}[Principio\IS del máximo fuerte] \label{prop:MaximoFuerte} Sea $u$ una función superarmónica en Ω ($-Δu ≥ 0$).
 
 			\[ - \Delta u \geq 0 \text{ en } \Omega \]
 			\[ u (\bar{x}) \geq \frac{1}{|\delta B_R(\bar{x})|} \int\limits_{\delta B_R (\bar{x})} u(\bar{y}) d \sigma_R \quad \forall x \in \Omega, \forall R : B_R(\bar{x}) \subset \Omega \]
@@ -1812,7 +1758,7 @@ En este capítulo vamos a ver:
 
 		\begin{itemize}
 			\item $u(x,t)\in C^{∞}$
-			\item $u_t - laplacianou = 0, \vx \in \real^n\;,t>0$, es decir, es solución de la ecuación de difusión (o ecuación del calor).
+			\item $u_t - Δu = 0, \vx \in \real^n\;,t>0$, es decir, es solución de la ecuación de difusión (o ecuación del calor).
 			\item $\lim_{t\to 0^+} u(x,t) = f(x)$ con convergencia puntual.
 		\end{itemize}
 		\end{theorem}
