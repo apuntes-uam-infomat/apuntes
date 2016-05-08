@@ -468,17 +468,7 @@ b-0.2 > 0 \\
 \end{array}\]
 donde las ecuaciones se obtienen al forzar que los puntos $(1,1), (1,0)$ y $(0,1)$ tengan los signos adecuados.
 
-Finalmente, aunque las cuatro primeras ecuaciones dan lugar a la posibilidad de existir las rectas $y_1$ y $y_2$\footnote{Como es lógico puesto que si ignoramos el origen y uno de los puntos que se encuentran sobre los ejes es trivial ver que toda recta con pendiente menor que 1 (o mayor, según que punto del eje estemos ignorando) actúa como linea divisoria}, las dos últimas ecuaciones son inconsistentes.
-
-\end{problem}
-
-\begin{problem}[10]
-Show that small initial weights still allow for any position of the initial decision line
-for the perceptron.
-
-\solution
-
-
+Finalmente, aunque las cuatro primeras ecuaciones dan lugar a la posibilidad de existir las rectas $y_1$ y $y_2$\footnote{Como es lógico puesto que si ignoramos el origen y uno de los puntos que se encuentran sobre los ejes es trivial ver que toda recta con pendiente menor que 1 (o mayor, según qué punto del eje estemos ignorando) actúa como linea divisoria}, las dos últimas ecuaciones son inconsistentes.
 
 \end{problem}
 
@@ -569,35 +559,6 @@ Por ejemplo, la función XOR, que no es separable, puede ser representada por un
 En el caso de la puerta lógica XOR que acabamos de mencionar tendríamos como solución:
 \[y=f(-b + x_1+x_2) \text{ siendo } \theta =0.5\]
 
-\end{problem}
-
-\begin{problem}[13]
- Even for $\theta= 0$, the perceptron learning rule prevents the correct classification of a point on the dividing line (which is better than assigning it arbitrarily to either side
-of the line). If $\theta < α$ (the learning rate), does the exact value of $\theta$ matter? Does it matter if $\theta > α?$ Does it make a difference whether we start with all initial weights
-equal to 0, as in Examples 2.11-2.13, or with other values (small random numbers,
-for instance)?
-
-\solution
-
-El proceso de aprendizaje del perceptrón consiste en reajustar los pesos de la red \textbf{cuando se produzca un error en la predicción} según la fórmula:
-\[ω_i = ω_i + αtx_i, \text{ siendo } t \text{ la salida esperada}\]
-
-Esta regla sólo se aplica en los siguientes casos:
-\[\begin{array}{lll}
-\sum_{i=0}^nω_ix_i < -\theta & \text{ y } & t\geq 0 \\
-\theta \geq \sum_{i=0}^nω_ix_i \geq - \theta & \text{ y } & \abs{t}> 0 \\
-\sum_{i=0}^nω_ix_i > \theta & \text{ y } & t\leq 0
-\end{array}\]
-
-Podemos obviar aquellos casos en los que $t=0$ puesto que en esos casos no se produce ningún aprendizaje por lo que las preguntas planteadas por el enunciado carecen de sentido.
-
-En el primer caso, tras corregir los pesos, ante la misma entrada, tendremos:
-\[\sum_{i=0}^nω_ix_i + \sum_{i=0}^nαtx_i^2 \]
-siendo
-\[ \theta  k\leq  \sum_{i=0}^nαtx_i^2 \leq  αk\]
-donde $k$ es el número de valores $x_i$ no nulos.
-
-\textcolor{red}{No se cómo seguir a partir de aquí. Supongo que hay que jugar con estas desigualdades pero no se qué más hacer.}
 \end{problem}
 
 \begin{problem}[14]
@@ -1327,7 +1288,7 @@ learning will occur? Consider the situation for Exercise 2 of this section..
 
 \solution
 
-En general siempre que ajustemos los pesos de forma que una neurona de la capa intermedia tenga salida valor de activación 0, estamos haciendo que no se produzca nada de aprendizaje en la conexión que lleva de esa neurona a la neurona de salida.
+En general siempre que ajustemos los pesos de forma que una neurona de la capa intermedia tenga valor de activación 0, estamos haciendo que no se produzca nada de aprendizaje en la conexión que lleva de esa neurona a la neurona de salida.
 
 Otra situación en la que se produce muy poco aprendizaje es el momento en el que el valor δ es 0. Esto ocurre cuando la derivada de la función toma valor 0, cosa que ocurre cuando $f(x)\approx 1$.
 \end{problem}
@@ -1475,9 +1436,9 @@ No obstante, si entrenamos demasiado a la red, puede que esta se vuelva muy espe
 
 Es por ello que hay que encontrar un punto justo entre precisión clasificando los patrones de entrenamiento y capacidad de aceptar variaciones pequeñas, manteniendo una correcta clasificación.
 
-Esto nos lleva a que (en las redes multicapa) podamos cambiar el algoritmo de entrenamiento considerando que en cada iteración, en lugar de movernos en la dirección del gradiente para la entrada dada, nos movemos en la dirección combinación del gradiente actual y el de la entrada anterior. Esto nos permite no ser demasiado específicos.
+Esto nos lleva a que (en las redes con aprendizaje por regla delta) podamos cambiar el algoritmo de entrenamiento considerando que en cada iteración, en lugar de movernos en la dirección del gradiente para la entrada dada, nos movemos en la dirección combinación del gradiente actual y el de la entrada anterior. Esto nos permite no ser demasiado específicos.
 
-Este entrenamiento es conocido como el método del \textbf{momento}. En esta ocasión la actualización de los pesos se lleva a cabo mediante las fórmulas:
+Este entrenamiento es conocido como el método del \concept{momento}. En esta ocasión la actualización de los pesos se lleva a cabo mediante las fórmulas:
 \[Δw_{jk}(t+1) = αδ_kz_j + μΔw_{jk}(t)\]
 y
 \[Δv_{ij}(t+1) = αδ_jx_i + μΔv_{ij}(t)\]
@@ -1530,7 +1491,6 @@ and a $p \times m$ matrix $T$ whose rows are the output patterns
 t_1(1) & . & . & . & t_m(p) \\
 . & . & . & . & . \\
 . & . & . & . & . \\
-. & . & . & . & . \\
 t_1(1) & . & . & . & t_m(p) \\
 \end{array}\right).\]
 
@@ -1539,12 +1499,10 @@ Then the product $S\cdot T$ gives the weight matrix $W$:
 \sum_{p=1}^P s_1(p)t_1(p) & . & . & . & \sum_{p=1}^P s_1(p)t_m(p) \\
 . & . & . & . & . \\
 . & . & . & . & . \\
-. & . & . & . & . \\
 \sum_{p=1}^P s_n(p)t_1(p) & . & . & . & \sum_{p=1}^P s_n(p)t_m(p) \\
 \end{array}\right)\]
 \solution
 
-\doneby{Pedro}
 
 La regla de aprendizaje Hebb consiste en actualizar los pesos en cada iteración según la fórmula
 \[Δω_{ij} = x_iy_j\]
@@ -1560,7 +1518,6 @@ que es lo mismo que obtenemos multiplicando las matrices $S$ y $T$ descritas en 
 Show the computations for the first component of the response of a Hebb net for an input vector and how this response depends on whether the input vector is orthogonal to the other vectors stored in the net.
 \solution
 
-\doneby{Pedro}
 
 Partiendo de la matriz $W$ calculda en el ejercicio anterior, tomando ahora un vector cualquiera $\vx = (s_1(x),\ldots, s_n(x))$ al calcular la primera componente del vector de salida tendríamos:
 
@@ -1583,7 +1540,6 @@ con lo que ciertos términos del sumatorio \ref{eq:salida} desaparecerían (al h
 Find the weight matrix for Example 3.1 using the results of Exercise \ref{ej:3_1}.
 \solution
 
-\doneby{Pedro}
 
 El ejemplo 3.1 nos plantea una red neuronal para la que nos da unos patrones de entrenamiento. Disponiendo la información de estos patrones en forma de matriz tenemos:
 
@@ -1614,7 +1570,6 @@ Test Example 3.6 on the input training vectors. Then test on input vectors that 
 similar to the input training vectors.
 \solution
 
-\doneby{Pedro}
 
 En el ejemplo 3.6 se calcula la matriz de pesos correspondiende a los patrones de entrenamiento dados obteniendo:
 \[W = \left( \begin{array}{cc}
@@ -1651,7 +1606,6 @@ La siguiente tabla recoge los resultados obtenidos al clasificar los patrones de
 Test Example 3.7 using the training input vectors. Then test with input vectors that
 are the training vector with one ``mistake''.
 \solution
-\doneby{Pedro}
 
 Tenemos la misma matriz de pesos del paso anterior pero en esta ocasión la salida es bipolar, por lo que estamos empleando una función de activación diferente:
 \[f(x) = \left\{ \begin{array}{lll} 1 & si & x>0 \\ 0 & si & x=0 \\ -1 & si & x< 0 \end{array}\right. \]
@@ -1707,7 +1661,6 @@ s(4) = (0,1,1,0) & t(4) = (0,1)
 
 \solution
 
-\doneby{Pedro}
 
 \spart
 
@@ -1776,7 +1729,6 @@ Podemos observar que la red es bastante resistente a fallos, dando una salida co
 Using the formation of Exercise \ref{ej:3_1}, find the weight matrix for Example 3.7
 \solution
 
-\doneby{Pedro}
 
 Simplemente tenemos que escirbir las matrices $S$ y $T$ y multiplicarlas:
 
@@ -1812,9 +1764,8 @@ Use the Hebb rule to store the vectors (1, 1, 1, 1) and (1, 1, - 1, - 1) in an a
 \ppart Repeat parts a-d with the diagonal terms in the weight matrix set to zero. Discuss any differences you find in the response of the net.
 
 \solution
-\doneby{Pedro}
 
-Una \concept{red neuronal autoasociativa} se caracteriza por la presencia de tantas neuronas de salida como de entrada y el empleo de los patrones de entrenamiento con salida idéntica a la entrada.
+Una \concept{red neuronal autoasociativa} se caracteriza por la presencia de tantas neuronas de salida como de entrada y el empleo de patrones de entrenamiento con salida idéntica a la entrada.
 
 Estas redes sirven para memorizar una serie de patrones a fin de poder detectarlos posteriormente y también detectar \textbf{pequeñas modificaciones} sobre estos patrones es decir, identificar los patrones aún con la presencia de ruido.
 
@@ -1921,7 +1872,6 @@ Consider an autoassociative net with the bipolar step function as the activation
 \ppart Test the net on $V_1$, $V_2$, $T_1$, $T_2$.
 
 \solution
-\doneby{Pedro}
 
 \spart
 
@@ -2040,7 +1990,6 @@ layer, the initial activation of the other layer is set to zero.
 \ppart  In which case does the network stabilize to a correct response, in which cases to an incorrect response, and in which cases to an indefinite or indeterminate response?
 
 \solution
-\doneby{Pedro}
 
 La idea de las \concept{redes asociativas bidireccionales} es tener dos capas de neuronas de forma que cada capa sea capaz de transmitir información a la otra (de ahi que se llamen \emph{bidireccionales}. La conexión entre cada neurona de una capa (llamémosla $X$) y la otra capa (llamémosla $Y$) es bidireccional, siendo el peso único.
 
@@ -2345,7 +2294,6 @@ s(4)=(0,1,1,0) & t(4)=(0,1)
 
 \solution
 
-\doneby{Pedro}
 
 \spart
 
@@ -2535,7 +2483,6 @@ Tal y como se describe y muestra en los ejercicios de la sección \ref{sec:Memor
 Show that if the weight vectors are not the same length, it is possible that the weight vector that appears to be closest to the input vector will not be the weight vector that is chosen when the dot product metric is used. More specifically, consider two weight vectors $\vec{w}_1$ and $\vec{w}_2$ with lengths $\norm{\vec{w}_1}$ and $\norm{\vec{w}_2}$ and angles with a horizontal axis of $\theta_1$ and $\theta_2$, respectively. For an arbitrary input vector $\vec{s}$, what is the inequality relation (in terms of the lengths and angles of the three vectors $\vec{w}_1$, $\vec{w}_2$ and $\vec{s}$ that determines when the neuron represented by $\vec{w}_1$ would be chosen as the winner (using the dot product metric). Give an example where this might not be the desired choice.
 
 \solution
-\doneby{Pedro}
 
 A lo largo de esta sección veremos varios algoritmos de redes neuronales en los que, a partir de una entrada dada, tendremos que seleccionar una \emph{neurona ganadora}, siendo esta la que tenga pesos más cercanos a los valores del vector de entrada.
 
@@ -2563,7 +2510,6 @@ Using a learning ratio of .2, find the new weights for unit $C_J$
 
 \ppart If units $C_{J-1}$ and $C_{J+1}$ are also allowed to learn the input pattern, find their new weights.
 \solution
-\doneby{Pedro}
 
 \spart
 
@@ -2604,7 +2550,6 @@ Por último, las redes de Kohonen nos permiten definir un ``radio de influencia'
 Repeat the preceding exercise for the input vector $(.5,.5)$ with $α=.1$
 
 \solution
-\doneby{Pedro}
 
 Consideramos de nuevo la red del ejercicio anterior (sin las modificaciones llevadas a cabo en ese ejercicio) y trabajamos con el nuevo vector de entrada.
 
@@ -2647,7 +2592,6 @@ Use the square of the Euclidean distance to find the winning cluster unit for th
 \[\vec{x} = (0.5, 1.0, 0.5, 0.0, 0.0)\]
 Using a learning rate of .2, find the new weights for the winning unit.
 \solution
-\doneby{Pedro}
 
 Los cuadrados de las distancias euclídeas en este caso son:
 \[(\norm{\vec{w}_1-\vx})^2 = 0.5\;\;\; (\norm{\vec{w}_2-\vx})^2 = 1.84\]
@@ -2677,9 +2621,8 @@ Using the square of the Euclidean distance (and the geometry of the diagram, to 
 
 From a short-term point of view, which of the second vectors presented -$(0.4,0.35)$ in part b) or $(0.4,0.45)$ in part c)- has better effect in moving the classification units towar their desired positions to represent the input data?
 \solution
-\doneby{Pedro}
 
-El esquema mostrado es una simiplifación del grafo que representa la red neuronal. Podría dibujarse como en el ejercicio \ref{ej:kohonenGraph} teniendo un total de 16 neuronas en la capa de salida, manteniendo 2 en la capa de entrada, y considerando que varias neuronas de salida representan la misma clase. Este método no es más que una \emph{variación de la red neuronal de kohonen}.
+El esquema mostrado es una simiplifación del grafo que representa la red neuronal. Podría dibujarse como en el ejercicio \ref{ej:kohonenGraph} teniendo un total de 16 neuronas en la capa de salida, manteniendo 2 en la capa de entrada, y considerando que varias neuronas de salida representan la misma clase. Este método no es más que una \emph{variación de la red neuronal de Kohonen}.
 
 \spart
 
@@ -2725,7 +2668,6 @@ Using the input pair
 \[\vec{x} = (1,0,0,0) \;\;\; \vec{y}=(1,0)\]
 perform the first phase of training (one step only). Find the activation of the cluster layer units. Update the weights using a learning rate of .3.
 \solution
-\doneby{Pedro}
 
 En la primera fase presentamos los vectores $\vx=(1,0,0,0)$ y $\vy=(1,0)$ a la red y las neuronas de la capa de cluster (la intermedia) compiten en busca de la que tenga pesos más cercanos al vector de entrada.
 
@@ -2748,7 +2690,6 @@ Puesto que sólo nos dan un factor de aprendizaje suponemos que $α=β$ con lo q
 \begin{problem}[7]
 Repreat exercise 6, except use $\vec{x}=(1,0,1,1)$ and $\vec{y}=(0,1)$
 \solution
-\doneby{Pedro}
 
 Volvemos a comparar los cuadrados de las distancias euclídeas obteniendo:
 \[D_1 = 0.2^2+0.8^2+0.8^2+0.8^2+0.5^2+0.5^2 = 2.46\]
@@ -2761,7 +2702,11 @@ En esta ocasión la ganadora es la neurona $Z_2$. Tras actualizar los pesos tene
 \end{problem}
 
 \section{Resumen de contenidos Teóricos}
-\subsection{Maxnet}
+\subsection{Buscando la neurona ganadora}
+
+Los dos algoritmos que vamos a ver a continuación no permiten realizar una clasificación de patrones y no son utilizados de manera aislada. La idea de estos algoritmos es encontrar el valor ganador de entre un conjunto. En el caso del \textbf{maxnet} este valor ganador será el más alto mientras que en el caso del \textbf{sobrero mejicano} será el fruto de un estudio de los valores, en los que se asume una cierta estructura topológica.
+
+\subsubsection{Maxnet}
 La redes \concept{maxnet} permiten encontrar el máximo entre una sirie de valores. Se componen de un número variable de neuronas que actúan a su vez como entradas y salidas. Cada neurona se conecta con todas las demás con un peso negativo -ε y consigo misma con peso 1.
 
 La función de activación es
@@ -2771,7 +2716,7 @@ Una vez ``alimentamos'' la red con un vector de entrada iteramos en la red hasta
 
 \obs Esta red neuronal puede no tener mucho valor en si misma pero se utiliza a menudo como parte del proceso de otras redes neuronales más complejas. En concreto, aunque \emph{no se muestre en los diagramas} todas las elecciones de ``máximo'' llevadas a cabo en los ejercicios de la sección anterior son válidas porque podrían llevarse a cabo con una red Maxnet.
 
-\subsection{Sombrero mejicano}
+\subsubsection{Sombrero mejicano}
 Las redes \concept{Sombrero mejicano} toman su nombre de el parecido que hay entre el grafo que representa esta red neuronal, que podemos observar en la figura \ref{figure:mexicanHat} y el típico sombrero mejicano.
 
 \begin{center}
@@ -2799,7 +2744,10 @@ donde $x\_max$ es un valor definido en el primer paso del algoritmo. Se emplea p
 \end{enumerate}
 \end{enumerate}
 
-\subsection{Red Hamming}
+\subsection{Algoritmos de clasificación por competición}
+Las redes que veremos en esta sección difieren de las estudiadas hasta ahora en el hecho de que toda la información queda recogida en los pesos sin tener relevancia las funciones de activación o la estructura de la red neuronal.
+
+\subsubsection{Red Hamming}
 La \concept{red Hamming} es una red para la clasificación de vectores que emplea la distancia Hamming para localizar el vector más cercano, es decir, busca el vector con más componentes comunes al vector dado.
 
 Esta red funciona mediante el siguiente algoritmo, donde $n$ es el número de neuronas de entrada, $m$ es el número de neuronas de salida y $\vec{e}(j)$ es el $j$-ésimo vector de entrenamiento:
@@ -2816,12 +2764,12 @@ y los bias
 \end{enumerate}
 \end{enumerate}
 
-\obs La idea de estas redes es que cada neurona de salida tenga ``almacenado'' un vector de entrenamiento. La neurona ganadora será aquella que almacenara el vector más similar al vector de entrada.
+\obs La idea de estas redes es que cada neurona de salida tenga ``almacenado'' un vector de entrenamiento. La neurona ganadora será aquella que almacenara el vector más similar al vector de entrada. Este \emph{almacenamiento} consiste en usar el vector almacenado como vector de pesos que conecta las $n$ entradas con la neurona dada.
 
-\subsection{Redes de Kohonen}
-Las \concept{redes de kohonen} son redes auto-organizativas que asumen una estructura topológica en sus neuronas, es decir, tienen las nociones de cercanía/lejanía entre ciertas neuronas.
+\subsubsection{Redes de Kohonen}
+Las \concept{redes de Kohonen} son redes auto-organizativas que asumen una estructura topológica en sus neuronas, es decir, tienen las nociones de cercanía/lejanía entre ciertas neuronas.
 
-Cada una de las $n$ neuronas de entrada está conectada a todas las $m$ neuronas de salida. Su funcionamiento es \emph{similar} al de las redes Hamming salvo que las neuronas cercanas a una dada afectan a su peso.
+Cada una de las $n$ neuronas de entrada está conectada a todas las $m$ neuronas de salida.
 
 El entrenamiento se lleva a cabo mediante el siguiente algoritmo:
 \begin{enumerate}
@@ -2844,8 +2792,10 @@ El entrenamiento se lleva a cabo mediante el siguiente algoritmo:
 
 \obs El factor de aprendizaje se reduce lentamente en cada iteración.
 
-\subsection{Redes LVQ (aprendizaje por cuantificación vectorial)}
-Se trata de un método de clasificación de patrones en el que cada unidad representa una clase o categoría. Una vez entrenada, una red de este tipo clasifica un vector de entrada asignándole la misma clase que la neurona de salida cuyo vector de pesos es más cercano al patrón de entrada.
+\obs Un detalle de \textbf{vital importancia} es que las redes Kohonen desempeñan un aprendizaje no guiado. Es decir, no sabemos cómo debe clasificarse cada patrón. Simplemente alimentamos la red con una serie de patrones y ella misma trata de encontrar una cierta relación entre ellos a fin de poder clasificar futuros patrones.
+
+\subsubsection{Redes LVQ (aprendizaje por cuantificación vectorial)}
+Las redes \concept{LVQ} son un método de clasificación de patrones en el que cada unidad representa una clase o categoría. Una vez entrenada, una red de este tipo clasifica un vector de entrada asignándole la misma clase que la neurona de salida cuyo vector de pesos es más cercano al patrón de entrada. En este sentido es muy similar a las redes \textbf{Kohonen}
 
 La arquitectura de estas redes es la misma que la de las redes de Kohonen salvo que \textbf{no supone ninguna estructura topológica}. El entrenamiento se lleva a cabo mediante el siguiente algoritmo:
 
@@ -2865,8 +2815,10 @@ es decir, la neurona cuyos pesos de entrada más se acercan al vector $\vx$.
 \end{enumerate}
 \end{enumerate}
 
-\subsection{Contrapropagación}
-Las redes de \concept{contrapropagación} son redes neuronales multicapa que constan de tes capas: entrada, salida y clustering. Suelen emplearse para comprimir datos, aproximar funciones o asociar patrones.
+\obs La principal diferencia entre estas redes y la red \textbf{Kohonen} es que en esta ocasión el aprendizaje es guiado, es decir, sabemos cómo queremos clasificar cada vector y forzamos a la red para que lo haga así, cosa que no ocurría en las redes Kohonen.
+
+\subsubsection{Contrapropagación}
+Las redes de \concept{contrapropagación} son redes neuronales multicapa que constan de tres capas: entrada, salida y clustering. Suelen emplearse para comprimir datos, aproximar funciones o asociar patrones.
 
 El entrenamiento de este tipo de redes se lleva a cabo en dos fases en cada una de las cuales nos fijamos en una parte de la red neuronal ligeramente diferente, como muestran las imágenes \ref{figure:counterpropagationPhase1}, \ref{figure:counterpropagationPhase2} y \ref{figure:counterpropagationTotal}
 
@@ -2907,6 +2859,7 @@ El algoritmo de entrenamiento es:
 \end{enumerate}
 \item Reducimos los factores de aprendizaje α y β
 \end{enumerate}
+\obs Básicamente estamos empleando el mismo algoritmo de aprendizaje de una red \textbf{Kohonen}
 \item Mientras que no se de la condición de parada para la fase 2:
 \begin{enumerate}
 \item Para cada par de patrones $\vx:\vy$
