@@ -1593,76 +1593,72 @@ En este capítulo vamos a ver:
 		\end{example}
 
 		% Clase 25-4-2016
-		\begin{example}
-			\[u_t - \Delta u = 0, x \in \real^n, t > 0\]
-		\end{example}
 
-		Estamos buscando una soluciín particular, normalizando:
-		\[ \int\limits_{\real^n} u(\bar{x},t) d\bar{x} = 1, \forall t\]
+		Vamos a estudiar ahora a fondo el problema, estudiando la ecuación
+		\[u_t - \Delta u = 0 \qquad x \in \real^n,\, t > 0\]
+
+		Buscaremos una solución particular, y además vamos a normalizar, esto es, hacer que el ``calor total'' sea 1:
+		\( \int\limits_{\real^n} u(\bar{x},t) \dif \bar{x} = 1\; \forall t > 0 \label{eq:Calor:Normalizacion} \)
 
 
-		Vamos a ir simplificando el problema. La primera simplificación que haremos será escribir $u$ como radical:
-		\[ r^2 = x^2_1 + … + x^2_n \]
+		Vamos a ir simplificando el problema. La primera simplificación que haremos será escribir $u$ como una función radial, esto es, $u = u(r)$ con $r^2 = x^2_1 + \dotsb  + x^2_n$. Sacando el laplaciano tenemos que
+		\[ Δu =  u_{x_1 x_1} + u_{x_2 x_2} + \dotsb + u_{x_n x_n} = \dotsc = u_{x_r x_r} + \frac{n-1}{r}u_r \]
 
-		Con $u = u(r)$:
-		\[ u_{x_1 x_1} + u_{x_2 x_2} + … + u_{x_n x_n} = … = u_{x_r x_r} + \frac{n-1}{r}u_r \]
-		\[ u_t - u_{rr} - \frac{n-1}{r}u_r  = 0\]
-		\[ 1 = \int\limits_{\real^n}  u(\bar{x},t) d \bar{x} \eqreason{polares} \int\limits_{S^{n-1}} \int_0^\infty u(r,t) r^{n-1} dr d\omega = \eqreason[\omega_n]{Medida esfera radio 1} \int_0^\infty u(r,t) r^{n-1} r^{n-1} dr \]
+		Por el otro lado, aplicamos el cambio de variables a la normalización de \eqref{eq:Calor:Normalizacion}, y tenemos que
+		\[ 1 = \int\limits_{\real^n}  u(\bar{x},t) \dif \bar{x} \eqreasonup{polares} \int_{\crc[n-1]} \int_0^\infty u(r,t) r^{n-1} \dif r \dif \omega = ω_n \int_0^\infty u(r,t) r^{n-1} r^{n-1} \dif r \] con $ω_n$ la medida de la esfera $n$-dimensional de radio $1$.
 
-		Con lo que llegamos a la simplificación del problema:
-
-		\[\begin{cases}
+		Con todo esto, llegamos a nuestro problema simplficado:
+		\( \begin{cases}
 			u_t - u_{rr} - \frac{n-1}{r}u_r  = 0\\
-			\int_0^\infty u(r,t) r^{n-1} r^{n-1} dr = \frac{1}{\omega}
-		\end{cases}\]
+			\displaystyle\int_0^\infty u(r,t) r^{n-1} r^{n-1} \dif r = \frac{1}{\omega}
+		\end{cases} \label{eq:Calor:ProblemaSimplificado} \)
 
-		Ahora simplificamos realizando cambios de escala:
-
+		Ahora aplicamos una idea feliz: vamos a estudiar qué efectos tienen los cambios de escala en nuestro problema. Dados dos factores $λ,μ$ de cambio de escala, hacemos la sustitución y estudiamos la solución ``reescalada'' $v$:
 		\[\begin{cases}
 			r = \lambda s\\
 			t = \mu \tau
-		\end{cases} \quad\quad \lambda, \mu \rightarrow \text{factores de cambio de escala.}\]
+		\end{cases} \implies v(s,τ) = u(λs, μτ)\]
 
-		(ups)
 
-		Quremos llegar a algo como $V_\tau - V_{ss} - \frac{n-1}{s} V_{s} = 0$.
-
+		Sacamos ahora las derivadas de nuestra nueva función, para prepararnos y sustituir en \eqref{eq:Calor:ProblemaSimplificado}:
 		\begin{align*}
-			V_\tau (s,\tau) &= u_t (\lambda s, \mu \tau) \cdot (\mu \tau)_{\tau} \\
+			v_\tau (s,\tau) &= u_t (\lambda s, \mu \tau) \cdot (\mu \tau)_{\tau} \\
 				&= u_t(\lambda s, \mu \tau) \mu \\
 				v_s(s,\tau) &= u_r(\lambda s, \mu \tau) \lambda \\
-				v_{ss}(s,\tau) = u_{rr} (\lambda s, \mu \tau) \lambda^2
+				v_{ss}(s,\tau) &= u_{rr} (\lambda s, \mu \tau) \lambda^2
 		\end{align*}
 
-		\[ v_\tau (s,\tau) - v_{ss}(s,\tau) - \frac{n-1}{s} v_s(s,\tau)\]
-		\[ = \mu \mu_t(\lambda s, \mu \tau) - u_{rr}(\lambda s, \mu \tau) \lambda^2 - \frac{n-1}{\lambda s} \lambda^2 u_r(\lambda s, \mu \tau) \]
-		\[ = \mu u_t(\lambda s, \mu \tau) - \lambda^2 \{ u_{rr}(\lambda s, \mu \tau) `\frac{n-1}{\lambda s} u_r(\lambda s, \mu \tau)\}\]
+		Ahora sustituimos en la ecuación diferencial, y vemos qué pasa:
+		\begin{align*}
+		v_\tau (s,\tau) - v_{ss}(s,\tau) - \frac{n-1}{s} v_s(s,\tau)
+			&= \mu v_t(\lambda s, \mu \tau) - u_{rr}(\lambda s, \mu \tau) \lambda^2 - \frac{n-1}{\lambda s} \lambda^2 u_r(\lambda s, \mu \tau) = \\
+			&= \mu u_t(\lambda s, \mu \tau) - \lambda^2 \left( u_{rr}(\lambda s, \mu \tau) `\frac{n-1}{\lambda s} u_r(\lambda s, \mu \tau)\right) = \\
+			&= (\mu - \lambda^2) u_t(\lambda s, \mu \tau)
+		\end{align*}
 
-		Falta algún comentario pero la conclusión es:
+		A lo que llegamos es a que si $μ = λ^2$, la función $v$ sigue siendo solución del problema. Si los cambios no son independientes, tiene que haber alguna variable subyacente que nos dé ese cambio de escala.
 
-		\[ v_\tau - v_{ss} - \frac{n-1}{s} v_s = (\mu - \lambda^2) u_t(\lambda s, \mu \tau)  \]
+		Por otro lado, buscamos soluciones que conserven la cantidad de calor, así que sustituimos en la integral:
+		\begin{align*}
+		\frac{1}{\omega_{n}} &= \int_0^\infty v(s, \tau) s^{n-1} \dif s
+		= \int_0^\infty C u(\lambda s, \lambda^2 \tau) s^{n-1} \dif s = \\
+		&\eqreason{cambio de variable $\lambda s = r$} \int_0^\infty C u(r, \lambda^2 \tau) \frac{r^{n-1}}{\lambda n \dif r}
+		= \frac{1}{\lambda^n}  \underbrace{\int_0^\infty   u(r, \lambda^2\tau) r^{n-1} dr}_{= \frac{1}{\omega_n} (\forall \tau)}
+		= \frac{C}{\lambda^n}\frac{1}{\omega_n} \\
+		C &= λ^n
+		\end{align*}
 
-		Necesitamos $\mu = \lambda^2$.
-
-		\[ v(s,\tau) = Cu(\lambda s, \lambda^2 \tau)\]
-
-		Ajustamos $C$ para conseguir:
-
-		\[ \int_0^\infty v(s, \tau) s^{n-1} dx = \frac{1}{\omega_{n}} \]
-		\[ \frac{1}{\omega_n} = C \int_0^\infty u(\lambda s, \lambda^2 \tau) s^{n-1} ds \eqreason{cambio de variable $\lambda s = r$} C \int_0^\infty u(r, \lambda^2 \tau) \frac{r^{n-1}}{\lambda n dr}  \]
-		\[ = \frac{c}{\lambda^n}  \underbrace{\int_0^\infty   u(r, \lambda^2\tau) r^{n-1} dr}_{= \frac{1}{\omega_n} (\forall \tau)}  = \frac{C}{\lambda^n}\frac{1}{\omega_n} \Rightarrow C = \lambda^n\]
-
+		Así, nuestra solución reescalada ha de ser de la forma:
 		\[ v(s,\tau) = \lambda^n u(\lambda s, \lambda^2 \tau)\]
 
-		Con esto hemos llegado a que si existe una solución existen infinitas cambiando la $n$ en la fórmula anterior. Pero también hemos obtenido que las soluciones no solo deben ser $C^2$, sino que tienen que respetar estas restricciones. Ahora, con un espacio de funciones posibles menor vamos a intentar encontrarlas:
-
+		Con esto hemos llegado a que si existe una solución existen infinitas cambiando la $n$ en la fórmula anterior. Pero también hemos obtenido que las soluciones no solo deben ser $C^2$, sino que tienen que respetar estas restricciones. Ahora, con un espacio de funciones posibles menor vamos a intentar encontrarlas. Estudiamos qué ocurre cuando hacemos el siguiente cambio
 		\[ \underbrace{v(s,1)}_{\text{una variable}} = \lambda^n u (\lambda s, \lambda^2) \]
 
 		Recordemos $\lambda^2 = t$, $\lambda s = r$ y $s = \frac{r}{\lambda} = \frac{r}{\sqrt{t}}$.
 
-		\[ u(r,t) = \frac{1}{\lambda^n} v(s,1) = \frac{1}{t^{n/2}} v(\frac{r}{\sqrt{t}},1)\]
+		\[ u(r,t) = \frac{1}{\lambda^n} v(s,1) = \frac{1}{t^{n/2}} v\left(\frac{r}{\sqrt{t}},1\right)\]
 
-		Idea: $u(r,t) = \frac{1}{t^{n/2}} \Phi(\frac{r}{\sqrt{t}})$, con $\Phi: \real \rightarrow \real$.
+		Parece que hemos llegado a algo, pero ahora estamos haciendo variar $λ$. En cualquier caso, quizás podríamos buscar por funciones que sigan esa forma, $u(r,t) = \frac{1}{t^{n/2}} \Phi\left(\frac{r}{\sqrt{t}}\right)$, con $\Phi: \real \rightarrow \real$.
 
 		Llegamos al problema: Encontrar una función $\Phi$ (de una variable) tal que $u(r,t) = \frac{1}{t^{n/2}} \Phi(\frac{r}{\sqrt{t}})$ sea solución.
 
