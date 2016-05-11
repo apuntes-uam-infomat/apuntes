@@ -904,7 +904,7 @@ En este capítulo vamos a ver:
 		\begin{prop}[Identidad\IS de Green] \label{prop:IdGreen} Sean $u,v ∈ C^2(U)$ con $U ⊂ ℝ^3$. Entonces se cumple que \( \int_U v · Δu - u · Δv \dif V = \int_{∂U} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S \label{eq:IdGreen} \) donde $\pd{v}{\vn}$ no es más que una forma pija\footnote{Seguro que ha sido un físico.} de poner la derivada direccional: \[ \dpd{v}{\vn} = \pesc{\grad v, \vn} = \grad_{\vn} v\]
 		\end{prop}
 
-		Es espcialmente interesante porque nos dará una forma de ``integrar por partes'' en dimensiones superiores, ya que podemos reescribir $\int v Δu$ quitándonos el laplaciano en $u$.
+		Es espcialmente interesante porque nos dará una forma de ``integrar por partes'' en dimensiones superiores, ya que podemos reescribir $\int v Δu$ quitándonos el laplaciano en $u$: \( \label{eq:IntegPartesNDim} \int_U v · Δ u \dif V = \int_{∂V} \left(v \dpd{u}{\vn} - u \dpd{v}{\vn}\right) \dif S + \int_U u·Δv \dif V\)
 
 		Con todas estas herramientas ya podremos probar la propiedad de la media:
 		\begin{prop}[Propiedad\IS de la media] \label{prop:MediaBola} Sea $\bola_{R}(\va) ⊂ ℝ^N$ una bola $N$-dimensional de radio $R$ centrada en $\va ∈ ℝ^N$, y sea $u$ solución del problema dado por \[
@@ -1314,13 +1314,13 @@ En este capítulo vamos a ver:
 	 \label{fig:EcCalorMaximosMinimos}
 	 \end{figure}
 
-	 Esto nos va a llevar a un principio del máximo algo más fuerte que nos va a restringir en que partes de la frontera se va a alcanzar.
+	 Esto nos va a llevar a un principio del máximo algo más fuerte que nos va a restringir en qué partes de la frontera se va a alcanzar.
 
-	 \begin{defn}[Frontera\IS parabólica]
+	 \begin{defn}[Frontera\IS parabólica] \label{def:FronteraParabolica}
 	 	\[\partial_P Q_T = \{(x,0), x \in [0,L]\} \cup \{(0,t), t \in [0,T]\} \cup \{(L,t), t \in [0,T]\}\]
 	 \end{defn}
 
-	 \begin{theorem}[Principio\IS del máximo débil] \label{thm:MaximoDebilCalor}
+	 \begin{theorem}[Principio\IS del máximo débil] \label{thm:MaximoDebilCalor} Consideramos el siguiente problema de la ecuación del calor:
 	 	\[ \begin{cases}
 	 		u_{t} - u_{xx} = 0, x \in (0,L), t > 0 \\
 			u(x,0) = f(x) \\
@@ -1328,66 +1328,43 @@ En este capítulo vamos a ver:
 			u(L,t) = \beta(t)
 	 	\end{cases}\]
 
-	 	Entonces $u(x,t)$ alcanza su máximo y su mínimo en puntos de la frontera parabólica $\partial_P Q_T$
+	 	Entonces $u(x,t)$ alcanza su máximo y su mínimo en puntos de la \nlref{def:FronteraParabolica} $\partial_P Q_T$.
 	 \end{theorem}
 
 	 \begin{proof}
-	 	Demostraremos por reducción al absurdo:
+	 	Demostraremos por reducción al absurdo distinguiendo dos casos: si el máximo $(x_0, t_0)$ se alcanzase en algún punto del interior o en la parte de la frontera que no es la parabólica (la línea gris de arriba en la \fref{fig:EcCalorMaximosMinimos}). En el primer caso tenemos que $t_0 < T$ y en el segundo $t_0 = T$ (estamos en el borde).
 
-	 	\begin{itemize}
+	 	En ambos casos tendremos que la derivada en $x$ se anula, y la segunda derivada es no positiva. Si estamos en el interior, será además obligatorio que la derivada en tiempo se anule. Si estamos en el borde ($t_0 = T$), la derivada no tiene por qué anularse: puede ser creciente y que simplemente sea un máximo porque ``cortamos'' ahí la región.  Es decir, que tenemos las dos posibilidades siguientes:
+	 	\begin{gather}
+	 	t_0 < T \implies \begin{cases} u_t(x_0, t_0) = 0 \\ u_{xx} (x_0, t_0) ≤ 0 \end{cases}
+	 	\nonumber \\
+	 	t_0 = T \implies \begin{cases} u_t(x_0, t_0) ≥ 0 \\ u_{xx} (x_0, t_0) ≤ 0 \end{cases}
+	 	\label{eq:Calor:MaximoDebil:Casos}
+	 	\end{gather}
 
-	 		\item Supongamos que se alcanza un máximo en algún punto del interior de $Q_R$.
+	 	Si tuviésemos una desigualdad estricta en $u_{xx}$ tendríamos la contradicción buscada, ya que entonces no se cumpliría la ecuación $u_{t} - u_{xx} = 0$. Pero no la tenemos, así que tenemos que trabajar un poco más.
 
-	 			\[ u_t(x_0,t_0), u_x(x_0,t_0) = (0,0)\]
+	 	La idae será modificar $u$ para obtener en alguna parte desigualdad estricta. Definimos $v^ε(x,t) = u(x,t) + εx^2$, y vamos a calcular sus derivadas:
+	 	\begin{align*}
+	 		v^\epsilon_t &= u_t \\
+			v^\epsilon_{xx} &= u_{xx} + 2\epsilon
+		\end{align*}
 
-	 			(DIBUJO)
+		Sustituyendo en la ecuación $u_{t} - u_{xx} = 0$, tenemos una nueva ecuación algo más interesante: \[ v^ε_t - v^ε_{xx} = -2ε < 0 \]
 
-	 			$u(x,t_0)$ es máximo en $x_0$
-
-	 			$u_{xx}(x_0) \leq 0$. Si la desigualdad fuera estricta habríamos acabado.
-
-	 		\item Supongamos que se alcanza en algún punto de $\delta Q_T - \delta_P Q_T$
-
-	 			(DIBUJO)
-
-	 			\[ \left. \begin{array}{r}
-	 				u_t(x_0,T) \geq 0 \\
-	 				u_{xx} (x_0,T) \leq 0
-	 			\end{array} \right\} \text{ Si la desigualdad fuera estricta habríamos acabado.}\]
-
-	 	\end{itemize}
-
-	 	Idea: Modificar $u$ par obtener en alguna parte desigualdad estricta. Definimos:
-
-	 	\[ \begin{cases}
-	 		v^\epsilon(x,t) = u(x,t) + \epsilon x^2\\
-	 		v^\epsilon_t = u_t \\
-			v^\epsilon_{xx} = u_{xx} + 2\epsilon \\
-			v^\epsilon_t - v^\epsilon_{xx} = u_t - u_{xx} - 2\epsilon = - 2\epsilon < 0
-	 	\end{cases}\]
-
-	 	Repitiendo los dos items anteriores con $v^\epsilon$ demostramos que $v^\epsilon$ no puede tener máximo en el interior ni en $\partial Q_T - \partial_P Q_T$.
-
-	 	\[ \underbrace{\max v^\epsilon}_{Q_T} = \underbrace{\max v^\epsilon}_{\delta_P Q_T} \]
-	 	\[ \left. \begin{array}{r}
-	 		u(x,t) \leq v^\epsilon (x,t) = u(x,t) + \epsilon x^2 \leq u(x,t) + \epsilon L^2 \\
-	 		v^\epsilon \longrightarrow u(\text{uniforme en } Q_T)
-	 		\end{array} \right\} \Rightarrow \max v^\epsilon \convs[][\epsilon][0] \max u
-	 	\]
-
-	 	De manera análoga:
-	 	\[ \underbrace{\min u}_{Q_T} = \underbrace{\min u}_{\delta_P Q_T} \]
-
-
+		Repitiendo el razonamiento de \eqref{eq:Calor:MaximoDebil:Casos} con $v^\epsilon$ demostramos que $v^\epsilon$ no puede tener máximo en el interior ni en $\partial Q_T - \partial_P Q_T$. Así, para $v^ε$ tenemos que $v^ε(x,t) ≤ \max_{∂_PQ_T} v_ε$.Como $v^ε \to u$ uniformemente y $u ≤ v^ε$, hacemos tender $ε \to 0$ y lo que nos queda es que \[ u(x,t) ≤ \max_{∂_PQ_t} u \] que es precisamente lo que buscábamos. Si quisiésemos hacer la demostración con el mínimo se haría de manera análoga.
 	 \end{proof}
 
-	 Como consecuencias de este principio del máximo tenemos:
-	 \begin{itemize}
-	 	\item Comparación
-	 	\item Unicidad
-	 	\item Estimación a priori
-	 	\item Dependencia continua de los datos
+	 Como consecuencias de este principio del máximo tenemos, al igual que para la ecuación de onda, los siguientes principios:
+	 \begin{itemize}[itemsep = 0pt]
+	 	\item Comparación.
+	 	\item Unicidad.
+	 	\item Estimación a priori.
+	 	\item Dependencia continua de los datos.
+
 	 \end{itemize}
+
+	 Vamos a verlos con ejemplos.
 
 	 \begin{example}[Comparación]
 	 	\begin{align*}
@@ -1457,10 +1434,6 @@ En este capítulo vamos a ver:
 	 	Análogamente $u(x,t) \geq … $
 
 	 	Resultado: $|u(x,t)| \leq \|F\|_\infty \frac{L^2}{2} + … $
-
-
-
-
 
 	\end{example}
 
@@ -1742,9 +1715,8 @@ En este capítulo vamos a ver:
 		\]
 
 
-		Hemos llegado a la expresión del \concept{núcleo de Gauss}
-
-		\[G(x,t) = \frac{1}{(\sqrt{4πt})^N}e^{-\frac{\norm{\vx}^2}{4t}}\]
+		Hemos llegado a la expresión del \concept{Núcleo\IS de Gauss}:
+		\( G(x,t) = \frac{1}{(\sqrt{4πt})^N}e^{-\frac{\norm{\vx}^2}{4t}} \label{eq:NucleoGauss} \)
 
 		Esto es una solución particular que tiene la curiosidad de que en $t=0$ no está definida.
 		%
@@ -1817,7 +1789,7 @@ En este capítulo vamos a ver:
 
 		Si tomamos más derivadas, en el término $|x_i-y_i|$ aparecería elevado a alguna potencia.
 		%
-		Independientemente de la potencia que aparezca, el argumento sigue siendo válido porque la exponencial negativa de \ref{eq:dejuan} manda sobre cualquier polinomio.
+		Independientemente de la potencia que aparezca, el argumento sigue siendo válido porque la exponencial negativa de \eqref{eq:dejuan} manda sobre cualquier polinomio.
 
 
 
