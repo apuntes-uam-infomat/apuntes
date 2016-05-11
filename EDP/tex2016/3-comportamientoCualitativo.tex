@@ -1394,10 +1394,9 @@ En este capítulo vamos a ver:
 
 	 \end{example}
 
-	 \begin{example}[Unicidad]
+	 \begin{example}[Unicidad] Como siempre, consideramos $u_1, u_2$ soluciones del mismo problema, de tal forma que $v = u_1 - u_2$ es solución de \[ \begin{cases} v_t - v_{xx} = 0 \\ \restr{v}{∂_PQ_T} = 0 \end{cases} \]
 
-	 	(FALTA)
-
+	 Como el máximo y mínimo se alcanzan en la frontera, tenemos que $v = 0$ en $Q_T$. La cuestión es que esto sólo nos vale para condiciones de contorno de este tipo. En la \fref{sec:Calor:Unicidad} veremos un resultado para condiciones de contorno más genéricas.
 	 \end{example}
 
 	 \begin{example}[Estimación a priori]
@@ -1441,40 +1440,39 @@ En este capítulo vamos a ver:
 %Clase  20-4-2016
 
 	\subsection{Prueba alternativa del resultado de unicidad}
+		\label{sec:Calor:Unicidad}
 
-	 	Vamos a ver una prueba alternativa más general que la vista anteriormente con el teorema del máximo.
+		Como decíamos antes, con el principio del máximo débil éramos capaces de dar un resultado de unicidad, pero sólo para unas condiciones de contorno muy concretas. Usaremos el método de la energía\footnote{Idea feliz 1000\%.}, multiplicando la ecuación por $u$ e integrando en $(0,L)$.
 
-	 	(RELLENAR ENUNCIADO)
+		Como siempre, tenemos dos soluciones $u_1, u_2$. Sea $u = u_1 - u_2$: queremos ver que $u = 0$. Hacemos la integral del método de la energía:
+	 	\begin{align*}
+	 		0 &= \int_0^L (u_t-u_{xx}) u \dif x = \int_0^L \underbracket{u u_t}_{\left(\frac{u^2}{2}\right)_t} \dif x - \underbracket{\int_0^L u u_{xx} \dif x}_{u u_x |_{x=0}^L - \int_0^L u^2_x \dif x} =  \\
+			&= \left(\int_0^L \frac{u^2}{2}\dif x\right)_t - \underbracket{\left. u u_x \right|_{x=0}^L}_{A} + \int_0^L u^2_x \dif x
+		\end{align*}
 
-	 	Y usámos el método de la energía:
-
-	 	\[ 0 = \int_0^L (W_t-W_{xx}) W dx = \int_0^L \underbrace{W W_t}_{(\frac{W}{2})_t} dx - \underbrace{\int_0^L W W_{xx}}_{W W_x |_{x=0}^L - \int_0^L W^2_x dx} dx  \]
-
-	 	\[ 0 = \left(\int_0^L \frac{W^2}{2}dx\right)_t - \underbrace{\left. W W_x \right|_{x=0}^L}_{(*)=W(L,t)W_x(L,t)-W(0,t)W_x(0,t)} + \int_0^L W^2_x dx \]
-
-	 	\[\text{Condiciones de contorno} \Rightarrow \begin{cases}
-	 		\text{ Dirichlet: } &W(0,t) = W(L,t) = 0 \Rightarrow (*) = 0\\
-	 		\text{ Neumann: } &W_x(0,t) = W_x(L,t) = 0 \Rightarrow (*) = 0\\
-	 		\text{ Periódicas: } &\begin{array}{l}
-	 			W(0,t) = W(L,t) \\
-	 			W_x(0,t) = W_x(L,t)
-	 			\end{array} \Rightarrow (*) = 0 \\
-	 		\text{ Mixtas: } &W(0,t) = 0 = W_x(L,t) \Rightarrow (*) = 0
+		Dado que $u$ es solución de la ``resta'' de dos problemas, las condiciones de contorno serán alguna de las siguientes:
+	 	\[ \begin{cases}
+	 		\text{Dirichlet: } 	& u(0,t) = u(L,t) = 0 \\
+	 		\text{Neumann: } 	& u_x(0,t) = u_x(L,t) = 0 \\
+	 		\text{Periódicas: } & u(0,t) = u(L,t) \\
+	 							& u_x(0,t) = u_x(L,t) \\
+	 		\text{Mixtas: } 	& u(0,t) = 0 = u_x(L,t)
 	 	\end{cases}\]
 
-	 	Para cualquier condición de contorno que anule $(*)$:
+	 	Todas ellas hacen que $A$ sea cero, así que nos queda la siguiente igualdad:
+	 	\( \od{}{t} \underbracket{\int_0^L \frac{u^2(x,t)}{2} \dif x}_{e(t)} = - \int_0^L u^2_x \dif x \label{eq:Calor:Unicidad:dt} \)
 
-	 	\[\left( \int_0^L \frac{W^2}{2} dx \right)_t = - \int_0^L W^2_x dx \]
+	 	Si tomamos $e(t) = \int_0^L \frac{u^2(x,t)}{2} \dif x$, lo que nos dice \eqref{eq:Calor:Unicidad:dt} es que $e' ≤ 0$, así que $e(t)$ es decreciente, y como además es la integral de un cuadrado es positiva: $e ≥ 0$. La cuestión es que si evaluamos en $t = 0$ aparecen las condiciones de contorno y nos sale cero: \[ e(0) = \int_0^L \frac{\overbracket{u^2(x,0)}^{=0}}{2} \dif x = 0 \] así que $e (t) = 0$. La única posibilidad entonces es que $u(x,t) = 0$ y por lo tanto $u_1 = u_2$: la solución es única.
 
-	 	Definimos $e(t) = \int_0^L \frac{W^2(x,t)}{2}dx$
-
-	 	Hemos probado:
-	 	\[\left.\begin{array}{r}
-	 		e'(t) \leq 0 \\
-	 		0 \leq e(t) \\
-	 		e(0) = 0
-	 	\end{array}\right\} \Rightarrow e \equiv 0 \forall t\]
-
+	 	A modo de observación, si aplicásemos esto a dos problemas \[
+	 	\begin{cases}
+	 	u_t - u_{xx} = F
+	 	u(x,0) = f_1(x)
+	 	\end{cases} \qquad
+	 	\begin{cases}
+	 	v_t - v_{xx} = F
+	 	v(x,0) = f_2(x)
+	 	\end{cases} \] tendríamos otro resultado de dependencia continua  en $L^2([0,L])$ de los datos: \[ \int_{0}^L \abs{u(x,t) - v(x,t)}^2 \dif x ≤ \int_{0}^L \abs{f_1(x) - f_2(x)}^2 \dif x \]
 
 	 \subsection{Problema de ``unicidad hacia atrás''}
 
