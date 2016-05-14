@@ -1109,7 +1109,7 @@ de la última desigualdad y de la definición de $q$ podemos deducir
 con lo que queda claro que $q'<1$.
 \end{problem}
 
-\section{Bonos y Futuros}
+\section{Bonos}
 
 \begin{problem}[1]
 ¿Cuántos años hay entre el 30/11/06 y el 01/03/08?
@@ -1344,3 +1344,191 @@ Es decir que jugando con el tipo sin riesgo tenemos una inversión con valor pos
 
 \end{problem}
 
+\section{Swaps}
+\begin{problem}[1]
+Estos son los parámetros de un swap de tipos:
+\begin{itemize}
+\item Intercambio de un LIBOR 6 meses por un 12\% anual (compuesto semestral)
+\item El principal es de 100 millones de dolares
+\item Al swap le quedan 10 meses de vida
+\item El promedio de tipos ofertados y demandados, que es intercambiado por el LIBOR
+a 6 meses en swaps de todos los vencimientos es del 10\% anual (compuesto continuo).
+\item El tipo LIBOR a 6 meses era del 9.6\% hace 2 meses.
+\end{itemize}
+¿Cuál es el valor del swap para la parte que paga interés variable?
+\solution
+\doneby{Pedro}
+
+Un \concept{swap} es un acuerdo para el intercambio de flujos financieros en una serie
+de fechas futuras. En esta ocasión estas fechas son cada 6 meses.
+
+Puesto que el último pago se efecutará dentro de 10 meses, el próximo pago a realizar será
+dentro de 4 meses.
+
+El valor de un swap viene dado por la diferencia entre el valor de los pagos fijos y el valor
+de los pagos variables. El signo dependerá de la parte del swap que estemos considerando.
+
+En esta ocasión, para quien paga interés variable, el valor del swap es:
+\[V_{\text{swap}} = B_{\text{fix}} - B_{\text{fl}}\]
+Por tanto solo tenemos que evaluar los bonos ya hemos hecho en la sección anterior.
+\[B_{\text{fix}} = 6\cdot e^{-0.1\cdot \frac{4}{12}} + 106 \cdot e^{-0.1\cdot \frac{10}{12}} = 103.33\]
+Para el bono con tipo variable la ecuación es más sencilla, puesto que capitalizamos con el mismo tipo
+de interés con el que descontamos. Así tenemos:
+\[B_{\text{fl}} = 104.8\cdot e^{-0.1\cdot \frac{4}{12}} = 101.36\]
+
+Por tanto tenemos:
+\[V_{\text{swap}} = 1.96375722\]
+
+Puesto que estamos trabajando en millones, debemos dar 8 decimales para tener precisión de céntimos.
+\end{problem}
+
+\begin{problem}[2]
+Un \textbf{forward rate agreement (FRA)} es un acuerdo OTC sobre la aplicación de un determinado
+tipo de interés, $R_k$, a un principal, $N$, durante un período de tiempo futuro $[T_1,T_2]$.
+
+¿Si $R_f$ es el tipo LIBOR para dicho período, cuál es el valor del FRA?
+\solution
+\doneby{Pedro}
+
+El valor será la diferencia entre lo obtenido con este acuerdo y lo que recibiríamos simplemente
+metiendo el dinero en la cuenta bancaria:
+\[V_{\text{FRA}}(T_2) = N \cdot \left(e^{(R_k-R_F)\cdot (T_2-T_1)} \right)\]
+Ahora descontamos este valor para traerlo al comienzo del intervalo
+\[V_{\text{FRA}}(T_1) = N \cdot \left(e^{(R_k-R_F)\cdot (T_2-T_1)} \right) \cdot e^{-R_F T}\]
+
+\end{problem}
+
+\begin{problem}[3]
+A las empresas $A$ y $B$ se les ha ofrecido los siguientes tipos anuales sobre un préstamo de 10 millones de dólares a 5 años:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+& \textbf{Fijo} & \textbf{Variable} \\
+\hline
+A & 7.0 \% & LIBOR \\
+B & 8.0 \% & LIBOR \\
+\hline
+\end{tabular}
+\end{center}
+
+La empresa $A$ necesita un préstamos a interés variable mientras que $B$ lo necesita a interés fijo.
+
+Diseñar un swap igualmente ventajoso en el cual una entidad financiera actúe como intermediario a cambio de 20pb.
+\solution
+\doneby{Pedro}
+
+El siguiente gráfico representa un swap ventajoso para ambas empresas.
+
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle, draw=black, thick, minimum width=1cm, minimum height=1cm] (C) at (0,0) {$C$};
+  \node[rectangle, draw=black, thick, minimum width=1cm, minimum height=1cm] (A) at (-3,3) {$A$};
+  \node[rectangle, draw=black, thick, minimum width=1cm, minimum height=1cm] (B) at (3,3) {$B$};
+  \node (A1) at (-5,3) {};
+  \node (B1) at (5,3) {};
+
+  \draw[->, thick, blue] ($(A.north east)!0.25!(A.south east)$) -- ($(B.north west)!0.25!(B.south west)$) node[black, midway, above]{$L$};
+  \draw[->, thick, blue] ($(B.north west)!0.75!(B.south west)$) -- ($(A.north east)!0.75!(A.south east)$) node[black, midway, below]{$7.5\%$};
+  \draw[->] (A) -- (A1) node[midway, above]{$7\%$};
+  \draw[->] (B) -- (B1) node[midway, above]{$L$};
+
+  \draw[->, thick, green] ($(A.south east)!0.25!(A.south west)$) -- ($(C.north west)!0.25!(C.south west)$) node[black, midway, right]{$L+10pb$};
+  \draw[->, thick, green] ($(C.north west)!0.75!(C.south west)$) -- ($(A.south east)!0.75!(A.south west)$) node[black, midway, left]{$7.5\%$};
+
+  \draw[->, thick, green] ($(B.south east)!0.25!(B.south west)$) -- ($(C.north east)!0.75!(C.south east)$) node[black, midway, right]{$7.6\%$};
+  \draw[->, thick, green] ($(C.north east)!0.25!(C.south east)$) -- ($(B.south east)!0.75!(B.south west)$) node[black, midway, left]{$L$};
+
+\end{tikzpicture}
+\end{center}
+
+En esta situación, la empresa $A$ ha pedido un préstamo a tipo fijo (aunque quería variable) y la empresa $B$ pide el préstamos a tipo variable.
+Ahora estas empresas realizan un swap entre ellas, representado en color azul, de modo que $A$ paga a $B$ el LIBOR y recibe un 7.5\%.
+
+Combinando el swap y el préstamo contratado tenemos la siguiente situación:
+\begin{itemize}
+\item La empresa $A$ paga cada intervalo un $7\%$ al banco, LIBOR a $B$ y recibe un $7.5\%$. El cómputo global es que ha conseguido el préstamo a LIBOR-5pb.
+\item La empresa $B$ paga cada intervalo LIBOR al banco, $7.5\%$ a $A$ y recibe LIBOR. El cómputo global es que ha conseguido el préstamo a $7.5\%$.
+\end{itemize}
+
+Es sencillo comprobar que ambas empresas tienen mejores préstamos que los que podían obtener por si mismas en un principio.
+
+Si ahora tenemos en cuenta la entidad financiera, que permite a ambas empresas asegurarse de que van a recibir por parte de la otra
+el dinero acordado, tendremos la situación descrita por las flechas verdes. En esta situación ambas empresas empeoran su situación en 10pb que són los que se
+lleva la entidad. Simplemente cada empresa paga 10pb más de lo que pagaba a la otra y realiza el pago a una entidad financiera, sin aumetan la cantidad
+percibida.
+\end{problem}
+
+\begin{problem}[4]
+Un swap de divisas está caracterizado por:
+\begin{itemize}
+\item Tiene una vida de 15 meses
+\item Intercambia un interés del 6\% sobre 10 millones de libras por un 4.5\% sobre 14 millones de dólares
+\end{itemize}
+
+La curva de tipos en ambos países es plana y de ser neogociado hoy el swap, se intercambiaría un 4.5\% en libras por un 4\% en dólares. Todos los tipos se componen anualmente siendo el tipo de cambio actual de 1.99. ¿Cuál es el valor del swap para la parte que paga en libras?
+
+\solution
+\doneby{Pedro}
+
+Cuando se trata de un swap de divisas la evaluación es equivalente a los swap anteriores salvo que hay que tener en cuenta el cambio de divisa. Así, para la
+parte que paga libras tendremos
+\[V_{\text{swap}}=B_{\$}-1.99\cdot B_{\pounds}\]
+
+Ahora sólo tenemos que calcular los valores de los bonos.
+
+\[B_{\pounds} = \frac{600000}{1.045^{0.5}} + \frac{10600000}{1.045^{1.25}} = 586939.1857 + 10032530.81 = 10619470\]
+\[B_{\$} = \frac{630000}{1.04^{0.5}} + \frac{14630000}{1.04^{1.25}} = 617765.8257 +13930049.25 = 14547815.08\]
+
+Finalmente
+
+\[V_{\text{swap}} = -6584930.22 \approx 6.6 \text{ millones }\]
+\end{problem}
+
+\begin{problem}[5]
+Una empresa $A$ (británica) necesita pedir prestados dólares a tipo fijo, mientras que la empresa $B$ (USA) necesita pedir prestadas libras
+esterlinas a tipo fijo. Los tipos ofertados son:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+& $\$$ & $\pounds$ \\
+\hline
+A & 7.0 \% & 11.5 \% \\
+B & 6.0 \% & 10.9 \% \\
+\hline
+\end{tabular}
+\end{center}
+
+Diseñar un swap igualmente atractivo en el cual la entidad financiera asuma todo el riesgo de tipo de cambio por una comisión de 20 pb.
+\solution
+\doneby{Pedro}
+
+La idea de este tipo de swap es que cada empresa solicite el préstamo en su propio país donde se supone que será mejor tratada y se intercambien el dinero.
+La situación queda recogida en la siguiente figura
+
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle, draw=black, thick, minimum width=1cm, minimum height=1cm] (C) at (0,3) {$C$};
+  \node[rectangle, draw=black, thick, minimum width=1cm, minimum height=1cm] (A) at (-3,3) {$A$};
+  \node[rectangle, draw=black, thick, minimum width=1cm, minimum height=1cm] (B) at (3,3) {$B$};
+  \node (A1) at (-6,3) {};
+  \node (B1) at (6,3) {};
+
+  \draw[->] (A) -- (A1) node[midway, above]{$\pounds 11.5\%$};
+  \draw[->] (B) -- (B1) node[midway, above]{$\$ 6\%$};
+
+  \draw[->, thick] ($(A.north east)!0.25!(A.south east)$) -- ($(C.north west)!0.25!(C.south west)$) node[black, midway, above]{$\$ x$};
+  \draw[->, thick] ($(C.north west)!0.75!(C.south west)$) -- ($(A.north east)!0.75!(A.south east)$) node[black, midway, below]{$\pounds 11.5 \%$};
+
+  \draw[->, thick] ($(B.south west)!0.25!(B.north west)$) -- ($(C.south east)!0.25!(C.north east)$) node[black, midway, below]{$\pounds y$};
+  \draw[->, thick] ($(C.north east)!0.25!(C.south east)$) -- ($(B.north west)!0.25!(B.south west)$) node[black, midway, above]{$\$ 6 \%$};
+
+\end{tikzpicture}
+\end{center}
+
+Ahora debemos calcular los valores de $x$ e $y$ de forma que la entidad financiera se quede con 20 puntos básicos y la mejora que experimenta cada empresa sea la misma. Así tenemos el sistema de ecuaciones:
+\[\left\{ \begin{array}{l} 7-x = 10.9-y \\ x+y-6-11.5 = 0.2 \end{array}\right. \implies 7+y-17.5 = 11.1-y \implies y = 10.8 \implies x = 6.9\]
+
+Es evidente ver que la compañía $A$ está pagando $6.9\%$ en dólares y la compañía $B$ está pagando $10.8\%$ en libras con lo que ambas han mejorado su situación inicial.
+
+\end{problem}
