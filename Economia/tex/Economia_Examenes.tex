@@ -145,14 +145,14 @@ No podemos calcular una cartera de cobertura en este nodo pues tenemos demasiado
 \end{problem}
 
 \begin{problem}[3]
-Una institución financiera entró en su día en un swap de tipos en el que acordó pagar un 6\% anual y recibir LIBOR a tres meses sobre un principal de 100 millones de euros con pagos intercambiados cada tres meses. Al swap le quedan 14 meses de vida. El tipo swap para intercambio por el LIBOR a tres meses en estos momentos es del 9\% anual par atodos los vencimientos. El tipo LIBOR a tres meses publicado hace dos meses era del 12\%. Todos los tipos son compuestos trimestralmente. ¿Cuál es el valor actual del swap?
+Una institución financiera entró en su día en un swap de tipos en el que acordó pagar un 6\% anual y recibir LIBOR a tres meses sobre un principal de 100 millones de euros con pagos intercambiados cada tres meses. Al swap le quedan 14 meses de vida. El tipo swap para intercambio por el LIBOR a tres meses en estos momentos es del 9\% anual para todos los vencimientos. El tipo LIBOR a tres meses publicado hace dos meses era del 12\%. Todos los tipos son compuestos trimestralmente. ¿Cuál es el valor actual del swap?
 \solution
 \doneby{Pedro}
 
 A la hora de contar los pagos que quedan trabajamos igual que con los bonos: Hacemos coincidir el último pago con la última fecha y vamos contando qué
 pagos previos, con los plazos dados, pueden realizarse. Así ten esta ocasión los pagos se harán a los 2, 5, 8, 11 y 14 meses.
 
-Puesto que la parte que paga fijo acordó pagar un 6\% anual dividido en pagos caga 3 meses, cada pago consta de un 1.5\% del principal.
+Puesto que la parte que paga fijo acordó pagar un 6\% anual dividido en pagos cada 3 meses, cada pago consta de un 1.5\% del principal.
 
 El valor del swap vendrá dado por la diferencia entre los dos bonos implícitos en el swap: el que paga fijo y el que paga variable.
 
@@ -386,7 +386,7 @@ sea en euros. Diseñar un swap igualmente atractivo para ambas empresas con un i
 financiero que se queda con 10 puntos básicos a cambio de asumir todo el riesgo de tipo de
 cambio.(1 punto)
 
-\ppart Una institución financiera A entrado en un swap de tipos, con pagos semestrales y a cinco,
+\ppart Una institución financiera A ha entrado en un swap de tipos, con pagos semestrales y a cinco,
 años con la empresa B. Bajo las condiciones del swap, A recibe un 5\% anual a cambio del
 LIBOR a 6 meses sobre un principal de 100 millones de euros. La empresa deja de pagar
 al final del tercer año cuando le tocaba pagar la sexta liquidación. El LIBOR a 6 meses
@@ -431,13 +431,15 @@ Para que ambas empresas obtengan el mismo beneficio porcentual y la entidad fina
 
 \spart
 
-El coste para la institución financiera será la diferencia entre lo pagado y lo recibido.
+La empresa $B$ deja de pagar cuando quedan aún 2 años de swap. La pérdida/beneficio que supone este cese del pago dependerá del valor del swap en ese momento. Por tanto lo único que debemos hacer es evaluar el swap restante en ese punto y comprobar el valor del mismo para la institución financiera. Puesto que $A$ pagaba LIBOR, tendremos:
+\[V_{\text{swap}} = V_{\text{fix}} - V_{\text{fl}}\]
 
-\[B_{\text{fix}} = 5\cdot e^{-0.07 \cdot 0.5} + 5 \cdot e^{-0.07} + 5 \cdot e^{-0.07\cdot 1.5} + 5 \cdot e^{-0.07\cdot 2} + 5 \cdot e^{-0.07\cdot 2.5} = 22.53569507\]
-\[B_{\text{fl}} = 3.3 \cdot e^{-0.07\cdot 0.5} = 3.186497874\]
+Como quedan sólo 5 pagos por realizar, siendo el primero de ellos justo ahora, tenemos:
+\[V_{\text{fix}} = 2.5\cdot e^{-0.07\cdot 0} + 2.5\cdot e^{-0.07\cdot 0.5} + 2.5\cdot e^{-0.07} + 2.5\cdot e^{-0.07\cdot 1.5} + 102.5\cdot e^{-0.07\cdot 2} = 98.60\]
+\[V_{\text{fl}} = 103.3 \cdot e^{-0.07 \cdot 0} = 103.3\]
 
-Así, para la empresa $A$ el coste ha sido
-\[V = B_{\text{fix}} - B_{\text{fl}} = 19349197.2 \text{\texteuro}\]
+Por tanto
+\[V_{\text{swap}} = -4694971.47\text{\texteuro}\]
 \end{problem}
 
 \section{Final Mayo 2015}
@@ -460,6 +462,43 @@ La empresa $A$ necesita un préstamo a tipo variable y la empresa $B$ lo necesit
 \ppart Han pasado tres años y ocho meses desde que se inició el swap anterior y B suspende pagos, siendo el tipo swap para los tres próximos años del 3\%. El tipo LIBOR a un año, publicado hace ocho meses era
 del 3,2\% anual. Todos los tipos son compuestos anualmente. ¿Cuál es el valor actual del swap? ¿Cuál es el impacto de dicho default para A?. (1,5 punto).
 \solution
+\doneby{Pedro}
+
+\spart
+
+Puesto que la $A$ necesita variable y la empresa $B$ fijo pero a $A$ le tratan mejor al pedir fijo, lo que harán será pedir cada empresa el contrario del que quieren e intercambiar los préstamos. Así el swap será el mostrado en la figura \ref{figure:swapMayo151a}
+
+\begin{figure}[hbpt]
+\centering
+\begin{tikzpicture}
+  \node[rectangle, draw=black, thick, minimum width=1cm, minimum height=1cm] (A) at (-3,3) {$A$};
+  \node[rectangle, draw=black, thick, minimum width=1cm, minimum height=1cm] (B) at (3,3) {$B$};
+  \node (A1) at (-5,3) {};
+  \node (B1) at (5,3) {};
+
+  \draw[->, thick] ($(A.north east)!0.25!(A.south east)$) -- ($(B.north west)!0.25!(B.south west)$) node[black, midway, above]{$L$};
+  \draw[->, thick] ($(B.north west)!0.75!(B.south west)$) -- ($(A.north east)!0.75!(A.south east)$) node[black, midway, below]{$3\%$};
+  \draw[->] (A) -- (A1) node[midway, above]{$2.5\%$};
+  \draw[->] (B) -- (B1) node[midway, above]{$L$};
+
+\end{tikzpicture}
+\caption{Swap ventajoso para ambas empresas}
+\label{figure:swapMayo151a}
+\end{figure}
+
+Así, $A$ está pagando LIBOR - $5\%$ y $B$ está pagando $3\%$, con lo que ambos mejoran sus ofertas iniciales en un $5\%$.
+
+\spart
+
+Si han pasado 3 años y 8 meses, sólo quedan 2 pagos por realizar: el correspondiente al cuarto año y el último. En este instante el valor del swap para $A$, que paga variable, viene dado por:
+\[V_{\text{swap}} = V_{\text{fix}} - V_{\text{fl}} \]
+siendo
+\[V_{\text{fix}} = 3\cdot e^{-0.03/3} + 103 \cdot e^{-0.03\cdot 4/3} = 101.93\]
+\[V_{\text{fl}} = 103.2 \cdot e^{-0.03/3} = 102.17\]
+Por tanto,
+\[V_{\text{swap}} = -0.241681109 \text{ millones de \texteuro}\]
+
+La empresa $A$ sale ganando ya que el swap tenía valor negativo en ese punto.
 
 \end{problem}
 
@@ -560,6 +599,32 @@ Es decir, al aumentar el precio del activo un $1\%$ la opción aumenta un $6.3\%
 Sea una put americana, At-The-Money, a 2 meses sobre un subyacente que no paga dividendos. El valor del subyacente es 50. Para valorar dicha opción se usa un árbol binomial con periodicidad mensual. En cada periodo, el subyacente puede subir o bajar un 4\%. El tipo libre de riesgo (composición continua) es del 1\%. Calcular el valor de la put.
 \solution
 
+\doneby{Pedro}
+
+El enunciado nos dice que $a=1.04$ y que $b=0.96$. Sabiendo que $r=0.01$ y que $Δt=0.083$ podemos calcular $q=\frac{e^{rΔt}-b}{a-b}=0.51$
+
+Para conocer el valor de la put americana en $t=0$ debemos estudiar cada nodo para ver si nos interesaría ejercer o no. Así, empezando por el penúltimo período, obtenemos el valor de la put como el máximo entre el beneficio obtenido ejerciendo en este instante y el beneficio potencial de no ejercer.
+
+\begin{itemize}
+\item \textbf{Nodo $aS_0$}
+En este momento la acción vale 52. Evidentemente en este instante no nos interesa ejercer, puesto que ejercer la put nos permitiría venderla por 50, que es menos que su valor actual.
+
+Por tanto, el valor de la put en este nodo viene dado por
+\[V = \left(0 + 0.08 \cdot (1-q)\right)\cdot e^{-rΔt} = 0.039\]
+
+\item \textbf{Nodo $bS_0$}
+En este momento podemos ejercer obteniendo un valor en este instante de la put igual a $V=2$. Si no ejercemos, el valor de esta será
+\[V = \left(0.08 \cdot q + 3.92 \cdot (1-q) \right)\cdot e^{-rΔt} = 1.96\]
+
+Por tanto en esta situación nos interesa ejercer.
+
+\item \textbf{Nodo $S_0$} (Instante inicial)
+Es obvio que en este instante no nos interesa ejercer dado que venderíamos al mismo valor que tiene el subyacente en el mercado con lo que no obtendríamos beneficio alguno.
+
+El valor en este instante es:
+\[V = \left( 0.039 \cdot q + 2 \cdot (1-q)\right)\cdot e^{-rΔt} = 0.998\]
+\end{itemize}
+
 \end{problem}
 
 \section{Recuperación Junio 2015}
@@ -596,7 +661,7 @@ Calcular la caretara de cobertura en cada nodo.
 \end{problem}
 
 \begin{problem}[3]
-Una institución financiera entró en su día en un swap de tipos en el que cordó pagar un 5\% anual y recibir LIBOR a tres meses sobre un principal de 100 millones de euros con pagos intercambiados cada tres meses. Al swap le quedan 14 meses de vida. El tipo swap para intercambio por el LIBOR a tres meses en estos momentos es del 7\% anual par atodos los vencimientos. El tipo LIBOR a tres meses publicado hace dos meses era del 8\%. Todos los tipos son compuestos trimestralmente. ¿Cuál es el valor actual del swap?
+Una institución financiera entró en su día en un swap de tipos en el que cordó pagar un 5\% anual y recibir LIBOR a tres meses sobre un principal de 100 millones de euros con pagos intercambiados cada tres meses. Al swap le quedan 14 meses de vida. El tipo swap para intercambio por el LIBOR a tres meses en estos momentos es del 7\% anual para todos los vencimientos. El tipo LIBOR a tres meses publicado hace dos meses era del 8\%. Todos los tipos son compuestos trimestralmente. ¿Cuál es el valor actual del swap?
 
 \solution
 
