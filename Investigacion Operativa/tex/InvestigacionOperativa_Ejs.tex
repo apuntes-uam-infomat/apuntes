@@ -818,7 +818,7 @@ Tras 2 iteraciones obtenemos:
 \begin{tabular}{c|cccccc}
 \hline
 4&$\rfrac{2}{5}$&1&0&0.1&0.8&0\\
-5&0.2&1&0.3&0.4&0\\
+5&0.2&0&1&0.3&0.4&0\\
 11&1&0&0&-0.5&10&1\\\hline
 &-0.2&0&0&-0.8&$-\rfrac{12}{5}$&0
 \end{tabular}
@@ -838,6 +838,29 @@ Entonces, la solución sería:
 \end{problem}
 
 \begin{problem}[3]
+Consideremos el siguiente problema de optimizaci\'on lineal:
+
+\begin{center}
+\begin{tabular}{ll}
+Minimizar & $c_1x_1+c_2x_2+c_3x_3$ \\
+sujeto a & \\
+& $x_1 - x_2 + 5x_3\leq 10$\\
+& $2x_1 - x_2 + 3x_3 \leq 40$\\
+&$x_1\geq 0,\ x_2\geq 0,\ x_3\geq 0$
+\end{tabular}
+\end{center}
+
+
+\ppart Calcula una direcci\'on extrema  y dos puntos extremos
+  del conjunto factible.
+\ppart Determina unos coeficientes $c_1,c_2,c_3$
+de la funci\'on objetivo tales que el problema no tenga
+soluci\'on \'optima finita.
+\ppart Determina unos coeficientes $c_1,c_2,c_3$
+de la funci\'on objetivo tales que el problema tenga
+infinitas soluciones \'optimas.
+
+
 
 \solution
 
@@ -846,7 +869,7 @@ Lo primero es escribir el problema en forma estándar:
 
 \begin{ioprob}
 \goal{$\min \sum_{i=1}^3 c_ix_i$}
-\restrictions{$x_1-x_2+5x_3 + x_4 = 10$}{$2x_1 - x_2 + x_3 + x_4 = 40$}{$x_i \geq 0$}{}{}
+\restrictions{$x_1-x_2+5x_3 + x_4 = 10$}{$2x_1 - x_2 + x_3 + x_5 = 40$}{$x_i \geq 0$}{}{}
 \end{ioprob}
 
 \spart
@@ -917,6 +940,14 @@ En cuanto al $c$, simplemente con cambiarlo de signo se revienta todo.
 
 \begin{problem}[5]
 
+Consideremos el problema de optimizaci\'on
+\begin{equation*}
+	{\rm min}\ z=c^\top x\ \ \hbox{sujeto a}\ \ x\in S=\{x\in\mathbb{R}^n:\, Ax= b,x\geq 0\}
+\end{equation*}
+donde $b\in\mathbb{R}^m$, $c\in\mathbb{R}^n$ y $A$ es una matriz $m\times n$ de rango $m$.
+
+
+
 \ppart Supongamos que $S≠\emptyset$ y que para un cierto vector no nulo d ≥ 0, $d∈\real^n$ , se verifica $Ad = 0$ ¿Puede asegurarse entonces que existe un vector $c≠0$ tal que el problema tiene solución
 óptima no acotada?
 
@@ -929,12 +960,18 @@ En cuanto al $c$, simplemente con cambiarlo de signo se revienta todo.
 \solution
 
 \spart
-Como $S≠\emptyset$, tenemos $\gor{x}\in S$ y tal que $\gor{x} + λd\in S ∀λ>0$.
+Como $S≠\emptyset$, tenemos $\gor{x}\in S$ y tal que $\gor{x} + λd\in S ∀λ>0$ ya que $A(\gx + λd) = A\gx + λAd = A\gx \in S$.
 
 Esto quiere decir que hay una dirección extrema, en la que a lo largo de ella, nunca salimos del conjunto factible.
-Podemos tomar cualquier $c$ tal que $c^\top d<0$, por ejemplo $c=-d$
+%
+Basta tomar un $c$ que haga que en esa dirección mejore el valor objetivo, para que la solución no esté acotada.
+%
+Podemos tomar cualquier $c$ tal que $c^\top d<0$, por ejemplo $c=-d$.
 
-\spart Sí puede ocurrir
+De esta manera, para cualquier $\gx$ que cumpla $Ax=b$, tenemos $∀λ>0,\; A(\gx+λd) = A\gx+λAd = A\gx = b$, cuyo valor objetivo es: $-d^\top(\gx+λd) = -d^\top \gx -λd^\top d < 0$. Podemos tomar $λ$ tan grande como queramos, dando lugar a una solución no acotada.
+
+
+\spart Claro que puede ocurrir.
 
 \spart Sabemos que punto extremo $\dimplies$ solución factible básica.
 %
@@ -962,6 +999,26 @@ No es una $SFB$ porque $a_3 = a_4 = \begin{pmatrix}1\\1\end{pmatrix}$, por lo qu
 
 
 \begin{problem}[6]
+
+Consideremos el problema:
+maximizar $x_1+3x_2+x_3$, sujeto a $Ax\leq b$, $x\geq 0$,
+siendo $A$ una matriz $2\times 3$, $b\in\mathbb{R}^2$ ($b\geq 0$) y
+$x=(x_1,x_2,x_3)^\top$.
+Se resuelve este problema pas\'andolo a forma est\'andar
+(para lo cual se a\~naden dos variables de holgura $x_4$ y $x_5$) y
+aplicando el algoritmo del simplex. La tabla final del algoritmo ha
+sido:
+
+\begin{center}
+\begin{tabular}{c||c|c|c|c|c}
+$c_j$&-1&-3&-1&0&0\\
+\hline
+Variables&$x_1$&$x_2$&$x_3$&$x_4$&$x_5$\\
+\hline
+$x_1=12$&1&4&3&1&0\\
+$x_5=16$&0&6&2&1&1\\
+\end{tabular}
+\end{center}
 
 \ppart Calcula la matriz $A$ y el vector $b$.
 
@@ -1009,10 +1066,10 @@ Con esto:
 \textbf{Otra posibilidad}
 
 \[
-	\begin{pmatrix} 1&4&3&1&0 \\ 0&6&2&1&1 \end{pmatrix} \overset{Gauss}{\to} \left(\begin{array}{c|c} Λ \begin{array}{cc}1&0\\0&1\end{array}\end{array}\right) = A
+	\begin{pmatrix} 1&4&3&1&0 \\ 0&6&2&1&1 \end{pmatrix} \overset{Gauss}{\to} \left(\begin{array}{c|c} Λ & \begin{array}{cc}1&0\\0&1\end{array}\end{array}\right) = A
 \]
 
-\spart Su ek problema es de maximización, la tabla es óptima si $z_j - c_j ≥ 0 ∀j∈ℕ$.
+\spart Si el problema es de maximización, la tabla es óptima si $z_j - c_j ≥ 0 ∀j∈ℕ$.
 
 El caso general, para un $\gamma$ dado sería:
 
@@ -1052,25 +1109,48 @@ Para este caso concreto (en el que estamos maximizando y no minimizando, con lo 
 
 
 \begin{problem}[7]
+Considera la siguiente tabla del simplex para un
+problema  lineal de minimizaci\'on ($a,b,c,d$ y $e$
+denotan aqu\'{\i} par\'ametros reales):
 
-Este es un problema de examen (ligeramente cambiado)
+\begin{center}
+\begin{tabular}{c||c|c|c|c|c}
+$c_j$&0&b&e&0&0\\
+\hline
+Variables&$x_1$&$x_2$&$x_3$&$x_4$&$x_5$\\
+\hline
+$x_1=a$&1&c&3&0&0\\
+$x_4=2$&0&d&2&1&0\\
+$x_5=4$&0&-1&1&0&1\\
+\end{tabular}
+\end{center}
+
+
+Determina condiciones sobre los par\'ametros $a,b,c,d$ y $e$ de manera que
+
+\ppart  La tabla corresponda a una soluci\'on \'optima.
+\ppart  La tabla indique la situaci\'on de \textit{soluci\'on \'optima no acotada}.
+\ppart  La tabla corresponda a una soluci\'on \'optima y la regi\'on factible  no sea acotada.
+
+\obs Este es un problema de examen (ligeramente cambiado)
 
 
 \solution
 
-a≥0 (está en la pizarra pero no se de donde sale)-
+a≥0 (está en la pizarra pero no se de donde sale).
 
 \spart
 
-En este caso, $z_j - c_j = -c_j$, si $a_j∈B$
+En este caso, $\gor{z_j} = z_j - c_j = -c_j$, si $a_j∈B$. 
+%
+Para que sea solución óptima, $\gor{z_j} ≥ 0$, con lo que:
 
-Por otro lado:
 \[ z_2 - c_2 = -b ≤ 0 \implies b≥0\]
 \[ z_3 - c_3 = -e ≤ 0 \implies e≥0\]
 
-\spart $b<0$ para que mejore al aumentar y $c,d≤0$ para que podamos aumentar todo lo que queramos.
+\spart $b<0$ para que el valor objetivo mejore al aumentar $x_2$ y $c,d≤0$ para que podamos aumentar todo lo que queramos.
 
-\textbf{¿Y si $b=0$?}
+Si $b=0$, con $c,d≤0$ podemos aumentar  
 
 \spart $b,e≥0$ para que sea óptima y para tener una dirección extrema, necesitamos $c,d≤0$.
 
