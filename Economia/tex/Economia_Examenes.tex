@@ -678,3 +678,99 @@ de interés libre de riesgo para el periodo es del 4\% anual para composición c
 \solution
 
 \end{problem}
+
+\section{Primer parcial 2016}
+\begin{problem}[1]
+El subyacente vale hoy 10 y su dinámica está descrita por un árbol binomial recombinante de tres períodos a un horizonte temporal de seis meses. La volatilidad del subyacente es del 30\% y el tipo libre de riesgo para el periodo es del 2.5\% (composición continua)
+\ppart Calibrar el árbol binomial para la valoración (calcular a, b y q).
+\ppart Calcular el precio de la \textbf{call lookback} cuyo flujo final es $S_3-\min\{S_i \mid i \leq 3\}$.
+\ppart ¿Cuál es la cartera que replica el derivado cuando estamos en el segundo período y el subyacente vale 10?
+\solution
+\doneby{Pedro}
+
+\spart
+Aplicando las fórmulas tenemos:
+\[Δt = \frac{0.5}{3} = \frac{1}{6},\;\;\; a=e^{σ\sqrt{Δt}}=1.13, \;\;\; b=\frac{1}{a}=0.88, \;\;\; q = \frac{e^{rΔt}-b}{a-b}=0.49\]
+
+\spart
+
+La siguiente tabla recoge los caminos estudiados:
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Path} & \textbf{Probabilidad} & \textbf{Valor} & \textbf{Valor ponderado}\\
+\hline
+aaa & 0.11 & $S_0 \cdot \left( a^3-1\right) = 4.44 $ & 0.49\\
+aab & 0.12 & $S_0 \cdot \left( a-1  \right) = 1.3 $ & 0.16\\
+aba & 0.12 & $S_0 \cdot \left( a-1 \right) = 1.3 $ & 0.16\\
+abb & 0.13 & 0 & 0 \\
+baa & 0.12 & $S_0 \cdot \left( a-b \right) = 2.46 $ & 0.3\\
+bab & 0.13 & 0 & 0 \\
+bba & 0.13 & $S_0 \cdot \left( b-b^2 \right) = 1.02 $ & 0.13\\
+bbb & 0.14 & 0 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+Así, el valor en $T=0.5$ de la opción es
+\[V_{0.5} = 0.49+0.16+0.16+0.3+0.13 = 1.24\]
+Trayendo este valor al presente obtenemos el valor actual de la opción:
+\[V_0 = V_{0.5}\cdot e^{-rΔt} = 1.24 \cdot e^{-0.025\cdot 0.5} = 1.22\]
+
+\spart
+
+Cuando estamos en el segundo período y el subyacente vale $10$ es que hemos llevado el camino ``ab'' o el camino ``ba''. Puesto que el valor de la opción depende
+del mínimo alcanzado por el activo durante su desarrollo, la cartera de cobertura en este punto será distinta según el camino seguido.
+
+\begin{itemize}
+\item \textbf{Para ``ab''}
+Siendo $\varphi_0$ el número de acciones del activo sin riesgo y $\varphi_1$ el número de acciones del activo $S$ tendremos:
+\[\left\{ \begin{array}{l}
+\varphi_0 \cdot e^{rΔt} + \varphi_1 \cdot 11.3 = 1.3\\
+\varphi_0 \cdot e^{rΔt} + \varphi_1 \cdot 8.85 = 0
+\end{array}\right. \implies \varphi_1 = 0.53 \implies \varphi_0 = -4.66\]
+
+\item \textbf{Para ``ba''}
+\[\left\{ \begin{array}{l}
+\varphi_0 \cdot e^{rΔt} + \varphi_1 \cdot 11.3 = 2.46\\
+\varphi_0 \cdot e^{rΔt} + \varphi_1 \cdot 8.85 = 0
+\end{array}\right. \implies \varphi_1 = 1 \implies \varphi_0 = -8.83\]
+\end{itemize}
+
+
+\end{problem}
+
+\begin{problem}[2]
+Consideramos un subyacente $S_0=50$ cuya dinámica para los próximos seis meses viene descrita por un modelo binomial de dos períodos. En cada periodo el activo puede subir o bajar un 20\%. El tipo libre de riesgo es del 10\% anual para composición continua. El activo no paga dividendos.
+\ppart Calcular la probabilidad riesgo neutro de pasar al estado alto
+\ppart Calcular el valor de la put americana de precio de ejercicio 52.
+
+\solution
+\doneby{Pedro}
+
+\spart
+
+Con los datos del enunciado vemos que $a=1.2$, $b=0.8$, $Δt=0.25$ y $r=0.1$. Para calcular la probabilidad riesgo neutro nos apoyamos en el hecho de que no existen arbitrajes en nuestro modelo y, por tanto, el valor descontado del activo debe coincidir con su valor actual, es decir:
+\[50 = \frac{q\cdot 50 \cdot 1.2 + (1-q)\cdot 50 \cdot 0.8}{e^{0.1\cdot 0.25}} \implies q=0.56\]
+
+\spart
+
+La put americana nos permite ejercer en cualquier instante. Por tanto, en cada nodo debemos comprobar, para poder conocer el valor de la opción en ese instante, si nos interesa o no ejercer.
+
+\begin{itemize}
+\item \textbf{Nodo $aS_0$}
+La acción en este instante vale $60$. Dado que el precio de ejercicio es 52, está claro que no nos interesa ejercer en este instante. Por tanto, el valor de la opción es:
+\[V = \left((K-a^2S_0)^+\cdot q + (K-abS_0)^+\cdot (1-q)\right)\cdot e^{-rΔt} = 1.7\]
+
+\item \textbf{Nodo $bS_0$}
+En este instante la acción vale $40$ por lo que podría intersarnos vender a precio $52$ obteniendo un beneficio de $12$. En caso de no vender, el valor de la opción sería:
+\[V = \left((K-abS_0)^+\cdot q + (K-bbS_0)^+\cdot (1-q)\right)\cdot e^{-rΔt} = 10.72\]
+
+En este caso nos interesa ejercer.
+
+\item \textbf{Nodo $S_0$}
+Nada mas empezar podríamos ejercer la opción obteniendo un beneficio de $2$. En cambio, en caso de no vender tendríamos un valor:
+\[V = \left(1.7\cdot q + 12 \cdot (1-q)\right)e^{-rΔt} = 6.047\]
+\end{itemize}
+
+\end{problem}
