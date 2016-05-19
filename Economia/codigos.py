@@ -264,7 +264,7 @@ def computeValueCashORNothing(path, a, b, p, S0, barrera, K):
 
 		value = value * i
 
-	if value >= barrera:
+	if value > barrera:
 		print string, " & ",  str("{:.4f}".format(K)), " & ", str("{:.4f}".format(prob)), " \\\\"
 		return K * prob
 	else:
@@ -321,6 +321,8 @@ def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
 	return finalValue
 
 
+#print compute_future_value_binary_tree(1.092412275,0.9154053122,0.9179234294,4,10,computeValueSTMinusMin, 1.08**8*12, 12)
+
 #print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarreraUp_Out, 1.08**8*12, 12)
 
 #print compute_future_value_binary_tree(1.08,0.93,0.5,10,12,computeValueCallBarreraUp_In, 1.08**8*12, 12)
@@ -335,10 +337,8 @@ def compute_future_value_binary_tree(a,b,p,T,S0,func, barrera, K):
 
 #print compute_future_value_binary_tree(1.08,0.93,0.77,6,10,computeValueActivo2_3_c, 0, 10)
 
-#print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueCashORNothing, 10, 1)
+#print compute_future_value_binary_tree(1.08,0.92,0.76,6,10,computeValueCashORNothing, 10, 1)
 
-#print compute_future_value_binary_tree(1.08,0.93,0.53,6,10,computeValueAssetORNothing, 10, 0)
+#print compute_future_value_binary_tree(1.08,0.92,0.76,6,10,computeValueAssetORNothing, 10, 0)
 
 #print compute_future_value_binary_tree(1.07,0.93,0.512,12,12,computeValuePutBarreraDown_Out, 1.07**(-8)*12, 12)
-
-print compute_future_value_binary_tree(1.092412275,0.9154053122,0.9179234294,4,10,computeValueSTMinusMin, 1.08**8*12, 12)
