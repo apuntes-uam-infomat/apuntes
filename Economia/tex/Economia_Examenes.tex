@@ -484,7 +484,7 @@ Puesto que la $A$ necesita variable y la empresa $B$ fijo pero a $A$ le tratan m
 \label{figure:swapMayo151a}
 \end{figure}
 
-Así, $A$ está pagando LIBOR - $5\%$ y $B$ está pagando $3\%$, con lo que ambos mejoran sus ofertas iniciales en un $5\%$.
+Así, $A$ está pagando LIBOR - $0.5\%$ y $B$ está pagando $3\%$, con lo que ambos mejoran sus ofertas iniciales en un $0.5\%$.
 
 Sin embargo, el problema nos dice que tenemos una institución financiera actuando como intermediario. La figura \ref{figure:swapMayo151abis} muestra la situación real.
 
@@ -655,7 +655,7 @@ El valor en este instante es:
 \section{Recuperación Junio 2015}
 
 \begin{problem}[1]
-Consideramos una opción que pagará a vencimiento (dentro de tres meses) $(S_4-A_3)^+$ siendo $A_3=\frac{1}{3}\sum_{i=1}^3S_i$, la media de los valores del subyacente a finales de cada mes, hasta vencimiento.
+Consideramos una opción que pagará a vencimiento (dentro de tres meses) $(S_3-A_3)^+$ siendo $A_3=\frac{1}{3}\sum_{i=1}^3S_i$, la media de los valores del subyacente a finales de cada mes, hasta vencimiento.
 
 \ppart Calcular el valor de esta opción. Para ello supondremos que la dinámica para los tres próximos meses viene descrita por un modelo binomial de tres periodos. En cada periodo el activo puede subir o bajar un 3\%. El tipo libre de riesgo es el 5\% anual para composición continua. El activo no paga dividendos y su valor actual es 10.
 
@@ -663,9 +663,40 @@ Consideramos una opción que pagará a vencimiento (dentro de tres meses) $(S_4-
 
 \solution
 
+\doneby{Pedro}
 
+\spart
+Para este problema tenemos:
+\[a=1.03, \;\;\; b=0.97, \;\;\; r = 0.05, \;\;\; q=\frac{e^{rΔt}-b}{a-b}=0.57, \;\;\; S_0 = 10, \;\;\; T = 0.25, \;\;\; Δt = 0.83\]
 
+La tabla \ref{tabla:Junio2015_1} muestra el estudio de los posibles caminos que puede tomar la evolución del activo junto con su valor, la probabilidad de que se de dicho camino y el valor ponderado.
 
+\begin{figure}[hbpt]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Path} & \textbf{Valor} & \textbf{Probabilidad} & \textbf{Ponderado}\\
+\hline
+aaa & 0.315 & 0.185 & 0.058 \\
+aab & 0     & 0.14  & 0 \\
+aba & 0.1   & 0.14  & 0.014 \\
+abb & 0     & 0.106 & 0 \\
+baa & 0.3   & 0.14  & 0.042 \\
+bab & 0     & 0.106 & 0 \\
+bba & 0.097 & 0.106 & 0.01 \\
+bbb & 0     & 0.08  & 0 \\
+\hline
+\end{tabular}
+\caption{Análisis de las trayectorias posibles para la opción dada}
+\label{tabla:Junio2015_1}
+\end{figure}
+
+Con los datos de la tabla \ref{tabla:Junio2015_1} es sencillo comprobar
+\[V_1(X) = 0.124 \implies V_0(X) = 0.122\]
+
+\spart
+
+Si paga dividendos el segundo mes tanto el precio del activo como la media de los valores por los que pasa caen. No obstante, la media se ve menos reducida que el precio final por lo que la diferencia se ve aumentada lo que lleva a un aumento del valor de la opción.
 \end{problem}
 
 \begin{problem}[2]
@@ -683,13 +714,97 @@ Calcular la caretara de cobertura en cada nodo.
 
 \solution
 
+\doneby{Pedro}
+
+\spart
+
+Si en cada período el activo puede subir o bajar un 20\% tenemos $a=1.2$ y $b=0.8$. Como hicimos en el ejercicio anterior, calculamos la probabilidad riesgo neutro forzando que el valor actual del activo coincida con su valor de precios descontados, de modo que no hay arbitrajes:
+\[S_0 = \frac{aS_0p + bS_0(1-p)}{e^{rΔt}} \implies p = \frac{e^{rΔt}-b}{a-b} = 0.58\]
+recordemos que en este caso $r=0.12$.
+
+\spart
+
+La put es un contrato que nos da derecho a vender por un determinado precio. Esta opción tendrá valor no nulo cuando el subyacente al que está asociada haya disminuido de precio. En caso contrario nos interesará vender al valor actual y no al acordado en la put, por lo que no estaremos ejerciendo dicho contrato.
+
+La put americana presenta la particularidad de que nos permite ejercer en cualquier momento.
+
+La siguiente tabla muestra el precio de opción en $T=2$.
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Camino} & \textbf{Valor}\\
+\hline
+aa & 0 \\
+ab & 4 \\
+ba & 4 \\
+bb & 20 \\
+\hline
+\end{tabular}
+\end{center}
+
+Sin embargo, podía ocurrir que hubiésemos ejercicio antes de llegar a esta situación. Vamos a estudiar el valor de esta opción en los estados $aS_0$ y $bS_0$.
+
+\begin{itemize}
+\item \textbf{Estado $aS_0$}
+En este momento no tiene sentido ejercer puesto que el subyacente vale más que el precio de ejercicio. Por tanto el valor en este estado es el resultado de los valores en $abS_0$ y $aaS_0$ descontados:
+
+\[V_{a} = \frac{p\cdot (abS_0-K)^+ + (1-p)\cdot (aaS_0-K)^+}{e^{0.12\cdot 0.25}}=1.65\]
+
+\item \textbf{Estado $bS_0$}
+
+El valor de la opción si ejercemos en este punto es $V_{b_1} = K-bS_0=12$. Si no ejercemos tendremos un valor:
+\[V_{b_2} = \frac{p\cdot (baS_0-K)^+ + (1-p)\cdot (bbS_0-K)^+}{e^{0.12\cdot 0.25}} = 10.46\]
+
+Por tanto en esta situación nos interesa ejercer con lo que el valor de la opción en este punto será
+\[V_b = 12\]
+\end{itemize}
+
+Ahora en el estado inicial tenemos que el precio de la opción es:
+\[V(X) = \frac{12\cdot (1-p) + 1.65\cdot p}{e^{0.12\cdot 0.25}} = 5.86\]
+
+\spart Si pagase dividendos, en el momento del pago el valor decaería con lo que la put ganaría valor haciendo que el precio de la opción aumentase.
+
+\spart
+
+\begin{itemize}
+\item \textbf{Nodo $aS_0$}
+
+En este momento tenemos una opción que paga $a^2S_0-S_0$ con probabilidad $p$ y $aS_0-S_0$ con probabilidad $(1-p)$.
+
+Para replicar esta cartera podemos jugar con el subyacente $S_0$ y la cuenta bancaria con rendimiento fijo conocido. Así necesitamos $\varphi_1$ acciones del activo $S_0$ e $\varphi_0$ de la cuenta bancaria de modo que:
+
+\[\left\{\begin{array}{l}
+\varphi_0 e^{0.12\cdot 0.25}+\varphi_1 \cdot 72 = 22 \\
+\varphi_0 e^{0.12\cdot 0.25}+\varphi_1 \cdot 50 = 10 \\
+\end{array}\right. \implies \varphi_1 = \frac{12}{22} = 0.5, \;\; \varphi_0 = -14.56\]
+
+\item \textbf{Nodo $bS_0$}
+
+En este momento tenemos una opción que paga $S_0-bS_0$ con probabilidad $p$ y $S_0-b^2S_0$ con probabilidad $(1-p)$. Calculamos la cartera de cobertura:
+\[\left\{\begin{array}{l}
+\varphi_0 e^{0.12\cdot 0.25}+\varphi_1 \cdot 50 = 10 \\
+\varphi_0 e^{0.12\cdot 0.25}+\varphi_1 \cdot 32 = 18 \\
+\end{array}\right. \implies \varphi_1 = \frac{-8}{18} = -0.44, \;\; \varphi_0 = 31.13\]
+
+\end{itemize}
+
 \end{problem}
 
 \begin{problem}[3]
-Una institución financiera entró en su día en un swap de tipos en el que cordó pagar un 5\% anual y recibir LIBOR a tres meses sobre un principal de 100 millones de euros con pagos intercambiados cada tres meses. Al swap le quedan 14 meses de vida. El tipo swap para intercambio por el LIBOR a tres meses en estos momentos es del 7\% anual para todos los vencimientos. El tipo LIBOR a tres meses publicado hace dos meses era del 8\%. Todos los tipos son compuestos trimestralmente. ¿Cuál es el valor actual del swap?
+Una institución financiera entró en su día en un swap de tipos en el que acordó pagar un 5\% anual y recibir LIBOR a tres meses sobre un principal de 100 millones de euros con pagos intercambiados cada tres meses. Al swap le quedan 14 meses de vida. El tipo swap para intercambio por el LIBOR a tres meses en estos momentos es del 7\% anual para todos los vencimientos. El tipo LIBOR a tres meses publicado hace dos meses era del 8\%. Todos los tipos son compuestos trimestralmente. ¿Cuál es el valor actual del swap?
 
 \solution
+\doneby{Pedro}
 
+El valor del swap viene dado por
+\[V_{\text{swap}} = B_{\text{fix}}- B_{\text{fl}}\]
+siendo
+\[B_{\text{fix}} =\frac{1.25}{1.0175^{2/3}} + \frac{1.25}{1.0175^{5/3}} +\frac{1.25}{1.0175^{8/3}}  + \frac{1.25}{1.0175^{11/3}} + \frac{101.25}{1.0175^{14/3}} = 98.19\]
+\[B_{\text{fl}} = 102 \cdot \frac{1}{1.0175^{2/3}} = 100.8\]
+
+Así nos queda que el valor del swap para la parte que paga variable es:
+\[V_{\text{swap}} = -2634820.66\]
 \end{problem}
 
 \begin{problem}[4]
@@ -701,6 +816,35 @@ de interés libre de riesgo para el periodo es del 4\% anual para composición c
 \ppart ¿Cuál sería el impacto en dicho precio si, con el subyacente en 10 euros, su volatilidad crece un 10\%?
 \ppart Un incremento de la volatilidad, ¿resultaría positivo o negativo para el titular de la cartera?
 \solution
+\doneby{Pedro}
+
+\spart
+
+La empresa buscará cubrise respecto a los cambios en el precio de la acción para lo que recurrimos a las sensibilidades de la fórmula de la call Cox-Rubinstein. Recordemos que
+\[δ = \partial_S = N(d_+)\]
+
+A la hora de cubrirnos de posibles variaciones en el precio lo que queremos es encontrar una cartera que tenga $δ=0$. Para ello consideramos como elementos de nuestra cartera la call que hemos vendido y el activo $S$. Si por cada call vendida compramos $x$ acciones de $S$, la suma de sus deltas será:
+\[δ - x\cdot 1 = 0 \implies x = δ\]
+por lo que deberemos comprar $1000\cdot δ$ acciones del activo $S$ para cubrirnos.
+
+\obs En la ecuación $δ-x=0$ nos hemos apoyado en el hecho de que la variación del precio del activo $S$ respecto a su precio es 1.
+
+\spart
+
+La delta nos da precisamente la variación del precio de la opción cuando varía el precio del subyacente. Por tanto:
+\[ΔC = δΔS = N(d_+)ΔS = N(d_+)\cdot 0.5 \]
+siendo $C$ el valor de la opción.
+
+\spart
+
+Atendiendo a la derivada respecto de la volatilidad tenemos:
+\[ΔC = \upsilon Δσ = S_0\sqrt{T}N'(d_+)\cdot 0.1 \cdot σ\]
+
+con lo que queda claro que el precio subirá.
+
+\spart
+
+Si aumenta la volatilidad, el precio de la call aumenta por lo que tendrá más valor que el valor al que la vendió originalmente el titular de la cartera. Por tanto un incremento de la volatilidad es negativo para dicho titular.
 
 \end{problem}
 
