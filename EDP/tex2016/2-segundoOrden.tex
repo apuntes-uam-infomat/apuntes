@@ -1724,10 +1724,10 @@
 
 		\begin{gather*}
 		\begin{rcases}
-			f(x^+) = \lim\limits_{t \to x^+} f(t) \\
-			f(x^-) = \lim\limits_{t \to x^-} f(t) \\
-			f'(x^+) = \lim\limits_{h \to 0^+} \frac{f(x+h)-f(x)}{h} \\
-			f'(x^-) = \lim\limits_{h \to 0^-} \frac{f(x+h)-f(x)}{h}
+			f(x_0^+) = \lim\limits_{x \to x_0^+} f(x) \\
+			f(x_0^-) = \lim\limits_{x \to x_0^-} f(x) \\
+			f'(x_0^+) = \lim\limits_{h \to 0^+} \frac{f(x_0+h)-f(x_0^+)}{h} \\
+			f'(x_0^-) = \lim\limits_{h \to 0^-} \frac{f(x_0+h)-f(x_0^-)}{h}
 		\end{rcases} \text{ existen y son finitos}\\
 		\text{Entonces: } \ \lim_{n \to \infty} S_nf(x) = \frac{1}{2} \{f(x^+)+f(x^-)\}
 		\end{gather*}
@@ -1740,9 +1740,9 @@
 		\end{gather*}
 		Tenemos que:
 		\begin{align*}
-			 \int_{-\pi}^\pi f(x-t) D_n (t) dt &= \int_{-\pi}^{0} f(x-t) D_n(t)dt + \int_{0}^\pi f(x-t) D_n(t) dt\\
-			 \textbf{a} = \frac{1}{2} &= \int_0^\pi D_n (t) dt \\
-			 \textbf{b} = \frac{1}{2} &= \int_{-\pi}^0 D_n (t) dt \\
+			\int_{-\pi}^\pi f(x-t) D_n (t) dt &= \int_{-\pi}^{0} f(x-t) D_n(t)dt + \int_{0}^\pi f(x-t) D_n(t) dt\\
+			\textbf{a} = \frac{1}{2} &= \int_0^\pi D_n (t) dt \\
+			\textbf{b} = \frac{1}{2} &= \int_{-\pi}^0 D_n (t) dt \\
 		\end{align*}
 		Luego sustituyendo y agrupando según los límites de integración obtenemos:
 		\[ \left| \underbrace{\int_0^\pi  \{ f(x-t) - f(x^+) \} D_n(t) dt }_{\text{I}} + \underbrace{\int_{-\pi}^{0}  \{ f(x-t) - f(x^-) \} D_n(t) dt }_{\text{II}} \right| \]
@@ -1770,57 +1770,71 @@
 		\noindent Por tanto, las dos integrales se van a 0 y eso implica que $$0 \leq | S_n f(x) - \frac{1}{2} \{f(x^+) + f(x^-)\} | \leq 0$$
 	\end{proof}
 
-
+	\subsubsection{Ejemplo: problema de la suma de Basilea}
 	\begin{example}
+		$ $ % hack
 
-		Dada $f(x) = x(\pi-x), x \in [0,\pi]$
+		\noindent Dada $f(x) = x(\pi-x), x \in [0,\pi]$, hacemos su extensión par, como se puede ver en la \fref{fig:extension-par-03-07}:
+		\[ f_1(x) =
+		\begin{cases}
+			f(x) & x \in [0, \pi]\\
+			f(-x) & x \in [-\pi, 0]\\
+		\end{cases} \]
 
-		(DIBUJO SEMICIRCUNFERENCIA).
+		\begin{figure}[hbtp]
+		\centering
+		\begin{subfigure}[t]{.5\textwidth}
+			\centering
+			\inputtikz{Joroba-Ejemplo03-07}
+			\caption{$f$ es la joroba de un dromedario.}
+			\label{fig:Joroba-Ejemplo03-07}
+		\end{subfigure}%
+		\begin{subfigure}[t]{.5\textwidth}
+			\centering
+			\inputtikz{Camello-Ejemplo03-07}
+			\caption{$f_1$ es parte del perfil de un camello.}
+			\label{fig:Camello-Ejemplo03-07}
+		\end{subfigure}
+		\caption{Los colores son totalmente arbitrarios...}
+		\label{fig:extension-par-03-07}
+		\end{figure}
 
-		\textbf{1:}
 
-		$f_1 = $ extensión par de $f$:
-
-		(DIBUJO)
-
-		\[\{ 1, \sin{kx}, \cos{kx} \}_{k = ±1,±2,…} \]
+		Consideramos la base
+		\[\set{ 1, \sin{kx}, \cos{kx} }_{k = ±1,±2,…} \]
 
 		\obs No está normalizada, si quisiéramos usar Parseval, tendríamos que normalizar.
 
 		El teorema de Dirichlet nos garantiza lo siguiente:
 
 		\[
-			f_1(x) = \frac{a_0}{2} + \sum_{k=1}^\infty a_k \cos{kx} + \sum_{k=1}^\infty b_k \sin kx
+			f_1(x) = \frac{a_0}{2} + \sum_{k=1}^\infty a_k \cos(kx) + \sum_{k=1}^\infty b_k \sin (kx)
 		\]
 
-		Pero tenemos que $b_k = 0 \forall x$:
+		Vamos a ver que $b_k = 0 \ \forall x$: ya que $f_1$ es par, tenemos que
+		\[b_k = \frac{1}{\pi} \int_{-\pi}^{\pi} \underbrace{f_1(x) \sin (kx)}_{\text{impar}} \ dx = 0 \]
 
-		\[b_k = \frac{1}{\pi} \int_{-\pi}^{\pi} f_1(x) \sin kx dx = 0 \]
+		Luego $a_0$ es:
+		\[ a_0 = \frac{1}{\pi} \int_{-\pi}^{\pi} \underbrace{f_1(x)}_{\text{par}} dx = \frac{2}{\pi} \int_0^\pi x(\pi-x) dx = \frac{2}{\pi} \left(\left. \frac{\pi}{2}x^2 - \frac{x^3}{3} \right|_{0}^{\pi} \right) = \frac{\pi^2}{3} \]
 
-		Tenemos que $a_0$ es:
-
-		\[ a_0 = \frac{1}{\pi} \int_{-\pi}^{\pi} f_1(x) dx = … = \frac{\pi^2}{3} \]
-
-		\[ a_k = \frac{1}{\pi} \int_{-\pi}^{\pi} \underbrace{f_1(x) \cos (kx)}_{\text{par}} dx = \frac{2}{\pi} \int_{0}^{\pi} x(\pi - x) \cos (kx) dx \]
-
-		\[ = \frac{2}{\pi} \left\{ \pi \int_{0}^{\pi} x \cos(kx) dx  - \int_{0}^{π} x^2 \cos(kx) dx \right\} = \text{ por partes dos veces ...} \]
-
-		\[ \Rightarrow … \Rightarrow a_k = \begin{cases}
+		y
+		\begin{gather*}
+			a_k = \frac{1}{\pi} \int_{-\pi}^{\pi} \underbrace{f_1(x) \cos (kx)}_{\text{par}} dx = \frac{2}{\pi} \int_{0}^{\pi} x(\pi - x) \cos (kx) dx = \\
+			= \frac{2}{\pi} \left\{ \pi \int_{0}^{\pi} x \cos(kx) dx  - \int_{0}^{π} x^2 \cos(kx) dx \right\} \eqreasonup{por partes dos veces} \dots =
+			\begin{cases}
 			\frac{-4}{k^2} & k \text{ par} \\
 			0 & k \text{ impar}
-		\end{cases}  \]
+			\end{cases}
+		\end{gather*}
 
 		Luego tenemos que $\frac{a_0}{2} = \frac{\pi^2}{6}$ y $a_{2n} = \frac{-4}{(2n)^2} = \frac{-1}{n^2}$
 
 		\obs si hacemos una extensión {\bf par}, tendrá periodo $\pi$; y si hacemos una extensión {\bf impar} tendrá periodo $2\pi$.
 
-		{\bf Conclusión:}
-
+		\noindent {\bf Conclusión:}
 		\[ x(\pi - x) = \frac{\pi^2}{6} -\sum_{n=1}^{\infty} \frac{1}{n^2} \cos(2n x) \]
-
 		En particular, si $x=0$:
-
-		\[ 0 = \frac{π^2}{6}  - \sum_{n=1}^\infty \frac{1}{n^2} \Rightarrow  \sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6} \]
+		\[ 0 = \frac{π^2}{6}  - \sum_{n=1}^\infty \frac{1}{n^2} \implies  \sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6} \]
 
 		Este resultado fue probado por Euler, y la suma de $\frac{1}{n^2}$ se la conoce como \concept{Problema de la suma de Basilea}.
 
@@ -1833,18 +1847,27 @@
 		Despejando obtenemos que
 		\[ \sum_{j=1}^\infty \frac{1}{(2j-1)^2} = \frac{\pi^2}{6} - \frac{1}{4} \frac{\pi^2}{6} = \frac{\pi^2}{8} = 1 + \frac{1}{3^2} + \frac{1}{5^2} + … \]
 
-		\textbf{2:}
 
-		Veamos $f_2$ como la extensión impar de $f$:
+		\subsubsection{Ejemplo: extensión par}
+		Veamos $f_2$ como la extensión impar de la $f$ anterior:
+		\[ f_2 =
+		\begin{cases}
+		 	f(x) & x \in [0, \pi]\\
+		 	-f(-x) & x \in [-\pi, 0]\\
+		 \end{cases} \]
 
-		(DIBUJO)
+		\begin{figure}[hbtp]
+			\inputtikz{EjemploExtensionImpar-03-07}
+			\caption{La extensión impar a $[-\pi,\pi]$ de $x(\pi-x)$}
+			\label{fig:EjemploExtensionImpar-03-07}
+		\end{figure}
 
-		\[ f_2 \Rightarrow \underbrace{\frac{a_0}{2}}_{0} + \sum_k \underbrace{a_k \cos(kx)}_{0} + \sum_k b_k \sin(kx)  \]
+		Tenemos pues que la $f_2$ es:
+		\[ f_2(x) = \underbrace{\frac{a_0}{2}}_{0} + \sum_k \underbrace{a_k \cos(kx)}_{0} + \sum_k b_k \sin(kx) =  \sum_k b_k \sin(kx) \]
 
-		\[  x(\pi - x) = \sum_{n=1}^{\infty} \frac{8}{n(2n-1)^3} \sin(2_n-1)x  \]
+		\[  x(\pi - x) = \sum_{n=1}^{\infty} \frac{8}{\pi(2n-1)^3} \sin((2n-1)x) = 1 - \frac{1}{3^3} + \frac{1}{5^3} - \frac{1}{7^3} + … = \frac{\pi^3}{32}\]
 
-		\[  1 - \frac{1}{3^3} + \frac{1}{5^3} - \frac{1}{7^3} + … = \frac{\pi^3}{32}\]
-
+		\obs Acabamos de ver que el resultado {\bf depende de} si la extensión que hacemos es par o impar.
 
 	\end{example}
 
@@ -1856,22 +1879,22 @@
 
 
 % Clase 8/3/2016
+	\subsubsection{Aplicación a la indentidad de Parseval}
+		Al igual que con el teorema de Dirichlet, podemos ver la aplicación de la identidad de Parçeval, que nos decía que \[ \norm{f}_{L^2}^2 = \sum_{k ∈ ℤ} \abs{\pesc{f, φ_k}}^2 \] con $\set{φ_k}$ nuestro sistema ortonormal.
 
-Al igual que con el teorema de Dirichlet, podemos ver la aplicación de la identidad de Parçeval, que nos decía que \[ \norm{f}_{L^2}^2 = \sum_{k ∈ ℤ} \abs{\pesc{f, φ_k}}^2 \] con $\set{φ_k}$ nuestro sistema ortonormal.
+		Consideramos de nuevo la extensión par de $f(x) = x(π-x)$. Podemos calcular y ver que \[ \pesc{\tilde{f}, φ_0} = \frac{1}{\sqrt{2π}} 2 \int_0^π x(π-x) \dif x = \sqrt{\frac{2}{π}} \left( \left. \frac{πx^2}{2} - \frac{x^3}{3}\right|_{x = 0}^π \right) =  \sqrt{\frac{2}{π}} \frac{π^3}{6} \]
 
-Consideramos de nuevo la extensión par de $f(x) = x(π-x)$. Podemos calcular y ver que \[ \pesc{\tilde{f}, φ_0} = \frac{1}{\sqrt{2π}} 2 \int_0^π x(π-x) \dif x = \sqrt{\frac{2}{π}} \left(\frac{πx^2}{2} - \frac{x^3}{3}\right|_{x = 0}^π =  \sqrt{\frac{2}{π}} \frac{π^3}{6} \]
+		Para el resto de los coeficientes, vemos primero que los coeficientes de los senos van a ser $0$ por simetría. En el caso de los cosenos, vemos que \[ \pesc{\tilde{f}, \frac{\cos kx}{\sqrt{π}}} = \frac{2}{\sqrt{π}} \int_{0}^π x(π-x) \cos kx \dif x = \frac{2}{\sqrt{π}} \left(π\int_0^π x \cos kx \dif x - \int_0^π x^2 \cos kx \dif x \right) \]
 
-Para el resto de los coeficientes, vemos primero que los coeficientes de los senos van a ser $0$ por simetría. En el caso de los cosenos, vemos que \[ \pesc{\tilde{f}, \frac{\cos kx}{\sqrt{π}}} = \frac{2}{\sqrt{π}} \int_{0}^π x(π-x) \cos kx \dif x = \frac{2}{\sqrt{π}} \left(π\int_0^π x \cos kx \dif x - \int_0^π x^2 \cos kx \dif x \right) \]
+		Resolvemos las dos integrales por separado: \[ \int_0^π x \cos kx \dif x = x \eval{\frac{\sin kx}{k}}_{x=0}^π - \int_0^π \frac{\sin kx}{k} \dif x = \eval{\frac{\cos kx}{k^2}}_{x=0}^π = \frac{(-1)^k - 1}{k^2} \] y la otra integral sale \[ \int_0^π x^2 \cos kx \dif x = \dotsb = \frac{2π}{k^2} (-1)^k \]
 
-Resolvemos las dos integrales por separado: \[ \int_0^π x \cos kx \dif x = x \eval{\frac{\sin kx}{k}}_{x=0}^π - \int_0^π \frac{\sin kx}{k} \dif x = \eval{\frac{\cos kx}{k^2}}_{x=0}^π = \frac{(-1)^k - 1}{k^2} \] y la otra integral sale \[ \int_0^π x^2 \cos kx \dif x = \dotsb = \frac{2π}{k^2} (-1)^k \]
+		Juntando ahora y haciendo más cuentas, queda que \[ \pesc{\tilde{f}, \frac{\cos kx}{\sqrt{π}}} = \frac{2 \sqrt{π}}{k^2}\left(-1 - (-1)^k\right) = \begin{cases} 0 & k \text{ impar} \\ \frac{-4\sqrt{π}}{k^2} & k \text{ par} \end{cases} \]
 
-Juntando ahora y haciendo más cuentas, queda que \[ \pesc{\tilde{f}, \frac{\cos kx}{\sqrt{π}}} = \frac{2 \sqrt{π}}{k^2}\left(-1 - (-1)^k\right) = \frac{2\sqrt{π}}{k^2} \begin{cases} 0 & k \text{ impar} \\ -2 & k \text{ par} \end{cases} \]
+		Por otra parte, vemos que \[ \norm{\tilde{f}}^2_{L^2} = \dotsb =\frac{π^5}{15} \]
 
-Por otra parte, vemos que \[ \norm{\tilde{f}}^2_{L^2} = \dotsb =\frac{π^5}{15} \]
+		Así, la identidad de Parçeval nos dice que \[ \frac{π^5}{15} = \left(\sqrt{\frac{2}{π}} \frac{π^3}{6}\right)^2 + \sum_{n=1}^∞ \left(\frac{2\sqrt{π}}{(2n)^2} - ( -2)\right)^2 = \frac{π^5}{18} + \sum_{n=1}^{∞} \frac{π}{n^4} \] y que simplificando \[ \sum_{n=1}^∞ \frac{1}{n^4} = \frac{π^4}{90} \]
 
-Así, la identidad de Parçeval nos dice que \[ \frac{π^5}{15} = \left(\sqrt{\frac{2}{π}} \frac{π^3}{6}\right)^2 + \sum_{n=1}^∞ \left(\frac{2\sqrt{π}}{(2n)^2} - ( -2)\right)^2 = \frac{π^5}{18} + \sum_{n=1}^{∞} \frac{π}{n^4} \] y que simplificando \[ \sum_{n=1}^∞ \frac{1}{n^4} = \frac{π^4}{90} \]
-
-Incluso podríamos repetir el resultado que hacíamos antes y sacar todavía más resultados de teoría de números, separando la suma de los pares y los impares \[ \frac{π^4}{90} = \sum_{k ∈ ℕ} \frac{1}{(2k)^4} + \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} = \sum_{k∈ℕ} \frac{1}{16k^4} + \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} \] y entonces podemos despejar y ver que \[ \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} =  \frac{π^4}{90} \frac{15}{16} \]
+		Incluso podríamos repetir el resultado que hacíamos antes y sacar todavía más resultados de teoría de números, separando la suma de los pares y los impares \[ \frac{π^4}{90} = \sum_{k ∈ ℕ} \frac{1}{(2k)^4} + \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} = \sum_{k∈ℕ} \frac{1}{16k^4} + \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} \] y entonces podemos despejar y ver que \[ \sum_{k ∈ ℕ} \frac{1}{(2k-1)^4} =  \frac{π^4}{90} \frac{15}{16} \]
 
 
 \subsection{Convergencia puntual para funciones Hölder continuas}
