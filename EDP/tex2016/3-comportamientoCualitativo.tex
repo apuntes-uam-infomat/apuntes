@@ -587,7 +587,7 @@ En este capítulo vamos a ver:
 			\clearpage % FIXME: puede romper la estructura del documento
 			\obs Esta definición que viene ahora no entra y viene acompañada de un ejemplo que no se ha incluido aquí.
 
-			\begin{defn}[Derivada débil]
+			\begin{defn}[Derivada\IS débil]
 
 				G es la derivada débil de $F$ si y solo si:
 
@@ -938,23 +938,55 @@ En este capítulo vamos a ver:
 
 		% Clase 11-4-2016
 
-		Investiguemos un poco más que pasa en $N > 2$. Realizaremos una prueba apoyada en las identidades de Green y demás teoremas del análisis matemático. El primero será el de Gauss, que pasamos a recordar a continuación.
+		Investiguemos un poco más qué pasa en $N > 2$. Realizaremos una prueba apoyada en las identidades de Green y demás teoremas del análisis matemático. El primero será el de Gauss, que pasamos a recordar a continuación.
 
-		\begin{theorem}[Teorema\IS de Gauss] \label{thm:Gauss} Sea $Ω ⊂ ℝ^3$ una región con borde $∂Ω$, y $\appl{\vf}{Ω}{ℝ^3}$ un campo vectorial continuo y derivable. Entonces se cumple que \[
-			\iint_{∂V} \vf \dif S = \iiint_{Ω} \dv \vf \dif x \dif y \dif z
+		\begin{theorem}[Teorema\IS de la divergencia de Gauss] \label{thm:Gauss}
+		$ $\\ % hack
+		Sea ${Ω ⊂ ℝ^3}$ una región con borde $∂Ω$, y ${\appl{\vf}{Ω}{ℝ^3}}$ un campo vectorial continuo y derivable. Entonces se cumple que \[
+			\int_{∂\Omega} \vf \dif S = \int_{Ω} \dv \vf \dif x \dif y \dif z
 		\]
+		Con dS la {\bf medida de la superficie sobre $\partial \Omega$}.\index{Medida! de una superficie}
 		\end{theorem}
 
-		Recordamos también que la divervencia dado un campo $\vf = (F_1, \dotsc, F_n)$ se calcula como \[ \dv \vf = \pd{F_1}{x_1} + \dotsb + \pd{F_n}{x_n} \] y que la integral sobre una superficie con vector normal unitario $\vn$ es \[ \int_{∂V} \vf \dif S = \int_{∂V} \pesc{\vf, \vn} \dif x \dif y \dif z \]
+		Recordamos también que la \concept[Divergencia]{divergencia} dado un campo $\vf = (F_1, \dotsc, F_n)$ se calcula como \[ \dv \vf = \pd{F_1}{x_1} + \dotsb + \pd{F_n}{x_n} \] y que la \concept[Integral\IS sobre una superficie]{integral sobre una superficie} con {\bf vector normal exterior unitario} $\vn$ es \[ \int_{∂\Omega} \vf \dif S = \int_{∂\Omega} \pesc{\vf, \vn} \dif S \]
 
-		Este ejemplo nos interesa particularmente porque el laplaciano es la divergencia del gradiente, esto es, $Δu = \dv (\grad u)$.
+		Este ejemplo nos interesa particularmente porque
+		\begin{prop}
+			El laplaciano es la divergencia del gradiente, esto es, $Δu = \dv (\grad u)$.
+		\end{prop}
 
 		También tendremos la siguiente identidad a partir del Teorema de Gauss, que nos será útil para simplificar los cálculos.
 
-		\begin{prop}[Identidad\IS de Green] \label{prop:IdGreen} Sean $u,v ∈ C^2(U)$ con $U ⊂ ℝ^3$. Entonces se cumple que \( \int_U v · Δu - u · Δv \dif V = \int_{∂U} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S \label{eq:IdGreen} \) donde $\pd{v}{\vn}$ no es más que una forma pija\footnote{Seguro que ha sido un físico.} de poner la derivada direccional: \[ \dpd{v}{\vn} = \pesc{\grad v, \vn} = \grad_{\vn} v\]
+		\subsubsubsection{Identidades de Green}
+		% 1
+		\begin{prop}
+			Sea $u$ armónica en $\Omega$, entonces
+			\[ 0 = \int_\Omega \Delta u \dif \gor{x} = \int_\Omega \dv (\grad u) \dif \gor{x} \eqreason{Gauss} \int_{\partial \Omega} \pesc{\grad u, \vn} \dif S = \int_{\partial \Omega} \pd{u}{\vn} \dif S \]
 		\end{prop}
+		Donde $\pd{u}{\vn}$ no es más que \concept[Derivada\IS direccional]{la derivada direccional}: \[ \dpd{u}{\vn} = \pesc{\grad u, \vn} = \grad_{\vn} u \]
 
-		Es espcialmente interesante porque nos dará una forma de ``integrar por partes'' en dimensiones superiores, ya que podemos reescribir $\int v Δu$ quitándonos el laplaciano en $u$: \( \label{eq:IntegPartesNDim} \int_U v · Δ u \dif V = \int_{∂V} \left(v \dpd{u}{\vn} - u \dpd{v}{\vn}\right) \dif S + \int_U u·Δv \dif V\)
+		% 2
+		\begin{prop}[Fórmula\IS de integración por partes] \label{prop:IdGreen2}$ $\\ % hack
+			Sean $u \in C^1$, $v \in C^2$, entonces
+				\( \int_\Omega u \Delta v \dif \gor{x} = \int_{\partial \Omega} u \pd{v}{\vn} dS - \int_\Omega \pesc{\grad u, \grad v} \dif \gor{x} \label{eq:IntegPartesNDim} \)
+		\end{prop}
+		\begin{proof}
+			Necesitaremos un campo vectorial, y nosotros sólo tenemos funciones escalares. Definiremos pues $\vf = u \cdot \grad v = (u v_{x_1}, \dots, u v_{x_n})$. Entonces \( \dv \vf = \pesc{\grad u, \grad v} + u \Delta v \label{eq:proofParts} \) integrando y aplicando Gauss
+			\[ \int_\Omega \dv \vf \dif \gor{x} \eqreason{\ref{eq:proofParts}} \int_{\Omega} \pesc{\grad u, \grad v} + u \Delta v \dif\gor{x} \eqreason{Gauss} \int_{\partial \Omega} \underbrace{u \pd{v}{\vn}}_{\pesc{F, \vn}} \dif S  \]
+			despejando
+			\[ \int_\Omega u \Delta v \dif \gor{x} = \int_{\partial \Omega} u \pd{v}{\vn} dS - \int_\Omega \pesc{\grad u, \grad v} \dif \gor{x} \]
+		\end{proof}
+
+		% 3
+		\begin{theorem}[Identidad\IS de Green] \label{thm:IdGreen}
+		$ $\\ % hack
+		Sean $u,v ∈ C^2(\Omega)$ con $\Omega ⊂ ℝ^3$. Entonces se cumple que \( \int_\Omega v · Δu - u · Δv \dif \gor{x} = \int_{∂\Omega} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S \label{eq:IdGreen} \)
+		\end{theorem}
+		\begin{proof}
+			Aplicar \ref{prop:IdGreen2} a $u \Delta v$ y a $v \Delta u$, restar e integrar.
+		\end{proof}
+
+		% Es especialmente interesante porque nos dará la \concept[Fórmula\IS de integración por partes]{fórmula de integración por partes} en dimensiones superiores, ya que podemos reescribir $\int v Δu$ quitándonos el laplaciano en $u$: \( \label{eq:IntegPartesNDim} \int_\Omega v · Δ u \dif \gor{x} = \int_{∂\Omega} \left(v \dpd{u}{\vn} - u \dpd{v}{\vn}\right) \dif S + \int_\Omega u·Δv \dif \gor{x}\)
 
 		Con todas estas herramientas ya podremos probar la propiedad de la media:
 		\begin{prop}[Propiedad\IS de la media] \label{prop:MediaBola} Sea $\bola_{R}(\va) ⊂ ℝ^N$ una bola $N$-dimensional de radio $R$ centrada en $\va ∈ ℝ^N$, y sea $u$ solución del problema dado por \[
@@ -966,9 +998,9 @@ En este capítulo vamos a ver:
 		Entonces, se cumple la propiedad de la media: \[ u(\va) = \frac{1}{\abs{∂\bola_R}} \int_{∂\bola_R} u(\vx) \dif σ\] donde $\abs{∂\bola_R(\va)}$ es la medida del borde de la bola (es decir, el área/volumen/loquesea de la hiperesfera de radio $R$).
 		\end{prop}
 
-		\begin{proof} Vamos a tratar de aplicar las identidades anteriores, aunque para ello necesitaremos un campo vectorial, y nosotros sólo tenemos una función escalar. Definiremos pues $\vf = v · \grad u = \left(v u_{x_1}, \dotsc, v u_{x_n}\right)$, de tal forma que la divergencia nos queda $\dv \vf = \pesc{\grad v, \grad u} + v Δ u$.
+		\begin{proof} Vamos a tratar de aplicar las identidades anteriores. De nuevo, hacemos el mismo truco de definir $\vf = v · \grad u = \left(v u_{x_1}, \dotsc, v u_{x_n}\right)$, de tal forma que la divergencia nos queda $\dv \vf = \pesc{\grad v, \grad u} + v Δ u$.
 
-		Como idea feliz para el caso $N > 2$ (que es el que queremos demostrar, el resto ya lo tenemos) tomaremos $v$ de la siguiente forma\footnote{Si tuviésemos $N=2$ tomaríamos $\log \norm{\vx}$.}: \[ v(\vx) = \frac{1}{\norm{\vx}^{N-2}} = (x_1^2 + \dotsb + x_N^2)^{\frac{2-N}{2}}\]
+		Como idea feliz para el caso $N > 2$ (que es el que queremos demostrar, el resto ya lo tenemos) tomaremos $v$ de la siguiente forma (si tuviésemos $N=2$ tomaríamos $\log \norm{\vx}$.): \[ v(\vx) = \frac{1}{\norm{\vx}^{N-2}} = (x_1^2 + \dotsb + x_N^2)^{\frac{2-N}{2}}\]
 
 		Haciendo cuentas, nos salen dos resultados interesantes para el gradiente y el laplaciano (ambos definidos sólo cuando $\vx ≠ \vec{0}$):
 		\begin{align*}
@@ -976,9 +1008,9 @@ En este capítulo vamos a ver:
 		- Δ v &= 0
 		\end{align*}
 
-		Ahora trataríamos de aplicar la \nref{prop:IdGreen}, pero tenemos que tener cuidado porque ni $v$ ni su gradiente son continuas en todo $ℝ^n$. Tendremos que quitarnos el punto conflictivo, así que integraremos en $B = \bola_R \setminus \bola_ε$ con $ε > 0$.
+		Ahora trataríamos de aplicar la \nref{thm:IdGreen}, pero tenemos que tener cuidado porque ni $v$ ni su gradiente son continuas en todo $ℝ^n$. Tendremos que quitarnos el punto conflictivo, así que integraremos en $B = \bola_R \setminus \bola_ε$ con $ε > 0$.
 
-		Ahora sí podemos aplicar Green, con la ventaja de que $Δu = Δv = 0$. Así, nos queda que \[ \int_{∂B} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S = \int_{B} v Δu - uΔv = 0 \]
+		Ahora sí podemos aplicar Green, con la ventaja de que $-Δu = -Δv = 0$ en $B$. Así, nos queda que \[ \int_{∂B} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S = \int_{B} v Δu - uΔv = 0 \]
 
 		\begin{wrapfigure}[8]{R}[0.1\textwidth]{0.3\textwidth}
 		\centering
@@ -992,22 +1024,26 @@ En este capítulo vamos a ver:
 		 \int_{∂\bola_{R}} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S &=  \int_{∂\bola_ε} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S
 		\end{align*}
 
-		Sabiendo que $v = \frac{1}{\norm{\vx}^{N-2}}$, resolvemos la integral sobre un borde:
-		\[ \int_{∂\bola_R} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S = \int_{∂\bola_R} \frac{1}{R^{N-2}} \dpd{u}{\vn} - u \frac{2-N}{R^{N-1}} \dif S = \dotsb
+		Sabiendo que $v = \frac{1}{\norm{\vx}^{N-2}}$, y usando que \[ \pd{v}{\vn} = \pesc{\grad v, \frac{\gor{x}}{\norm{x}}} = (2-N) \frac{1}{R^{N-1}} \quad (< 0 \text{ porque } N > 2) \] resolvemos la integral sobre un borde:
+		\[ \int_{∂\bola_R} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S_R = \int_{∂\bola_R} \frac{1}{R^{N-2}} \dpd{u}{\vn} \dif S_R - \frac{2-N}{R^{N-1}} \int_{∂\bola_{R}} u \dif S_R \eqreason{Gauss + $-\Delta u \equiv 0$} \frac{N-2}{R^{N-1}} \int_{∂\bola_{R}} u \dif S_R
 		\]
+		de manera similar, sobre el otro borde
+		\[ \int_{∂\bola_\epsilon} v \dpd{u}{\vn} - u \dpd{v}{\vn} \dif S_\epsilon = \frac{N-2}{\epsilon^{N-1}} \int_{∂\bola_\epsilon} u \dif S_\epsilon \]
+		Luego llegamos a que
+		\[\frac{1}{R^{N-1}} \int_{∂ \bola_R} u \dif S_R = \frac{1}{\epsilon^{N-1}} \int_{∂\bola_\epsilon} u \dif S_\epsilon \]
+		Utilizando que $\abs{∂ \bola_R} = \omega_N R^{N-1}$, donde $\omega_N$ es la {\bf medida de una esfera} de radio 1:
+		\[ \frac{1}{\abs{∂ \bola_R}} \int_{∂ \bola_R} u \dif S_R = \frac{1}{\abs{∂ \bola_\epsilon}} \int_{∂\bola_\epsilon} u \dif S_\epsilon \]
+		Como $u$ es armónica en $\Omega \supset \bola_\epsilon$, entonces $u$ es continua en $\partial \bola_\epsilon$. Luego existen $m_\epsilon, M_\epsilon$ tales que $m_\epsilon = \min\limits_{\partial \bola_\epsilon} u$, $M_\epsilon = \max\limits_{\partial \bola_\epsilon} u$, de manera que $m_\epsilon \leq u \leq M_\epsilon$ en $\partial \bola_\epsilon$.
 
-		% TODO: Completar esto.
-		Después de cálculos desconocidos, llegamos a que
-		\[\frac{1}{R^{N-1}} \int_{∂ \bola_R} u \dif \sigma_R = \frac{1}{\epsilon^{N-1}} \int_{∂\bola_\epsilon} u \dif \sigma_\epsilon \]
-		y después de algunos cálculos más a que \[ m_\epsilon \leq \frac{1}{\abs{∂ \bola_{\epsilon}}} \int_{∂ \bola_\epsilon} u \dif \sigma_\epsilon \leq M_\epsilon  \]
+		Por tanto tenemos que
+		\[ m_\epsilon \abs{\partial \bola_\epsilon} \leq \int_{\partial \bola_\epsilon} u \dif S_\epsilon \leq M_\epsilon \abs{\partial \bola_\epsilon} \implies m_\epsilon \leq \frac{1}{\abs{∂ \bola_\epsilon}} \int_{∂ \bola_\epsilon} u \dif S_\epsilon \leq M_\epsilon \]
+		Por continuidad: \[M_\epsilon, m_\epsilon \convs[ ][\epsilon][0] u(0) \]
 
-		Por continuidad: \[M_\epsilon. m_\epsilon \convs[\epsilon][0] u(0) \]
-
+		En \textbf{conclusión}, hemos llegado a lo que buscábamos:
+		\[ u(0) = \frac{1}{|\partial \bola_R|} \int_{∂ \bola_R} u(y) \dif S_R \]
 		\end{proof}
 
 
-		En \textbf{conclusión}, hemos llegado a lo que buscábamos:
-		\[ u(0) = \frac{1}{|\bola_R|} \int_{∂ \bola_R} u(y) \dif  \sigma_R \]
 
 		Sin demostrarlo, vamos a ver que tenemos algunas desigualdades si $u$ es sólo superarmónica o subarmónica.
 
