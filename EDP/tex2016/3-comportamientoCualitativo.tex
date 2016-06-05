@@ -1941,129 +1941,106 @@ En este capítulo vamos a ver:
 		%
 		En un tiempo tan pequeño como queramos, encontramos que el calor del dato inicial se ha desplazado a cualquier punto.
 
-		Vamos a justificarlo.
+		Vamos a justificarlo. Tenemos un objeto que integra 1, luego se comporta como una medida o distribución de probabilidad. La integral
+		\[ u(x,y) = \int_{\real^n} f(y) \cdot G(x-y, t) \dif y  \ > 0 \quad \forall t, \forall  x\]
+		mide la probabilidad de que cualquier partícula en y salte a x, mediante la suma de todas las probabilidades. El núcleo de Gauss permite saltos infinitos, pero con probabilidad muy, muy baja.
+
+		% Supongamos que tenemos una pequeña cantidad de calor en $x=x_1, t=0$.
 		%
-		Supongamos que tenemos una pequeña cantidad de calor en $x=x_1, t=0$.
-		%
-		La función solución $u(x,t)$ siempre positiva. Al integrar el producto en $\vx = \vec{x_2}$ muy alejado de $\vec{x_1}$
+		% La función solución $u(x,t)$ es siempre positiva. Al integrar el producto en $\vx = \vec{x_2}$ muy alejado de $\vec{x_1}$
 
-		\[
-			\int_{\real^n} G(\vx_2-\vy,t)f(\vy)d\vy
-		\]
+		% \[
+		%	\int_{\real^n} G(\vx_2-\vy,t)f(\vy)d\vy
+		% \]
 
+		% Comentarios ``útiles'':
 
+		% \begin{equation}
+		% 	\abs{\dpa{G}{x_i} (z,t)} \leq … \leq \frac{|x_i-y_i|+1}{2\sqrt{4πt}^N} e^{-\frac{\norm{x-y}(\norm{x-y}-2)}{4t}}
+		% 	\label{eq:dejuan}
+		% \end{equation}
 
+		% Este paso clave demuestra que podemos pasar derivadas dentro de integrales, es decir:
 
-		Comentarios ``útiles'':
+		% \[
+		% 	\dpa{u}{x_i} = \int_{\real^N} \dpa{G}{x_i} f
+		% \]
 
-		\begin{equation}
-			\abs{\dpa{G}{x_i} (z,t)} \leq … \leq \frac{|x_i-y_i|+1}{2\sqrt{4πt}^N} e^{-\frac{\norm{x-y}(\norm{x-y}-2)}{4t}}
-			\label{eq:dejuan}
-		\end{equation}
+		% Si tomamos más derivadas, en el término $|x_i-y_i|$ aparecería elevado a alguna potencia.
+		% %
+		% Independientemente de la potencia que aparezca, el argumento sigue siendo válido porque la exponencial negativa de \eqref{eq:dejuan} manda sobre cualquier polinomio.
 
-		Este paso clave demuestra que podemos pasar derivadas dentro de integrales, es decir:
+		Como u es $C^\infty$, deberíamos saber calcular su derivada respecto de x. Pero, ¿podemos hacerlo?
 
-		\[
-			\dpa{u}{x_i} = \int_{\real^N} \dpa{G}{x_i} f
-		\]
+		Para calcular $\pd{u}{x}$ tenemos por definición que
+		\[ \lim_{h \to 0} \frac{u(\gor{x} + h e_i,t)-u(\gor{x},t)}{h} = \lim_{h \to 0} \int\limits_{\real^n} \frac{G(\gor{x}-\gor{y}+he_i,t)-G(\gor{x}-\gor{y})}{h} f(y) dy \]
+		¿Podemos asegurar que el limite y la integral permutan? En primer lugar, no podemos aplicar el teorema de la convergencia monótona porque no sabemos si el signo de la integral es siempre el mismo o cambia. Luego debemos recurrir al siguiente teorema que vimos en TIM:
 
-		Si tomamos más derivadas, en el término $|x_i-y_i|$ aparecería elevado a alguna potencia.
-		%
-		Independientemente de la potencia que aparezca, el argumento sigue siendo válido porque la exponencial negativa de \eqref{eq:dejuan} manda sobre cualquier polinomio.
-
-
-
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-		¿Este resultado prueba convergencia uniforme? No, porque en principio el $δ$, podría depender de $\vx$ y podría ocurrir que necesitáramos una prueba para $\vx$.
-		%
-		Si tomamos uniformemente continua, entonces $\exists δ$ que no depende de $\vx$, con lo que la convergencia es uniforme.
-
-
+		\begin{theorem}[Convergencia\IS dominada]
+			Si
+			\begin{itemize}
+				\item $ f_k \convs[ ][k][\infty] f \text{ puntualmente en } \Omega $
+				\item $ | f_k (x) | \leq F(x), \forall x, \forall k $
+				\item $ F $ integrable.
+			\end{itemize}
+			entonces
+			\[ \lim_{k \to \infty} \int_\Omega f_k = \int_\Omega \lim_{k\to \infty} f_k = \int_\Omega f \]
+		\end{theorem}
 		\begin{proof}
-			¿Qué pasa con $\frac{\partial u}{\partial x}$ ?
-			\[ \lim_{h \to 0} \frac{u(\bar{x} + hei,t)-u(\bar{x},t)}{h} = \lim_{h \to 0} \int\limits_{\real^n} \frac{G(\bar{x}-\bar{y}+he_i,t)-G(\bar{x}-\bar{y})}{h} f(y) dy
-			\]
+		Lo que tenemos que estimar el cociente incremental, utilizando el Teorema del Valor Medio:
+		\[ \frac{G(\gor{x}-\gor{y}+he_i,t)-G(\gor{x}-\gor{y},t)}{h} = \pd{G}{x_i}(z,t) \]
+		Con $z$ un punto intermedio. Haciendo cuentas llegamos a
+		\[ \pd{G}{x_i}(z,t) = \dots = \frac{-z_i}{2t} \frac{1}{(\sqrt{4 \pi t}) ^n} e^{-|z|^2 / 4t} \]
+		Como $z$ es un punto intermedio entre $x-y$, e $x-y+h e_i$, lo podemos escribir como \[ z = x - y + \theta h e_i \quad \theta \in (0,1) \]
+		luego
+		\[ \left| \pd{G}{x_i} (z,t) \right| \leq \frac{|z|}{2t (\sqrt{4 \pi t})^n} e^{- \| z \|^2 / (4t)} \]
 
-			Problema: ¿Podemos permutar límite e integral?
+		Para acotar eso, tenemos que acotar $|z_i|$ por arriba y $|z|^2$ por abajo\footnote{para acotar por arriba una exponencial decreciente hay que encontrar el valor mínimo de su exponente}.
+		\[ |z_i| \leq |x_i - y_i + \theta h e_i| \leq |x_i - y_i| + |\theta h e_i| \eqreason[\leq]{$h\leq1, \theta < 1$} |x_i - y_i| + 1 \]
+		\begin{gather*}
+		|z|^2 = \| x - y + \theta h e_i \|^2 = \pesc{x - y + \theta h e_i. x - y + \theta h e_i} = \dots =\\
+		= \| x - y \|^2 + \| \theta h e_i \|^2 + 2 \pesc{x-y, \theta h e_i} \geq \| x - y\|^2 + 0 - 2 \| x - y\|
+		\end{gather*}
+		donde en la última desigualdad hemos usado Cauchy-Swartz para el producto escalar combinado con que $\theta h e_i \leq 1$, y que el cuadrado de una norma es positivo.
 
-			Usaremos el teorema de convergencia dominada:
+		Recordemos {\bf Cauchy-Swartz}\index{Desigualdad! de Cauchy-Swartz}:
+		\[ -\|a\| \|b\| \leq |\pesc{a, b}| \leq \|a\| \|b\| \]
 
-			\[\left. \begin{array}{r}
-				f_x \to f \text{ puntualmente en } \Omega \\
-				|f_x(x)| \leq F(x), \forall x \forall k \\
-				F \text{integrable}
-			\end{array} \right\} \Rightarrow \lim_k \int\limits_{\Omega} f_k = \int\limits_\Omega \lim f_k = \int\limits_\Omega f\]
+		Luego
+		\[ \left| \pd{G}{x_i} (z,t) \right| \leq \frac{[x_i - y_i| + 1}{2t (\sqrt{4t \pi})^n} \cdot e^{\frac{-\| x-y \|(\| x-y \| - 2)}{4t} } \equiv \psi(y) \ \text{ x,t fijos; y derivable}\]
 
-			\[ \frac{G(\bar{x}-\bar{y}+he_i,t)-G(\bar{x}-\bar{y},t)}{h} = \frac{\partial G}{\partial x}(z,t) \]
+		Luego tenemos dentro de la integral $\psi(y) f(y)$, y sabemos que $f(y)$ está acotada.
 
-			$z$ es un punto intermedio
-
-			\[\frac{\partial G}{\partial X_i}(z,t) = … = \frac{z_i}{2t} \frac{1}{(\sqrt{4\pi t}^n)} e^{-\frac{\|z\|^2}{4t}}\]
-
-			Entonces expresamos $z$, que está entre $\bar{x}-\bar{y}$ y $\bar{x}-\bar{y}+he_i$, como: $z = \bar{x} - \bar{y} + \theta h e_i$ con $\theta \in (0,1)$
-
-			\[ \left| \frac{\partial G}{\partial x}(z,t) \right|  \leq \frac{|z_i}{2t (\sqrt{4\pi t})`n} e^{-\frac{\|z\|}{4t}}\]
-
-			\[\text{ Queremos encontrar} \begin{cases}
-				|z_i| \leq |x_i - y_i| + 1 \\
-				\| z\|^2 \geq (ALGO)
-			\end{cases}\]
-
-			(FALTA)
-
-			Y entonces podemos reescribir lo que queríamos encontrar así:
-
-			\[\begin{cases}
-				|z_i| \leq |x_i - y_i| + 1 \\
-				\| z\|^2 \geq \|\bar{x}-\bar{y}\| (\|\bar{x}-\bar{y}\| -2)
-			\end{cases}\]
-
-			Acotamos la expresión que teníamos así:
-
-			\[ \left| \frac{\partial G}{\partial x}(z,t) \right|  \leq \frac{|z_i}{2t (\sqrt{4\pi t})`n} e^{-\frac{\|z\|}{4t}} \leq \frac{|x_i-y_i| +1}{2t(\sqrt{4 \pi t})^n} e^{-\frac{\|\bar{x}-\bar{y}\| (\|\bar{x}-\bar{y}\| -2)}{4t}}\]
-
-			Lo que es equivalente a $\phi(y)$
-
-			Por lo que hemos acotado:
-
-			\[ \left| \frac{G(x-y+he_i,t) - G(x-y,t)}{h} f(y) \right| \leq \phi(y) g(y) \]
-
-			$f(y)$ está acotada. Y $\phi(y)$ es integrable. Tenemos que hacer que se deje integrar en todo $\real^n$. Tiene que decaer en el infinito, no nos vale que sea continua, pero podemos ver que tiene decaimiento exponencial.
-
-			Hemos demostrado:
-
-			\[ \frac{\partial u}{\partial x_i} = \int\limits_{\real^n}\frac{\partial G}{\partial x} f\]
-
-			Iterando el proceso (pasando todas las derivadas dentro de la integral):
-			\[ u \in C^\infty, t> 0\]
-
-			Como por ejemplo:
-			\[ u_t - \Delta u = … = \int(G_t- \Delta G) f = 0\]
-
-
+		Necesitamos que $\psi$ decaiga a 0 en el infinito, ya que el dominio no está acotado, y que sea continua. Pero todo eso lo tenemos porque el término importante es la exponencial negativa, luego $\psi$ es integrable, luego podemos aplicar el teorema de la convergencia dominada .
 		\end{proof}
 
-		\begin{example}
+		Para calcular la segunda derivada, en lugar de $|z_i|$ en la prueba aparece $z_i^2$. Luego el mismo argumento vale porque sigue dominando la exponencial negativa. Iterando el argumento hasta $z_i^n$ tenemos que $u \in C^\infty$.
+
+		\obs Hemos utilizado que $t>0$
+
+		El mismo argumento nos dice que $u_t - \Delta u = \int (G_z - \Delta G) f = 0$ . Pero, ¿recuperamos el dato inicial?
+
+		\begin{proof}
 
 			Queremos probar:
-			\[ \int\limits_{\real^n} G(x-y,t) f(y) dy \convs[][t][0^+] f(x)\]
+			\[ \int\limits_{\real^n} G(x-y,t) f(y) \dif y \convs[][t][0^+] f(x)\]
 
-			\[ 0 \leq \left| \int\limits_{\real^n} G(x-y,t) f(y) dy - f(x) \int_{\real^n} G(x-y,t) dy \right|\]
+			\[ 0 \leq \left| \int\limits_{\real^n} G(x-y,t) f(y) \dif y - f(x) \int_{\real^n} G(x-y,t) \dif y \right| = \]
 
-			\[ = \left| \int_{\real^n} G(x-y,t) (f(y)-f(x))dy \right| \eqreason[\leq]{$G \geq 0$} \int_{\real^n} G(x-y,t) |f(x) - f(y)| dy \]
+			\[ = \left| \int_{\real^n} G(x-y,t) (f(y)-f(x))\dif y \right| \eqreason[\leq]{$G \geq 0$} \int_{\real^n} G(x-y,t) |f(x) - f(y)| \dif y \]
 
-			Dado $\epsilon > 0$ encontramos $\delta$ tal que si $\|x-y\| < \delta$, entonces $|f(\bar{x})-f(\bar{y})| < \epsilon$
-
+			Aquí tenemos el mismo problema que con el núcleo de Poisson. Pero $f$ es continua, luego dado $\epsilon > 0$ encontramos $\delta$ tal que si $\|x-y\| < \delta$, entonces $|f(\bar{x})-f(\bar{y})| < \epsilon$. Dividimos la integral en dos trozos:
 			\[ \int\limits_{\real^n} = \underbrace{\int\limits_{\|x-y\| < \delta}}_{(1)} + \underbrace{\int\limits_{\|x-y\|>\delta}}_{(2)}\]
 
 			\[ (1) \leq \int\limits_{\|x-y\|\leq \delta} G \epsilon \eqreason[\leq]{$\int_{\real^n} G = 1$} \epsilon\]
 
-			\[ (2): \int\limits_{\|x-y\|>\delta} G(x-y) \underbrace{| f(x) - f(y) |}_{C,f \text{ acotada}} dy \leq C \int\limits_{\|x-y\| > \delta} \frac{1}{(\sqrt{4\pi t})^n} e^{-\frac{\|x-y\|^2}{4t}} dy \convs[exponencial][t][0^+] \epsilon\]
+			\[ (2): \int\limits_{\|x-y\|>\delta} G(x-y) \underbrace{| f(x) - f(y) |}_{C,f \text{ acotada}} \dif y \leq C \int\limits_{\|x-y\| > \delta} \frac{1}{(\sqrt{4\pi t})^n} e^{-\frac{\|x-y\|^2}{4t}} \dif y \convs[exponencial][t][0^+] \epsilon\]
+			Ya que la única forma de que el producto diverja es que $x-y=0$, pero ese caso está fuera de la región en la que estamos integrando.
 
 			Entonces hay convergencia puntual:
-			\[\int G(x-y,t) f(y) dy \convs[][t][0^+] f(x)\]
+			\[\int G(x-y,t) f(y) \dif y \convs[][t][0^+] f(x)\]
 
-		\end{example}
+		\end{proof}
 
 		\obs
 				\begin{itemize}
@@ -2076,7 +2053,7 @@ En este capítulo vamos a ver:
 		% Clase 27-4-2016
 		% Copiado por @gjulianm
 
-		Ayer demostrarmos que teníamos convergencia a una función, pero el problema es que no sabemos si es solución única.
+		Ayer demostramos que teníamos convergencia a una función, pero el problema es que no sabemos si es solución única.
 
 		Antes de eso vamos a ver el problema no homogéneo, es decir, con \[ \begin{cases}
 		u_t - Δu = F(x,t) \\
@@ -2091,14 +2068,15 @@ En este capítulo vamos a ver:
 
 		Así, la solución $w(x,t)$ será la suma de los efectos de $F$ entre $0$ y $t$, luego \[ w(x,t) = \int_0^t Φ(x, t - s) \dif s = \int_0^t \int_{ℝ^N} G(x-y, t-s) F(y,s) \dif y \dif s\]
 
-		Finalmente podemos hallar la solución al problema completo: \( u(x,t) = \int{ℝ^N} G(x-y, t) f(y) \dif y + \int_0^t \int_{ℝ^N} G(x-y, t-s) F(y,s) \dif y \dif s \label{eq:Calor:SolucionNoHomogenea} \)
+		Finalmente podemos hallar la solución al problema completo: \( u(x,t) = \int_{ℝ^N} G(x-y, t) f(y) \dif y + \int_0^t \int_{ℝ^N} G(x-y, t-s) F(y,s) \dif y \dif s \label{eq:Calor:SolucionNoHomogenea} \)
 
 		De nuevo, nos encontramos con el problema de la unicidad. Tenemos $u_1$ y $u_2$ dos soluciones, así que consideramos la función $ψ = u_1 - u_2$ y buscamos soluciones no triviales al sistema \[ \begin{cases} ψ_t - Δψ = 0 \\ ψ(x,0) = 0 \end{cases} \]
+		El problema es que las soluciones obtenidas no son razonables físicamente. Si nos restringimos a soluciones positivas y acotadas, la solución será única, pero hay monstruos, como por ejemplo el contraejemplo de Tychonoff.
 
 		%Vuelta a @erpheus
 
 		\subsection{Contraejemplo de Tijonov}
-			También conocido como Tychonoff.
+			También conocido como Tychonoff.  % Era ruso, y escribía su nombre en cirílico, así que cada autor lo escribe como mejor cree
 
 			\[u_t - u_{xx} = 0\]
 
@@ -2109,29 +2087,28 @@ En este capítulo vamos a ver:
 			\[\begin{cases}
 				u_t-u_{xx} = 0 \\
 				u(0,t) = g(t) \\
-				u_x(0,t) = 0
+				u_x(0,t) = h(td)
 			\end{cases}\]
 
-			Tijonov decidió expresar $u(x,t)$ como desarrollo en forma de potencias: $u(x,t) = \sum\limits_{k=0}^\infty a_k(t) x^k = a_0(t) + a_1(t)x + a_2(t)x^2 + …$
+			A Tijonov la cuenta le salio con $h(t)\equiv 0$, así que vamos a suponer eso.
 
-			Formalmente:
+			Tijonov decidió expresar $u(x,t)$ como desarrollo en forma de potencias: $$u(x,t) = \sum\limits_{k=0}^\infty a_k(t) x^k = a_0(t) + a_1(t)x + a_2(t)x^2 + …$$
+
+			Que vamos a tratar como una serie formal:
 			\[ g(t) = u(0,t) = a_0(t)\]
 			\[ u_x(x,t) \qeq a_1(t) + 2a_2(t)x + 3a_3(t)x^2 + …\]
 			\[ 0 = u_x(0,t) = a_1(t)\]
-
 			\begin{align*}
 				u_t(x,t) &= a'_0 + a'_1 x + a'_2x^2 + … \\
 				u_x(x,t) &= a_1 + 2a_2x + 3a_3x^2 + … \\
 				u_{xx}(x,t) &= 2a_2 + 3 \cdot 2 a_3 x + 4 \cdot 3 a_4 x^2 + …
 			\end{align*}
 
-			Para tener $u_t = u_{xx}$ igualamos los coeficientes de caa término en $x^j$.
-
+			Para tener $u_t = u_{xx}$ igualamos los coeficientes de cada término en $x^j$.
 			\[ a'_j(t) = (j+2)(j+1) a_{j+2} (t)\]
 			\[a_1 \equiv 0 \Rightarrow a'_1 \equiv 0 \Rightarrow a_3 \equiv 0 \Rightarrow a'_3 \equiv 0 …\]
 
-			Por lo que llegamos a que $a_{2n+1} = 0 \forall n$. Podemos hacer lo mismo con los pares:
-
+			Por lo que llegamos a que $a_{2n+1} = 0 \ \forall n$. Tenemos que hacer la cuenta con los pares de forma que no den 0 (no queremos soluciones triviales):
 			\begin{align*}
 				a_0 &= g \\
 				g' &= a'_0 = 2 \cdot 1 a_2 (t) \Rightarrow a_2 = \frac{1}{2} g' \\
@@ -2139,21 +2116,31 @@ En este capítulo vamos a ver:
 				\frac{1}{4!}g''' &= a'_4 = 6 \cdot 5 a_6 (t) \Rightarrow a_6 = \frac{1}{6!} g'''
 			\end{align*}
 
-			Y llegamos a la expresión general: $a_{2n} (t) = \frac{1}{(2n)!} g'^{j} (t)$
+			Y llegamos a la expresión general: $a_{2n} (t) = \frac{1}{(2n)!} g^{n)} (t)$
+			\obs $g^{n)} \equiv$ derivada n-ésima
 
 			Solución:
-				\[ u(x,t) = \sum_{n=0}^\infty  \frac{1}{(2n)!} g'^{j} (t) x^{2n}\]
+				\[ u(x,t) = \sum_{n=0}^\infty  \frac{1}{(2n)!} g^{n)} (t) x^{2n}\]
 
-			¿Como elegimos $g$?
+			\newpage % FIXME: puede romper la estructura del documento
 
-			(DIBUJO)
+			\begin{figure}[hbtp]
+				\begin{minipage}[t]{0.5\textwidth}
+					\inputtikz{Tychonoff-XT}
+				\end{minipage}
+				\begin{minipage}[t]{0.5\textwidth}
+					\inputtikz{Tychonoff-gT}
+				\end{minipage}
+				\caption{g debe ser $C^\infty$}
+			\end{figure}
 
+			¿Como elegimos $g$? Pues se puede demostrar que la $g$ que buscamos es
 			\[ g(t) = \begin{cases}
 				0,& t \leq 0 \\
 				e^{-t^{-\alpha}},&  t>0
 			\end{cases}\]
-
-			\[ g \in C^\infty, g'^k(t) \equiv 0, t < 0, g \not\equiv 0\]
+			\[ g \in C^\infty, g^{k)}(t) \equiv 0 \quad t \leq 0, g \not\equiv 0\]
+			\obs El exponente $-t^{-\alpha}$ es un tecnicismo de la prueba.
 
 		\subsection{Resultados (parciales) de unicidad}
 
