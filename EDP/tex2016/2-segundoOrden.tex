@@ -2044,54 +2044,49 @@ Lo interesante del núcleo de Féjer es que es positivo y que nos permitirá hac
 				\label{fig:DFT-Sampling}
 			\end{figure}
 
-			Nuestro propósito es resumir esa información para poder guardarla de forma comprimida. Intentaremos hacer una interpolación para reconstruir la función inicial $f$. Después calcularemos la serie de Fourier de esta, y por último truncaremos las frecuencias no audibles para comprimir.
+			Nuestro propósito es resumir esa información para poder guardarla de forma comprimida. Intentaremos hacer una interpolación para reconstruir la función inicial $f$. Después calcularemos la serie de Fourier de ésta, y por último truncaremos las frecuencias no audibles para comprimir.
 
 			Este proceso sería muy costoso así que en vez de hacer todos los pasos uno por uno vamos a intentar no tener que pasar por el mundo contínuo.
 
 			Tenemos unos datos;
 
 			En el intervalo $[0,2\pi]$ dividido en $N$ trozos:
-
 			\[x_j = \frac{2\pi}{N}j, \quad j=0,1,2,…,N-1\]
 
 			Y el sampling que hemos realizado:
+			\[ y_j = f \left(\frac{2\pi}{N}j \right)\]
 
-			\[ y_j = f(\frac{2\pi}{N}j)\]
 
-
-			\textbf{Idea 1}
-
+			\textbf{Idea 1}\\
 			Supongamos que existe:
 
-			\[f(x) = \sum_{k=-\infty}^\infty c_k e^{ikx} \]
+			\[f(x) = \sum_{k=-\infty}^\infty c_k \
+			e^{ikx} \quad \text{ con } c_k \text{ desconocido } \]
+			Y tenemos el sistema con $N$ ecuaciones
+			\begin{align*}
+				y_0 &= f(x_0) = f(0) = \sum_{k=-\infty}^\infty c_k \\
+				y_1 &= f(x_1) = f\left(\frac{2\pi}{N}\right) = \sum_{k=-\infty}^\infty c_k \left( e^{i\frac{2\pi}{N}} \right)^k \eqreason{$e^{i\frac{2\pi}{N}} \equiv \omega $} \sum_{k=-\infty}^\infty c_k \ \omega^k \\
+				\vdots \\
+				y_p &= f(x_p) = f\left(\frac{2\pi}{N}p\right) = \sum_{k=-\infty}^\infty c_k \left(\omega^p\right)^k
+			\end{align*}
 
-			\[ y_0 = f(x_0) = f(0) = \sum_{k=-\infty}^\infty c_k \]
-			\[ y_1 = f(x_1) = f\left(\frac{2\pi}{N}\right) = \sum_{k=-\infty}^\infty c_k \left( e^{i\frac{2\pi}{N}} \right)^k \eqreason{$e^{i\frac{2\pi}{N}} \equiv \omega $} \sum_{k=-\infty}^\infty c_k \omega^k \]
-			\[ y_p = f(x_p) = f\left(\frac{2\pi}{N}p\right) = \sum_{k=-\infty}^\infty c_k \left(\omega^p\right)^k \]
-
-
-
-			Tenemos $N$ ecuaciones e infinitas incógnitas $C_k$. Los $C_k$ son valores exactos pero podemos reducir el problema a encontrar valores aproximados $z_k$. Veamos el sistema aproximado:
-
-			\[y_0 = \sum_{k=0}^N-1 z_k\]
-			\[y_1 = \sum_{k=0}^N-1 z_k \omega^k\]
-			\[y_{N-1} = \sum_{k=0}^N-1 z_k \left(\omega^{N-1}\right)^k\]
-
-
-			\obs
-			\[ \omega = e^{i \frac{2\pi}{N}}  \]
-
-			(FALTA COMPLETAR)
+			Tenemos $N$ ecuaciones e infinitas incógnitas $c_k$. Los $c_k$ son valores exactos, pero podemos aspirar a encontrar $N$ valores aproximados $z_k$. Veamos el sistema aproximado:
+			\begin{align*}
+				y_0 &= \sum_{k=0}^{n-1} z_k\\
+				y_1 &= \sum_{k=0}^{n-1} z_k\ \omega^k\\
+				y_{N-1} &= \sum_{k=0}^{n-1} z_k \left(\omega^{N-1}\right)^k
+			\end{align*}
 
 
-			Todo lo que tenemos es periódico así que cualquier bloque de longitud $N$ nos vale (es equivalente). Porque todos os coeficientes son $N$-periódicos. Suponiendo que los datos $\{y_i\}$ también los extiendo de manera $N$-periódica a izquierda y derecha. Tenemos que cualquier bloque de longitud $N$ es equivalente.
+			\obs $\omega = e^{i \frac{2\pi}{N}}$, \quad $\omega^N = e^{2 \pi i} = 1$, \quad $\omega^{N+k} = \omega^k$ periódico con periodo $N$
 
-			\[k=0,1,2,…,N-1\]
-			\[k = -\frac{N}{2}, -\frac{N}{2}+1, … , \frac{N}{2}\]
+
+			Todo lo que tenemos es $N$-periódico así que cualquier bloque de longitud $N$ nos vale. Suponiendo que los datos $\set{y_i}$ también los extiendo de manera $N$-periódica a izquierda y derecha, tenemos que nos vale cualquier conjunto contiguo de índices de longitud $N$.
+
+			\[ k=0,1,2,…,N-1 \text{ equivalente a } k = -\frac{N}{2}, -\frac{N}{2}+1, … , \frac{N}{2} \]
 
 
 			Formulación matricial:
-
 			\[ \bar{Y} = \left(
 			\begin{matrix}
 				1 & 1 & 1 & … & 1 \\
@@ -2102,22 +2097,32 @@ Lo interesante del núcleo de Féjer es que es positivo y que nos permitirá hac
 			\end{matrix} \right) \bar{Z}
 			\]
 
-			Ortogonalidad:
-
-			\[ \sum_{s=0}^{N-1} \omega^{js} \omega^{-LS} = \begin{cases}
-			0 & L \neq j\\
-			N & L = j
+			\newpage % FIXME: puede romper la estructura del documento
+			Tenemos el siguiente lema de ortogonalidad:
+			\begin{lemma}{Lema de ortogonalidad}
+			\[ \sum_{s=0}^{N-1} \omega^{js}\ \omega^{-LS} =
+			\begin{cases}
+				0 & L \neq j\\
+				N & L = j
 			\end{cases} \]
+			\end{lemma}
 
-			(FALTA UNA COSILLA Y UN POCO DE EXPLICACIÓN)
+			Recapitulando un poco, lo que tenemos hasta ahora es
+			\[ f(x) \approx \sum_{s=0}^{N-1} z_k \ e^{ikx} \eqreason[\longrightarrow]{$M << N-1$} \sum_{s=0}^{M} z_k \ e^{ikx} \]
+			y esperamos que sea una aproximación lo {\it bastante buena}.
 
-			Veamos la demostración
-
+			Veamos la demostración del lema, que es muy cortita:
 			\begin{proof}
-
-			\[ \omega^{js} \omega^{-LS} = \omega^{(j-L)S} = e^{i\frac{2\pi}{N}(j-L)s}  \]
-
-			(FALTA TERMINAR)
+			\begin{gather*}
+				\omega^{js} \omega^{-LS} = \omega^{(j-L)S} = e^{i\frac{2\pi}{N}(j-L)s}\\
+				\sum_{s=0}^{N-1} \omega^{js} \omega^{-LS} = \sum_{s=0}^{N-1} e^{i\frac{2\pi}{N}(j-L)s} \eqreason{prog geométrica}
+				\begin{cases}
+					N & j = L\\
+					0 & j \neq L
+				\end{cases}\\
+			\end{gather*}
+			Ya que si $j\neq L$, la suma nos da
+			\[ 1 - e^{i \frac{2 \pi}{N} (j-L) N} = 1 - e^{i {2 \pi} (j-L)} \eqreason{múltiplo de $2\pi$} 1 - 1 = 0 \]
 
 			\end{proof}
 
@@ -2125,22 +2130,28 @@ Lo interesante del núcleo de Féjer es que es positivo y que nos permitirá hac
 
 			% La clase empieza con un comentario que amplia información de una sección anterior, que no he copiado.
 
-			\textbf{Aplicación:} cálculo de $\bar{z}$.
+			\textbf{Aplicación:} cálculo de $\gor{z}$.
 
-				\[ y_j\omega^{-js} = \sum_{k=0}^{n-1} z_k \omega^{jk} \omega^{-js} \]
-
-				\[ \sum_{j=0}^{n-1} y_j \omega^{-js} = \sum_{j=0}^{n-1} \sum_{k=0}^{n-1} z_k \omega^{jk} \omega^{-js} = \]\[ = \sum_{k=0} z_k \sum_{j=0}^{n-1} \omega^{jk} \omega^{-js} = \begin{cases}
+				Si fijamos s, tenemos para un $j$ concreto:
+				\[ y_j\ \omega^{-js} = \sum_{k=0}^{n-1} z_k\ \omega^{jk}\ \omega^{-js} \]
+				luego sumando en $j$:
+				\[ \sum_{j=0}^{n-1} y_j\ \omega^{-js} = \sum_{j=0}^{n-1} \sum_{k=0}^{n-1} z_k\ \omega^{jk}\ \omega^{-js} = \sum_{k=0}^{n-1} z_k\ \sum_{j=0}^{n-1} \omega^{jk}\ \omega^{-js}
+				\]
+				ya que aplicando el lema tenemos:
+				\[\sum_{j=0}^{n-1} \omega^{jk}\ \omega^{-js} = \begin{cases}
 					0 & s \neq k\\
 					N & s = k  \end{cases} \]
+				\obs El cambio de sumatorios se puede hacer por el Teorema de Fubini para sumas finitas: da igual sumar primero en $j$ y luego en $k$ que al revés.
 
 				\textbf{Conclusión}
+				\begin{align*}
+					 n z_s &= \sum_{j=0}^{n-1} y_j \omega^{-js} \\
+					 z_s &= \frac{1}{n} \sum_{j=0}^{n-1} y_j \omega^{-js} \longrightarrow O(n^2) \text{ operaciones} \\
+					 y_j &= \sum_{k=0}^{n-1} z_k\ \omega^{jk}
+				\end{align*}
+				\obs Ni $z_s$ ni $y_j$ están en una base ortonormal. A $\set{\gor{z}}$ se le llama la \concept{Transformada\IS discreta (de Fourier) de orden $n$} de $\set{\gor{y}}$
 
-				\[ \sum_{j=0}^{n-1} y_j \omega^{-js} = n z_s   \]
-				\[ z_s = \frac{1}{n} \sum_{j=0}^{n-1} y_j \omega^{-js}   \]
-				\[ y_j = \sum_{k=0}^{n-1} z_k \omega^{jk} \]
-				\[ \{\bar{z}\} \equiv \text{Transformada discreta de orden n de } \{\bar{y}\} \]
-
-				\[ \bar{z} = F_n (\bar{y}) \]
+				\[ \gor{z} = F_n (\gor{y}) \]
 
 
 
@@ -2148,96 +2159,86 @@ Lo interesante del núcleo de Féjer es que es positivo y que nos permitirá hac
 
 			\[f(x) = \sum_{k=-\infty}^{\infty} c_k e^{ikx} \]
 			\[c_k= \frac{1}{2\pi} \int_0^{2\pi} f(x) e^{-ikx} dx ≈ \frac{1}{2\pi} \sum_{j=0}^{n-1} f(x_j) e^{-ikxj} \frac{2\pi}{n}  \]
-			\[ = \frac{1}{N} \sum_{j=0}^{n-1}  y_j \omega^{-kj} \equiv z_k  \]
+			Donde hemos aproximado la integral utilizando la regla de cuadratura del rectágulo.
+			\[\sum_{j=0}^{n-1} f(x_j) e^{-ikxj} \frac{1}{n} \eqreason{$x=\frac{2\pi j}{n}$} \frac{1}{n} \sum_{j=0}^{n-1}  y_j\ \omega^{-kj} \equiv z_k  \]
 
 			Tomando $k = n$:
-
-			\[c_n \underbrace{\eqexpl[≈]{?}}_{\text{En general no}} \frac{1}{n} \sum_{j=0}^{n-1} y_j \omega^{-Nj}  \eqreason{$\omega^n \equiv 1$} \frac{1}{n} \sum_{j=0}^{n-1} y_j \omega^{0j} = z_0   \]
+			\[c_n \underbrace{\eqexpl[≈]{?}}_{\text{En general no}} \frac{1}{n} \sum_{j=0}^{n-1} y_j\ \omega^{-nj}  \eqreason{$\omega^n \equiv 1$} \frac{1}{n} \sum_{j=0}^{n-1} y_j  = z_0   \]
 
 			En general $z_{n+l} = z_{l}$.
 
 			Esta es una aproximación válida si  $k << n$.
 
-			(DIBUJO ALIASING)
+			Un problema que puede ocurrir al truncar la serie de Fourier es el \concept[Aliasing]{aliasing}: frecuencias altas se quedan en bajas, y al interpolar nos queda una curva que no se parece a la señal muestreada. Este fenómeno se ilustra en la figura \ref{fig:Aliasing}.
+			\begin{figure}[hbtp]
+				\inputtikz{Aliasing}
+				\caption{Ilustración del aliasing}
+				\label{fig:Aliasing}
+			\end{figure}
 
 
 			\textbf{Relación precisa entre $\{c_k\}$ y $\{z_k\}$}
 
-			\[ f(x) = \sum_{L=-\infty}^\infty c_L e^{iLx}  \]
+			\[ f(x) = \sum_{L=-\infty}^\infty c_L \cdot e^{iLx}  \]
 
-			\[ z_k = \frac{1}{N}  \sum_{j=0}^{n-1} y_j \omega^{-kj} = \frac{1}{n} \sum_{j=0}^{n-1}  f(x_j) \omega^{-kj} = \frac{1}{n} \sum_{j=0}^{n-1} f\left( \frac{2\pi}{n} j \right) \omega^{-kj}  \]
+			\begin{gather*}
+			z_k = \frac{1}{n}  \sum_{j=0}^{n-1} y_j\ \omega^{-kj} = \frac{1}{n} \sum_{j=0}^{n-1}  f(x_j)\ \omega^{-kj} = \frac{1}{n} \sum_{j=0}^{n-1} f\left( \frac{2\pi}{n} j \right) \omega^{-kj}  \\
+			= \frac{1}{n} \sum_{j=0}^{n-1} \sum_{L=-\infty}^{\infty} c_L \cdot \underbrace{e^{iL\frac{2\pi}{n}j}}_{w^{Lj}} \omega^{-kj} = \frac{1}{n} \sum_{L=-\infty}^{\infty} c_L \sum_{j=0}^{n-1} \omega^{Lj} \omega^{-kj}
+			\end{gather*}
 
-			\[  = \frac{1}{n} \sum_{j=0}^{n-1} \sum_{L=-\infty}^{\infty} c_L e^{iL\frac{2\pi}{n}j} \omega^{-kj} = \frac{1}{n} \sum_{l=-\infty}^{\infty} c_l \sum_{j=0}^{n-1} \omega^{lj} \omega^{-kj} \]
-
-
-			No podemos aplicar tal cual el teorema de ortogonalidad porque la $l$ no va entre 0 y $n$. Pero podemos descomponer la suma en trozos de longitud $n$. En cada uno de ellos solo uno de los sumandos será distinto de 0.
-
-			(DIBUJO RECTA DIVIDIDA)
-
+			No podemos aplicar tal cual el lema de ortogonalidad porque la $L$ no va entre 0 y $n$. Pero podemos descomponer la suma en trozos de longitud $n$. En cada uno de ellos solo uno de los sumandos será distinto de 0.
 
 			\[ \omega^{Lj} = \omega^{(L+n)j} = \omega^{(L+2n)j} … \]
-
+			luego
 			\[ \frac{1}{n} \sum_{L=-\infty}^{\infty} c_L \sum_{j=0}^{n-1} \omega^{Lj} \omega^{-kj} = \frac{1}{n} n \{ c_k + c_{k+n} + c_{k+2n} + … \}  \]
 
 			\[ z_k = c_k + c_{k+n} + c_{k+2n} + c_{k+3n} + … = \sum_{k \mod n} c_k  \]
 
 			Por Riemman-Lebesgue: $C_k \convs[][k] 0$
 
-			Esto nos indica que el muestreo puede hacer que una onda de mucha frecuencia en nuestros datos baje de frecuencia al tomar la transformada de Fourier.
+			Esto nos indica que el muestreo puede hacer que una onda de mucha frecuencia (inaudible) en nuestros datos baje de frecuencia (hasta ser audible) al tomar la transformada de Fourier.
 
 
 			\obs Veamos una función $f(x) = \sum\limits_{k=-\infty}^{\infty} c_k e^{ikx}$.
 
 			\[ \left|  f - \sum_{k=-\infty}^{\infty} c_k e^{ikx} \right| = 0 \]
-			\[ = \left|  f - \sum_{|k|\leq n} + \sum_{|k| > n} \right| \geq \left|  f- \sum_{|k| \leq n} \right| - \left| \sum_{|k| > n} \right| \]
-
+			\[ = \left|  f - \left( \sum_{|k|\leq n} + \sum_{|k| > n} \right) \right| \leq \left|  f- \sum_{|k| \leq n} \right| + \left| \sum_{|k| > n} \right| \]
 			\[ \left| f- \sum_{|k| \leq n} c_k e^{ikx} \right| \leq \left| \sum_{|k| > n} c_k e^{ikx} \right| \leq \sum_{|k| > n} |c_k|  \]
 
-			Este es el error exacto que cometemos en el desarrollo de Fourier, en base a las $c$s. Tenemos este teorema que nos dice que si hacemos ese mismo cálculo con las $z$s, el error no es muy malo:
+			Esto nos da una cota del error que cometemos en el desarrollo de Fourier, en base a las $c_k$. Tenemos este teorema que nos dice que si hacemos ese mismo cálculo con las $z$s, el error no es muy malo:
 
 			\begin{theorem}
-				\[ \left| f - \sum_{|k|< n} z_k e^{ikx}  \right| \leq 2 \sum_{|k| > n |c_k| } \]
+				\[ \left| f - \sum_{|k|< n} z_k e^{ikx}  \right| \leq 2 \sum_{|k| > n } |c_k| \]
 			\end{theorem}
 
 
 			\subsubsubsection{Cálculo efectivo (FFT)}
+			\obs Algoritmo publicado por Cooley-Tukey en 1965. En 1805 Gauss ya lo usaba, y se publicó en latín a título póstumo en 1865.
 
 			\[ \bar{u} = (u_0, u_1, … u_{n-1}) \rightarrow F_n (\bar{u})  \]
 			\[ \bar{v} = (v_0, v_1, … v_{n-1}) \rightarrow F_n (\bar{v})  \]
 
 			Entonces:
-
 			\[ \bar{y} = (y_0,y_1,…,y_{2n-1}) \equiv (u_0,v_0,u_1,v_1, … u_{n-1},v_{n-1})  \]
 
-			Pero que pasa con $f_{2n}(\bar{y})$?
+			Pero ¿qué pasa con $f_{2n}(\bar{y})$?
 
 			Tenemos
-
 			\[ \left(F_{2n} (\bar{y})\right)_k = \left(F_{n} (\bar{u})\right)_k + \left(F_{n} (\bar{v})\right)_k \omega_{2n}^{-k}, k=0,1,…,n-1 \]
 
 			\[ \left(F_{2n} (\bar{y})\right)_{k+n} = \left(F_{n} (\bar{u})\right)_k - \left(F_{n} (\bar{v})\right)_k \omega_{2n}^{-k}, k=0,1,…,n-1 \]
-
-			\[ (\omega_{2n} = e^{i\frac{2\pi}{2n}}, \omega_{n} = e^{i \frac{2\pi}{n}})  \]
+			\obs $\omega_{2n} = e^{i\frac{2\pi}{2n}}$, $\omega_{n} = e^{i \frac{2\pi}{n}}$
 
 			\begin{proof}
-
 				\[ w_{2n}^2 = \omega_{n} \]
-
 				Separamos la suma en indices pares e impares y listo.
-
 			\end{proof}
 
-			\textbf{Método FFT}
+			\begin{figure}[hbtp]
+				\inputtikz{FFT}
+				\caption{Ejemplo del algoritmo FFT}
+			\end{figure}
 
-			(DIBUJO ÁRBOL FFT)
-
-			Este método es $O(n \log n)$.
-
-
-
-
-
-
-
+			Este método es $O(n \log n)$, pero solo funciona cuando el número de coeficientes es una potencia de 2.
 
 
