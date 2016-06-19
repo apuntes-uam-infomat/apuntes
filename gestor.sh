@@ -97,7 +97,7 @@ crear_asignatura() {
 	local current_year=$(date +%y)
 	local docdate
 
-	# ¿Primer o segundo cuatrimestre?
+	# Primer o segundo cuatrimestre?
 	if [[ $(date +%m ) -ge 8 ]]; then
 		docdate="$current_year/$((current_year + 1)) C1"
 	else
@@ -124,7 +124,7 @@ crear_asignatura() {
 		\newpage
 		% Contenido.
 
-		%% Apéndices (ejercicios, exámenes)
+		%% Apendices (ejercicios, examenes)
 		\appendix
 		$extra_tex_files_input
 		\printindex
@@ -143,9 +143,9 @@ crear_asignatura() {
 ##
 compilar() {
 
-	# Esta separado para no ignorar el codigo de returno
+	# Esta separado para no ignorar el codigo de retorno
 	local asignatura;
-	asignatura="$(seleccionar_asignatura "$1")"
+	asignatura="$(seleccionar_asignatura "${1:-}")"
 
 	INFO "Compilando ${F_UNDER}$asignatura${F_RESET} ..."
 
@@ -153,7 +153,7 @@ compilar() {
 	cd "$asignatura"
 	mkdir -p tikzgen
 
-	# Compilamos comprobando el codigo de returno
+	# Compilamos comprobando el codigo de retorno
 	if ! latexmk -r "../latexmkrc.pl" > /dev/null; then
 
 		ERR "Ha ocurrido un error fatal al compilar"
@@ -189,13 +189,13 @@ compilar_todo() {
 			(( dir_err += 1 ))
 		fi
 
-		((dir_num += 1))
+		(( dir_num += 1 ))
 
 		INFO "================================================================"
 
-	done < <(find . -iname '*.tex' -depth 2 -print0)
+	done < <( find . -mindepth 2 -maxdepth 2 -iname '*.tex' -print0 )
 
-	INFO "Encontrado ${F_BOLD}$dir_num${F_RESET} cursos, de los cuales"
+	INFO "Encontrado ${F_BOLD}$dir_num${F_RESET} asignaturas, de las cuales"
 	INFO "    ${F_GREEN}$dir_upd${F_RESET} han sido compilados sin errores."
 	INFO "    ${F_RED}$dir_err${F_RESET} han tenido algun problema."
 	INFO ""
@@ -211,9 +211,9 @@ compilar_todo() {
 ##
 limpiar() {
 
-	# Esta separado para no ignorar el codigo de returno
+	# Esta separado para no ignorar el codigo de retorno
 	local asignatura;
-	asignatura="$(seleccionar_asignatura "$1")"
+	asignatura="$(seleccionar_asignatura "${1:-}")"
 
 	INFO "Limpiando ${F_UNDER}$asignatura${F_RESET} ..."
 
@@ -229,9 +229,9 @@ limpiar() {
 ##
 empaquetar() {
 
-	# Esta separado para no ignorar el codigo de returno
+	# Esta separado para no ignorar el codigo de retorno
 	local asignatura;
-	asignatura="$(seleccionar_asignatura "$1")"
+	asignatura="$(seleccionar_asignatura "${1:-}")"
 
 	# Zip de salida es la asignatura sin espacios
 	local salida_zip="${asignatura//[[:space:]]/}.zip"
@@ -262,7 +262,10 @@ empaquetar() {
 ## Instala localmente los paquetes de los apuntes.
 ##
 instalar() {
-	INFO "NYI -- Aun no implementado!"
+	WARN "Esta funcionalidad no esta implementada aqui."
+	WARN "Si realmente quieres instalar los paquetes globalmente,"
+	WARN "ejecuta el script situado en ${F_UNDER}Cosas guays LaTeX/install${F_RESET}"
+	return 0
 }
 
 
@@ -292,7 +295,7 @@ ayuda() {
 	echo "    Zipea todos los ficheros necesarios para compilar una asignatura"
 	echo
 	echo "${F_BOLD}instalar${F_RESET}"
-	echo "    Instala localmente los paquetes (aun no implementado)"
+	echo "    Instala globalmente los paquetes"
 	echo
 	echo "${F_BOLD}ayuda${F_RESET}"
 	echo "    Muestra esta ayuda"

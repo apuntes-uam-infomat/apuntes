@@ -12,7 +12,7 @@ $pdf_mode = 1; $postscript_mode = $dvi_mode = 0;
 $silent = 1;
 
 # Algunas variables de entorno que usa pdflatex
-$ENV{'TEXINPUTS'}      	= "../Cosas guays LaTeX:" . $ENV{'TEXINPUTS'};
+$ENV{'TEXINPUTS'}      	= "../Cosas guays LaTeX:" . ($ENV{'TEXINPUTS'} // "");
 $ENV{'max_print_line'} 	= 1000; # Cualquier numero
 $ENV{'error_line'}     	= 254; # Maximo: 254
 $ENV{'half_error_line'}	= 238; # Maximo: error_line - 16
