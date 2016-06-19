@@ -23,10 +23,10 @@ F_UNDER=$(tput smul)
 F_RED=$(tput setaf 1)
 F_GREEN=$(tput setaf 2)
 F_YELLOW=$(tput setaf 3)
-F_BLUE=$(tput setaf 4)
-F_MAGENTA=$(tput setaf 5)
-F_CYAN=$(tput setaf 6)
-F_WHITE=$(tput setaf 7)
+#F_BLUE=$(tput setaf 4)
+#F_MAGENTA=$(tput setaf 5)
+#F_CYAN=$(tput setaf 6)
+#F_WHITE=$(tput setaf 7)
 
 # Mini-comandos
 INFO()  { "$SILENT" || echo >&2 "${F_BOLD}${F_GREEN}>>${F_RESET} $1"; }
@@ -46,7 +46,7 @@ seleccionar_asignatura() {
 	[[ -d "$asignatura" ]] || abort "No existe un directorio '$asignatura/'"
 
 	# Y que tenga al menos un .tex dentro!
-	[[ -n "$asignatura/"*.tex ]] || abort "El directorio '$asignatura/' no contiene ningun fichero .tex"
+	[[ -n "$(find "$asignatura" -iname '*.tex' -maxdepth 1)" ]] || abort "El directorio '$asignatura/' no contiene ningun fichero .tex"
 
 	# Exito!
 	echo "$asignatura"
@@ -77,7 +77,7 @@ crear_asignatura() {
 	INFO "Creando $name/ (abbrev: $abbr)"
 	mkdir "$name" && cd "$name"
 
-	local extra_tex_files_input=""
+	local extra_tex_files_input="" subdir suffix
 
 	# Creamos algunos directorios extra
 	for subdir in img pdf tex tikzgen; do
@@ -86,15 +86,16 @@ crear_asignatura() {
 		touch "$subdir/.keep"
 	done
 
-	# Creamos sub-documentos por defecto
-	for suffix in Ejs; do
-		texfile="tex/${abbr}_${suffix}.tex"
-		printf -v extra_tex_files_input "$extra_tex_files_input\n\chapter{---}\n\\input{$texfile}"
-		echo "% -*- root: ../${abbr}.tex -*-" > "$texfile"
-		INFO "Creado fichero extra $texfile"
-	done
+	# Creamos fichero de ejercicios (antes era un bucle)
+	suffix=Ejs
 
-	local current_year=$(date +%y)
+	texfile="tex/${abbr}_${suffix}.tex"
+	printf -v extra_tex_files_input "%s\n\chapter{---}\n%s\n" "$extra_tex_files_input" "\input{$texfile}"
+	echo "% -*- root: ../${abbr}.tex -*-" > "$texfile"
+	INFO "Creado fichero extra $texfile"
+
+	local current_year
+	current_year=$(date +%y)
 	local docdate
 
 	# Primer o segundo cuatrimestre?
@@ -178,8 +179,6 @@ compilar_todo() {
 	local dir_num=0
 	local dir_upd=0
 	local dir_err=0
-
-	local start_time=$SECONDS
 
 	while IFS= read -r -d $'\0' asignatura; do
 
