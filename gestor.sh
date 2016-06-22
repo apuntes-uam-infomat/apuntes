@@ -46,7 +46,7 @@ seleccionar_asignatura() {
 	[[ -d "$asignatura" ]] || abort "No existe un directorio '$asignatura/'"
 
 	# Y que tenga al menos un .tex dentro!
-	[[ -n "$(find "$asignatura" -iname '*.tex' -maxdepth 1)" ]] || abort "El directorio '$asignatura/' no contiene ningun fichero .tex"
+	[[ -n "$(find "$asignatura" -maxdepth 1 -iname '*.tex')" ]] || abort "El directorio '$asignatura/' no contiene ningun fichero .tex"
 
 	# Exito!
 	echo "$asignatura"
