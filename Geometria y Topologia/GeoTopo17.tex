@@ -1,0 +1,149 @@
+\documentclass[palatino, bibnumbers]{apuntes}
+
+\title{Geometría y Topología}
+\author{Jose Antonio García del Saz}
+\date{16/17 C2}
+
+% Paquetes adicionales
+\usepackage{enumitem}
+\usepackage{kpfonts}
+\usepackage{tikztools}
+\usepackage{fancysprefs}
+\usepackage{tikz-3dplot}
+\usepackage{xfrac}
+\usepackage{wrapfig}
+\usepackage{fastbuild}
+\usepackage{tikz-cd}
+
+\usetikzlibrary{arrows}
+\usetikzlibrary{patterns}
+\usetikzlibrary{intersections}
+\usetikzlibrary{calc}
+\usetikzlibrary{fadings}
+
+\tikzset{
+	snake/.style={
+		rounded corners,
+		to path={
+			-- ([xshift=1em]\tikztostart.east)
+			-- ([xshift=1em]\tikztostart.south east)
+			-- ([xshift=-1em]\tikztotarget.north west)
+			-- ([xshift=-1em]\tikztotarget.west)
+			-- (\tikztotarget)
+		}
+	},
+	snake up/.style={
+		rounded corners,
+		to path={
+			-- ([xshift=-1em]\tikztostart.west)
+			-- ([xshift=-1em]\tikztostart.north west)
+			-- ([xshift=1em]\tikztotarget.south east)
+			-- ([xshift=1em]\tikztotarget.east)
+			-- (\tikztotarget)
+		}
+	}
+}
+
+\setlist{itemsep=1pt, topsep=5pt}
+\bibliographystyle{alpha}
+% --------------------
+
+%\precompileTikz
+
+\newcommand{\Id}{\mop{Id}}
+\newcommand{\cln}{\colon\!}
+
+\setcounter{tocdepth}{3}
+
+\begin{document}
+\pagestyle{plain}
+
+% http://tex.stackexchange.com/a/14243
+\relpenalty=9999
+\binoppenalty=9999
+
+\begin{abstract}
+Estos son los apuntes del curso de Geometría y Topología, del profesor Fernando Chamizo.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+\newpage
+% Contenido.
+
+\chapter{Álgebra Tensorial}
+
+\section{Tensores en  $ℝ^{n}$}
+
+Estudiar los tensores en $ℝ^n$ es en realidad estudiar el Álgebra Lineal pero en varias variables. En primer curso (Álgebra I) estudiamos las aplicaciones lineales, las cuales eran de la forma:
+\begin{align*}
+	\appl{π}{ℝ^{n}&}{ℝ^{m}} \\
+	\overline{x} &\longmapsto[\overline{y}=A\cdot \overline{x}]
+\end{align*}
+
+\begin{defn}[Aplicación\IS Lineal] Sea $f$ una aplicación entre dos espacios vectoriales $V$, $W$ sobre el mismo cuerpo $K$. Decimos que $f$ es una \textbf{aplicación lineal} si se cumplen las siguientes propiedades:
+	\begin{enumerate}
+		\item $f(λ\overline{x})=λ*f(\overline{x})$ .
+		\item $f(\overline{x_1}+\overline{x_2})=f(\overline{x_1})+f(\overline{x_2})$
+	\end{enumerate}
+\end{defn}
+
+\begin{defn}[Aplicación\IS Bilineal] Sea 
+	\begin{align*}
+	\appl{f}{ℝ^{n}×ℝ^{n}&}{ℝ} \\
+	\overline{x},\overline{y} &\longmapsto{f(\overline{x},\overline{y})}
+	\end{align*}
+una aplicación, decimos que es \textbf{bilineal} si es una aplicación lineal en cada una de las dos variables, es decir:
+\begin{enumerate}
+	\item $f(λ\overline{x},\overline{y})=λ\cdot f(\overline{x},\overline{y})$; $f(\overline{x_1}+\overline{x_2},\overline{y})=f(\overline{x_1},\overline{y})+f(\overline{x_2},\overline{y})$
+	\item $f(\overline{x},λ\overline{y})=λ\cdot f(\overline{x},\overline{y})$; $f(\overline{x},\overline{y_1}+\overline{y_2})=f(\overline{x},\overline{y_1})+f(\overline{x},\overline{y_2})$
+\end{enumerate}
+\end{defn}
+\textbf{Observación:} todas las aplicaciones bilineales entre dos espacios se pueden escribir de la siguiente manera:
+$$f(\overline{x},\overline{y})=\overline{x}^{T}A\overline{y}$$ con A una matriz n×n.
+\newpage
+\begin{defn}[Aplicación\IS Multilineal] Decimos que una aplicación es \textbf{multilineal} si es lineal en cada una de sus variables. 
+\end{defn}
+
+\begin{defn}[Tensor\IS n veces covariante] Es cualquier aplicación multilineal
+	$\appl{T}{\varprod_{i=1}^n V}{ℝ}$, siendo V un espacio vectorial de dimensión finita sobre $ℝ$ (que como sabemos de otros cursos son isomorfos a $ℝ^{n}$).
+\end{defn}
+
+\begin{example} Sea
+	\begin{align*}
+		\appl{T}{ℝ^{3}×ℝ^{3}&}{ℝ} \\
+		T\left(\begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix},\begin{pmatrix}y_1\\y_2\\y_3\end{pmatrix}\right) &\longmapsto{x_1\cdot y_3}
+	\end{align*}
+es obvio que T es multilineal, luego T es un tensor 2 veces covariante en $ℝ^{3}$.
+\end{example}
+\begin{example} Sea
+	\begin{align*}
+		\appl{T}{ℝ^{3}×ℝ^{3}&}{ℝ} \\
+		T\left(\begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix},\begin{pmatrix}y_1\\y_2\\y_3\end{pmatrix}\right) &\longmapsto{x_1\cdot x_3}
+	\end{align*}
+	se ve rápidamente que \underline{no} es una aplicación lineal respecto de la variable $\overline{x}$.
+\end{example}
+\begin{example} Sea
+	\begin{align*}
+		\appl{T}{ℝ^{3}×ℝ^{3}×ℝ^{3}&}{ℝ} \\
+		T\left(\begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix},\begin{pmatrix}y_1\\y_2\\y_3\end{pmatrix},\begin{pmatrix}z_1\\z_2\\z_3\end{pmatrix}\right) &\longmapsto{\begin{vmatrix}
+			x_1 & y_1 &  z_1 \\ 
+			x_2 & y_2 & z_2 \\ 
+			x_3 & y_3 & z_3 \\ 
+		\end{vmatrix}}
+	\end{align*}
+	la propiedad de linealidad del producto por un escalar es obvia por las propiedades de los determinantes. La propiedad de linealidad que conserva la adición se demuestra fácilmante desarrollando el determinante por adjuntos en la primera columna.
+\end{example}
+
+%% Apéndices (ejercicios, exámenes)
+\appendix
+
+
+\chapter{Ejercicios}
+\input{tex/GeoTopo17_Ejs.tex}
+
+
+\bibliography{../Apuntes}{}
+\printindex
+\end{document}
