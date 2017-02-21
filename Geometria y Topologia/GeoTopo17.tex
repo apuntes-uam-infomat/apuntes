@@ -16,7 +16,7 @@
 \usepackage{fastbuild}
 %\usepackage{lipsum}
 \usepackage{tikz-cd}
-
+\usetikzlibrary{calc,patterns,angles,quotes}
 \usetikzlibrary{arrows}
 \usetikzlibrary{patterns}
 \usetikzlibrary{intersections}
@@ -469,7 +469,38 @@ Esto tiene una aplicación en mecánica (s.XVIII y S.XIX) que es fantástica. En
 \begin{prop}\textbf{(Principio de mínima acción o de acción estacionaria)}\\
 	En mecánica se usa este langrangiano siempre $L=E_c-E_p$ que es la diferencia entre energía cinética (energía que aportan las partículas, que es igual a $E_c=\frac{1}{2}\sum_{i=1}m_i\norm{\dv{\overline{x}_i}{t}}^2$) y energía potencial (la energía que las partículas toman del campo donde se encuentren, como el gravitatorio donde vale $E_p=\sum_{i=1}m_igh_i$) y existe el \textbf{principio de mínima acción}, que dice que los sistemas mecánicos evolucionan entre dos tiempos de modo que $\int_{t1}^{t2}Ldt$ es mínima (aunque en rigor es estacionaria).
 \end{prop}
-\begin{example}Supongamos que queremos ver el movimiento de un péndulo. En lugar de imaginar fuerzas y tensiones ficticias, veámoslo matemáticamente. El punto extremo del péndulo tiene coordenadas $(x,y)$ y entonces $L=\frac{1}{2}m(\dot{x}^2+\dot{y}^2)-mgy$. Si nos fijamos, $(x,y)$ no son buenas coordenadas para este problema. Cojamos mejor la coordenada $\theta=$ángulo. Entonces$$ \begin{cases}
+\begin{example}
+	\begin{wrapfigure}{r}{0.5\textwidth}
+		\begin{center}
+			\begin{tikzpicture}
+			\pgfmathsetmacro{\Gvec}{1.5}
+			\pgfmathsetmacro{\myAngle}{30}
+			% calculate lengths of vector components
+			\pgfmathsetmacro{\Gcos}{\Gvec*cos(\myAngle)}
+			\pgfmathsetmacro{\Gsin}{\Gvec*sin(\myAngle)}
+			
+			\coordinate (centro) at (0,0);
+			\draw[dashed,gray,-] (centro) -- ++ (0,-3.5) node (mary) [black,below]{$ $};
+			\draw[thick] (centro) -- ++(270+\myAngle:3) coordinate (bob);
+			\pic [draw, ->, "$\theta$", angle eccentricity=1.5] {angle = mary--centro--bob};
+			\draw [blue,-stealth] (bob) -- ($(bob)!\Gcos cm!(centro)$);
+			\draw [-stealth] (bob) -- ($(bob)!-\Gcos cm!(centro)$)
+			coordinate (gcos)
+			node[midway,above right] {$l\cos\theta$};
+			\draw [-stealth] (bob) -- ($(bob)!\Gsin cm!90:(centro)$)
+			coordinate (gsin)
+			node[midway,above left] {$l\sin\theta$};
+			\draw [-stealth] (bob) -- ++(0,-\Gvec)
+			coordinate (g)
+			node[near end,left] {$g$};
+			\pic [draw, ->, "$\theta$", angle eccentricity=1.5] {angle = g--bob--gcos};
+			\filldraw [fill=black!40,draw=black] (bob) circle[radius=0.1];
+			\end{tikzpicture}
+		\end{center}
+		\caption{Péndulo en $ℝ^n$}
+	\end{wrapfigure}
+	
+	Supongamos que queremos ver el movimiento de un péndulo. En lugar de imaginar fuerzas y tensiones ficticias, veámoslo matemáticamente. El punto extremo del péndulo tiene coordenadas $(x,y)$ y entonces $L=\frac{1}{2}m(\dot{x}^2+\dot{y}^2)-mgy$. Si nos fijamos, $(x,y)$ no son buenas coordenadas para este problema. Cojamos mejor la coordenada $\theta=$ángulo. Entonces$$ \begin{cases}
 		x=l\cdot sen(\theta)\\
 		y=-l\cdot cos(\theta)\\
 	\end{cases}\longrightarrow \begin{cases}
