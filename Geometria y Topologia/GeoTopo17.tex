@@ -4,7 +4,24 @@
 \title{Geometría y Topología}
 \author{Jose Antonio García del Saz}
 \date{16/17 C2}
+\usepackage{mathtools,tikz,lmodern, xparse}
+\usetikzlibrary{%arrows, chains, matrix, 
+	positioning, graphs,
+	%shadows,
+	shapes, shapes.callouts,
+	%shapes.geometric,
+	%shapes.misc
+}
+\usepackage{amsmath} %For align environement
+\usepackage{color}% to define the next colors
+\definecolor{bananayellow}{rgb}{1.0, 0.88, 0.21}
+\definecolor{citrine}{rgb}{0.89, 0.82, 0.04}
+\definecolor{darktangerine}{rgb}{1.0, 0.66, 0.07}
 
+\newcommand{\Varrow}[3]{\begin{tikzpicture}[remember picture,overlay, ->, L/.style = {draw, #1}]
+	\draw%[]
+	(#2) edge[L] (#3); 
+	\end{tikzpicture}       } 
 % Paquetes adicionales
 \usepackage{enumitem}
 \usepackage{kpfonts}
@@ -537,7 +554,39 @@ Tomando $k^2=cte$ conseguiría $g_{ij}\dot{x}^i\dot{x}^j=1$. Esto es porque la c
 \end{obs}
 
 Vamos a atar algunos cambios sueltos, como que no está claro que estén "bien" definidas las geodésicas. Sabemos que funcionan con cambio de carta (aunque no lo hemos visto con todo rigor), pero ¿funcionan como en GCS que dado un valor inicial y un vector inicial ya tengo definida una sola geodésica? ¿Nos salen las mismas geodésicas que en segundo? ¿minimizan las geodésicas la longitud en pequeños entornos?.\\ \indent Sabemos que algunas EDO tienen más de una solución así que \textbf{no está claro} que estén bien definidas (especialmente en los casos que no hay unicidad o existencia de la EDO asociada). \\ \indent Desde el punto de vista de la física la primera y la última pregunta se contestan fácil: Por ejemplo, dada una partícula si le pones una posición inicial y un vector inicial está definida si miramos el momento y el espacio donde está, luego la respuesta sería que sí, que está bien definida (por tramposo que parezca el razonamiento). Por otro lado, por el principio de mínima acción también nos haría intuir una respuesta afirmativa.\\
-\indent Vamos a dar demostraciones matemáticas para dejar de intuír. En Geometría de Curvas y Superficies, se trabaja con el siguiente sistema de referencia: $\{\overline{\Phi}_u,\overline{\Phi}_v,\overline{N}\}$ (DIBUJO).\\ \indent Con este criterio cada vector de $\mathbb{R}^3$ tendrá unas componentes en esta base.Si no sabemos que la superficie está en $\mathbb{R}^3$ se usan los símbolos de Christoffel, dando las componentes en $\overline{\Phi}_u,\overline{\Phi}_v$ de sus derivadas.\\
+\begin{wrapfigure}{r}{0.3\textwidth}
+	\begin{tikzpicture}[remember picture]   
+	%horizantal
+	\foreach \y in {0.6, 0.9, 1.2, 1.5}
+	\draw[xshift=0.2cm , yshift=\y cm, gray] (-2,-1.8)..controls (-1.5,-0.6)..(0.5,-1.6)
+	(0.5,-1.6)..controls (1.0,-1.8) and (1,-2)..(2,-1);
+	\draw[xshift=0.2cm , yshift=0.1cm, gray] (-2,-1.8)..controls (-1.5,-0.6)..(0.5,-1.6)
+	(0.5,-1.6)..controls (1.0,-1.8) and (1,-2)..(2,-1);
+	%vertical                                                 
+	\draw[xshift=0.1 cm , yshift=-0.0cm, gray]     (-1.9,-1.1)..controls (-1.8,-0.1)..(-1.3,0.8);                                
+	\draw[xshift=0.24 cm , yshift=-0.0cm,gray]     (-1.9,-1.1)..controls (-1.8,-0.1)..(-1.3,0.8);                           
+	\draw[xshift=0.4 cm , yshift=-0.0cm, gray]     (-1.9,-1.1)..controls (-1.8,0)..(-1.3,0.8);                                               
+	\foreach \x in { 0.4, 0.7, 1.0, 1.3}             
+	\draw[xshift=\x cm , yshift=-0.0cm, gray]     (-1.9,-1.1)..controls (-1.8,0)..(-1.3,0.8);
+	\foreach \x in { 1.6, 1.9}             
+	\draw[xshift=\x cm , yshift=-0.3cm,gray]      (-1.9,-0.9)..controls (-1.8,0.1)..(-1.3,0.6);
+	\foreach \x in { 2.2, 2.5}             
+	\draw[xshift=\x cm , yshift=-0.3cm, gray]     (-1.9,-1.1)..controls (-1.8,0)..(-1.3,0.4);
+	%rectangle
+	\draw [rectangle,fill=gray!50,rotate=-20,xshift=-1.13cm,yshift=-0.16cm](-0.13,-0.3) rectangle (0.13,0.3);
+	\node[](nodeA) at (-1.1cm,0.4cm){};
+	\node[black](nodeB) at (0.7cm,0.5cm) {\tiny{$T_p(M)$}};
+	%coord syst
+	\draw [->,thick,color=red,xshift=-1.1cm,yshift=0.3cm,rotate=-15](0,0) -- (xyz cs:x=0.3) ; 
+	%\node [black, above, xshift=-1cm,yshift=-0.6cm] at (-0.2,1.3) {\tiny{$\mathbf{e_1}$}};  
+	%\draw [->,thick,color=red, xshift=-1.1cm,yshift=0.3cm,rotate=10](0,0) -- (xyz cs:y=0.5) ;
+	\node [black, right, xshift=-1.8cm] at (0.9,0.2) {\tiny{$\overline{\Phi}_u$}};
+	\draw [->,thick,color=red, xshift=-1.1cm,yshift=0.3cm,rotate=23](0,0) -- (xyz cs:z=1.0) ; 
+	\node [black, above, xshift=-0.67cm,yshift=0.3cm] at (-0.6,-0.87) {\tiny{$\overline{\Phi}_v$}};     
+	\end{tikzpicture}
+	\Varrow{black}{nodeA}{nodeB}         
+\end{wrapfigure}
+\indent Vamos a dar demostraciones matemáticas para dejar de intuír. En Geometría de Curvas y Superficies, se trabaja con el siguiente sistema de referencia: $\{\overline{\Phi}_u,\overline{\Phi}_v,\overline{N}\}$ .\\ \indent Con este criterio cada vector de $\mathbb{R}^3$ tendrá unas componentes en esta base.Si no sabemos que la superficie está en $\mathbb{R}^3$ se usan los símbolos de Christoffel, dando las componentes en $\overline{\Phi}_u,\overline{\Phi}_v$ de sus derivadas.\\
 \indent Cuando uno calcula la aceleración de una partícula en $\overline{\Phi}_u$ tenemos $$\pdv[2]{\overline{\Phi}}{u}=\overline{\Phi}_{uu}=\Gamma^1_{11}\overline{\Phi}_u+\Gamma^2_{11}\overline{\Phi}_v+e\overline{N}$$, donde e es el primer coeficiente de la 2ª forma fundamental. Lo mismo con las otras derivadas $\overline{\Phi}_{uv}$ y $\overline{\Phi}_{vv}$. Los símbolos de Christoffel son las $\Gamma$. Estos símbolos se usan porque las curvaturas en realidad sólo dependen de las métricas: la curvatura de Gauss se puede dar en función de $e,f,g$ (coeficientes de la $II FF$), pero haciendo magia negra podemos dejarla en función sólo de los símbolos de Christoffel, convirtiéndose esta en un invariante intrínseco de la variedad (\textbf{theorema egregium} de Gauss).
 \begin{prop}
 Las ecuaciones de Euler-Lagrange que definen las geodésicas son equivalentes a estas con una pinta más amable
