@@ -29,6 +29,7 @@
 \epsilon#m
 \bigzero#m
 \tlps#m
+\vect{arg0}#m
 \invers{arg0}#m
 \f#m
 \F#m
