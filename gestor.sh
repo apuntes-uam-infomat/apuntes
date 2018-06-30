@@ -218,6 +218,31 @@ limpiar() {
 
 	cd "$asignatura"
 	latexmk -r "../latexmkrc.pl" -C
+	cd ..
+}
+
+##
+## limpiar_todo
+##
+## Limpia los archivos no necesarios de todos los directorios.
+##
+limpiar_todo() {
+
+	local dir_num=0
+
+	while IFS= read -r -d $'\0' asignatura; do
+
+		limpiar "$(dirname "$asignatura")"
+		(( dir_num += 1 ))
+
+		INFO "================================================================"
+
+	done < <( find . -mindepth 2 -maxdepth 2 -iname '*.tex' -print0 )
+
+	INFO "Encontrado ${F_BOLD}$dir_num${F_RESET} asignaturas"
+	INFO ""
+	INFO "Terminado ($(date))"
+
 }
 
 ##
@@ -290,6 +315,9 @@ ayuda() {
 	echo "${F_BOLD}limpiar${F_RESET} [asignatura]"
 	echo "    Limpia los archivos generados de una asignatura"
 	echo
+	echo "${F_BOLD}limpiar_todo${F_RESET}"
+	echo "    Limpia los archivos generados de todas las asignaturas"
+	echo
 	echo "${F_BOLD}empaquetar${F_RESET} [asignatura]"
 	echo "    Zipea todos los ficheros necesarios para compilar una asignatura"
 	echo
@@ -324,6 +352,7 @@ case "$subcmd" in
 	limpiar)         	( limpiar           	"$@" ) ;;
 	compilar)        	( compilar          	"$@" ) ;;
 	compilar_todo)   	( time compilar_todo	"$@" ) ;;
+	limpiar_todo)    	( time limpiar_todo		"$@" ) ;;
 	empaquetar)      	( empaquetar        	"$@" ) ;;
 	instalar)        	( instalar          	"$@" ) ;;
 	ayuda)           	( ayuda             	"$@" ) ;;
