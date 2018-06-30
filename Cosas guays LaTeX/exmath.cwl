@@ -22,6 +22,7 @@
 \MT#m
 \deriv{f}{arg1}#m
 \dpa{arg0}{arg1}#m
+\ddpa{arg0}{arg1}{arg2}#m
 \rot#m
 \dv#m
 \grad#m
@@ -135,6 +136,7 @@
 \cplex#m
 \vec{arg0}#m
 \pesc{arg0}#m
+\pescm{arg0}{arg1}#m
 \md{arg0}#m
 \vx#m
 \vy#m
